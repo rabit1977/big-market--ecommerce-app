@@ -1,0 +1,85 @@
+import { fetchQuery } from 'convex/nextjs';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import { api } from '../../../../convex/_generated/api';
+import { Id } from '../../../../convex/_generated/dataModel';
+import { ListingDetailContent } from './ListingDetailContent';
+import { ListingDetailSkeleton } from './ListingDetailSkeleton';
+
+interface ListingDetailPageProps {
+  params: Promise<{ id: string }>;
+}
+
+// Helper function to validate Convex ID
+function isValidConvexId(id: string): boolean {
+  return Boolean(id && id !== 'undefined' && id !== 'null' && id.length > 0);
+}
+
+export async function generateMetadata({
+  params,
+}: ListingDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+
+  // Validate ID
+  if (!isValidConvexId(id)) {
+    return {
+      title: 'Listing Not Found | Big Market',
+    };
+  }
+
+  try {
+    const listing = await fetchQuery(api.listings.getById, {
+      id: id as Id<'listings'>,
+    });
+
+    if (!listing) {
+      return {
+        title: 'Listing Not Found | Big Market',
+      };
+    }
+
+    return {
+      title: `${listing.title} | Big Market`,
+      description: listing.description.slice(0, 160),
+      openGraph: {
+        images: listing.images?.[0] ? [listing.images[0]] : [],
+      },
+    };
+  } catch {
+    return {
+      title: 'Listing Not Found | Big Market',
+    };
+  }
+}
+
+const ListingDetailPage = async ({ params }: ListingDetailPageProps) => {
+  const { id } = await params;
+
+  // Validate ID before querying
+  if (!isValidConvexId(id)) {
+    notFound();
+  }
+
+  let listing;
+  try {
+    listing = await fetchQuery(api.listings.getById, {
+      id: id as Id<'listings'>,
+    });
+  } catch (error) {
+    console.error('Error fetching listing:', error);
+    notFound();
+  }
+
+  if (!listing) {
+    notFound();
+  }
+
+  return (
+    <Suspense fallback={<ListingDetailSkeleton />}>
+      <ListingDetailContent listing={listing as any} />
+    </Suspense>
+  );
+};
+
+export default ListingDetailPage;

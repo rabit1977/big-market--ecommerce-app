@@ -1,0 +1,99 @@
+'use client';
+
+import { FilterPanel, FilterState } from '@/components/listing/filter-panel';
+import { ListingGrid } from '@/components/listing/listing-grid';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { ListingWithRelations } from '@/lib/types';
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import { useMemo, useState } from 'react';
+
+interface LatestListingsClientProps {
+  initialListings: ListingWithRelations[];
+  categories: any[];
+}
+
+export function LatestListingsClient({ initialListings, categories }: LatestListingsClientProps) {
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [sortBy, setSortBy] = useState<string>('newest');
+  
+  // Apply sorting client-side for "Latest Listings"
+  const sortedListings = useMemo(() => {
+    return [...initialListings].sort((a, b) => {
+      if (sortBy === 'price-low') return a.price - b.price;
+      if (sortBy === 'price-high') return b.price - a.price;
+      // Default to newest
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+  }, [initialListings, sortBy]);
+
+  const handleFilterChange = (filters: FilterState) => {
+    // For homepage latest listings, we don't necessarily want to navigate away
+    // but the user asked for "it to open on small screen" and show sort/filters.
+    // If they apply complex filters (like city), maybe we should redirect them to /listings?
+    
+    if (filters.city && filters.city !== 'all') {
+        const params = new URLSearchParams();
+        if (filters.category) params.set('category', filters.category);
+        if (filters.city) params.set('city', filters.city);
+        if (filters.priceMin) params.set('minPrice', filters.priceMin.toString());
+        if (filters.priceMax) params.set('maxPrice', filters.priceMax.toString());
+        window.location.href = `/listings?${params.toString()}`;
+        return;
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 className='text-3xl md:text-4xl font-bold tracking-tight mb-2'>
+            Latest Listings
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            Fresh deals posted by our community
+          </p>
+        </div>
+
+        {/* Desktop View All Link */}
+        <Link 
+          href="/listings" 
+          className="hidden md:inline-flex items-center text-primary hover:text-primary/80 font-semibold transition-colors group"
+        >
+          View All
+          <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </div>
+
+      <ListingGrid 
+        listings={sortedListings as any} 
+        onOpenFilters={() => setIsFiltersOpen(true)}
+        showSaveSearch={false} // Don't show save search on home page latest
+        sortBy={sortBy}
+        onSortChange={setSortBy}
+      />
+
+      <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
+        <SheetContent side="left" className="w-[85vw] sm:w-[400px] overflow-y-auto p-0">
+          <div className="p-4 pt-10">
+            <FilterPanel 
+              onFilterChange={handleFilterChange} 
+              categories={categories} 
+            />
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* Mobile View All Link */}
+      <div className="text-center mt-8 md:hidden">
+        <Link 
+          href="/listings" 
+          className="inline-flex items-center text-primary font-bold transition-colors group px-6 py-2 border-2 border-primary/20 rounded-full hover:bg-primary/5"
+        >
+          Browse All Listings
+          <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </div>
+    </div>
+  );
+}
