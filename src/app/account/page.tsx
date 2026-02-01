@@ -4,7 +4,8 @@ import { getWishlistAction } from '@/actions/wishlist-actions';
 import { auth } from '@/auth';
 import { AccountStats } from '@/components/account/AccountStats';
 import AuthGuard from '@/components/auth/auth-guard';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -78,6 +79,7 @@ const AccountPage = async () => {
         <div className='fixed inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(99,102,241,0.05),transparent)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(99,102,241,0.1),transparent)]' />
 
         <div className='container-wide py-10 sm:py-16 relative z-10'>
+          <AppBreadcrumbs />
           {/* Profile Header */}
           <header className='mb-10 sm:mb-16 rounded-[2.5rem] p-8 sm:p-12 glass-card relative overflow-hidden border-border/60 shadow-xl shadow-black/5'>
              <div className='absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-50' />
@@ -87,11 +89,6 @@ const AccountPage = async () => {
                <div className='relative group shrink-0'>
                  <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                  <Avatar className='w-28 h-28 sm:w-32 sm:h-32 rounded-3xl shadow-2xl ring-4 ring-white/50 dark:ring-white/10'>
-                   <AvatarImage 
-                     src={user?.image ? (user.image.startsWith('http') || user.image.startsWith('/') ? user.image : `/${user.image}`) : undefined} 
-                     alt={user?.name || 'User'} 
-                     className="object-cover"
-                   />
                    <AvatarFallback className='text-4xl sm:text-5xl font-black bg-gradient-to-br from-primary to-violet-600 text-white'>
                      {userInitials}
                    </AvatarFallback>
@@ -153,16 +150,15 @@ const AccountPage = async () => {
                    </Button>
                  </Link>
                </div>
-             </div>
-
-             {/* Edit Profile Button - Mobile */}
-             <div className='mt-8 sm:hidden'>
-               <Link href='/account/edit' className='block'>
-                 <Button size='lg' className='w-full rounded-xl font-bold'>
-                   <Settings className='h-4 w-4 mr-2' />
-                   Edit Profile
-                 </Button>
-               </Link>
+               {/* Edit Profile Button - Mobile */}
+               <div className='mt-6 sm:hidden w-full'>
+                 <Link href='/account/edit' className='block w-full'>
+                   <Button size='lg' className='w-full rounded-xl font-bold bg-secondary/80 hover:bg-secondary text-foreground'>
+                     <Settings className='h-4 w-4 mr-2' />
+                     Edit Profile
+                   </Button>
+                 </Link>
+               </div>
              </div>
           </header>
 

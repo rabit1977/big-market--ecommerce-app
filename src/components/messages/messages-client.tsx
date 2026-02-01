@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { UserAvatar } from '@/components/shared/user-avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -263,12 +263,11 @@ function ConversationItem({
         ${isSelected ? 'bg-muted' : ''}
       `}
     >
-      <Avatar className="shrink-0">
-        <AvatarImage src="" />
-        <AvatarFallback>
-          {conversation.otherUserId.substring(0, 2).toUpperCase()}
-        </AvatarFallback>
-      </Avatar>
+      <UserAvatar 
+        user={{ id: conversation.otherUserId } as any}
+        fallbackText={conversation.otherUserId.substring(0, 2).toUpperCase()}
+        className="shrink-0"
+      />
 
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2 mb-1">

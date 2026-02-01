@@ -1,22 +1,15 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
-    FormMessage,
+    FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover';
 import {
     Select,
     SelectContent,
@@ -24,29 +17,32 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
-import { CalendarIcon, Loader2, Phone, Save, User } from 'lucide-react';
+import { Camera, Loader2, MessageCircle, Phone } from 'lucide-react';
+import Image from 'next/image';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 /**
- * Enhanced profile schema with all new fields
+ * Enhanced profile schema with all new fields from design
  */
 const editProfileSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: 'Name must be at least 2 characters' })
-    .max(50, { message: 'Name must be less than 50 characters' }),
-  bio: z
-    .string()
-    .max(500, { message: 'Bio cannot be longer than 500 characters' })
-    .optional(),
-  city: z.string().max(100).optional(),
-  image: z.string().optional(),
+  name: z.string().min(2).max(50),
+  accountType: z.enum(['PERSON', 'COMPANY']),
+  companyName: z.string().optional(),
+  bio: z.string().max(500).optional(),
+  city: z.string().optional(),
+  municipality: z.string().optional(),
+  address: z.string().optional(),
+  postalCode: z.string().optional(),
+  image: z.string().optional(), // Logo
+  banner: z.string().optional(), // Banner
   phone: z.string().max(20).optional(),
+  hasWhatsapp: z.boolean().default(false),
+  hasViber: z.boolean().default(false),
+  email: z.string().email().optional(), // Read-only typically but good to have in form state
   dateOfBirth: z.date().optional().nullable(),
   gender: z.enum(['male', 'female', 'other', 'prefer_not_to_say', '']).optional(),
 });
@@ -54,17 +50,7 @@ const editProfileSchema = z.object({
 export type EditProfileFormValues = z.infer<typeof editProfileSchema>;
 
 interface EditProfileFormProps {
-  user: {
-    id?: string;
-    name?: string | null;
-    city?: string | null;
-    email?: string | null;
-    bio?: string | null;
-    image?: string | null;
-    phone?: string | null;
-    dateOfBirth?: Date | string | null;
-    gender?: string | null;
-  } | null;
+  user: any; // Using any for flexibility with new fields, ideally typed properly
   onSubmit: (values: EditProfileFormValues) => void | Promise<void>;
   isSubmitting: boolean;
 }
@@ -73,285 +59,311 @@ const genderOptions = [
   { value: 'male', label: 'Male' },
   { value: 'female', label: 'Female' },
   { value: 'other', label: 'Other' },
-  { value: 'prefer_not_to_say', label: 'Prefer not to say' },
 ];
 
-/**
- * Enhanced Edit Profile Form
- * 
- * Features:
- * - Name & City editing
- * - Bio textarea with character count
- * - Phone number input
- * - Date of birth picker
- * - Gender selection
- * - Better UI/UX
- * - Loading states
- */
+const MUNICIPALITIES = [
+    "Aerodrom", "Centar", "Karpos", "Kisela Voda", "Gazi Baba", "Butel", "Chair", "Gjorce Petrov", "Saraj", "Suto Orizari"
+];
+
 export function EditProfileForm({
   user,
   onSubmit,
   isSubmitting,
 }: EditProfileFormProps) {
   const form = useForm<EditProfileFormValues>({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(editProfileSchema) as any,
     defaultValues: {
       name: user?.name || '',
+      accountType: user?.accountType || 'PERSON',
+      companyName: user?.companyName || '',
       city: user?.city || '',
+      municipality: user?.municipality || '',
+      address: user?.address || '',
+      postalCode: user?.postalCode || '',
       bio: user?.bio || '',
       image: user?.image || '',
+      banner: user?.banner || '',
       phone: user?.phone || '',
+      hasWhatsapp: user?.hasWhatsapp || false,
+      hasViber: user?.hasViber || false,
+      email: user?.email || '',
       dateOfBirth: user?.dateOfBirth 
         ? (typeof user.dateOfBirth === 'string' ? new Date(user.dateOfBirth) : user.dateOfBirth) 
         : null,
-      gender: (user?.gender as EditProfileFormValues['gender']) || '',
+      gender: (user?.gender as any) || '',
     },
   });
 
-  const bioLength = form.watch('bio')?.length || 0;
+
+  const accountType = form.watch('accountType');
+
+  // File Input Refs
+  const bannerInputRef = useState<HTMLInputElement | null>(null);
+  const logoInputRef = useState<HTMLInputElement | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: 'banner' | 'image') => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        // You might want to pass error handling or toast here, but simple alert for now or ignore
+        return; 
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        form.setValue(fieldName, reader.result as string, { shouldDirty: true });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-        {/* Personal Information Section */}
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+        
+        {/* Banner & Logo Section */}
         <div className="space-y-4">
-          <div className="flex items-center gap-2 text-lg font-semibold">
-            <User className="w-5 h-5 text-primary" />
-            Personal Information
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Name Field */}
+             {/* Banner Upload */}
+             <div 
+                className="relative w-full h-48 bg-gray-100 rounded-xl overflow-hidden border border-dashed border-gray-300 group hover:border-blue-400 transition-colors cursor-pointer"
+                onClick={() => document.getElementById('banner-upload')?.click()}
+             >
+                 {form.watch('banner') ? (
+                     <Image src={form.watch('banner')!} alt="Banner" fill className="object-cover" />
+                 ) : (
+                     <div className="absolute inset-0 flex items-center justify-center text-muted-foreground flex-col gap-2">
+                         <Camera className="w-8 h-8 opacity-50" />
+                         <span className="text-xs uppercase font-bold tracking-wider">Banner (1200 x 300px)</span>
+                     </div>
+                 )}
+                 <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors" />
+                 <input 
+                    id="banner-upload"
+                    type="file" 
+                    className="hidden" 
+                    accept="image/*"
+                    onChange={(e) => handleFileChange(e, 'banner')}
+                 />
+             </div>
+
+             {/* Logo / Initials - Overlapping, Static (No Upload) */}
+             <div className="relative -mt-16 ml-8 w-32 h-32 bg-white rounded-xl shadow-lg border p-1 z-10">
+                 <div className="w-full h-full bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-white text-4xl font-black shadow-inner">
+                    {form.watch('name')?.slice(0, 2).toUpperCase() || 'US'}
+                 </div>
+             </div>
+        </div>
+
+        {/* Account Type Toggle */}
+        <div className="flex p-1 bg-gray-100 rounded-xl w-full max-w-md mx-auto relative">
+            <div 
+                className={cn(
+                    "absolute top-1 bottom-1 w-1/2 bg-white rounded-lg shadow-sm transition-transform duration-300 ease-in-out",
+                    accountType === 'COMPANY' ? "translate-x-full" : "translate-x-0"
+                )} 
+            />
+            <button
+                type="button"
+                className={cn("flex-1 relative z-10 py-2 text-sm font-bold transition-colors text-center", accountType === 'PERSON' ? "text-blue-600" : "text-gray-500")}
+                onClick={() => form.setValue('accountType', 'PERSON')}
+            >
+                Person
+            </button>
+            <button
+                type="button"
+                className={cn("flex-1 relative z-10 py-2 text-sm font-bold transition-colors text-center", accountType === 'COMPANY' ? "text-blue-600" : "text-gray-500")}
+                onClick={() => form.setValue('accountType', 'COMPANY')}
+            >
+                Company
+            </button>
+        </div>
+
+        {/* Form Fields */}
+        <div className="space-y-4">
+            
+            {/* Name */}
             <FormField
               control={form.control}
               name='name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+                  <FormLabel className="text-blue-600 font-bold">Your Name</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder='John Doe'
-                      {...field}
-                      disabled={isSubmitting}
-                      className='text-base'
-                    />
+                    <Input placeholder={accountType === 'COMPANY' ? 'Company Name' : 'Full Name'} {...field} className="h-12 bg-gray-50/50 border-gray-200 rounded-xl focus:ring-blue-500/20" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            {/* City Field */}
-            <FormField
-              control={form.control}
-              name='city'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>City / Location</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder='Skopje'
-                      {...field}
-                      disabled={isSubmitting}
-                      className='text-base'
+            {/* Phone & Apps */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="md:col-span-2">
+                    <FormField
+                      control={form.control}
+                      name='phone'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-blue-600 font-bold">Your Phone</FormLabel>
+                          <FormControl>
+                            <Input placeholder='07x xxx xxx' {...field} className="h-12 bg-gray-50/50 border-gray-200 rounded-xl" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          {/* Bio Field */}
-          <FormField
-            control={form.control}
-            name='bio'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Biography</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder='Tell us a little about yourself...'
-                    className='resize-none min-h-[100px]'
-                    {...field}
-                    disabled={isSubmitting}
-                  />
-                </FormControl>
-                <div className='flex items-center justify-between'>
-                  <FormDescription>
-                    A brief description about yourself
-                  </FormDescription>
-                  <span className={`text-xs ${
-                    bioLength > 500 
-                      ? 'text-destructive' 
-                      : bioLength > 450 
-                      ? 'text-amber-600' 
-                      : 'text-muted-foreground'
-                  }`}>
-                    {bioLength}/500
-                  </span>
                 </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+                <div className="flex items-end pb-3 gap-3">
+                    <FormField
+                        control={form.control}
+                        name="hasWhatsapp"
+                        render={({ field }) => (
+                            <FormItem className="flex items-center space-x-2 space-y-0">
+                                <FormControl>
+                                    <div 
+                                        onClick={() => field.onChange(!field.value)}
+                                        className={cn(
+                                            "w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-colors border",
+                                            field.value ? "bg-green-100 border-green-500 text-green-600" : "bg-gray-50 border-gray-200 text-gray-300 hover:border-green-300"
+                                        )}
+                                    >
+                                        <MessageCircle className="w-5 h-5" />
+                                    </div>
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="hasViber"
+                        render={({ field }) => (
+                            <FormItem className="flex items-center space-x-2 space-y-0">
+                                <FormControl>
+                                     <div 
+                                        onClick={() => field.onChange(!field.value)}
+                                        className={cn(
+                                            "w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-colors border",
+                                            field.value ? "bg-purple-100 border-purple-500 text-purple-600" : "bg-gray-50 border-gray-200 text-gray-300 hover:border-purple-300"
+                                        )}
+                                    >
+                                        <Phone className="w-5 h-5" />
+                                    </div>
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+                </div>
+            </div>
 
-        {/* Contact & Demographics Section */}
-        <div className="space-y-4 pt-4 border-t">
-          <div className="flex items-center gap-2 text-lg font-semibold">
-            <Phone className="w-5 h-5 text-primary" />
-            Contact & Demographics
-          </div>
-
-          {/* Phone Field */}
-          <FormField
-            control={form.control}
-            name='phone'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone Number</FormLabel>
-                <FormControl>
-                  <Input
-                    type="tel"
-                    placeholder='+1 (555) 123-4567'
-                    {...field}
-                    disabled={isSubmitting}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Used for order notifications and account recovery
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Date of Birth & Gender Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Date of Birth */}
+            {/* Email (Read Only style) */}
             <FormField
               control={form.control}
-              name='dateOfBirth'
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Date of Birth</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            'w-full pl-3 text-left font-normal',
-                            !field.value && 'text-muted-foreground'
-                          )}
-                          disabled={isSubmitting}
-                        >
-                          {field.value ? (
-                            format(field.value, 'PPP')
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <CalendarComponent
-                        mode="single"
-                        selected={field.value || undefined}
-                        onSelect={field.onChange}
-                        disabled={(date: Date) =>
-                          date > new Date() || date < new Date('1900-01-01')
-                        }
-                        autoFocus
-                        captionLayout="dropdown"
-                        fromYear={1920}
-                        toYear={new Date().getFullYear()}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormDescription>
-                    For birthday offers and age verification
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Gender */}
-            <FormField
-              control={form.control}
-              name='gender'
+              name='email'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Gender</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
-                    value={field.value || ''}
-                    disabled={isSubmitting}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select gender" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {genderOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>
-                    Optional demographic info
-                  </FormDescription>
+                  <FormLabel className="text-blue-600 font-bold">Your E-Mail</FormLabel>
+                  <FormControl>
+                    <Input {...field} disabled className="h-12 bg-gray-100 border-gray-200 rounded-xl text-gray-500" />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
+
+            {/* Address */}
+            <FormField
+              control={form.control}
+              name='address'
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder='Address' {...field} className="h-12 bg-gray-50/50 border-gray-200 rounded-xl" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Postal Code */}
+            <FormField
+              control={form.control}
+              name='postalCode'
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder='Postal code' {...field} className="h-12 bg-gray-50/50 border-gray-200 rounded-xl" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Location & Municipality */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <FormField
+                  control={form.control}
+                  name='city'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-blue-600 font-bold text-xs">Select Location</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="h-12 bg-gray-50/50 border-gray-200 rounded-xl">
+                            <SelectValue placeholder="Select City" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                           <SelectItem value="skopje">Skopje</SelectItem>
+                           <SelectItem value="bitola">Bitola</SelectItem>
+                           <SelectItem value="kumanovo">Kumanovo</SelectItem>
+                           <SelectItem value="ohrid">Ohrid</SelectItem>
+                           <SelectItem value="tetovo">Tetovo</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name='municipality'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-blue-600 font-bold text-xs">Select Municipality</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="h-12 bg-gray-50/50 border-gray-200 rounded-xl">
+                            <SelectValue placeholder="Select Municipality" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                           {MUNICIPALITIES.map(m => (
+                               <SelectItem key={m} value={m.toLowerCase()}>{m}</SelectItem>
+                           ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+            </div>
+
         </div>
 
-        {/* Action Buttons */}
-        <div className='flex flex-col sm:flex-row gap-4 pt-4 border-t'>
-          <Button
+        <Button
             type='submit'
             disabled={isSubmitting}
-            className='w-full sm:flex-1'
+            className='w-full h-12 text-lg font-bold rounded-xl bg-blue-600 hover:bg-blue-700'
           >
             {isSubmitting ? (
               <>
                 <Loader2 className='h-4 w-4 mr-2 animate-spin' />
-                Saving Changes...
+                Saving...
               </>
             ) : (
-              <>
-                <Save className='h-4 w-4 mr-2' />
-                Save Changes
-              </>
+              'Save Profile'
             )}
-          </Button>
-          <Button
-            type='button'
-            variant='outline'
-            onClick={() => form.reset()}
-            disabled={isSubmitting}
-            className='w-full sm:w-auto'
-          >
-            Reset
-          </Button>
-        </div>
-
-        {/* Info Box */}
-        <div className='rounded-lg border bg-muted/50 p-4'>
-          <p className='text-sm text-muted-foreground'>
-            <strong>Note:</strong> Your email address cannot be changed here. If you need to update it, 
-            please contact support.
-          </p>
-        </div>
+        </Button>
       </form>
     </Form>
   );

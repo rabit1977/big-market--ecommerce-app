@@ -4,7 +4,6 @@ import { testimonialsData } from '@/lib/constants/testimonials';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Quote, Star } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 export const Testimonials = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -50,10 +49,9 @@ export const Testimonials = () => {
                 </h3>
 
                 <div className='flex flex-col items-center gap-3'>
-                  <Avatar className='h-12 w-12 sm:h-14 sm:w-14 border-2 border-primary/20'>
-                    <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${activeTestimonial.name}`} />
-                    <AvatarFallback>{activeTestimonial.name[0]}</AvatarFallback>
-                  </Avatar>
+                  <div className='h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center text-primary font-bold text-lg sm:text-xl shadow-sm'>
+                    {activeTestimonial.name[0]}
+                  </div>
                   
                   <div className='space-y-0.5'>
                     <p className='text-base sm:text-lg font-semibold text-foreground'>{activeTestimonial.name}</p>

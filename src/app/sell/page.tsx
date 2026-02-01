@@ -1,5 +1,6 @@
 import { auth } from '@/auth';
 import { PostListingWizard } from '@/components/sell/post-listing-wizard';
+import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { fetchQuery } from 'convex/nextjs';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
@@ -23,8 +24,11 @@ export default async function SellPage() {
   const categories = await fetchQuery(api.categories.list);
 
   return (
-    <div className="min-h-screen bg-background">
-      <PostListingWizard categories={categories} userId={session.user.id || ""} />
+    <div className="min-h-screen bg-background pt-24 pb-12">
+      <div className="container-wide">
+        <AppBreadcrumbs />
+        <PostListingWizard categories={categories} userId={session.user.id || ""} />
+      </div>
     </div>
   );
 }

@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 import { Heart, MapPin, ShieldCheck, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { memo, useCallback, useOptimistic, useState, useTransition } from 'react';
+import { memo, useCallback, useEffect, useOptimistic, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
 
@@ -22,6 +22,14 @@ export const ListingCard = memo(
   ({ listing, initialIsWished = false, viewMode = 'list' }: ListingCardProps) => {
     const [isPending, startTransition] = useTransition();
     const [isWished, setIsWished] = useState(initialIsWished);
+    
+    // Sync state with prop if it changes (e.g. data loaded late)
+    useEffect(() => {
+        if (initialIsWished !== undefined) {
+            setIsWished(initialIsWished);
+        }
+    }, [initialIsWished]);
+
     const [optimisticIsWished, setOptimisticIsWished] = useOptimistic(
       isWished,
       (state, newValue: boolean) => newValue

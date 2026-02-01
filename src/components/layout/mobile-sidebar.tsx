@@ -1,13 +1,13 @@
 'use client';
 
 import { getAllCategoriesAction } from '@/actions/listing-actions';
+import { UserAvatar } from '@/components/shared/user-avatar';
 import {
     Accordion,
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
@@ -227,12 +227,10 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                 ) : user ? (
                    <div className="bg-muted/30 rounded-2xl p-4 border border-border/50">
                       <div className="flex items-center gap-3 mb-3">
-                         <Avatar className='h-12 w-12 border-2 border-background shadow-sm'>
-                            <AvatarImage src={user.image || undefined} />
-                            <AvatarFallback className='bg-primary/10 text-primary font-bold'>
-                               {userInitials}
-                            </AvatarFallback>
-                         </Avatar>
+                         <UserAvatar 
+                            user={user as any} 
+                            className='h-12 w-12 border-2 border-background shadow-sm' 
+                         />
                          <div className='flex-1 min-w-0'>
                             <p className='font-semibold truncate leading-tight'>{user.name}</p>
                             <p className='text-xs text-muted-foreground truncate'>{user.email}</p>

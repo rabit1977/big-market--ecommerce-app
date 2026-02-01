@@ -2,58 +2,116 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export const ListingDetailSkeleton = () => {
   return (
-    <div className='bg-background min-h-screen'>
-      <div className='container-wide py-12'>
-        {/* Breadcrumb Skeleton */}
-        <Skeleton className='h-10 w-40 mb-6' />
-        
-        {/* Listing Main Content Skeleton */}
-        <div className='grid gap-8 md:grid-cols-2 md:gap-12'>
-          {/* Image Gallery Skeleton */}
-          <div className='space-y-4'>
-            <Skeleton className='aspect-square w-full rounded-2xl' />
-            <div className='grid grid-cols-4 gap-4'>
-              {[...Array(4)].map((_, i) => (
-                <Skeleton key={i} className='aspect-square rounded-xl' />
-              ))}
-            </div>
-          </div>
-          
-          {/* Listing Info Skeleton */}
-          <div className='space-y-8'>
-            <div className='space-y-4'>
-              <Skeleton className='h-4 w-24' />
-              <Skeleton className='h-12 w-3/4' />
-              <div className='flex items-center gap-4'>
-                 <Skeleton className='h-8 w-32' />
-                 <Skeleton className='h-6 w-24' />
+    <div className='bg-slate-50/50 min-h-screen'>
+      {/* Mobile Header Skeleton */}
+      <div className='md:hidden sticky top-0 z-40 bg-white border-b px-4 py-3 flex items-center justify-between'>
+          <div className='flex items-center gap-3'>
+              <Skeleton className='h-8 w-8 rounded-full' />
+              <div className='space-y-1'>
+                  <Skeleton className='h-3 w-24' />
+                  <Skeleton className='h-2 w-32' />
               </div>
-            </div>
+          </div>
+          <div className='flex items-center gap-2'>
+              <Skeleton className='h-8 w-8 rounded-full' />
+              <Skeleton className='h-8 w-8 rounded-full' />
+          </div>
+      </div>
+
+      <div className='container-wide max-w-6xl mx-auto md:px-4 md:py-8'>
+        {/* Breadcrumb Skeleton */}
+        <Skeleton className='h-5 w-48 mb-8 hidden md:block' />
+        
+        <div className='grid grid-cols-1 lg:grid-cols-12 gap-0 md:gap-8'>
+          {/* Main Column */}
+          <div className='lg:col-span-8 space-y-6'>
+            {/* Image Skeleton */}
+            <Skeleton className='aspect-[4/3] md:aspect-video w-full md:rounded-2xl shadow-sm' />
             
-            <Skeleton className='h-32 w-full rounded-xl' />
-
-            <div className='space-y-4 pt-4 border-t border-border'>
-               <div className='grid grid-cols-2 gap-4'>
-                  <Skeleton className='h-14 w-full rounded-xl' />
-                  <Skeleton className='h-14 w-full rounded-xl' />
-               </div>
+            {/* Thumbnails Skeleton */}
+            <div className='flex gap-2 overflow-hidden px-4 md:px-0'>
+                {[...Array(5)].map((_, i) => (
+                    <Skeleton key={i} className='h-16 w-16 md:h-24 md:w-24 rounded-lg flex-shrink-0' />
+                ))}
             </div>
 
-            {/* Seller Info Skeleton */}
-            <div className='p-4 border rounded-xl space-y-3'>
-                 <Skeleton className='h-5 w-32' />
-                 <Skeleton className='h-4 w-48' />
+            {/* Mobile-Only Info Skeleton */}
+            <div className='md:hidden space-y-4 px-4 bg-white border-b py-6'>
+                <div className='space-y-2'>
+                    <Skeleton className='h-3 w-20' />
+                    <Skeleton className='h-8 w-full' />
+                    <Skeleton className='h-10 w-32' />
+                </div>
+                <div className='flex items-center gap-3 pt-4 border-t'>
+                    <Skeleton className='h-10 w-10 rounded-full' />
+                    <div className='flex-1 space-y-1'>
+                        <Skeleton className='h-4 w-32' />
+                        <Skeleton className='h-2 w-24' />
+                    </div>
+                    <Skeleton className='h-10 w-10 rounded-full' />
+                </div>
+                <div className='grid grid-cols-2 gap-3 pt-4'>
+                    <Skeleton className='h-14 w-full rounded-xl' />
+                    <Skeleton className='h-14 w-full rounded-xl' />
+                </div>
+            </div>
+
+            {/* Specs Skeleton */}
+            <div className='bg-white md:rounded-2xl border border-slate-200 overflow-hidden'>
+                <div className='p-4 border-b bg-slate-50'>
+                    <Skeleton className='h-4 w-40' />
+                </div>
+                <div className='grid grid-cols-1 md:grid-cols-2'>
+                    {[...Array(6)].map((_, i) => (
+                        <div key={i} className='p-4 border-b flex justify-between'>
+                            <Skeleton className='h-3 w-20' />
+                            <Skeleton className='h-3 w-24' />
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Description Skeleton */}
+            <div className='bg-white md:rounded-2xl border border-slate-200 p-6 space-y-4'>
+                <Skeleton className='h-5 w-32' />
+                <div className='space-y-2'>
+                    <Skeleton className='h-4 w-full' />
+                    <Skeleton className='h-4 w-full' />
+                    <Skeleton className='h-4 w-3/4' />
+                </div>
             </div>
           </div>
-        </div>
 
-        {/* Separator Skeleton */}
-        <Skeleton className='h-px w-full my-16' />
+          {/* Sidebar Skeleton (Desktop Only) */}
+          <div className='hidden lg:block lg:col-span-4 space-y-6'>
+              <div className='bg-white border-2 border-slate-100 rounded-3xl p-8 space-y-6 shadow-sm'>
+                  <div className='space-y-2'>
+                      <Skeleton className='h-8 w-full' />
+                      <Skeleton className='h-4 w-32' />
+                  </div>
+                  <Skeleton className='h-24 w-full rounded-2xl' />
+                  <div className='space-y-3 pt-2'>
+                      <Skeleton className='h-14 w-full rounded-2xl' />
+                      <Skeleton className='h-14 w-full rounded-2xl' />
+                  </div>
+              </div>
 
-        {/* Content Skeleton */}
-        <div className='space-y-8'>
-           <Skeleton className='h-8 w-48' />
-           <Skeleton className='h-40 w-full rounded-xl' />
+              <div className='bg-white border rounded-3xl p-6 shadow-sm'>
+                  <div className='flex items-center gap-4 mb-6'>
+                      <Skeleton className='h-16 w-16 rounded-full' />
+                      <div className='space-y-2 flex-1'>
+                          <Skeleton className='h-5 w-32' />
+                          <Skeleton className='h-3 w-48' />
+                      </div>
+                  </div>
+                  <div className='grid grid-cols-2 gap-2'>
+                      <Skeleton className='h-12 w-full rounded-xl' />
+                      <Skeleton className='h-12 w-full rounded-xl' />
+                  </div>
+              </div>
+
+              <Skeleton className='aspect-[1.5/1] w-full rounded-3xl' />
+          </div>
         </div>
       </div>
     </div>

@@ -71,7 +71,11 @@ export const list = query({
       const pB = b.priority || 0;
       if (pA !== pB) return pB - pA;
       
-      return 0; // Keep descending order from collect()
+      
+      // 3. Date (Renewed/Created)
+      const dateA = a.createdAt || a._creationTime;
+      const dateB = b.createdAt || b._creationTime;
+      return dateB - dateA;
     });
   },
 });
@@ -170,6 +174,12 @@ export const update = mutation({
     hasShipping: v.optional(v.boolean()),
     isVatIncluded: v.optional(v.boolean()),
     isAffordable: v.optional(v.boolean()),
+    
+    // System Fields
+    createdAt: v.optional(v.number()),
+    isPromoted: v.optional(v.boolean()),
+    promotionTier: v.optional(v.string()),
+    promotionExpiresAt: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const { id, ...patch } = args;

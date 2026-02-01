@@ -1,5 +1,6 @@
 import { auth } from '@/auth';
 import { MessagesClient } from '@/components/messages/messages-client';
+import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { fetchQuery } from 'convex/nextjs';
 import { redirect } from 'next/navigation';
 import { api } from '../../../convex/_generated/api';
@@ -23,9 +24,14 @@ export default async function MessagesPage() {
   });
 
   return (
-    <MessagesClient
-      conversations={conversations as any}
-      userId={session.user.id!}
-    />
+    <div className="min-h-screen pt-24 pb-12 bg-background">
+      <div className="container-wide">
+        <AppBreadcrumbs />
+        <MessagesClient
+          conversations={conversations as any}
+          userId={session.user.id!}
+        />
+      </div>
+    </div>
   );
 }

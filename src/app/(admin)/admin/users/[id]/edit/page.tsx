@@ -3,15 +3,15 @@
 import { getUserByIdAction } from '@/actions/user-actions';
 import { auth } from '@/auth';
 import { EditUserForm } from '@/components/admin/edit-user-form';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { UserAvatar } from '@/components/shared/user-avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from '@/components/ui/card';
 import { ArrowLeft, Shield } from 'lucide-react';
 import Link from 'next/link';
@@ -59,16 +59,11 @@ export default async function EditUserPage({ params }: EditUserPageProps) {
           </Button>
 
           <div className='flex items-start gap-4'>
-            <Avatar className='h-16 w-16'>
-              <AvatarImage 
-                src={user.image ? (user.image.startsWith('http') || user.image.startsWith('/') ? user.image : `/${user.image}`) : undefined} 
-                alt={user.name || 'User'} 
-                className="object-cover"
-              />
-              <AvatarFallback className='text-xl'>
-                {user.name?.charAt(0).toUpperCase() || 'U'}
-              </AvatarFallback>
-            </Avatar>
+            <UserAvatar 
+              user={user} 
+              className='h-16 w-16' 
+              fallbackClassName="text-xl"
+            />
             <div className='flex-1'>
               <div className='flex items-center gap-3'>
                 <h1 className='text-3xl font-bold tracking-tight'>Edit User</h1>

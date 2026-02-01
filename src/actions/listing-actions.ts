@@ -277,6 +277,7 @@ export async function renewListingAction(id: string) {
     await convex.mutation(api.listings.update, {
       id: id as any,
       status: 'ACTIVE',
+      createdAt: Date.now(), // Bump listing to top
     });
 
     revalidatePath('/my-listings');
@@ -286,6 +287,36 @@ export async function renewListingAction(id: string) {
   } catch (error) {
     console.error('Error renewing listing:', error);
     return { success: false, error: 'Failed to renew listing' };
+  }
+}
+
+// ============================================
+// PROMOTE LISTING
+// ============================================
+
+export async function promoteListingAction(id: string, tier: 'GOLD' | 'SILVER' | 'BRONZE', durationDays: number) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return { success: false, error: 'Unauthorized' };
+    }
+
+    const expiresAt = Date.now() + (durationDays * 24 * 60 * 60 * 1000);
+
+    await convex.mutation(api.listings.update, {
+      id: id as any,
+      isPromoted: true,
+      promotionTier: tier,
+      promotionExpiresAt: expiresAt,
+    });
+
+    revalidatePath('/my-listings');
+    revalidatePath(`/listings/${id}`);
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error promoting listing:', error);
+    return { success: false, error: 'Failed to promote listing' };
   }
 }
 

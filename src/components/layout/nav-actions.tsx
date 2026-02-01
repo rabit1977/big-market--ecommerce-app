@@ -23,6 +23,7 @@ import {
     Lock,
     LogOut,
     MessageSquare,
+    Package,
     Pencil,
     Settings,
     ShieldCheck,
@@ -169,15 +170,28 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                   <UserAvatar user={user} className='h-12 w-12 border border-border' />
                   <div className='flex-1 overflow-hidden'>
                      <div className='flex items-center gap-1'>
-                        <span className='font-bold text-lg truncate'>{user.name}</span>
+                        <span className='font-bold text-lg truncate'>
+                            {(user as any).accountType === 'COMPANY' && (user as any).companyName 
+                                ? (user as any).companyName 
+                                : user.name}
+                        </span>
                         <BadgeCheck className='w-4 h-4 text-blue-500 fill-blue-500/10' />
                      </div>
                      <div className='text-xs text-muted-foreground truncate'>{user.email}</div>
                      <div className='text-xs text-muted-foreground mt-0.5'>User ID: #{user.id.slice(-6)}</div>
                   </div>
                </div>
-               <div className='text-[10px] text-muted-foreground bg-muted/50 p-2 rounded'>
-                  Your profile certificate is active. Thank you for your support.
+               <div className='mt-3 bg-muted/50 p-3 rounded-lg border border-border/50'>
+                  <div className='flex items-center justify-between mb-2'>
+                      <span className='text-xs font-medium text-muted-foreground'>Your Balance</span>
+                      <span className='text-sm font-bold text-foreground'>0.00 MKD</span>
+                  </div>
+                  <Button size="sm" className="w-full text-xs h-7 bg-blue-600 hover:bg-blue-700 text-white" asChild>
+                      <Link href="/wallet/top-up">
+                          <Wallet className="w-3 h-3 mr-1.5" />
+                          Top up account
+                      </Link>
+                  </Button>
                </div>
             </div>
 
@@ -216,6 +230,13 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                   <Link href="/wallet" className='flex items-center gap-3'>
                      <CreditCard className='w-4 h-4 text-muted-foreground' />
                      <span className='flex-1'>Account overview</span>
+                  </Link>
+               </DropdownMenuItem>
+
+               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5 my-1 bg-amber-50/50'>
+                  <Link href="/my-listings" className='flex items-center gap-3 font-bold text-amber-900'>
+                     <Package className='w-4 h-4 text-amber-600' />
+                     <span className='flex-1'>My Listings</span>
                   </Link>
                </DropdownMenuItem>
                

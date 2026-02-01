@@ -1,17 +1,15 @@
 'use client';
 
+import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useMutation, useQuery } from 'convex/react';
+import { format } from 'date-fns';
 import {
-    AlertCircle,
-    CheckCircle2,
-    Clock,
-    FileText,
-    ShieldCheck,
-    Upload,
-    XCircle
+    Crown,
+    ShieldCheck
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
@@ -25,6 +23,7 @@ export default function VerificationPage() {
     const user = useQuery(api.users.getByExternalId, { externalId: userId });
     const request = useQuery(api.verification.getRequest, { userId });
     const submitRequest = useMutation(api.verification.submit);
+    const cancelSubscription = useMutation(api.users.cancelMembership);
 
     const [fileUrl, setFileUrl] = useState('');
     const [submitting, setSubmitting] = useState(false);
@@ -59,99 +58,97 @@ export default function VerificationPage() {
     return (
         <div className="min-h-screen pt-24 pb-12 bg-muted/10">
             <div className="container max-w-2xl mx-auto px-4">
+                <AppBreadcrumbs />
                 <div className="flex items-center gap-3 mb-8">
                     <ShieldCheck className="w-8 h-8 text-primary" />
-                    <h1 className="text-3xl font-black tracking-tighter text-slate-900">Account Verification</h1>
+                    <h1 className="text-3xl font-black tracking-tighter text-slate-900">Account Status</h1>
                 </div>
 
-                {user.isVerified ? (
-                    <Card className="border-green-500/20 bg-green-500/5 overflow-hidden rounded-3xl">
-                        <CardHeader className="text-center pb-2">
-                            <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-green-500/20">
-                                <CheckCircle2 className="w-10 h-10 text-white" />
-                            </div>
-                            <CardTitle className="text-2xl font-bold text-green-700">You are Verified!</CardTitle>
-                            <CardDescription className="text-green-600/80">
-                                Your identity has been confirmed. You now have full access to all classifieds features.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="text-center pb-8 pt-4">
-                             <div className="inline-flex items-center gap-2 bg-green-500/10 text-green-700 px-4 py-2 rounded-full font-bold text-sm">
-                                 <ShieldCheck className="w-4 h-4" />
-                                 Verified Member
+                {/* Verification Status based on Subscription */}
+                {user.membershipStatus === 'ACTIVE' ? (
+                     <Card className="mb-8 border border-border/60 shadow-sm bg-card rounded-[1.5rem] overflow-hidden">
+                        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4 flex items-center justify-between">
+                             <div className="flex items-center gap-2 text-white">
+                                 <div className="p-1.5 bg-white/20 backdrop-blur-md rounded-lg">
+                                     <Crown className="w-4 h-4 text-white" />
+                                 </div>
+                                 <span className="font-bold text-sm tracking-wide uppercase opacity-90">Premium Membership</span>
                              </div>
-                        </CardContent>
-                    </Card>
-                ) : request && request.status === "PENDING" ? (
-                    <Card className="border-amber-500/20 bg-amber-500/5 rounded-3xl">
-                         <CardHeader className="text-center">
-                            <div className="w-16 h-16 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-amber-500/20">
-                                <Clock className="w-10 h-10 text-amber-500 animate-pulse" />
-                            </div>
-                            <CardTitle className="text-2xl font-bold text-amber-700">Verification Pending</CardTitle>
-                            <CardDescription className="text-amber-600/80">
-                                We've received your document and it's currently under review. This usually takes 24-48 hours.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                             <div className="bg-white/50 border rounded-2xl p-4 flex items-center justify-between">
-                                 <div className="flex items-center gap-3">
-                                     <FileText className="w-5 h-5 text-muted-foreground" />
+                             <Badge className="bg-white/20 text-white hover:bg-white/30 border-0 backdrop-blur-md">
+                                 Active
+                             </Badge>
+                        </div>
+                        
+                        <CardContent className="p-6 md:p-8">
+                             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                                 {/* Avatar / Icon */}
+                                 <Avatar className="w-24 h-24 border-4 border-white shadow-lg shrink-0">
+                                     <AvatarFallback className="bg-indigo-100 text-indigo-700 text-3xl font-black">
+                                         {user.name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase() || 'US'}
+                                     </AvatarFallback>
+                                 </Avatar>
+
+                                 {/* User Details */}
+                                 <div className="flex-1 text-center md:text-left space-y-4 w-full">
                                      <div>
-                                         <p className="text-sm font-bold">Document Submitted</p>
-                                         <p className="text-xs text-muted-foreground">ID_Document_Photo.jpg</p>
+                                         <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-none mb-1">
+                                             Dear, {user.name}
+                                         </h2>
+                                         <p className="text-emerald-600 font-bold text-lg">
+                                             Your certificate is activated and valid until {user.membershipExpiresAt ? format(new Date(user.membershipExpiresAt), 'MMM dd, yyyy') : 'Forever'}.
+                                         </p>
+                                     </div>
+
+                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                                         <div className="bg-muted/30 p-3 rounded-xl border border-border/50">
+                                              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Membership ID</p>
+                                              <p className="font-mono text-sm font-bold text-slate-700">
+                                                  #{userId.slice(-8).toUpperCase()}
+                                              </p>
+                                         </div>
+                                     </div>
+
+                                     <div className="pt-4 flex justify-end">
+                                        <Button 
+                                            variant="ghost" 
+                                            size="sm" 
+                                            className="text-red-400 hover:text-red-600 hover:bg-red-50 h-auto py-1 px-3 text-xs font-semibold"
+                                            onClick={async () => {
+                                                if (confirm("Are you sure you want to cancel your Premium Membership? You will lose your verified status immediately.")) {
+                                                    try {
+                                                        await cancelSubscription({ externalId: userId });
+                                                        toast.success("Membership cancelled");
+                                                    } catch (e) {
+                                                        toast.error("Failed to cancel");
+                                                    }
+                                                }
+                                            }}
+                                        >
+                                            Cancel Subscription
+                                        </Button>
                                      </div>
                                  </div>
-                                 <Badge variant="outline" className="bg-amber-100 text-amber-700 border-amber-200">In Review</Badge>
                              </div>
                         </CardContent>
                     </Card>
                 ) : (
-                    <div className="space-y-6">
-                        {request && request.status === "REJECTED" && (
-                            <div className="bg-destructive/10 border border-destructive/20 text-destructive p-4 rounded-2xl flex items-start gap-3">
-                                <XCircle className="w-5 h-5 mt-0.5" />
-                                <div>
-                                    <p className="font-bold">Verification Request Rejected</p>
-                                    <p className="text-sm opacity-90">{request.notes || "The document provided was not clear or did not match our requirements. Please try again."}</p>
-                                </div>
+                    <Card className="border-slate-200 rounded-3xl bg-slate-50/50">
+                        <CardContent className="flex flex-col items-center justify-center text-center py-16 px-6">
+                            <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6 shadow-sm border border-slate-200">
+                                <Crown className="w-10 h-10 text-slate-400" />
                             </div>
-                        )}
+                            
+                            <h2 className="text-2xl font-black text-slate-900 mb-2">Subscription Required</h2>
+                            
+                            <p className="text-muted-foreground font-medium max-w-md mb-8 leading-relaxed">
+                                Until you are subscribed to a plan, you cannot upload verified listings. Upgrade your account to unlock full selling potential.
+                            </p>
 
-                        <Card className="border-slate-200 rounded-3xl">
-                            <CardHeader>
-                                <CardTitle>Identity Verification</CardTitle>
-                                <CardDescription>
-                                    Upload a clear photo of your ID Card or Driver's License to become a verified seller.
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                     <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center group hover:bg-slate-100/50 transition-colors cursor-pointer" onClick={handleUpload}>
-                                         <Upload className="w-10 h-10 text-slate-400 mb-3 group-hover:text-primary transition-colors" />
-                                         <p className="text-sm font-bold text-slate-900">Front Side</p>
-                                         <p className="text-xs text-slate-500 mt-1">Click to upload</p>
-                                         {fileUrl && <Badge className="mt-4 bg-green-600 hover:bg-green-700">Selected</Badge>}
-                                     </div>
-                                     <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center group">
-                                         <Upload className="w-10 h-10 text-slate-400 mb-3" />
-                                         <p className="text-sm font-bold text-slate-900">Back Side</p>
-                                         <p className="text-xs text-slate-500 mt-1">Optional</p>
-                                     </div>
-                                </div>
-
-                                <div className="space-y-5">
-                                     <div className="flex items-start gap-3 text-sm text-slate-600 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                                         <AlertCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                                         <p>Make sure the photo is well-lit and all information is readable. We protect your data according to our privacy policy.</p>
-                                     </div>
-                                     <Button className="w-full py-7 rounded-2xl font-bold text-lg shadow-lg shadow-primary/20" disabled={!fileUrl || submitting} onClick={handleSubmit}>
-                                         {submitting ? "Submitting Request..." : "Submit for Verification"}
-                                     </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
+                            <Button className="h-12 px-8 rounded-full font-bold text-lg bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/20" onClick={() => window.location.href = '/pricing'}>
+                                View Subscription Plans
+                            </Button>
+                        </CardContent>
+                    </Card>
                 )}
             </div>
         </div>

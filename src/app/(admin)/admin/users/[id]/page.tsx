@@ -2,7 +2,7 @@
 
 import { getUserByIdAction } from '@/actions/user-actions';
 import { auth } from '@/auth';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { UserAvatar } from '@/components/shared/user-avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -105,16 +105,11 @@ export default async function UserDetailsPage({
             <Card>
               <CardHeader>
                 <div className='flex items-start gap-4'>
-                  <Avatar className='h-20 w-20'>
-                    <AvatarImage
-                      src={user.image ? (user.image.startsWith('http') || user.image.startsWith('/') ? user.image : `/${user.image}`) : undefined}
-                      alt={user.name || 'User'}
-                      className="object-cover"
-                    />
-                    <AvatarFallback className='text-2xl'>
-                      {user.name?.charAt(0).toUpperCase() || 'U'}
-                    </AvatarFallback>
-                  </Avatar>
+                  <UserAvatar 
+                    user={user} 
+                    className='h-20 w-20' 
+                    fallbackClassName="text-2xl"
+                  />
                   <div className='flex-1 space-y-2'>
                     <div className='flex items-center justify-between'>
                       <div>

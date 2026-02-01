@@ -13,6 +13,17 @@ export default defineSchema({
     phone: v.optional(v.string()),
     gender: v.optional(v.string()),
     dateOfBirth: v.optional(v.string()),
+    
+    // Extended Profile Fields
+    banner: v.optional(v.string()),
+    accountType: v.optional(v.string()), // 'PERSON' | 'COMPANY'
+    companyName: v.optional(v.string()),
+    municipality: v.optional(v.string()),
+    address: v.optional(v.string()),
+    postalCode: v.optional(v.string()),
+    hasWhatsapp: v.optional(v.boolean()),
+    hasViber: v.optional(v.boolean()),
+    
     marketingEmails: v.optional(v.boolean()),
     orderEmails: v.optional(v.boolean()),
     reviewEmails: v.optional(v.boolean()),
@@ -132,7 +143,8 @@ export default defineSchema({
     data: v.optional(v.any()),
     createdAt: v.number(),
   }).index("by_type", ["eventType"])
-    .index("by_session", ["sessionId"]),
+    .index("by_session", ["sessionId"])
+    .index("by_listing", ["data.listingId"]),
 
   activityLogs: defineTable({
     userId: v.string(),
@@ -220,4 +232,12 @@ export default defineSchema({
     processedAt: v.optional(v.number()),
   }).index("by_user", ["userId"])
     .index("by_status", ["status"]),
+
+  recentlyViewed: defineTable({
+    userId: v.string(), // External User ID
+    listingId: v.id("listings"),
+    viewedAt: v.number(),
+  }).index("by_user", ["userId"])
+    .index("by_user_listing", ["userId", "listingId"])
+    .index("by_user_time", ["userId", "viewedAt"]),
 });

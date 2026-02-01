@@ -1,23 +1,26 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
+
+import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { formatPrice } from '@/lib/utils/formatters';
-import { useMutation, useQuery } from 'convex/react';
+import { useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import {
     ArrowDownLeft,
     ArrowUpRight,
-    CreditCard,
-    History,
-    Loader2,
-    Wallet
+    Loader2
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import Link from 'next/link';
 import { api } from '../../../convex/_generated/api';
 
 export default function WalletPage() {
@@ -26,132 +29,104 @@ export default function WalletPage() {
     
     const user = useQuery(api.users.getByExternalId, { externalId: userId });
     const transactions = useQuery(api.wallet.getTransactions, { userId });
-    const topUp = useMutation(api.wallet.topUp);
-
-    const [isToppingUp, setIsToppingUp] = useState(false);
-
-    const handleTopUp = async (amount: number) => {
-        setIsToppingUp(true);
-        try {
-            await topUp({
-                userId,
-                amount,
-                description: `Manual Top-up via UI`
-            });
-            toast.success(`Successfully added ${formatPrice(amount)} to your wallet`);
-        } catch (err) {
-            toast.error("Failed to add credits");
-        } finally {
-            setIsToppingUp(false);
-        }
+    
+    // Derived stats from transactions (mock logic for now as we might need backend aggregation)
+    const stats = {
+        payments: user?.credits || 0, // In wallet currently
+        spent: 0, // Placeholder
+        bonuses: 0 // Placeholder
     };
 
     if (!user) return <div className="p-20 text-center">Loading Wallet...</div>;
 
     return (
-        <div className="min-h-screen pt-24 pb-12 bg-muted/10">
-            <div className="container max-w-5xl mx-auto px-4">
-                <div className="flex items-center gap-3 mb-8">
-                    <Wallet className="w-8 h-8 text-primary" />
-                    <h1 className="text-3xl font-black tracking-tighter text-slate-900">Wallet & Credits</h1>
+        <div className="min-h-screen pt-24 pb-12 bg-gray-50/50">
+            <div className="container max-w-3xl mx-auto px-4">
+                <AppBreadcrumbs />
+                
+                {/* Header matches Image 2 Header Style */}
+                <div className="flex items-center justify-between mb-6">
+                     <h1 className="text-xl font-bold">User ID: {user.externalId.slice(-6)}</h1>
+                     {/* Close button usually there on modal, here we just show as page title */}
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Left: Balance & Top up */}
-                    <div className="lg:col-span-1 space-y-6">
-                        <Card className="bg-primary text-white border-none shadow-xl shadow-primary/20 rounded-3xl overflow-hidden relative">
-                            <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
-                            <CardHeader>
-                                <CardTitle className="text-white/80 font-medium">Available Balance</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-5xl font-black">{formatPrice(user.credits || 0)}</div>
-                                <p className="text-white/60 text-sm mt-2">Use credits to promote your ads</p>
-                            </CardContent>
-                        </Card>
+                {/* Tabs Navigation */}
+                <Tabs defaultValue="payments" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2 mb-6">
+                        <TabsTrigger value="payments" className="data-[state=active]:bg-blue-500 data-[state=active]:text-white rounded-md">Payments</TabsTrigger>
+                        <TabsTrigger value="expenses" className="data-[state=active]:bg-blue-500 data-[state=active]:text-white rounded-md">Expenses</TabsTrigger>
+                    </TabsList>
 
-                        <Card className="rounded-3xl border-slate-200">
-                            <CardHeader>
-                                <CardTitle className="text-lg">Top Up Balance</CardTitle>
-                                <CardDescription>Select an amount to add to your credits</CardDescription>
-                            </CardHeader>
-                            <CardContent className="grid grid-cols-2 gap-3">
-                                {[10, 20, 50, 100].map((amount) => (
-                                    <Button 
-                                        key={amount} 
-                                        variant="outline" 
-                                        className="h-16 rounded-2xl font-bold text-lg hover:border-primary hover:text-primary transition-all"
-                                        onClick={() => handleTopUp(amount)}
-                                        disabled={isToppingUp}
-                                    >
-                                        +{formatPrice(amount)}
-                                    </Button>
-                                ))}
-                                <Button className="col-span-2 h-14 rounded-2xl mt-2 font-bold" variant="secondary">
-                                    Custom Amount
-                                </Button>
-                            </CardContent>
-                        </Card>
+                    <div className="mb-6">
+                        <div className="text-xs text-muted-foreground mb-1 ml-1">Select month</div>
+                        <Select defaultValue="current">
+                          <SelectTrigger className="w-full bg-white border-gray-200">
+                            <SelectValue placeholder="Select month" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="current">Current Month</SelectItem>
+                            <SelectItem value="last">Last Month</SelectItem>
+                          </SelectContent>
+                        </Select>
                     </div>
 
-                    {/* Right: Transaction History */}
-                    <div className="lg:col-span-2">
-                        <Card className="h-full rounded-3xl border-slate-200">
-                            <CardHeader className="flex flex-row items-center justify-between">
-                                <div>
-                                    <CardTitle className="flex items-center gap-2">
-                                        <History className="w-5 h-5 text-primary" />
-                                        Transaction History
-                                    </CardTitle>
-                                    <CardDescription>Recent activity in your wallet</CardDescription>
-                                </div>
-                                <Badge variant="secondary">{transactions?.length || 0} Total</Badge>
-                            </CardHeader>
-                            <CardContent>
-                                {!transactions ? (
-                                    <div className="flex justify-center py-20">
-                                        <Loader2 className="w-8 h-8 animate-spin text-primary/40" />
-                                    </div>
-                                ) : transactions.length === 0 ? (
-                                    <div className="text-center py-20 bg-slate-50 rounded-2xl border border-dashed">
-                                        <CreditCard className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                                        <p className="text-slate-500 font-medium">No transactions yet</p>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-4">
-                                        {transactions.map((tx) => (
-                                            <div key={tx._id} className="flex items-center justify-between p-4 rounded-2xl border border-slate-100 hover:bg-slate-50 transition-colors">
-                                                <div className="flex items-center gap-4">
-                                                    <div className={cn(
-                                                        "w-10 h-10 rounded-full flex items-center justify-center",
-                                                        tx.type === 'TOPUP' ? "bg-green-100 text-green-600" : "bg-blue-100 text-blue-600"
-                                                    )}>
-                                                        {tx.type === 'TOPUP' ? <ArrowDownLeft className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />}
-                                                    </div>
-                                                    <div>
-                                                        <p className="font-bold text-slate-900">{tx.description}</p>
-                                                        <p className="text-xs text-slate-500">{formatDistanceToNow(tx.createdAt, { addSuffix: true })}</p>
-                                                    </div>
-                                                </div>
-                                                <div className="text-right">
-                                                    <div className={cn(
-                                                        "font-black text-lg",
-                                                        tx.type === 'TOPUP' ? "text-green-600" : "text-slate-900"
-                                                    )}>
-                                                        {tx.type === 'TOPUP' ? '+' : ''}{formatPrice(Math.abs(tx.amount))}
-                                                    </div>
-                                                    <Badge variant="outline" className="text-[10px] h-5 uppercase">
-                                                        {tx.status}
-                                                    </Badge>
-                                                </div>
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-3 gap-2 mb-6 p-4 bg-white rounded-xl border border-gray-100 shadow-sm text-center">
+                        <div>
+                            <div className="text-xs text-muted-foreground mb-1">Payments:</div>
+                            <div className="font-bold text-lg">{formatPrice(stats.payments)}</div>
+                        </div>
+                        <div className="border-l border-r border-gray-100">
+                            <div className="text-xs text-muted-foreground mb-1">Spent:</div>
+                            <div className="font-bold text-lg">{formatPrice(stats.spent)}</div>
+                        </div>
+                        <div>
+                            <div className="text-xs text-muted-foreground mb-1">Bonuses:</div>
+                            <div className="font-bold text-lg">{formatPrice(stats.bonuses)}</div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-4">
+                        <Button 
+                            className="w-full bg-blue-100 hover:bg-blue-200 text-blue-600 font-bold h-12 rounded-xl"
+                            asChild
+                        >
+                            <Link href="/wallet/top-up">
+                                Top Up Account
+                            </Link>
+                        </Button>
+                    </div>
+
+                    {/* Content Area */}
+                    <div className="mt-8 min-h-[300px]">
+                        {!transactions ? (
+                             <div className="flex justify-center p-10"><Loader2 className="animate-spin text-muted-foreground" /></div>
+                        ) : transactions.length === 0 ? (
+                            <div className="text-center py-20">
+                                <span className="text-muted-foreground text-sm">No transactions found</span>
+                            </div>
+                        ) : (
+                            <div className="space-y-3">
+                                {transactions.map((tx) => (
+                                    <div key={tx._id} className="flex items-center justify-between p-4 bg-white border rounded-xl shadow-sm">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+                                                {tx.type === 'TOPUP' ? <ArrowDownLeft size={18} /> : <ArrowUpRight size={18} />}
                                             </div>
-                                        ))}
+                                            <div>
+                                                <div className="font-bold text-sm">{tx.description}</div>
+                                                <div className="text-xs text-muted-foreground">{formatDistanceToNow(tx.createdAt, { addSuffix: true })}</div>
+                                            </div>
+                                        </div>
+                                        <div className={`font-bold ${tx.type === 'TOPUP' ? 'text-green-600' : 'text-slate-900'}`}>
+                                            {tx.type === 'TOPUP' ? '+' : ''}{formatPrice(Math.abs(tx.amount))}
+                                        </div>
                                     </div>
-                                )}
-                            </CardContent>
-                        </Card>
+                                ))}
+                            </div>
+                        )}
                     </div>
-                </div>
+                </Tabs>
             </div>
         </div>
     );

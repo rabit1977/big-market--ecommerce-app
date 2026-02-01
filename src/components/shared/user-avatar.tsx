@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
 import * as React from "react"
 
@@ -24,17 +24,21 @@ export function UserAvatar({
 
   const initials = React.useMemo(() => {
     if (fallbackText) return fallbackText;
-    if (!user?.name) return 'U';
-    const parts = user.name.trim().split(' ');
+    const nameToUse = (user as any)?.accountType === 'COMPANY' && (user as any)?.companyName 
+        ? (user as any).companyName 
+        : (user?.name || '');
+        
+    if (!nameToUse) return 'U';
+    
+    const parts = nameToUse.trim().split(' ');
     if (parts.length > 1) {
       return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
     }
-    return user.name.slice(0, 2).toUpperCase();
+    return nameToUse.slice(0, 2).toUpperCase();
   }, [user, fallbackText]);
 
   return (
     <Avatar className={className} {...props}>
-      <AvatarImage src={imageUrl} alt={user?.name || 'User'} className="object-cover" />
       <AvatarFallback 
         className={cn(
           "bg-gradient-to-tr from-emerald-400 to-emerald-600 text-white font-bold",

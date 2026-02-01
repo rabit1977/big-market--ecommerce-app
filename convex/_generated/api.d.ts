@@ -13,6 +13,7 @@ import type * as analytics from "../analytics.js";
 import type * as categories from "../categories.js";
 import type * as cleanup from "../cleanup.js";
 import type * as favorites from "../favorites.js";
+import type * as history from "../history.js";
 import type * as listings from "../listings.js";
 import type * as messages from "../messages.js";
 import type * as notifications from "../notifications.js";
@@ -38,6 +39,7 @@ declare const fullApi: ApiFromModules<{
   categories: typeof categories;
   cleanup: typeof cleanup;
   favorites: typeof favorites;
+  history: typeof history;
   listings: typeof listings;
   messages: typeof messages;
   notifications: typeof notifications;

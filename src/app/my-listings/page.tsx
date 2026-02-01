@@ -1,5 +1,7 @@
 import { getMyListingsAction } from '@/actions/listing-actions';
-import { MyListingCard } from '@/components/listing/my-listing-card';
+import { MyListingsDashboardHeader } from '@/components/listing/dashboard-header';
+import { MyListingListItem } from '@/components/listing/my-listing-list-item';
+import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { Package, Plus } from 'lucide-react';
@@ -15,19 +17,24 @@ export default async function MyListingsPage() {
 
   if (!success) {
       if (error === 'Unauthorized') {
-          redirect('/auth/signin'); // Redirect to login if not authenticated
+          redirect('/auth/signin'); 
       }
       return <div className="p-8 text-center text-red-500">Error loading listings: {error}</div>;
   }
 
   return (
-    <div className='container-wide py-8 min-h-screen pb-24'>
-      <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8'>
+    <div className='container-wide py-8 pt-24 min-h-screen pb-24 bg-gray-50/30'>
+      <AppBreadcrumbs />
+      {/* Dashboard Stats Header */}
+      <MyListingsDashboardHeader />
+
+      {/* Listings Section Header */}
+      <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 px-2'>
         <div>
-           <h1 className='text-3xl font-bold tracking-tight'>My Listings</h1>
-           <p className='text-muted-foreground mt-1'>Manage your active and sold items</p>
+           <h2 className='text-2xl font-bold tracking-tight text-slate-900'>Your Ads</h2>
+           <p className='text-muted-foreground text-sm'>Manage your active and sold items</p>
         </div>
-        <Button asChild className="gap-2 rounded-full font-bold shadow-lg shadow-primary/20">
+        <Button asChild className="gap-2 rounded-full font-bold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90">
             <Link href="/sell">
                 <Plus className="h-4 w-4 stroke-[3]" />
                 Post New Ad
@@ -36,21 +43,21 @@ export default async function MyListingsPage() {
       </div>
 
       {listings && listings.length > 0 ? (
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
+          <div className='flex flex-col gap-4'>
               {listings.map((listing: ListingWithRelations) => (
-                  <MyListingCard key={listing.id} listing={listing} />
+                  <MyListingListItem key={listing.id} listing={listing} />
               ))}
           </div>
       ) : (
-          <div className='text-center py-20 bg-muted/30 rounded-3xl border border-dashed border-border'>
-              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Package className="h-8 w-8 text-muted-foreground" />
+          <div className='text-center py-20 bg-white rounded-3xl border border-dashed border-slate-200 shadow-sm'>
+              <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100">
+                  <Package className="h-8 w-8 text-slate-400" />
               </div>
-              <h3 className='text-lg font-semibold'>No listings yet</h3>
+              <h3 className='text-lg font-semibold text-slate-900'>No listings yet</h3>
               <p className='text-muted-foreground max-w-sm mx-auto mt-2 mb-6'>
                   You haven&apos;t posted any ads yet. Start selling today!
               </p>
-              <Button asChild>
+              <Button asChild size="lg" className="rounded-xl font-bold">
                   <Link href="/sell">Create your first listing</Link>
               </Button>
           </div>

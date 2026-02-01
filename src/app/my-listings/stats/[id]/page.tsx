@@ -10,35 +10,41 @@ import {
     PopoverTrigger,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
+import { useQuery } from 'convex/react';
 import { format } from 'date-fns';
 import { CalendarIcon, ChevronLeft, Eye, MousePointerClick } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { use, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { api } from '../../../../../convex/_generated/api';
+import { Id } from '../../../../../convex/_generated/dataModel';
 
-// Mock Data simulating daily stats
-const MOCK_DATA = Array.from({ length: 30 }, (_, i) => {
-    const views = Math.floor(Math.random() * 150);
-    const clicks = Math.floor(Math.random() * 20);
-    const date = new Date();
-    date.setDate(date.getDate() - (29 - i));
-    return {
-        date: date.toISOString(),
-        formattedDate: format(date, 'dd.MM.yyyy'),
-        views,
-        clicks,
-        total: views + clicks
-    };
-});
+interface PageProps {
+    params: Promise<{ id: string }>;
+}
 
-const TOTAL_VIEWS = MOCK_DATA.reduce((acc, curr) => acc + curr.views, 0);
-const TOTAL_CLICKS = MOCK_DATA.reduce((acc, curr) => acc + curr.clicks, 0);
-
-export default function ListingStatsPage() {
+export default function ListingStatsPage({ params }: PageProps) {
+    const { id } = use(params);
     const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
         from: new Date(new Date().setDate(new Date().getDate() - 30)),
         to: new Date()
     });
+    
+    // Fetch real stats
+    const statsData = useQuery(api.analytics.getListingStats, { 
+        listingId: id as Id<"listings">,
+        days: 30 // Could be dynamic based on dateRange difference
+    });
+    
+    // Format data for chart
+    const data = statsData?.map((d: { date: string, views: number, clicks: number }) => ({
+        ...d,
+        formattedDate: format(new Date(d.date), 'dd.MM.yyyy'),
+        total: d.views + d.clicks
+    })) || [];
+
+    const totalViews = data.reduce((acc: number, curr: { views: number }) => acc + curr.views, 0);
+    const totalClicks = data.reduce((acc: number, curr: { clicks: number }) => acc + curr.clicks, 0);
 
     return (
         <div className="min-h-screen pt-24 pb-12 bg-gray-50/50">
@@ -50,14 +56,14 @@ export default function ListingStatsPage() {
                         <ChevronLeft className="w-4 h-4" /> Back to My Listings
                     </Link>
                     <h1 className="text-2xl font-bold text-slate-900">Statistics Overview</h1>
-                    <p className="text-muted-foreground">Performance of all your listings</p>
+                    <p className="text-muted-foreground">Performance for listing #{id}</p>
                 </div>
 
                 {/* Date Filter Card */}
                 <Card className="mb-6 border-slate-200">
                     <CardContent className="p-4 flex items-center justify-between flex-wrap gap-4">
                         <div>
-                            <h3 className="font-bold text-slate-900">Review of all ads</h3>
+                            <h3 className="font-bold text-slate-900">Review of the ad</h3>
                             <p className="text-sm text-muted-foreground">
                                 {format(dateRange.from, 'dd.MM.yyyy')} - {format(dateRange.to, 'dd.MM.yyyy')}
                             </p>
@@ -105,51 +111,55 @@ export default function ListingStatsPage() {
                 <Card className="mb-6 border-slate-200 shadow-sm overflow-hidden">
                     <CardContent className="p-6">
                         <div className="h-[300px] w-full">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={MOCK_DATA} margin={{ top: 20, right: 0, left: -20, bottom: 0 }}>
-                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
-                                    <XAxis 
-                                        dataKey="formattedDate" 
-                                        fontSize={10} 
-                                        tickLine={false} 
-                                        axisLine={false}
-                                        tickFormatter={(val, index) => index % 3 === 0 ? val.split('.')[0] : ''} // Show every 3rd day
-                                    />
-                                    <YAxis 
-                                        fontSize={10} 
-                                        tickLine={false} 
-                                        axisLine={false}
-                                        tickCount={5}
-                                    />
-                                    <Tooltip 
-                                        cursor={{ fill: 'transparent' }}
-                                        content={({ active, payload }) => {
-                                            if (active && payload && payload.length) {
-                                                const data = payload[0].payload;
-                                                return (
-                                                    <div className="bg-slate-800 text-white text-xs rounded-lg p-2 shadow-xl">
-                                                        <div className="font-bold mb-1">{data.formattedDate}</div>
-                                                        <div className="flex justify-between gap-4">
-                                                            <span>Views:</span>
-                                                            <span className="font-bold text-orange-400">{data.views}</span>
+                            {!statsData ? (
+                                <div className="h-full w-full flex items-center justify-center text-muted-foreground">Loading chart...</div>
+                            ) : data.length === 0 ? (
+                                <div className="h-full w-full flex items-center justify-center text-muted-foreground">No data available for this period.</div>
+                            ) : (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={data} margin={{ top: 20, right: 0, left: -20, bottom: 0 }}>
+                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
+                                        <XAxis 
+                                            dataKey="formattedDate" 
+                                            fontSize={10} 
+                                            tickLine={false} 
+                                            axisLine={false}
+                                            tickFormatter={(val, index) => index % 3 === 0 ? val.split('.')[0] : ''} 
+                                        />
+                                        <YAxis 
+                                            fontSize={10} 
+                                            tickLine={false} 
+                                            axisLine={false}
+                                            tickCount={5}
+                                            allowDecimals={false}
+                                        />
+                                        <Tooltip 
+                                            cursor={{ fill: 'transparent' }}
+                                            content={({ active, payload }) => {
+                                                if (active && payload && payload.length) {
+                                                    const d = payload[0].payload;
+                                                    return (
+                                                        <div className="bg-slate-800 text-white text-xs rounded-lg p-2 shadow-xl">
+                                                            <div className="font-bold mb-1">{d.formattedDate}</div>
+                                                            <div className="flex justify-between gap-4">
+                                                                <span>Views:</span>
+                                                                <span className="font-bold text-orange-400">{d.views}</span>
+                                                            </div>
+                                                            <div className="flex justify-between gap-4">
+                                                                <span>Clicks:</span>
+                                                                <span className="font-bold text-blue-400">{d.clicks}</span>
+                                                            </div>
                                                         </div>
-                                                        <div className="flex justify-between gap-4">
-                                                            <span>Clicks:</span>
-                                                            <span className="font-bold text-blue-400">{data.clicks}</span>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            }
-                                            return null;
-                                        }}
-                                    />
-                                    <Bar dataKey="views" fill="#FB923C" radius={[4, 4, 0, 0]} maxBarSize={40} stackId="a" />
-                                    <Bar dataKey="clicks" fill="#60A5FA" radius={[4, 4, 0, 0]} maxBarSize={40} stackId="b" /> 
-                                    {/* Note: In screenshot they are side-by-side or stacked? They look side-by-side or just separate bars. 
-                                        Let's try side-by-side. Removing stackId.
-                                    */}
-                                </BarChart>
-                            </ResponsiveContainer>
+                                                    );
+                                                }
+                                                return null;
+                                            }}
+                                        />
+                                        <Bar dataKey="views" fill="#FB923C" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                                        <Bar dataKey="clicks" fill="#60A5FA" radius={[4, 4, 0, 0]} maxBarSize={40} /> 
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            )}
                         </div>
                         
                         <div className="flex justify-center gap-6 mt-4">
@@ -170,7 +180,7 @@ export default function ListingStatsPage() {
                     <Card className="border-l-4 border-l-orange-400 shadow-sm">
                         <CardContent className="p-4 flex items-center justify-between">
                             <div>
-                                <div className="text-3xl font-black text-slate-900">{TOTAL_VIEWS}</div>
+                                <div className="text-3xl font-black text-slate-900">{totalViews}</div>
                                 <div className="text-sm text-muted-foreground">Total Views</div>
                             </div>
                             <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center">
@@ -182,7 +192,7 @@ export default function ListingStatsPage() {
                     <Card className="border-l-4 border-l-blue-500 shadow-sm">
                         <CardContent className="p-4 flex items-center justify-between">
                             <div>
-                                <div className="text-3xl font-black text-slate-900">{TOTAL_CLICKS}</div>
+                                <div className="text-3xl font-black text-slate-900">{totalClicks}</div>
                                 <div className="text-sm text-muted-foreground">Total Clicks</div>
                             </div>
                             <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
@@ -205,7 +215,7 @@ export default function ListingStatsPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {MOCK_DATA.slice().reverse().map((row, i) => (
+                                {data.slice().reverse().map((row, i) => (
                                     <tr key={i} className="bg-white border-b hover:bg-slate-50 transition-colors">
                                         <td className="px-6 py-4 font-bold text-slate-900">{row.formattedDate}</td>
                                         <td className="px-6 py-4 text-right">{row.views}</td>
@@ -213,6 +223,13 @@ export default function ListingStatsPage() {
                                         <td className="px-6 py-4 text-right font-bold">{row.total}</td>
                                     </tr>
                                 ))}
+                                {data.length === 0 && (
+                                    <tr>
+                                        <td colSpan={4} className="text-center py-8 text-muted-foreground">
+                                           No activity recorded in this period.
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>

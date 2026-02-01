@@ -29,6 +29,8 @@ export const authConfig = {
               token.id = convexUser.externalId; // Keep using externalId as the primary reference
               token.role = convexUser.role || 'USER';
               token.convexId = convexUser._id; // Store original Convex ID just in case
+              token.accountType = convexUser.accountType;
+              token.companyName = convexUser.companyName;
           } else {
               token.id = user.id;
               token.role = (user as any).role || 'USER';
@@ -41,6 +43,9 @@ export const authConfig = {
       if (session.user && token.id) {
         session.user.id = token.id as string;
         session.user.role = (token.role as any) || 'USER';
+        // Add custom fields to session user type
+        (session.user as any).accountType = token.accountType;
+        (session.user as any).companyName = token.companyName;
       }
       return session;
     },
