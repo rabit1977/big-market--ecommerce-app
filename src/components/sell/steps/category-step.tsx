@@ -1,22 +1,25 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
+    Baby as BabyIcon,
+    Book,
     Briefcase,
+    Building2,
     Car,
+    ChevronLeft,
     ChevronRight,
+    Dog,
     Dumbbell,
-    GraduationCap,
+    Shirt as Fashion,
+    Heart,
     Home,
     LucideIcon,
-    PawPrint,
-    Shirt,
     Smartphone,
     Sofa,
     Wrench
 } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { ListingFormData } from '../post-listing-wizard';
 
 interface CategoryStepProps {
@@ -24,6 +27,7 @@ interface CategoryStepProps {
     _id: string;
     name: string;
     slug: string;
+    parentId?: string;
     template?: any;
   }>;
   formData: ListingFormData;
@@ -32,16 +36,19 @@ interface CategoryStepProps {
 }
 
 const categoryIcons: Record<string, LucideIcon> = {
-  'vehicles': Car,
+  'motor-vehicles': Car,
   'real-estate': Home,
+  'home-garden': Sofa,
+  'fashion': Fashion,
   'electronics': Smartphone,
-  'fashion': Shirt,
+  'sports-leisure': Dumbbell,
+  'baby-kids': BabyIcon,
+  'business-industry': Building2,
+  'pets': Dog,
   'jobs': Briefcase,
   'services': Wrench,
-  'sports-leisure': Dumbbell,
-  'pets': PawPrint,
-  'education': GraduationCap,
-  'home-garden': Sofa,
+  'books-art': Book,
+  'health-beauty': Heart,
 };
 
 export function CategoryStep({
@@ -50,102 +57,122 @@ export function CategoryStep({
   updateFormData,
   onNext,
 }: CategoryStepProps) {
-  const mainCategories = categories.filter((cat) => !cat.template?.parentId);
+  const [level, setLevel] = useState(0); // 0: Main, 1: Sub, 2: Sub-Sub
+  const [selectedMainId, setSelectedMainId] = useState<string | null>(null);
+  const [selectedSubId, setSelectedSubId] = useState<string | null>(null);
 
-  const handleSelect = (value: string) => {
-      updateFormData({ category: value });
-      // Auto-advance after small delay for visual feedback
-      setTimeout(() => {
-          onNext();
-      }, 400);
+  const mainCategories = useMemo(() => categories.filter((cat) => !cat.parentId), [categories]);
+  
+  const subCategories = useMemo(() => {
+    if (!selectedMainId) return [];
+    return categories.filter((cat) => cat.parentId === selectedMainId);
+  }, [categories, selectedMainId]);
+
+  const subSubCategories = useMemo(() => {
+    if (!selectedSubId) return [];
+    return categories.filter((cat) => cat.parentId === selectedSubId);
+  }, [categories, selectedSubId]);
+
+  const handleMainSelect = (category: any) => {
+    setSelectedMainId(category._id);
+    const hasSubs = categories.some(cat => cat.parentId === category._id);
+    if (hasSubs) {
+      setLevel(1);
+    } else {
+      updateFormData({ category: category.slug, subCategory: undefined });
+      onNext();
+    }
   };
+
+  const handleSubSelect = (subcategory: any) => {
+    setSelectedSubId(subcategory._id);
+    const hasSubSubs = categories.some(cat => cat.parentId === subcategory._id);
+    if (hasSubSubs) {
+      setLevel(2);
+    } else {
+      updateFormData({ 
+        category: categories.find(c => c._id === selectedMainId)?.slug, 
+        subCategory: subcategory.slug 
+      });
+      onNext();
+    }
+  };
+
+  const handleSubSubSelect = (subSubCategory: any) => {
+      updateFormData({ 
+        category: categories.find(c => c._id === selectedMainId)?.slug, 
+        subCategory: subSubCategory.slug 
+      });
+      onNext();
+  };
+
+  const goBack = () => {
+    if (level === 2) {
+      setLevel(1);
+      setSelectedSubId(null);
+    } else if (level === 1) {
+      setLevel(0);
+      setSelectedMainId(null);
+    }
+  };
+
+  const currentItems = level === 0 ? mainCategories : level === 1 ? subCategories : subSubCategories;
+  const currentTitle = level === 0 ? "Select Category" : level === 1 ? "Select Subcategory" : "Select Specific Type";
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold mb-2">Choose a Category</h2>
-        <p className="text-muted-foreground">
-          Select the category that best describes your listing
-        </p>
-      </div>
-
-      <RadioGroup
-        value={formData.category}
-        onValueChange={handleSelect}
-        className="grid grid-cols-1 md:grid-cols-2 gap-4"
-      >
-        {mainCategories.map((category) => {
-          const Icon = categoryIcons[category.slug] || Smartphone;
-          const isSelected = formData.category === category.slug;
-
-          return (
-            <Label
-              key={category._id}
-              htmlFor={category.slug}
-              className="cursor-pointer"
-            >
-              <Card
-                className={`
-                  p-4 transition-all duration-200 hover:shadow-lg
-                  ${
-                    isSelected
-                      ? 'border-primary border-2 bg-primary/5 shadow-md'
-                      : 'border-2 border-transparent hover:border-primary/30'
-                  }
-                `}
-              >
-                <div className="flex items-center gap-4">
-                  <RadioGroupItem
-                    value={category.slug}
-                    id={category.slug}
-                    className="shrink-0"
-                  />
-                  
-                  <div
-                    className={`
-                      w-12 h-12 rounded-xl flex items-center justify-center transition-colors
-                      ${
-                        isSelected
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-muted'
-                      }
-                    `}
-                  >
-                    <Icon className="w-6 h-6" />
-                  </div>
-
-                  <div className="flex-1">
-                    <p className="font-semibold">{category.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      Post in {category.name.toLowerCase()}
-                    </p>
-                  </div>
-
-                  <ChevronRight
-                    className={`
-                      w-5 h-5 transition-all
-                      ${
-                        isSelected
-                          ? 'text-primary translate-x-1'
-                          : 'text-muted-foreground'
-                      }
-                    `}
-                  />
-                </div>
-              </Card>
-            </Label>
-          );
-        })}
-      </RadioGroup>
-
-      {formData.category && (
-        <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
-          <p className="text-sm font-medium text-primary">
-            ✓ Category selected:{' '}
-            {mainCategories.find((c) => c.slug === formData.category)?.name}
+      <div className="flex items-center gap-4">
+        {level > 0 && (
+          <button 
+            onClick={goBack}
+            className="p-2 hover:bg-muted rounded-full transition-colors"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+        )}
+        <div>
+          <h2 className="text-2xl font-bold">{currentTitle}</h2>
+          <p className="text-muted-foreground">
+            {level === 0 ? "Choose the main category for your listing" : "Refine your selection to help buyers find you"}
           </p>
         </div>
-      )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {currentItems.map((item) => {
+          const Icon = categoryIcons[item.slug] || Smartphone;
+          const hasMore = categories.some(cat => cat.parentId === item._id);
+
+          return (
+            <Card
+              key={item._id}
+              onClick={() => {
+                if (level === 0) handleMainSelect(item);
+                else if (level === 1) handleSubSelect(item);
+                else handleSubSubSelect(item);
+              }}
+              className="p-4 cursor-pointer hover:border-primary/50 hover:shadow-md transition-all group"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-muted group-hover:bg-primary/10 flex items-center justify-center transition-colors">
+                  <Icon className="w-6 h-6 group-hover:text-primary transition-colors" />
+                </div>
+                
+                <div className="flex-1">
+                  <p className="font-semibold">{item.name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {level === 0 ? `Post in ${item.name}` : `Select ${item.name}`}
+                  </p>
+                </div>
+
+                {hasMore && (
+                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                )}
+              </div>
+            </Card>
+          );
+        })}
+      </div>
     </div>
   );
 }

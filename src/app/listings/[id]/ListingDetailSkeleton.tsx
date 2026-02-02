@@ -1,8 +1,14 @@
 import { Skeleton } from '@/components/ui/skeleton';
+import { motion } from 'framer-motion';
 
 export const ListingDetailSkeleton = () => {
   return (
-    <div className='bg-slate-50/50 min-h-screen'>
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className='bg-slate-50/50 min-h-screen'
+    >
       {/* Mobile Header Skeleton */}
       <div className='md:hidden sticky top-0 z-40 bg-white border-b px-4 py-3 flex items-center justify-between'>
           <div className='flex items-center gap-3'>
@@ -26,14 +32,25 @@ export const ListingDetailSkeleton = () => {
           {/* Main Column */}
           <div className='lg:col-span-8 space-y-6'>
             {/* Image Skeleton */}
-            <Skeleton className='aspect-[4/3] md:aspect-video w-full md:rounded-2xl shadow-sm' />
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <Skeleton className='aspect-[4/3] md:aspect-video w-full md:rounded-2xl shadow-sm' />
+            </motion.div>
             
             {/* Thumbnails Skeleton */}
-            <div className='flex gap-2 overflow-hidden px-4 md:px-0'>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className='flex gap-2 overflow-hidden px-4 md:px-0'
+            >
                 {[...Array(5)].map((_, i) => (
                     <Skeleton key={i} className='h-16 w-16 md:h-24 md:w-24 rounded-lg flex-shrink-0' />
                 ))}
-            </div>
+            </motion.div>
 
             {/* Mobile-Only Info Skeleton */}
             <div className='md:hidden space-y-4 px-4 bg-white border-b py-6'>
@@ -57,7 +74,12 @@ export const ListingDetailSkeleton = () => {
             </div>
 
             {/* Specs Skeleton */}
-            <div className='bg-white md:rounded-2xl border border-slate-200 overflow-hidden'>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className='bg-white md:rounded-2xl border border-slate-200 overflow-hidden'
+            >
                 <div className='p-4 border-b bg-slate-50'>
                     <Skeleton className='h-4 w-40' />
                 </div>
@@ -69,22 +91,32 @@ export const ListingDetailSkeleton = () => {
                         </div>
                     ))}
                 </div>
-            </div>
+            </motion.div>
 
             {/* Description Skeleton */}
-            <div className='bg-white md:rounded-2xl border border-slate-200 p-6 space-y-4'>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className='bg-white md:rounded-2xl border border-slate-200 p-6 space-y-4'
+            >
                 <Skeleton className='h-5 w-32' />
                 <div className='space-y-2'>
                     <Skeleton className='h-4 w-full' />
                     <Skeleton className='h-4 w-full' />
                     <Skeleton className='h-4 w-3/4' />
                 </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Sidebar Skeleton (Desktop Only) */}
           <div className='hidden lg:block lg:col-span-4 space-y-6'>
-              <div className='bg-white border-2 border-slate-100 rounded-3xl p-8 space-y-6 shadow-sm'>
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 }}
+                className='bg-white border-2 border-slate-100 rounded-3xl p-8 space-y-6 shadow-sm'
+              >
                   <div className='space-y-2'>
                       <Skeleton className='h-8 w-full' />
                       <Skeleton className='h-4 w-32' />
@@ -94,9 +126,14 @@ export const ListingDetailSkeleton = () => {
                       <Skeleton className='h-14 w-full rounded-2xl' />
                       <Skeleton className='h-14 w-full rounded-2xl' />
                   </div>
-              </div>
+              </motion.div>
 
-              <div className='bg-white border rounded-3xl p-6 shadow-sm'>
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6 }}
+                className='bg-white border rounded-3xl p-6 shadow-sm'
+              >
                   <div className='flex items-center gap-4 mb-6'>
                       <Skeleton className='h-16 w-16 rounded-full' />
                       <div className='space-y-2 flex-1'>
@@ -108,12 +145,18 @@ export const ListingDetailSkeleton = () => {
                       <Skeleton className='h-12 w-full rounded-xl' />
                       <Skeleton className='h-12 w-full rounded-xl' />
                   </div>
-              </div>
+              </motion.div>
 
-              <Skeleton className='aspect-[1.5/1] w-full rounded-3xl' />
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.7 }}
+              >
+                <Skeleton className='aspect-[1.5/1] w-full rounded-3xl' />
+              </motion.div>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

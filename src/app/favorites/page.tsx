@@ -1,6 +1,7 @@
 'use client';
 
 import { ListingCard } from '@/components/listing/listing-card';
+import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useMutation, useQuery } from 'convex/react';

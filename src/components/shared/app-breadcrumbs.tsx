@@ -29,6 +29,16 @@ const routeMap: Record<string, string> = {
   success: 'Success',
   admin: 'Admin Panel',
   dashboard: 'Dashboard',
+  'motor-vozila': 'Motor Vehicles',
+  'nedviznosti': 'Real Estate',
+  'dom-gradina': 'Home & Garden',
+  'mobilni-telefoni': 'Mobile Phones',
+  'tv-video-foto': 'Electronics',
+  'bebi-i-deca': 'Baby & Kids',
+  'sport': 'Sports',
+  'vrabotuvanje': 'Employment',
+  'zivotni': 'Pets',
+  'biznis-alati': 'Business & Tools',
 };
 
 interface AppBreadcrumbsProps {
