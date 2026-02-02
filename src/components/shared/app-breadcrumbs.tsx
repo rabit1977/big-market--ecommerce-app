@@ -29,23 +29,20 @@ const routeMap: Record<string, string> = {
   success: 'Success',
   admin: 'Admin Panel',
   dashboard: 'Dashboard',
-  'motor-vozila': 'Motor Vehicles',
-  'nedviznosti': 'Real Estate',
-  'dom-gradina': 'Home & Garden',
-  'mobilni-telefoni': 'Mobile Phones',
-  'tv-video-foto': 'Electronics',
-  'bebi-i-deca': 'Baby & Kids',
-  'sport': 'Sports',
-  'vrabotuvanje': 'Employment',
-  'zivotni': 'Pets',
-  'biznis-alati': 'Business & Tools',
+  'motor-vehicles': 'Motor Vehicles',
+  'cars': 'Cars',
+  'real-estate': 'Real Estate',
+  'home-and-garden': 'Home & Garden',
+  'fashion-clothing-shoes': 'Fashion & Clothing',
+  'mobile-phones-accessories': 'Mobile Phones',
 };
 
 interface AppBreadcrumbsProps {
   className?: string;
+  customLabel?: string;
 }
 
-export function AppBreadcrumbs({ className }: AppBreadcrumbsProps) {
+export function AppBreadcrumbs({ className, customLabel }: AppBreadcrumbsProps) {
   const pathname = usePathname();
   
   // Don't show breadcrumbs on the home page
@@ -68,14 +65,14 @@ export function AppBreadcrumbs({ className }: AppBreadcrumbsProps) {
         {pathSegments.map((segment, index) => {
           const href = `/${pathSegments.slice(0, index + 1).join('/')}`;
           const isLast = index === pathSegments.length - 1;
-          const label = routeMap[segment] || segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
+          const label = (isLast && customLabel) ? customLabel : (routeMap[segment] || segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' '));
 
           return (
             <React.Fragment key={href}>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage className="font-bold text-foreground capitalize">
+                  <BreadcrumbPage className="font-bold text-foreground line-clamp-1">
                     {label}
                   </BreadcrumbPage>
                 ) : (

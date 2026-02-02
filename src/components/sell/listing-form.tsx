@@ -47,6 +47,7 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
 
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>(getInitialCategoryId());
   const [templateFields, setTemplateFields] = useState<any[]>([]);
+  const [titlePlaceholder, setTitlePlaceholder] = useState<string>('e.g. iPhone 14 Pro Max');
   const [specifications, setSpecifications] = useState<Record<string, any>>(initialData?.specifications ? (initialData.specifications as any) : {});
   
   const [images, setImages] = useState<string[]>(
@@ -85,8 +86,15 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
           } else {
               setTemplateFields([]);
           }
+          // Set Title Placeholder if available
+          if (template.titlePlaceholder) {
+              setTitlePlaceholder(template.titlePlaceholder);
+          } else {
+              setTitlePlaceholder('e.g. iPhone 14 Pro Max'); // Default
+          }
       } else {
           setTemplateFields([]);
+          setTitlePlaceholder('e.g. iPhone 14 Pro Max');
       }
       
       if (resetSpecs && !initialData) {
@@ -240,7 +248,7 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
 
                     <div className="grid gap-2">
                         <Label>Title</Label>
-                        <Input name="title" placeholder="e.g. iPhone 14 Pro Max" value={formData.title} onChange={handleInputChange} required />
+                        <Input name="title" placeholder={titlePlaceholder} value={formData.title} onChange={handleInputChange} required />
                     </div>
 
                     <div className="grid sm:grid-cols-2 gap-4">
@@ -287,7 +295,7 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
                                         onValueChange={(val) => handleSpecChange(field.key || field.name, val)}
                                      >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select..." />
+                                            <SelectValue placeholder={`Select ${field.label || field.name}...`} />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {field.options?.map((opt: string) => (
@@ -298,7 +306,7 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
                                 ) : (
                                     <Input 
                                         type={field.type || 'text'} 
-                                        placeholder={field.placeholder}
+                                        placeholder={field.placeholder || ''}
                                         value={specifications[field.key || field.name] || ''}
                                         onChange={(e) => handleSpecChange(field.key || field.name, e.target.value)}
                                     />

@@ -79,7 +79,7 @@ export function DetailsStep({
           </Label>
           <Input
             id="title"
-            placeholder="e.g., iPhone 15 Pro Max 256GB - Like New"
+            placeholder={selectedCategory?.template?.titlePlaceholder || "e.g., iPhone 15 Pro Max 256GB - Like New"}
             value={formData.title || ''}
             onChange={(e) => updateFormData({ title: e.target.value })}
             className="h-12 text-lg font-medium border-2 focus:border-primary"

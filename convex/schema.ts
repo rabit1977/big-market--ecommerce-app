@@ -52,6 +52,9 @@ export default defineSchema({
     isFeatured: v.boolean(),
     parentId: v.optional(v.string()),
     position: v.optional(v.number()),
+    googleId: v.optional(v.number()),
+    fullPath: v.optional(v.string()),
+    parentPath: v.optional(v.string()),
     template: v.optional(v.any()), // JSON template for category-specific fields
     createdAt: v.number(),
   }).index("by_slug", ["slug"])

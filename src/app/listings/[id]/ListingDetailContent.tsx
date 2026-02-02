@@ -6,20 +6,21 @@ import { Button } from '@/components/ui/button';
 import { useQuery as useConvexQuery, useMutation } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import {
-   BadgeCheck,
-   ChevronLeft,
-   Heart,
-   MapPin,
-   MessageCircle,
-   MessageSquare,
-   MoreVertical,
-   Phone,
-   Share2,
-   ShieldAlert
+    BadgeCheck,
+    ChevronLeft,
+    Heart,
+    MapPin,
+    MessageCircle,
+    MessageSquare,
+    MoreVertical,
+    Phone,
+    Share2,
+    ShieldAlert
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { api } from '../../../../convex/_generated/api';
 import { Id } from '../../../../convex/_generated/dataModel';
@@ -46,6 +47,7 @@ interface ListingDetailContentProps {
 }
 
 export function ListingDetailContent({ listing }: ListingDetailContentProps) {
+  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const { data: session } = useSession();
@@ -93,9 +95,12 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
       {/* Mobile Header (Big Market Style) */}
       <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b px-4 py-3 flex items-center justify-between shadow-sm md:hidden">
          <div className="flex items-center gap-3">
-             <Link href="/listings" className="p-1 hover:bg-slate-100 rounded-full transition-colors">
+             <button 
+                onClick={() => router.back()} 
+                className="p-1 hover:bg-slate-100 rounded-full transition-colors"
+             >
                 <ChevronLeft className="w-6 h-6 text-slate-700" />
-             </Link>
+             </button>
              <div className="flex flex-col">
                  <span className="text-sm font-black tracking-tight leading-none text-slate-900 uppercase">AD ID: {listing._id.slice(-7)}</span>
                  <span className="text-[10px] font-bold text-slate-500 mt-1 uppercase tracking-wider">{publishDate}</span>
@@ -112,7 +117,10 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
       </div>
 
       <div className="container-wide max-w-6xl mx-auto px-0 md:px-4 md:py-8">
-        <AppBreadcrumbs className="px-4 md:px-0 mb-4 md:mb-6" />
+        <AppBreadcrumbs 
+          className="px-4 md:px-0 mb-4 md:mb-6" 
+          customLabel={listing.title}
+        />
         
         {/* Desktop Actions Header */}
         <div className="hidden md:flex items-center justify-end mb-8 pb-4 border-b border-slate-200">
