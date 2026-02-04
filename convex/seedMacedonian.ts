@@ -8,13 +8,11 @@ interface CategoryInput {
   subcategories?: CategoryInput[];
 }
 
-const MACEDONIAN_CATEGORIES: CategoryInput[] = [
-  { name: "All Categories", slug: "all-categories" },
-  { 
+const MACEDONIAN_CATEGORIES: CategoryInput[] = [  { 
     name: "Motor Vehicles", 
     slug: "motor-vehicles",
     subcategories: [
-      { name: "All Motor Vehicles", slug: "all-motor-vehicles" },
+     
       { name: "Cars", slug: "cars" },
       { name: "Motorcycles (above 50 cc)", slug: "motorcycles-above-50cc" },
       { name: "Mopeds (under 50 cc)", slug: "mopeds-under-50cc" },
@@ -484,28 +482,106 @@ const getCustomTemplate = (slug: string, name: string) => {
     };
   }
 
-  if (slug.includes("tv") || slug.includes("audio") || slug.includes("video") || slug.includes("projectors")) {
+  // --- TV, AUDIO & VIDEO SPECIFIC LOGIC ---
+
+  if (slug === "televisions") {
     return {
       titlePlaceholder: "e.g. Samsung 55' 4K Smart TV",
       fields: [
         ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "e.g. Sony, Samsung, JBL" },
+        { label: "Brand", type: "text", key: "brand", placeholder: "e.g. Samsung, LG, Sony" },
         { label: "Model", type: "text", key: "model", placeholder: "Model Name" },
-        // Show screen size only for visual categories
-        ...(slug.includes("tv") || slug.includes("monitor") || slug.includes("screen") 
-            ? [{ label: "Screen Size (inch)", type: "number", key: "screen_size_inch", placeholder: "Inches" }] 
-            : []
-        ),
-        // Show power for audio
-        ...(slug.includes("audio") || slug.includes("sound") || slug.includes("speaker")
-            ? [{ label: "Power (Watts)", type: "number", key: "power_watts", placeholder: "Watts" }] 
-            : []
-        ),
-        // Show resolution for video
-        ...(slug.includes("tv") || slug.includes("projector")
-            ? [{ label: "Resolution", type: "select", key: "resolution", options: ["HD Ready", "Full HD", "4K Ultra HD", "8K"] }] 
-            : []
-        ),
+        { label: "Screen Size (inch)", type: "number", key: "screen_size_inch", placeholder: "Inches" },
+        { label: "Resolution", type: "select", key: "resolution", options: ["HD Ready", "Full HD", "4K Ultra HD", "8K"] },
+        { label: "Screen Type", type: "select", key: "screen_type", options: ["LED","Mini-Led", "OLED", "QLED", "LCD", "Plasma", "CRT"] },
+        { label: "Smart TV", type: "select", key: "smart_tv", options: ["Yes", "No", "Android TV", "WebOS", "Tizen"] },
+      ]
+    };
+  }
+
+  if (slug === "soundbars" || slug === "hifi-systems" || slug === "home-theater" || slug === "speakers-equipment" || slug === "wireless-speakers") {
+    return {
+      titlePlaceholder: "e.g. JBL Bar 5.1 Soundbar",
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "e.g. JBL, Sony, Bose" },
+        { label: "Model", type: "text", key: "model", placeholder: "Model" },
+        { label: "Power (Watts)", type: "number", key: "power_watts", placeholder: "Total Power (RMS)" },
+        { label: "Connectivity", type: "select", key: "connectivity", options: ["Bluetooth", "Wired", "WiFi", "Optical", "HDMI ARC"] },
+        { label: "Channels", type: "select", key: "channels", options: ["2.0", "2.1", "5.1", "7.1", "Other"] },
+      ]
+    };
+  }
+
+  if (slug === "headphones-equipment") {
+    return {
+      titlePlaceholder: "e.g. Sony WH-1000XM4",
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Model", type: "text", key: "model", placeholder: "Model" },
+        { label: "Type", type: "select", key: "type", options: ["In-Ear", "On-Ear", "Over-Ear", "True Wireless"] },
+        { label: "Connection", type: "select", key: "connection", options: ["Wired", "Bluetooth/Wireless"] },
+        { label: "Noise Cancellation", type: "select", key: "anc", options: ["Yes", "No"] },
+      ]
+    };
+  }
+
+  if (slug === "projectors") {
+    return {
+      titlePlaceholder: "e.g. Epson EH-TW7000",
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Model", type: "text", key: "model", placeholder: "Model" },
+        { label: "Resolution", type: "select", key: "resolution", options: ["SVGA", "XGA", "Full HD", "4K"] },
+        { label: "Brightness (Lumens)", type: "number", key: "lumens", placeholder: "Lumens" },
+        { label: "Lamp Life (Hours)", type: "number", key: "lamp_life", placeholder: "Hours" },
+      ]
+    };
+  }
+
+  if (slug === "tv-av-cables" || slug === "tv-adapters" || slug === "converters") {
+    return {
+      titlePlaceholder: "e.g. HDMI Cable 2.1",
+      fields: [
+        ...baseFields,
+        { label: "Type", type: "text", key: "cable_type", placeholder: "e.g. HDMI, RCA, Optical" },
+        { label: "Length (m)", type: "number", key: "length", placeholder: "Meters" },
+      ]
+    };
+  }
+
+  if (slug === "tv-mounts") {
+    return {
+      titlePlaceholder: "e.g. Wall Mount for 55 inch TV",
+      fields: [
+        ...baseFields,
+        { label: "Type", type: "select", key: "mount_type", options: ["Fixed", "Tilt", "Full Motion", "Ceiling", "Desktop Stand"] },
+        { label: "Supported Size (Max Inch)", type: "number", key: "max_inch", placeholder: "Max Inches" },
+      ]
+    };
+  }
+
+  if (slug === "dvd-players" || slug === "cd-players" || slug === "mp3-players" || slug === "radios" || slug === "dictaphones") {
+     return {
+      titlePlaceholder: `e.g. Sony DVD Player`,
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Model", type: "text", key: "model", placeholder: "Model" },
+      ]
+    };
+  }
+  
+  // Catch-all for other TV/Audio/Video categories not explicitly defined above
+  if (slug.includes("tv") || slug.includes("audio") || slug.includes("video") || slug.includes("projector")) {
+     return {
+      titlePlaceholder: `e.g. ${name}`,
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand" },
+        { label: "Description", type: "textarea", key: "desc_tech", placeholder: "Technical details" },
       ]
     };
   }
