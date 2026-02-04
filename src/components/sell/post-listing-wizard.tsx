@@ -81,12 +81,34 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
       case 1:
         return !!formData.category;
       case 2:
-        return !!(
+        // Basic fields
+        const hasBasicFields = !!(
           formData.title &&
           formData.description &&
           formData.price &&
-          formData.city
+          formData.city &&
+          formData.contactPhone &&
+          formData.contactEmail
         );
+
+        if (!hasBasicFields) return false;
+
+        // Check required specification fields from category template
+        const selectedCategory = categories.find((c) => c.slug === formData.subCategory) || 
+                               categories.find((c) => c.slug === formData.category);
+        
+        if (selectedCategory?.template?.fields) {
+          const requiredFields = selectedCategory.template.fields.filter((f: any) => f.required);
+          const hasAllSpecs = requiredFields.every((field: any) => {
+            const val = formData.specifications?.[field.key];
+             // Check if value is defined and not an empty string (if it's a string)
+            return val !== undefined && val !== null && val !== '';
+          });
+          
+          if (!hasAllSpecs) return false;
+        }
+
+        return true;
       case 3:
         return formData.images && formData.images.length > 0;
       case 4:
@@ -262,34 +284,42 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
             Previous
           </Button>
 
-          {currentStep < steps.length ? (
-            <Button
-              onClick={nextStep}
-              disabled={!canProceed()}
-              className="gap-2"
-            >
-              Next
-              <ChevronRight className="w-4 h-4" />
-            </Button>
-          ) : (
-            <Button
-              onClick={handleSubmit}
-              disabled={!canProceed() || isSubmitting}
-              className="gap-2 bg-green-600 hover:bg-green-700"
-            >
-              {isSubmitting ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Publishing...
-                </>
-              ) : (
-                <>
-                  <Check className="w-4 h-4" />
-                  Publish Listing
-                </>
-              )}
-            </Button>
-          )}
+          <div className="flex flex-col items-end gap-2">
+            {currentStep < steps.length ? (
+              <Button
+                onClick={nextStep}
+                disabled={!canProceed()}
+                className="gap-2"
+              >
+                Next
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            ) : (
+              <Button
+                onClick={handleSubmit}
+                disabled={!canProceed() || isSubmitting}
+                className="gap-2 bg-green-600 hover:bg-green-700"
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Publishing...
+                  </>
+                ) : (
+                  <>
+                    <Check className="w-4 h-4" />
+                    Publish Listing
+                  </>
+                )}
+              </Button>
+            )}
+            
+            {!canProceed() && (
+              <p className="text-sm text-destructive font-medium animate-in fade-in slide-in-from-top-1">
+                Please fill in all required fields
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </div>

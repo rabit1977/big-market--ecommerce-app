@@ -1,15 +1,17 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { ChevronLeft } from 'lucide-react';
 import { ListingFormData } from '../post-listing-wizard';
 
 interface DetailsStepProps {
@@ -17,16 +19,34 @@ interface DetailsStepProps {
     _id: string;
     name: string;
     slug: string;
-    // ...
+    template?: {
+      titlePlaceholder?: string;
+      fields: Array<{
+        label: string;
+        type: string;
+        key: string;
+        options?: string[];
+        required?: boolean;
+        placeholder?: string;
+      }>;
+    };
   }>;
   formData: ListingFormData;
   updateFormData: (data: Partial<ListingFormData>) => void;
   onBack: () => void;
 }
 
-// ... (imports remain)
-import { Button } from '@/components/ui/button';
-import { ChevronLeft } from 'lucide-react';
+const cities = [
+  'Skopje', 'Bitola', 'Kumanovo', 'Prilep', 'Tetovo', 'Veles', 'Ohrid', 'Gostivar', 
+  'Štip', 'Strumica', 'Kavadarci', 'Kočani', 'Kičevo', 'Struga', 'Radoviš', 'Gevgelija',
+];
+
+const conditions = [
+  { value: 'new', label: 'New' },
+  { value: 'like-new', label: 'Like New' },
+  { value: 'good', label: 'Good' },
+  { value: 'used', label: 'Used' },
+];
 
 export function DetailsStep({
   categories,
@@ -34,7 +54,18 @@ export function DetailsStep({
   updateFormData,
   onBack,
 }: DetailsStepProps) {
-  // ... (logic remains)
+  // Use subcategory if selected, otherwise fallback to main category
+  const selectedCategory = categories.find((c) => c.slug === formData.subCategory) || 
+                           categories.find((c) => c.slug === formData.category);
+
+  const handleSpecChange = (key: string, value: any) => {
+    updateFormData({
+      specifications: {
+        ...(formData.specifications || {}),
+        [key]: value,
+      },
+    });
+  };
 
   return (
     <div className="space-y-8">
@@ -42,16 +73,17 @@ export function DetailsStep({
         <Button 
           variant="outline" 
           size="icon" 
-          className="rounded-full shrink-0" 
+          className="rounded-full shrink-0 mt-1" 
           onClick={onBack}
         >
           <ChevronLeft className="h-5 w-5" />
         </Button>
         <div className="flex-1">
           <h2 className="text-2xl font-bold mb-2">Listing Details</h2>
-        <p className="text-muted-foreground">
-          Provide detailed information about your {selectedCategory?.name || 'item'}
-        </p>
+          <p className="text-muted-foreground">
+            Provide detailed information about your {selectedCategory?.name || 'item'}
+          </p>
+        </div>
       </div>
 
       <div className="space-y-6">
@@ -179,7 +211,9 @@ export function DetailsStep({
           <h3 className="font-bold text-lg">Contact Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-sm font-medium">Phone Number</Label>
+              <Label htmlFor="phone" className="text-sm font-medium">
+                Phone Number <span className="text-destructive">*</span>
+              </Label>
               <Input
                 id="phone"
                 type="tel"
@@ -190,7 +224,9 @@ export function DetailsStep({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium">Email Address</Label>
+              <Label htmlFor="email" className="text-sm font-medium">
+                Email Address <span className="text-destructive">*</span>
+              </Label>
               <Input
                 id="email"
                 type="email"
