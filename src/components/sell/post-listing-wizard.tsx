@@ -288,8 +288,45 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
           <div className="flex flex-col items-end gap-2">
             {currentStep < steps.length ? (
               <Button
-                onClick={nextStep}
-                disabled={!canProceed()}
+                onClick={() => {
+                   if (currentStep === 2 && !canProceed()) {
+                     // Check basic fields first
+                     const basicRequired = ['title', 'price', 'city', 'condition', 'contactPhone', 'contactEmail'];
+                     for (const field of basicRequired) {
+                       // @ts-ignore
+                       if (!formData[field]) {
+                         const element = document.getElementById(field);
+                         if (element) {
+                           element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                           element.focus();
+                           import('sonner').then(({ toast }) => toast.error(`Please fill in the required field: ${field}`));
+                           return; // Stop after finding the first one
+                         }
+                       }
+                     }
+                     // Check dynamic specification fields
+                     const selectedCategory = categories.find((c) => c.slug === formData.subCategory) || 
+                                            categories.find((c) => c.slug === formData.category);
+                     if (selectedCategory?.template?.fields) {
+                        const requiredFields = selectedCategory.template.fields.filter((f: any) => f.required);
+                        for (const field of requiredFields) {
+                            const val = formData.specifications?.[field.key];
+                            if (val === undefined || val === null || val === '') {
+                                const element = document.getElementById(`spec-${field.key}`);
+                                if (element) {
+                                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                    import('sonner').then(({ toast }) => toast.error(`Please fill in the required field: ${field.label}`));
+                                    return;
+                                }
+                            }
+                        }
+                     }
+                     import('sonner').then(({ toast }) => toast.error('Please fill in all required fields.'));
+                     return;
+                   }
+                   nextStep();
+                }}
+                disabled={currentStep !== 2 && !canProceed()}
                 className="gap-2"
               >
                 Next
@@ -313,12 +350,6 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
                   </>
                 )}
               </Button>
-            )}
-            
-            {!canProceed() && (
-              <p className="text-sm text-destructive font-medium animate-in fade-in slide-in-from-top-1">
-                Please fill in all required fields
-              </p>
             )}
           </div>
         </div>

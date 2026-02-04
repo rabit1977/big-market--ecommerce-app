@@ -69,24 +69,22 @@ export function DetailsStep({
 
   return (
     <div className="space-y-8">
-      <div className="flex items-start gap-4">
-        <Button 
-          variant="outline" 
-          size="icon" 
-          className="rounded-full shrink-0 mt-1" 
-          onClick={onBack}
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </Button>
-        <div className="flex-1">
-          <h2 className="text-2xl font-bold mb-2">Listing Details</h2>
-          <p className="text-muted-foreground">
-            Provide detailed information about your {selectedCategory?.name || 'item'}
-          </p>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Left Column - Form Fields */}
+      <div className="lg:col-span-2 space-y-8">
+        <div className="flex items-center gap-4 mb-6">
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="rounded-full shrink-0" 
+            onClick={onBack}
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+          <h2 className="text-2xl font-bold lg:hidden">Listing Details</h2>
         </div>
-      </div>
 
-      <div className="space-y-6">
+        <div className="space-y-6">
         {/* Title */}
         <div className="space-y-2">
           <Label htmlFor="title" className="text-sm font-semibold">
@@ -120,7 +118,7 @@ export function DetailsStep({
                       value={formData.specifications?.[field.key] || ''}
                       onValueChange={(val) => handleSpecChange(field.key, val)}
                     >
-                      <SelectTrigger className="h-11 bg-background">
+                      <SelectTrigger id={`spec-${field.key}`} className="h-11 bg-background">
                         <SelectValue placeholder={`Select ${field.label}`} />
                       </SelectTrigger>
                       <SelectContent>
@@ -133,6 +131,7 @@ export function DetailsStep({
                     </Select>
                   ) : field.type === 'number' ? (
                     <Input
+                      id={`spec-${field.key}`}
                       type="number"
                       placeholder={field.placeholder || `e.g., 2024`}
                       value={formData.specifications?.[field.key] || ''}
@@ -141,6 +140,7 @@ export function DetailsStep({
                     />
                   ) : (
                     <Input
+                      id={`spec-${field.key}`}
                       placeholder={field.placeholder || `e.g., ${field.label}`}
                       value={formData.specifications?.[field.key] || ''}
                       onChange={(e) => handleSpecChange(field.key, e.target.value)}
@@ -232,11 +232,11 @@ export function DetailsStep({
           <h3 className="font-bold text-lg">Contact Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-sm font-medium">
+              <Label htmlFor="contactPhone" className="text-sm font-medium">
                 Phone Number <span className="text-destructive">*</span>
               </Label>
               <Input
-                id="phone"
+                id="contactPhone"
                 type="tel"
                 placeholder="+389 70 123 456"
                 value={formData.contactPhone || ''}
@@ -245,11 +245,11 @@ export function DetailsStep({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium">
+              <Label htmlFor="contactEmail" className="text-sm font-medium">
                 Email Address <span className="text-destructive">*</span>
               </Label>
               <Input
-                id="email"
+                id="contactEmail"
                 type="email"
                 placeholder="your@email.com"
                 value={formData.contactEmail || ''}
@@ -261,5 +261,25 @@ export function DetailsStep({
         </div>
       </div>
     </div>
+
+      {/* Right Column - Info Panel */}
+      <div className="hidden lg:block lg:col-span-1">
+        <div className="sticky top-8 space-y-4">
+          <div className="p-6 bg-muted/50 rounded-xl border">
+            <h2 className="text-2xl font-bold mb-4">Listing Details</h2>
+            <p className="text-muted-foreground mb-4">
+              Provide detailed information about your {selectedCategory?.name || 'item'} to help buyers find it easily. 
+              Be as specific as possible to attract the right buyers.
+            </p>
+            <div className="text-sm text-muted-foreground space-y-2">
+              <p>• Title should be clear and concise</p>
+              <p>• Describe the condition accurately</p>
+              <p>• Include specific features or specs</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   );
 }
