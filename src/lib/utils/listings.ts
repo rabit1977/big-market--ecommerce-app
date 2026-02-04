@@ -40,5 +40,13 @@ export const mapConvexListing = (l: any) => ({
         name: "User", 
         image: null,
         city: l.city
-    }
+    },
+    // New Fields
+    userType: l.userType || null,
+    adType: l.adType || null,
+    condition: l.condition || null,
+    isTradePossible: l.isTradePossible || false,
+    hasShipping: l.hasShipping || false,
+    isVatIncluded: l.isVatIncluded || false,
+    isAffordable: l.isAffordable || false,
 });

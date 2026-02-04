@@ -4,6 +4,8 @@ import { Suspense } from 'react';
 import { api } from '../../../convex/_generated/api';
 import Loading from './loading';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Browse Listings | Big Market',
   description: 'Find great deals in your area on Big Market Classifieds.',
@@ -20,6 +22,12 @@ interface ListingsPageProps {
     page?: string;
     city?: string;
     condition?: string;
+    userType?: string;
+    adType?: string;
+    trade?: string;
+    shipping?: string;
+    vat?: string;
+    affordable?: string;
   }>;
 }
 
@@ -30,48 +38,41 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   const category = params.category || '';
   const city = params.city || '';
   const page = params.page ? Number(params.page) : 1;
+  
+  // Sort mapping
+  let sort = params.sort || 'newest';
+  if (sort === 'price-low') sort = 'price-asc'; // Align with Convex
+  if (sort === 'price-high') sort = 'price-desc';
 
-  // Fetch data from Convex
-  const [categories, allListings] = await Promise.all([
+  // Fetch data directly with filters
+  const [categories, listings] = await Promise.all([
     fetchQuery(api.categories.list),
-    fetchQuery(api.listings.get),
+    fetchQuery(api.listings.list, {
+        category: category !== 'all' ? category : undefined,
+        subCategory: params.subCategory,
+        city: city !== 'all' ? city : undefined,
+        minPrice: params.minPrice ? Number(params.minPrice) : undefined,
+        maxPrice: params.maxPrice ? Number(params.maxPrice) : undefined,
+        condition: params.condition !== 'all' ? params.condition : undefined,
+        sort,
+        status: 'ACTIVE',
+        userType: params.userType,
+        adType: params.adType,
+        isTradePossible: params.trade === 'true' ? true : undefined,
+        hasShipping: params.shipping === 'true' ? true : undefined,
+        isVatIncluded: params.vat === 'true' ? true : undefined,
+        isAffordable: params.affordable === 'true' ? true : undefined
+    }),
   ]);
 
-  // Filter listings based on search params
-  let filteredListings = allListings;
-
-  if (category && category !== 'all') {
-    filteredListings = filteredListings.filter((l) => l.category === category);
-  }
-
-  if (city && city !== 'all') {
-    filteredListings = filteredListings.filter(
-      (l) => l.city.toLowerCase() === city.toLowerCase()
-    );
-  }
-
+  // Search filtering (if query exists, further filter result, or ideally use search index query if query is dominant)
+  // For now, if query exists, we filter in memory since api.listings.list is optimizing for category/filters
+  // TODO: Combined search+filter query in Convex
+  let filteredListings = listings;
   if (query) {
-    filteredListings = filteredListings.filter((l) =>
-      l.title.toLowerCase().includes(query.toLowerCase())
-    );
+      const q = query.toLowerCase();
+      filteredListings = filteredListings.filter(l => l.title.toLowerCase().includes(q));
   }
-
-  // Sort listings
-  const sort = params.sort || 'newest';
-  filteredListings = [...filteredListings].sort((a, b) => {
-    switch (sort) {
-      case 'oldest':
-        return a.createdAt - b.createdAt;
-      case 'price-low':
-        return a.price - b.price;
-      case 'price-high':
-        return b.price - a.price;
-      case 'popular':
-        return (b.viewCount || 0) - (a.viewCount || 0);
-      default: // newest
-        return b.createdAt - a.createdAt;
-    }
-  });
 
   // Pagination
   const limit = 12;
@@ -92,7 +93,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
       <div className="bg-card border-b border-border/50 py-8 mb-8">
         <div className="container-wide">
           <h1 className="text-4xl font-bold tracking-tight mb-3">
-            {category
+            {category && category !== 'all'
               ? categories.find((c) => c.slug === category)?.name || 'Listings'
               : 'All Listings'}
           </h1>

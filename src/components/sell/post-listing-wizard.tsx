@@ -231,6 +231,7 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
                   categories={categories}
                   formData={formData}
                   updateFormData={updateFormData}
+                  onBack={prevStep}
                 />
               )}
               {currentStep === 3 && (

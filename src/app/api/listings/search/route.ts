@@ -1,4 +1,5 @@
-import { prisma } from '@/lib/db';
+import { api, convex } from '@/lib/convex-server';
+import { mapConvexListing } from '@/lib/utils/listings';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -10,19 +11,10 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const listings = await prisma.listing.findMany({
-      where: {
-        OR: [
-          { title: { contains: query, mode: 'insensitive' } },
-          { description: { contains: query, mode: 'insensitive' } },
-          { category: { contains: query, mode: 'insensitive' } },
-        ],
-        status: 'ACTIVE'
-      },
-      take: 5,
-    });
+    const listings = await convex.query(api.listings.search, { query });
+    const mappedListings = listings.map(mapConvexListing);
 
-    return NextResponse.json(listings);
+    return NextResponse.json(mappedListings.slice(0, 5));
   } catch (error) {
     console.error('Search API Error:', error);
     return NextResponse.json(

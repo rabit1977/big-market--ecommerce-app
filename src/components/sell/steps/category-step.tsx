@@ -57,9 +57,31 @@ export function CategoryStep({
   updateFormData,
   onNext,
 }: CategoryStepProps) {
-  const [level, setLevel] = useState(0); // 0: Main, 1: Sub, 2: Sub-Sub
-  const [selectedMainId, setSelectedMainId] = useState<string | null>(null);
-  const [selectedSubId, setSelectedSubId] = useState<string | null>(null);
+  // Initialize state based on existing formData to preserve history on "Back"
+  const initialState = useMemo(() => {
+    if (formData.subCategory) {
+       // Try to find the selected item
+       const leaf = categories.find(c => c.slug === formData.subCategory);
+       if (leaf?.parentId) {
+           const parent = categories.find(c => c._id === leaf.parentId);
+           if (parent?.parentId) {
+               // It's a level 3 item (Grandparent -> Parent -> Leaf)
+               return { level: 2, mainId: parent.parentId, subId: leaf.parentId };
+           }
+           // It's a level 2 item (Parent -> Leaf)
+           return { level: 1, mainId: leaf.parentId, subId: null };
+       }
+    }
+    if (formData.category) {
+        const main = categories.find(c => c.slug === formData.category);
+        if (main) return { level: 1, mainId: main._id, subId: null };
+    }
+    return { level: 0, mainId: null, subId: null };
+  }, [formData, categories]);
+
+  const [level, setLevel] = useState(initialState.level); // 0: Main, 1: Sub, 2: Sub-Sub
+  const [selectedMainId, setSelectedMainId] = useState<string | null>(initialState.mainId);
+  const [selectedSubId, setSelectedSubId] = useState<string | null>(initialState.subId);
 
   const mainCategories = useMemo(() => categories.filter((cat) => !cat.parentId), [categories]);
   

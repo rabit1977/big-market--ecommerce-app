@@ -2,17 +2,17 @@
 
 import { Button } from '@/components/ui/button';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
 import {
-  ChevronLeft,
-  ChevronLeftIcon,
-  ChevronRight,
-  ChevronRightIcon,
+    ChevronLeft,
+    ChevronLeftIcon,
+    ChevronRight,
+    ChevronRightIcon,
 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -36,6 +36,10 @@ export function PaginationControls({
     const params = new URLSearchParams(searchParams);
     params.set('page', page.toString());
     router.push(`?${params.toString()}`);
+    // Scroll to top
+    if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handlePageSizeChange = (size: string) => {

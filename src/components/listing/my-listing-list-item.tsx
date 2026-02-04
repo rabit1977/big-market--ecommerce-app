@@ -122,6 +122,34 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                 <div className="text-lg sm:text-xl font-black text-blue-600">
                     {formatPrice(listing.price)}
                 </div>
+                
+                {/* Specs Summary */}
+                <div className="flex flex-wrap gap-2 mt-2 text-xs text-muted-foreground">
+                    {listing.condition && (
+                        <span className="bg-slate-100 px-2 py-0.5 rounded text-slate-600 font-medium border border-slate-200">
+                            {listing.condition}
+                        </span>
+                    )}
+                    {listing.specifications && (
+                        <>
+                             {listing.specifications.year && (
+                                <span className="bg-slate-100 px-2 py-0.5 rounded text-slate-600 border border-slate-200">
+                                    {listing.specifications.year}
+                                </span>
+                             )}
+                             {listing.specifications.mileage && (
+                                <span className="bg-slate-100 px-2 py-0.5 rounded text-slate-600 border border-slate-200">
+                                    {listing.specifications.mileage} km
+                                </span>
+                             )}
+                             {listing.specifications.fuel && (
+                                <span className="bg-slate-100 px-2 py-0.5 rounded text-slate-600 border border-slate-200">
+                                    {listing.specifications.fuel}
+                                </span>
+                             )}
+                        </>
+                    )}
+                </div>
             </div>
 
             {/* Main Action Buttons (Promote / Renew) */}

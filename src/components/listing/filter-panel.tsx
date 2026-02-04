@@ -16,12 +16,6 @@ import { Slider } from '@/components/ui/slider';
 import { MapPin, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-interface FilterPanelProps {
-  onFilterChange: (filters: FilterState) => void;
-  categories: Array<{ _id: string; name: string; slug: string }>;
-  initialFilters?: FilterState;
-}
-
 export interface FilterState {
   category?: string;
   priceMin?: number;
@@ -35,6 +29,13 @@ export interface FilterState {
   hasShipping?: boolean;
   isVatIncluded?: boolean;
   isAffordable?: boolean;
+}
+
+interface FilterPanelProps {
+  onFilterChange: (filters: FilterState) => void;
+  categories: Array<{ _id: string; name: string; slug: string }>;
+  initialFilters?: FilterState;
+  idPrefix?: string;
 }
 
 const cities = [
@@ -58,7 +59,7 @@ const sortOptions = [
   { value: 'popular', label: 'Most Popular' },
 ];
 
-export function FilterPanel({ onFilterChange, categories, initialFilters }: FilterPanelProps) {
+export function FilterPanel({ onFilterChange, categories, initialFilters, idPrefix = 'filter' }: FilterPanelProps) {
   const [filters, setFilters] = useState<FilterState>(initialFilters || {
     sortBy: 'newest',
   });
@@ -66,7 +67,7 @@ export function FilterPanel({ onFilterChange, categories, initialFilters }: Filt
   // Initialize price range from props or default
   const [priceRange, setPriceRange] = useState<[number, number]>([
     initialFilters?.priceMin || 0,
-    initialFilters?.priceMax || 10000
+    initialFilters?.priceMax || 1000000
   ]);
 
   // Sync state if initialFilters changes (optional, but good for deep linking)
@@ -74,7 +75,7 @@ export function FilterPanel({ onFilterChange, categories, initialFilters }: Filt
      if (initialFilters) {
         setFilters(prev => ({...prev, ...initialFilters}));
         if (initialFilters.priceMin !== undefined || initialFilters.priceMax !== undefined) {
-           setPriceRange([initialFilters.priceMin || 0, initialFilters.priceMax || 10000]);
+           setPriceRange([initialFilters.priceMin || 0, initialFilters.priceMax || 1000000]);
         }
      }
   }, [initialFilters]);
@@ -88,7 +89,7 @@ export function FilterPanel({ onFilterChange, categories, initialFilters }: Filt
   const clearFilters = () => {
     const resetFilters: FilterState = { sortBy: 'newest' };
     setFilters(resetFilters);
-    setPriceRange([0, 10000]);
+    setPriceRange([0, 1000000]);
     onFilterChange(resetFilters);
   };
 
@@ -117,12 +118,12 @@ export function FilterPanel({ onFilterChange, categories, initialFilters }: Filt
 
         {/* Sort By */}
         <div className="space-y-2">
-          <Label htmlFor="sort">Sort By</Label>
+          <Label htmlFor={`${idPrefix}-sort`}>Sort By</Label>
           <Select
             value={filters.sortBy}
             onValueChange={(value) => updateFilter('sortBy', value)}
           >
-            <SelectTrigger id="sort">
+            <SelectTrigger id={`${idPrefix}-sort`}>
               <SelectValue placeholder="Sort by..." />
             </SelectTrigger>
             <SelectContent>
@@ -137,12 +138,12 @@ export function FilterPanel({ onFilterChange, categories, initialFilters }: Filt
 
         {/* Category */}
         <div className="space-y-2">
-          <Label htmlFor="category">Category</Label>
+          <Label htmlFor={`${idPrefix}-category`}>Category</Label>
           <Select
             value={filters.category}
             onValueChange={(value) => updateFilter('category', value)}
           >
-            <SelectTrigger id="category">
+            <SelectTrigger id={`${idPrefix}-category`}>
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent>
@@ -158,7 +159,7 @@ export function FilterPanel({ onFilterChange, categories, initialFilters }: Filt
 
         {/* Location */}
         <div className="space-y-2">
-          <Label htmlFor="city" className="flex items-center gap-2">
+          <Label htmlFor={`${idPrefix}-city`} className="flex items-center gap-2">
             <MapPin className="h-4 w-4" />
             Location
           </Label>
@@ -166,7 +167,7 @@ export function FilterPanel({ onFilterChange, categories, initialFilters }: Filt
             value={filters.city}
             onValueChange={(value) => updateFilter('city', value)}
           >
-            <SelectTrigger id="city">
+            <SelectTrigger id={`${idPrefix}-city`}>
               <SelectValue placeholder="All Cities" />
             </SelectTrigger>
             <SelectContent>
@@ -191,17 +192,17 @@ export function FilterPanel({ onFilterChange, categories, initialFilters }: Filt
                 updateFilter('priceMin', value[0]);
                 updateFilter('priceMax', value[1]);
               }}
-              max={10000}
+              max={1000000}
               step={100}
               className="w-full"
             />
             <div className="flex items-center gap-4">
               <div className="flex-1">
-                <Label htmlFor="priceMin" className="text-xs text-muted-foreground">
+                <Label htmlFor={`${idPrefix}-priceMin`} className="text-xs text-muted-foreground">
                   Min
                 </Label>
                 <Input
-                  id="priceMin"
+                  id={`${idPrefix}-priceMin`}
                   type="number"
                   value={priceRange[0]}
                   onChange={(e) => {
@@ -213,15 +214,15 @@ export function FilterPanel({ onFilterChange, categories, initialFilters }: Filt
                 />
               </div>
               <div className="flex-1">
-                <Label htmlFor="priceMax" className="text-xs text-muted-foreground">
+                <Label htmlFor={`${idPrefix}-priceMax`} className="text-xs text-muted-foreground">
                   Max
                 </Label>
                 <Input
-                  id="priceMax"
+                  id={`${idPrefix}-priceMax`}
                   type="number"
                   value={priceRange[1]}
                   onChange={(e) => {
-                    const value = parseInt(e.target.value) || 10000;
+                    const value = parseInt(e.target.value) || 1000000;
                     setPriceRange([priceRange[0], value]);
                     updateFilter('priceMax', value);
                   }}
@@ -237,12 +238,12 @@ export function FilterPanel({ onFilterChange, categories, initialFilters }: Filt
 
         {/* Condition */}
         <div className="space-y-2">
-          <Label htmlFor="condition">Condition</Label>
+          <Label htmlFor={`${idPrefix}-condition`}>Condition</Label>
           <Select
             value={filters.condition}
             onValueChange={(value) => updateFilter('condition', value)}
           >
-            <SelectTrigger id="condition">
+            <SelectTrigger id={`${idPrefix}-condition`}>
               <SelectValue placeholder="Any Condition" />
             </SelectTrigger>
             <SelectContent>
@@ -288,13 +289,13 @@ export function FilterPanel({ onFilterChange, categories, initialFilters }: Filt
                   />
                 </Badge>
               )}
-              {(filters.priceMin !== 0 || filters.priceMax !== 10000) && (
+              {(filters.priceMin !== 0 || filters.priceMax !== 1000000) && (
                 <Badge variant="secondary" className="gap-1">
                   €{filters.priceMin} - €{filters.priceMax}
                   <X
                     className="h-3 w-3 cursor-pointer"
                     onClick={() => {
-                      setPriceRange([0, 10000]);
+                      setPriceRange([0, 1000000]);
                       updateFilter('priceMin', undefined);
                       updateFilter('priceMax', undefined);
                     }}

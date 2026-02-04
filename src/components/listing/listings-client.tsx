@@ -25,7 +25,8 @@ export function ListingsClient({
 }: ListingsClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [filteredListings, setFilteredListings] = useState(initialListings);
+  // Removed stale state: filteredListings
+  
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
   // Derive initial filters from URL params
@@ -33,7 +34,7 @@ export function ListingsClient({
     category: searchParams.get('category') || 'all',
     city: searchParams.get('city') || 'all',
     priceMin: searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : 0,
-    priceMax: searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : 10000,
+    priceMax: searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : 1000000,
     condition: searchParams.get('condition') || 'all',
     sortBy: searchParams.get('sort') || 'newest',
     userType: searchParams.get('userType') || undefined,
@@ -57,7 +58,7 @@ export function ListingsClient({
     if (filters.priceMin !== undefined && filters.priceMin > 0) params.set('minPrice', filters.priceMin.toString());
     else params.delete('minPrice');
     
-    if (filters.priceMax !== undefined && filters.priceMax < 10000) params.set('maxPrice', filters.priceMax.toString());
+    if (filters.priceMax !== undefined && filters.priceMax < 1000000) params.set('maxPrice', filters.priceMax.toString());
     else params.delete('maxPrice');
     
     if (filters.condition && filters.condition !== 'all') params.set('condition', filters.condition);
@@ -84,6 +85,9 @@ export function ListingsClient({
     if (filters.isAffordable) params.set('affordable', 'true');
     else params.delete('affordable');
 
+    // Reset pagination
+    params.delete('page');
+
     // Navigate with new params
     router.push(`/listings?${params.toString()}`);
   };
@@ -101,22 +105,22 @@ export function ListingsClient({
       <Sheet open={isMobileFiltersOpen} onOpenChange={setIsMobileFiltersOpen}>
          <SheetContent side="left" className="w-[85vw] sm:w-[400px] overflow-y-auto p-0">
             <div className="p-4 pt-10">
-               <FilterPanel onFilterChange={handleFilterChange} categories={categories} initialFilters={initialFilters} />
+               <FilterPanel onFilterChange={handleFilterChange} categories={categories} initialFilters={initialFilters} idPrefix="mobile-filter" />
             </div>
          </SheetContent>
       </Sheet>
 
       {/* Sidebar Filters (Desktop Only) */}
       <aside className="hidden lg:block lg:sticky lg:top-24 h-fit">
-        <FilterPanel onFilterChange={handleFilterChange} categories={categories} initialFilters={initialFilters} />
+        <FilterPanel onFilterChange={handleFilterChange} categories={categories} initialFilters={initialFilters} idPrefix="desktop-filter" />
       </aside>
 
       {/* Main Content */}
       <div className="space-y-6">
         {/* Listings Grid - passes handler to open mobile filters */}
-        {filteredListings.length > 0 ? (
+        {initialListings.length > 0 ? (
           <ListingGrid 
-             listings={filteredListings as any} 
+             listings={initialListings as any} 
              onOpenFilters={() => setIsMobileFiltersOpen(true)}
              sortBy={initialFilters.sortBy}
              onSortChange={(val) => handleFilterChange({ ...initialFilters, sortBy: val })}

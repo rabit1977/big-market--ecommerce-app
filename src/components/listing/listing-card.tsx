@@ -161,9 +161,11 @@ export const ListingCard = memo(
                    </span>
                </div>
 
-               <div className="hidden md:block text-xs text-muted-foreground mt-1 line-clamp-2">
-                   {listing.description}
-               </div>
+                <div className="hidden md:block text-xs text-muted-foreground mt-1 line-clamp-2">
+                    {listing.description.length > 150 
+                        ? `${listing.description.substring(0, 150)}...` 
+                        : listing.description}
+                </div>
 
                <div className="flex items-end justify-between mt-auto">
                    <div className="flex flex-col">

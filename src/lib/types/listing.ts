@@ -19,6 +19,14 @@ export interface Listing {
   specifications?: any;
   tags?: string[];
   features?: string[];
+  // Professional Market Fields
+  userType?: string;
+  adType?: string;
+  condition?: string;
+  isTradePossible?: boolean;
+  hasShipping?: boolean;
+  isVatIncluded?: boolean;
+  isAffordable?: boolean;
   // Promotion Fields
   isPromoted?: boolean;
   promotionTier?: string;

@@ -1,6 +1,7 @@
 import { getMyListingsAction } from '@/actions/listing-actions';
 import { MyListingsDashboardHeader } from '@/components/listing/dashboard-header';
 import { MyListingListItem } from '@/components/listing/my-listing-list-item';
+import { MyListingsSearch } from '@/components/listing/my-listings-search';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { ListingWithRelations } from '@/lib/types/listing';
@@ -12,8 +13,13 @@ export const metadata = {
   title: 'My Listings',
 };
 
-export default async function MyListingsPage() {
-  const { success, listings, error } = await getMyListingsAction();
+interface MyListingsPageProps {
+  searchParams: Promise<{ q?: string }>;
+}
+
+export default async function MyListingsPage({ searchParams }: MyListingsPageProps) {
+  const { q } = await searchParams;
+  const { success, listings, error } = await getMyListingsAction(undefined, q);
 
   if (!success) {
       if (error === 'Unauthorized') {
@@ -34,12 +40,16 @@ export default async function MyListingsPage() {
            <h2 className='text-2xl font-bold tracking-tight text-slate-900'>Your Ads</h2>
            <p className='text-muted-foreground text-sm'>Manage your active and sold items</p>
         </div>
-        <Button asChild className="gap-2 rounded-full font-bold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90">
-            <Link href="/sell">
-                <Plus className="h-4 w-4 stroke-[3]" />
-                Post New Ad
-            </Link>
-        </Button>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+            <MyListingsSearch />
+            <Button asChild className="gap-2 rounded-full font-bold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90 shrink-0">
+                <Link href="/sell">
+                    <Plus className="h-4 w-4 stroke-[3]" />
+                    <span className="hidden sm:inline">Post New Ad</span>
+                    <span className="sm:hidden">Post</span>
+                </Link>
+            </Button>
+        </div>
       </div>
 
       {listings && listings.length > 0 ? (

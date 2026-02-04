@@ -151,24 +151,48 @@ export const clearAndSeedCategories = mutation({
     const realEstateId = await upsertCategory("real-estate", { name: "Real Estate", image: "🏠", isFeatured: true });
     
     // Estate Helpers
-    const estateSpecs = (isLand = false) => [
+    const estateSpecs = (isLand = false, isBusiness = false) => [
       { label: "Type", type: "select", key: "offer_type", options: ["Sale", "Rent"] },
       { label: isLand ? "Area (m²)" : "Size (m²)", type: "number", key: "sqm", required: true, placeholder: "e.g. 75" },
-      { label: "Location/Sudo", type: "text", key: "location", placeholder: "e.g. Center, Karpos 3" },
+      { label: "Location", type: "text", key: "location", placeholder: "e.g. Center, Karpos 3" },
+      { label: "Price", type: "number", key: "price", placeholder: "e.g. 50000" },
       ...(!isLand ? [
         { label: "Rooms", type: "select", key: "rooms", options: ["Studio", "1", "2", "3", "4", "5+"] },
         { label: "Floor", type: "number", key: "floor", placeholder: "e.g. 3" },
-        { label: "Heating", type: "select", key: "heating", options: ["Central", "Electricity", "Wood", "Inverter", "None"] },
-        { label: "Furnished", type: "select", key: "furnished", options: ["Yes", "No", "Semi"] }
+        { label: "Total Floors", type: "number", key: "total_floors", placeholder: "e.g. 5" },
+        { label: "Heating", type: "select", key: "heating", options: ["Central", "Electricity", "Wood", "Inverter", "None", "Floor"] },
+        { label: "Furnished", type: "select", key: "furnished", options: ["Yes", "No", "Semi", "Empty"] },
+        { label: "Condition", type: "select", key: "condition", options: ["New", "Renovated", "Solid", "Old Construction", "Under Construction"] },
+        { label: "Orientation", type: "select", key: "orientation", options: ["North", "South", "East", "West", "North-East", "North-West", "South-East", "South-West"] },
+        { label: "Balcony", type: "select", key: "balcony", options: ["Yes", "No"] },
+        { label: "Parking/Garage", type: "select", key: "parking", options: ["Yes", "No"] },
+        { label: "Lift", type: "select", key: "lift", options: ["Yes", "No"] }
+      ] : []),
+      ...((isBusiness) ? [
+        { label: "Business Type", type: "select", key: "business_type", options: ["Office", "Warehouse", "Store", "Industrial", "Catering"] }
       ] : [])
     ];
 
+    await upsertCategory("houses", { name: "Houses / Villas", parentId: realEstateId, template: { titlePlaceholder: "e.g. Luxury Villa in Vodno", fields: [...estateSpecs(), { label: "Yard Area (m²)", type: "number", key: "yard_size", placeholder: "e.g. 300" }] } });
     await upsertCategory("apartments", { name: "Apartments", parentId: realEstateId, template: { titlePlaceholder: "e.g. 2-Bedroom Apartment in Center", fields: estateSpecs() } });
-    await upsertCategory("houses", { name: "Houses / Villas", parentId: realEstateId, template: { titlePlaceholder: "e.g. Luxury Villa in Vodno", fields: estateSpecs() } });
-    await upsertCategory("business-space", { name: "Business Space", parentId: realEstateId, template: { titlePlaceholder: "e.g. Office Space 200m2", fields: estateSpecs() } });
-    await upsertCategory("land", { name: "Plots & Land", parentId: realEstateId, template: { titlePlaceholder: "e.g. Building Plot in Sopiste", fields: estateSpecs(true) } });
-    await upsertCategory("garages", { name: "Garages", parentId: realEstateId, template: { titlePlaceholder: "e.g. Garage in Aerodrom", fields: [estateSpecs(true)[0], estateSpecs(true)[1]] } });
-    await upsertCategory("vacation-rentals", { name: "Vacation Rentals", parentId: realEstateId, template: { titlePlaceholder: "e.g. Apartment in Ohrid", fields: estateSpecs() } });
+    await upsertCategory("rooms", { name: "Rooms", parentId: realEstateId, template: { titlePlaceholder: "e.g. Single Room for Student", fields: estateSpecs() } });
+    await upsertCategory("weekend-houses", { name: "Weekend Houses", parentId: realEstateId, template: { titlePlaceholder: "e.g. Weekend House in Mavrovo", fields: [...estateSpecs(), { label: "Yard Area (m²)", type: "number", key: "yard_size", placeholder: "e.g. 500" }] } });
+    await upsertCategory("shops", { name: "Shops / Stores", parentId: realEstateId, template: { titlePlaceholder: "e.g. Shop in GTC", fields: estateSpecs(false, true) } });
+    
+    // Business Space & Subcategories
+    const businessSpaceId = await upsertCategory("business-space", { name: "Business Space", parentId: realEstateId, template: { titlePlaceholder: "e.g. Office Space 200m2", fields: estateSpecs(false, true) } });
+    await upsertCategory("industry-workshop", { name: "Industry & Workshop", parentId: businessSpaceId, template: { titlePlaceholder: "e.g. Production Hall", fields: estateSpecs(false, true) } });
+    await upsertCategory("offices", { name: "Offices", parentId: businessSpaceId, template: { titlePlaceholder: "e.g. Modern Office", fields: estateSpecs(false, true) } });
+    await upsertCategory("warehouses-business", { name: "Warehouses", parentId: businessSpaceId, template: { titlePlaceholder: "e.g. Storage Warehouse", fields: estateSpecs(false, true) } });
+    await upsertCategory("other-business", { name: "Other", parentId: businessSpaceId, template: { titlePlaceholder: "e.g. Other Business Space", fields: estateSpecs(false, true) } });
+
+    await upsertCategory("roommates", { name: "Roommates", parentId: realEstateId, template: { titlePlaceholder: "e.g. Roommate wanted for Apartment in Aerodrom", fields: [{label: "Gender Preference", type: "select", key: "gender", options:["Male", "Female", "Any"]}, {label: "Price per Month", type: "number", key: "price"}] } });
+    await upsertCategory("garages", { name: "Garages", parentId: realEstateId, template: { titlePlaceholder: "e.g. Garage in Aerodrom", fields: [estateSpecs(true)[0], estateSpecs(true)[1], {label: "Type", type: "select", key: "garage_type", options: ["Underground", "External", "Parking Spot"]}] } });
+    await upsertCategory("land", { name: "Plots & Land", parentId: realEstateId, template: { titlePlaceholder: "e.g. Building Plot in Sopiste", fields: [...estateSpecs(true), {label: "Type", type: "select", key: "land_type", options: ["Building", "Agricultural", "Industrial"]}] } });
+    await upsertCategory("warehouses", { name: "Warehouses (General)", parentId: realEstateId, template: { titlePlaceholder: "e.g. Large Warehouse", fields: estateSpecs(false, true) } });
+    await upsertCategory("shacks", { name: "Shacks, Kiosks, Booths", parentId: realEstateId, template: { titlePlaceholder: "e.g. Kiosk in Center", fields: estateSpecs(false, true) } });
+    await upsertCategory("new-construction", { name: "New Construction", parentId: realEstateId, template: { titlePlaceholder: "e.g. New Apartment Building", fields: estateSpecs() } });
+    await upsertCategory("abroad", { name: "Real Estate Abroad", parentId: realEstateId, template: { titlePlaceholder: "e.g. Apartment in Greece", fields: estateSpecs() } });
     await upsertCategory("real-estate-other", { name: "Other", parentId: realEstateId, template: { titlePlaceholder: "e.g. Other Real Estate", fields: [] } });
 
     // ============================================
@@ -177,33 +201,50 @@ export const clearAndSeedCategories = mutation({
     const electronicsId = await upsertCategory("electronics", { name: "Electronics", image: "📱", isFeatured: true });
     
     // Specs
+    // Specs
     const phoneSpecs = [brand("e.g. Apple"), model("e.g. iPhone 13"), { label: "Storage", type: "select", key: "storage", options: ["32GB", "64GB", "128GB", "256GB", "512GB", "1TB"] }, { label: "Color", type: "text", key: "color", placeholder: "e.g. Midnight Green" }, condition];
 
     const phonesId = await upsertCategory("mobile-phones", { name: "Mobile Phones", parentId: electronicsId });
     await upsertCategory("iphone", { name: "iPhone", parentId: phonesId, template: { titlePlaceholder: "e.g. iPhone 14 Pro 128GB", fields: phoneSpecs } });
     await upsertCategory("samsung", { name: "Samsung", parentId: phonesId, template: { titlePlaceholder: "e.g. Samsung S23 Ultra", fields: phoneSpecs } });
+    await upsertCategory("xiaomi", { name: "Xiaomi", parentId: phonesId, template: { titlePlaceholder: "e.g. Redmi Note 12", fields: phoneSpecs } });
+    await upsertCategory("huawei", { name: "Huawei", parentId: phonesId, template: { titlePlaceholder: "e.g. P50 Pro", fields: phoneSpecs } });
+    await upsertCategory("google", { name: "Google Pixel", parentId: phonesId, template: { titlePlaceholder: "e.g. Pixel 7", fields: phoneSpecs } });
+    await upsertCategory("other-phones", { name: "Other Phones", parentId: phonesId, template: { titlePlaceholder: "e.g. Nokia 3310", fields: phoneSpecs } });
+    
     await upsertCategory("phone-accessories", { name: "Phone Accessories", parentId: phonesId, template: { titlePlaceholder: "e.g. Case for iPhone 13", fields: [brand("e.g. Spigen"), { label: "Type", type: "text", key: "type", placeholder: "e.g. Case / Charger" }] } });
+    await upsertCategory("smartwatches", { name: "Smartwatches & Trackers", parentId: phonesId, template: { titlePlaceholder: "e.g. Apple Watch Series 8", fields: [brand("e.g. Apple"), { label: "Type", type: "select", key: "type", options: ["Smartwatch", "Fitness Tracker", "Band"] }, condition] } });
 
     const computersId = await upsertCategory("computers", { name: "Computers", parentId: electronicsId });
     const pcSpecs = [brand("e.g. Lenovo"), { label: "Processor", type: "text", key: "cpu", placeholder: "e.g. i7-12700H" }, { label: "RAM", type: "select", key: "ram", options: ["4GB", "8GB", "16GB", "32GB", "64GB+"] }, { label: "Storage", type: "text", key: "ssd", placeholder: "e.g. 512GB SSD" }, { label: "Graphics", type: "text", key: "gpu", placeholder: "e.g. RTX 3060" }, condition];
     
     await upsertCategory("laptops", { name: "Laptops", parentId: computersId, template: { titlePlaceholder: "e.g. MacBook Pro M1 16GB", fields: pcSpecs } });
     await upsertCategory("desktops", { name: "Desktop PCs", parentId: computersId, template: { titlePlaceholder: "e.g. Gaming PC RTX 3080", fields: pcSpecs } });
-    await upsertCategory("monitors", { name: "Monitors", parentId: computersId, template: { titlePlaceholder: "e.g. Dell U2419H IPS", fields: [brand("e.g. Dell"), { label: "Size (inch)", type: "number", key: "size", placeholder: "e.g. 24" }, condition] } });
-    await upsertCategory("pc-parts", { name: "Computer Parts", parentId: computersId, template: { titlePlaceholder: "e.g. DDR4 RAM 16GB", fields: [brand("e.g. Kingston"), { label: "Type", type: "text", key: "type", placeholder: "e.g. RAM / SSD / GPU" }, condition] } });
+    await upsertCategory("monitors", { name: "Monitors", parentId: computersId, template: { titlePlaceholder: "e.g. Dell U2419H IPS", fields: [brand("e.g. Dell"), { label: "Size (inch)", type: "number", key: "size", placeholder: "e.g. 24" }, { label: "Refresh Rate (Hz)", type: "text", key: "hz", placeholder: "e.g. 144Hz" }, condition] } });
+    
+    // Detailed PC Parts
+    const partsId = await upsertCategory("pc-parts", { name: "Computer Parts", parentId: computersId });
+    await upsertCategory("gpu", { name: "Graphics Cards", parentId: partsId, template: { titlePlaceholder: "e.g. RTX 3060 Ti", fields: [brand("e.g. NVIDIA"), { label: "Memory (GB)", type: "text", key: "vram", placeholder: "e.g. 8GB" }, condition] } });
+    await upsertCategory("cpu", { name: "Processors (CPU)", parentId: partsId, template: { titlePlaceholder: "e.g. Ryzen 7 5800x", fields: [brand("e.g. AMD"), { label: "Socket", type: "text", key: "socket", placeholder: "e.g. AM4" }, condition] } });
+    await upsertCategory("ram", { name: "RAM", parentId: partsId, template: { titlePlaceholder: "e.g. Corsair Vengeance 16GB", fields: [brand("e.g. Corsair"), { label: "Type", type: "select", key: "type", options: ["DDR3", "DDR4", "DDR5"] }, condition] } });
+    await upsertCategory("motherboards", { name: "Motherboards", parentId: partsId, template: { titlePlaceholder: "e.g. ASUS ROG Strix B550", fields: [brand("e.g. ASUS")] } });
+    await upsertCategory("storage-drives", { name: "Storage (SSD/HDD)", parentId: partsId, template: { titlePlaceholder: "e.g. Samsung 980 Pro 1TB", fields: [brand("e.g. Samsung"), {label: "Capacity", type: "text", key:"size"}] } });
+
     await upsertCategory("tablets", { name: "Tablets", parentId: computersId, template: { titlePlaceholder: "e.g. iPad Air 5", fields: phoneSpecs } });
     await upsertCategory("peripherals", { name: "Peripherals", parentId: computersId, template: { titlePlaceholder: "e.g. Logitech MX Master 3", fields: [brand("e.g. Logitech"), { label: "Type", type: "text", key: "type", placeholder: "e.g. Mouse / Keyboard" }, condition] } });
     await upsertCategory("software", { name: "Software", parentId: computersId, template: { titlePlaceholder: "e.g. Windows 11 License", fields: [] } });
     await upsertCategory("mining-crypto", { name: "Mining & Crypto", parentId: computersId, template: { titlePlaceholder: "e.g. Mining Rig 6xRx580", fields: [] } });
     await upsertCategory("gaming", { name: "Gaming Equipment", parentId: computersId, template: { titlePlaceholder: "e.g. Gaming Chair Razer", fields: [] } });
-    await upsertCategory("computers-other", { name: "Other", parentId: computersId, template: { titlePlaceholder: "e.g. Other Computer Item", fields: []} });
+    await upsertCategory("projectors", { name: "Projectors", parentId: computersId, template: { titlePlaceholder: "e.g. Epson EB-1", fields: [brand("e.g. Epson"), {label: "Resolution", type:"text", key:"res"}, condition] } });
 
     const tvPhotoId = await upsertCategory("tv-video-photo", { name: "TV, Video & Photo", parentId: electronicsId });
-    await upsertCategory("televisions", { name: "Televisions", parentId: tvPhotoId, template: { titlePlaceholder: "e.g. Samsung 55\" 4K Smart TV", fields: [brand("e.g. Samsung"), { label: "Screen Size (inch)", type: "number", key: "size", placeholder: "e.g. 55" }, { label: "Resolution", type: "select", key: "res", options: ["HD", "Full HD", "4K", "8K"] }, condition] } });
-    await upsertCategory("cameras", { name: "Cameras & Photography", parentId: tvPhotoId, template: { titlePlaceholder: "e.g. Sony A7 III Body", fields: [brand("e.g. Sony"), { label: "Type", type: "select", key: "type", options: ["DSLR", "Mirrorless", "Point & Shoot", "Lens"] }, condition] } });
-    await upsertCategory("gaming-consoles", { name: "Gaming Consoles", parentId: electronicsId, template: { titlePlaceholder: "e.g. PlayStation 5 Disc Edition", fields: [brand("e.g. Sony"), model("e.g. PS5"), condition] } });
+    await upsertCategory("televisions", { name: "Televisions", parentId: tvPhotoId, template: { titlePlaceholder: "e.g. Samsung 55\" 4K Smart TV", fields: [brand("e.g. Samsung"), { label: "Screen Size (inch)", type: "number", key: "size", placeholder: "e.g. 55" }, { label: "Resolution", type: "select", key: "res", options: ["HD", "Full HD", "4K", "8K"] }, { label: "Technology", type: "select", key: "tech", options: ["LED", "OLED", "QLED", "LCD"] }, { label: "Smart TV", type: "select", key: "smart", options: ["Yes", "No"] }, condition] } });
+    await upsertCategory("cameras", { name: "Cameras", parentId: tvPhotoId, template: { titlePlaceholder: "e.g. Sony A7 III Body", fields: [brand("e.g. Sony"), { label: "Type", type: "select", key: "type", options: ["DSLR", "Mirrorless", "Point & Shoot", "Action", "Drone"] }, { label: "Resolution (MP)", type: "number", key: "megapixels", placeholder: "e.g. 24" }, condition] } });
+    await upsertCategory("lenses", { name: "Lenses", parentId: tvPhotoId, template: { titlePlaceholder: "e.g. Sigma 24-70mm f/2.8", fields: [brand("e.g. Sigma"), { label: "Mount", type: "text", key: "mount", placeholder: "e.g. Sony E" }, condition] } });
+    await upsertCategory("gaming-consoles", { name: "Gaming Consoles", parentId: electronicsId, template: { titlePlaceholder: "e.g. PlayStation 5 Disc Edition", fields: [brand("e.g. Sony"), model("e.g. PS5"), {label: "Storage", type:"text", key:"storage"}, condition] } });
     await upsertCategory("drones", { name: "Drones", parentId: tvPhotoId, template: { titlePlaceholder: "e.g. DJI Mavic 3", fields: [brand("e.g. DJI"), condition] } });
-    await upsertCategory("audio-equipment", { name: "Audio Equipment", parentId: tvPhotoId, template: { titlePlaceholder: "e.g. JBL PartyBox 310", fields: [brand("e.g. JBL"), { label: "Type", type: "text", key: "type", placeholder: "e.g. Speaker / Amplifier" }, condition] } });
+    await upsertCategory("audio-equipment", { name: "Audio", parentId: tvPhotoId, template: { titlePlaceholder: "e.g. JBL PartyBox 310", fields: [brand("e.g. JBL"), { label: "Type", type: "select", key: "type", options: ["Speaker", "Headphones", "Soundbar", "Amplifier", "Receiver"] }, condition] } });
+
 
     // ============================================
     // 4. HOME & GARDEN
@@ -217,9 +258,16 @@ export const clearAndSeedCategories = mutation({
     await upsertCategory("kitchen", { name: "Kitchen", parentId: furnitureId, template: { titlePlaceholder: "e.g. Dining Table + 4 Chairs", fields: furnitureSpecs } });
     await upsertCategory("home-decoration", { name: "Home Decoration", parentId: homeGardenId, template: { titlePlaceholder: "e.g. Large Wall Mirror", fields: [] } });
 
-    const appliancesId = await upsertCategory("home-appliances", { name: "Home Appliances", parentId: homeGardenId });
-    await upsertCategory("refrigerators", { name: "Refrigerators", parentId: appliancesId, template: { titlePlaceholder: "e.g. LG Side-by-Side Fridge", fields: [brand("e.g. LG"), condition] } });
-    await upsertCategory("washing-machines", { name: "Washing Machines", parentId: appliancesId, template: { titlePlaceholder: "e.g. Beko 7kg Washing Machine", fields: [brand("e.g. Beko"), { label: "Capacity (kg)", type: "number", key: "capacity", placeholder: "e.g. 7" }, condition] } });
+    const appliancesId = await upsertCategory("home-appliances", { name: "White Goods & Appliances", parentId: homeGardenId });
+    const applianceSpecs = (typeEx: string) => [brand("e.g. Beko"), { label: "Energy Class", type: "select", key: "class", options: ["A", "B", "C", "D", "E"] }, condition];
+    
+    await upsertCategory("refrigerators", { name: "Refrigerators & Freezers", parentId: appliancesId, template: { titlePlaceholder: "e.g. LG Side-by-Side Fridge", fields: [brand("e.g. LG"), { label: "Type", type: "select", key: "type", options: ["Fridge", "Freezer", "Combo"] }, {label: "Height (cm)", type:"number", key:"height"}, condition] } });
+    await upsertCategory("washing-machines", { name: "Washing Machines", parentId: appliancesId, template: { titlePlaceholder: "e.g. Beko 7kg Washing Machine", fields: [brand("e.g. Beko"), { label: "Capacity (kg)", type: "number", key: "capacity", placeholder: "e.g. 7" }, {label: "RPM", type: "number", key: "rpm", placeholder: "e.g. 1400"}, condition] } });
+    await upsertCategory("dishwashers", { name: "Dishwashers", parentId: appliancesId, template: { titlePlaceholder: "e.g. Bosch Series 4", fields: [brand("e.g. Bosch"), { label: "Width", type: "select", key: "width", options: ["45cm", "60cm"] }, condition] } });
+    await upsertCategory("ovens-stoves", { name: "Cookers & Ovens", parentId: appliancesId, template: { titlePlaceholder: "e.g. Gorenje Electric Stove", fields: [brand("e.g. Gorenje"), { label: "Type", type: "select", key: "type", options: ["Electric", "Gas", "Combined", "Built-in"] }, condition] } });
+    await upsertCategory("ac-heating", { name: "Heating & Cooling", parentId: appliancesId, template: { titlePlaceholder: "e.g. Gree Inverter 3.5kW", fields: [brand("e.g. Gree"), { label: "Type", type: "select", key: "type", options: ["Inverter AC", "Standard AC", "Heater", "Panel"] }, {label: "Power (kW)", type:"number", key:"power"}, condition] } });
+    await upsertCategory("small-appliances", { name: "Small Kitchen Appliances", parentId: appliancesId, template: { titlePlaceholder: "e.g. Air Fryer Philips", fields: [brand("e.g. Philips"), { label: "Type", type: "text", key: "type", placeholder: "e.g. Blender / Mixer" }] } });
+    await upsertCategory("vacuums", { name: "Vacuums & Cleaning", parentId: appliancesId, template: { titlePlaceholder: "e.g. Dyson V15", fields: [brand("e.g. Dyson"), { label: "Type", type: "select", key: "type", options: ["Standard", "Handheld", "Robot"] }, condition] } });
     
     await upsertCategory("dishes-cutlery", { name: "Dishes & Cutlery", parentId: homeGardenId, template: { titlePlaceholder: "e.g. Dinner Set 18 pcs", fields: [] } });
     await upsertCategory("garden", { name: "Garden", parentId: homeGardenId, template: { titlePlaceholder: "e.g. Garden Table and Chairs", fields: furnitureSpecs } });

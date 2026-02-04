@@ -99,11 +99,30 @@ export async function getListingsAction(filters: GetListingsFilters = {}) {
       limit = 20,
     } = filters;
 
+    // Map sort to Convex expected values
+    // Using string type for sortStr to allow for mapping from frontend values
+    let sortStr: string = filters.sort || 'newest';
+    if (sortStr === 'price-low') sortStr = 'price-asc';
+    if (sortStr === 'price-high') sortStr = 'price-desc';
+
     let listings;
+    
+    listings = await convex.query(api.listings.list, { 
+        category, 
+        subCategory, 
+        status,
+        city: filters.city,
+        minPrice: filters.minPrice,
+        maxPrice: filters.maxPrice,
+        sort: sortStr,
+        userType: undefined, 
+        adType: undefined,
+        condition: undefined
+    });
+
     if (search) {
-        listings = await convex.query(api.listings.search, { query: search });
-    } else {
-        listings = await convex.query(api.listings.list, { category, subCategory, status });
+        const q = search.toLowerCase();
+        listings = listings.filter((l: any) => l.title.toLowerCase().includes(q));
     }
 
     const total = listings.length;
@@ -324,18 +343,22 @@ export async function promoteListingAction(id: string, tier: 'GOLD' | 'SILVER' |
 // GET USER'S LISTINGS
 // ============================================
 
-export async function getMyListingsAction(status?: 'ACTIVE' | 'PENDING' | 'SOLD' | 'EXPIRED') {
+export async function getMyListingsAction(status?: 'ACTIVE' | 'PENDING' | 'SOLD' | 'EXPIRED', search?: string) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
       return { success: false, error: 'Unauthorized', listings: [] };
     }
 
-    const listings = await convex.query(api.listings.getByUser, { userId: session.user.id });
+    const listings = await convex.query(api.listings.getByUser, { 
+        userId: session.user.id,
+        search: search
+    });
 
     const mappedListings = listings.map(mapConvexListing);
 
-    // Filter by status if provided
+    // Filter by status if provided (and if not searching, or keep logic same? Search should probably traverse statuses unless specified)
+    // Current logic: Filter AFTER fetch. If status is provided, filter by it.
     const filtered = status ? mappedListings.filter((l: any) => l.status === status) : mappedListings;
 
     return { success: true, listings: filtered as any };
