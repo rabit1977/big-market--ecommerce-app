@@ -87,6 +87,7 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
           formData.description &&
           formData.price &&
           formData.city &&
+          formData.condition &&
           formData.contactPhone &&
           formData.contactEmail
         );
