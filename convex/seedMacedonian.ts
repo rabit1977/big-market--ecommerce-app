@@ -103,7 +103,59 @@ const MACEDONIAN_CATEGORIES: CategoryInput[] = [  {
       { name: "Other", slug: "other-vehicles" },
     ]
   },
-  { name: "Real Estate", slug: "real-estate" },
+  { 
+    name: "Real Estate", 
+    slug: "real-estate",
+    subcategories: [
+      { 
+        name: "Apartments", 
+        slug: "apartments",
+        subcategories: [
+          { name: "Apartments for Sale", slug: "apartments-sale" },
+          { name: "Apartments for Rent", slug: "apartments-rent" },
+        ]
+      },
+      { 
+        name: "Houses / Villas", 
+        slug: "houses",
+        subcategories: [
+          { name: "Houses for Sale", slug: "houses-sale" },
+          { name: "Houses for Rent", slug: "houses-rent" },
+        ]
+      },
+      { 
+        name: "Commercial Space", 
+        slug: "commercial-space",
+        subcategories: [
+          { name: "Offices", slug: "offices" },
+          { name: "Shops / Stores", slug: "shops" },
+          { name: "Warehouses", slug: "warehouses" },
+          { name: "Industrial Plants", slug: "industrial-plants" },
+        ]
+      },
+      { 
+        name: "Land / Plots", 
+        slug: "land",
+        subcategories: [
+          { name: "Construction Land", slug: "construction-land" },
+          { name: "Agricultural Land", slug: "agricultural-land" },
+          { name: "Industrial Land", slug: "industrial-land" },
+        ]
+      },
+      { 
+        name: "Holiday Homes / Villas", 
+        slug: "holiday-homes",
+        subcategories: [
+          { name: "Holiday Homes for Sale", slug: "holiday-homes-sale" },
+          { name: "Holiday Homes for Rent", slug: "holiday-homes-rent" },
+        ]
+      },
+      { name: "Garages / Parking", slug: "garages" },
+      { name: "Rooms / Shared Accommodation", slug: "rooms-accommodation" },
+      { name: "Abroad", slug: "real-estate-abroad" },
+      { name: "Other Real Estate", slug: "other-real-estate" },
+    ]
+  },
   { 
     name: "Home Appliances", 
     slug: "home-appliances",
@@ -314,6 +366,298 @@ const MACEDONIAN_CATEGORIES: CategoryInput[] = [  {
   { name: "Events, Nightlife, Exhibitions", slug: "events-nightlife" },
   { name: "Vacation, Tourism, Tickets, Travel", slug: "vacation-tourism" },
   { name: "Personal Contacts", slug: "personal-contacts" },
+  { 
+    name: "Do It Yourself (DIY)", 
+    slug: "napravete-sami",
+    subcategories: [
+      { 
+        name: "Cordless Tools", 
+        slug: "cordless-tools",
+        subcategories: [
+          { name: "Cordless Drills & Drivers", slug: "cordless-drills" },
+          { name: "Cordless Rotary Hammers", slug: "cordless-rotary-hammers" },
+          { name: "Cordless Grinders", slug: "cordless-grinders" },
+          { name: "Cordless Impact Drivers", slug: "cordless-impact-drivers" },
+          { name: "Cordless Saws", slug: "cordless-saws" },
+          { name: "Cordless Routers & Planers", slug: "cordless-routers-planers" },
+          { name: "Cordless Renovators & Multitools", slug: "cordless-multitools" },
+          { name: "Cordless Industrial Vacuums", slug: "cordless-vacuums" },
+          { name: "Cordless Tool Sets", slug: "cordless-tool-sets" },
+          { name: "Batteries & Chargers", slug: "cordless-batteries-chargers" },
+          { name: "Other Cordless Tools", slug: "cordless-other" },
+        ]
+      },
+      { 
+        name: "Garden Tools", 
+        slug: "garden-tools",
+        subcategories: [
+          { name: "Lawn Mowers", slug: "garden-mowers" },
+          { name: "Grass Trimmers", slug: "garden-trimmers" },
+          { name: "Pressure Washers", slug: "garden-pressure-washers" },
+          { name: "Garden Hand Tools", slug: "garden-hand-tools" },
+          { name: "Watering & Irrigation", slug: "garden-watering" },
+          { name: "Chainsaws", slug: "garden-chainsaws" },
+          { name: "Water Pumps", slug: "garden-pumps" },
+          { name: "Leaf Blowers & Vacuums", slug: "garden-blowers" },
+          { name: "Earth Augers", slug: "garden-augers" },
+          { name: "Planting & Care", slug: "garden-planting" },
+          { name: "Other Garden Tools", slug: "garden-other" },
+          { name: "Nets & Foils", slug: "garden-nets" },
+        ]
+      },
+      { 
+        name: "Electric Tools", 
+        slug: "electric-tools",
+        subcategories: [
+          { name: "Electric Drills & Drivers", slug: "electric-drills" },
+          { name: "Electric Rotary Hammers", slug: "electric-rotary-hammers" },
+          { name: "Electric Saws", slug: "electric-saws" },
+          { name: "Electric Grinders", slug: "electric-grinders" },
+          { name: "Electric Planers & Routers", slug: "electric-planers" },
+          { name: "Renovators - Multitools", slug: "electric-multitools" },
+          { name: "Industrial Vacuums", slug: "electric-vacuums" },
+          { name: "Heat Guns", slug: "electric-heat-guns" },
+          { name: "Staplers & Nailers", slug: "electric-staplers" },
+          { name: "Wall Chasers", slug: "electric-wall-chasers" },
+          { name: "Mixers for Construction Materials", slug: "electric-mixers" },
+          { name: "Sheet Metal Shears", slug: "electric-shears" },
+          { name: "Glue Guns", slug: "electric-glue-guns" },
+          { name: "Other Electric Tools", slug: "electric-other" },
+          { name: "Electric Tool Accessories", slug: "electric-accessories" },
+          { name: "Routers", slug: "electric-routers" },
+        ]
+      },
+      { 
+        name: "Hand Tools", 
+        slug: "hand-tools",
+        subcategories: [
+          { name: "Pliers", slug: "hand-pliers" },
+          { name: "Wrenches & Spanners", slug: "hand-wrenches" },
+          { name: "Screwdrivers", slug: "hand-screwdrivers" },
+          { name: "Tool Sets", slug: "hand-tool-sets" },
+          { name: "Cutters & Utility Knives", slug: "hand-cutters" },
+          { name: "Tool Storage & Organization", slug: "hand-storage" },
+          { name: "Saws & Hacksaws", slug: "hand-saws" },
+          { name: "Hammers & Mallets", slug: "hand-hammers" },
+          { name: "Wire Brushes & Files", slug: "hand-brushes" },
+          { name: "Clamps & Vices", slug: "hand-clamps" },
+          { name: "Chisels & Crowbars", slug: "hand-chisels" },
+          { name: "Marking Tools", slug: "hand-marking" },
+          { name: "Hand Staplers", slug: "hand-staplers" },
+          { name: "Automotive Tools", slug: "hand-automotive" },
+          { name: "Shears & Bolt Cutters", slug: "hand-shears" },
+          { name: "Other Hand Tools", slug: "hand-other" },
+        ]
+      },
+      { 
+        name: "Painting & Ceramics", 
+        slug: "painting-ceramics",
+        subcategories: [
+          { name: "Paint Brushes", slug: "painting-brushes" },
+          { name: "Paint Rollers", slug: "painting-rollers" },
+          { name: "Foils & Protection", slug: "painting-foil" },
+          { name: "Trowels", slug: "painting-trowels" },
+          { name: "Spatulas", slug: "painting-spatulas" },
+          { name: "Ladles & Trowels", slug: "painting-ladles" },
+          { name: "Mixers", slug: "painting-mixers" },
+          { name: "Silicone & Foam Guns", slug: "painting-guns" },
+          { name: "Telescopic Poles", slug: "painting-telescopic" },
+          { name: "Ceramic Tools", slug: "ceramics-tools" },
+          { name: "Tile Cutters", slug: "ceramics-cutters" },
+          { name: "Ladders, Scaffolding & Platforms", slug: "painting-ladders" },
+          { name: "Sanders & Abrasives", slug: "painting-sanders" },
+          { name: "Buckets & Trays", slug: "painting-buckets" },
+          { name: "Cleaning Brushes", slug: "painting-cleaning" },
+          { name: "Other Painting Tools", slug: "painting-other" },
+          { name: "Silicone Guns", slug: "painting-silicone-guns" },
+          { name: "Large Brushes", slug: "painting-brushes-large" },
+        ]
+      },
+      { 
+        name: "Paints & Varnishes", 
+        slug: "paints-varnishes",
+        subcategories: [
+          { name: "Wall Paints", slug: "paints-wall" },
+          { name: "Metal Paints", slug: "paints-metal" },
+          { name: "Concrete & Stone Paints", slug: "paints-concrete" },
+          { name: "Wood Varnishes", slug: "paints-wood" },
+          { name: "Spray Paints", slug: "paints-sprays" },
+        ]
+      },
+      { 
+        name: "Protective Equipment (PPE)", 
+        slug: "protective-equipment",
+        subcategories: [
+          { name: "Safety Shoes", slug: "protective-shoes" },
+          { name: "Protective Clothing", slug: "protective-clothing" },
+          { name: "Protective Gloves", slug: "protective-gloves" },
+          { name: "Protective Masks", slug: "protective-masks" },
+          { name: "Safety Glasses", slug: "protective-glasses" },
+          { name: "Helmets & Visors", slug: "protective-helmets" },
+          { name: "Hearing Protection", slug: "protective-hearing" },
+          { name: "Welding Masks", slug: "protective-welding" },
+          { name: "Knee Pads", slug: "protective-knee" },
+          { name: "Other PPE", slug: "protective-other" },
+        ]
+      },
+      { 
+        name: "Technical Chemistry", 
+        slug: "technical-chemistry",
+        subcategories: [
+          { name: "Construction Silicone", slug: "chem-silicone" },
+          { name: "PU Foam", slug: "chem-foam" },
+          { name: "Adhesives & Putty", slug: "chem-adhesives" },
+          { name: "Technical Sprays", slug: "chem-sprays" },
+          { name: "Thermo & Fluoro Sprays", slug: "chem-thermo-sprays" },
+          { name: "Other Technical Chemistry", slug: "chem-other" },
+        ]
+      },
+      { 
+        name: "Tool Accessories", 
+        slug: "tool-accessories",
+        subcategories: [
+          { name: "Bits & Bit Holders", slug: "acc-bits" },
+          { name: "Grinding & Cutting Accessories", slug: "acc-grinding" },
+          { name: "Drills, Chisels & Points", slug: "acc-drills" },
+          { name: "Saw Blades", slug: "acc-blades" },
+          { name: "Milling & Grooving", slug: "acc-milling" },
+          { name: "Hole Saws & Adapters", slug: "acc-crowns" },
+          { name: "Staples & Nails", slug: "acc-staples" },
+          { name: "Chucks & Accessories", slug: "acc-chucks" },
+          { name: "Grinder Accessories", slug: "acc-grinder-parts" },
+          { name: "Heat Gun Accessories", slug: "acc-heat-gun-parts" },
+          { name: "Planer Accessories", slug: "acc-planer-parts" },
+          { name: "Pressure Washer Accessories", slug: "acc-washer-parts" },
+          { name: "Multitool Accessories", slug: "acc-multitool-parts" },
+          { name: "Welding & Soldering Accessories", slug: "acc-welding" },
+          { name: "Other Machine Accessories", slug: "acc-machine-other" },
+          { name: "Misc Tools & storage", slug: "acc-misc" },
+        ]
+      },
+      { 
+        name: "Machines & Pneumatics", 
+        slug: "machines-pneumatics",
+        subcategories: [
+          { name: "Log Splitters", slug: "mach-splitters" },
+          { name: "Air Compressors", slug: "mach-compressors" },
+          { name: "Power Generators", slug: "mach-generators" },
+          { name: "Welding Machines", slug: "mach-welders" },
+          { name: "Hoists & Winches", slug: "mach-lifts" },
+          { name: "Hydraulic Presses", slug: "mach-presses" },
+          { name: "Soldering Irons", slug: "mach-soldering" },
+          { name: "Trolleys & Carts", slug: "mach-trolleys" },
+          { name: "Pneumatic Tools", slug: "mach-pneumatic" },
+          { name: "Floor Cleaning Machines", slug: "mach-cleaning" },
+          { name: "Pipe Welders", slug: "mach-pipe-welders" },
+          { name: "Forklifts & Pallet Jacks", slug: "mach-forklifts" },
+          { name: "Other Machines", slug: "mach-other" },
+          { name: "Pneumatic Guns", slug: "mach-pneumatic-guns" },
+        ]
+      },
+      { 
+        name: "Measuring Tools", 
+        slug: "measuring-tools",
+        subcategories: [
+          { name: "Construction Lasers", slug: "meas-lasers" },
+          { name: "Detectors", slug: "meas-detectors" },
+          { name: "Measuring Tapes", slug: "meas-tapes" },
+          { name: "Levels", slug: "meas-levels" },
+          { name: "Rulers & Squares", slug: "meas-rulers" },
+          { name: "Protractors & Compasses", slug: "meas-protractors" },
+          { name: "Micrometers", slug: "meas-micrometers" },
+          { name: "Multimeters & Testers", slug: "meas-multimeters" },
+          { name: "Calipers", slug: "meas-calipers" },
+          { name: "Thermal & Inspection Cameras", slug: "meas-cameras" },
+          { name: "Tripods & Accessories", slug: "meas-tripods" },
+          { name: "Other Measuring Tools", slug: "meas-other" },
+        ]
+      },
+      { 
+        name: "Tapes & Ropes", 
+        slug: "tapes-ropes",
+        subcategories: [
+          { name: "Masking Tape", slug: "tape-crepe" },
+          { name: "Insulation Tape", slug: "tape-insulation" },
+          { name: "Scotch Tape", slug: "tape-scoth" },
+          { name: "Double-sided Tape", slug: "tape-double" },
+          { name: "Sealing Tape", slug: "tape-sealing" },
+          { name: "Banding Tape", slug: "tape-banding" },
+          { name: "Ropes", slug: "tape-ropes" },
+          { name: "Other Tapes & Ropes", slug: "tape-other" },
+        ]
+      },
+      { 
+        name: "Metal Hardware", 
+        slug: "metal-hardware",
+        subcategories: [
+          { name: "Screws & Bolts", slug: "metal-screws" },
+          { name: "Nails", slug: "metal-nails" },
+          { name: "Dowels", slug: "metal-dowels" },
+          { name: "Small Hardware", slug: "metal-small" },
+          { name: "Chains & Cables", slug: "metal-chains" },
+          { name: "Locks & Handles", slug: "metal-locks" },
+          { name: "Metal Cabinets & Safes", slug: "metal-safes" },
+          { name: "Padlocks", slug: "metal-padlocks" },
+          { name: "Furniture Hardware", slug: "metal-furniture" },
+          { name: "Shelf Brackets", slug: "metal-brackets" },
+          { name: "Other Metal Hardware", slug: "metal-other" },
+        ]
+      },
+      { 
+        name: "Electrical Materials", 
+        slug: "electrical-materials",
+        subcategories: [
+          { name: "Extension Cords & Splitters", slug: "elec-cables" },
+          { name: "Batteries & Chargers", slug: "elec-batteries" },
+          { name: "Switches", slug: "elec-switches" },
+          { name: "Sockets", slug: "elec-sockets" },
+          { name: "Plugs", slug: "elec-plugs" },
+          { name: "Modular Hardware", slug: "elec-modular" },
+          { name: "Junction Boxes", slug: "elec-boxes" },
+          { name: "Distribution Panels", slug: "elec-panels" },
+          { name: "Circuit Breakers", slug: "elec-breakers" },
+          { name: "Cable Carriers", slug: "elec-carriers" },
+          { name: "Other Cables", slug: "elec-other" },
+        ]
+      },
+      { 
+        name: "Plumbing", 
+        slug: "plumbing",
+        subcategories: [
+          { name: "Valves & Regulators", slug: "plumbing-valves" },
+          { name: "Siphons & Drains", slug: "plumbing-drains" },
+          { name: "Parts & Accessories", slug: "plumbing-parts" }, 
+        ]
+      },
+      { 
+        name: "Construction Materials", 
+        slug: "construction-materials",
+        subcategories: [
+          { name: "Building Materials", slug: "const-building" },
+          { name: "Flooring & Wall Coverings", slug: "const-flooring" },
+          { name: "Insulation", slug: "const-insulation" },
+          { name: "Drainage", slug: "const-drainage" },
+          { name: "Construction Equipment", slug: "const-equipment" },
+        ]
+      },
+      { 
+        name: "Tiling Program", 
+        slug: "tiling-program",
+        subcategories: [
+          { name: "Tile Spacers", slug: "tiling-spacers" },
+        ]
+      },
+      { 
+        name: "Agricultural Machines", 
+        slug: "agricultural-machines",
+        subcategories: [
+           { name: "Cultivators & Tillers", slug: "agri-cultivators" },
+           { name: "Storage & Transport Equipment", slug: "agri-storage" },
+           { name: "Other Agricultural Machines", slug: "agri-other" },
+        ]
+      },
+    ]
+  },
   { name: "Other", slug: "other-categories" },
 ];
 
@@ -340,7 +684,63 @@ const getCustomTemplate = (slug: string, name: string) => {
     { label: "Capacity (kg)", type: "number", key: "capacity", placeholder: "kg" },
   ];
 
-  // SPECIFIC CATEGORY LOGIC
+  // REAL ESTATE LOGIC
+  if (slug.includes("apartments")) {
+    return {
+      titlePlaceholder: "e.g. Furnished Apartment in Center",
+      fields: [
+        ...baseFields,
+        { label: "Square meters (m2)", type: "number", key: "m2", placeholder: "m2" },
+        { label: "Number of rooms", type: "number", key: "rooms", placeholder: "Rooms" },
+        { label: "Floor", type: "number", key: "floor", placeholder: "Floor" },
+        { label: "Heating", type: "select", key: "heating", options: ["Central", "Electricity", "Inverter AC", "Wood", "None"] },
+        { label: "Furnished", type: "select", key: "furnished", options: ["Yes", "Semi", "No"] },
+        { label: "Year Built", type: "number", key: "year_built", placeholder: "Year" },
+        { label: "Parking/Garage", type: "select", key: "parking", options: ["Yes", "No"] },
+      ]
+    };
+  }
+
+  if (slug.includes("houses") || slug.includes("holiday-homes")) {
+    return {
+      titlePlaceholder: "e.g. Family House with Yard",
+      fields: [
+        ...baseFields,
+        { label: "House Area (m2)", type: "number", key: "m2", placeholder: "m2" },
+        { label: "Yard Area (m2)", type: "number", key: "yard_m2", placeholder: "m2" },
+        { label: "Number of rooms", type: "number", key: "rooms", placeholder: "Rooms" },
+        { label: "Floors", type: "number", key: "floors", placeholder: "Floors" },
+        { label: "Heating", type: "select", key: "heating", options: ["Central", "Electricity", "Heat Pump", "Wood", "Solar"] },
+        { label: "Year Built", type: "number", key: "year_built", placeholder: "Year" },
+      ]
+    };
+  }
+
+  if (slug.includes("land")) {
+    return {
+      titlePlaceholder: "e.g. Construction Plot in Karpos",
+      fields: [
+        ...baseFields,
+        { label: "Area (m2)", type: "number", key: "m2", placeholder: "m2" },
+        { label: "Electricity", type: "select", key: "electricity", options: ["Yes", "No", "Nearby"] },
+        { label: "Water", type: "select", key: "water", options: ["Yes", "No", "Nearby"] },
+        { label: "Road Access", type: "select", key: "road", options: ["Asphalt", "Dirt Road", "None"] },
+      ]
+    };
+  }
+
+  if (slug.includes("commercial-space") || slug.includes("offices") || slug.includes("shops")) {
+    return {
+      titlePlaceholder: "e.g. Office Space in Aerodrom",
+      fields: [
+        ...baseFields,
+        { label: "Area (m2)", type: "number", key: "m2", placeholder: "m2" },
+        { label: "Rooms", type: "number", key: "rooms", placeholder: "Rooms" },
+        { label: "Floor", type: "number", key: "floor", placeholder: "Floor" },
+      ]
+    };
+  }
+  
   if (slug === "cars") {
     return {
       titlePlaceholder: "e.g. Volkswagen Golf 7 1.6 TDI",
@@ -574,7 +974,180 @@ const getCustomTemplate = (slug: string, name: string) => {
     };
   }
   
-  // Catch-all for other TV/Audio/Video categories not explicitly defined above
+  // --- TOOLS & DIY SPECIFIC LOGIC ---
+  
+  // 1. DRILLS & DRIVERS
+  if (slug.includes("drills") || slug.includes("impact-drivers") || slug.includes("rotary-hammers") || slug.includes("screw")) {
+    const isCordless = slug.includes("cordless");
+    return {
+      titlePlaceholder: `e.g. Bosch Professional GSB 18V-50`,
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Power Source", type: "select", key: "power_source", options: ["Cordless (Battery)", "Electric (Corded)"], defaultValue: isCordless ? "Cordless (Battery)" : "Electric (Corded)" },
+        { label: "Voltage (V)", type: "number", key: "voltage", placeholder: "V (if cordless)" },
+        { label: "Power (W)", type: "number", key: "power_watts", placeholder: "W (if corded)" },
+        { label: "Max Torque (Nm)", type: "number", key: "torque", placeholder: "Nm" },
+        { label: "Chuck Type", type: "select", key: "chuck_type", options: ["Keyless", "Keyed", "SDS Plus", "SDS Max", "Hex"] },
+      ]
+    };
+  }
+
+  // 2. GRINDERS
+  if (slug.includes("grinders")) {
+    const isCordless = slug.includes("cordless");
+    return {
+      titlePlaceholder: `e.g. Makita GA4530`,
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Power Source", type: "select", key: "power_source", options: ["Cordless (Battery)", "Electric (Corded)"], defaultValue: isCordless ? "Cordless (Battery)" : "Electric (Corded)" },
+        { label: "Disc Diameter (mm)", type: "select", key: "disc_diameter", options: ["115mm", "125mm", "150mm", "180mm", "230mm"] },
+        { label: "Power (W)", type: "number", key: "power_watts", placeholder: "W" },
+        { label: "Switch Type", type: "text", key: "switch_type", placeholder: "Paddle / Slide" },
+      ]
+    };
+  }
+
+  // 3. SAWS
+  if (slug.includes("saws")) {
+    return {
+      titlePlaceholder: `e.g. DeWalt DCS570`,
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Type", type: "select", key: "saw_type", options: ["Circular Saw", "Jigsaw", "Reciprocating Saw", "Mitre Saw", "Table Saw"] },
+        { label: "Blade Diameter (mm)", type: "number", key: "blade_diameter", placeholder: "mm" },
+        { label: "Cutting Depth (mm)", type: "number", key: "cutting_depth", placeholder: "mm" },
+        { label: "Power (W)", type: "number", key: "power_watts", placeholder: "W" },
+      ]
+    };
+  }
+
+  // 4. BATTERIES & CHARGERS
+  if (slug.includes("batteries")) {
+     return {
+      titlePlaceholder: `e.g. Makita 18V 5Ah`,
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Voltage (V)", type: "number", key: "voltage", placeholder: "V" },
+        { label: "Capacity (Ah)", type: "number", key: "capacity", placeholder: "Ah" },
+        { label: "Type", type: "text", key: "type", placeholder: "Li-Ion / NiCd" },
+      ]
+    };
+  }
+
+  // 5. GARDEN - MOWERS
+  if (slug.includes("mowers")) {
+     return {
+      titlePlaceholder: `e.g. Husqvarna LC 140P`,
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Power Source", type: "select", key: "power_source", options: ["Petrol", "Electric", "Battery", "Manual"] },
+        { label: "Cutting Width (cm)", type: "number", key: "cutting_width", placeholder: "cm" },
+        { label: "Collector Volume (L)", type: "number", key: "collector_volume", placeholder: "Liters" },
+        { label: "Self-propelled", type: "select", key: "self_propelled", options: ["Yes", "No"] },
+      ]
+    };
+  }
+
+  // 6. GARDEN - TRIMMERS & CHAINSAWS
+  if (slug.includes("trimmers") || slug.includes("chainsaws")) {
+     return {
+      titlePlaceholder: `e.g. Stihl FS 55`,
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Power Source", type: "select", key: "power_source", options: ["Petrol", "Electric", "Battery"] },
+        { label: "Power (HP/Kw)", type: "text", key: "power", placeholder: "HP / kW" },
+        { label: "Bar/Shaft Length", type: "text", key: "length", placeholder: "cm" },
+      ]
+    };
+  }
+
+  // 7. MACHINES - GENERATORS
+  if (slug.includes("generators")) {
+      return {
+      titlePlaceholder: `e.g. Honda EU22i`,
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Output Power (kVA)", type: "number", key: "power_kva", placeholder: "kVA" },
+        { label: "Fuel Type", type: "select", key: "fuel", options: ["Petrol", "Diesel"] },
+        { label: "Phase", type: "select", key: "phase", options: ["Single-phase", "Three-phase"] },
+      ]
+    };
+  }
+
+  // 8. MACHINES - COMPRESSORS
+  if (slug.includes("compressors")) {
+      return {
+      titlePlaceholder: `e.g. Abac 50L`,
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Tank Capacity (L)", type: "number", key: "tank_capacity", placeholder: "Liters" },
+        { label: "Max Pressure (bar)", type: "number", key: "pressure", placeholder: "bar" },
+        { label: "Airflow (l/min)", type: "number", key: "airflow", placeholder: "l/min" },
+      ]
+    };
+  }
+
+   // 9. MACHINES - WELDERS
+  if (slug.includes("welders")) {
+      return {
+      titlePlaceholder: `e.g. Telwin Force 165`,
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Welding Type", type: "select", key: "welding_type", options: ["MMA (Stick)", "MIG/MAG", "TIG", "Plasma"] },
+        { label: "Max Current (A)", type: "number", key: "current", placeholder: "Amperes" },
+      ]
+    };
+  }
+
+   // 10. PROTECTIVE EQUIPMENT
+   if (slug.includes("protective-")) {
+    return {
+      titlePlaceholder: `e.g. ${name}`,
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Size", type: "select", key: "size", options: ["S", "M", "L", "XL", "XXL", "Universal", "39", "40", "41", "42", "43", "44", "45", "46"] },
+        { label: "Material", type: "text", key: "material", placeholder: "Material" },
+        { label: "Protection Level", type: "text", key: "protection_level", placeholder: "e.g. FFP2, S3" },
+      ]
+    };
+  }
+
+  // 11. GENERAL / OTHER TOOLS
+  if (slug.includes("electric") || slug.includes("mach-") || slug.includes("garden-") || slug.includes("planers") || slug.includes("routers") || slug.includes("multitools") || slug.includes("heat-guns") || slug.includes("staplers")) {
+    return {
+      titlePlaceholder: `e.g. ${name}`,
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Power (W)", type: "number", key: "power_watts", placeholder: "Watts" },
+        { label: "Type", type: "text", key: "type", placeholder: "Type" },
+      ]
+    };
+  }
+
+  if (slug.includes("hand-") || slug.includes("meas-") || slug.includes("tiling-") || slug.includes("metal-") || slug.includes("const-") || slug.includes("acc-") || slug.includes("paints-") || slug.includes("chem-") || slug.includes("elec-") || slug.includes("plumbing-") || slug.includes("tape-") || slug.includes("agri-")) {
+    // Keep generic for these or add more specifics if needed, but this covers the rest
+     return {
+      titlePlaceholder: `e.g. ${name}`,
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Material", type: "text", key: "material", placeholder: "Material" },
+        { label: "Dimensions/Size", type: "text", key: "dimensions", placeholder: "Dimensions" },
+      ]
+    };
+  }
+  
   if (slug.includes("tv") || slug.includes("audio") || slug.includes("video") || slug.includes("projector")) {
      return {
       titlePlaceholder: `e.g. ${name}`,

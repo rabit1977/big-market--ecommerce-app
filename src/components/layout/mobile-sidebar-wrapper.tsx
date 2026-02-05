@@ -1,6 +1,6 @@
 'use client';
 
-import { useMobileSidebar } from '@/lib/hooks/useMobileSidebar';
+import { useSidebar } from '@/lib/context/sidebar-context';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Header } from './header';
@@ -17,7 +17,7 @@ interface MobileSidebarWrapperProps {
 export function MobileSidebarWrapper({
   initialWishlistCount,
 }: MobileSidebarWrapperProps) {
-  const sidebar = useMobileSidebar();
+  const sidebar = useSidebar();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 

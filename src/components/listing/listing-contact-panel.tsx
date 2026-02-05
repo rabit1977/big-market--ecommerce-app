@@ -4,19 +4,25 @@ import { sendMessageAction } from '@/actions/message-actions';
 import { toggleWishlistAction } from '@/actions/wishlist-actions';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { formatPrice } from '@/lib/utils/formatters';
 import {
-    AlertTriangle,
-    CheckCircle,
-    Heart,
-    Mail,
-    MapPin,
-    Phone,
-    Shield,
-    User,
-    XCircle
+  AlertTriangle,
+  CheckCircle,
+  Heart,
+  Mail,
+  MapPin,
+  Phone,
+  Shield,
+  User,
+  XCircle
 } from 'lucide-react';
 import { useMemo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
@@ -74,10 +80,10 @@ export function ListingContactPanel({
 
   const handleToggleWishlist = () => {
     startTransition(async () => {
-      const result = await toggleWishlistAction(listing.id);
+      const result = await toggleWishlistAction(listing._id);
 
       if (!result.success) {
-        toast.error(result.error ?? 'Wishlist update failed');
+        toast.error(String(result.error || 'Wishlist update failed'));
         return;
       }
 
@@ -95,14 +101,14 @@ export function ListingContactPanel({
     startTransition(async () => {
         const result = await sendMessageAction({
             content,
-            listingId: listing.id,
+            listingId: listing._id,
             receiverId: listing.userId
         });
         
         if (result.success) {
             toast.success("Message sent!");
         } else {
-            toast.error(result.error || "Failed to send message");
+            toast.error(String(result.error || "Failed to send message"));
         }
     });
   };
@@ -167,26 +173,32 @@ export function ListingContactPanel({
       {/* Contact Actions */}
       <div className='space-y-4'>
         <div className='flex gap-3 justify-end'>
-          <Button
-            size='icon'
-            variant='outline'
-            onClick={handleToggleWishlist}
-            disabled={isPending}
-            className={cn(
-              'h-12 w-12 rounded-full border transition-all shrink-0',
-              isWished 
-                ? 'bg-red-50 border-red-200 hover:bg-red-100 dark:bg-red-950/50 dark:border-red-800 dark:hover:bg-red-900/50' 
-                : 'border-border/60 hover:bg-secondary/50 hover:border-primary/30'
-            )}
-            title={isWished ? 'Remove from Favorites' : 'Add to Favorites'}
-          >
-            <Heart
-              className={cn('h-5 w-5 transition-all duration-300', {
-                'fill-red-500 text-red-500 scale-110': isWished,
-                'text-muted-foreground': !isWished
-              })}
-            />
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size='icon'
+                  variant='outline'
+                  onClick={handleToggleWishlist}
+                  disabled={isPending}
+                  className={cn(
+                    'h-12 w-12 rounded-full border transition-all shrink-0',
+                    isWished 
+                      ? 'bg-red-50 border-red-200 hover:bg-red-100 dark:bg-red-950/50 dark:border-red-800 dark:hover:bg-red-900/50' 
+                      : 'border-border/60 hover:bg-secondary/50 hover:border-primary/30'
+                  )}
+                >
+                  <Heart
+                    className={cn('h-5 w-5 transition-all duration-300', {
+                      'fill-red-500 text-red-500 scale-110': isWished,
+                      'text-muted-foreground': !isWished
+                    })}
+                  />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{isWished ? 'Remove from Favorites' : 'Add to Favorites'}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
 
         {/* Contact Seller Buttons */}

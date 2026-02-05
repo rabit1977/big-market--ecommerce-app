@@ -1,5 +1,6 @@
 'use client';
 
+import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -55,6 +56,9 @@ export default function PasswordPage() {
     return (
         <div className="min-h-screen pt-24 pb-12 bg-muted/10">
             <div className="container max-w-xl mx-auto px-4">
+                <div className="mb-6">
+                    <AppBreadcrumbs />
+                </div>
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">

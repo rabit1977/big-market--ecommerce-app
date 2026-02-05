@@ -129,7 +129,7 @@ export const ListingCard = memo(
                </div>
 
                <div className="pt-1">
-                   <span className="text-lg font-bold text-blue-700">
+                   <span className="text-lg font-bold text-blue-700 dark:text-blue-400">
                      {formatPrice(listing.price)}
                    </span>
                </div>

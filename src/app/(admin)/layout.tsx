@@ -1,5 +1,6 @@
 import { AdminBottomNav, AdminMobileHeader, AdminSidebar } from '@/components/admin/admin-sidebar';
 import AdminAuthGuard from '@/components/auth/admin-auth-guard';
+import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 
 export default function AdminLayout({
   children,
@@ -24,6 +25,9 @@ export default function AdminLayout({
           {/* Main Content with bottom padding on mobile */}
           <main className='flex-1 overflow-x-hidden pb-20 lg:pb-0'>
             <div className='container-wide py-6 lg:py-8'>
+              <div className="mb-6">
+                <AppBreadcrumbs />
+              </div>
               <div className='page-enter'>{children}</div>
             </div>
           </main>

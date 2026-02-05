@@ -1,6 +1,7 @@
 'use client';
 
 import { createStripeCheckoutSession } from '@/actions/stripe-actions';
+import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -126,6 +127,9 @@ export default function PricingPage() {
 
     return (
         <div className="min-h-screen pt-24 pb-20 bg-slate-50/50">
+            <div className="container-wide mb-8">
+                <AppBreadcrumbs />
+            </div>
             {/* Header */}
             <div className="container px-4 mx-auto text-center mb-16">
                 <Badge variant="outline" className="mb-4 bg-blue-50 text-blue-700 border-blue-200 px-4 py-1">

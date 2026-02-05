@@ -1,6 +1,6 @@
 'use client';
 
-import { Heart, MessageCircle, Package, Zap } from 'lucide-react';
+import { Heart, MessageSquare, Package, Zap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface AccountStatsProps {
@@ -42,7 +42,7 @@ export function AccountStats({
     {
         label: 'Messages',
         value: messagesCount,
-        icon: MessageCircle,
+        icon: MessageSquare,
         color: 'text-emerald-500',
         bg: 'bg-emerald-500/10',
         path: '/messages'
@@ -58,25 +58,28 @@ export function AccountStats({
   ];
 
   return (
-    <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6'>
+    <div className='grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4'>
       {statItems.map((item, i) => (
           <button
             key={i}
             onClick={() => handleNavigate(item.path)}
-            className='glass-card p-6 border-border/50 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-left group relative overflow-hidden'
+            className='relative group bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 text-left'
           >
-            <div className='flex flex-col gap-4'>
-              <div className={`w-12 h-12 ${item.bg} ${item.color} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform ring-1 ring-inset ring-white/10`}>
-                <item.icon className='h-6 w-6' />
+            <div className='flex items-center gap-4'>
+              <div className={`w-10 h-10 shrink-0 ${item.bg} ${item.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                <item.icon className='h-5 w-5' />
               </div>
-              <div>
-                <p className='text-xs sm:text-sm font-bold text-muted-foreground uppercase tracking-wider mb-1'>
+              <div className='flex-1 min-w-0'>
+                <p className='text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-0.5 truncate'>
                   {item.label}
                 </p>
-                <p className='text-2xl sm:text-3xl font-black tracking-tight text-foreground'>
+                <p className='text-xl font-bold tracking-tight text-foreground'>
                   {item.value}
                 </p>
               </div>
+            </div>
+            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary" />
             </div>
           </button>
       ))}

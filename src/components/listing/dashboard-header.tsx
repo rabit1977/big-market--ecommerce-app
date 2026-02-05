@@ -2,6 +2,12 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger
+} from '@/components/ui/tooltip';
 import { useQuery } from 'convex/react';
 import { format } from 'date-fns';
 import {
@@ -63,9 +69,16 @@ export function MyListingsDashboardHeader() {
                      )}
                  </div>
                  {user.isVerified && (
-                     <div className="absolute -bottom-1 -right-1 bg-blue-500 text-white p-1 rounded-full border-2 border-white shadow-sm" title="Verified Account">
-                         <CheckCircle2 className="w-4 h-4" />
-                     </div>
+                     <TooltipProvider>
+                         <Tooltip>
+                             <TooltipTrigger asChild>
+                                 <div className="absolute -bottom-1 -right-1 bg-blue-500 text-white p-1 rounded-full border-2 border-white shadow-sm cursor-help">
+                                     <CheckCircle2 className="w-4 h-4" />
+                                 </div>
+                             </TooltipTrigger>
+                             <TooltipContent>Verified Account</TooltipContent>
+                         </Tooltip>
+                     </TooltipProvider>
                  )}
              </div>
              <div>

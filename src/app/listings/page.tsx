@@ -1,4 +1,5 @@
 import { ListingsClient } from '@/components/listing/listings-client';
+import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { fetchQuery } from 'convex/nextjs';
 import { Suspense } from 'react';
 import { api } from '../../../convex/_generated/api';
@@ -92,6 +93,9 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
       {/* Header */}
       <div className="bg-card border-b border-border/50 py-8 mb-8">
         <div className="container-wide">
+          <div className="mb-4">
+            <AppBreadcrumbs />
+          </div>
           <h1 className="text-4xl font-bold tracking-tight mb-3">
             {category && category !== 'all'
               ? categories.find((c) => c.slug === category)?.name || 'Listings'

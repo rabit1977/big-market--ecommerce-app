@@ -1,11 +1,8 @@
 export const CITIES = [
   "All Cities",
-  "Berovo", "Bitola", "Bogdanci", "Debar", "Delcevo", 
-  "Demir Hisar", "Demir Kapija", "Gevgelija", "Gostivar", 
-  "Kavadarci", "Kicevo", "Kocani", "Kratovo", "Kriva Palanka", 
-  "Krusevo", "Kumanovo", "Makedonski Brod", "Makedonska Kamenica", 
-  "Negotino", "Ohrid", "Pehcevo", "Prilep", "Probistip", 
-  "Radovis", "Resen", "Skopje", "Stip", "Struga", 
-  "Strumica", "Sveti Nikole", "Tetovo", "Valandovo", 
-  "Veles", "Vinica"
+  "Skopje","Kumanovo", "Bitola", "Tetovo", "Stip", 
+  "Gostivar","Strumica", "Prilep", "Kavadarci", "Kicevo", "Kocani", "Debar", "Kratovo", "Kriva Palanka", 
+  "Krusevo",  "Makedonski Brod", "Makedonska Kamenica", 
+  "Negotino", "Ohrid", "Pehcevo", "Probistip", "Radovis", "Resen", "Struga", "Sveti Nikole", "Valandovo", 
+  "Veles", "Vinica","Berovo", "Bogdanci","Delcevo", "Demir Hisar", "Demir Kapija", "Gevgelija", 
 ];

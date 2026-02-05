@@ -47,7 +47,7 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className='text-3xl md:text-4xl font-bold tracking-tight mb-2'>
+          <h2 className='text-xl md:text-2xl font-black tracking-tight mb-2'>
             Latest Listings
           </h2>
           <p className="text-muted-foreground text-sm">

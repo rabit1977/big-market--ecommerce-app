@@ -6,16 +6,17 @@ import { Button } from '@/components/ui/button';
 import { useQuery as useConvexQuery, useMutation } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import {
-    BadgeCheck,
-    ChevronLeft,
-    Heart,
-    MapPin,
-    MessageCircle,
-    MessageSquare,
-    MoreVertical,
-    Phone,
-    Share2,
-    ShieldAlert
+   BadgeCheck,
+   ChevronLeft,
+   Heart,
+   Mail,
+   MapPin,
+   MessageCircle,
+   MessageSquare,
+   MoreVertical,
+   Phone,
+   Share2,
+   ShieldAlert
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -77,6 +78,8 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
   const condition = listing.specifications?.condition; 
   // Use actual contact phone from listing or fallback to seller's phone if available (though listing.contactPhone is preferred for the item)
   const contactPhone = listing.contactPhone || (seller as any)?.phone;
+  // Use actual contact email from listing or fallback to seller's email
+  const contactEmail = listing.contactEmail || (seller as any)?.email;
 
   const handleShare = () => {
     if (navigator.share) {
@@ -146,9 +149,9 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-0 md:gap-8">
           {/* Left Column: Images, Specs, Description (lg:col-span-8) */}
-          <div className="lg:col-span-8 space-y-4 md:space-y-6">
+          <div className="md:col-span-7 lg:col-span-8 space-y-4 md:space-y-6">
             
             {/* Image Section - Edge-to-edge on mobile */}
             <div className="relative group bg-slate-900 overflow-hidden md:rounded-2xl shadow-xl">
@@ -272,6 +275,13 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                         </a>
                     )}
                 </div>
+                
+                {contactEmail && (
+                    <div className="mt-3 flex items-center justify-center p-3 bg-slate-50 rounded-xl text-xs font-bold text-slate-500 border border-slate-100 gap-2">
+                        <Mail className="w-4 h-4" />
+                        <span>Email: {contactEmail}</span>
+                    </div>
+                )}
             </div>
 
             {/* Specifications Section */}
@@ -320,11 +330,11 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
           </div>
 
           {/* Right Column (lg:col-span-4) - Hidden/Transformed on Mobile */}
-          <div className="hidden lg:block lg:col-span-4 space-y-6">
+          <div className="hidden md:block md:col-span-5 lg:col-span-4 space-y-6">
              {/* Sticky Actions Container */}
-             <div className="sticky top-24 space-y-6">
+             <div className="top-24 space-y-6 max-h-[calc(100vh-8rem)] overflow-y-auto pr-1 no-scrollbar">
                 {/* Price & Primary Details */}
-                <div className="bg-white border-2 border-slate-100 rounded-3xl p-8 shadow-xl shadow-slate-200/50 space-y-6">
+                <div className="bg-white border-2 border-slate-100 rounded-3xl p-6 md:p-8 shadow-xl shadow-slate-200/50 space-y-6">
                    <div className="space-y-2">
                        <h1 className="text-2xl font-black text-slate-900 tracking-tight leading-tight uppercase group-hover:text-primary transition-colors">
                           {listing.title}
@@ -352,26 +362,42 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                          </Link>
                       </Button>
                       
-                      {contactPhone && (
-                        <div className="flex gap-2">
-                            <Button asChild variant="outline" className="flex-1 h-14 rounded-2xl border-2 border-slate-100 font-black text-lg text-slate-900 hover:bg-slate-50 group">
-                                <a href={`tel:${contactPhone}`}>
-                                    <Phone className="mr-2 h-5 w-5 text-emerald-500" />
-                                    {contactPhone}
-                                </a>
-                            </Button>
-                            <Button asChild variant="outline" className="w-14 h-14 px-0 rounded-2xl border-2 border-slate-100 text-slate-600 hover:bg-slate-50">
-                                <a href={`sms:${contactPhone}`}>
+                       {/* Phone Number Display */}
+                       <div className="flex gap-2">
+                           {contactPhone && (
+                                <Button asChild variant="outline" className="flex-1 h-14 rounded-2xl border-2 border-slate-100 font-black text-lg text-slate-900 hover:bg-slate-50 group">
+                                    <a href={`tel:${contactPhone}`}>
+                                        <Phone className="mr-2 h-5 w-5 text-emerald-500" />
+                                        {contactPhone}
+                                    </a>
+                                </Button>
+                           )}
+
+                           <Button asChild variant="outline" className="w-14 h-14 px-0 rounded-2xl border-2 border-slate-100 text-slate-600 hover:bg-slate-50">
+                                <a href={`sms:${contactPhone || ''}`}>
                                     <MessageCircle className="h-6 w-6" />
                                 </a>
-                            </Button>
-                        </div>
-                      )}
+                           </Button>
+                       </div>
+                   </div>
+
+                   {/* Email Display */}
+                   {contactEmail && (
+                       <div className="flex items-center justify-center p-3 bg-slate-50 rounded-xl text-xs font-bold text-slate-500 border border-slate-100 gap-2">
+                           <span>Email: {contactEmail}</span>
+                       </div>
+                   )}
+
+                       <div className="flex items-center justify-center pt-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest gap-4">
+                           <span>ID: {listing._id.slice(-7)}</span>
+                           <span>•</span>
+                           <span>Posted: {publishDate}</span>
+                       </div>
                    </div>
                 </div>
 
                 {/* Seller Profile Card */}
-                <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm overflow-hidden relative">
+                <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-6 shadow-sm overflow-hidden relative">
                     <div className="absolute top-0 right-0 p-4">
                         <BadgeCheck className="w-8 h-8 text-blue-500 fill-blue-50 opacity-20" />
                     </div>
@@ -436,7 +462,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
         </div>
 
         {/* Mobile-Only Map & Safety */}
-        <div className="lg:hidden px-4 py-8 space-y-6">
+        <div className="md:hidden px-4 py-8 space-y-6">
             <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm aspect-[4/3] relative">
                 <iframe 
                     width="100%" height="100%" frameBorder="0" 
@@ -459,6 +485,5 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
             </div>
         </div>
       </div>
-    </div>
-  );
+);
 }

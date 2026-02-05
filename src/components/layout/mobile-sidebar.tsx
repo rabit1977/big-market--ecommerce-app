@@ -1,76 +1,27 @@
 'use client';
 
 import { getAllCategoriesAction } from '@/actions/listing-actions';
-import { UserAvatar } from '@/components/shared/user-avatar';
 import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
+import { useSidebar } from '@/lib/context/sidebar-context';
 import { useOnClickOutside } from '@/lib/hooks/useOnClickOutside';
-import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-    Briefcase,
-    Heart,
-    Home,
-    Info,
-    LayoutDashboard,
-    LogOut,
-    Mail,
-    Moon,
-    Package,
-    ShoppingBag,
-    Sun,
-    User,
-    UserCircle,
-    X,
-    Zap
+  Moon,
+  Sun,
+  X,
+  Zap
 } from 'lucide-react';
-import { signOut, useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { startTransition, useCallback, useEffect, useRef, useState } from 'react';
-import { SearchBar } from './search-bar';
+import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-interface NavLinkProps {
-  href: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  children: React.ReactNode;
-  isActive?: boolean;
-  onClick?: () => void;
-  className?: string;
-}
-
-const NavLink = ({
-  href,
-  icon: Icon,
-  children,
-  isActive,
-  onClick,
-  className,
-}: NavLinkProps) => (
-  <Link
-    href={href}
-    onClick={onClick}
-    className={cn(
-      'flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200',
-      isActive
-        ? 'bg-primary/10 text-primary'
-        : 'text-muted-foreground hover:bg-muted hover:text-foreground',
-      className
-    )}
-  >
-    {Icon && <Icon className={cn('h-5 w-5 shrink-0', isActive ? 'text-primary' : 'text-muted-foreground')} />}
-    <span>{children}</span>
-    {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />}
-  </Link>
-);
 
 interface MobileSidebarProps {
   isOpen: boolean;
@@ -80,24 +31,26 @@ interface MobileSidebarProps {
 
 
 export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
+  const { activeCategory, setActiveCategory } = useSidebar();
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
-  const { data: session, status } = useSession();
-  const user = session?.user;
   const menuRef = useRef<HTMLDivElement>(null);
   const previousOpenState = useRef(isOpen);
-  const [categories, setCategories] = useState<{ id: string; name: string; slug: string }[]>([]);
+  const [categories, setCategories] = useState<{ id: string; name: string; slug: string; parentId?: string | null }[]>([]);
 
   useEffect(() => {
     if (isOpen && categories.length === 0) {
       getAllCategoriesAction().then((res) => {
         if (res.success && res.categories) {
-          // Show only root categories
-          setCategories(res.categories.filter((c: any) => !c.parentId));
+          setCategories(res.categories);
         }
       });
     }
   }, [isOpen, categories.length]);
+
+  // Group categories
+  const rootCategories = useMemo(() => categories.filter(c => !c.parentId), [categories]);
+  const getSubcategories = useCallback((parentId: string) => categories.filter(c => c.parentId === parentId), [categories]);
 
   // Close menu on path change
   useEffect(() => {
@@ -128,25 +81,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
     };
   }, [isOpen]);
 
-  const handleLogout = useCallback(async () => {
-    startTransition(() => onClose());
-    await signOut({ callbackUrl: '/' });
-  }, [onClose]);
-
   useOnClickOutside(menuRef, onClose);
-
-  const isActiveLink = useCallback(
-    (href: string) => {
-      if (href === '/' && pathname === '/') return true;
-      if (href !== '/' && pathname.startsWith(href)) return true;
-      return false;
-    },
-    [pathname]
-  );
-
-  const userInitials = user?.name
-    ? user.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
-    : '';
 
   return (
     <AnimatePresence mode='wait'>
@@ -157,18 +92,18 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className='fixed inset-0 z-50 bg-black/60 backdrop-blur-sm lg:hidden'
+            className='fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex'
             onClick={onClose}
             aria-hidden='true'
           />
 
           <motion.aside
             ref={menuRef}
-            initial={{ x: '100%' }}
+            initial={{ x: '-100%' }}
             animate={{ x: 0 }}
-            exit={{ x: '100%' }}
+            exit={{ x: '-100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className='fixed top-0 right-0 z-50 h-full w-[85%] max-w-sm bg-background shadow-2xl lg:hidden flex flex-col'
+            className='fixed top-0 bottom-0 left-0 z-50 w-[85%] max-w-sm bg-background shadow-2xl flex flex-col overflow-hidden'
           >
             {/* Header */}
             <div className='flex items-center justify-between px-6 py-5 border-b shrink-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
@@ -176,7 +111,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                 <div className='relative w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center shadow-md shadow-primary/20'>
                   <Zap className='h-5 w-5 text-white' fill="currentColor" />
                 </div>
-                <span className='font-bold text-lg tracking-tight'>Big Market<span className="text-primary">.</span></span>
+                <span className='font-bold text-lg tracking-tight text-foreground'>Big Market<span className="text-primary">.</span></span>
               </Link>
               <div className="flex items-center gap-2">
                  <Button
@@ -200,174 +135,75 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
               </div>
             </div>
 
-            {/* Mobile Search - Integrated into sidebar */}
-            <div className="px-6 pt-6 pb-2">
-               <div className="relative">
-                  <SearchBar />
-               </div>
-            </div>
-
-            <ScrollArea className='flex-1 py-6 px-4'>
-              <div className='flex flex-col gap-6'>
-                {/* User Profile Card */}
-                {status === 'loading' ? (
-                   <div className="bg-muted/30 rounded-2xl p-4 border border-border/50 space-y-4">
-                      <div className="flex items-center gap-3">
-                         <div className='h-12 w-12 rounded-full skeleton-enhanced' />
-                         <div className='flex-1 space-y-2'>
-                            <div className='h-4 w-24 skeleton-enhanced rounded' />
-                            <div className='h-3 w-32 skeleton-enhanced rounded' />
-                         </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 mt-2">
-                         <div className="h-9 w-full skeleton-enhanced rounded-md" />
-                         <div className="h-9 w-full skeleton-enhanced rounded-md" />
-                      </div>
-                   </div>
-                ) : user ? (
-                   <div className="bg-muted/30 rounded-2xl p-4 border border-border/50">
-                      <div className="flex items-center gap-3 mb-3">
-                         <UserAvatar 
-                            user={user as any} 
-                            className='h-12 w-12 border-2 border-background shadow-sm' 
-                         />
-                         <div className='flex-1 min-w-0'>
-                            <p className='font-semibold truncate leading-tight'>{user.name}</p>
-                            <p className='text-xs text-muted-foreground truncate'>{user.email}</p>
-                         </div>
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-2 mt-2">
-                         <Button asChild variant="outline" size="sm" className="w-full justify-start h-9 text-xs">
-                            <Link href="/account" onClick={onClose}>
-                               <UserCircle className="mr-2 h-3.5 w-3.5" />
-                               Account
-                            </Link>
-                         </Button>
-                         <Button asChild variant="outline" size="sm" className="w-full justify-start h-9 text-xs">
-                            <Link href="/my-listings" onClick={onClose}>
-                               <Package className="mr-2 h-3.5 w-3.5" />
-                               My Listings
-                            </Link>
-                         </Button>
-                      </div>
-                   </div>
-                ) : (
-                  <div className='bg-primary/5 rounded-2xl p-6 text-center space-y-3 border border-primary/10'>
-                    <div className='w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto text-primary'>
-                      <User className='h-6 w-6' />
-                    </div>
-                    <div>
-                      <h3 className='font-bold text-foreground'>Welcome Guest</h3>
-                      <p className='text-xs text-muted-foreground mt-1'>Sign in to access your account & orders</p>
-                    </div>
-                    <Button asChild className='w-full rounded-xl shadow-lg shadow-primary/20'>
-                      <Link href='/auth/signin' onClick={onClose}>
-                        Login / Register
-                      </Link>
-                    </Button>
-                  </div>
-                )}
-
-                {/* Main Navigation */}
-                <div className='space-y-1'>
-                  <NavLink 
-                    href='/sell' 
-                    icon={Zap} 
-                    isActive={isActiveLink('/sell')} 
-                    onClick={onClose}
-                    className="bg-orange-500/10 text-orange-600 dark:text-orange-500 hover:bg-orange-500/20"
+            {/* Scrollable content area */}
+            <div className='flex-1 overflow-y-auto min-h-0 overscroll-contain'>
+              <div className='py-6 px-4 flex flex-col gap-4'>
+                {/* Categories Section */}
+                <div className="pt-2">
+                  <p className='px-4 text-[10px] font-black text-muted-foreground mb-4 uppercase tracking-widest'>
+                      Categories
+                  </p>
+                  <Accordion 
+                    type="single" 
+                    collapsible 
+                    className="w-full"
+                    value={activeCategory || undefined}
+                    onValueChange={(val) => setActiveCategory(val || null)}
                   >
-                    Start Selling
-                  </NavLink>
-                  <NavLink href='/' icon={Home} isActive={isActiveLink('/')} onClick={onClose}>
-                    Home
-                  </NavLink>
-                  <NavLink href='/listings' icon={ShoppingBag} isActive={isActiveLink('/listings') && !pathname.includes('category')} onClick={onClose}>
-                    Browse All Listings
-                  </NavLink>
-                  
-                  {/* Categories Accordion */}
-                  <Accordion type="single" collapsible className="w-full border-none">
-                     <AccordionItem value="categories" className="border-none">
-                        <AccordionTrigger className="py-3 px-4 rounded-xl hover:bg-muted text-sm font-medium hover:no-underline text-muted-foreground">
-                           <div className="flex items-center gap-3">
-                              <Package className="h-5 w-5" />
-                              <span>Categories</span>
-                           </div>
-                        </AccordionTrigger>
-                        <AccordionContent className="pb-0 pt-1 px-2">
-                           {categories.map((cat) => (
-                              <Link 
-                                 key={cat.id}
-                                 href={`/listings?category=${cat.name}`}
-                                 onClick={onClose}
-                                 className="flex items-center gap-3 py-2.5 px-4 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors ml-4"
-                              >
-                                 <Package className="h-4 w-4" />
-                                 {cat.name}
-                              </Link>
-                           ))}
-                        </AccordionContent>
-                     </AccordionItem>
+                      {rootCategories.map((cat) => {
+                          const subs = getSubcategories(cat.id);
+                          const hasSubs = subs.length > 0;
+                          
+                          return (
+                              <AccordionItem key={cat.id} value={cat.id} className="border-none mb-1">
+                                  {hasSubs ? (
+                                      <>
+                                          <AccordionTrigger className="py-3 px-4 rounded-xl hover:bg-muted/50 text-sm font-bold hover:no-underline text-foreground transition-all group">
+                                              <div className="flex items-center gap-3">
+                                                  <div className="w-2 h-2 rounded-full bg-primary/20 group-hover:bg-primary transition-colors" />
+                                                  <span>{cat.name}</span>
+                                              </div>
+                                          </AccordionTrigger>
+                                          <AccordionContent className="pb-1 pt-0">
+                                              <div className="ml-4 pl-4 border-l border-border/50 flex flex-col gap-1 mt-1">
+                                                  {subs.map(sub => (
+                                                      <Link 
+                                                          key={sub.id}
+                                                          href={`/listings?category=${encodeURIComponent(cat.name)}&subCategory=${encodeURIComponent(sub.name)}`}
+                                                          onClick={onClose}
+                                                          className="py-2.5 px-3 rounded-lg text-sm text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all font-medium flex items-center justify-between group"
+                                                      >
+                                                          <span>{sub.name}</span>
+                                                          <div className="w-1 h-1 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                      </Link>
+                                                  ))}
+                                                  <Link 
+                                                      href={`/listings?category=${encodeURIComponent(cat.name)}`}
+                                                      onClick={onClose}
+                                                      className="py-2 px-3 rounded-lg text-xs font-bold text-primary hover:underline mt-1"
+                                                  >
+                                                      View all in {cat.name}
+                                                  </Link>
+                                              </div>
+                                          </AccordionContent>
+                                      </>
+                                  ) : (
+                                      <Link 
+                                          href={`/listings?category=${encodeURIComponent(cat.name)}`}
+                                          onClick={onClose}
+                                          className="flex items-center gap-3 py-3 px-4 rounded-xl text-sm font-bold text-foreground hover:bg-muted/50 transition-all group"
+                                      >
+                                          <div className="w-2 h-2 rounded-full bg-primary/20 group-hover:bg-primary transition-colors" />
+                                          <span>{cat.name}</span>
+                                      </Link>
+                                  )}
+                              </AccordionItem>
+                          );
+                      })}
                   </Accordion>
                 </div>
-
-                <Separator className="bg-border/50" />
-
-                {/* Account & Support */}
-                <div className='space-y-1'>
-                  <p className='px-4 text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider'>
-                     Account & Support
-                  </p>
-                  
-                  {status === 'loading' ? (
-                     <div className='space-y-1 px-4'>
-                        {[1, 2, 3].map(i => (
-                           <div key={i} className='h-10 w-full skeleton-enhanced rounded-xl' />
-                        ))}
-                     </div>
-                  ) : user ? (
-                    <>
-                      <NavLink href='/favorites' icon={Heart} isActive={isActiveLink('/favorites')} onClick={onClose}>
-                        My Favorites
-                      </NavLink>
-
-                      
-                      {user.role === 'ADMIN' && (
-                        <NavLink href='/admin/dashboard' icon={LayoutDashboard} isActive={isActiveLink('/admin/dashboard')} onClick={onClose} className="text-amber-600 dark:text-amber-500 bg-amber-50 dark:bg-amber-950/30">
-                          Admin Dashboard
-                        </NavLink>
-                      )}
-                    </>
-                  ) : null}
-
-                  <NavLink href='/services' icon={Briefcase} isActive={isActiveLink('/services')} onClick={onClose}>
-                    Services
-                  </NavLink>
-                  <NavLink href='/about' icon={Info} isActive={isActiveLink('/about')} onClick={onClose}>
-                    About Us
-                  </NavLink>
-                  <NavLink href='/contact' icon={Mail} isActive={isActiveLink('/contact')} onClick={onClose}>
-                    Contact Support
-                  </NavLink>
-                </div>
               </div>
-            </ScrollArea>
-
-            {/* Footer */}
-            {user && (
-               <div className='p-4 border-t bg-muted/20'>
-                  <Button 
-                     variant="outline" 
-                     className='w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20 h-11'
-                     onClick={handleLogout}
-                  >
-                     <LogOut className='mr-2 h-4 w-4' />
-                     Log Out
-                  </Button>
-               </div>
-            )}
+            </div>
           </motion.aside>
         </>
       )}

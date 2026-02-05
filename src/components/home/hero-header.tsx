@@ -11,19 +11,26 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { CITIES } from '@/lib/constants/cities';
+import { useSidebar } from '@/lib/context/sidebar-context';
+import { buildCategoryTree } from '@/lib/utils/category-tree';
 import { useQuery } from 'convex/react';
 import { MapPin, Menu, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
-import { SearchBar } from '../layout/search-bar';
 
 export const HeroHeader = () => {
   const router = useRouter();
+  const { toggle } = useSidebar();
   const categories = useQuery(api.categories.list);
   const [category, setCategory] = useState('all');
   const [location, setLocation] = useState('all');
   const [query, setQuery] = useState('');
+
+  const categoryTree = useMemo(() => {
+      if (!categories) return [];
+      return buildCategoryTree(categories);
+  }, [categories]);
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -44,30 +51,23 @@ export const HeroHeader = () => {
     <div className='bg-background border-b py-6 md:py-8'>
       <div className='container-wide'>
         
-        {/* Mobile View: Simple Search Bar */}
-        <div className="md:hidden">
-             <SearchBar />
-        </div>
+        {/* Mobile search bar removed to prioritize header search */}
 
         {/* Desktop View: Complex Search Strip */}
         <div className="hidden md:block">
             <div className="flex items-stretch border border-border rounded-lg overflow-hidden shadow-sm h-14 bg-background">
-                {/* Category Dropdown */}
+                {/* Category Dropdown -> Opens Mobile Sidebar on Click */}
                 <div className="w-48 border-r border-border flex items-center hover:bg-muted/30 transition-colors relative">
-                    <Select value={category} onValueChange={setCategory}>
-                        <SelectTrigger className="w-full h-full border-0 focus:ring-0 focus:ring-offset-0 ring-0 shadow-none outline-none bg-transparent rounded-none px-4 gap-2 text-foreground font-medium">
-                            <Menu className="w-5 h-5 shrink-0 text-muted-foreground" />
-                            <SelectValue placeholder="All Categories" />
-                        </SelectTrigger>
-                        <SelectContent className="max-h-[300px]">
-                            <SelectItem value="all">All Categories</SelectItem>
-                            {categories?.map((cat) => (
-                                <SelectItem key={cat._id} value={cat.slug}>
-                                    {cat.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    <Button 
+                        variant="ghost" 
+                        onClick={toggle}
+                        className="w-full h-full border-0 focus:ring-0 focus:ring-offset-0 ring-0 shadow-none outline-none bg-transparent rounded-none px-4 gap-2 text-foreground font-medium justify-start hover:bg-transparent"
+                    >
+                        <Menu className="w-5 h-5 shrink-0 text-muted-foreground" />
+                        <span className="truncate">
+                            All Categories
+                        </span>
+                    </Button>
                 </div>
 
                 {/* Search Input */}

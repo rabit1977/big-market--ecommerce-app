@@ -1,4 +1,10 @@
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { ProductOptionsProps } from '@/lib/types/quickview';
 import { cn } from '@/lib/utils';
 import { AlertCircle, Check } from 'lucide-react';
@@ -46,43 +52,48 @@ export const ProductOptions = ({
                   selectedOptions[option.name] === variant.value;
 
                 return (
-                  <button
-                    key={variant.value}
-                    type='button'
-                    onClick={() => onOptionChange(option.name, variant.value)}
-                    className={cn(
-                      'relative flex items-center justify-center rounded-md transition-all',
-                      'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
-                      option.type === 'color'
-                        ? 'h-10 w-10'
-                        : 'h-10 px-4 text-sm font-medium border-2',
-                      isVariantSelected
-                        ? option.type === 'color'
-                          ? 'ring-2 ring-primary ring-offset-2'
-                          : 'border-primary bg-primary text-primary-foreground'
-                        : option.type === 'color'
-                        ? 'ring-1 ring-muted'
-                        : 'border-muted hover:border-primary/50',
-                      hasError &&
-                        !isVariantSelected &&
-                        'ring-2 ring-destructive/50'
-                    )}
-                    title={variant.name || variant.value}
-                  >
-                    {option.type === 'color' ? (
-                      <>
-                        <span
-                          className='h-full w-full rounded-md block'
-                          style={{ backgroundColor: variant.value }}
-                        />
-                        {isVariantSelected && (
-                          <Check className='absolute h-4 w-4 text-white drop-shadow-md' />
-                        )}
-                      </>
-                    ) : (
-                      <span>{variant.name}</span>
-                    )}
-                  </button>
+                  <TooltipProvider key={variant.value}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type='button'
+                          onClick={() => onOptionChange(option.name, variant.value)}
+                          className={cn(
+                            'relative flex items-center justify-center rounded-md transition-all',
+                            'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
+                            option.type === 'color'
+                              ? 'h-10 w-10'
+                              : 'h-10 px-4 text-sm font-medium border-2',
+                            isVariantSelected
+                              ? option.type === 'color'
+                                ? 'ring-2 ring-primary ring-offset-2'
+                                : 'border-primary bg-primary text-primary-foreground'
+                              : option.type === 'color'
+                              ? 'ring-1 ring-muted'
+                              : 'border-muted hover:border-primary/50',
+                            hasError &&
+                              !isVariantSelected &&
+                              'ring-2 ring-destructive/50'
+                          )}
+                        >
+                          {option.type === 'color' ? (
+                            <>
+                              <span
+                                className='h-full w-full rounded-md block'
+                                style={{ backgroundColor: variant.value }}
+                              />
+                              {isVariantSelected && (
+                                <Check className='absolute h-4 w-4 text-white drop-shadow-md' />
+                              )}
+                            </>
+                          ) : (
+                            <span>{variant.name}</span>
+                          )}
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>{variant.name || variant.value}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 );
               })}
             </div>

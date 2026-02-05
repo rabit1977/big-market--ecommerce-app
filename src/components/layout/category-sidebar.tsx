@@ -27,31 +27,10 @@ export function CategorySidebar() {
     if (open && categories.length === 0) {
       getAllCategoriesAction().then((res) => {
         if (res.success && res.categories) {
-           // Adapt new structure to flat list with parentId
-           const flatList: Category[] = [];
-           
-           res.categories.forEach((cat: { name: string, subCategories: string[] }, index: number) => {
-               const parentId = `cat-${index}`;
-               // Add Parent
-               flatList.push({
-                   id: parentId,
-                   name: cat.name,
-                   slug: cat.name, 
-                   parentId: null
-               });
-               
-               // Add Children
-               cat.subCategories.forEach((sub, subIndex) => {
-                   flatList.push({
-                       id: `${parentId}-sub-${subIndex}`,
-                       name: sub,
-                       slug: sub,
-                       parentId: parentId
-                   });
-               });
-           });
-           
-           setCategories(flatList);
+            setCategories(res.categories.map(c => ({
+              ...c,
+              parentId: c.parentId ?? null
+            })));
         }
       });
     }
