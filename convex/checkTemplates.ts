@@ -17,7 +17,9 @@ export const checkTemplates = query({
 
     return {
        carsFields: cars?.template?.fields?.map((f: any) => f.label),
-       tractorsFields: tractors?.template?.fields?.map((f: any) => f.label)
+       mobileFields: (await ctx.db.query("categories").withIndex("by_slug", q=>q.eq("slug", "mobile-phones")).unique())?.template?.fields?.map((f:any)=>f.label),
+       smartwatchFields: (await ctx.db.query("categories").withIndex("by_slug", q=>q.eq("slug", "smartwatches")).unique())?.template?.fields?.map((f:any)=>f.label),
+       accessoryFields: (await ctx.db.query("categories").withIndex("by_slug", q=>q.eq("slug", "mobile-cases")).unique())?.template?.fields?.map((f:any)=>f.label),
     };
   },
 });

@@ -119,7 +119,7 @@ const Header = ({
         {/* User Actions */}
         <div className='flex items-center gap-1 sm:gap-3 shrink-0'>
           {/* Browse Listings Link - Visible on md+ */}
-          <Button asChild variant="ghost" className="hidden md:flex font-bold text-muted-foreground hover:text-foreground mr-1">
+          <Button asChild variant="ghost" className="hidden md:flex font-bold text-muted-foreground hover:text-foreground mr-1 hover:bg-blue-500/10">
              <Link href="/listings">
                 Browse Listings
              </Link>

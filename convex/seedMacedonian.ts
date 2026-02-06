@@ -293,7 +293,46 @@ const MACEDONIAN_CATEGORIES: CategoryInput[] = [  {
   },
   { name: "Home and Garden", slug: "home-and-garden" },
   { name: "Fashion, Clothing and Shoes", slug: "fashion-clothing-shoes" },
-  { name: "Mobile Phones and Accessories", slug: "mobile-phones-accessories" },
+  { 
+    name: "Mobile Phones and Accessories", 
+    slug: "mobile-phones-accessories",
+    subcategories: [
+      { name: "Mobile Phones", slug: "mobile-phones" },
+      { 
+        name: "Accessories for Mobile Phones", 
+        slug: "mobile-accessories",
+        subcategories: [
+           { name: "Batteries", slug: "mobile-batteries" },
+           { name: "Chargers", slug: "mobile-chargers" },
+           { name: "Screens", slug: "mobile-screens" },
+           { name: "Motherboards", slug: "mobile-motherboards" },
+           { name: "Headphones", slug: "mobile-headphones" },
+           { name: "Memory Cards", slug: "mobile-memory-cards" },
+           { name: "Antennas", slug: "mobile-antennas" },
+           { name: "Cameras", slug: "mobile-cameras" },
+           { name: "Microphones", slug: "mobile-microphones" },
+           { name: "Cases", slug: "mobile-cases" },
+           { name: "Car Chargers", slug: "mobile-car-chargers" },
+           { name: "Protective Foils & Glass", slug: "mobile-protectors" },
+           { name: "Bumpers", slug: "mobile-bumpers" },
+           { name: "Protective Cases", slug: "mobile-cases-protectors" },
+           { name: "Bluetooth Accessories", slug: "mobile-bluetooth" },
+           { name: "Mobile Decorations", slug: "mobile-decorations" },
+           { name: "Sim Cards", slug: "mobile-sim-cards" },
+           { name: "Selfie Sticks", slug: "mobile-selfie-sticks" },
+           { name: "Service Tools", slug: "mobile-service-tools" },
+           { name: "Mobile Phone Services", slug: "mobile-services" },
+           { name: "Buying Mobile Phones", slug: "mobile-buying" },
+           { name: "Other Accessories", slug: "mobile-accessories-other" },
+        ]
+      },
+      { name: "Smartwatches", slug: "smartwatches" },
+      { name: "Landlines", slug: "landlines" },
+      { name: "Faxes", slug: "faxes" },
+      { name: "Old Phones", slug: "old-phones" },
+      { name: "Other", slug: "mobile-other" },
+    ]
+  },
   { name: "Computers", slug: "computers" },
   { 
     name: "TV, Audio and Video", 
@@ -1148,6 +1187,74 @@ const getCustomTemplate = (slug: string, name: string) => {
     };
   }
   
+  // MOBILE PHONES LOGIC
+  if (slug === "mobile-phones") {
+    return {
+      titlePlaceholder: "e.g. iPhone 15 Pro Max 256GB",
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" }, 
+        { label: "Model", type: "text", key: "model", placeholder: "Model" },
+        { label: "Internal Memory", type: "select", key: "memory", options: ["16GB", "32GB", "64GB", "128GB", "256GB", "512GB", "1TB+"] },
+        { label: "Color", type: "color-picker", key: "color" },
+        { label: "Operating System", type: "select", key: "os", options: ["iOS", "Android", "HarmonyOS", "Other"] },
+        { label: "Warranty", type: "select", key: "warranty", options: ["Yes", "No"] },
+      ]
+    };
+  }
+
+  if (slug === "smartwatches") {
+     return {
+      titlePlaceholder: "e.g. Apple Watch Series 9",
+      fields: [
+        ...baseFields,
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Model", type: "text", key: "model", placeholder: "Model" },
+        { label: "Case Size (mm)", type: "number", key: "size_mm", placeholder: "mm" },
+        { label: "Color", type: "color-picker", key: "color" },
+        { label: "Cellular", type: "select", key: "cellular", options: ["Yes", "No"] },
+      ]
+     };
+  }
+
+
+  if (slug === "mobile-memory-cards") {
+    return {
+      titlePlaceholder: "e.g. Samsung MicroSD EVO Select 128GB",
+      fields: [
+        ...baseFields,
+        { label: "Type", type: "select", key: "card_type", options: ["MicroSD", "SD", "Nano Memory", "CF", "Other"] },
+        { label: "Capacity", type: "select", key: "capacity", options: ["8GB", "16GB", "32GB", "64GB", "128GB", "256GB", "512GB", "1TB"] },
+        { label: "Class", type: "text", key: "class", placeholder: "e.g. Class 10, UHS-I" },
+      ]
+    };
+  }
+
+  if (slug === "mobile-batteries") {
+    return {
+      titlePlaceholder: "e.g. Samsung Galaxy S22 Battery",
+      fields: [
+         ...baseFields,
+         { label: "Compatible Brand", type: "text", key: "compatible_brand", placeholder: "e.g. Samsung" },
+         { label: "Compatible Model", type: "text", key: "compatible_model", placeholder: "e.g. S22" },
+         { label: "Capacity", type: "number", key: "capacity_mah", placeholder: "mAh" },
+      ]
+    };
+  }
+
+  if (slug.startsWith("mobile-")) {
+    // Generic template for mobile accessories if not specific
+    return {
+      titlePlaceholder: "e.g. Samsung Galaxy S24 Case",
+      fields: [
+        ...baseFields,
+         { label: "Compatible Brand", type: "text", key: "compatible_brand", placeholder: "e.g. Samsung" },
+         { label: "Compatible Model", type: "text", key: "compatible_model", placeholder: "e.g. S24 Ultra" },
+         { label: "Type", type: "text", key: "type", placeholder: "Type" },
+      ]
+    };
+  }
+
   if (slug.includes("tv") || slug.includes("audio") || slug.includes("video") || slug.includes("projector")) {
      return {
       titlePlaceholder: `e.g. ${name}`,

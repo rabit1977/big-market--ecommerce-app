@@ -44,7 +44,7 @@ export default async function HomePage() {
       <PromotedCarousel />
 
       {/* 4. Latest Listings */}
-      <div className="container-wide py-16 bg-muted/20">
+      <div className="container-wide py-6 bg-muted/20">
         <LatestListingsClient 
           initialListings={latestListings as any} 
           categories={categories} 

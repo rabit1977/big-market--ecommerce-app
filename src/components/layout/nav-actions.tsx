@@ -123,10 +123,10 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                 asChild
                 variant='ghost'
                 size='icon'
-                className='relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-rose-500 hover:bg-rose-500/10'
+                className='relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-blue-500 hover:bg-blue-500/10'
             >
                 <Link href="/favorites">
-                    <Heart className={cn("h-5 w-5", wishlistCount > 0 && "fill-rose-500 text-rose-500")} />
+                    <Heart className="h-5 w-5" />
                     <AnimatePresence>
                         {wishlistCount > 0 && (
                             <motion.span

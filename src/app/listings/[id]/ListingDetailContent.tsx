@@ -6,17 +6,17 @@ import { Button } from '@/components/ui/button';
 import { useQuery as useConvexQuery, useMutation } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import {
-   BadgeCheck,
-   ChevronLeft,
-   Heart,
-   Mail,
-   MapPin,
-   MessageCircle,
-   MessageSquare,
-   MoreVertical,
-   Phone,
-   Share2,
-   ShieldAlert
+    BadgeCheck,
+    ChevronLeft,
+    Heart,
+    Mail,
+    MapPin,
+    MessageCircle,
+    MessageSquare,
+    MoreVertical,
+    Phone,
+    Share2,
+    ShieldAlert
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -160,7 +160,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                       src={mainImage}
                       alt={listing.title}
                       fill
-                      className="object-contain"
+                      className="object-cover"
                       priority
                     />
                 </div>
@@ -208,7 +208,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                       onClick={() => setSelectedImage(idx)} 
                       className={`
                         relative flex-shrink-0 aspect-square w-16 md:w-24 rounded-lg overflow-hidden snap-start transition-all duration-300
-                        ${selectedImage === idx ? 'ring-2 ring-primary scale-105 shadow-lg' : 'opacity-70 hover:opacity-100 grayscale hover:grayscale-0'}
+                        ${selectedImage === idx ? 'ring-2 ring-primary scale-105 shadow-lg opacity-100' : 'opacity-70 hover:opacity-100 grayscale hover:grayscale-0'}
                       `}
                     >
                        <Image src={img} alt="" fill className="object-cover" />

@@ -98,7 +98,7 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
                   className="min-w-[150px] sm:min-w-[200px] md:min-w-[220px] snap-start"
                 >
                   <Link href={`/listings/${listing._id}`}>
-                    <Card className="group h-full overflow-hidden border-border/40 hover:border-blue-500/50 hover:shadow-[0_20px_50px_rgba(8,112,184,0.12)] transition-all duration-500 rounded-xl md:rounded-2xl bg-white/80 dark:bg-card/40 dark:backdrop-blur-md backdrop-blur-sm">
+                    <Card className="group h-full overflow-hidden border-border/40 hover:border-blue-500/50 hover:shadow-[0_20px_50px_rgba(8,112,184,0.12)] transition-all duration-500 rounded-xl md:rounded-2xl bg-white/80 dark:bg-card/40 dark:backdrop-blur-md backdrop-blur-sm p-0 gap-0">
                       {/* Image Container */}
                       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                         <div className="absolute top-2 left-2 md:top-3 md:left-3 z-10">
