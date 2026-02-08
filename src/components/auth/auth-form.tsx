@@ -108,17 +108,21 @@ const GitHubIcon = () => (
   </svg>
 );
 
+interface AuthFormProps {
+  initialMode?: AuthMode;
+}
+
 /**
  * Premium Authentication Form Component with OAuth
  */
-export function AuthForm() {
+export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
   const callbackUrl = searchParams.get('callbackUrl') || '/';
 
-  const [mode, setMode] = useState<AuthMode>('login');
+  const [mode, setMode] = useState<AuthMode>(initialMode);
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',

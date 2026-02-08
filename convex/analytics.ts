@@ -18,13 +18,17 @@ export const trackEvent = mutation({
     });
 
     // 2. If it's a listing view, increment the listing's viewCount
-    if (args.eventType === 'view_listing' && args.data?.listingId) {
-        const listingId = args.data.listingId as any; 
-        const listing = await ctx.db.get(listingId);
-        if (listing && "viewCount" in listing) {
-            await ctx.db.patch(listingId, {
-                viewCount: ((listing as any).viewCount || 0) + 1
-            });
+    if (args.eventType === 'view_listing' && args.data && typeof args.data === 'object' && 'listingId' in args.data) {
+        try {
+            const listingId = args.data.listingId as any; 
+            const listing = await ctx.db.get(listingId);
+            if (listing && "viewCount" in listing) {
+                await ctx.db.patch(listingId, {
+                    viewCount: (Number(listing.viewCount) || 0) + 1
+                });
+            }
+        } catch (e) {
+            console.error("Failed to update view count:", e);
         }
     }
 

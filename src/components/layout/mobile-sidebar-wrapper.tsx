@@ -27,10 +27,15 @@ export function MobileSidebarWrapper({
 
   const isAdminRoute = pathname?.startsWith('/admin');
 
-  // Avoid hydration mismatch by not rendering anything that depends on client state/pathname
-  // until the component has mounted on the client.
-  if (!mounted || isAdminRoute) {
+  // Avoid hydration mismatch by rendering a consistent server/client initial state
+  if (isAdminRoute) {
     return null;
+  }
+
+  // Render a placeholder height during SSR and initial client mount
+  // to prevent layout shift and mismatch once 'Header' mounts.
+  if (!mounted) {
+    return <div className="h-16 w-full bg-background" />;
   }
 
   return (
