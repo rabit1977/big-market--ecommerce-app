@@ -1,6 +1,14 @@
 'use client';
 
-import { broadcastToAllUsersAction, NotificationType } from '@/actions/notification-actions';
+import { broadcastToAllUsersAction } from '@/actions/notification-actions';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { NotificationTypes } from '@/lib/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Megaphone, Send, User } from 'lucide-react';
 import { useState, useTransition } from 'react';
@@ -11,7 +19,7 @@ import { z } from 'zod';
 const notificationSchema = z.object({
   title: z.string().min(3, 'Title is required'),
   message: z.string().min(5, 'Message is required'),
-  type: z.nativeEnum(NotificationType).default(NotificationType.SYSTEM),
+  type: z.enum(Object.values(NotificationTypes) as [string, ...string[]]).default(NotificationTypes.SYSTEM),
   link: z.string().url().optional().or(z.literal('')),
   targetUserEmail: z.string().email().optional().or(z.literal('')),
 });
@@ -28,7 +36,7 @@ export function NotificationsSender() {
     defaultValues: {
       title: '',
       message: '',
-      type: NotificationType.SYSTEM,
+      type: NotificationTypes.SYSTEM,
       link: '',
       targetUserEmail: '',
     },
@@ -125,10 +133,10 @@ export function NotificationsSender() {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value={NotificationType.SYSTEM}>System Announcement</SelectItem>
-                                                <SelectItem value={NotificationType.PROMOTION}>Promotion / Sale</SelectItem>
-                                                <SelectItem value={NotificationType.ACCOUNT_ALERT}>Account Alert</SelectItem>
-                                                <SelectItem value={NotificationType.ORDER_UPDATE}>Order Update</SelectItem>
+                                                <SelectItem value={NotificationTypes.SYSTEM}>System Announcement</SelectItem>
+                                                <SelectItem value={NotificationTypes.PROMOTION}>Promotion / Sale</SelectItem>
+                                                <SelectItem value={NotificationTypes.ACCOUNT_ALERT}>Account Alert</SelectItem>
+                                                <SelectItem value={NotificationTypes.ORDER_UPDATE}>Order Update</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormDescription>

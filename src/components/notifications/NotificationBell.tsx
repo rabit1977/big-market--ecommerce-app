@@ -6,7 +6,6 @@ import {
     getUnreadCountAction,
     markAllNotificationsAsReadAction,
     markNotificationAsReadAction,
-    NotificationWithMeta,
 } from '@/actions/notification-actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -15,6 +14,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
+import { NotificationWithMeta } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Bell, CheckCheck, Loader2 } from 'lucide-react';

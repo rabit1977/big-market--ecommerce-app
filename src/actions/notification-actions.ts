@@ -2,57 +2,11 @@
 
 import { auth } from '@/auth';
 import { api, convex } from '@/lib/convex-server';
+import {
+    GetNotificationsOptions,
+    GetNotificationsResult
+} from '@/lib/types';
 import { revalidatePath } from 'next/cache';
-
-// ============================================
-// TYPES
-// ============================================
-
-export const NotificationType = {
-  ORDER_UPDATE: 'ORDER_UPDATE',
-  PRICE_DROP: 'PRICE_DROP',
-  BACK_IN_STOCK: 'BACK_IN_STOCK',
-  PROMOTION: 'PROMOTION',
-  REVIEW_REPLY: 'REVIEW_REPLY',
-  SHIPMENT_UPDATE: 'SHIPMENT_UPDATE',
-  ACCOUNT_ALERT: 'ACCOUNT_ALERT',
-  WISHLIST_SALE: 'WISHLIST_SALE',
-  SYSTEM: 'SYSTEM',
-  INFO: 'INFO',
-  SUCCESS: 'SUCCESS',
-  ERROR: 'ERROR',
-  WARNING: 'WARNING',
-} as const;
-
-export type NotificationType = keyof typeof NotificationType;
-
-export interface NotificationWithMeta {
-  id: string;
-  type: NotificationType;
-  title: string;
-  message: string;
-  link: string | null;
-  isRead: boolean;
-  readAt: Date | null;
-  metadata?: unknown;
-  createdAt: Date;
-}
-
-export interface GetNotificationsOptions {
-  page?: number;
-  limit?: number;
-  unreadOnly?: boolean;
-  type?: NotificationType;
-}
-
-export interface GetNotificationsResult {
-  notifications: NotificationWithMeta[];
-  totalCount: number;
-  unreadCount: number;
-  page: number;
-  totalPages: number;
-  hasMore: boolean;
-}
 
 // ============================================
 // HELPER

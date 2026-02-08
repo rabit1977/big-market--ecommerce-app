@@ -29,10 +29,18 @@ export async function getCategories() {
     
     // Map to include parent names for the UI if needed
     const enriched = categories.map(c => ({
-        ...c,
-        id: c._id,
+        id: c._id as string,
+        _id: c._id as string,
+        name: c.name,
+        slug: c.slug,
+        description: c.description,
+        image: c.image,
+        isActive: c.isActive,
+        isFeatured: c.isFeatured,
+        parentId: c.parentId as string | undefined,
+        template: c.template,
         _count: { children: 0 }, // Simplified for now
-        parent: c.parentId ? { name: categories.find(p => p._id === c.parentId)?.name } : null
+        parent: c.parentId ? { name: categories.find(p => p._id === c.parentId)?.name || '' } : null
     }));
 
     return { success: true, categories: enriched };

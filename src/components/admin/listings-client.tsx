@@ -3,8 +3,8 @@
 import { deleteMultipleListingsAction } from '@/actions/listing-actions';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Listing } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { Listing } from '@prisma/client';
 import { Edit, MapPin, Package, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

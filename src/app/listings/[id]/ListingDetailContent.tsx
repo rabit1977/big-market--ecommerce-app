@@ -13,13 +13,12 @@ import {
     Heart,
     Mail,
     MapPin,
-    MessageCircle,
     MessageSquare,
     MoreVertical,
     Phone,
     Share2,
     ShieldAlert,
-    Trash2
+    Trash2,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -470,19 +469,19 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                       </Button>
                       
                        {/* Phone Number Display */}
-                       <div className="flex gap-2">
+                       <div className="flex w-full gap-2 overflow-hidden">
                            {contactPhone && (
-                                <Button asChild variant="outline" className="flex-1 h-14 rounded-2xl border-2 border-border font-black text-lg text-foreground hover:bg-accent group">
-                                    <a href={`tel:${contactPhone}`} onClick={() => handleContactClick('call')}>
-                                        <Phone className="mr-2 h-5 w-5 text-green-500" />
-                                        {contactPhone}
+                                <Button asChild variant="outline" className="flex-1 min-w-0 h-14 rounded-2xl border-2 border-border font-black text-sm lg:text-base text-foreground hover:bg-accent group">
+                                    <a href={`tel:${contactPhone}`} onClick={() => handleContactClick('call')} className="flex items-center justify-center truncate px-3">
+                                        <Phone className="shrink-0 mr-2 h-5 w-5 text-green-500" />
+                                        <span className="truncate">{contactPhone}</span>
                                     </a>
                                 </Button>
                            )}
 
                            <Button asChild variant="outline" className="w-14 h-14 px-0 rounded-2xl border-2 border-border text-muted-foreground hover:bg-accent">
                                 <a href={`sms:${contactPhone || ''}`}>
-                                    <MessageCircle className="h-6 w-6" />
+                                    <MessageSquare className="h-6 w-6" />
                                 </a>
                            </Button>
                        </div>
@@ -505,9 +504,6 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
 
                 {/* Seller Profile Card */}
                 <div className="bg-card border border-border rounded-3xl p-6 md:p-6 shadow-sm overflow-hidden relative">
-                    <div className="absolute top-0 right-0 p-4">
-                        <BadgeCheck className="w-8 h-8 text-primary fill-primary/5 opacity-20" />
-                    </div>
                     <div className="flex items-center gap-4 mb-6 relative">
                        <UserAvatar 
                           user={seller} 

@@ -1,6 +1,6 @@
 'use client';
 
-import { NotificationWithMeta } from '@/actions/notification-actions';
+import { NotificationWithMeta } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Inbox } from 'lucide-react';
 import { NotificationItem } from './NotificationItem';

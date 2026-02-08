@@ -1,36 +1,38 @@
 'use client';
 
 import {
-    deleteNotificationAction,
-    getNotificationsAction,
-    GetNotificationsResult,
-    markAllNotificationsAsReadAction,
-    markNotificationAsReadAction,
-    NotificationWithMeta,
+  deleteNotificationAction,
+  getNotificationsAction,
+  markAllNotificationsAsReadAction,
+  markNotificationAsReadAction,
 } from '@/actions/notification-actions';
 import { NotificationList } from '@/components/notifications';
 import { Button } from '@/components/ui/button';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
-import { NotificationType } from '@/generated/prisma/browser';
 import {
-    AlertCircle,
-    Bell,
-    CheckCheck,
-    Heart,
-    Loader2,
-    MessageSquare,
-    Package,
-    RefreshCw,
-    Tag,
-    TrendingDown,
-    Truck,
+  GetNotificationsResult,
+  NotificationType,
+  NotificationWithMeta
+} from '@/lib/types';
+import {
+  AlertCircle,
+  Bell,
+  CheckCheck,
+  Heart,
+  Loader2,
+  MessageSquare,
+  Package,
+  RefreshCw,
+  Tag,
+  TrendingDown,
+  Truck,
 } from 'lucide-react';
 import { useCallback, useState, useTransition } from 'react';
 

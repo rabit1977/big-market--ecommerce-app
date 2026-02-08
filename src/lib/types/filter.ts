@@ -1,4 +1,11 @@
-import { CategoryHierarchy } from './product';
+export interface CategoryHierarchy {
+  id: string;
+  name: string;
+  slug: string;
+  image?: string;
+  children?: CategoryHierarchy[];
+  [key: string]: any;
+}
 
 export interface FilterSidebarProps {
   categories: (string | CategoryHierarchy)[];

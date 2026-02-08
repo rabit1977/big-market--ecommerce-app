@@ -10,6 +10,7 @@ export interface User {
   createdAt: Date | number;
   updatedAt: Date | number;
   externalId: string;
+  emailVerified?: Date | number | null;
 }
 
 export interface Review {
@@ -32,7 +33,7 @@ export interface Order {
 }
 
 export * from './listing';
-export * from './product';
+// export * from './product'; // Removed non-existent file export
 
 export type ReviewWithUser = Review & {
   user: {
@@ -46,3 +47,83 @@ export type UserWithRelations = User & {
   orders?: Order[];
   reviews?: Review[];
 };
+
+export const AddressType = {
+  SHIPPING: 'SHIPPING',
+  BILLING: 'BILLING',
+  BOTH: 'BOTH',
+} as const;
+
+export type AddressType = keyof typeof AddressType;
+
+export interface Address {
+  id: string;
+  _id: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  company?: string;
+  street1: string;
+  street2?: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  phone?: string;
+  isDefault: boolean;
+  label?: string;
+  type: AddressType;
+  deliveryInstructions?: string;
+  createdAt: Date | number;
+  updatedAt: Date | number;
+}
+
+// ============================================
+// NOTIFICATION TYPES
+// ============================================
+
+export const NotificationTypes = {
+  ORDER_UPDATE: 'ORDER_UPDATE',
+  PRICE_DROP: 'PRICE_DROP',
+  BACK_IN_STOCK: 'BACK_IN_STOCK',
+  PROMOTION: 'PROMOTION',
+  REVIEW_REPLY: 'REVIEW_REPLY',
+  SHIPMENT_UPDATE: 'SHIPMENT_UPDATE',
+  ACCOUNT_ALERT: 'ACCOUNT_ALERT',
+  WISHLIST_SALE: 'WISHLIST_SALE',
+  SYSTEM: 'SYSTEM',
+  INFO: 'INFO',
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR',
+  WARNING: 'WARNING',
+} as const;
+
+export type NotificationType = keyof typeof NotificationTypes;
+
+export interface NotificationWithMeta {
+  id: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  link: string | null;
+  isRead: boolean;
+  readAt: Date | null;
+  metadata?: unknown;
+  createdAt: Date;
+}
+
+export interface GetNotificationsOptions {
+  page?: number;
+  limit?: number;
+  unreadOnly?: boolean;
+  type?: NotificationType;
+}
+
+export interface GetNotificationsResult {
+  notifications: NotificationWithMeta[];
+  totalCount: number;
+  unreadCount: number;
+  page: number;
+  totalPages: number;
+  hasMore: boolean;
+}

@@ -95,23 +95,23 @@ export const formatDiscount = (
 
 /**
  * Format date for order display
- * @param dateString - ISO date string
+ * @param date - Date object, ISO string, or timestamp
  * @returns Formatted date (e.g., "Jan 15, 2024")
  */
-export const formatOrderDate = (dateString: string): string => {
+export const formatOrderDate = (date: string | Date | number): string => {
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-  }).format(new Date(dateString));
+  }).format(new Date(date));
 };
 
 /**
  * Format date with time
- * @param dateString - ISO date string
+ * @param date - Date object, ISO string, or timestamp
  * @returns Formatted date with time (e.g., "Jan 15, 2024, 3:45 PM")
  */
-export const formatDateTime = (date: string | Date): string => {
+export const formatDateTime = (date: string | Date | number): string => {
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: 'short',
@@ -124,10 +124,10 @@ export const formatDateTime = (date: string | Date): string => {
 
 /**
  * Format relative time (e.g., "2 hours ago", "3 days ago")
- * @param dateString - ISO date string
+ * @param dateInput - Date object, ISO string, or timestamp
  */
-export const formatRelativeTime = (dateString: string): string => {
-  const date = new Date(dateString);
+export const formatRelativeTime = (dateInput: string | Date | number): string => {
+  const date = new Date(dateInput);
   const now = new Date();
   const diffInMs = now.getTime() - date.getTime();
   const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
@@ -142,5 +142,5 @@ export const formatRelativeTime = (dateString: string): string => {
   if (diffInDays < 7)
     return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
 
-  return formatOrderDate(dateString);
+  return formatOrderDate(dateInput);
 };
