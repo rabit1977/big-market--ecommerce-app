@@ -46,7 +46,7 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
   }
 
   return (
-    <div className="bg-gradient-to-b from-blue-50/30 to-background border-t">
+    <div className="bg-card/50 backdrop-blur-sm  border-t">
       <div className="container-wide py-6 md:py-8">
         <div className="flex items-center justify-between mb-4 px-4 sm:px-0">
           <div>
@@ -70,13 +70,13 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
              </button>
              <button 
                onClick={() => scroll('right')}
-               className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white border shadow-sm hover:bg-blue-50 hover:text-blue-600 transition-all active:scale-95"
+               className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white border shadow-sm hover:bg-accent hover:text-foreground transition-all active:scale-95"
              >
                 <ChevronRight className="w-6 h-6" />
              </button>
              <Link 
                href="/listings?featured=true" 
-               className="ml-2 inline-flex items-center text-sm font-bold text-blue-600 hover:text-blue-700 bg-blue-50 px-4 py-2 rounded-xl transition-all"
+               className="ml-2 inline-flex items-center text-sm font-bold text-primary hover:text-primary/80 bg-primary/5 px-4 py-2 rounded-xl transition-all"
              >
                View All
              </Link>
@@ -98,13 +98,12 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
                   className="min-w-[150px] sm:min-w-[200px] md:min-w-[220px] snap-start"
                 >
                   <Link href={`/listings/${listing._id}`}>
-                    <Card className="group h-full overflow-hidden border-border/40 hover:border-blue-500/50 hover:shadow-[0_20px_50px_rgba(8,112,184,0.12)] transition-all duration-500 rounded-xl md:rounded-2xl bg-white/80 dark:bg-card/40 dark:backdrop-blur-md backdrop-blur-sm p-0 gap-0">
+                    <Card className="group h-full overflow-hidden border-border/40 hover:border-primary/50 hover:shadow-[0_20px_50px_rgba(255,0,0,0.05)] transition-all duration-500 rounded-xl md:rounded-2xl bg-white/80 dark:bg-card/40 dark:backdrop-blur-md backdrop-blur-sm p-0 gap-0">
                       {/* Image Container */}
-                      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-                        <div className="absolute top-2 left-2 md:top-3 md:left-3 z-10">
-                          <Badge className="bg-orange-500/90 backdrop-blur-md hover:bg-orange-600 text-white border-0 shadow-lg px-2 py-0.5 md:px-2 md:py-1 font-bold uppercase tracking-tighter text-[9px]">
-                            <Star className="w-2.5 h-2.5 mr-1 fill-current" />
-                            Featured
+                      <div className="relative aspect-[4/3] overflow-hidden bg-white">
+                        <div className="absolute top-1 left-1 z-10">
+                          <Badge className="bg-orange-500/90 backdrop-blur-md hover:bg-orange-600 text-white border-0 shadow-lg rounded-full font-bold uppercase tracking-tighter text-[9px]">
+                            <Star className="w-2.5 h-2.5 fill-current" />
                           </Badge>
                         </div>
 
@@ -118,7 +117,7 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
                         
                         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         
-                        <div className="absolute bottom-3 left-3 right-3 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 hidden md:flex items-center justify-between">
+                        <div className="absolute bottom-3 left-3 right-3 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 hidden sm:flex items-center justify-between">
                            <span className="text-white text-[10px] font-bold bg-white/20 backdrop-blur-md px-2 py-1 rounded-md border border-white/30">
                                Quick View
                            </span>
@@ -128,22 +127,22 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
                       {/* Content */}
                       <div className="p-3 space-y-2">
                         <div className="space-y-1">
-                          <h3 className="font-bold text-sm leading-tight line-clamp-2 text-foreground group-hover:text-blue-600 transition-colors h-[2.5rem]">
+                          <h3 className="font-bold text-[11px] lg:text-xs leading-tight line-clamp-2 text-foreground group-hover:text-primary transition-colors h-[2.5rem]">
                             {listing.title}
                           </h3>
                         </div>
 
+
+                        <div className="pt-2 border-t border-border/50 flex items-center justify-between gap-2 text-xs text-muted-foreground font-medium">
                         <div className="flex flex-col gap-1">
-                          <div className="text-base md:text-lg font-black text-foreground leading-none">
+                          <div className="text-sm md:text-base font-black text-foreground leading-none">
                             €{listing.price.toLocaleString()}
                           </div>
                         </div>
-
-                        <div className="pt-2 border-t border-border/50 flex items-center gap-2 text-xs text-muted-foreground font-medium">
-                           <div className="bg-primary/10 p-1 rounded-md shrink-0">
+                           <div className="bg-primary/10 p-1 rounded-md shrink-0 flex items-center gap-1">
                               <MapPin className="w-3 h-3 text-primary" />
-                           </div>
                            <span className="truncate">{listing.city}</span>
+                           </div>
                         </div>
                       </div>
                     </Card>

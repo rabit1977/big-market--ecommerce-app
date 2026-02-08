@@ -31,7 +31,7 @@ export function CreateListingClient({ categories }: CreateListingClientProps) {
           Back to Listings
         </Button>
         <div className='flex items-center gap-4'>
-           <div className='h-12 w-12 rounded-2xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center shadow-lg shadow-primary/25'>
+           <div className='h-12 w-12 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25'>
              <Box className='h-6 w-6 text-white' />
            </div>
            <div>

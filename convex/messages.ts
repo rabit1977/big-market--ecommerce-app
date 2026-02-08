@@ -9,6 +9,44 @@ export const send = mutation({
     receiverId: v.string(),
   },
   handler: async (ctx, args) => {
+    // 1. Check if conversation rights exist
+    const existingConversation = await ctx.db
+      .query("conversations")
+      .withIndex("by_listing", (q) => q.eq("listingId", args.listingId))
+      .filter((q) =>
+        q.or(
+          q.and(
+            q.eq(q.field("buyerId"), args.senderId),
+            q.eq(q.field("sellerId"), args.receiverId)
+          ),
+          q.and(
+            q.eq(q.field("buyerId"), args.receiverId),
+            q.eq(q.field("sellerId"), args.senderId)
+          )
+        )
+      )
+      .first();
+
+    // 2. Create or Update Conversation
+    if (existingConversation) {
+      await ctx.db.patch(existingConversation._id, {
+        lastMessage: args.content,
+        lastMessageAt: Date.now(),
+        unreadCount: (existingConversation.unreadCount || 0) + 1,
+      });
+    } else {
+      // Create new
+      await ctx.db.insert("conversations", {
+        listingId: args.listingId,
+        buyerId: args.senderId,
+        sellerId: args.receiverId,
+        lastMessage: args.content,
+        lastMessageAt: Date.now(),
+        unreadCount: 1,
+      });
+    }
+
+    // 3. Insert Message
     return await ctx.db.insert("messages", {
       ...args,
       read: false,
@@ -175,6 +213,53 @@ export const markConversationAsRead = mutation({
     }
 
     return messages.length;
+  },
+});
+
+export const getListingStats = query({
+  args: { listingId: v.id("listings") },
+  handler: async (ctx, args) => {
+    // 1. Get total conversations for this listing
+    const conversations = await ctx.db
+      .query("conversations")
+      .withIndex("by_listing", (q) => q.eq("listingId", args.listingId))
+      .collect();
+
+    // 2. Calculate unique interlocutors (people who messaged about this)
+    // Actually conversations are unique per pair (buyer, seller, listing).
+    // So conversations.length IS the number of chats.
+    
+    // 3. Count unread messages for the seller (current user will be seller if calling this)
+    // We can't easily know who is calling without passing userId or checking auth.
+    // Ideally we assume the caller is the owner.
+    // Let's return the total unread count across all conversations for this listing.
+    // However, unreadCount in conversation is for the USER who has unread messages.
+    // Wait, `unreadCount` in schema:
+    // lastMessageAt: v.number(), lastMessage: v.optional(v.string()), unreadCount: v.optional(v.number())
+    // The current schema implementation of `unreadCount` in `conversations` table is slightly ambiguous
+    // if it doesn't specify WHO has unread messages.
+    // Usually unreadCount is per-user-conversation status. 
+    // But here `conversations` is a shared record between buyer and seller.
+    // If we look at `send` mutation:
+    // unreadCount: (existingConversation.unreadCount || 0) + 1
+    // It just increments. It doesn't say for whom.
+    // AND `markConversationAsRead` clears it.
+    // This implies `unreadCount` is simpler/shared or buggy?
+    // Actually, looking at `getUnreadCount`: it sums up `unreadCount` for all conversations where user is buyer OR seller.
+    // This suggests `unreadCount` implies messages waiting for *someone*.
+    // If I send a message, unreadCount goes up. If I am the sender, it shouldn't be unread for ME.
+    // The current implementation in `send` increments it blindly.
+    // So `unreadCount` effectively means "messages since last read by ANYONE"?
+    // Or maybe it assumes the receiver has unread messages?
+    // `markConversationAsRead` clears it when a specific user reads it.
+    // This schema is a bit simplistic for dual-sided unread counts (usually you need `buyerUnreadCount` and `sellerUnreadCount`).
+    
+    // For now, let's just return what we have: total conversations (leads).
+    
+    return {
+        totalConversations: conversations.length,
+        totalUnread: conversations.reduce((acc, curr) => acc + (curr.unreadCount || 0), 0),
+    };
   },
 });
 

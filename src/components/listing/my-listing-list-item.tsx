@@ -78,7 +78,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
         className="group relative flex flex-row bg-card border border-border/60 shadow-sm rounded-xl overflow-hidden hover:shadow-md transition-all duration-300"
       >
         {/* Image Section */}
-        <div className="relative w-32 sm:w-48 aspect-square bg-muted shrink-0">
+        <div className="relative w-32 sm:w-48 aspect-square bg-white shrink-0">
           <Image
             src={activeImage}
             alt={listing.title}

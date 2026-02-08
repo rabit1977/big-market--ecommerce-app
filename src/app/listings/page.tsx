@@ -29,6 +29,8 @@ interface ListingsPageProps {
     shipping?: string;
     vat?: string;
     affordable?: string;
+    date?: string;
+    filters?: string; // JSON dynamic filters
   }>;
 }
 
@@ -60,11 +62,28 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
         userType: params.userType,
         adType: params.adType,
         isTradePossible: params.trade === 'true' ? true : undefined,
+
         hasShipping: params.shipping === 'true' ? true : undefined,
         isVatIncluded: params.vat === 'true' ? true : undefined,
-        isAffordable: params.affordable === 'true' ? true : undefined
+        isAffordable: params.affordable === 'true' ? true : undefined,
+        dateRange: params.date,
+        dynamicFilters: params.filters // Added dynamicFilters
     }),
   ]);
+
+  // Determine active category template
+  let activeTemplate = null;
+  if (category && category !== 'all') {
+      const catObj = categories.find(c => c.slug === category);
+      if (catObj?.template) activeTemplate = catObj.template;
+      // Check subcategory if main category template is generic or we want more specificity
+      if (params.subCategory) {
+           // Subcategories are flattened if in top level list? No, Convex returns flat list. 
+           // We need to look up subcategory object but api.categories.list returns all.
+           const subCatObj = categories.find(c => c.slug === params.subCategory);
+           if (subCatObj?.template) activeTemplate = subCatObj.template;
+      }
+  }
 
   // Search filtering (if query exists, further filter result, or ideally use search index query if query is dominant)
   // For now, if query exists, we filter in memory since api.listings.list is optimizing for category/filters
@@ -91,21 +110,23 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   return (
     <div className="bg-background min-h-screen pb-20">
       {/* Header */}
-      <div className="bg-card border-b border-border/50 py-8 mb-8">
+      <div className="bg-card border-b border-border/50 py-8  mb-8 mt-4">
         <div className="container-wide">
-          <div className="mb-4">
+          <div className="">
             <AppBreadcrumbs />
           </div>
-          <h1 className="text-4xl font-bold tracking-tight mb-3">
+         <div className='flex items-center justify-between'>
+          <h1 className="text-xl font-bold md:text-2xl">
             {category && category !== 'all'
               ? categories.find((c) => c.slug === category)?.name || 'Listings'
               : 'All Listings'}
           </h1>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground md:text-lg text-sm">
             {total} {total === 1 ? 'result' : 'results'} found
             {city && city !== 'all' && ` in ${city}`}
             {query && ` for "${query}"`}
           </p>
+        </div>
         </div>
       </div>
 
@@ -115,6 +136,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
             initialListings={paginatedListings}
             categories={categories}
             pagination={pagination}
+            template={activeTemplate}
           />
         </Suspense>
       </div>

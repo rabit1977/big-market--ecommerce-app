@@ -1,20 +1,16 @@
 {
-  "name": "ecommerce-app",
+  "name": "classifieds-platform",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "test": "jest",
-    "postinstall": "prisma generate"
+    "lint": "eslint"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
-    "@prisma/adapter-pg": "^7.3.0",
-    "@prisma/client": "7.3.0",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-avatar": "^1.1.11",
@@ -50,7 +46,6 @@
     "next": "16.0.7",
     "next-auth": "5.0.0-beta.30",
     "next-themes": "^0.4.6",
-    "pg": "^8.17.2",
     "react": "19.2.1",
     "react-day-picker": "^9.13.0",
     "react-dom": "19.2.1",
@@ -69,36 +64,25 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",
     "@tailwindcss/postcss": "^4.1.18",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
     "@types/bcryptjs": "^3.0.0",
-    "@types/jest": "^30.0.0",
     "@types/node": "^20.19.30",
-    "@types/pg": "^8.16.0",
     "@types/react": "^19.2.10",
     "@types/react-dom": "^19.2.3",
     "baseline-browser-mapping": "^2.9.19",
     "eslint": "^9.39.2",
     "eslint-config-next": "15.5.0",
-    "jest": "^30.2.0",
-    "jest-environment-jsdom": "^30.2.0",
     "prettier": "^3.8.1",
-    "prisma": "7.3.0",
     "tailwindcss": "^4.1.18",
-    "ts-jest": "^29.4.6",
     "tsx": "^4.21.0",
     "tw-animate-css": "^1.4.0",
     "typescript": "^5.9.3"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "@prisma/client",
-      "@prisma/engines",
       "esbuild",
       "@tailwindcss/oxide",
       "bcryptjs",
       "msw",
-      "prisma",
       "sharp",
       "unrs-resolver"
     ]

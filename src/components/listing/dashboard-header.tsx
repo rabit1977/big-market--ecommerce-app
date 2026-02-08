@@ -55,7 +55,7 @@ export function MyListingsDashboardHeader() {
       {/* 1. Header Card: Identity & Wallet */}
       <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
           {/* Background decoration */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-full blur-3xl -z-0 opacity-50 translate-x-12 -translate-y-12" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/5 to-primary/10 rounded-full blur-3xl -z-0 opacity-50 translate-x-12 -translate-y-12" />
           
           <div className="flex items-center gap-6 relative z-10 w-full md:w-auto">
              <div className="relative">
@@ -109,7 +109,7 @@ export function MyListingsDashboardHeader() {
                   <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Your Balance</div>
                   <div className="text-2xl font-black text-slate-900">{user.credits.toFixed(2)} MKD</div>
               </div>
-              <Button asChild size="lg" className="rounded-xl font-bold shadow-lg shadow-blue-500/20 bg-blue-600 hover:bg-blue-700">
+              <Button asChild size="lg" className="rounded-xl font-bold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90">
                   <Link href="/wallet/top-up">
                       <Plus className="w-5 h-5 mr-2" />
                       Add Money
@@ -140,7 +140,7 @@ export function MyListingsDashboardHeader() {
           <Card className="min-w-[300px] snap-center md:min-w-0 border-slate-200 shadow-sm hover:shadow-md transition-all md:col-span-2 bg-white">
               <CardContent className="p-5">
                   <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                           <RefreshCw className="w-5 h-5" />
                       </div>
                       <div>
@@ -172,7 +172,7 @@ export function MyListingsDashboardHeader() {
                       <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
                           <Megaphone className="w-5 h-5" />
                       </div>
-                      <Link href="/my-listings/stats" className="text-xs font-bold text-blue-600 hover:underline flex items-center">
+                      <Link href="/my-listings/stats" className="text-xs font-bold text-primary hover:underline flex items-center">
                           Details <ArrowRight className="w-3 h-3 ml-1" />
                       </Link>
                   </div>

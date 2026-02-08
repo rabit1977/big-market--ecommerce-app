@@ -110,7 +110,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                     />
                   </div>
                 ) : (
-                  <div className='h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-gradient-to-br from-primary/20 to-violet-500/20 flex items-center justify-center ring-2 ring-border'>
+                  <div className='h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-primary/20 flex items-center justify-center ring-2 ring-border'>
                     <span className='text-sm sm:text-base font-bold text-primary'>
                       {user.name?.charAt(0).toUpperCase() || 'U'}
                     </span>

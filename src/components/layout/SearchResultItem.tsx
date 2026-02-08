@@ -25,7 +25,7 @@ export const SearchResultItem = ({
         onKeyDown={(e) => onKeyDown(e, index)}
         className='flex items-center gap-3 rounded-md p-2 hover:bg-accent transition-colors focus:bg-accent focus:outline-none'
       >
-        <div className='relative h-12 w-12 flex shrink-0 rounded-md overflow-hidden bg-muted'>
+        <div className='relative h-12 w-12 flex shrink-0 rounded-md overflow-hidden bg-white'>
            {(listing.thumbnail) ? (
               <Image
                 src={listing.thumbnail}

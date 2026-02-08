@@ -86,17 +86,17 @@ export default async function AdminListingsPage(props: AdminListingsPageProps) {
       label: 'Listings', 
       value: stats.total, 
       icon: Package, 
-      color: 'text-blue-500', 
-      bg: 'bg-blue-500/10', 
-      border: 'border-blue-500/20' 
+      color: 'text-primary', 
+      bg: 'bg-primary/10', 
+      border: 'border-primary/20' 
     },
     { 
       label: 'Categories', 
       value: stats.categories, 
       icon: Layers, 
-      color: 'text-violet-500', 
-      bg: 'bg-violet-500/10', 
-      border: 'border-violet-500/20' 
+      color: 'text-primary', 
+      bg: 'bg-primary/10', 
+      border: 'border-primary/20' 
     },
     { 
       label: 'Active', 

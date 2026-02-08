@@ -111,6 +111,9 @@ export default defineSchema({
     query: v.string(),
     url: v.string(), // Full URL with filters
     name: v.optional(v.string()), 
+    filters: v.optional(v.string()), // JSON string
+    isEmailAlert: v.optional(v.boolean()),
+    frequency: v.optional(v.string()), // 'daily', 'weekly', etc. 
   }).index('by_user', ['userId']),
 
   messages: defineTable({

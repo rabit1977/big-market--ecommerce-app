@@ -1,14 +1,14 @@
-import { Product } from '@/generated/prisma/browser';
+import { Listing } from './listing';
 
 export interface SearchState {
   inputValue: string;
   isSearchFocused: boolean;
-  searchResults: Product[];
+  searchResults: Listing[];
   isLoading: boolean;
 }
 
 export interface SearchResultItem {
-  product: Product;
+  product: Listing;
   index: number;
   onSelect: () => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLAnchorElement>, index: number) => void;

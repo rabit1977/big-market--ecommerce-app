@@ -107,6 +107,8 @@ export const update = mutation({
     role: v.optional(v.string()),
     bio: v.optional(v.string()),
     image: v.optional(v.string()),
+    resetToken: v.optional(v.string()),
+    resetTokenExpiry: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const { id, ...data } = args;

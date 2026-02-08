@@ -8,8 +8,8 @@ import {
     CommandItem,
     CommandList,
 } from '@/components/ui/command';
-import { Product } from '@/lib/types';
-import { Heart, Home, Loader2, Moon, Search, ShoppingCart, Sun } from 'lucide-react';
+import { Listing } from '@/lib/types';
+import { Heart, Home, Loader2, Moon, Search, Sun, User } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -19,7 +19,7 @@ export const CommandPalette = () => {
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<Product[]>([]);
+  const [results, setResults] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -50,7 +50,7 @@ export const CommandPalette = () => {
       }
       setIsLoading(true);
       try {
-        const response = await fetch(`/api/products/search?query=${query}`);
+        const response = await fetch(`/api/listings/search?query=${query}`);
         if (response.ok) {
           const data = await response.json();
           setResults(data);
@@ -76,7 +76,7 @@ export const CommandPalette = () => {
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
       <CommandInput
-        placeholder="Type a command or search..."
+        placeholder="Type a command or search listings..."
         value={query}
         onValueChange={setQuery}
       />
@@ -88,15 +88,15 @@ export const CommandPalette = () => {
           </div>
         )}
         {!isLoading && results.length > 0 && (
-          <CommandGroup heading="Products">
-            {results.map((product) => (
+          <CommandGroup heading="Listings">
+            {results.map((listing) => (
               <CommandItem
-                key={product.id}
-                onSelect={() => runCommand(() => router.push(`/products/${product.id}`))}
-                value={`product-${product.id}-${product.title}`}
+                key={listing._id}
+                onSelect={() => runCommand(() => router.push(`/listings/${listing._id}`))}
+                value={`listing-${listing._id}-${listing.title}`}
               >
                 <Search className="mr-2 h-4 w-4" />
-                <span>{product.title}</span>
+                <span>{listing.title}</span>
               </CommandItem>
             ))}
           </CommandGroup>
@@ -106,13 +106,17 @@ export const CommandPalette = () => {
             <Home className="mr-2 h-4 w-4" />
             <span>Home</span>
           </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => router.push('/cart'))}>
-            <ShoppingCart className="mr-2 h-4 w-4" />
-            <span>Cart</span>
+          <CommandItem onSelect={() => runCommand(() => router.push('/listings'))}>
+            <Search className="mr-2 h-4 w-4" />
+            <span>Browse All Listings</span>
           </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => router.push('/wishlist'))}>
+          <CommandItem onSelect={() => runCommand(() => router.push('/favorites'))}>
             <Heart className="mr-2 h-4 w-4" />
-            <span>Wishlist</span>
+            <span>Favorites</span>
+          </CommandItem>
+          <CommandItem onSelect={() => runCommand(() => router.push('/account'))}>
+            <User className="mr-2 h-4 w-4" />
+            <span>Account</span>
           </CommandItem>
         </CommandGroup>
         <CommandGroup heading="Actions">

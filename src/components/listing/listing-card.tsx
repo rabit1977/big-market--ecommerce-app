@@ -73,7 +73,7 @@ export const ListingCard = memo(
         className={cn(
           "group relative flex bg-card border border-border/50 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden",
           isGrid ? "flex-col h-full rounded-xl" : "flex-row h-32 md:h-44 rounded-lg",
-          isPromoted && "ring-2 ring-blue-500 shadow-xl shadow-blue-500/10"
+          isPromoted && "ring-2 ring-primary shadow-xl shadow-primary/10"
         )}
       >
         {/* Main Card Link - Lower Z-Index */}
@@ -81,7 +81,7 @@ export const ListingCard = memo(
 
         {/* Image Section */}
         <div className={cn(
-          "relative shrink-0 bg-muted overflow-hidden z-10 pointer-events-none",
+          "relative shrink-0 bg-white overflow-hidden z-10 pointer-events-none",
           isGrid ? "aspect-[4/3] w-full" : "w-32 md:w-56 h-full"
         )}>
           <Image
@@ -95,7 +95,7 @@ export const ListingCard = memo(
           {/* Status Badges Overlay */}
           <div className="absolute top-2 left-2 z-20 pointer-events-none flex flex-col gap-1.5">
               {isPromoted && (
-                 <div className="bg-blue-600/90 backdrop-blur-sm text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-lg border border-white/20 uppercase tracking-tighter">
+                 <div className="bg-primary backdrop-blur-sm text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-lg border border-white/20 uppercase tracking-tighter">
                     Promoted
                  </div>
               )}
@@ -105,7 +105,7 @@ export const ListingCard = memo(
                  </div>
               )}
               {isVerified && (
-                 <div className="bg-blue-500/90 text-white rounded-full p-1 shadow-md">
+                 <div className="bg-primary text-white rounded-full p-1 shadow-md">
                     <ShieldCheck className="h-3.5 w-3.5" />
                  </div>
               )}
@@ -129,7 +129,7 @@ export const ListingCard = memo(
                </div>
 
                <div className="pt-1">
-                   <span className="text-lg font-bold text-blue-700 dark:text-blue-400">
+                   <span className="text-lg font-bold text-primary">
                      {formatPrice(listing.price)}
                    </span>
                </div>
@@ -173,7 +173,7 @@ export const ListingCard = memo(
                            <MapPin className="h-3 w-3" />
                            {listing.city || 'Skopje'}
                        </span>
-                       <span className="text-base md:text-xl font-bold text-blue-600 dark:text-blue-400">
+                       <span className="text-base md:text-xl font-bold text-primary">
                          {formatPrice(listing.price)}
                        </span>
                    </div>

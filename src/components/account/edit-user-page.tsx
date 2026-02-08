@@ -3,15 +3,15 @@
 
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle
 } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useMutation, useQuery } from 'convex/react';
 import {
-  ArrowLeft
+    ArrowLeft
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -123,7 +123,7 @@ export default function EditProfilePage() {
 
   if (user === undefined) {
     return (
-      <div className='min-h-screen pt-24 pb-12 bg-gray-50/50'>
+      <div className='min-h-screen pt-24 pb-12 bg-background'>
         <div className='container mx-auto px-4'>
           <ProfileSkeleton />
         </div>
@@ -136,25 +136,25 @@ export default function EditProfilePage() {
   }
 
   return (
-    <div className='min-h-screen pt-24 pb-12 bg-gray-50/50'>
+    <div className='min-h-screen pt-24 pb-12 bg-background'>
       <div className='container max-w-4xl mx-auto px-4'>
         <AppBreadcrumbs />
         {/* Header */}
         <div className='mb-8 flex items-center justify-between'>
           <div>
-              <Link href='/account' className="text-sm text-muted-foreground flex items-center gap-1 hover:text-foreground mb-2">
+              <Link href='/account' className="text-sm text-muted-foreground flex items-center gap-1 hover:text-foreground mb-2 transition-colors">
                  <ArrowLeft className='h-4 w-4' /> Back to Account
               </Link>
-              <h1 className='text-3xl font-black tracking-tight text-slate-900'>
+              <h1 className='text-3xl font-black tracking-tighter text-foreground'>
                 Edit Profile
               </h1>
-              <p className='text-muted-foreground'>
+              <p className='text-muted-foreground font-medium'>
                 Manage your public profile and preferences
               </p>
           </div>
         </div>
 
-        <Card className="border-none shadow-sm bg-white overflow-hidden rounded-3xl">
+        <Card className="border-border shadow-sm bg-card overflow-hidden rounded-3xl">
             <CardHeader className="sr-only">
                <CardTitle>Edit Profile Form</CardTitle>
             </CardHeader>

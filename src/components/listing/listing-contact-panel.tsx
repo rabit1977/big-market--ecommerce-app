@@ -5,24 +5,24 @@ import { toggleWishlistAction } from '@/actions/wishlist-actions';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger
 } from '@/components/ui/tooltip';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { formatPrice } from '@/lib/utils/formatters';
 import {
-  AlertTriangle,
-  CheckCircle,
-  Heart,
-  Mail,
-  MapPin,
-  Phone,
-  Shield,
-  User,
-  XCircle
+    AlertTriangle,
+    CheckCircle,
+    Heart,
+    Mail,
+    MapPin,
+    Phone,
+    Shield,
+    User,
+    XCircle
 } from 'lucide-react';
 import { useMemo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
@@ -107,6 +107,8 @@ export function ListingContactPanel({
         
         if (result.success) {
             toast.success("Message sent!");
+            // Redirect to messages page to see the new conversation
+            window.location.href = `/messages?listingId=${listing._id}&newItem=true`;
         } else {
             toast.error(String(result.error || "Failed to send message"));
         }
@@ -132,7 +134,7 @@ export function ListingContactPanel({
 
         {/* Price Section */}
         <div className='flex items-baseline gap-3 sm:gap-4 flex-wrap'>
-          <p className='text-2xl sm:text-4xl lg:text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-primary via-violet-500 to-primary'>
+          <p className='text-2xl sm:text-4xl lg:text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-primary via-red-500 to-primary'>
             {formatPrice(listing.price)}
           </p>
         </div>

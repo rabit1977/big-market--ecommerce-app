@@ -1,6 +1,7 @@
 
 'use client';
 
+
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,57 +10,63 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
+import { api } from '@/lib/convex-server';
 import { cn } from '@/lib/utils';
+import { useQuery } from 'convex/react';
 import { format } from 'date-fns';
 import { CalendarIcon, ChevronLeft, Eye, MousePointerClick } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
-// Mock Data simulating daily stats
-const MOCK_DATA = Array.from({ length: 30 }, (_, i) => {
-    const views = Math.floor(Math.random() * 150);
-    const clicks = Math.floor(Math.random() * 20);
-    const date = new Date();
-    date.setDate(date.getDate() - (29 - i));
-    return {
-        date: date.toISOString(),
-        formattedDate: format(date, 'dd.MM.yyyy'),
-        views,
-        clicks,
-        total: views + clicks
-    };
-});
-
-const TOTAL_VIEWS = MOCK_DATA.reduce((acc, curr) => acc + curr.views, 0);
-const TOTAL_CLICKS = MOCK_DATA.reduce((acc, curr) => acc + curr.clicks, 0);
+// MOCK_DATA removed
 
 export default function ListingStatsPage() {
+    const { data: session } = useSession();
     const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
         from: new Date(new Date().setDate(new Date().getDate() - 30)),
         to: new Date()
     });
 
+    const days = Math.ceil((dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24));
+
+    const stats = useQuery(api.analytics.getUserStats, 
+        session?.user?.id ? { 
+            userId: session.user.id, 
+            days: days > 0 ? days : 30 
+        } : "skip"
+    );
+
+    const chartData = stats?.map(s => ({
+        ...s,
+        formattedDate: format(new Date(s.date), 'dd.MM.yyyy'),
+        total: (s.views || 0) + (s.clicks || 0)
+    })) || [];
+
+    const totalViews = chartData.reduce((acc, curr) => acc + (curr.views || 0), 0);
+    const totalClicks = chartData.reduce((acc, curr) => acc + (curr.clicks || 0), 0);
+
     return (
-        <div className="min-h-screen pt-24 pb-12 bg-gray-50/50">
-            <div className="container max-w-4xl mx-auto px-4">
+        <div className="min-h-screen pt-20 md:pt-24 pb-12 bg-gray-50/50">
+            <div className="container max-w-4xl mx-auto px-2 md:px-4">
                 
                 {/* Header */}
-                <div className="mb-8">
-                    <Link href="/my-listings" className="text-sm text-muted-foreground flex items-center gap-1 hover:text-foreground mb-4">
+                <div className="mb-6 md:mb-8 px-2 md:px-0">
+                    <Link href="/my-listings" className="text-xs md:text-sm text-muted-foreground flex items-center gap-1 hover:text-foreground mb-4">
                         <ChevronLeft className="w-4 h-4" /> Back to My Listings
                     </Link>
-                    <h1 className="text-2xl font-bold text-slate-900">Statistics Overview</h1>
-                    <p className="text-muted-foreground">Performance of all your listings</p>
+                    <h1 className="text-xl md:text-2xl font-black text-slate-900 uppercase tracking-tight">Statistics Overview</h1>
+                    <p className="text-xs md:text-sm text-muted-foreground">Performance of all your listings</p>
                 </div>
 
                 {/* Date Filter Card */}
-                <Card className="mb-6 border-slate-200">
-                    <CardContent className="p-4 flex items-center justify-between flex-wrap gap-4">
-                        <div>
-                            <h3 className="font-bold text-slate-900">Review of all ads</h3>
-                            <p className="text-sm text-muted-foreground">
-                                {format(dateRange.from, 'dd.MM.yyyy')} - {format(dateRange.to, 'dd.MM.yyyy')}
+                <Card className="mb-4 md:mb-6 border-slate-200 overflow-hidden shadow-sm">
+                    <CardContent className="p-3 md:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div className="space-y-1">
+                            <h3 className="font-black text-slate-900 uppercase tracking-tight text-sm">Review Period</h3>
+                            <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                {format(dateRange.from, 'dd MMM yyyy')} - {format(dateRange.to, 'dd MMM yyyy')}
                             </p>
                         </div>
                         
@@ -68,33 +75,44 @@ export default function ListingStatsPage() {
                                 <Button
                                     variant={"outline"}
                                     className={cn(
-                                        "w-[240px] justify-start text-left font-normal",
+                                        "w-full sm:w-[260px] justify-start text-left font-bold text-xs h-11 border-2 border-slate-100 rounded-xl",
                                         !dateRange && "text-muted-foreground"
                                     )}
                                 >
-                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    <CalendarIcon className="mr-2 h-4 w-4 text-blue-500" />
                                     {dateRange?.from ? (
                                         dateRange.to ? (
                                             <>
-                                                {format(dateRange.from, "LLL dd, y")} -{" "}
-                                                {format(dateRange.to, "LLL dd, y")}
+                                                {format(dateRange.from, "MMM dd, y")} -{" "}
+                                                {format(dateRange.to, "MMM dd, y")}
                                             </>
                                         ) : (
-                                            format(dateRange.from, "LLL dd, y")
+                                            format(dateRange.from, "MMM dd, y")
                                         )
                                     ) : (
-                                        <span>Pick a date</span>
+                                        <span>Pick a date range</span>
                                     )}
                                 </Button>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="end">
+                            <PopoverContent 
+                                className="w-[320px] sm:w-auto p-0" 
+                                align="center" 
+                                sideOffset={8}
+                            >
                                 <Calendar
                                     initialFocus
                                     mode="range"
                                     defaultMonth={dateRange?.from}
                                     selected={dateRange as any}
-                                    onSelect={(val: any) => setDateRange(val || { from: new Date(), to: new Date() })}
-                                    numberOfMonths={2}
+                                    onSelect={(val: any) => {
+                                        if (val?.from && val?.to) {
+                                            setDateRange({ from: val.from, to: val.to });
+                                        } else if (val?.from) {
+                                            setDateRange({ from: val.from, to: val.from });
+                                        }
+                                    }}
+                                    numberOfMonths={1}
+                                    className="rounded-xl border shadow-2xl bg-white"
                                 />
                             </PopoverContent>
                         </Popover>
@@ -102,21 +120,22 @@ export default function ListingStatsPage() {
                 </Card>
 
                 {/* Chart Section */}
-                <Card className="mb-6 border-slate-200 shadow-sm overflow-hidden">
-                    <CardContent className="p-6">
-                        <div className="h-[300px] w-full">
+                <Card className="mb-4 md:mb-6 border-slate-200 shadow-sm overflow-hidden">
+                    <CardContent className="p-4 md:p-6">
+                        <div className="h-[200px] md:h-[300px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={MOCK_DATA} margin={{ top: 20, right: 0, left: -20, bottom: 0 }}>
+                                <BarChart data={chartData} margin={{ top: 20, right: 0, left: -25, bottom: 0 }}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
                                     <XAxis 
-                                        dataKey="formattedDate" 
-                                        fontSize={10} 
+                                        dataKey="date" 
+                                        fontSize={9} 
                                         tickLine={false} 
                                         axisLine={false}
-                                        tickFormatter={(val, index) => index % 3 === 0 ? val.split('.')[0] : ''} // Show every 3rd day
+                                        tickFormatter={(val) => format(new Date(val), 'dd.MM')}
+                                        minTickGap={20}
                                     />
                                     <YAxis 
-                                        fontSize={10} 
+                                        fontSize={9} 
                                         tickLine={false} 
                                         axisLine={false}
                                         tickCount={5}
@@ -127,14 +146,14 @@ export default function ListingStatsPage() {
                                             if (active && payload && payload.length) {
                                                 const data = payload[0].payload;
                                                 return (
-                                                    <div className="bg-slate-800 text-white text-xs rounded-lg p-2 shadow-xl">
-                                                        <div className="font-bold mb-1">{data.formattedDate}</div>
+                                                    <div className="bg-slate-800 text-white text-[10px] rounded-lg p-2 shadow-xl border border-white/10">
+                                                        <div className="font-bold mb-1">{format(new Date(data.date), 'dd MMMM yyyy')}</div>
                                                         <div className="flex justify-between gap-4">
                                                             <span>Views:</span>
                                                             <span className="font-bold text-orange-400">{data.views}</span>
                                                         </div>
                                                         <div className="flex justify-between gap-4">
-                                                            <span>Clicks:</span>
+                                                            <span>Inquiries:</span>
                                                             <span className="font-bold text-blue-400">{data.clicks}</span>
                                                         </div>
                                                     </div>
@@ -143,76 +162,87 @@ export default function ListingStatsPage() {
                                             return null;
                                         }}
                                     />
-                                    <Bar dataKey="views" fill="#FB923C" radius={[4, 4, 0, 0]} maxBarSize={40} stackId="a" />
-                                    <Bar dataKey="clicks" fill="#60A5FA" radius={[4, 4, 0, 0]} maxBarSize={40} stackId="b" /> 
-                                    {/* Note: In screenshot they are side-by-side or stacked? They look side-by-side or just separate bars. 
-                                        Let's try side-by-side. Removing stackId.
-                                    */}
+                                    <Bar dataKey="views" fill="#FB923C" radius={[2, 2, 0, 0]} maxBarSize={20} />
+                                    <Bar dataKey="clicks" fill="#3B82F6" radius={[2, 2, 0, 0]} maxBarSize={20} /> 
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
                         
                         <div className="flex justify-center gap-6 mt-4">
                             <div className="flex items-center gap-2">
-                                <div className="w-3 h-1 bg-orange-400 rounded-full"></div>
-                                <span className="text-sm font-medium text-slate-700">Views</span>
+                                <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Views</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <div className="w-3 h-1 bg-blue-400 rounded-full"></div>
-                                <span className="text-sm font-medium text-slate-700">Clicks</span>
+                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Inquiries</span>
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
                 {/* Summary Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <Card className="border-l-4 border-l-orange-400 shadow-sm">
-                        <CardContent className="p-4 flex items-center justify-between">
+                <div className="grid grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-6">
+                    <Card className="border-l-4 border-l-orange-400 shadow-sm overflow-hidden">
+                        <CardContent className="p-3 md:p-4 flex items-center justify-between">
                             <div>
-                                <div className="text-3xl font-black text-slate-900">{TOTAL_VIEWS}</div>
-                                <div className="text-sm text-muted-foreground">Total Views</div>
+                                <div className="text-xl md:text-3xl font-black text-slate-900 leading-none mb-1">{totalViews}</div>
+                                <div className="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">Views</div>
                             </div>
-                            <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center">
-                                <Eye className="w-5 h-5 text-orange-500" />
+                            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-orange-50 flex items-center justify-center">
+                                <Eye className="w-4 h-4 md:w-5 md:h-5 text-orange-500" />
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card className="border-l-4 border-l-blue-500 shadow-sm">
-                        <CardContent className="p-4 flex items-center justify-between">
+                    <Card className="border-l-4 border-l-blue-500 shadow-sm overflow-hidden">
+                        <CardContent className="p-3 md:p-4 flex items-center justify-between">
                             <div>
-                                <div className="text-3xl font-black text-slate-900">{TOTAL_CLICKS}</div>
-                                <div className="text-sm text-muted-foreground">Total Clicks</div>
+                                <div className="text-xl md:text-3xl font-black text-slate-900 leading-none mb-1">{totalClicks}</div>
+                                <div className="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">Inquiries</div>
                             </div>
-                            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-                                <MousePointerClick className="w-5 h-5 text-blue-500" />
+                            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-blue-50 flex items-center justify-center">
+                                <MousePointerClick className="w-4 h-4 md:w-5 md:h-5 text-blue-500" />
                             </div>
                         </CardContent>
                     </Card>
                 </div>
 
                 {/* Data Table */}
-                <Card className="overflow-hidden shadow-sm border-slate-200">
+                <Card className="overflow-hidden shadow-sm border-slate-200 rounded-xl">
+                    <div className="bg-slate-50 px-4 py-3 border-b">
+                        <h4 className="text-xs font-black text-slate-900 uppercase tracking-tight">Daily Breakdown</h4>
+                    </div>
                     <div className="overflow-x-auto">
-                        <table className="w-full text-sm text-left">
-                            <thead className="text-xs text-muted-foreground uppercase bg-slate-50 border-b">
+                        <table className="w-full text-xs md:text-sm text-left">
+                            <thead className="text-[10px] md:text-xs text-muted-foreground uppercase bg-slate-50/50 border-b">
                                 <tr>
-                                    <th className="px-6 py-3 font-medium">Date</th>
-                                    <th className="px-6 py-3 font-medium text-right">Views</th>
-                                    <th className="px-6 py-3 font-medium text-right">Clicks</th>
-                                    <th className="px-6 py-3 font-medium text-right">Total Activity</th>
+                                    <th className="px-4 md:px-6 py-3 font-bold tracking-wider">Date</th>
+                                    <th className="px-4 md:px-6 py-3 font-bold tracking-wider text-right">Views</th>
+                                    <th className="px-4 md:px-6 py-3 font-bold tracking-wider text-right">Inq.</th>
+                                    <th className="px-4 md:px-6 py-3 font-bold tracking-wider text-right">Activity</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {MOCK_DATA.slice().reverse().map((row, i) => (
-                                    <tr key={i} className="bg-white border-b hover:bg-slate-50 transition-colors">
-                                        <td className="px-6 py-4 font-bold text-slate-900">{row.formattedDate}</td>
-                                        <td className="px-6 py-4 text-right">{row.views}</td>
-                                        <td className="px-6 py-4 text-right">{row.clicks}</td>
-                                        <td className="px-6 py-4 text-right font-bold">{row.total}</td>
+                            <tbody className="divide-y divide-slate-100">
+                                {chartData.slice().reverse().map((row, i) => (
+                                    <tr key={i} className="bg-white hover:bg-slate-50 transition-colors">
+                                        <td className="px-4 md:px-6 py-3 font-bold text-slate-900">{format(new Date(row.date), 'dd.MM')}</td>
+                                        <td className="px-4 md:px-6 py-3 text-right font-medium">{row.views}</td>
+                                        <td className="px-4 md:px-6 py-3 text-right font-medium">{row.clicks}</td>
+                                        <td className="px-4 md:px-6 py-3 text-right">
+                                            <span className="bg-slate-100 px-2 py-0.5 rounded-full font-black text-slate-700">
+                                                {row.total}
+                                            </span>
+                                        </td>
                                     </tr>
                                 ))}
+                                {chartData.length === 0 && (
+                                    <tr>
+                                        <td colSpan={4} className="px-6 py-8 text-center text-slate-400 font-bold uppercase tracking-widest text-xs">
+                                            No data available for this range
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>

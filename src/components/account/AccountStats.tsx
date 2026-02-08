@@ -35,8 +35,8 @@ export function AccountStats({
         label: 'Active Ads',
         value: activeListings,
         icon: Zap,
-        color: 'text-violet-500',
-        bg: 'bg-violet-500/10',
+        color: 'text-primary',
+        bg: 'bg-primary/10',
         path: '/my-listings'
     },
     {

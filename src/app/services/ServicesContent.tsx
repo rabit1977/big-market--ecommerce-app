@@ -62,7 +62,7 @@ export const ServicesContent = () => {
         </span>
         <h1 className='text-4xl sm:text-6xl font-black tracking-tight text-foreground max-w-4xl mx-auto leading-tight'>
           Premium Services for <br className="hidden sm:block" />
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-violet-500">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
             Exceptional Experiences
           </span>
         </h1>

@@ -80,7 +80,7 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
         exit={{ opacity: 0, scale: 0.95 }}
         className="group relative flex flex-col h-full rounded-2xl bg-card border border-border/50 shadow-sm transition-all duration-300 overflow-hidden"
       >
-        <div className="relative aspect-[4/3] bg-muted overflow-hidden">
+        <div className="relative aspect-[4/3] bg-white overflow-hidden">
           <Image
             src={activeImage}
             alt={listing.title}

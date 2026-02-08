@@ -32,6 +32,8 @@ export const list = query({
     isVatIncluded: v.optional(v.boolean()),
     isAffordable: v.optional(v.boolean()),
     isPromoted: v.optional(v.boolean()),
+    dateRange: v.optional(v.string()),
+    dynamicFilters: v.optional(v.string()), // JSON string of filters
   },
   handler: async (ctx, args) => {
     console.log("API list called with args:", args);
@@ -47,14 +49,81 @@ export const list = query({
       results = results.filter(r => r.status === args.status);
     }
     
-    // Category
+    // Category - exact match or hierarchical match (case-insensitive)
     if (args.category && args.category !== 'all') {
-      results = results.filter(r => r.category === args.category);
+      const filterCategory = args.category.toLowerCase();
+      results = results.filter(r => {
+        if (!r.category) return false;
+        const listingCat = r.category.toLowerCase();
+        
+        // Exact match on category (case-insensitive)
+        if (listingCat === filterCategory) return true;
+        
+        // If subCategory contains the category slug, it's a child category
+        if (r.subCategory && r.subCategory.toLowerCase().includes(filterCategory)) return true;
+        
+        return false;
+      });
     }
     
-    // SubCategory
-    if (args.subCategory && args.subCategory !== '') {
-        results = results.filter(r => r.subCategory === args.subCategory);
+    // SubCategory - exact match or hierarchical match (case-insensitive)
+    if (args.subCategory && args.subCategory !== '' && args.subCategory !== 'all') {
+      const filterSub = args.subCategory.toLowerCase();
+      console.log('Filtering by subCategory:', filterSub);
+      
+      // Get all categories to check hierarchy
+      const allCategories = await ctx.db.query("categories").collect();
+      const categoryMap = new Map(allCategories.map(c => [c.slug.toLowerCase(), c]));
+      
+      // Helper function to check if a category is an ancestor of another
+      const isAncestor = (potentialAncestorSlug: string, childSlug: string): boolean => {
+        const child = categoryMap.get(childSlug);
+        if (!child || !child.parentId) return false;
+        
+        const parent = allCategories.find(c => c._id === child.parentId);
+        if (!parent) return false;
+        
+        // Check if parent matches
+        if (parent.slug.toLowerCase() === potentialAncestorSlug) return true;
+        
+        // Recursively check grandparents
+        return isAncestor(potentialAncestorSlug, parent.slug.toLowerCase());
+      };
+      
+      results = results.filter(r => {
+        if (!r.subCategory) return false;
+        const listingSub = r.subCategory.toLowerCase();
+        console.log(`  Comparing filter "${filterSub}" with listing "${listingSub}"`);
+        
+        // Exact match (case-insensitive)
+        if (listingSub === filterSub) {
+          console.log('    ✓ Exact match!');
+          return true;
+        }
+        
+        // Check if filter is an ancestor of the listing's subcategory
+        // E.g., filter="refrigerators", listing="combined-refrigerators"
+        // Check if "refrigerators" is parent or grandparent of "combined-refrigerators"
+        if (isAncestor(filterSub, listingSub)) {
+          console.log('    ✓ Ancestor match!');
+          return true;
+        }
+        
+        // Check path-based matching for deeper hierarchies (fallback)
+        if (listingSub.startsWith(filterSub + '/')) {
+          console.log('    ✓ Path match!');
+          return true;
+        }
+        
+        // Check if filter is more specific and listing matches the parent
+        if (filterSub.startsWith(listingSub + '/')) {
+          console.log('    ✓ Parent match!');
+          return true;
+        }
+        
+        console.log('    ✗ No match');
+        return false;
+      });
     }
     
     // Location
@@ -77,6 +146,50 @@ export const list = query({
     if (args.isAffordable !== undefined) results = results.filter(r => r.isAffordable === args.isAffordable);
     if (args.isPromoted !== undefined) results = results.filter(r => r.isPromoted === args.isPromoted);
     
+    // Date Range
+    if (args.dateRange && args.dateRange !== 'all') {
+      const now = Date.now();
+      let threshold = 0;
+      if (args.dateRange === 'today') threshold = now - 24 * 60 * 60 * 1000;
+      if (args.dateRange === '3days') threshold = now - 3 * 24 * 60 * 60 * 1000;
+      if (args.dateRange === '7days') threshold = now - 7 * 24 * 60 * 60 * 1000;
+      
+      if (threshold > 0) {
+        results = results.filter(r => r._creationTime >= threshold);
+      }
+    }
+
+    // Dynamic Specifications Filter
+    if (args.dynamicFilters) {
+      try {
+        const filters = JSON.parse(args.dynamicFilters);
+        results = results.filter(r => {
+          if (!r.specifications) return false;
+          
+          return Object.entries(filters).every(([key, value]) => {
+            const itemValue = r.specifications[key];
+            if (itemValue === undefined) return false;
+            
+            // Handle different types of comparisons
+            if (Array.isArray(value)) {
+               // Range [min, max]
+               if (typeof itemValue === 'number' && value.length === 2 && typeof value[0] === 'number') {
+                   const [min, max] = value as [number, number];
+                   return itemValue >= min && itemValue <= max;
+               }
+               // Multi-select (OR logic)
+               return (value as any[]).includes(itemValue);
+            }
+            
+            // Exact match (string, boolean, number)
+            return itemValue == value; // Loose equality for string/number mix
+          });
+        });
+      } catch (e) {
+        console.error("Failed to parse dynamic filters", e);
+      }
+    }
+
     console.log(`Returning ${results.length} listings`);
 
     // Sort logic

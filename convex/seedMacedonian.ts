@@ -291,7 +291,151 @@ const MACEDONIAN_CATEGORIES: CategoryInput[] = [  {
       { name: "Air Purifiers", slug: "air-purifiers" },
     ]
   },
-  { name: "Home and Garden", slug: "home-and-garden" },
+  {
+    name: "Home and Garden",
+    slug: "home-and-garden",
+    subcategories: [
+      { 
+        name: "Furniture", 
+        slug: "furniture",
+        subcategories: [
+          { name: "Living Room", slug: "living-room" },
+          { name: "Bedroom", slug: "bedroom" },
+          { name: "Children's Room", slug: "childrens-room" },
+          { name: "Dining Room", slug: "dining-room" },
+          { name: "Kitchen", slug: "kitchen-furniture" },
+          { name: "Hallway / Entryway", slug: "entryway" },
+          { name: "Office Furniture", slug: "office-furniture" },
+          { name: "Wardrobe Elements", slug: "wardrobe-elements" },
+        ]
+      },
+      { 
+        name: "Garden and Terrace", 
+        slug: "garden-terrace",
+        subcategories: [
+           { name: "Garden Furniture", slug: "garden-furniture" },
+           { name: "Pools", slug: "pools" },
+           { name: "Solar Showers", slug: "solar-showers" },
+           { name: "BBQ and Equipment", slug: "bbq-equipment" },
+           { name: "Fences and Equipment", slug: "fences-equipment" },
+           { name: "Flower Pots / Planters", slug: "flower-pots" },
+           { name: "Garden Decoration", slug: "garden-decoration" },
+           { name: "Fountains", slug: "fountains" },
+           { name: "Terrace Flooring", slug: "terrace-flooring" },
+        ]
+      },
+      { 
+        name: "Kitchen and Dining", 
+        slug: "kitchen-dining",
+        subcategories: [
+           { name: "Cooking and Baking Cookware", slug: "cookware-baking" },
+           { name: "Serving Food and Drinks", slug: "serving-food-drinks" },
+           { name: "Kitchen Textiles", slug: "kitchen-textiles" },
+           { name: "Food Storage Containers", slug: "food-storage" },
+           { name: "Shopping Carts", slug: "shopping-carts" },
+        ]
+      },
+      { 
+        name: "Bedding, Pillows and Covers", 
+        slug: "bedding",
+        subcategories: [
+           { name: "Pillows", slug: "pillows" },
+           { name: "Bedding Sets", slug: "bedding-sets" },
+           { name: "Duvets", slug: "duvets" },
+           { name: "Blankets", slug: "blankets" },
+           { name: "Bedspreads / Covers", slug: "bedspreads" },
+        ]
+      },
+      { 
+        name: "Lighting", 
+        slug: "lighting",
+        subcategories: [
+           { name: "Chandeliers", slug: "chandeliers" },
+           { name: "Ceiling Lights", slug: "ceiling-lights" },
+           { name: "Lamps", slug: "lamps" },
+           { name: "Children's Room Lighting", slug: "childrens-lighting" },
+           { name: "Garden Lighting", slug: "garden-lighting" },
+           { name: "Light Bulbs", slug: "light-bulbs" },
+           { name: "LED Strips", slug: "led-strips" },
+           { name: "Track Lighting", slug: "track-lighting" },
+           { name: "Other Lighting", slug: "other-lighting" },
+           { name: "Recessed Lighting", slug: "recessed-lighting" },
+           { name: "Decorative Lighting", slug: "decorative-lighting" },
+        ]
+      },
+      { 
+        name: "Decoration", 
+        slug: "decoration",
+        subcategories: [
+           { name: "Home Textiles", slug: "home-textiles" },
+           { name: "Paintings / Pictures", slug: "paintings-pictures" },
+           { name: "Clocks", slug: "clocks" },
+           { name: "Artificial Flowers and Pots", slug: "artificial-flowers" },
+           { name: "Wall Decoration", slug: "wall-decoration" },
+           { name: "Decorative Items", slug: "decorative-items" },
+           { name: "Candles and Candlesticks", slug: "candles" },
+           { name: "Picture Frames", slug: "picture-frames" },
+           { name: "Vases", slug: "vases" },
+           { name: "Carpets, Rugs and Mats", slug: "carpets-rugs" },
+           { name: "Easter Decoration", slug: "easter-decoration" },
+           { name: "Holiday Decoration", slug: "holiday-decoration" },
+           { name: "Other Decoration", slug: "other-decoration" },
+        ]
+      },
+      { 
+        name: "Bathroom Equipment", 
+        slug: "bathroom-equipment",
+        subcategories: [
+           { name: "Bathroom Furniture and Sanitary Ware", slug: "bathroom-furniture" },
+           { name: "Bathroom Sets", slug: "bathroom-sets" },
+           { name: "Towels", slug: "towels" },
+           { name: "Bathroom Mats and Rugs", slug: "bathroom-mats" },
+           { name: "Shower Curtains", slug: "shower-curtains" },
+           { name: "Bath and Shower Mats (Rubber)", slug: "bath-rubber-mats" },
+           { name: "Sanitary Equipment", slug: "sanitary-equipment" },
+           { name: "Faucets and Accessories", slug: "faucets-accessories" },
+        ]
+      },
+      { 
+        name: "Wine and Brandy Preparation", 
+        slug: "wine-brandy-production",
+        subcategories: [
+           { name: "Wine and Brandy Storage Vessels", slug: "wine-storage" },
+           { name: "Preparation Equipment", slug: "preparation-equipment" },
+           { name: "Additional Equipment", slug: "additional-equipment" },
+        ]
+      },
+      { 
+        name: "Smart Home", 
+        slug: "smart-home",
+        subcategories: [
+           { name: "Smart Home Elements", slug: "smart-home-elements" },
+           { name: "Security Equipment", slug: "security-equipment" },
+        ]
+      },
+      { 
+        name: "New Year Decoration", 
+        slug: "new-year-decoration",
+        subcategories: [
+           { name: "Christmas Trees", slug: "christmas-trees" },
+           { name: "Tree Ornaments", slug: "tree-ornaments" },
+           { name: "Christmas Lights", slug: "christmas-lights" },
+           { name: "Garlands, Wreaths and Branches", slug: "garlands-wreaths" },
+           { name: "Decorative Christmas Ornaments", slug: "decorative-ornaments" },
+        ]
+      },
+      { name: "Carpentry", slug: "carpentry" },
+      { 
+        name: "Solar Elements", 
+        slug: "solar-elements",
+        subcategories: [
+           { name: "Solar Panels", slug: "solar-panels" },
+           { name: "Charge Controllers and Inverters", slug: "charge-controllers" },
+           { name: "Solar Batteries", slug: "solar-batteries" },
+        ]
+      },
+    ]
+  },
   { name: "Fashion, Clothing and Shoes", slug: "fashion-clothing-shoes" },
   { 
     name: "Mobile Phones and Accessories", 
@@ -700,35 +844,19 @@ const MACEDONIAN_CATEGORIES: CategoryInput[] = [  {
   { name: "Other", slug: "other-categories" },
 ];
 
+
 const getCustomTemplate = (slug: string, name: string) => {
-  const baseFields = [
-    { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged"] },
-  ];
-
-  // COMMON FIELD SETS
-  const autoFields = [
-    { label: "Brand", type: "text", key: "make", placeholder: "Choose Brand" },
-    { label: "Year", type: "number", key: "year", placeholder: "Year" },
-    { label: "Mileage (km)", type: "number", key: "mileage", placeholder: "km" },
-    { label: "Fuel", type: "select", key: "fuel", options: ["Petrol", "Diesel", "LPG", "Electric", "Hybrid"] },
-    { label: "Transmission", type: "select", key: "transmission", options: ["Manual", "Automatic", "Semi-automatic"] },
-    { label: "Registration", type: "select", key: "registration", options: ["Registered", "Not registered", "Foreign plates"] },
-    { label: "Power (KW)", type: "number", key: "power", placeholder: "KW" },
-  ];
-
-  const heavyFields = [
-    { label: "Year", type: "number", key: "year", placeholder: "Production Year" },
-    { label: "Working Hours", type: "number", key: "working_hours", placeholder: "hours" },
-    { label: "Power (KW/HP)", type: "number", key: "power", placeholder: "Power" },
-    { label: "Capacity (kg)", type: "number", key: "capacity", placeholder: "kg" },
-  ];
-
-  // REAL ESTATE LOGIC
+  // NO baseFields - each template defines its own fields to avoid duplicates
+  
+  // ========================================
+  // REAL ESTATE
+  // ========================================
+  
   if (slug.includes("apartments")) {
     return {
       titlePlaceholder: "e.g. Furnished Apartment in Center",
       fields: [
-        ...baseFields,
+        { label: "Condition", type: "select", key: "condition", options: ["New Construction", "Renovated", "Good", "Needs Renovation"] },
         { label: "Square meters (m2)", type: "number", key: "m2", placeholder: "m2" },
         { label: "Number of rooms", type: "number", key: "rooms", placeholder: "Rooms" },
         { label: "Floor", type: "number", key: "floor", placeholder: "Floor" },
@@ -744,7 +872,7 @@ const getCustomTemplate = (slug: string, name: string) => {
     return {
       titlePlaceholder: "e.g. Family House with Yard",
       fields: [
-        ...baseFields,
+        { label: "Condition", type: "select", key: "condition", options: ["New Construction", "Renovated", "Good", "Needs Renovation"] },
         { label: "House Area (m2)", type: "number", key: "m2", placeholder: "m2" },
         { label: "Yard Area (m2)", type: "number", key: "yard_m2", placeholder: "m2" },
         { label: "Number of rooms", type: "number", key: "rooms", placeholder: "Rooms" },
@@ -757,9 +885,8 @@ const getCustomTemplate = (slug: string, name: string) => {
 
   if (slug.includes("land")) {
     return {
-      titlePlaceholder: "e.g. Construction Plot in Karpos",
+      titlePlaceholder: "e.g. Construction Plot",
       fields: [
-        ...baseFields,
         { label: "Area (m2)", type: "number", key: "m2", placeholder: "m2" },
         { label: "Electricity", type: "select", key: "electricity", options: ["Yes", "No", "Nearby"] },
         { label: "Water", type: "select", key: "water", options: ["Yes", "No", "Nearby"] },
@@ -770,9 +897,9 @@ const getCustomTemplate = (slug: string, name: string) => {
 
   if (slug.includes("commercial-space") || slug.includes("offices") || slug.includes("shops")) {
     return {
-      titlePlaceholder: "e.g. Office Space in Aerodrom",
+      titlePlaceholder: "e.g. Office Space",
       fields: [
-        ...baseFields,
+        { label: "Condition", type: "select", key: "condition", options: ["Renovated", "Good", "Needs Renovation"] },
         { label: "Area (m2)", type: "number", key: "m2", placeholder: "m2" },
         { label: "Rooms", type: "number", key: "rooms", placeholder: "Rooms" },
         { label: "Floor", type: "number", key: "floor", placeholder: "Floor" },
@@ -780,45 +907,67 @@ const getCustomTemplate = (slug: string, name: string) => {
     };
   }
   
+  // ========================================
+  // MOTOR VEHICLES
+  // ========================================
+  
   if (slug === "cars") {
     return {
       titlePlaceholder: "e.g. Volkswagen Golf 7 1.6 TDI",
       fields: [
-        ...baseFields,
-        ...autoFields,
+        { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged"] },
+        { label: "Brand", type: "select", key: "make", options: ["Alfa Romeo", "Audi", "BMW", "Chevrolet", "Citroen", "Dacia", "Fiat", "Ford", "Honda", "Hyundai", "Kia", "Mercedes-Benz", "Nissan", "Opel", "Peugeot", "Renault", "Skoda", "Toyota", "Volkswagen", "Volvo", "Other"] },
+        { label: "Year", type: "number", key: "year", placeholder: "Year" },
+        { label: "Mileage (km)", type: "number", key: "mileage", placeholder: "km" },
+        { label: "Fuel", type: "select", key: "fuel", options: ["Petrol", "Diesel", "LPG", "Electric", "Hybrid"] },
+        { label: "Transmission", type: "select", key: "transmission", options: ["Manual", "Automatic", "Semi-automatic"] },
+        { label: "Power (KW)", type: "number", key: "power", placeholder: "KW" },
+        { label: "Registration", type: "select", key: "registration", options: ["Registered", "Not registered", "Foreign plates"] },
         { label: "Color", type: "color-picker", key: "color" },
-        { label: "Body Type", type: "select", key: "body_type", options: ["Sedan", "Hatchback", "Wagon", "SUV", "Coupe", "Convertible", "Pickup"] },
+        { label: "Body Type", type: "select", key: "body_type", options: ["Sedan", "Hatchback", "Wagon", "SUV", "Coupe", "Convertible"] },
       ]
     };
   }
 
   if (slug === "buses" || slug === "vans") {
     return {
-      titlePlaceholder: `e.g. ${name}`,
+      titlePlaceholder: "e.g. Mercedes Sprinter",
       fields: [
-        ...baseFields,
-        ...autoFields,
+        { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged"] },
+        { label: "Brand", type: "text", key: "make", placeholder: "e.g. Mercedes, MAN, Iveco" },
+        { label: "Year", type: "number", key: "year", placeholder: "Year" },
+        { label: "Mileage (km)", type: "number", key: "mileage", placeholder: "km" },
+        { label: "Fuel", type: "select", key: "fuel", options: ["Diesel", "Petrol", "Electric", "CNG"] },
+        { label: "Transmission", type: "select", key: "transmission", options: ["Manual", "Automatic"] },
         { label: "Number of Seats", type: "number", key: "seats", placeholder: "Seats" },
+        { label: "Power (KW)", type: "number", key: "power", placeholder: "KW" },
+        { label: "Registration", type: "select", key: "registration", options: ["Registered", "Not registered", "Foreign plates"] },
       ]
     };
   }
 
   if (slug === "trucks") {
     return {
-      titlePlaceholder: `e.g. MAN TGX 18.440`,
+      titlePlaceholder: "e.g. MAN TGX 18.440",
       fields: [
-        ...baseFields,
-        ...autoFields,
-        { label: "Payload (t)", type: "number", key: "payload", placeholder: "tons" },
+        { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged"] },
+        { label: "Brand", type: "text", key: "make", placeholder: "e.g. MAN, Volvo, Scania, Mercedes" },
+        { label: "Year", type: "number", key: "year", placeholder: "Year" },
+        { label: "Mileage (km)", type: "number", key: "mileage", placeholder: "km" },
+        { label: "Payload (tons)", type: "number", key: "payload", placeholder: "tons" },
+        { label: "Fuel", type: "select", key: "fuel", options: ["Diesel", "Electric", "LNG"] },
+        { label: "Transmission", type: "select", key: "transmission", options: ["Manual", "Automatic"] },
+        { label: "Power (KW)", type: "number", key: "power", placeholder: "KW" },
       ]
     };
   }
 
   if (slug.includes("motorcycles") || slug.includes("mopeds") || slug.includes("scooters")) {
     return {
-      titlePlaceholder: `e.g. Honda CBR 600RR`,
+      titlePlaceholder: "e.g. Honda CBR 600RR",
       fields: [
-        ...baseFields,
+        { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged"] },
+        { label: "Brand", type: "text", key: "make", placeholder: "Brand" },
         { label: "Year", type: "number", key: "year", placeholder: "Year" },
         { label: "Mileage", type: "number", key: "mileage", placeholder: "km" },
         { label: "Displacement (ccm)", type: "number", key: "ccm", placeholder: "ccm" },
@@ -828,451 +977,190 @@ const getCustomTemplate = (slug: string, name: string) => {
     };
   }
 
-  if (slug.includes("tractors") || slug.includes("agricultural") || slug.includes("harvesters")) {
+  // ========================================
+  // HOME APPLIANCES - NESTED SUBCATEGORIES FIRST
+  // ========================================
+
+  // Air Conditioners - Specific Types
+  if (slug === "inverter-ac" || slug === "standard-ac" || slug === "mobile-ac" || slug === "multi-split-ac") {
     return {
-      titlePlaceholder: `e.g. IMT 539`,
+      titlePlaceholder: "e.g. Gree Inverter 3.5kW",
       fields: [
-        ...baseFields,
-        ...heavyFields,
+        { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged / For Parts"] },
+        { label: "Brand", type: "text", key: "brand", placeholder: "e.g. Gree, Vivax, Daikin" },
+        { label: "Model", type: "text", key: "model", placeholder: "Model" },
+        { label: "Power Cooling (kW)", type: "number", key: "power_cooling", placeholder: "kW" },
+        { label: "Power Heating (kW)", type: "number", key: "power_heating", placeholder: "kW" },
+        { label: "Energy Class", type: "select", key: "energy_class", options: ["A+++", "A++", "A+", "A", "B", "C", "D"] },
+        { label: "Warranty (Months)", type: "number", key: "warranty", placeholder: "Months" },
       ]
     };
   }
 
-  if (slug.includes("construction") || slug.includes("heavy") || slug.includes("forklifts")) {
+  // Air Conditioners - Parent
+  if (slug === "air-conditioners") {
     return {
-      titlePlaceholder: `e.g. JCB 3CX`,
+      titlePlaceholder: "e.g. Air Conditioner",
       fields: [
-        ...baseFields,
-        ...heavyFields,
-        { label: "Type", type: "text", key: "machine_type", placeholder: "e.g. Excavator, Forklift" },
+        { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged / For Parts"] },
+        { label: "Brand", type: "text", key: "brand", placeholder: "e.g. Gree, Vivax, Daikin" },
+        { label: "Type", type: "select", key: "ac_type", options: ["Inverter", "Standard", "Portable", "Multi Split"] },
+        { label: "Power Cooling (kW)", type: "number", key: "power_cooling", placeholder: "kW" },
+        { label: "Energy Class", type: "select", key: "energy_class", options: ["A+++", "A++", "A+", "A", "B", "C", "D"] },
       ]
     };
   }
 
-  if (slug === "trailers") {
+  // Refrigerators - Specific Types
+  if (slug === "combined-refrigerators" || slug === "double-door-refrigerators" || slug === "single-door-refrigerators" || 
+      slug === "built-in-refrigerators" || slug === "mini-refrigerators") {
     return {
-      titlePlaceholder: "e.g. Truck Trailer",
+      titlePlaceholder: "e.g. Samsung Combined 350L",
       fields: [
-        ...baseFields,
-        { label: "Year", type: "number", key: "year", placeholder: "Year" },
-        { label: "Payload (t)", type: "number", key: "payload", placeholder: "tons" },
-        { label: "Number of Axles", type: "number", key: "axles", placeholder: "Axles" },
+        { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged / For Parts"] },
+        { label: "Brand", type: "text", key: "brand", placeholder: "e.g. Samsung, Beko, Gorenje, LG" },
+        { label: "Model", type: "text", key: "model", placeholder: "Model" },
+        { label: "Capacity (Liters)", type: "number", key: "capacity_liters", placeholder: "Liters" },
+        { label: "Height (cm)", type: "number", key: "height", placeholder: "cm" },
+        { label: "No Frost", type: "select", key: "no_frost", options: ["Yes", "No"] },
+        { label: "Energy Class", type: "select", key: "energy_class", options: ["A+++", "A++", "A+", "A", "B", "C"] },
+        { label: "Warranty (Months)", type: "number", key: "warranty", placeholder: "Months" },
       ]
     };
   }
 
-  if (slug.includes("boats") || slug.includes("jetskis")) {
+  // Refrigerators - Parent
+  if (slug === "refrigerators") {
     return {
-      titlePlaceholder: "e.g. Sea-Doo Spark",
-      fields: [
-        ...baseFields,
-        { label: "Year", type: "number", key: "year", placeholder: "Year" },
-        { label: "Length (m)", type: "number", key: "length", placeholder: "meters" },
-        { label: "Engine Power (HP)", type: "number", key: "engine_power", placeholder: "HP" },
-        { label: "Fuel", type: "select", key: "fuel", options: ["Petrol", "Diesel", "Electric"] },
-      ]
-    };
-  }
-
-  if (slug === "camping-vehicles") {
-    return {
-      titlePlaceholder: "e.g. Fiat Ducato Hymer",
-      fields: [
-        ...baseFields,
-        ...autoFields,
-        { label: "Number of Beds", type: "number", key: "beds", placeholder: "Beds" },
-      ]
-    };
-  }
-
-  if (slug.includes("spare-parts") || slug.includes("equipment")) {
-    return {
-      titlePlaceholder: "e.g. Front Bumper for BMW E46",
-      fields: [
-        { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Refurbished"] },
-        { label: "Brand", type: "text", key: "make", placeholder: "e.g. Bosch, Brembo" },
-        { label: "For Vehicle (Model/Year)", type: "text", key: "compatibility", placeholder: "e.g. VW Golf 5 2005" },
-      ]
-    };
-  }
-
-  if (slug === "damaged-vehicles-parts") {
-    return {
-      titlePlaceholder: "e.g. Opel Astra for parts",
-      fields: [
-        { label: "Type", type: "select", key: "damage_type", options: ["For parts", "Damaged - Drivable", "Damaged - Non-drivable"] },
-        { label: "Brand and Model", type: "text", key: "make_model", placeholder: "e.g. Audi A4" },
-        { label: "Year", type: "number", key: "year", placeholder: "Year" },
-        { label: "Description of damage", type: "textarea", key: "damage_description", placeholder: "Detailed description..." }
-      ]
-    };
-  }
-
-  if (slug === "home-appliances" || slug === "air-conditioners" || slug === "refrigerators" || slug === "washing-machines" || slug === "stoves-ovens") {
-    return {
-      titlePlaceholder: "e.g. Samsung Inverter AC 3.5kW",
+      titlePlaceholder: "e.g. Refrigerator",
       fields: [
         { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged / For Parts"] },
         { label: "Brand", type: "text", key: "brand", placeholder: "e.g. Samsung, Beko, Gorenje" },
-        { label: "Model", type: "text", key: "model", placeholder: "Model number" },
-        { label: "Energy Class", type: "select", key: "energy_class", options: ["A+++", "A++", "A+", "A", "B", "C", "D", "E", "F", "G"] },
-        { label: "Warranty (Months)", type: "number", key: "warranty", placeholder: "Months left" },
+        { label: "Type", type: "select", key: "fridge_type", options: ["Combined", "Double Door", "Single Door", "Built-in", "Mini"] },
+        { label: "Capacity (Liters)", type: "number", key: "capacity_liters", placeholder: "Liters" },
+        { label: "Energy Class", type: "select", key: "energy_class", options: ["A+++", "A++", "A+", "A", "B", "C"] },
       ]
     };
   }
 
-  // --- TV, AUDIO & VIDEO SPECIFIC LOGIC ---
+  // Washing Machines - Specific Types
+  if (slug === "washing-machines-sub" || slug === "dryers" || slug === "washer-dryer-combo") {
+    return {
+      titlePlaceholder: "e.g. Beko 7kg Washing Machine",
+      fields: [
+        { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged / For Parts"] },
+        { label: "Brand", type: "text", key: "brand", placeholder: "e.g. Beko, Whirlpool, Samsung" },
+        { label: "Model", type: "text", key: "model", placeholder: "Model" },
+        { label: "Load Capacity (kg)", type: "number", key: "capacity_kg", placeholder: "kg" },
+        { label: "Spin Speed (RPM)", type: "number", key: "rpm", placeholder: "RPM" },
+        { label: "Energy Class", type: "select", key: "energy_class", options: ["A+++", "A++", "A+", "A", "B", "C"] },
+        { label: "Warranty (Months)", type: "number", key: "warranty", placeholder: "Months" },
+      ]
+    };
+  }
 
+  // Washing Machines - Parent
+  if (slug === "washing-machines") {
+    return {
+      titlePlaceholder: "e.g. Washing Machine",
+      fields: [
+        { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged / For Parts"] },
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Type", type: "select", key: "type", options: ["Washing Machine", "Dryer", "Combo"] },
+        { label: "Load Capacity (kg)", type: "number", key: "capacity_kg", placeholder: "kg" },
+        { label: "Energy Class", type: "select", key: "energy_class", options: ["A+++", "A++", "A+", "A"] },
+      ]
+    };
+  }
+
+  // Dishwashers
+  if (slug === "built-in-dishwashers" || slug === "freestanding-dishwashers") {
+    return {
+      titlePlaceholder: "e.g. Bosch Dishwasher 12 Place",
+      fields: [
+        { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged / For Parts"] },
+        { label: "Brand", type: "text", key: "brand", placeholder: "e.g. Bosch, Beko, Gorenje" },
+        { label: "Place Settings", type: "number", key: "place_settings", placeholder: "12, 14, etc." },
+        { label: "Width (cm)", type: "number", key: "width", placeholder: "45or 60" },
+        { label: "Energy Class", type: "select", key: "energy_class", options: ["A+++", "A++", "A+", "A"] },
+        { label: "Warranty (Months)", type: "number", key: "warranty", placeholder: "Months" },
+      ]
+    };
+  }
+
+  if (slug === "dishwashers") {
+    return {
+      titlePlaceholder: "e.g. Dishwasher",
+      fields: [
+        { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged / For Parts"] },
+        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+        { label: "Type", type: "select", key: "type", options: ["Built-in", "Freestanding"] },
+        { label: "Place Settings", type: "number", key: "place_settings", placeholder: "12, 14, etc." },
+        { label: "Energy Class", type: "select", key: "energy_class", options: ["A+++", "A++", "A+", "A"] },
+      ]
+    };
+  }
+
+  // Stoves & Ovens
+  if (slug === "electric-stoves" || slug === "gas-stoves" || slug === "combined-stoves") {
+    return {
+      titlePlaceholder: "e.g. Gorenje 4-Burner Stove",
+      fields: [
+        { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged / For Parts"] },
+        { label: "Brand", type: "text", key: "brand", placeholder: "e.g. Gorenje, Beko" },
+        { label: "Number of Burners", type: "number", key: "burners", placeholder: "4" },
+        { label: "Oven Volume (L)", type: "number", key: "oven_volume", placeholder: "Liters" },
+        { label: "Energy Class", type: "select", key: "energy_class", options: ["A", "B", "C", "D"] },
+      ]
+    };
+  }
+
+  // Televisions
   if (slug === "televisions") {
     return {
       titlePlaceholder: "e.g. Samsung 55' 4K Smart TV",
       fields: [
-        ...baseFields,
+        { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged"] },
         { label: "Brand", type: "text", key: "brand", placeholder: "e.g. Samsung, LG, Sony" },
-        { label: "Model", type: "text", key: "model", placeholder: "Model Name" },
         { label: "Screen Size (inch)", type: "number", key: "screen_size_inch", placeholder: "Inches" },
         { label: "Resolution", type: "select", key: "resolution", options: ["HD Ready", "Full HD", "4K Ultra HD", "8K"] },
-        { label: "Screen Type", type: "select", key: "screen_type", options: ["LED","Mini-Led", "OLED", "QLED", "LCD", "Plasma", "CRT"] },
-        { label: "Smart TV", type: "select", key: "smart_tv", options: ["Yes", "No", "Android TV", "WebOS", "Tizen"] },
+        { label: "Screen Type", type: "select", key: "screen_type", options: ["LED", "OLED", "QLED", "LCD"] },
+        { label: "Smart TV", type: "select", key: "smart_tv", options: ["Yes", "No"] },
       ]
     };
   }
 
-  if (slug === "soundbars" || slug === "hifi-systems" || slug === "home-theater" || slug === "speakers-equipment" || slug === "wireless-speakers") {
-    return {
-      titlePlaceholder: "e.g. JBL Bar 5.1 Soundbar",
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "e.g. JBL, Sony, Bose" },
-        { label: "Model", type: "text", key: "model", placeholder: "Model" },
-        { label: "Power (Watts)", type: "number", key: "power_watts", placeholder: "Total Power (RMS)" },
-        { label: "Connectivity", type: "select", key: "connectivity", options: ["Bluetooth", "Wired", "WiFi", "Optical", "HDMI ARC"] },
-        { label: "Channels", type: "select", key: "channels", options: ["2.0", "2.1", "5.1", "7.1", "Other"] },
-      ]
-    };
-  }
-
-  if (slug === "headphones-equipment") {
-    return {
-      titlePlaceholder: "e.g. Sony WH-1000XM4",
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
-        { label: "Model", type: "text", key: "model", placeholder: "Model" },
-        { label: "Type", type: "select", key: "type", options: ["In-Ear", "On-Ear", "Over-Ear", "True Wireless"] },
-        { label: "Connection", type: "select", key: "connection", options: ["Wired", "Bluetooth/Wireless"] },
-        { label: "Noise Cancellation", type: "select", key: "anc", options: ["Yes", "No"] },
-      ]
-    };
-  }
-
-  if (slug === "projectors") {
-    return {
-      titlePlaceholder: "e.g. Epson EH-TW7000",
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
-        { label: "Model", type: "text", key: "model", placeholder: "Model" },
-        { label: "Resolution", type: "select", key: "resolution", options: ["SVGA", "XGA", "Full HD", "4K"] },
-        { label: "Brightness (Lumens)", type: "number", key: "lumens", placeholder: "Lumens" },
-        { label: "Lamp Life (Hours)", type: "number", key: "lamp_life", placeholder: "Hours" },
-      ]
-    };
-  }
-
-  if (slug === "tv-av-cables" || slug === "tv-adapters" || slug === "converters") {
-    return {
-      titlePlaceholder: "e.g. HDMI Cable 2.1",
-      fields: [
-        ...baseFields,
-        { label: "Type", type: "text", key: "cable_type", placeholder: "e.g. HDMI, RCA, Optical" },
-        { label: "Length (m)", type: "number", key: "length", placeholder: "Meters" },
-      ]
-    };
-  }
-
-  if (slug === "tv-mounts") {
-    return {
-      titlePlaceholder: "e.g. Wall Mount for 55 inch TV",
-      fields: [
-        ...baseFields,
-        { label: "Type", type: "select", key: "mount_type", options: ["Fixed", "Tilt", "Full Motion", "Ceiling", "Desktop Stand"] },
-        { label: "Supported Size (Max Inch)", type: "number", key: "max_inch", placeholder: "Max Inches" },
-      ]
-    };
-  }
-
-  if (slug === "dvd-players" || slug === "cd-players" || slug === "mp3-players" || slug === "radios" || slug === "dictaphones") {
-     return {
-      titlePlaceholder: `e.g. Sony DVD Player`,
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
-        { label: "Model", type: "text", key: "model", placeholder: "Model" },
-      ]
-    };
-  }
-  
-  // --- TOOLS & DIY SPECIFIC LOGIC ---
-  
-  // 1. DRILLS & DRIVERS
-  if (slug.includes("drills") || slug.includes("impact-drivers") || slug.includes("rotary-hammers") || slug.includes("screw")) {
-    const isCordless = slug.includes("cordless");
-    return {
-      titlePlaceholder: `e.g. Bosch Professional GSB 18V-50`,
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
-        { label: "Power Source", type: "select", key: "power_source", options: ["Cordless (Battery)", "Electric (Corded)"], defaultValue: isCordless ? "Cordless (Battery)" : "Electric (Corded)" },
-        { label: "Voltage (V)", type: "number", key: "voltage", placeholder: "V (if cordless)" },
-        { label: "Power (W)", type: "number", key: "power_watts", placeholder: "W (if corded)" },
-        { label: "Max Torque (Nm)", type: "number", key: "torque", placeholder: "Nm" },
-        { label: "Chuck Type", type: "select", key: "chuck_type", options: ["Keyless", "Keyed", "SDS Plus", "SDS Max", "Hex"] },
-      ]
-    };
-  }
-
-  // 2. GRINDERS
-  if (slug.includes("grinders")) {
-    const isCordless = slug.includes("cordless");
-    return {
-      titlePlaceholder: `e.g. Makita GA4530`,
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
-        { label: "Power Source", type: "select", key: "power_source", options: ["Cordless (Battery)", "Electric (Corded)"], defaultValue: isCordless ? "Cordless (Battery)" : "Electric (Corded)" },
-        { label: "Disc Diameter (mm)", type: "select", key: "disc_diameter", options: ["115mm", "125mm", "150mm", "180mm", "230mm"] },
-        { label: "Power (W)", type: "number", key: "power_watts", placeholder: "W" },
-        { label: "Switch Type", type: "text", key: "switch_type", placeholder: "Paddle / Slide" },
-      ]
-    };
-  }
-
-  // 3. SAWS
-  if (slug.includes("saws")) {
-    return {
-      titlePlaceholder: `e.g. DeWalt DCS570`,
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
-        { label: "Type", type: "select", key: "saw_type", options: ["Circular Saw", "Jigsaw", "Reciprocating Saw", "Mitre Saw", "Table Saw"] },
-        { label: "Blade Diameter (mm)", type: "number", key: "blade_diameter", placeholder: "mm" },
-        { label: "Cutting Depth (mm)", type: "number", key: "cutting_depth", placeholder: "mm" },
-        { label: "Power (W)", type: "number", key: "power_watts", placeholder: "W" },
-      ]
-    };
-  }
-
-  // 4. BATTERIES & CHARGERS
-  if (slug.includes("batteries")) {
-     return {
-      titlePlaceholder: `e.g. Makita 18V 5Ah`,
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
-        { label: "Voltage (V)", type: "number", key: "voltage", placeholder: "V" },
-        { label: "Capacity (Ah)", type: "number", key: "capacity", placeholder: "Ah" },
-        { label: "Type", type: "text", key: "type", placeholder: "Li-Ion / NiCd" },
-      ]
-    };
-  }
-
-  // 5. GARDEN - MOWERS
-  if (slug.includes("mowers")) {
-     return {
-      titlePlaceholder: `e.g. Husqvarna LC 140P`,
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
-        { label: "Power Source", type: "select", key: "power_source", options: ["Petrol", "Electric", "Battery", "Manual"] },
-        { label: "Cutting Width (cm)", type: "number", key: "cutting_width", placeholder: "cm" },
-        { label: "Collector Volume (L)", type: "number", key: "collector_volume", placeholder: "Liters" },
-        { label: "Self-propelled", type: "select", key: "self_propelled", options: ["Yes", "No"] },
-      ]
-    };
-  }
-
-  // 6. GARDEN - TRIMMERS & CHAINSAWS
-  if (slug.includes("trimmers") || slug.includes("chainsaws")) {
-     return {
-      titlePlaceholder: `e.g. Stihl FS 55`,
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
-        { label: "Power Source", type: "select", key: "power_source", options: ["Petrol", "Electric", "Battery"] },
-        { label: "Power (HP/Kw)", type: "text", key: "power", placeholder: "HP / kW" },
-        { label: "Bar/Shaft Length", type: "text", key: "length", placeholder: "cm" },
-      ]
-    };
-  }
-
-  // 7. MACHINES - GENERATORS
-  if (slug.includes("generators")) {
-      return {
-      titlePlaceholder: `e.g. Honda EU22i`,
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
-        { label: "Output Power (kVA)", type: "number", key: "power_kva", placeholder: "kVA" },
-        { label: "Fuel Type", type: "select", key: "fuel", options: ["Petrol", "Diesel"] },
-        { label: "Phase", type: "select", key: "phase", options: ["Single-phase", "Three-phase"] },
-      ]
-    };
-  }
-
-  // 8. MACHINES - COMPRESSORS
-  if (slug.includes("compressors")) {
-      return {
-      titlePlaceholder: `e.g. Abac 50L`,
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
-        { label: "Tank Capacity (L)", type: "number", key: "tank_capacity", placeholder: "Liters" },
-        { label: "Max Pressure (bar)", type: "number", key: "pressure", placeholder: "bar" },
-        { label: "Airflow (l/min)", type: "number", key: "airflow", placeholder: "l/min" },
-      ]
-    };
-  }
-
-   // 9. MACHINES - WELDERS
-  if (slug.includes("welders")) {
-      return {
-      titlePlaceholder: `e.g. Telwin Force 165`,
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
-        { label: "Welding Type", type: "select", key: "welding_type", options: ["MMA (Stick)", "MIG/MAG", "TIG", "Plasma"] },
-        { label: "Max Current (A)", type: "number", key: "current", placeholder: "Amperes" },
-      ]
-    };
-  }
-
-   // 10. PROTECTIVE EQUIPMENT
-   if (slug.includes("protective-")) {
-    return {
-      titlePlaceholder: `e.g. ${name}`,
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
-        { label: "Size", type: "select", key: "size", options: ["S", "M", "L", "XL", "XXL", "Universal", "39", "40", "41", "42", "43", "44", "45", "46"] },
-        { label: "Material", type: "text", key: "material", placeholder: "Material" },
-        { label: "Protection Level", type: "text", key: "protection_level", placeholder: "e.g. FFP2, S3" },
-      ]
-    };
-  }
-
-  // 11. GENERAL / OTHER TOOLS
-  if (slug.includes("electric") || slug.includes("mach-") || slug.includes("garden-") || slug.includes("planers") || slug.includes("routers") || slug.includes("multitools") || slug.includes("heat-guns") || slug.includes("staplers")) {
-    return {
-      titlePlaceholder: `e.g. ${name}`,
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
-        { label: "Power (W)", type: "number", key: "power_watts", placeholder: "Watts" },
-        { label: "Type", type: "text", key: "type", placeholder: "Type" },
-      ]
-    };
-  }
-
-  if (slug.includes("hand-") || slug.includes("meas-") || slug.includes("tiling-") || slug.includes("metal-") || slug.includes("const-") || slug.includes("acc-") || slug.includes("paints-") || slug.includes("chem-") || slug.includes("elec-") || slug.includes("plumbing-") || slug.includes("tape-") || slug.includes("agri-")) {
-    // Keep generic for these or add more specifics if needed, but this covers the rest
-     return {
-      titlePlaceholder: `e.g. ${name}`,
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
-        { label: "Material", type: "text", key: "material", placeholder: "Material" },
-        { label: "Dimensions/Size", type: "text", key: "dimensions", placeholder: "Dimensions" },
-      ]
-    };
-  }
-  
-  // MOBILE PHONES LOGIC
+  // Mobile Phones
   if (slug === "mobile-phones") {
     return {
-      titlePlaceholder: "e.g. iPhone 15 Pro Max 256GB",
+      titlePlaceholder: "e.g. iPhone 14 Pro 256GB",
       fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" }, 
+        { label: "Condition", type: "select", key: "condition", options: ["New", "Used - Excellent", "Used - Good", "Used - Fair", "For Parts"] },
+        { label: "Brand", type: "text", key: "brand", placeholder: "e.g. Apple, Samsung, Xiaomi" },
         { label: "Model", type: "text", key: "model", placeholder: "Model" },
-        { label: "Internal Memory", type: "select", key: "memory", options: ["16GB", "32GB", "64GB", "128GB", "256GB", "512GB", "1TB+"] },
+        { label: "Storage (GB)", type: "number", key: "storage", placeholder: "GB" },
+        { label: "RAM (GB)", type: "number", key: "ram", placeholder: "GB" },
         { label: "Color", type: "color-picker", key: "color" },
-        { label: "Operating System", type: "select", key: "os", options: ["iOS", "Android", "HarmonyOS", "Other"] },
-        { label: "Warranty", type: "select", key: "warranty", options: ["Yes", "No"] },
+        { label: "Battery Health (%)", type: "number", key: "battery_health", placeholder: "%" },
       ]
     };
   }
 
-  if (slug === "smartwatches") {
-     return {
-      titlePlaceholder: "e.g. Apple Watch Series 9",
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
-        { label: "Model", type: "text", key: "model", placeholder: "Model" },
-        { label: "Case Size (mm)", type: "number", key: "size_mm", placeholder: "mm" },
-        { label: "Color", type: "color-picker", key: "color" },
-        { label: "Cellular", type: "select", key: "cellular", options: ["Yes", "No"] },
-      ]
-     };
-  }
-
-
-  if (slug === "mobile-memory-cards") {
-    return {
-      titlePlaceholder: "e.g. Samsung MicroSD EVO Select 128GB",
-      fields: [
-        ...baseFields,
-        { label: "Type", type: "select", key: "card_type", options: ["MicroSD", "SD", "Nano Memory", "CF", "Other"] },
-        { label: "Capacity", type: "select", key: "capacity", options: ["8GB", "16GB", "32GB", "64GB", "128GB", "256GB", "512GB", "1TB"] },
-        { label: "Class", type: "text", key: "class", placeholder: "e.g. Class 10, UHS-I" },
-      ]
-    };
-  }
-
-  if (slug === "mobile-batteries") {
-    return {
-      titlePlaceholder: "e.g. Samsung Galaxy S22 Battery",
-      fields: [
-         ...baseFields,
-         { label: "Compatible Brand", type: "text", key: "compatible_brand", placeholder: "e.g. Samsung" },
-         { label: "Compatible Model", type: "text", key: "compatible_model", placeholder: "e.g. S22" },
-         { label: "Capacity", type: "number", key: "capacity_mah", placeholder: "mAh" },
-      ]
-    };
-  }
-
-  if (slug.startsWith("mobile-")) {
-    // Generic template for mobile accessories if not specific
-    return {
-      titlePlaceholder: "e.g. Samsung Galaxy S24 Case",
-      fields: [
-        ...baseFields,
-         { label: "Compatible Brand", type: "text", key: "compatible_brand", placeholder: "e.g. Samsung" },
-         { label: "Compatible Model", type: "text", key: "compatible_model", placeholder: "e.g. S24 Ultra" },
-         { label: "Type", type: "text", key: "type", placeholder: "Type" },
-      ]
-    };
-  }
-
-  if (slug.includes("tv") || slug.includes("audio") || slug.includes("video") || slug.includes("projector")) {
-     return {
-      titlePlaceholder: `e.g. ${name}`,
-      fields: [
-        ...baseFields,
-        { label: "Brand", type: "text", key: "brand" },
-        { label: "Description", type: "textarea", key: "desc_tech", placeholder: "Technical details" },
-      ]
-    };
-  }
-
+  // ========================================
+  // FALLBACK - Generic Template
+  // ========================================
+  
   return {
     titlePlaceholder: `e.g. ${name}`,
     fields: [
-      ...baseFields,
+      { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged"] },
+      { label: "Brand", type: "text", key: "brand", placeholder: "Brand" },
+      { label: "Description", type: "textarea", key: "description", placeholder: "Details..." },
     ]
   };
 };
+
+
 
 export const seedMacedonianCategories = action({
   args: {},

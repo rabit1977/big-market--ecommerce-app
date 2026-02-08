@@ -2,20 +2,20 @@
 
 import { getAllCategoriesAction } from '@/actions/listing-actions';
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { useSidebar } from '@/lib/context/sidebar-context';
 import { useOnClickOutside } from '@/lib/hooks/useOnClickOutside';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  Moon,
-  Sun,
-  X,
-  Zap
+    Moon,
+    Sun,
+    X,
+    Zap
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
@@ -108,7 +108,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
             {/* Header */}
             <div className='flex items-center justify-between px-6 py-5 border-b shrink-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
               <Link href="/" onClick={onClose} className='flex items-center gap-3 group'>
-                <div className='relative w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center shadow-md shadow-primary/20'>
+                <div className='relative w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-md shadow-primary/20'>
                   <Zap className='h-5 w-5 text-white' fill="currentColor" />
                 </div>
                 <span className='font-bold text-lg tracking-tight text-foreground'>Big Market<span className="text-primary">.</span></span>
@@ -171,7 +171,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                                                           key={sub.id}
                                                           href={`/listings?category=${encodeURIComponent(cat.name)}&subCategory=${encodeURIComponent(sub.name)}`}
                                                           onClick={onClose}
-                                                          className="py-2.5 px-3 rounded-lg text-sm text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all font-medium flex items-center justify-between group"
+                                                          className="py-2.5 px-3 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-all font-medium flex items-center justify-between group"
                                                       >
                                                           <span>{sub.name}</span>
                                                           <div className="w-1 h-1 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />

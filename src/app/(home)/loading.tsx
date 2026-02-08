@@ -1,8 +1,9 @@
 'use client';
 
+import { ListingCardSkeleton } from '@/components/ui/listing-card-skeleton';
 import { motion } from 'framer-motion';
 
-import { ProductCardSkeleton } from '@/components/ui/product-card-skeleton';
+
 
 /**
  * Home Page Loading Skeleton
@@ -103,7 +104,7 @@ export default function HomeLoading() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 + i * 0.04 }}
             >
-              <ProductCardSkeleton />
+              <ListingCardSkeleton />
             </motion.div>
           ))}
         </div>

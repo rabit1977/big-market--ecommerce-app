@@ -6,7 +6,10 @@ export const saveSearch = mutation({
     userId: v.string(),
     query: v.string(),
     url: v.string(),
-    name: v.optional(v.string())
+    name: v.optional(v.string()),
+    filters: v.string(),
+    isEmailAlert: v.boolean(),
+    frequency: v.optional(v.string())
   },
   handler: async (ctx, args) => {
     // Check if exists
@@ -22,7 +25,10 @@ export const saveSearch = mutation({
       userId: args.userId,
       query: args.query,
       url: args.url,
-      name: args.name
+      name: args.name,
+      filters: args.filters,
+      isEmailAlert: args.isEmailAlert,
+      frequency: args.frequency
     });
   },
 });

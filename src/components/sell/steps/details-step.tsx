@@ -4,11 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { ChevronLeft } from 'lucide-react';
@@ -153,7 +153,8 @@ export function DetailsStep({
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label htmlFor="price" className="text-sm font-semibold">
               Price (€) <span className="text-destructive">*</span>
@@ -169,27 +170,6 @@ export function DetailsStep({
                 className="h-11 pl-8 bg-background border-2 focus:border-primary"
               />
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="condition" className="text-sm font-semibold">
-              Condition <span className="text-destructive">*</span>
-            </Label>
-            <Select
-              value={formData.condition}
-              onValueChange={(value) => updateFormData({ condition: value })}
-            >
-              <SelectTrigger className="h-11 bg-background border-2 focus:border-primary">
-                <SelectValue placeholder="Select condition" />
-              </SelectTrigger>
-              <SelectContent>
-                {conditions.map((condition) => (
-                  <SelectItem key={condition.value} value={condition.value}>
-                    {condition.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
 
           <div className="space-y-2">

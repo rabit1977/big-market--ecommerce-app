@@ -17,7 +17,8 @@ import { formatDistanceToNow } from 'date-fns';
 import {
     ArrowDownLeft,
     ArrowUpRight,
-    Loader2
+    Loader2,
+    Wallet
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -40,27 +41,31 @@ export default function WalletPage() {
     if (!user) return <div className="p-20 text-center">Loading Wallet...</div>;
 
     return (
-        <div className="min-h-screen pt-24 pb-12 bg-gray-50/50">
+        <div className="min-h-screen pt-24 pb-12 bg-muted/30">
             <div className="container max-w-3xl mx-auto px-4">
                 <AppBreadcrumbs />
                 
-                {/* Header matches Image 2 Header Style */}
-                <div className="flex items-center justify-between mb-6">
-                     <h1 className="text-xl font-bold">User ID: {user.externalId.slice(-6)}</h1>
-                     {/* Close button usually there on modal, here we just show as page title */}
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-8">
+                     <div className="p-2 bg-primary/10 rounded-xl">
+                        <Wallet className="w-8 h-8 text-primary" />
+                    </div>
+                    <div>
+                         <h1 className="text-3xl font-black tracking-tighter text-foreground">My Wallet</h1>
+                         <p className="text-muted-foreground text-sm font-medium">User ID: {user.externalId.slice(-6).toUpperCase()}</p>
+                    </div>
                 </div>
 
                 {/* Tabs Navigation */}
                 <Tabs defaultValue="payments" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2 mb-6">
-                        <TabsTrigger value="payments" className="data-[state=active]:bg-blue-500 data-[state=active]:text-white rounded-md">Payments</TabsTrigger>
-                        <TabsTrigger value="expenses" className="data-[state=active]:bg-blue-500 data-[state=active]:text-white rounded-md">Expenses</TabsTrigger>
+                    <TabsList className="grid w-full grid-cols-2 mb-6 h-12 bg-muted p-1 rounded-xl">
+                        <TabsTrigger value="payments" className="rounded-lg font-bold data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Payments</TabsTrigger>
+                        <TabsTrigger value="expenses" className="rounded-lg font-bold data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Expenses</TabsTrigger>
                     </TabsList>
 
-                    <div className="mb-6">
-                        <div className="text-xs text-muted-foreground mb-1 ml-1">Select month</div>
+                    <div className="mb-6 flex justify-end">
                         <Select defaultValue="current">
-                          <SelectTrigger className="w-full bg-white border-gray-200">
+                          <SelectTrigger className="w-[180px] bg-card border-border">
                             <SelectValue placeholder="Select month" />
                           </SelectTrigger>
                           <SelectContent>
@@ -71,24 +76,25 @@ export default function WalletPage() {
                     </div>
 
                     {/* Stats Grid */}
-                    <div className="grid grid-cols-3 gap-2 mb-6 p-4 bg-white rounded-xl border border-gray-100 shadow-sm text-center">
+                    <div className="grid grid-cols-3 gap-4 mb-8 bg-card rounded-2xl border border-border/50 shadow-sm p-6 text-center">
                         <div>
-                            <div className="text-xs text-muted-foreground mb-1">Payments:</div>
-                            <div className="font-bold text-lg">{formatPrice(stats.payments)}</div>
+                            <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Balance</div>
+                            <div className="font-black text-2xl text-foreground">{formatPrice(stats.payments)}</div>
                         </div>
-                        <div className="border-l border-r border-gray-100">
-                            <div className="text-xs text-muted-foreground mb-1">Spent:</div>
-                            <div className="font-bold text-lg">{formatPrice(stats.spent)}</div>
+                        <div className="border-l border-border/50 relative">
+                            <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Spent</div>
+                            <div className="font-black text-2xl text-foreground">{formatPrice(stats.spent)}</div>
                         </div>
-                        <div>
-                            <div className="text-xs text-muted-foreground mb-1">Bonuses:</div>
-                            <div className="font-bold text-lg">{formatPrice(stats.bonuses)}</div>
+                        <div className="border-l border-border/50">
+                            <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Bonuses</div>
+                            <div className="font-black text-2xl text-foreground">{formatPrice(stats.bonuses)}</div>
                         </div>
                     </div>
 
                     <div className="space-y-4">
                         <Button 
-                            className="w-full bg-blue-100 hover:bg-blue-200 text-blue-600 font-bold h-12 rounded-xl"
+                            className="w-full font-bold h-12 rounded-xl text-lg shadow-lg shadow-primary/20"
+                            size="lg"
                             asChild
                         >
                             <Link href="/wallet/top-up">
@@ -98,27 +104,28 @@ export default function WalletPage() {
                     </div>
 
                     {/* Content Area */}
-                    <div className="mt-8 min-h-[300px]">
+                    <div className="mt-10 min-h-[300px]">
+                        <h3 className="font-bold text-foreground mb-4 text-lg">Recent Transactions</h3>
                         {!transactions ? (
-                             <div className="flex justify-center p-10"><Loader2 className="animate-spin text-muted-foreground" /></div>
+                             <div className="flex justify-center p-10"><Loader2 className="animate-spin text-muted-foreground w-8 h-8" /></div>
                         ) : transactions.length === 0 ? (
-                            <div className="text-center py-20">
-                                <span className="text-muted-foreground text-sm">No transactions found</span>
+                            <div className="text-center py-20 border-2 border-dashed border-border rounded-xl">
+                                <span className="text-muted-foreground text-sm font-medium">No transactions found</span>
                             </div>
                         ) : (
                             <div className="space-y-3">
                                 {transactions.map((tx) => (
-                                    <div key={tx._id} className="flex items-center justify-between p-4 bg-white border rounded-xl shadow-sm">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
-                                                {tx.type === 'TOPUP' ? <ArrowDownLeft size={18} /> : <ArrowUpRight size={18} />}
+                                    <div key={tx._id} className="flex items-center justify-between p-4 bg-card border border-border/50 rounded-xl hover:bg-muted/50 transition-colors">
+                                        <div className="flex items-center gap-4">
+                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${tx.type === 'TOPUP' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}`}>
+                                                {tx.type === 'TOPUP' ? <ArrowDownLeft size={20} /> : <ArrowUpRight size={20} />}
                                             </div>
                                             <div>
-                                                <div className="font-bold text-sm">{tx.description}</div>
-                                                <div className="text-xs text-muted-foreground">{formatDistanceToNow(tx.createdAt, { addSuffix: true })}</div>
+                                                <div className="font-bold text-sm text-foreground">{tx.description}</div>
+                                                <div className="text-xs text-muted-foreground font-medium">{formatDistanceToNow(tx.createdAt, { addSuffix: true })}</div>
                                             </div>
                                         </div>
-                                        <div className={`font-bold ${tx.type === 'TOPUP' ? 'text-green-600' : 'text-slate-900'}`}>
+                                        <div className={`font-black text-lg ${tx.type === 'TOPUP' ? 'text-emerald-600' : 'text-foreground'}`}>
                                             {tx.type === 'TOPUP' ? '+' : ''}{formatPrice(Math.abs(tx.amount))}
                                         </div>
                                     </div>

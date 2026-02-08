@@ -5,40 +5,40 @@ import { UserAvatar } from '@/components/shared/user-avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  BadgeCheck,
-  BarChart,
-  CreditCard,
-  Heart,
-  Home,
-  LayoutDashboard,
-  Lock,
-  LogOut,
-  MessageSquare,
-  Package,
-  Pencil,
-  Settings,
-  ShieldCheck,
-  Star,
-  Store,
-  Trash,
-  User,
-  Wallet
+    BadgeCheck,
+    BarChart,
+    CreditCard,
+    Heart,
+    Home,
+    LayoutDashboard,
+    Lock,
+    LogOut,
+    MessageSquare,
+    Package,
+    Pencil,
+    Settings,
+    ShieldCheck,
+    Star,
+    Store,
+    Trash,
+    User,
+    Wallet
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -123,7 +123,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                 asChild
                 variant='ghost'
                 size='icon'
-                className='relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-blue-500 hover:bg-blue-500/10'
+                className='relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10'
             >
                 <Link href="/favorites">
                     <Heart className="h-5 w-5" />
@@ -134,7 +134,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
                                 exit={{ scale: 0 }}
-                                className='absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white ring-2 ring-background'
+                                className='absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
                             >
                                 {wishlistCount > 9 ? '9+' : wishlistCount}
                             </motion.span>
@@ -155,10 +155,10 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                 asChild
                 variant='ghost'
                 size='icon'
-                className='relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-blue-500 hover:bg-blue-500/10'
+                className='relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10'
             >
                 <Link href="/messages">
-                    <MessageSquare className={cn("h-5 w-5", notificationCount > 0 && "text-blue-500")} />
+                    <MessageSquare className={cn("h-5 w-5", notificationCount > 0 && "text-primary")} />
                     <AnimatePresence>
                         {notificationCount > 0 && (
                             <motion.span
@@ -166,7 +166,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
                                 exit={{ scale: 0 }}
-                                className='absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500 text-[10px] font-bold text-white ring-2 ring-background'
+                                className='absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
                             >
                                 {notificationCount > 9 ? '9+' : notificationCount}
                             </motion.span>
@@ -201,7 +201,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       exit={{ scale: 0 }}
-                      className='absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500 text-[10px] font-bold text-white ring-2 ring-background'
+                      className='absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
                     >
                       {alertCount > 9 ? '9+' : alertCount}
                     </motion.span>
@@ -224,7 +224,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                                 ? (user as any).companyName 
                                 : user.name}
                         </span>
-                        <BadgeCheck className='w-4 h-4 text-blue-500 fill-blue-500/10' />
+                        <BadgeCheck className='w-4 h-4 text-primary' />
                      </div>
                      <div className='text-xs text-muted-foreground truncate'>{user.email}</div>
                   </div>
@@ -233,7 +233,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
 
             {/* Main Actions */}
             <div className='p-2 grid gap-2'>
-               <Button asChild variant="outline" className='justify-between border-blue-200 text-blue-600 hover:bg-blue-50 h-10'>
+               <Button asChild variant="outline" className='justify-between border-primary/20 text-primary hover:bg-primary/10 h-10'>
                   <Link href="/sell">
                      <span className='flex items-center gap-2'><Pencil className='w-4 h-4' /> Post New Listing</span>
                      <span className='text-xs font-normal'>Free</span>
@@ -264,17 +264,17 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                </DropdownMenuItem>
                
                {/* Prominent Messages and Favorites - Hidden on desktop as they are in the header */}
-               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5 bg-blue-50/50 my-1 md:hidden'>
-                  <Link href="/messages" className='flex items-center gap-3 font-bold text-blue-900'>
-                     <MessageSquare className='w-4 h-4 text-blue-600' />
+               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5 bg-primary/5 my-1 md:hidden'>
+                  <Link href="/messages" className='flex items-center gap-3 font-bold text-foreground'>
+                     <MessageSquare className='w-4 h-4 text-primary' />
                      <span className='flex-1'>My Messages</span>
-                     {notificationCount > 0 && <Badge className='h-5 bg-blue-500 hover:bg-blue-600'>{notificationCount}</Badge>}
+                     {notificationCount > 0 && <Badge className='h-5 bg-primary hover:bg-primary/90'>{notificationCount}</Badge>}
                   </Link>
                </DropdownMenuItem>
 
-               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5 bg-rose-50/50 my-1 md:hidden'>
-                  <Link href="/favorites" className='flex items-center gap-3 font-bold text-rose-900'>
-                     <Heart className='w-4 h-4 text-rose-600' />
+               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5 bg-primary/5 my-1 md:hidden'>
+                  <Link href="/favorites" className='flex items-center gap-3 font-bold text-foreground'>
+                     <Heart className='w-4 h-4 text-primary' />
                      <span className='flex-1'>Favorites</span>
                   </Link>
                </DropdownMenuItem>
@@ -328,7 +328,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                </DropdownMenuItem>
                
                {user.role === 'ADMIN' && (
-                 <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5 text-blue-600'>
+                 <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5 text-primary'>
                     <Link href="/admin/dashboard" className='flex items-center gap-3 font-bold'>
                        <LayoutDashboard className='w-4 h-4' />
                        <span className='flex-1'>Admin Panel</span>
@@ -351,7 +351,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                <Button 
                  onClick={handleLogout}
                  variant="outline" 
-                 className='w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700'
+                 className='w-full border-primary/20 text-primary hover:bg-primary hover:text-white'
                >
                  <LogOut className='w-4 h-4 mr-2' />
                  Log out

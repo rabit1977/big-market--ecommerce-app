@@ -25,8 +25,8 @@ const plans = [
     price: "€9.99",
     period: "/mo",
     description: "Best for active sellers",
-    icon: <ShieldCheck className="w-6 h-6 text-blue-500" />,
-    badgeColor: "bg-blue-100 text-blue-600",
+    icon: <ShieldCheck className="w-6 h-6 text-primary" />,
+    badgeColor: "bg-primary/10 text-primary",
     features: [
       "Verified Blue Badge",
       "Up to 15 active listings",
@@ -60,8 +60,8 @@ const plans = [
     price: "€99.99",
     period: "/mo",
     description: "Elite enterprise dominance",
-    icon: <Trophy className="w-6 h-6 text-indigo-500" />,
-    badgeColor: "bg-indigo-100 text-indigo-600",
+    icon: <Trophy className="w-6 h-6 text-primary" />,
+    badgeColor: "bg-primary/10 text-primary",
     features: [
       "Exclusive 'Elite' Member Badge",
       "Top-tier priority placement",
@@ -81,14 +81,14 @@ export function MembershipSection() {
     <section className="py-12 md:py-24 relative overflow-hidden">
       {/* Background Decor */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 opacity-30">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-400 rounded-full blur-[128px]" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-400 rounded-full blur-[128px]" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[128px]" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[128px]" />
       </div>
 
       <div className="container px-4 mx-auto">
         <div className="max-w-3xl mx-auto text-center mb-10 md:mb-16">
           <h2 className="text-2xl md:text-5xl font-black tracking-tight mb-3 md:mb-4">
-            Choose Your <span className="text-blue-600">Membership</span>
+            Choose Your <span className="text-primary text-glow">Membership</span>
           </h2>
           <p className="text-sm md:text-xl text-muted-foreground">
             Empower your store with professional tools and reach thousands of buyers daily.
@@ -101,12 +101,12 @@ export function MembershipSection() {
               key={plan.name}
               className={cn(
                 "relative group p-6 md:p-8 rounded-2xl md:rounded-3xl transition-all duration-500",
-                "bg-white border border-slate-200 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10",
-                plan.popular && "ring-2 ring-blue-600 shadow-xl shadow-blue-500/20 md:scale-105 z-20"
+                "bg-white border border-slate-200 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 text-slate-900 dark:text-slate-900",
+                plan.popular && "ring-2 ring-primary shadow-xl shadow-primary/20 md:scale-105 z-20"
               )}
             >
               {plan.popular && (
-                <div className="absolute -top-3 md:-top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-[10px] md:text-xs font-bold px-3 py-1 md:px-4 md:py-1.5 rounded-full tracking-wider uppercase whitespace-nowrap">
+                <div className="absolute -top-3 md:-top-4 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] md:text-xs font-bold px-3 py-1 md:px-4 md:py-1.5 rounded-full tracking-wider uppercase whitespace-nowrap">
                   Most Popular
                 </div>
               )}
@@ -145,7 +145,7 @@ export function MembershipSection() {
                 className={cn(
                   "w-full rounded-xl md:rounded-2xl h-10 md:h-12 font-bold transition-all duration-300 text-sm md:text-base",
                   plan.popular 
-                    ? "bg-blue-600 text-white hover:bg-blue-700 md:hover:scale-[1.02]" 
+                    ? "bg-primary text-white hover:bg-primary/90 md:hover:scale-[1.02]" 
                     : "bg-slate-900 text-white hover:bg-slate-800 md:hover:scale-[1.02] shadow-lg"
                 )}
               >

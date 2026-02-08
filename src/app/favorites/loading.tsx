@@ -1,6 +1,6 @@
 'use client';
 
-import { ProductCardSkeleton } from '@/components/ui/product-card-skeleton';
+import { ListingCardSkeleton } from '@/components/ui/listing-card-skeleton';
 import { Skeleton } from '@/components/ui/skeleton';
 import { motion } from 'framer-motion';
 
@@ -30,7 +30,7 @@ export default function WishlistLoading() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.1 + (i * 0.05) }}
             >
-              <ProductCardSkeleton />
+              <ListingCardSkeleton />
             </motion.div>
           ))}
         </div>

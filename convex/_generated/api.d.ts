@@ -32,6 +32,7 @@ import type * as seedAmazon from "../seedAmazon.js";
 import type * as seedCustom from "../seedCustom.js";
 import type * as seedEnhanced from "../seedEnhanced.js";
 import type * as seedGoogle from "../seedGoogle.js";
+import type * as seedHomeAndGarden from "../seedHomeAndGarden.js";
 import type * as seedListings from "../seedListings.js";
 import type * as seedMacedonian from "../seedMacedonian.js";
 import type * as seedSelected from "../seedSelected.js";
@@ -71,6 +72,7 @@ declare const fullApi: ApiFromModules<{
   seedCustom: typeof seedCustom;
   seedEnhanced: typeof seedEnhanced;
   seedGoogle: typeof seedGoogle;
+  seedHomeAndGarden: typeof seedHomeAndGarden;
   seedListings: typeof seedListings;
   seedMacedonian: typeof seedMacedonian;
   seedSelected: typeof seedSelected;

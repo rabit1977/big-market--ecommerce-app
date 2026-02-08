@@ -66,7 +66,7 @@ export function ListingDetailGallery({ listing }: ListingDetailGalleryProps) {
     <div className='flex flex-col gap-6 select-none'>
         {/* Main Image Stage */}
         <div 
-          className='group relative aspect-[4/3] sm:aspect-square w-full overflow-hidden rounded-3xl border border-border bg-secondary/20 shadow-sm'
+          className='group relative aspect-[4/3] sm:aspect-square w-full overflow-hidden rounded-3xl border border-border bg-white shadow-sm'
           onMouseMove={handleMouseMove}
           onMouseEnter={() => setIsZoomed(true)}
           onMouseLeave={() => setIsZoomed(false)}

@@ -68,7 +68,7 @@ export default async function AdminUsersPage() {
       <div className='grid gap-3 sm:gap-5 grid-cols-2 md:grid-cols-3 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100'>
         {[
             { label: 'Total Users', value: users.length, icon: Users, color: 'text-blue-500', bg: 'bg-blue-500/10', border: 'border-blue-500/20' },
-            { label: 'Administrators', value: adminCount, icon: Shield, color: 'text-violet-500', bg: 'bg-violet-500/10', border: 'border-violet-500/20' },
+            { label: 'Administrators', value: adminCount, icon: Shield, color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/20' },
             { label: 'Regular Customers', value: userCount, icon: UserIcon, color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
         ].map((stat, i) => (
              <div key={i} className={`glass-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl flex items-center justify-between hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group border gap-2 flex-row-reverse ${stat.border}`}>

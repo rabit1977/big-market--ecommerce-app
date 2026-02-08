@@ -102,7 +102,7 @@ export const HeroHeader = () => {
                 {/* Search Button */}
                 <Button 
                     onClick={handleSearch}
-                    className="h-full w-24 rounded-none bg-blue-900 hover:bg-blue-800 text-white transition-colors"
+                    className="h-full w-24 rounded-none border-l border-border bg-primary hover:bg-primary/90 text-white transition-all cursor-pointer"
                 >
                     <Search className="w-6 h-6" />
                 </Button>
@@ -120,7 +120,7 @@ export const HeroHeader = () => {
                     { id: 'ddv', label: 'VAT included', checked: false },
                 ].map((filter) => (
                     <div key={filter.id} className="flex items-center space-x-2">
-                        <Checkbox id={filter.id} defaultChecked={filter.checked} className="rounded-sm data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600" />
+                        <Checkbox id={filter.id} defaultChecked={filter.checked} className="rounded-sm data-[state=checked]:bg-primary data-[state=checked]:border-primary" />
                         <label
                             htmlFor={filter.id}
                             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"

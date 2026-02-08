@@ -222,7 +222,7 @@ export default function DashboardClient({
             icon: Users,
             description: 'Registered accounts',
             trend: stats.userTrend,
-            color: 'violet' as const,
+            color: 'violet' as const, // Mapped to primary in DashboardCard
             href: '/admin/users',
           },
           {
@@ -327,7 +327,7 @@ export default function DashboardClient({
         {[
           { label: 'Add Listing', href: '/admin/listings/new', icon: Package, color: 'bg-blue-100 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400' },
           { label: 'Manage Users', href: '/admin/users', icon: Users, color: 'bg-amber-100 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400' },
-          { label: 'Categories', href: '/admin/categories', icon: Layers, color: 'bg-violet-100 dark:bg-violet-950/50 text-violet-600 dark:text-violet-400' },
+          { label: 'Categories', href: '/admin/categories', icon: Layers, color: 'bg-primary/10 text-primary' },
           { label: 'Reviews', href: '/admin/reviews', icon: Star, color: 'bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400' },
         ].map((action, _index) => (
           <Link

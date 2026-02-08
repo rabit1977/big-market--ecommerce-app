@@ -8,12 +8,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { CITIES } from '@/lib/constants/cities';
+import { cn } from '@/lib/utils';
 import { buildCategoryTree } from '@/lib/utils/category-tree';
 import { useQuery } from 'convex/react';
 import { ChevronDown, Loader2, MapPin, Search, X } from 'lucide-react';
 import { forwardRef, useMemo } from 'react';
 import { api } from '../../../convex/_generated/api';
-import { cn } from '@/lib/utils';
 
 interface SearchInputProps {
   value: string;
@@ -68,7 +68,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           ref={ref}
           type='search'
           placeholder='BMW, Iphone, Samsung...'
-          className='h-12 rounded-full pl-11 pr-36 bg-secondary/30 border-border/50 shadow-sm focus-visible:ring-primary/20 
+          className='h-12 rounded-full pl-11 pr-36 bg-secondary border-border shadow-sm focus-visible:ring-primary/20 
                      text-base placeholder:text-muted-foreground/70
                      [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden'
           value={value}

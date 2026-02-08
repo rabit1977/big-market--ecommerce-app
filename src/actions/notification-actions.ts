@@ -8,20 +8,23 @@ import { revalidatePath } from 'next/cache';
 // TYPES
 // ============================================
 
-export type NotificationType = 
-  | 'ORDER_UPDATE' 
-  | 'PRICE_DROP' 
-  | 'BACK_IN_STOCK' 
-  | 'PROMOTION' 
-  | 'REVIEW_REPLY' 
-  | 'SHIPMENT_UPDATE' 
-  | 'ACCOUNT_ALERT' 
-  | 'WISHLIST_SALE' 
-  | 'SYSTEM'
-  | 'INFO'
-  | 'SUCCESS'
-  | 'ERROR'
-  | 'WARNING';
+export const NotificationType = {
+  ORDER_UPDATE: 'ORDER_UPDATE',
+  PRICE_DROP: 'PRICE_DROP',
+  BACK_IN_STOCK: 'BACK_IN_STOCK',
+  PROMOTION: 'PROMOTION',
+  REVIEW_REPLY: 'REVIEW_REPLY',
+  SHIPMENT_UPDATE: 'SHIPMENT_UPDATE',
+  ACCOUNT_ALERT: 'ACCOUNT_ALERT',
+  WISHLIST_SALE: 'WISHLIST_SALE',
+  SYSTEM: 'SYSTEM',
+  INFO: 'INFO',
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR',
+  WARNING: 'WARNING',
+} as const;
+
+export type NotificationType = keyof typeof NotificationType;
 
 export interface NotificationWithMeta {
   id: string;

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useMutation, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import {
     ArrowLeft,
@@ -18,6 +19,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import { api } from '../../../convex/_generated/api';
 
 interface Message {
   _id: string;
@@ -42,7 +44,7 @@ interface Conversation {
     price: number;
     thumbnail?: string;
     images: string[];
-  };
+  } | null;
   otherUserId: string;
 }
 
@@ -52,15 +54,28 @@ interface MessagesClientProps {
 }
 
 export function MessagesClient({
-  conversations,
+  conversations: initialConversations, // We can use this as initial data or just ignore if we want purely dynamic
   userId,
 }: MessagesClientProps) {
-  const [selectedConversation, setSelectedConversation] =
-    useState<Conversation | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
+  // Use Convex Query for real-time updates
+  const conversations = (useQuery(api.messages.getConversations, { userId }) as Conversation[] | undefined) || initialConversations;
+  
+  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Messages Query
+  const messages = (useQuery(api.messages.getConversation, 
+    selectedConversation ? {
+      listingId: selectedConversation.listingId as any,
+      userA: userId,
+      userB: selectedConversation.otherUserId
+    } : "skip"
+  ) as Message[] | undefined) || [];
+
+  const sendMessageMutation = useMutation(api.messages.send);
+  const markReadMutation = useMutation(api.messages.markConversationAsRead);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -70,22 +85,48 @@ export function MessagesClient({
     scrollToBottom();
   }, [messages]);
 
+  // Handle initial selection from URL if present
+  useEffect(() => {
+      const params = new URLSearchParams(window.location.search);
+      const listingId = params.get('listingId');
+      if (listingId && conversations) {
+          const found = conversations.find(c => c.listingId === listingId);
+          if (found) {
+              handleSelectConversation(found);
+          }
+      }
+  }, [conversations]);
+
   const handleSelectConversation = async (conversation: Conversation) => {
     setSelectedConversation(conversation);
-    // TODO: Fetch messages from Convex
-    // TODO: Mark as read
+    
+    // Mark as read
+    if (conversation.unreadCount && conversation.unreadCount > 0) {
+        await markReadMutation({
+            listingId: conversation.listingId as any,
+            userId: userId,
+            otherUserId: conversation.otherUserId
+        });
+    }
   };
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !selectedConversation) return;
 
-    // TODO: Send message via Convex mutation
-    console.log('Sending message:', newMessage);
-    
-    setNewMessage('');
+    try {
+        await sendMessageMutation({
+            content: newMessage,
+            listingId: selectedConversation.listingId as any,
+            senderId: userId,
+            receiverId: selectedConversation.otherUserId,
+        });
+        setNewMessage('');
+    } catch (error) {
+        console.error("Failed to send", error);
+    }
   };
 
-  const filteredConversations = conversations.filter((conv) =>
+  const filteredConversations = (conversations || []).filter((conv) =>
     conv.listing?.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -113,7 +154,7 @@ export function MessagesClient({
             {/* Conversation List */}
             <ScrollArea className="flex-1">
               {filteredConversations.length > 0 ? (
-                <div className="divide-y">
+                <div className="divide-y text-left">
                   {filteredConversations.map((conversation) => (
                     <ConversationItem
                       key={conversation._id}
@@ -185,7 +226,7 @@ export function MessagesClient({
                 {/* Messages */}
                 <ScrollArea className="flex-1 p-4">
                   <div className="space-y-4">
-                    {messages.map((message) => (
+                    {messages.map((message: any) => (
                       <MessageBubble
                         key={message._id}
                         message={message}

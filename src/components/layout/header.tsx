@@ -3,13 +3,13 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import {
-  Heart,
-  Home,
-  Menu,
-  MessageSquare,
-  Plus,
-  Store,
-  Zap
+    Heart,
+    Home,
+    Menu,
+    MessageSquare,
+    Plus,
+    Store,
+    Zap
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -95,7 +95,7 @@ const Header = ({
           className='flex shrink-0 items-center gap-2 group mr-1 sm:mr-0'
           aria-label='Big Market home page'
         >
-          <div className='relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center shadow-md shadow-primary/20 group-hover:scale-105 transition-all duration-300'>
+          <div className='relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary flex items-center justify-center shadow-md shadow-primary/20 group-hover:scale-105 transition-all duration-300'>
             <Zap className='h-5 w-5 text-white' fill="currentColor" />
           </div>
           <div className='hidden sm:block'>
@@ -119,14 +119,14 @@ const Header = ({
         {/* User Actions */}
         <div className='flex items-center gap-1 sm:gap-3 shrink-0'>
           {/* Browse Listings Link - Visible on md+ */}
-          <Button asChild variant="ghost" className="hidden md:flex font-bold text-muted-foreground hover:text-foreground mr-1 hover:bg-blue-500/10">
+          <Button asChild variant="ghost" className="hidden md:flex font-bold text-muted-foreground hover:text-foreground mr-1 hover:bg-accent">
              <Link href="/listings">
                 Browse Listings
              </Link>
           </Button>
 
           {/* Desktop Post Button - Visible on md+ */}
-          <Button asChild className="hidden md:flex bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full shadow-lg shadow-orange-500/20 px-6 h-10 transition-all hover:scale-105">
+          <Button asChild className="hidden md:flex bg-primary hover:bg-primary/90 text-white font-bold rounded-full shadow-lg shadow-primary/20 px-6 h-10 transition-all hover:scale-105">
              <Link href="/sell">
                 <Plus className="h-5 w-5 mr-2 stroke-[3]" />
                 Post Ad

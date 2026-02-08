@@ -8,6 +8,8 @@ import { formatDistanceToNow } from 'date-fns';
 import {
     BadgeCheck,
     ChevronLeft,
+    Edit,
+    Eye,
     Heart,
     Mail,
     MapPin,
@@ -16,7 +18,8 @@ import {
     MoreVertical,
     Phone,
     Share2,
-    ShieldAlert
+    ShieldAlert,
+    Trash2
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -54,25 +57,64 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
   const { data: session } = useSession();
   
   const recordVisit = useMutation(api.history.recordVisit);
+  const trackEvent = useMutation(api.analytics.trackEvent);
 
   // Fetch seller details using External ID (UUID) since listing.userId stores the auth provider ID
   const seller = useConvexQuery(api.users.getByExternalId, { externalId: listing.userId });
 
   useEffect(() => {
-    if (session?.user?.id && listing._id) {
-       recordVisit({ 
-          listingId: listing._id as Id<"listings">, 
-          userId: session.user.id 
-       });
+    // Session id for analytics
+    let sessionId = sessionStorage.getItem('analytics_session_id');
+    if (!sessionId) {
+        sessionId = Math.random().toString(36).substring(7);
+        sessionStorage.setItem('analytics_session_id', sessionId);
     }
-  }, [session?.user?.id, listing._id, recordVisit]);
+
+    if (listing._id) {
+       // Track view
+       trackEvent({
+           eventType: 'view_listing',
+           sessionId: sessionId,
+           userId: session?.user?.id,
+           data: { listingId: listing._id }
+       });
+       
+       if (session?.user?.id) {
+          recordVisit({ 
+             listingId: listing._id as Id<"listings">, 
+             userId: session.user.id 
+          });
+       }
+    }
+  }, [session?.user?.id, listing._id, recordVisit, trackEvent]);
+
+  const handleContactClick = (type: 'contact' | 'call' | 'email') => {
+      let sessionId = sessionStorage.getItem('analytics_session_id');
+      if (!sessionId) {
+          sessionId = Math.random().toString(36).substring(7);
+          sessionStorage.setItem('analytics_session_id', sessionId);
+      }
+
+      trackEvent({
+          eventType: `click_${type}`,
+          sessionId: sessionId,
+          userId: session?.user?.id,
+          data: { listingId: listing._id }
+      });
+  };
 
   const images = listing.images || [];
   const mainImage = images[selectedImage] || listing.thumbnail || '/placeholder-listing.jpg';
   
   const date = listing.createdAt ? new Date(listing.createdAt) : new Date();
   const timeAgo = formatDistanceToNow(date, { addSuffix: true });
-  const publishDate = date.toLocaleDateString('mk-MK', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  
+  // Use state to handle hydration mismatch for date formatting
+  const [publishDate, setPublishDate] = useState<string>('');
+  
+  useEffect(() => {
+    setPublishDate(date.toLocaleDateString('mk-MK', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }));
+  }, [listing.createdAt]);
 
   // Use actual condition if available
   const condition = listing.specifications?.condition; 
@@ -94,26 +136,26 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/50 pb-20">
+    <div className="min-h-screen bg-background pb-20">
       {/* Mobile Header (Big Market Style) */}
-      <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b px-4 py-3 flex items-center justify-between shadow-sm md:hidden">
+      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b px-4 py-3 flex items-center justify-between shadow-sm md:hidden">
          <div className="flex items-center gap-3">
              <button 
                 onClick={() => router.back()} 
-                className="p-1 hover:bg-slate-100 rounded-full transition-colors"
+                className="p-1 hover:bg-accent rounded-full transition-colors"
              >
-                <ChevronLeft className="w-6 h-6 text-slate-700" />
+                <ChevronLeft className="w-6 h-6 text-foreground" />
              </button>
              <div className="flex flex-col">
-                 <span className="text-sm font-black tracking-tight leading-none text-slate-900 uppercase">AD ID: {listing._id.slice(-7)}</span>
-                 <span className="text-[10px] font-bold text-slate-500 mt-1 uppercase tracking-wider">{publishDate}</span>
+                 <span className="text-sm font-black tracking-tight leading-none text-foreground uppercase">AD ID: {listing._id.slice(-7)}</span>
+                 <span className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-wider">{publishDate}</span>
              </div>
          </div>
          <div className="flex items-center gap-2">
-             <Button variant="ghost" size="icon" className="h-9 w-9 text-slate-600" onClick={handleShare}>
+             <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground" onClick={handleShare}>
                 <Share2 className="w-5 h-5" />
              </Button>
-             <Button variant="ghost" size="icon" className="h-9 w-9 text-slate-600">
+             <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground">
                 <MoreVertical className="w-5 h-5" />
              </Button>
          </div>
@@ -126,11 +168,11 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
         />
         
         {/* Desktop Actions Header */}
-        <div className="hidden md:flex items-center justify-end mb-8 pb-4 border-b border-slate-200">
+        <div className="hidden md:flex items-center justify-end mb-8 pb-4 border-b border-border">
           <div className="flex items-center gap-3">
              <button 
                onClick={handleShare}
-               className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm"
+               className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-full text-sm font-bold text-foreground hover:bg-accent transition-all shadow-sm"
              >
                 <Share2 className="w-4 h-4" />
                 Share
@@ -139,8 +181,8 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                onClick={() => setIsFavorite(!isFavorite)}
                className={`flex items-center gap-2 px-4 py-2 border rounded-full text-sm font-bold transition-all shadow-sm ${
                  isFavorite 
-                 ? 'bg-red-50 border-red-200 text-red-600' 
-                 : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                 ? 'bg-primary/5 border-primary/20 text-primary' 
+                 : 'bg-card border-border text-foreground hover:bg-accent'
                }`}
              >
                 <Heart className={`w-4 h-4 ${isFavorite ? 'fill-current' : ''}`} />
@@ -218,39 +260,39 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
             )}
 
             {/* Mobile-Only Info Grouping */}
-            <div className="md:hidden space-y-4 px-4 bg-white border-b py-6">
+            <div className="md:hidden space-y-4 px-4 bg-background border-b py-6">
                 <div className="space-y-2">
                     <div className="flex items-center gap-2 mb-1">
-                       <span className="text-[10px] font-black uppercase text-primary bg-primary/5 px-2 py-0.5 rounded tracking-tighter">Verified Ad</span>
+                       <span className="text-[10px] font-black uppercase text-primary bg-primary/10 px-2 py-0.5 rounded tracking-tighter">Verified Ad</span>
                        {condition && (
-                         <span className="text-[10px] font-bold uppercase text-slate-500 border border-slate-200 px-2 py-0.5 rounded tracking-tighter">
+                         <span className="text-[10px] font-bold uppercase text-muted-foreground border border-border px-2 py-0.5 rounded tracking-tighter">
                             Condition: {String(condition)}
                          </span>
                        )}
                     </div>
-                    <h1 className="text-xl font-bold text-slate-900 leading-tight">
+                    <h1 className="text-xl font-bold text-foreground leading-tight">
                         {listing.title}
                     </h1>
                     <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-black text-blue-700">
+                        <span className="text-3xl font-black text-primary">
                             {listing.price > 0 ? `${listing.price.toLocaleString()} €` : 'Price on request'}
                         </span>
-                        {listing.price > 0 && <span className="text-xs font-bold text-slate-400 uppercase tracking-tighter">Fixed</span>}
+                        {listing.price > 0 && <span className="text-xs font-bold text-muted-foreground uppercase tracking-tighter">Fixed</span>}
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
-                    <UserAvatar user={seller} className="w-10 h-10 border-2 border-slate-100" />
+                <div className="flex items-center gap-3 pt-4 border-t border-border">
+                    <UserAvatar user={seller} className="w-10 h-10 border-2 border-border" />
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1">
-                            <span className="font-bold text-sm text-slate-900">{seller?.name || 'Seller'}</span>
-                            <BadgeCheck className="w-4 h-4 text-blue-500" />
+                            <span className="font-bold text-sm text-foreground">{seller?.name || 'Seller'}</span>
+                            <BadgeCheck className="w-4 h-4 text-primary" />
                         </div>
-                        <p className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">Member since 2024</p>
+                        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Member since 2024</p>
                     </div>
                     <button 
                       onClick={() => setIsFavorite(!isFavorite)}
-                      className={`p-2.5 rounded-full transition-colors ${isFavorite ? 'bg-red-50 text-red-500' : 'bg-slate-50 text-slate-400'}`}
+                      className={`p-2.5 rounded-full transition-colors ${isFavorite ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}
                     >
                         <Heart className={`w-6 h-6 ${isFavorite ? 'fill-current' : ''}`} />
                     </button>
@@ -260,7 +302,8 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                 <div className="grid grid-cols-2 gap-3 pt-4">
                     <Link 
                       href={`/messages?listing=${listing._id}`}
-                      className="flex items-center justify-center gap-2 py-3.5 bg-blue-600 text-white rounded-xl font-black text-sm uppercase tracking-tight shadow-lg shadow-blue-200 active:scale-95 transition-all"
+                      onClick={() => handleContactClick('contact')}
+                      className="flex items-center justify-center gap-2 py-3.5 bg-primary text-white rounded-xl font-black text-sm uppercase tracking-tight shadow-lg shadow-primary/20 active:scale-95 transition-all"
                     >
                         <MessageSquare className="w-4 h-4" />
                         Send Message
@@ -268,7 +311,8 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                     {contactPhone && (
                         <a 
                           href={`tel:${contactPhone}`}
-                          className="flex items-center justify-center gap-2 py-3.5 bg-emerald-500 text-white rounded-xl font-black text-sm uppercase tracking-tight shadow-lg shadow-emerald-200 active:scale-95 transition-all"
+                          onClick={() => handleContactClick('call')}
+                          className="flex items-center justify-center gap-2 py-3.5 bg-green-500 text-white rounded-xl font-black text-sm uppercase tracking-tight shadow-lg shadow-green-200 active:scale-95 transition-all"
                         >
                             <Phone className="w-4 h-4" />
                             Call Now
@@ -277,7 +321,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                 </div>
                 
                 {contactEmail && (
-                    <div className="mt-3 flex items-center justify-center p-3 bg-slate-50 rounded-xl text-xs font-bold text-slate-500 border border-slate-100 gap-2">
+                    <div className="mt-3 flex items-center justify-center p-3 bg-accent rounded-xl text-xs font-bold text-muted-foreground border border-border gap-2">
                         <Mail className="w-4 h-4" />
                         <span>Email: {contactEmail}</span>
                     </div>
@@ -286,30 +330,30 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
 
             {/* Specifications Section */}
             {listing.specifications && Object.keys(listing.specifications).length > 0 && (
-               <div className="bg-white md:rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                  <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-                      <h3 className="font-black text-slate-900 uppercase tracking-tight text-sm">Technical Specifications</h3>
+               <div className="bg-card md:rounded-2xl border border-border shadow-sm overflow-hidden">
+                  <div className="px-6 py-4 border-b border-border bg-muted">
+                      <h3 className="font-black text-foreground uppercase tracking-tight text-sm">Technical Specifications</h3>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-0 divide-y md:divide-y-0 md:divide-x divide-slate-100">
-                     <div className="divide-y divide-slate-100">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-0 divide-y md:divide-y-0 md:divide-x divide-border">
+                     <div className="divide-y divide-border">
                         {Object.entries(listing.specifications)
                           .filter(([key]) => key !== 'condition' && !key.startsWith('_'))
                           .slice(0, Math.ceil(Object.entries(listing.specifications).filter(([key]) => key !== 'condition' && !key.startsWith('_')).length / 2))
                           .map(([key, value]) => (
-                           <div key={key} className="flex justify-between items-center p-4 hover:bg-slate-50 transition-colors">
-                              <span className="text-slate-500 text-xs font-bold uppercase tracking-wider">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
-                              <span className="font-bold text-slate-900 text-sm">{String(value)}</span>
+                           <div key={key} className="flex justify-between items-center p-4 hover:bg-accent transition-colors">
+                              <span className="text-muted-foreground text-xs font-bold uppercase tracking-wider">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                              <span className="font-bold text-foreground text-sm">{String(value)}</span>
                            </div>
                         ))}
                      </div>
-                     <div className="divide-y divide-slate-100">
+                     <div className="divide-y divide-border">
                         {Object.entries(listing.specifications)
                           .filter(([key]) => key !== 'condition' && !key.startsWith('_'))
                           .slice(Math.ceil(Object.entries(listing.specifications).filter(([key]) => key !== 'condition' && !key.startsWith('_')).length / 2))
                           .map(([key, value]) => (
-                           <div key={key} className="flex justify-between items-center p-4 hover:bg-slate-50 transition-colors">
-                              <span className="text-slate-500 text-xs font-bold uppercase tracking-wider">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
-                              <span className="font-bold text-slate-900 text-sm">{String(value)}</span>
+                           <div key={key} className="flex justify-between items-center p-4 hover:bg-accent transition-colors">
+                              <span className="text-muted-foreground text-xs font-bold uppercase tracking-wider">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                              <span className="font-bold text-foreground text-sm">{String(value)}</span>
                            </div>
                         ))}
                      </div>
@@ -318,15 +362,78 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
             )}
 
             {/* Description Section */}
-            <div className="bg-white md:rounded-2xl border border-slate-200 shadow-sm px-6 py-8 space-y-6">
+            <div className="bg-card md:rounded-2xl border border-border shadow-sm px-6 py-8 space-y-6">
                <div className="space-y-1">
-                  <h3 className="font-black text-slate-900 uppercase tracking-tight text-sm">Product Description</h3>
+                  <h3 className="font-black text-foreground uppercase tracking-tight text-sm">Product Description</h3>
                   <div className="h-1 w-8 bg-primary rounded-full" />
                </div>
-               <p className="text-slate-600 whitespace-pre-wrap leading-relaxed text-base">
+               <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed text-base">
                   {listing.description}
                </p>
             </div>
+
+            {/* Owner Dashboard - Visible only to owner */}
+            {session?.user?.id === listing.userId && (
+                <div className="bg-card rounded-2xl p-6 md:p-8 shadow-xl border border-border space-y-6">
+                    <div className="flex items-center justify-between">
+                        <div className="space-y-1">
+                            <h3 className="text-foreground font-black uppercase tracking-tight text-lg">Owner Dashboard</h3>
+                            <p className="text-muted-foreground text-sm">Manage your listing and view performance</p>
+                        </div>
+                        <BadgeCheck className="w-8 h-8 text-green-500" />
+                    </div>
+
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="bg-muted border border-border rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 group hover:bg-accent transition-colors">
+                            <Eye className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
+                            <div>
+                                <div className="text-2xl font-black text-foreground">{listing.viewCount || 0}</div>
+                                <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Total Views</div>
+                            </div>
+                        </div>
+                        <div className="bg-muted border border-border rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 group hover:bg-accent transition-colors">
+                            <MessageSquare className="w-6 h-6 text-green-500 group-hover:scale-110 transition-transform" />
+                            <div>
+                                {/* We need to fetch this dynamically */}
+                                <ListingStats listingId={listing._id} />
+                            </div>
+                        </div>
+                        {/* Placeholders for future stats */}
+                        <div className="bg-muted border border-border rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 group hover:bg-accent transition-colors opacity-50">
+                            <Heart className="w-6 h-6 text-primary" />
+                            <div>
+                                <div className="text-2xl font-black text-foreground">-</div>
+                                <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Favorites</div>
+                            </div>
+                        </div>
+                         <div className="bg-muted border border-border rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 group hover:bg-accent transition-colors opacity-50">
+                            <Share2 className="w-6 h-6 text-primary" />
+                            <div>
+                                <div className="text-2xl font-black text-foreground">-</div>
+                                <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Shares</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+                        <Button asChild variant="outline" className="h-12 bg-transparent border-border text-foreground hover:bg-accent border-2">
+                            <Link href={`/listings/edit/${listing._id}`}>
+                                <Edit className="w-4 h-4 mr-2" />
+                                Edit Listing
+                            </Link>
+                        </Button>
+                        <Button asChild variant="default" className="h-12 bg-primary hover:bg-primary/90 text-white font-bold">
+                             <Link href={`/messages?listing=${listing._id}`}>
+                                <Mail className="w-4 h-4 mr-2" />
+                                View Messages
+                            </Link>
+                        </Button>
+                        <DeleteListingButton listingId={listing._id} />
+                    </div>
+                </div>
+            )}
           </div>
 
           {/* Right Column (lg:col-span-4) - Hidden/Transformed on Mobile */}
@@ -334,29 +441,29 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
              {/* Sticky Actions Container */}
              <div className="top-24 space-y-6 max-h-[calc(100vh-8rem)] overflow-y-auto pr-1 no-scrollbar">
                 {/* Price & Primary Details */}
-                <div className="bg-white border-2 border-slate-100 rounded-3xl p-6 md:p-8 shadow-xl shadow-slate-200/50 space-y-6">
+                <div className="bg-card border-2 border-border rounded-3xl p-6 md:p-8 shadow-xl shadow-foreground/5 space-y-6">
                    <div className="space-y-2">
-                       <h1 className="text-2xl font-black text-slate-900 tracking-tight leading-tight uppercase group-hover:text-primary transition-colors">
+                       <h1 className="text-2xl font-black text-foreground tracking-tight leading-tight uppercase group-hover:text-primary transition-colors">
                           {listing.title}
                        </h1>
-                       <div className="flex items-center gap-2 text-xs font-bold text-slate-400">
+                       <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground">
                           <MapPin className="w-3 h-3" />
                           {listing.city}, {listing.region || 'Skopje'}
                        </div>
                    </div>
                    
-                   <div className="p-6 bg-slate-50 rounded-2xl flex flex-col gap-1 border border-slate-200/60">
+                   <div className="p-6 bg-muted rounded-2xl flex flex-col gap-1 border border-border">
                        <div className="text-4xl font-black text-primary tracking-tighter">
                           {listing.price > 0 ? `${listing.price.toLocaleString()} €` : 'Call for Price'}
                        </div>
-                       <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                       <div className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
                           Secured Transaction • Fixed Price
                        </div>
                    </div>
 
                    <div className="space-y-3 pt-2">
-                      <Button asChild className="w-full h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-black text-lg uppercase tracking-tight shadow-xl shadow-blue-200 group">
-                         <Link href={`/messages?listing=${listing._id}`}>
+                      <Button asChild className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-lg uppercase tracking-tight shadow-xl shadow-primary/20 group">
+                         <Link href={`/messages?listing=${listing._id}`} onClick={() => handleContactClick('contact')}>
                             <MessageSquare className="mr-2 h-6 w-6 group-hover:scale-110 transition-transform" />
                             Send Message
                          </Link>
@@ -365,15 +472,15 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                        {/* Phone Number Display */}
                        <div className="flex gap-2">
                            {contactPhone && (
-                                <Button asChild variant="outline" className="flex-1 h-14 rounded-2xl border-2 border-slate-100 font-black text-lg text-slate-900 hover:bg-slate-50 group">
-                                    <a href={`tel:${contactPhone}`}>
-                                        <Phone className="mr-2 h-5 w-5 text-emerald-500" />
+                                <Button asChild variant="outline" className="flex-1 h-14 rounded-2xl border-2 border-border font-black text-lg text-foreground hover:bg-accent group">
+                                    <a href={`tel:${contactPhone}`} onClick={() => handleContactClick('call')}>
+                                        <Phone className="mr-2 h-5 w-5 text-green-500" />
                                         {contactPhone}
                                     </a>
                                 </Button>
                            )}
 
-                           <Button asChild variant="outline" className="w-14 h-14 px-0 rounded-2xl border-2 border-slate-100 text-slate-600 hover:bg-slate-50">
+                           <Button asChild variant="outline" className="w-14 h-14 px-0 rounded-2xl border-2 border-border text-muted-foreground hover:bg-accent">
                                 <a href={`sms:${contactPhone || ''}`}>
                                     <MessageCircle className="h-6 w-6" />
                                 </a>
@@ -383,12 +490,12 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
 
                    {/* Email Display */}
                    {contactEmail && (
-                       <div className="flex items-center justify-center p-3 bg-slate-50 rounded-xl text-xs font-bold text-slate-500 border border-slate-100 gap-2">
+                       <div className="flex items-center justify-center p-3 bg-muted rounded-xl text-xs font-bold text-muted-foreground border border-border gap-2">
                            <span>Email: {contactEmail}</span>
                        </div>
                    )}
 
-                       <div className="flex items-center justify-center pt-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest gap-4">
+                       <div className="flex items-center justify-center pt-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest gap-4">
                            <span>ID: {listing._id.slice(-7)}</span>
                            <span>•</span>
                            <span>Posted: {publishDate}</span>
@@ -397,38 +504,38 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                 </div>
 
                 {/* Seller Profile Card */}
-                <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-6 shadow-sm overflow-hidden relative">
+                <div className="bg-card border border-border rounded-3xl p-6 md:p-6 shadow-sm overflow-hidden relative">
                     <div className="absolute top-0 right-0 p-4">
-                        <BadgeCheck className="w-8 h-8 text-blue-500 fill-blue-50 opacity-20" />
+                        <BadgeCheck className="w-8 h-8 text-primary fill-primary/5 opacity-20" />
                     </div>
                     <div className="flex items-center gap-4 mb-6 relative">
                        <UserAvatar 
                           user={seller} 
-                          className="w-16 h-16 border-4 border-slate-50 shadow-md" 
+                          className="w-16 h-16 border-4 border-muted shadow-md" 
                        />
                        <div>
                           <div className="flex items-center gap-1.5 mb-0.5">
-                             <h4 className="font-black text-slate-900 text-lg">{seller?.name || 'Loading...'}</h4> 
-                             <BadgeCheck className="w-5 h-5 text-blue-500" />
+                             <h4 className="font-black text-foreground text-lg">{seller?.name || 'Loading...'}</h4> 
+                             <BadgeCheck className="w-5 h-5 text-primary" />
                           </div>
-                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Verified Seller since 2024</p>
+                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Verified Seller since 2024</p>
                        </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2">
-                        <div className="p-3 bg-slate-50 rounded-xl text-center border border-slate-100">
-                           <div className="text-lg font-black text-slate-900">12</div>
-                           <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Active Ads</p>
+                        <div className="p-3 bg-muted rounded-xl text-center border border-border">
+                           <div className="text-lg font-black text-foreground">12</div>
+                           <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">Active Ads</p>
                         </div>
-                        <div className="p-3 bg-slate-50 rounded-xl text-center border border-slate-100">
-                           <div className="text-lg font-black text-slate-900">4.9</div>
-                           <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Seller Rating</p>
+                        <div className="p-3 bg-muted rounded-xl text-center border border-border">
+                           <div className="text-lg font-black text-foreground">4.9</div>
+                           <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">Seller Rating</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Map Section */}
-                <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm aspect-[1.5/1] relative group">
+                <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-sm aspect-[1.5/1] relative group">
                     <iframe 
                        width="100%" 
                        height="100%" 
@@ -437,8 +544,8 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                        className="filter grayscale-[0.3] contrast-[1.1] opacity-90 group-hover:opacity-100 transition-opacity"
                     ></iframe>
                     <div className="absolute bottom-4 left-4 right-4 pointer-events-none">
-                        <div className="bg-white/95 backdrop-blur-md px-4 py-2 rounded-2xl text-xs font-black shadow-xl border border-slate-100 flex items-center gap-2 w-fit text-slate-900 uppercase tracking-tight">
-                           <MapPin className="w-4 h-4 text-red-500" />
+                        <div className="bg-card/95 backdrop-blur-md px-4 py-2 rounded-2xl text-xs font-black shadow-xl border border-border flex items-center gap-2 w-fit text-foreground uppercase tracking-tight">
+                           <MapPin className="w-4 h-4 text-primary" />
                            {listing.city} • {listing.region || 'CENTAR'}
                         </div>
                     </div>
@@ -446,15 +553,15 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
 
                 {/* Safety Tips */}
                 <div className="space-y-2 px-2">
-                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Safety & Trust</p>
-                   <button className="w-full flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl group hover:border-red-100 transition-all">
+                   <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-3">Safety & Trust</p>
+                   <button className="w-full flex items-center justify-between p-4 bg-card border border-border rounded-2xl group hover:border-primary/20 transition-all">
                        <div className="flex items-center gap-3">
-                           <div className="p-2 rounded-lg bg-slate-50 group-hover:bg-red-50 transition-colors">
-                              <ShieldAlert className="w-4 h-4 text-slate-400 group-hover:text-red-500" />
+                           <div className="p-2 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
+                              <ShieldAlert className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
                            </div>
-                           <span className="text-xs font-bold text-slate-700">Report suspicious activity</span>
+                           <span className="text-xs font-bold text-foreground">Report suspicious activity</span>
                        </div>
-                       <ChevronLeft className="w-4 h-4 text-slate-300 rotate-180" />
+                       <ChevronLeft className="w-4 h-4 text-muted-foreground rotate-180" />
                    </button>
                 </div>
              </div>
@@ -463,13 +570,13 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
 
         {/* Mobile-Only Map & Safety */}
         <div className="md:hidden px-4 py-8 space-y-6">
-            <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm aspect-[4/3] relative">
+            <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm aspect-[4/3] relative">
                 <iframe 
                     width="100%" height="100%" frameBorder="0" 
                     src={`https://maps.google.com/maps?q=${encodeURIComponent(listing.city)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
                     className="filter contrast-[1.1]"
                 ></iframe>
-                <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-black shadow-lg">
+                <div className="absolute bottom-4 left-4 bg-card/95 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-black shadow-lg border border-border">
                     {listing.city}
                 </div>
             </div>
@@ -486,4 +593,55 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
         </div>
       </div>
 );
+}
+
+function ListingStats({ listingId }: { listingId: string }) {
+    const stats = useConvexQuery(api.messages.getListingStats, { listingId: listingId as Id<"listings"> });
+    
+    if (!stats) return <div className="text-sm font-bold text-slate-500">Loading...</div>;
+
+    return (
+        <>
+            <div className="text-2xl font-black text-foreground">{stats.totalConversations}</div>
+            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Inquiries</div>
+        </>
+    );
+}
+
+function DeleteListingButton({ listingId }: { listingId: string }) {
+    const [isDeleting, setIsDeleting] = useState(false);
+    const deleteListing = useMutation(api.listings.remove);
+    const router = useRouter();
+
+    const handleDelete = async () => {
+        if (!confirm("Are you sure you want to delete this listing? This action cannot be undone.")) return;
+        
+        setIsDeleting(true);
+        try {
+            await deleteListing({ id: listingId as Id<"listings"> });
+            router.push('/');
+        } catch (error) {
+            console.error("Failed to delete listing", error);
+            alert("Failed to delete listing. Please try again.");
+            setIsDeleting(false);
+        }
+    };
+
+    return (
+        <Button 
+            variant="destructive" 
+            className="h-12 bg-red-600 hover:bg-red-700 text-white font-bold"
+            onClick={handleDelete}
+            disabled={isDeleting}
+        >
+            {isDeleting ? (
+                "Deleting..." 
+            ) : (
+                <>
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete Listing
+                </>
+            )}
+        </Button>
+    );
 }

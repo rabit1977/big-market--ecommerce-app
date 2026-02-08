@@ -19,9 +19,9 @@ interface DashboardCardProps {
 
 const colorVariants = {
   violet: {
-    iconBg: 'bg-violet-100 dark:bg-violet-950/50',
-    iconColor: 'text-violet-600 dark:text-violet-400',
-    gradient: 'from-violet-500/10 to-transparent',
+    iconBg: 'bg-primary/10 dark:bg-primary/20',
+    iconColor: 'text-primary',
+    gradient: 'from-primary/10 to-transparent',
   },
   emerald: {
     iconBg: 'bg-emerald-100 dark:bg-emerald-950/50',

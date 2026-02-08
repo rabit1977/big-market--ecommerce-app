@@ -16,12 +16,14 @@ interface ListingsClientProps {
     totalPages: number;
     total: number;
   };
+  template?: any;
 }
 
 export function ListingsClient({
   initialListings,
   categories,
   pagination,
+  template
 }: ListingsClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -32,6 +34,7 @@ export function ListingsClient({
   // Derive initial filters from URL params
   const initialFilters = useMemo<FilterState>(() => ({
     category: searchParams.get('category') || 'all',
+    subCategory: searchParams.get('subCategory') || 'all',
     city: searchParams.get('city') || 'all',
     priceMin: searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : 0,
     priceMax: searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : 1000000,
@@ -43,6 +46,8 @@ export function ListingsClient({
     hasShipping: searchParams.get('shipping') === 'true',
     isVatIncluded: searchParams.get('vat') === 'true',
     isAffordable: searchParams.get('affordable') === 'true',
+    dateRange: searchParams.get('date') || undefined,
+    dynamicFilters: searchParams.get('filters') || undefined,
   }), [searchParams]);
 
   const handleFilterChange = (filters: FilterState) => {
@@ -51,6 +56,9 @@ export function ListingsClient({
     
     if (filters.category && filters.category !== 'all') params.set('category', filters.category);
     else params.delete('category');
+
+    if (filters.subCategory && filters.subCategory !== 'all') params.set('subCategory', filters.subCategory);
+    else params.delete('subCategory');
     
     if (filters.city && filters.city !== 'all') params.set('city', filters.city);
     else params.delete('city');
@@ -85,6 +93,13 @@ export function ListingsClient({
     if (filters.isAffordable) params.set('affordable', 'true');
     else params.delete('affordable');
 
+    if (filters.dateRange && filters.dateRange !== 'all') params.set('date', filters.dateRange);
+    else params.delete('date');
+
+    // Dynamic Filters
+    if (filters.dynamicFilters) params.set('filters', filters.dynamicFilters);
+    else params.delete('filters');
+
     // Reset pagination
     params.delete('page');
 
@@ -100,19 +115,19 @@ export function ListingsClient({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Mobile Filter Sheet */}
       <Sheet open={isMobileFiltersOpen} onOpenChange={setIsMobileFiltersOpen}>
-         <SheetContent side="left" className="w-[85vw] sm:w-[400px] overflow-y-auto p-0">
-            <div className="p-4 pt-10">
-               <FilterPanel onFilterChange={handleFilterChange} categories={categories} initialFilters={initialFilters} idPrefix="mobile-filter" />
+         <SheetContent side="left" className="w-full sm:w-[450px] overflow-y-auto p-0">
+            <div className="p-4 pt-12">
+               <FilterPanel onFilterChange={handleFilterChange} categories={categories} initialFilters={initialFilters} idPrefix="mobile-filter" template={template} />
             </div>
          </SheetContent>
       </Sheet>
 
-      {/* Sidebar Filters (Desktop Only) */}
+      {/* Sidebar Filters (Desktop Only) - Now wider! */}
       <aside className="hidden lg:block lg:sticky lg:top-24 h-fit">
-        <FilterPanel onFilterChange={handleFilterChange} categories={categories} initialFilters={initialFilters} idPrefix="desktop-filter" />
+        <FilterPanel onFilterChange={handleFilterChange} categories={categories} initialFilters={initialFilters} idPrefix="desktop-filter" template={template} />
       </aside>
 
       {/* Main Content */}

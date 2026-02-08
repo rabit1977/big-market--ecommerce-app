@@ -124,7 +124,7 @@ export function EditProfileForm({
         <div className="space-y-4">
              {/* Banner Upload */}
              <div 
-                className="relative w-full h-48 bg-gray-100 rounded-xl overflow-hidden border border-dashed border-gray-300 group hover:border-blue-400 transition-colors cursor-pointer"
+                className="relative w-full h-48 bg-muted rounded-xl overflow-hidden border border-dashed border-border group hover:border-primary transition-colors cursor-pointer"
                 onClick={() => document.getElementById('banner-upload')?.click()}
              >
                  {form.watch('banner') ? (
@@ -146,31 +146,31 @@ export function EditProfileForm({
              </div>
 
              {/* Logo / Initials - Overlapping, Static (No Upload) */}
-             <div className="relative -mt-16 ml-8 w-32 h-32 bg-white rounded-xl shadow-lg border p-1 z-10">
-                 <div className="w-full h-full bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-white text-4xl font-black shadow-inner">
+             <div className="relative -mt-16 ml-8 w-32 h-32 bg-card rounded-xl shadow-lg border border-border p-1 z-10">
+                 <div className="w-full h-full bg-primary rounded-lg flex items-center justify-center text-white text-4xl font-black shadow-inner">
                     {form.watch('name')?.slice(0, 2).toUpperCase() || 'US'}
                  </div>
              </div>
         </div>
 
         {/* Account Type Toggle */}
-        <div className="flex p-1 bg-gray-100 rounded-xl w-full max-w-md mx-auto relative">
+        <div className="flex p-1 bg-muted rounded-xl w-full max-w-md mx-auto relative">
             <div 
                 className={cn(
-                    "absolute top-1 bottom-1 w-1/2 bg-white rounded-lg shadow-sm transition-transform duration-300 ease-in-out",
+                    "absolute top-1 bottom-1 w-1/2 bg-card rounded-lg shadow-sm transition-transform duration-300 ease-in-out",
                     accountType === 'COMPANY' ? "translate-x-full" : "translate-x-0"
                 )} 
             />
             <button
                 type="button"
-                className={cn("flex-1 relative z-10 py-2 text-sm font-bold transition-colors text-center", accountType === 'PERSON' ? "text-blue-600" : "text-gray-500")}
+                className={cn("flex-1 relative z-10 py-2 text-sm font-bold transition-colors text-center", accountType === 'PERSON' ? "text-primary" : "text-muted-foreground")}
                 onClick={() => form.setValue('accountType', 'PERSON')}
             >
                 Person
             </button>
             <button
                 type="button"
-                className={cn("flex-1 relative z-10 py-2 text-sm font-bold transition-colors text-center", accountType === 'COMPANY' ? "text-blue-600" : "text-gray-500")}
+                className={cn("flex-1 relative z-10 py-2 text-sm font-bold transition-colors text-center", accountType === 'COMPANY' ? "text-primary" : "text-muted-foreground")}
                 onClick={() => form.setValue('accountType', 'COMPANY')}
             >
                 Company
@@ -186,9 +186,9 @@ export function EditProfileForm({
               name='name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-blue-600 font-bold">Your Name</FormLabel>
+                  <FormLabel className="text-primary font-black uppercase text-[10px] tracking-wider">Your Name</FormLabel>
                   <FormControl>
-                    <Input placeholder={accountType === 'COMPANY' ? 'Company Name' : 'Full Name'} {...field} className="h-12 bg-gray-50/50 border-gray-200 rounded-xl focus:ring-blue-500/20" />
+                    <Input placeholder={accountType === 'COMPANY' ? 'Company Name' : 'Full Name'} {...field} className="h-12 bg-muted border-border rounded-xl focus:ring-primary/20" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -203,9 +203,9 @@ export function EditProfileForm({
                       name='phone'
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-blue-600 font-bold">Your Phone</FormLabel>
+                          <FormLabel className="text-primary font-black uppercase text-[10px] tracking-wider">Your Phone</FormLabel>
                           <FormControl>
-                            <Input placeholder='07x xxx xxx' {...field} className="h-12 bg-gray-50/50 border-gray-200 rounded-xl" />
+                            <Input placeholder='07x xxx xxx' {...field} className="h-12 bg-muted border-border rounded-xl" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -238,11 +238,11 @@ export function EditProfileForm({
                         render={({ field }) => (
                             <FormItem className="flex items-center space-x-2 space-y-0">
                                 <FormControl>
-                                     <div 
+                                    <div 
                                         onClick={() => field.onChange(!field.value)}
                                         className={cn(
                                             "w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-colors border",
-                                            field.value ? "bg-purple-100 border-purple-500 text-purple-600" : "bg-gray-50 border-gray-200 text-gray-300 hover:border-purple-300"
+                                            field.value ? "bg-primary/10 border-primary text-primary" : "bg-muted border-border text-muted-foreground/30 hover:border-primary/50"
                                         )}
                                     >
                                         <Phone className="w-5 h-5" />
@@ -260,9 +260,9 @@ export function EditProfileForm({
               name='email'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-blue-600 font-bold">Your E-Mail</FormLabel>
+                  <FormLabel className="text-primary font-black uppercase text-[10px] tracking-wider">Your E-Mail</FormLabel>
                   <FormControl>
-                    <Input {...field} disabled className="h-12 bg-gray-100 border-gray-200 rounded-xl text-gray-500" />
+                    <Input {...field} disabled className="h-12 bg-muted/50 border-border rounded-xl text-muted-foreground opacity-70" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -276,7 +276,7 @@ export function EditProfileForm({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder='Address' {...field} className="h-12 bg-gray-50/50 border-gray-200 rounded-xl" />
+                    <Input placeholder='Address' {...field} className="h-12 bg-muted border-border rounded-xl" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -290,7 +290,7 @@ export function EditProfileForm({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder='Postal code' {...field} className="h-12 bg-gray-50/50 border-gray-200 rounded-xl" />
+                    <Input placeholder='Postal code' {...field} className="h-12 bg-muted border-border rounded-xl" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -304,10 +304,10 @@ export function EditProfileForm({
                   name='city'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-blue-600 font-bold text-xs">Select Location</FormLabel>
+                      <FormLabel className="text-primary font-black uppercase text-[10px] tracking-wider">Select Location</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
-                          <SelectTrigger className="h-12 bg-gray-50/50 border-gray-200 rounded-xl">
+                          <SelectTrigger className="h-12 bg-muted border-border rounded-xl">
                             <SelectValue placeholder="Select City" />
                           </SelectTrigger>
                         </FormControl>
@@ -329,10 +329,10 @@ export function EditProfileForm({
                   name='municipality'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-blue-600 font-bold text-xs">Select Municipality</FormLabel>
+                      <FormLabel className="text-primary font-black uppercase text-[10px] tracking-wider">Select Municipality</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
-                          <SelectTrigger className="h-12 bg-gray-50/50 border-gray-200 rounded-xl">
+                          <SelectTrigger className="h-12 bg-muted border-border rounded-xl">
                             <SelectValue placeholder="Select Municipality" />
                           </SelectTrigger>
                         </FormControl>
@@ -353,7 +353,7 @@ export function EditProfileForm({
         <Button
             type='submit'
             disabled={isSubmitting}
-            className='w-full h-12 text-lg font-bold rounded-xl bg-blue-600 hover:bg-blue-700'
+            className='w-full h-12 text-lg font-bold rounded-xl bg-primary hover:bg-primary/90'
           >
             {isSubmitting ? (
               <>

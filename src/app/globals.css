@@ -4,8 +4,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ============================================
-   DESIGN SYSTEM: Premium E-commerce Theme
-   Colors: Violet Primary + Blue accents (no green)
+   DESIGN SYSTEM: YouTube Inspired Theme
+   Colors: YouTube Red Primary (#ff0000)
    ============================================ */
 
 @theme inline {
@@ -42,10 +42,22 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  
+  /* YouTube Custom Colors */
+  --color-yt-bg: var(--yt-bg);
+  --color-yt-hover: var(--yt-hover);
+  --color-yt-border: var(--yt-border);
+  --color-yt-text: var(--yt-text);
+  --color-yt-text-sec: var(--yt-text-sec);
+  --color-yt-search: var(--yt-search);
+  --color-yt-red: #ff0000;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-yt: 12px;
+  --radius-pill: 9999px;
   --breakpoint-xs: 480px;
 }
 
@@ -53,118 +65,115 @@
   /* Core Radius */
   --radius: 0.75rem;
   
-  /* ===== Light Mode ===== */
+  /* ===== YT Light Mode ===== */
+  --background: #ffffff;
+  --foreground: #0f0f0f;
   
-  /* Page Background - Clean white with subtle warmth */
-  --background: #fafafa;
-  --foreground: #0f172a;
-  
-  /* Card Surfaces - Pure white with good contrast */
   --card: #ffffff;
-  --card-foreground: #0f172a;
+  --card-foreground: #0f0f0f;
   
-  /* Popover Surfaces */
   --popover: #ffffff;
-  --popover-foreground: #0f172a;
+  --popover-foreground: #0f0f0f;
   
-  /* Primary - Violet/Indigo */
-  --primary: #6366f1;
+  --primary: #ff0000;
   --primary-foreground: #ffffff;
   
-  /* Secondary - Light gray-blue */
-  --secondary: #f1f5f9;
-  --secondary-foreground: #475569;
+  --secondary: #f0f0f0;
+  --secondary-foreground: #606060;
   
-  /* Muted backgrounds */
-  --muted: #f8fafc;
-  --muted-foreground: #64748b;
+  --muted: #f0f0f0;
+  --muted-foreground: #606060;
   
-  /* Accent - Soft blue (for hover states) */
-  --accent: #e0e7ff;
-  --accent-foreground: #4338ca;
+  --accent: #e5e5e5;
+  --accent-foreground: #0f0f0f;
   
-  /* Destructive - Red */
   --destructive: #ef4444;
   
-  /* Borders & Inputs */
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #6366f1;
+  --border: #e5e5e5;
+  --input: #f0f0f0;
+  --ring: #ff0000;
   
+  /* YT Specific Mapping */
+  --yt-bg: #ffffff;
+  --yt-hover: #e5e5e5;
+  --yt-border: #e5e5e5;
+  --yt-text: #0f0f0f;
+  --yt-text-sec: #606060;
+  --yt-search: #f0f0f0;
+
   /* Chart Colors */
-  --chart-1: #6366f1;
+  --chart-1: #ff0000;
   --chart-2: #3b82f6;
   --chart-3: #8b5cf6;
   --chart-4: #a855f7;
   --chart-5: #0ea5e9;
   
   /* Sidebar */
-  --sidebar: #fafafa;
-  --sidebar-foreground: #0f172a;
-  --sidebar-primary: #6366f1;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0f0f0f;
+  --sidebar-primary: #ff0000;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f1f5f9;
-  --sidebar-accent-foreground: #475569;
+  --sidebar-accent: #e5e5e5;
+  --sidebar-accent-foreground: #0f0f0f;
   --sidebar-border: #e2e8f0;
-  --sidebar-ring: #6366f1;
+  --sidebar-ring: #ff0000;
 }
 
 .dark {
-  /* ===== Dark Mode - High Contrast ===== */
+  /* ===== YT Dark Mode ===== */
   
-  /* Page Background - Pure black or very dark grey */
-  --background: #000000;
-  --foreground: #ffffff;
+  --background: #0f0f0f;
+  --foreground: #f1f1f1;
   
-  /* Card Surfaces - Distinctly lighter than background but still dark */
-  --card: #121212;
-  --card-foreground: #ffffff;
+  --card: #0f0f0f;
+  --card-foreground: #f1f1f1;
   
-  /* Popover Surfaces */
   --popover: #121212;
-  --popover-foreground: #ffffff;
+  --popover-foreground: #f1f1f1;
   
-  /* Primary - Vivid Violet/Indigo with high luminance */
-  --primary: #818cf8;
+  --primary: #ff0000;
   --primary-foreground: #ffffff;
   
-  /* Secondary - Zinc/Slate for secondary surfaces */
-  --secondary: #18181b;
-  --secondary-foreground: #a1a1aa;
+  --secondary: #121212;
+  --secondary-foreground: #aaaaaa;
   
-  /* Muted - For subdued text/backgrounds */
-  --muted: #27272a;
-  --muted-foreground: #a1a1aa;
+  --muted: #121212;
+  --muted-foreground: #aaaaaa;
   
-  /* Accent - For interactive states */
-  --accent: #27272a;
+  --accent: #272727;
   --accent-foreground: #ffffff;
   
-  /* Destructive */
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   
-  /* Borders - Minimal contrast but visible */
-  --border: #27272a;
-  --input: #27272a;
-  --ring: #818cf8;
+  --border: #3f3f3f;
+  --input: #121212;
+  --ring: #ff0000;
+
+  /* YT Specific Mapping */
+  --yt-bg: #0f0f0f;
+  --yt-hover: #272727;
+  --yt-border: #3f3f3f;
+  --yt-text: #f1f1f1;
+  --yt-text-sec: #aaaaaa;
+  --yt-search: #121212;
   
-  /* Chart Colors (retaining existing) */
-  --chart-1: #818cf8;
+  /* Chart Colors */
+  --chart-1: #ff0000;
   --chart-2: #60a5fa;
   --chart-3: #a78bfa;
   --chart-4: #c084fc;
   --chart-5: #38bdf8;
   
   /* Sidebar */
-  --sidebar: #000000;
-  --sidebar-foreground: #ffffff;
-  --sidebar-primary: #818cf8;
+  --sidebar: #0f0f0f;
+  --sidebar-foreground: #f1f1f1;
+  --sidebar-primary: #ff0000;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #18181b;
+  --sidebar-accent: #272727;
   --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #27272a;
-  --sidebar-ring: #818cf8;
+  --sidebar-border: #3f3f3f;
+  --sidebar-ring: #ff0000;
 }
 
 /* ============================================
@@ -301,22 +310,22 @@
     box-shadow: 0 4px 20px -4px rgba(129, 140, 248, 0.2), 0 12px 28px -8px rgba(0, 0, 0, 0.5);
   }
 
-  /* ===== Gradient Text (Violet to Blue) ===== */
+  /* ===== Gradient Text (Primary Red) ===== */
   .gradient-text {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, #6366f1, #8b5cf6, #3b82f6);
+    background-image: linear-gradient(135deg, #ff0000, #ff4d4d, #b30000);
   }
 
   .gradient-text-animate {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, #6366f1, #8b5cf6, #3b82f6, #6366f1);
+    background-image: linear-gradient(135deg, #ff0000, #ff4d4d, #b30000, #ff0000);
     background-size: 300% 300%;
     animation: gradient-flow 4s ease infinite;
   }
 
   /* ===== Gradient Backgrounds ===== */
   .gradient-primary {
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    background: linear-gradient(135deg, #ff0000, #cc0000);
   }
   
   /* Hero gradient - subtle, consistent */
@@ -545,7 +554,7 @@
   }
 
   .status-shipped {
-    @apply bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300;
+    @apply bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300;
   }
 
   .status-delivered {

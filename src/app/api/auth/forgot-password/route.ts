@@ -1,5 +1,5 @@
 import { ResetPasswordEmail } from '@/components/emails/reset-password-email';
-import { prisma } from '@/lib/db';
+import { api, convex } from '@/lib/convex-server';
 import crypto from 'crypto';
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
@@ -21,10 +21,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // Find user by email
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    // Find user by email in Convex
+    const user = await convex.query(api.users.getByEmail, { email });
 
     // Always return success to prevent email enumeration
     if (!user) {
@@ -37,24 +35,22 @@ export async function POST(request: Request) {
 
     // Generate reset token
     const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour from now
+    const resetTokenExpiry = Date.now() + 3600000; // 1 hour from now
 
-    // Save token to user
-    await prisma.user.update({
-      where: { email },
-      data: {
+    // Save token to user in Convex
+    await convex.mutation(api.users.update, {
+        id: user._id,
         resetToken,
-        resetTokenExpiry,
-      },
+        resetTokenExpiry
     });
 
     const resetUrl = `${process.env.NEXTAUTH_URL}/auth/reset-password?token=${resetToken}`;
     
     // Send email using Resend
     await resend.emails.send({
-      from: 'Electro Store <onboarding@resend.dev>', // Should use verified domain in production
+      from: 'Big Market <onboarding@resend.dev>', // Should use verified domain in production
       to: email,
-      subject: 'Reset your password - Electro Store',
+      subject: 'Reset your password - Big Market',
       react: ResetPasswordEmail({ email, resetUrl }),
     });
 

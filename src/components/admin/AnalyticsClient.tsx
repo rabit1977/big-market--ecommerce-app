@@ -44,7 +44,7 @@ export default function AnalyticsClient({ initialData }: { initialData: Analytic
         <div className='space-y-1'>
           <h1 className='text-3xl sm:text-4xl font-black tracking-tight text-foreground flex items-center gap-3'>
             Analytics
-            <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-full bg-violet-500/10 text-violet-500 text-xs font-bold ring-1 ring-inset ring-violet-500/20">
+            <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold ring-1 ring-inset ring-primary/20">
                Pro
             </span>
           </h1>
@@ -60,7 +60,7 @@ export default function AnalyticsClient({ initialData }: { initialData: Analytic
             { label: 'Total Revenue', value: formatPrice(initialData.revenue), icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
             { label: 'Total Orders', value: initialData.orders, icon: BarChart3, color: 'text-blue-500', bg: 'bg-blue-500/10', border: 'border-blue-500/20' },
             { label: 'Total Customers', value: initialData.users, icon: Users, color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/20' },
-            { label: 'Products', value: initialData.products, icon: Package, color: 'text-violet-500', bg: 'bg-violet-500/10', border: 'border-violet-500/20' },
+            { label: 'Products', value: initialData.products, icon: Package, color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/20' },
         ].map((stat, i) => (
              <div key={i} className={`glass-card p-6 rounded-3xl flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group border ${stat.border}`}>
                 <div className='flex justify-between items-start mb-2'>
@@ -120,7 +120,7 @@ export default function AnalyticsClient({ initialData }: { initialData: Analytic
         {/* Category Distribution */}
         <div className='glass-card rounded-[2.5rem] p-8 sm:p-10 shadow-xl shadow-black/5 border border-border/60'>
              <div className="flex items-center gap-3 mb-8">
-                <div className="h-10 w-10 rounded-full bg-violet-500/10 flex items-center justify-center text-violet-500">
+                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                     <Package className="h-5 w-5" />
                 </div>
                 <h2 className='text-xl font-bold'>Products by Category</h2>

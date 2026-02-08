@@ -78,7 +78,7 @@ const AdminThemeToggle = () => {
                         exit={{ scale: 0.5, opacity: 0, rotate: -90 }}
                         transition={{ duration: 0.2 }}
                     >
-                        <Moon className="h-4 w-4 text-indigo-400" />
+                        <Moon className="h-4 w-4 text-primary" />
                     </motion.div>
                 ) : (
                     <motion.div
@@ -111,12 +111,12 @@ export const AdminSidebar = () => {
         {/* Logo Section */}
         <div className='p-8 pb-6'>
           <Link href='/admin/dashboard' className='flex items-center gap-3 group'>
-            <div className='relative w-11 h-11 rounded-full bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center shadow-lg shadow-primary/25 group-hover:shadow-primary/40 group-hover:scale-105 transition-all duration-300'>
+            <div className='relative w-11 h-11 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/25 group-hover:shadow-primary/40 group-hover:scale-105 transition-all duration-300'>
               <div className="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
               <Zap className='h-6 w-6 text-white' fill="currentColor" />
             </div>
             <div>
-              <h1 className='text-xl font-black tracking-tight text-foreground'>Electro<span className="text-primary">Admin</span></h1>
+              <h1 className='text-xl font-black tracking-tight text-foreground'>BigMarket <span className="text-primary">Admin</span></h1>
               <p className='text-xs font-semibold text-muted-foreground tracking-wide'>STORE MANAGER</p>
             </div>
           </Link>
@@ -145,7 +145,7 @@ export const AdminSidebar = () => {
                   {isActive && (
                     <motion.div
                       layoutId='activeNavSidebar'
-                      className='absolute inset-0 rounded-xl bg-gradient-to-r from-primary to-violet-600'
+                      className='absolute inset-0 rounded-xl bg-primary'
                       transition={{ type: 'spring', bounce: 0.15, duration: 0.5 }}
                     />
                   )}
@@ -249,16 +249,16 @@ export const AdminMobileHeader = () => {
     return (
         <header className='lg:hidden fixed top-0 left-0 right-0 z-50 w-full bg-background border-b border-border/50 px-4 h-16 flex items-center justify-between shadow-sm'>
              <Link href='/admin/dashboard' className='flex items-center gap-2'>
-                <div className='w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center shadow-md shadow-primary/20'>
+                <div className='w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-md shadow-primary/20'>
                     <Zap className='h-4 w-4 text-white' fill="currentColor" />
                 </div>
-                <span className='font-bold text-lg tracking-tight'>Electro<span className="text-primary">Admin</span></span>
+                <span className='font-bold text-lg tracking-tight'>BigMarket <span className="text-primary">Admin</span></span>
             </Link>
 
             <div className="flex items-center gap-3 transition-colors group">
               <Link href="/" className="flex items-center gap-1.5 sm:group-hover:bg-secondary/50 p-2 rounded-xl transition-colors">
-                <Home className="h-7 w-7 rounded-full bg-secondary/20 text-muted-foreground group-hover:text-indigo-400 transition-colors dark:text-indigo-400 hover:bg-indigo-400/10  border-1 border-text-foreground p-1.5" />
-                <span className="hidden sm:block text-sm font-medium text-muted-foreground group-hover:text-indigo-400 transition-colors">View Store</span>
+                <Home className="h-7 w-7 rounded-full bg-secondary/20 text-muted-foreground group-hover:text-primary transition-colors dark:text-primary hover:bg-primary/10  border-1 border-text-foreground p-1.5" />
+                <span className="hidden sm:block text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">View Store</span>
               </Link>
               <AdminThemeToggle />
               <DropdownMenu modal={false}>

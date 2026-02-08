@@ -2,7 +2,7 @@
 
 import { FilterPanel, FilterState } from '@/components/listing/filter-panel';
 import { ListingGrid } from '@/components/listing/listing-grid';
-import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { ListingWithRelations } from '@/lib/types';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
@@ -75,6 +75,9 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
 
       <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
         <SheetContent side="left" className="w-[85vw] sm:w-[400px] overflow-y-auto p-0">
+          <SheetHeader className="sr-only">
+            <SheetTitle>Filter Listings</SheetTitle>
+          </SheetHeader>
           <div className="p-4 pt-10">
             <FilterPanel 
               onFilterChange={handleFilterChange} 

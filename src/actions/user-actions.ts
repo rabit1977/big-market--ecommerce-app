@@ -1,9 +1,10 @@
 'use server';
 
 import { auth } from '@/auth';
-import { UserRole } from '@/generated/prisma/client';
 import { api, convex } from '@/lib/convex-server';
+import { User, UserWithRelations } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
+export type UserRole = 'USER' | 'ADMIN';
 
 /**
  * Helper to check admin access
@@ -19,7 +20,7 @@ async function requireAdmin() {
 /**
  * Get all users (admin only)
  */
-export async function getAllUsersAction() {
+export async function getAllUsersAction(): Promise<{ success: boolean; data: User[]; error?: string }> {
   try {
     await requireAdmin();
 
@@ -29,7 +30,9 @@ export async function getAllUsersAction() {
       success: true,
       data: (users || []).map(u => ({
           ...u,
-          id: u._id,
+          id: u._id as string,
+          _id: u._id as string,
+          role: (u.role as 'USER' | 'ADMIN') || 'USER',
           createdAt: new Date(u._creationTime),
           updatedAt: new Date(u._creationTime),
       })),
@@ -47,7 +50,7 @@ export async function getAllUsersAction() {
 /**
  * Get user by ID (admin only)
  */
-export async function getUserByIdAction(userId: string) {
+export async function getUserByIdAction(userId: string): Promise<{ success: boolean; data: UserWithRelations | null; error?: string }> {
   try {
     await requireAdmin();
 
@@ -65,7 +68,9 @@ export async function getUserByIdAction(userId: string) {
       success: true,
       data: {
           ...user,
-          id: user._id,
+          id: user._id as string,
+          _id: user._id as string,
+          role: (user.role as 'USER' | 'ADMIN') || 'USER',
           createdAt: new Date(user._creationTime),
           updatedAt: new Date(user._creationTime),
           orders: [], // No orders in classifieds

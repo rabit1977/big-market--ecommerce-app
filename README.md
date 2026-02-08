@@ -1,46 +1,60 @@
-# Electro e-commerce Store
+# Big Market Classifieds Platform
 
-This is a modern e-commerce web application built with Next.js, Redux, and Tailwind CSS. It provides a feature-rich and interactive shopping experience, including product filtering, sorting, and a fully functional shopping cart.
+This is a modern, high-performance classifieds marketplace built with Next.js 15, Convex, and Tailwind CSS. It is inspired by platforms like Reklama5 and Big Market, tailored for the Macedonian market.
 
 ## Features
 
-- **Product Filtering & Sorting**: Filter products by category, brand, and price range. Sort products by price, rating, and popularity.
-- **Shopping Cart**: Add products to the cart, update quantities, and remove items.
-- **Wishlist**: Save products for later.
-- **Product Reviews**: Add and view product reviews.
-- **User Authentication**: Login and signup functionality with client-side session management.
-- **Admin Dashboard**: Manage products, users, and orders (future development).
-- **Responsive Design**: Fully responsive layout for a seamless experience on all devices.
+- **Dynamic Classifieds Grid**: Browse listings with advanced filtering by category, city, price, and condition.
+- **Convex Backend**: Fully reactive backend using Convex for real-time updates and efficient data fetching.
+- **Smart Category Templates**: Category-specific input fields and filters (e.g., screen size for TVs, mileage for cars).
+- **Messaging System**: Real-time communication between buyers and sellers.
+- **Admin Dashboard**: Comprehensive management of users, listings, and platform analytics.
+- **User Wallet & Memberships**: Integrated credit system and membership tiers for professional sellers.
+- **Responsive & Premium UI**: Polished design with dark mode support and mobile-first navigation.
+
+## Tech Stack
+
+- **Framework**: Next.js 15+ (App Router)
+- **Database/Backend**: Convex
+- **Authentication**: Next-Auth v5 (Auth.js)
+- **Styling**: Tailwind CSS 4.0
+- **UI Components**: Shadcn UI & Framer Motion
+- **Payments**: Stripe (Integrated for wallet top-ups)
 
 ## Getting Started
 
-First, run the development server:
+1. **Environment Setup**:
+   Copy `.env.example` to `.env.local` and fill in your Convex and Next-Auth credentials.
 
+2. **Install Dependencies**:
+   ```bash
+   pnpm install
+   ```
+
+3. **Start Development Server**:
+   ```bash
+   pnpm dev
+   ```
+
+4. **Convex Backend**:
+   In a separate terminal, start the Convex dev server:
+   ```bash
+   npx convex dev
+   ```
+
+## Seeding Data
+
+To seed the platform with initial categories and listings:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+npx convex run seed
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Convex Documentation](https://docs.convex.dev)
+- [Auth.js Documentation](https://authjs.dev)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Private / Proprietary

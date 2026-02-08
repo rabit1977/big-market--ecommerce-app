@@ -13,8 +13,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { ListingWithRelations } from '@/lib/types/listing';
-import { Listing } from '@prisma/client';
+import { Listing, ListingWithRelations } from '@/lib/types/listing';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
