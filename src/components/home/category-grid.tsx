@@ -3,32 +3,32 @@
 import { Card } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 import {
-    Baby as BabyIcon,
-    Book,
-    Briefcase,
-    Building2,
-    Calendar,
-    Camera,
-    Car,
-    ChevronRight,
-    CircleEllipsis,
-    Computer,
-    Disc,
-    Dumbbell,
-    Shirt as Fashion,
-    Guitar,
-    Heart,
-    Home,
-    LucideIcon,
-    Palette,
-    Plane,
-    ShoppingBag,
-    Smartphone,
-    Sofa,
-    Users,
-    Utensils,
-    Watch,
-    Wrench
+  Baby as BabyIcon,
+  Book,
+  Briefcase,
+  Building2,
+  Calendar,
+  Camera,
+  Car,
+  ChevronRight,
+  CircleEllipsis,
+  Computer,
+  Disc,
+  Dumbbell,
+  Shirt as Fashion,
+  Guitar,
+  Heart,
+  Home,
+  LucideIcon,
+  Palette,
+  Plane,
+  ShoppingBag,
+  Smartphone,
+  Sofa,
+  Users,
+  Utensils,
+  Watch,
+  Wrench
 } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -150,12 +150,12 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
   , [categories]);
 
   return (
-    <div className="container-wide py-8 md:py-12">
-      <div className="text-center mb-6 md:mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">
+    <div className="container-wide py-6 sm:py-8 md:py-12">
+      <div className="text-center mb-4 sm:mb-6 md:mb-8">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight mb-1 sm:mb-2">
           Browse by Category
         </h2>
-        <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto">
+        <p className="text-muted-foreground text-xs sm:text-sm max-w-2xl mx-auto">
           Find exactly what you're looking for
         </p>
       </div>
@@ -165,7 +165,7 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
-        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4"
+        className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-2 sm:gap-3 md:gap-4"
       >
         {mainCategories.map((category, index) => {
           const Icon = categoryIcons[category.slug] || categoryIcons['other'] || Smartphone;
@@ -183,19 +183,19 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
                 <Card className={`
                   group relative overflow-hidden border bg-gradient-to-br ${colorClass}
                   hover:shadow-md transition-all duration-300 cursor-pointer
-                  h-full min-h-[100px] md:min-h-[120px] flex flex-col items-center justify-center
+                  h-full min-h-[80px] sm:min-h-[90px] md:min-h-[110px] flex flex-col items-center justify-center
                 `}>
-                  <div className="p-2 md:p-3 flex flex-col items-center text-center space-y-2">
+                  <div className="p-1.5 sm:p-2 md:p-3 flex flex-col items-center text-center space-y-1 sm:space-y-1.5 md:space-y-2">
                     {/* Icon Container */}
                     <div className="relative">
-                      <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-background/40 backdrop-blur-sm flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-sm border border-white/10">
-                        <Icon className="w-5 h-5 md:w-6 md:h-6 text-foreground/80 group-hover:text-primary transition-colors duration-300" />
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-11 md:h-11 rounded-lg sm:rounded-xl bg-background/40 backdrop-blur-sm flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-sm border border-white/10">
+                        <Icon className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5.5 md:h-5.5 text-foreground/80 group-hover:text-primary transition-colors duration-300" />
                       </div>
                     </div>
 
                     {/* Category Name */}
                     <div className="z-10 relative">
-                      <h3 className="font-semibold text-xs md:text-sm text-foreground/90 group-hover:text-primary transition-colors duration-300 line-clamp-2 leading-tight">
+                      <h3 className="font-semibold text-[10px] sm:text-xs md:text-sm text-foreground/90 group-hover:text-primary transition-colors duration-300 line-clamp-2 leading-tight">
                         {category.name}
                       </h3>
                     </div>

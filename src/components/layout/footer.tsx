@@ -91,11 +91,11 @@ export function Footer() {
   return (
     <footer className='border-t border-border/40 bg-card'>
       {/* Upper Footer: Logo & Tagline */}
-      <div className='container-wide py-12 md:py-16'>
-        <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-y-10 gap-x-8'>
+      <div className='container-wide py-8 sm:py-12 md:py-16'>
+        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-y-8 sm:gap-y-10 gap-x-6 sm:gap-x-8'>
           
           {/* Logo & Brand Column */}
-          <div className='col-span-2 md:col-span-2 lg:col-span-1'>
+          <div className='col-span-2 sm:col-span-3 md:col-span-2 lg:col-span-1'>
             <Link href="/" className="flex items-center gap-2 mb-6">
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
                     <Zap className="h-6 w-6 text-primary" />
@@ -140,7 +140,7 @@ export function Footer() {
           ))}
 
           {/* App Stores & Social Column */}
-          <div className='col-span-2 md:col-span-2 lg:col-span-1 space-y-6'>
+          <div className='col-span-2 sm:col-span-3 md:col-span-2 lg:col-span-1 space-y-6'>
               <div>
                   <h3 className='text-sm font-bold text-foreground mb-5 relative inline-block'>
                     Stay Connected

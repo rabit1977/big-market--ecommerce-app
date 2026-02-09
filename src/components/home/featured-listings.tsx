@@ -46,9 +46,9 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
   }
 
   return (
-    <div className="bg-card/50 backdrop-blur-sm  border-t">
-      <div className="container-wide py-6 md:py-8">
-        <div className="flex items-center justify-between mb-4 px-4 sm:px-0">
+    <div className="bg-card/50 backdrop-blur-sm border-t">
+      <div className="container-wide py-4 sm:py-6 md:py-8">
+        <div className="flex items-center justify-between mb-3 sm:mb-4 px-0">
           <div>
             <div className="flex items-center gap-2 mb-2">
                <span className="flex h-2 w-2 rounded-full bg-orange-500 animate-pulse" />
@@ -88,7 +88,7 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
         <div className="relative group">
           <div 
             ref={scrollContainerRef}
-            className="flex gap-4 md:gap-6 overflow-x-auto no-scrollbar pb-8 px-4 sm:px-0 scroll-smooth snap-x snap-mandatory"
+            className="flex gap-3 sm:gap-4 md:gap-5 overflow-x-auto no-scrollbar pb-4 sm:pb-8 scroll-smooth snap-x snap-mandatory"
           >
             {featuredListings.map((listing) => {
               const imageUrl = listing.thumbnail || listing.images[0] || '/placeholder-listing.jpg';
@@ -97,10 +97,10 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
               return (
                 <div 
                   key={listing._id} 
-                  className="min-w-[150px] sm:min-w-[200px] md:min-w-[220px] snap-start"
+                  className="min-w-[130px] sm:min-w-[170px] md:min-w-[200px] snap-start"
                 >
                   <Link href={`/listings/${listing._id}`}>
-                    <Card className="group h-full overflow-hidden border-border/40 hover:border-primary/50 hover:shadow-[0_20px_50px_rgba(255,0,0,0.05)] transition-all duration-500 rounded-xl md:rounded-2xl bg-white/80 dark:bg-card/40 dark:backdrop-blur-md backdrop-blur-sm p-0 gap-0">
+                    <Card className="group h-full overflow-hidden border-border/40 hover:border-primary/50 hover:shadow-[0_20px_50px_rgba(255,0,0,0.05)] transition-all duration-500 rounded-lg sm:rounded-xl md:rounded-2xl bg-white/80 dark:bg-card/40 dark:backdrop-blur-md backdrop-blur-sm p-0 gap-0">
                       {/* Image Container */}
                       <div className="relative aspect-[4/3] overflow-hidden bg-white">
                         <div className="absolute top-1 left-1 z-10">
@@ -127,17 +127,17 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
                       </div>
 
                       {/* Content */}
-                      <div className="p-3 space-y-2">
+                      <div className="p-2 sm:p-3 space-y-1.5 sm:space-y-2">
                         <div className="space-y-1">
-                          <h3 className="font-bold text-[11px] lg:text-xs leading-tight line-clamp-2 text-muted-foreground group-hover:text-foreground transition-colors h-[2.5rem]">
+                          <h3 className="font-bold text-[10px] sm:text-[11px] lg:text-xs leading-tight line-clamp-2 text-muted-foreground group-hover:text-foreground transition-colors h-[2rem] sm:h-[2.5rem]">
                             {listing.title}
                           </h3>
                         </div>
 
 
-                        <div className="pt-2 border-t border-border/50 flex items-center justify-between gap-2 text-xs text-muted-foreground font-medium">
-                        <div className="flex flex-col gap-1">
-                          <div className="text-sm md:text-base font-black text-foreground leading-none">
+                        <div className="pt-1.5 sm:pt-2 border-t border-border/50 flex items-center justify-between gap-1 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground font-medium">
+                        <div className="flex flex-col gap-0.5 sm:gap-1">
+                          <div className="text-xs sm:text-sm md:text-base font-black text-foreground leading-none">
                             €{listing.price.toLocaleString()}
                           </div>
                         </div>

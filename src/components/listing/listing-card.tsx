@@ -71,7 +71,7 @@ export const ListingCard = memo(
         transition={{ duration: 0.2 }}
         className={cn(
           "group relative flex bg-card border border-border/50 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden",
-          isGrid ? "flex-col h-full rounded-xl" : "flex-row h-32 md:h-44 rounded-lg"
+          isGrid ? "flex-col h-full rounded-xl" : "flex-row h-28 sm:h-32 md:h-44 rounded-lg"
         )}
       >
         {/* Main Card Link - Lower Z-Index */}
@@ -80,7 +80,7 @@ export const ListingCard = memo(
         {/* Image Section */}
         <div className={cn(
           "relative shrink-0 bg-white overflow-hidden z-10 pointer-events-none",
-          isGrid ? "aspect-[4/3] w-full" : "w-32 md:w-56 h-full"
+          isGrid ? "aspect-[4/3] w-full" : "w-28 sm:w-36 md:w-56 h-full"
         )}>
           <Image
             src={activeImage}
@@ -91,15 +91,15 @@ export const ListingCard = memo(
           />
           
           {/* Status Badges Overlay */}
-          <div className="absolute top-2 left-2 z-20 pointer-events-none flex flex-col gap-1.5">
+          <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-20 pointer-events-none flex flex-col gap-1 sm:gap-1.5">
               {isElite && (
-                 <div className="bg-gradient-to-r from-amber-400 to-orange-500 p-1 rounded-full shadow-lg border border-white/30 animate-pulse">
-                    <Star className="h-4 w-4 fill-white text-white" />
+                 <div className="bg-gradient-to-r from-amber-400 to-orange-500 p-0.5 sm:p-1 rounded-full shadow-lg border border-white/30 animate-pulse">
+                    <Star className="h-3 w-3 sm:h-4 sm:w-4 fill-white text-white" />
                  </div>
               )}
               {isVerified && (
-                 <div className="bg-primary text-white rounded-full p-1 shadow-md">
-                    <ShieldCheck className="h-3.5 w-3.5" />
+                 <div className="bg-primary text-white rounded-full p-0.5 sm:p-1 shadow-md">
+                    <ShieldCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                  </div>
               )}
           </div>
@@ -108,77 +108,77 @@ export const ListingCard = memo(
         {/* Content Section */}
         <div className={cn(
           "flex flex-1 flex-col justify-between relative z-10 pointer-events-none min-w-0 bg-card",
-          isGrid ? "p-3 space-y-1.5" : "p-3 md:p-4"
+          isGrid ? "p-2 sm:p-3 space-y-1 sm:space-y-1.5" : "p-2 sm:p-3 md:p-4"
         )}>
            
            {isGrid ? (
              <>
-               <h3 className="font-bold text-sm uppercase leading-tight line-clamp-2 md:line-clamp-2 text-foreground pr-6">
-                  {listing.title}
-               </h3>
-               
-               <div className="text-xs text-muted-foreground font-medium">
-                  Currently Available • Verified
-               </div>
+                <h3 className="font-bold text-xs sm:text-sm uppercase leading-tight line-clamp-2 text-foreground pr-6">
+                   {listing.title}
+                </h3>
+                
+                <div className="text-[10px] sm:text-xs text-muted-foreground font-medium">
+                   Currently Available • Verified
+                </div>
 
-               <div className="pt-1">
-                   <span className="text-lg font-bold text-primary">
-                     {formatPrice(listing.price)}
-                   </span>
-               </div>
+                <div className="pt-0.5 sm:pt-1">
+                    <span className="text-base sm:text-lg font-bold text-primary">
+                      {formatPrice(listing.price)}
+                    </span>
+                </div>
 
-               <div className="flex items-end justify-between mt-auto pt-2">
-                   <div className="text-[10px] text-muted-foreground/80 flex items-center gap-1">
-                      <span>{listing.city || 'Skopje'} {'>'} {listing.city ? 'Centar' : 'Karpos'}</span>
-                      <span>{new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                   </div>
+                <div className="flex items-end justify-between mt-auto pt-1.5 sm:pt-2">
+                    <div className="text-[9px] sm:text-[10px] text-muted-foreground/80 flex items-center gap-1">
+                       <span>{listing.city || 'Skopje'} {'>'} {listing.city ? 'Centar' : 'Karpos'}</span>
+                       <span>{new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                    </div>
 
-                   {/* Grid View Heart - Bottom Right */}
-                   <Button
-                     size="icon" variant="ghost" onClick={handleToggleWishlist}
-                     className={cn("rounded-full h-8 w-8 -mr-2 -mb-2 pointer-events-auto hover:bg-muted/50 z-30 relative", optimisticIsWished ? "text-red-500" : "text-muted-foreground")}
-                   >
-                     <Heart className={cn("h-5 w-5", optimisticIsWished && "fill-current")} />
-                   </Button>
-               </div>
+                    {/* Grid View Heart - Bottom Right */}
+                    <Button
+                      size="icon" variant="ghost" onClick={handleToggleWishlist}
+                      className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 -mr-1.5 -mb-1.5 sm:-mr-2 sm:-mb-2 pointer-events-auto hover:bg-muted/50 z-30 relative", optimisticIsWished ? "text-red-500" : "text-muted-foreground")}
+                    >
+                      <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", optimisticIsWished && "fill-current")} />
+                    </Button>
+                </div>
              </>
            ) : (
              <>
                {/* List View Content */}
                <div className="flex justify-between items-start gap-2">
-                   <h3 className="font-bold text-sm md:text-lg uppercase leading-tight line-clamp-2 group-hover:text-primary transition-colors text-foreground">
-                      {listing.title}
-                   </h3>
-                   <span className="text-[10px] md:text-xs text-muted-foreground whitespace-nowrap shrink-0">
-                       {listing.createdAt ? new Date(listing.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Now'}
-                   </span>
-               </div>
-
-                <div className="hidden md:block text-xs text-muted-foreground mt-1 line-clamp-2">
-                    {listing.description.length > 150 
-                        ? `${listing.description.substring(0, 150)}...` 
-                        : listing.description}
+                    <h3 className="font-bold text-xs sm:text-sm md:text-base uppercase leading-tight line-clamp-2 group-hover:text-primary transition-colors text-foreground">
+                       {listing.title}
+                    </h3>
+                    <span className="text-[9px] sm:text-[10px] md:text-xs text-muted-foreground whitespace-nowrap shrink-0">
+                        {listing.createdAt ? new Date(listing.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Now'}
+                    </span>
                 </div>
 
-               <div className="flex items-end justify-between mt-auto">
-                   <div className="flex flex-col">
-                       <span className="text-[10px] md:text-xs text-muted-foreground flex items-center gap-1 mb-0.5 capitalize">
-                           <MapPin className="h-3 w-3" />
-                           {listing.city || 'Skopje'}
-                       </span>
-                       <span className="text-base md:text-xl font-bold text-primary">
-                         {formatPrice(listing.price)}
-                       </span>
-                   </div>
-                   
-                   {/* List View Heart - Moved to Content Bottom Right */}
-                   <Button
-                     size="icon" variant="ghost" onClick={handleToggleWishlist}
-                     className={cn("rounded-full h-9 w-9 -mr-2 -mb-2 pointer-events-auto hover:bg-muted/50 z-30", optimisticIsWished ? "text-red-500" : "text-muted-foreground")}
-                   >
-                     <Heart className={cn("h-5 w-5", optimisticIsWished && "fill-current")} />
-                   </Button>
-               </div>
+                 <div className="hidden sm:block text-[11px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">
+                     {listing.description.length > 150 
+                         ? `${listing.description.substring(0, 150)}...` 
+                         : listing.description}
+                 </div>
+
+                <div className="flex items-end justify-between mt-auto">
+                    <div className="flex flex-col">
+                        <span className="text-[9px] sm:text-[10px] md:text-xs text-muted-foreground flex items-center gap-0.5 sm:gap-1 mb-0.5 capitalize">
+                            <MapPin className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+                            {listing.city || 'Skopje'}
+                        </span>
+                        <span className="text-sm sm:text-base md:text-xl font-bold text-primary">
+                          {formatPrice(listing.price)}
+                        </span>
+                    </div>
+                    
+                    {/* List View Heart - Moved to Content Bottom Right */}
+                    <Button
+                      size="icon" variant="ghost" onClick={handleToggleWishlist}
+                      className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 -mr-1.5 -mb-1.5 sm:-mr-2 sm:-mb-2 pointer-events-auto hover:bg-muted/50 z-30", optimisticIsWished ? "text-red-500" : "text-muted-foreground")}
+                    >
+                      <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", optimisticIsWished && "fill-current")} />
+                    </Button>
+                </div>
              </>
            )}
         </div>

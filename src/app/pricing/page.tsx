@@ -126,7 +126,7 @@ export default function PricingPage() {
     };
 
     return (
-        <div className="min-h-screen pt-24 pb-20 bg-slate-50/50">
+        <div className="min-h-screen pt-20 sm:pt-24 pb-12 sm:pb-20 bg-slate-50/50">
             <div className="container-wide mb-8">
                 <AppBreadcrumbs />
             </div>
@@ -135,10 +135,10 @@ export default function PricingPage() {
                 <Badge variant="outline" className="mb-4 bg-blue-50 text-blue-700 border-blue-200 px-4 py-1">
                     Simple Pricing
                 </Badge>
-                <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight mb-4 sm:mb-6">
                     Choose the plan that fits your needs
                 </h1>
-                <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                <p className="text-sm sm:text-base md:text-lg text-slate-600 max-w-2xl mx-auto">
                     Unlock verified status, more listings, and premium features to grow your business on our platform.
                 </p>
 
@@ -159,9 +159,9 @@ export default function PricingPage() {
 
             {/* Pricing Cards */}
             <div className="container px-4 mx-auto max-w-7xl">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
                     {plans.map((plan) => (
-                        <Card key={plan.name} className={`relative flex flex-col ${plan.popular ? 'border-blue-600 shadow-xl shadow-blue-500/10 scale-105 border-2 z-10' : 'border-slate-200 shadow-sm hover:border-blue-300 transition-colors'}`}>
+                        <Card key={plan.name} className={`relative flex flex-col ${plan.popular ? 'border-blue-600 shadow-xl shadow-blue-500/10 md:scale-105 border-2 z-10' : 'border-slate-200 shadow-sm hover:border-blue-300 transition-colors'}`}>
                             {plan.popular && (
                                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
                                     <Badge className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-1 text-sm font-bold uppercase tracking-wider shadow-lg">
