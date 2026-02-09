@@ -18,8 +18,7 @@ import {
     DollarSign,
     Megaphone,
     Plus,
-    RefreshCw,
-    TrendingUp
+    RefreshCw
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -179,10 +178,6 @@ export function MyListingsDashboardHeader() {
                   <div className="space-y-1">
                       <p className="text-sm font-medium text-muted-foreground">Total Views</p>
                       <h3 className="text-2xl font-black text-slate-900">{stats.totalViews.toLocaleString()}</h3>
-                      <p className="text-xs text-emerald-600 font-bold flex items-center">
-                          <TrendingUp className="w-3 h-3 mr-1" />
-                          + Active Promos: {stats.promotedCount}
-                      </p>
                   </div>
               </CardContent>
           </Card>

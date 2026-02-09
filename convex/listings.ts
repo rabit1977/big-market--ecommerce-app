@@ -4,13 +4,7 @@ import { mutation, query } from "./_generated/server";
 export const get = query({
   args: {},
   handler: async (ctx) => {
-    const results = await ctx.db.query("listings").order("desc").collect();
-    // Prioritize promoted
-    return results.sort((a, b) => {
-      if (a.isPromoted && !b.isPromoted) return -1;
-      if (!a.isPromoted && b.isPromoted) return 1;
-      return 0;
-    });
+    return await ctx.db.query("listings").order("desc").collect();
   },
 });
 
@@ -27,11 +21,10 @@ export const list = query({
     userType: v.optional(v.string()),
     adType: v.optional(v.string()),
     condition: v.optional(v.string()),
-    isTradePossible: v.optional(v.boolean()),
+    isTradePossible: v.optional(v.union(v.string(), v.boolean())),
     hasShipping: v.optional(v.boolean()),
     isVatIncluded: v.optional(v.boolean()),
     isAffordable: v.optional(v.boolean()),
-    isPromoted: v.optional(v.boolean()),
     dateRange: v.optional(v.string()),
     dynamicFilters: v.optional(v.string()), // JSON string of filters
   },
@@ -39,7 +32,6 @@ export const list = query({
     console.log("API list called with args:", args);
 
     // 1. Fetch EVERYTHING (simplest, most robust approach given < 10k listings)
-    // We rely on in-memory filtering to avoid index complexity bugs
     let results = await ctx.db.query("listings").order("desc").collect();
     
     // 2. Filter Loops
@@ -102,8 +94,6 @@ export const list = query({
         }
         
         // Check if filter is an ancestor of the listing's subcategory
-        // E.g., filter="refrigerators", listing="combined-refrigerators"
-        // Check if "refrigerators" is parent or grandparent of "combined-refrigerators"
         if (isAncestor(filterSub, listingSub)) {
           console.log('    ✓ Ancestor match!');
           return true;
@@ -138,13 +128,23 @@ export const list = query({
 
     // Other filters
     if (args.userType) results = results.filter(r => r.userType === args.userType);
-    if (args.adType) results = results.filter(r => r.adType === args.adType);
-    if (args.condition && args.condition !== 'all') results = results.filter(r => r.condition === args.condition);
+    
+    // Multi-value adType filter (comma-separated)
+    if (args.adType) {
+      const types = args.adType.split(',').map(t => t.trim());
+      results = results.filter(r => r.adType && types.includes(r.adType));
+    }
+    
+    // Multi-value condition filter (comma-separated)
+    if (args.condition && args.condition !== 'all') {
+      const conditions = args.condition.split(',').map(c => c.trim());
+      results = results.filter(r => r.condition && conditions.includes(r.condition));
+    }
+    
     if (args.isTradePossible !== undefined) results = results.filter(r => r.isTradePossible === args.isTradePossible);
     if (args.hasShipping !== undefined) results = results.filter(r => r.hasShipping === args.hasShipping);
     if (args.isVatIncluded !== undefined) results = results.filter(r => r.isVatIncluded === args.isVatIncluded);
     if (args.isAffordable !== undefined) results = results.filter(r => r.isAffordable === args.isAffordable);
-    if (args.isPromoted !== undefined) results = results.filter(r => r.isPromoted === args.isPromoted);
     
     // Date Range
     if (args.dateRange && args.dateRange !== 'all') {
@@ -194,11 +194,6 @@ export const list = query({
 
     // Sort logic
     return results.sort((a, b) => {
-      // 1. Promoted always first
-      if (a.isPromoted && !b.isPromoted) return -1;
-      if (!a.isPromoted && b.isPromoted) return 1;
-      
-      // 2. Apply Custom Sort
       switch (args.sort) {
           case 'price-asc': // Low to High
               return a.price - b.price;
@@ -208,10 +203,7 @@ export const list = query({
               return (a.createdAt || 0) - (b.createdAt || 0);
           case 'newest':
           default:
-              // Fallback to Priority then Date
-              const pA = a.priority || 0;
-              const pB = b.priority || 0;
-              if (pA !== pB) return pB - pA;
+              // Fallback to Date
               return (b.createdAt || b._creationTime) - (a.createdAt || a._creationTime);
       }
     });
@@ -274,6 +266,8 @@ export const create = mutation({
     hasShipping: v.optional(v.boolean()),
     isVatIncluded: v.optional(v.boolean()),
     isAffordable: v.optional(v.boolean()),
+    isPromoted: v.optional(v.boolean()),
+    promotionTier: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     return await ctx.db.insert("listings", {
@@ -319,12 +313,11 @@ export const update = mutation({
     hasShipping: v.optional(v.boolean()),
     isVatIncluded: v.optional(v.boolean()),
     isAffordable: v.optional(v.boolean()),
+    isPromoted: v.optional(v.boolean()),
+    promotionTier: v.optional(v.string()),
     
     // System Fields
     createdAt: v.optional(v.number()),
-    isPromoted: v.optional(v.boolean()),
-    promotionTier: v.optional(v.string()),
-    promotionExpiresAt: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const { id, ...patch } = args;

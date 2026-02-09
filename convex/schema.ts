@@ -77,19 +77,16 @@ export default defineSchema({
     specifications: v.optional(v.any()), // Category-specific fields
     contactPhone: v.optional(v.string()),
     contactEmail: v.optional(v.string()),
-    // Promotion & Priority
-    isPromoted: v.optional(v.boolean()),
-    promotionTier: v.optional(v.string()), // 'DAILY', 'WEEKLY', 'MONTHLY'
-    promotionExpiresAt: v.optional(v.number()),
-    priority: v.optional(v.number()), // Higher value = higher position
     // Professional Market Fields
     userType: v.optional(v.string()), // 'PRIVATE', 'COMPANY'
     adType: v.optional(v.string()), // 'SALE', 'BUYING'
     condition: v.optional(v.string()), // 'NEW', 'USED'
-    isTradePossible: v.optional(v.boolean()),
+    isTradePossible: v.optional(v.union(v.string(), v.boolean())),
     hasShipping: v.optional(v.boolean()),
     isVatIncluded: v.optional(v.boolean()),
     isAffordable: v.optional(v.boolean()), // For 'Povolni'
+    isPromoted: v.optional(v.boolean()), // For promoted/featured listings
+    promotionTier: v.optional(v.string()), // 'GOLD', 'SILVER', etc.
   })
     .index("by_category", ["category"])
     .index("by_userId", ["userId"])

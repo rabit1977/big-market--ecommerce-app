@@ -17,6 +17,7 @@ import type * as checkListings from "../checkListings.js";
 import type * as checkTemplates from "../checkTemplates.js";
 import type * as cleanup from "../cleanup.js";
 import type * as cleanupFavorites from "../cleanupFavorites.js";
+import type * as clearListings from "../clearListings.js";
 import type * as clearSeedData from "../clearSeedData.js";
 import type * as debug from "../debug.js";
 import type * as favorites from "../favorites.js";
@@ -57,6 +58,7 @@ declare const fullApi: ApiFromModules<{
   checkTemplates: typeof checkTemplates;
   cleanup: typeof cleanup;
   cleanupFavorites: typeof cleanupFavorites;
+  clearListings: typeof clearListings;
   clearSeedData: typeof clearSeedData;
   debug: typeof debug;
   favorites: typeof favorites;

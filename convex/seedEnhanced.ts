@@ -24,6 +24,12 @@ export const clearAndSeedCategories = mutation({
     // ============================================
     const condition = { label: "Condition", type: "select", key: "condition", options: ["New", "Like New", "Used", "For parts / Damaged"] };
     const brand = (ph: string) => ({ label: "Brand", type: "text", key: "brand", placeholder: ph });
+    
+    // Transaction Type Fields (Macedonian labels)
+    const transactionTypes = [
+      { label: "Тип на оглас", type: "select", key: "adType", options: ["Се продава", "Се купува", "Се изнајмува", "Се бара изнајмување"] },
+      { label: "Може замена", type: "select", key: "isTradePossible", options: ["Да", "Не"] },
+    ];
     const model = (ph: string) => ({ label: "Model", type: "text", key: "model", placeholder: ph });
     
     // ============================================
@@ -31,8 +37,9 @@ export const clearAndSeedCategories = mutation({
     // ============================================
     const motorVehiclesId = await upsertCategory("motor-vehicles", { name: "Motor Vehicles", image: "🚗", isFeatured: true });
     
-    // Common Vehicle Specs
+    // Common Vehicle Specs - now includes transaction type
     const vehicleSpecs = (brandEx: string, modelEx: string) => [
+      ...transactionTypes,
       brand(brandEx),
       model(modelEx),
       { label: "Year", type: "number", key: "year", required: true, placeholder: "e.g. 2018" },
@@ -150,9 +157,10 @@ export const clearAndSeedCategories = mutation({
     // ============================================
     const realEstateId = await upsertCategory("real-estate", { name: "Real Estate", image: "🏠", isFeatured: true });
     
-    // Estate Helpers
+    // Estate Helpers - includes Macedonian transaction types
     const estateSpecs = (isLand = false, isBusiness = false) => [
-      { label: "Type", type: "select", key: "offer_type", options: ["Sale", "Rent"] },
+      { label: "Тип на оглас", type: "select", key: "adType", options: ["Се продава", "Се купува", "Се изнајмува", "Се бара изнајмување"] },
+      { label: "Може замена", type: "select", key: "isTradePossible", options: ["Да", "Не"] },
       { label: isLand ? "Area (m²)" : "Size (m²)", type: "number", key: "sqm", required: true, placeholder: "e.g. 75" },
       { label: "Location", type: "text", key: "location", placeholder: "e.g. Center, Karpos 3" },
       { label: "Price", type: "number", key: "price", placeholder: "e.g. 50000" },

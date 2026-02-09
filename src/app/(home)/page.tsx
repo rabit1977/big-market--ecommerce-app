@@ -3,7 +3,6 @@ import { FeaturedListings } from '@/components/home/featured-listings';
 import { Hero } from '@/components/home/hero';
 import { LatestListingsClient } from '@/components/home/latest-listings-client';
 import { MembershipSection } from '@/components/home/membership-section';
-import { PromotedCarousel } from '@/components/home/promoted-carousel';
 import { StatsSection } from '@/components/home/stats-section';
 import { fetchQuery } from 'convex/nextjs';
 import { api } from '../../../convex/_generated/api';
@@ -40,10 +39,7 @@ export default async function HomePage() {
         <FeaturedListings listings={featuredListings as any} />
       )}
 
-      {/* 3. Promoted Carousel - Elite Advertising */}
-      <PromotedCarousel />
-
-      {/* 4. Latest Listings */}
+      {/* 3. Latest Listings */}
       <div className="container-wide py-6 bg-muted/20">
         <LatestListingsClient 
           initialListings={latestListings as any} 

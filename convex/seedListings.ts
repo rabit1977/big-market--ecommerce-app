@@ -20,7 +20,7 @@ export const seedListings = mutation({
     const conditions = ["new", "like-new", "good", "used", "fair"];
     const userTypes = ["INDIVIDUAL", "DEALER"];
     
-    // 4. Create Dummy Listings
+    // 4. Create Dummy Listings (Updated to match Macedonian filters)
     const listings = [
       {
         title: "iPhone 14 Pro Max - Deep Purple",
@@ -29,11 +29,10 @@ export const seedListings = mutation({
         categorySlug: "mobile-phones",
         city: "Skopje",
         images: ["https://images.unsplash.com/photo-1696446701796-da61225697cc?auto=format&fit=crop&q=80&w=800"],
-        condition: "like-new",
+        condition: "Used",
         userType: "INDIVIDUAL",
-        status: "ACTIVE",
-        isPromoted: true,
-        promotionTier: "GOLD"
+        adType: "Се продава",
+        status: "ACTIVE"
       },
       {
         title: "BMW 320d 2019 M-Sport",
@@ -42,8 +41,9 @@ export const seedListings = mutation({
         categorySlug: "cars",
         city: "Bitola",
         images: ["https://images.unsplash.com/photo-1556189250-72ba95452242?auto=format&fit=crop&q=80&w=800"],
-        condition: "used",
+        condition: "Used",
         userType: "DEALER",
+        adType: "Се продава",
         status: "ACTIVE",
         features: ["Navigation", "Leather Seats", "Sunroof"]
       },
@@ -54,8 +54,9 @@ export const seedListings = mutation({
         categorySlug: "apartments",
         city: "Skopje",
         images: ["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=800"],
-        condition: "renovated",
+        condition: "Renovated", 
         userType: "INDIVIDUAL",
+        adType: "Се продава",
         status: "ACTIVE"
       },
       {
@@ -65,8 +66,9 @@ export const seedListings = mutation({
         categorySlug: "gaming-consoles",
         city: "Ohrid",
         images: ["https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&q=80&w=800"],
-        condition: "new",
+        condition: "New",
         userType: "DEALER",
+        adType: "Се продава",
         status: "ACTIVE",
         hasShipping: true
       },
@@ -77,10 +79,11 @@ export const seedListings = mutation({
         categorySlug: "bicycles",
         city: "Tetovo",
         images: ["https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?auto=format&fit=crop&q=80&w=800"],
-        condition: "like-new",
+        condition: "Used",
         userType: "INDIVIDUAL",
+        adType: "Се продава",
         status: "ACTIVE",
-        isTradePossible: true
+        isTradePossible: "Да"
       },
       {
          title: "Leather Sofa Set",
@@ -89,8 +92,9 @@ export const seedListings = mutation({
          categorySlug: "furniture",
          city: "Kumanovo",
          images: ["https://images.unsplash.com/photo-1540574163026-643ea20ade25?auto=format&fit=crop&q=80&w=800"],
-         condition: "good",
+         condition: "Used",
          userType: "INDIVIDUAL",
+         adType: "Се продава",
          status: "ACTIVE",
          isAffordable: true 
       },
@@ -101,8 +105,9 @@ export const seedListings = mutation({
           categorySlug: "laptops",
           city: "Skopje",
           images: ["https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&q=80&w=800"],
-          condition: "good",
+          condition: "Used",
           userType: "INDIVIDUAL",
+          adType: "Се продава",
           status: "ACTIVE"
       },
       {
@@ -112,8 +117,9 @@ export const seedListings = mutation({
         categorySlug: "auto-parts",
         city: "Skopje",
         images: ["https://images.unsplash.com/photo-1603517604646-953e53d5a2cd?auto=format&fit=crop&q=80&w=800"],
-        condition: "used",
+        condition: "Used",
         userType: "INDIVIDUAL",
+        adType: "Се продава",
         status: "ACTIVE",
         isVatIncluded: true
       }
@@ -143,12 +149,11 @@ export const seedListings = mutation({
         thumbnail: item.images[0],
         condition: item.condition,
         userType: item.userType,
-        isPromoted: item.isPromoted,
-        promotionTier: item.promotionTier,
         hasShipping: item.hasShipping,
-        isTradePossible: item.isTradePossible,
+        isTradePossible: item.isTradePossible as any, // Cast to any to handle string/boolean union
         isVatIncluded: item.isVatIncluded,
         isAffordable: item.isAffordable,
+        adType: item.adType, // Added adType
         specifications: (item as any).specifications || {},
         createdAt: Date.now(),
         viewCount: Math.floor(Math.random() * 500)

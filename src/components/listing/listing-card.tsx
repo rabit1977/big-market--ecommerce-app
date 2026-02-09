@@ -61,7 +61,6 @@ export const ListingCard = memo(
     const isElite = tier === 'ELITE';
     const isPro = tier === 'PRO' || tier === 'BUSINESS';
     const isVerified = listing.user?.isVerified;
-    const isPromoted = listing.isPromoted;
 
     return (
       <motion.div
@@ -72,8 +71,7 @@ export const ListingCard = memo(
         transition={{ duration: 0.2 }}
         className={cn(
           "group relative flex bg-card border border-border/50 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden",
-          isGrid ? "flex-col h-full rounded-xl" : "flex-row h-32 md:h-44 rounded-lg",
-          isPromoted && "ring-2 ring-primary shadow-xl shadow-primary/10"
+          isGrid ? "flex-col h-full rounded-xl" : "flex-row h-32 md:h-44 rounded-lg"
         )}
       >
         {/* Main Card Link - Lower Z-Index */}
@@ -94,11 +92,6 @@ export const ListingCard = memo(
           
           {/* Status Badges Overlay */}
           <div className="absolute top-2 left-2 z-20 pointer-events-none flex flex-col gap-1.5">
-              {isPromoted && (
-                 <div className="bg-primary backdrop-blur-sm text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-lg border border-white/20 uppercase tracking-tighter">
-                    Promoted
-                 </div>
-              )}
               {isElite && (
                  <div className="bg-gradient-to-r from-amber-400 to-orange-500 p-1 rounded-full shadow-lg border border-white/30 animate-pulse">
                     <Star className="h-4 w-4 fill-white text-white" />

@@ -260,7 +260,6 @@ export const getMyDashboardStats = query({
         
      const activeListings = listings.filter(l => l.status === 'ACTIVE').length;
      const totalViews = listings.reduce((acc, curr) => acc + (curr.viewCount || 0), 0);
-     const promotedCount = listings.filter(l => l.isPromoted).length;
      
      // 2. Spend Today
      const now = new Date();
@@ -291,7 +290,6 @@ export const getMyDashboardStats = query({
          stats: {
              activeListings,
              totalViews,
-             promotedCount,
              spendToday,
              renewedToday: 0 // Placeholder
          }

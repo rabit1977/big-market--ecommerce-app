@@ -4,11 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
 import { CITIES } from '@/lib/constants/cities';
 import { useSidebar } from '@/lib/context/sidebar-context';
@@ -19,6 +19,19 @@ import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 
+// Filter definitions with Macedonian labels
+const QUICK_FILTERS = [
+  { id: 'forSale', label: 'Се продава', adType: 'Се продава', defaultChecked: true },
+  { id: 'wanted', label: 'Се купува', adType: 'Се купува', defaultChecked: true },
+  { id: 'forRent', label: 'Се изнајмува', adType: 'Се изнајмува', defaultChecked: false },
+  { id: 'rentWanted', label: 'Се бара изнајмување', adType: 'Се бара изнајмување', defaultChecked: false },
+  { id: 'trade', label: 'Може замена', isTradePossible: 'Да', defaultChecked: true },
+  { id: 'used', label: 'Половен', condition: 'Used', defaultChecked: true },
+  { id: 'new', label: 'Нов', condition: 'New', defaultChecked: true },
+  { id: 'shipping', label: 'Со достава', hasShipping: true, defaultChecked: false },
+  { id: 'vat', label: 'Со ДДВ', isVatIncluded: true, defaultChecked: false },
+];
+
 export const HeroHeader = () => {
   const router = useRouter();
   const { toggle } = useSidebar();
@@ -26,17 +39,57 @@ export const HeroHeader = () => {
   const [category, setCategory] = useState('all');
   const [location, setLocation] = useState('all');
   const [query, setQuery] = useState('');
+  
+  // Initialize filter state from defaults
+  const [filters, setFilters] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {};
+    QUICK_FILTERS.forEach(f => {
+      initial[f.id] = f.defaultChecked;
+    });
+    return initial;
+  });
 
   const categoryTree = useMemo(() => {
       if (!categories) return [];
       return buildCategoryTree(categories);
   }, [categories]);
 
+  const toggleFilter = (id: string) => {
+    setFilters(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
   const handleSearch = () => {
     const params = new URLSearchParams();
     if (query) params.set('q', query);
     if (category && category !== 'all') params.set('category', category);
     if (location && location !== 'all' && location !== 'All Cities') params.set('city', location);
+    
+    // Build adType array from checked filters
+    const adTypes: string[] = [];
+    QUICK_FILTERS.forEach(f => {
+      if (f.adType && filters[f.id]) {
+        adTypes.push(f.adType);
+      }
+    });
+    if (adTypes.length > 0 && adTypes.length < 4) {
+      params.set('adType', adTypes.join(','));
+    }
+    
+    // Build condition array  
+    const conditions: string[] = [];
+    QUICK_FILTERS.forEach(f => {
+      if (f.condition && filters[f.id]) {
+        conditions.push(f.condition);
+      }
+    });
+    if (conditions.length === 1) {
+      params.set('condition', conditions[0]);
+    }
+    
+    // Boolean/String filters
+    if (filters.trade) params.set('isTradePossible', 'Да');
+    if (filters.shipping) params.set('hasShipping', 'true');
+    if (filters.vat) params.set('isVatIncluded', 'true');
     
     router.push(`/listings?${params.toString()}`);
   };
@@ -108,22 +161,19 @@ export const HeroHeader = () => {
                 </Button>
             </div>
 
-            {/* Filter Checkboxes */}
-            <div className="flex flex-wrap gap-6 mt-4 text-sm text-muted-foreground select-none">
-                {[
-                    { id: 'se-prodava', label: 'For Sale', checked: true },
-                    { id: 'se-kupuva', label: 'Wanted', checked: true },
-                    { id: 'moza-e-zamena', label: 'Trade possible', checked: true },
-                    { id: 'polovni', label: 'Used', checked: true },
-                    { id: 'novi', label: 'New', checked: true },
-                    { id: 'cargo', label: 'With shipping', checked: false },
-                    { id: 'ddv', label: 'VAT included', checked: false },
-                ].map((filter) => (
+            {/* Filter Checkboxes - Now Functional */}
+            <div className="flex flex-wrap gap-x-6 gap-y-2 mt-4 text-sm text-muted-foreground select-none">
+                {QUICK_FILTERS.map((filter) => (
                     <div key={filter.id} className="flex items-center space-x-2">
-                        <Checkbox id={filter.id} defaultChecked={filter.checked} className="rounded-sm data-[state=checked]:bg-primary data-[state=checked]:border-primary" />
+                        <Checkbox 
+                          id={filter.id} 
+                          checked={filters[filter.id]} 
+                          onCheckedChange={() => toggleFilter(filter.id)}
+                          className="rounded-sm data-[state=checked]:bg-primary data-[state=checked]:border-primary" 
+                        />
                         <label
                             htmlFor={filter.id}
-                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer hover:text-foreground transition-colors"
                         >
                             {filter.label}
                         </label>

@@ -64,15 +64,17 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
           <div className="flex items-center gap-2">
              <button 
                onClick={() => scroll('left')}
-               className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white border shadow-sm hover:bg-blue-50 hover:text-blue-600 transition-all active:scale-95"
+               className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white border shadow-sm dark:bg-accent/50 text-muted-foreground dark:hover:text-foreground
+               dark:hover:bg-accent transition-all active:scale-95 cursor-pointer group hover:bg-primary/5"
              >
-                <ChevronLeft className="w-6 h-6" />
+                <ChevronLeft className="w-6 h-6 group-hover:text-primary" />
              </button>
              <button 
                onClick={() => scroll('right')}
-               className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white border shadow-sm hover:bg-accent hover:text-foreground transition-all active:scale-95"
+               className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white border shadow-sm dark:bg-accent/50 text-muted-foreground dark:hover:text-foreground
+               dark:hover:bg-accent transition-all active:scale-95 cursor-pointer group hover:bg-primary/5"
              >
-                <ChevronRight className="w-6 h-6" />
+                <ChevronRight className="w-6 h-6 group-hover:text-primary" />
              </button>
              <Link 
                href="/listings?featured=true" 
@@ -127,7 +129,7 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
                       {/* Content */}
                       <div className="p-3 space-y-2">
                         <div className="space-y-1">
-                          <h3 className="font-bold text-[11px] lg:text-xs leading-tight line-clamp-2 text-foreground group-hover:text-primary transition-colors h-[2.5rem]">
+                          <h3 className="font-bold text-[11px] lg:text-xs leading-tight line-clamp-2 text-muted-foreground group-hover:text-foreground transition-colors h-[2.5rem]">
                             {listing.title}
                           </h3>
                         </div>

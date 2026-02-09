@@ -848,6 +848,12 @@ const MACEDONIAN_CATEGORIES: CategoryInput[] = [  {
 const getCustomTemplate = (slug: string, name: string) => {
   // NO baseFields - each template defines its own fields to avoid duplicates
   
+  // Transaction Type Fields (Macedonian labels) - shared across vehicles and real estate
+  const transactionTypeFields = [
+    { label: "Тип на оглас", type: "select", key: "adType", options: ["Се продава", "Се купува", "Се изнајмува", "Се бара изнајмување"] },
+    { label: "Може замена", type: "select", key: "isTradePossible", options: ["Да", "Не"] },
+  ];
+  
   // ========================================
   // REAL ESTATE
   // ========================================
@@ -856,6 +862,7 @@ const getCustomTemplate = (slug: string, name: string) => {
     return {
       titlePlaceholder: "e.g. Furnished Apartment in Center",
       fields: [
+        ...transactionTypeFields,
         { label: "Condition", type: "select", key: "condition", options: ["New Construction", "Renovated", "Good", "Needs Renovation"] },
         { label: "Square meters (m2)", type: "number", key: "m2", placeholder: "m2" },
         { label: "Number of rooms", type: "number", key: "rooms", placeholder: "Rooms" },
@@ -872,6 +879,7 @@ const getCustomTemplate = (slug: string, name: string) => {
     return {
       titlePlaceholder: "e.g. Family House with Yard",
       fields: [
+        ...transactionTypeFields,
         { label: "Condition", type: "select", key: "condition", options: ["New Construction", "Renovated", "Good", "Needs Renovation"] },
         { label: "House Area (m2)", type: "number", key: "m2", placeholder: "m2" },
         { label: "Yard Area (m2)", type: "number", key: "yard_m2", placeholder: "m2" },
@@ -887,6 +895,7 @@ const getCustomTemplate = (slug: string, name: string) => {
     return {
       titlePlaceholder: "e.g. Construction Plot",
       fields: [
+        ...transactionTypeFields,
         { label: "Area (m2)", type: "number", key: "m2", placeholder: "m2" },
         { label: "Electricity", type: "select", key: "electricity", options: ["Yes", "No", "Nearby"] },
         { label: "Water", type: "select", key: "water", options: ["Yes", "No", "Nearby"] },
@@ -899,6 +908,7 @@ const getCustomTemplate = (slug: string, name: string) => {
     return {
       titlePlaceholder: "e.g. Office Space",
       fields: [
+        ...transactionTypeFields,
         { label: "Condition", type: "select", key: "condition", options: ["Renovated", "Good", "Needs Renovation"] },
         { label: "Area (m2)", type: "number", key: "m2", placeholder: "m2" },
         { label: "Rooms", type: "number", key: "rooms", placeholder: "Rooms" },
@@ -915,6 +925,7 @@ const getCustomTemplate = (slug: string, name: string) => {
     return {
       titlePlaceholder: "e.g. Volkswagen Golf 7 1.6 TDI",
       fields: [
+        ...transactionTypeFields,
         { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged"] },
         { label: "Brand", type: "select", key: "make", options: ["Alfa Romeo", "Audi", "BMW", "Chevrolet", "Citroen", "Dacia", "Fiat", "Ford", "Honda", "Hyundai", "Kia", "Mercedes-Benz", "Nissan", "Opel", "Peugeot", "Renault", "Skoda", "Toyota", "Volkswagen", "Volvo", "Other"] },
         { label: "Year", type: "number", key: "year", placeholder: "Year" },
@@ -933,6 +944,7 @@ const getCustomTemplate = (slug: string, name: string) => {
     return {
       titlePlaceholder: "e.g. Mercedes Sprinter",
       fields: [
+        ...transactionTypeFields,
         { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged"] },
         { label: "Brand", type: "text", key: "make", placeholder: "e.g. Mercedes, MAN, Iveco" },
         { label: "Year", type: "number", key: "year", placeholder: "Year" },
@@ -950,6 +962,7 @@ const getCustomTemplate = (slug: string, name: string) => {
     return {
       titlePlaceholder: "e.g. MAN TGX 18.440",
       fields: [
+        ...transactionTypeFields,
         { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged"] },
         { label: "Brand", type: "text", key: "make", placeholder: "e.g. MAN, Volvo, Scania, Mercedes" },
         { label: "Year", type: "number", key: "year", placeholder: "Year" },
@@ -966,6 +979,7 @@ const getCustomTemplate = (slug: string, name: string) => {
     return {
       titlePlaceholder: "e.g. Honda CBR 600RR",
       fields: [
+        ...transactionTypeFields,
         { label: "Condition", type: "select", key: "condition", options: ["New", "Used", "Damaged"] },
         { label: "Brand", type: "text", key: "make", placeholder: "Brand" },
         { label: "Year", type: "number", key: "year", placeholder: "Year" },

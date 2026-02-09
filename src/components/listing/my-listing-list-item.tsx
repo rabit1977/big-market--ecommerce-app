@@ -1,7 +1,6 @@
 'use client';
 
 import { deleteListingAction, markAsSoldAction, renewListingAction } from '@/actions/listing-actions';
-import { PromoteModal } from '@/components/listing/promote-modal';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -20,7 +19,7 @@ import { cn } from '@/lib/utils';
 import { formatPrice } from '@/lib/utils/formatters';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
-import { BarChart2, CheckCircle, Edit, Mail, RefreshCw, Star, Trash2 } from 'lucide-react';
+import { BarChart2, CheckCircle, Edit, Mail, RefreshCw, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTransition } from 'react';
@@ -67,7 +66,6 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
     };
 
     const activeImage = listing.images?.[0]?.url || listing.thumbnail || '/placeholder.png';
-    const isPromoted = listing.isPromoted; // Assuming this field exists or similar logic
 
     return (
       <motion.div
@@ -152,20 +150,8 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                 </div>
             </div>
 
-            {/* Main Action Buttons (Promote / Renew) */}
-            {/* Main Action Buttons (Promote / Renew) */}
-            {/* Main Action Buttons (Promote / Renew) */}
+            {/* Main Action Buttons */}
             <div className="flex flex-row gap-2 mt-auto mb-2 sm:mb-4">
-                <PromoteModal listingId={listing.id!}>
-                    <Button 
-                        className="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold h-7 sm:h-9 bg-gradient-to-r from-amber-400 to-amber-600 border-0 shadow-md hover:shadow-lg transition-all text-[10px] sm:text-sm px-1"
-                        size="sm"
-                    >
-                        <Star className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 fill-current" />
-                        Promote
-                    </Button>
-                </PromoteModal>
-                
                 <Button 
                     className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold h-7 sm:h-9 shadow-md hover:shadow-lg transition-all text-[10px] sm:text-sm px-1"
                     size="sm"
