@@ -3,7 +3,7 @@
 import { FilterPanel, FilterState } from '@/components/listing/filter-panel';
 import { ListingGrid } from '@/components/listing/listing-grid';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
@@ -119,6 +119,7 @@ export function ListingsClient({
       {/* Mobile Filter Sheet */}
       <Sheet open={isMobileFiltersOpen} onOpenChange={setIsMobileFiltersOpen}>
          <SheetContent side="left" className="w-full sm:w-[450px] overflow-y-auto p-0">
+            <SheetTitle className="sr-only">Filter Listings</SheetTitle>
             <div className="p-4 pt-12">
                <FilterPanel onFilterChange={handleFilterChange} categories={categories} initialFilters={initialFilters} idPrefix="mobile-filter" template={template} />
             </div>

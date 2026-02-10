@@ -41,9 +41,9 @@ export const ListingCard = memo(
       e.stopPropagation();
       
       const newValue = !optimisticIsWished;
-      setOptimisticIsWished(newValue);
       
       startTransition(async () => {
+        setOptimisticIsWished(newValue);
         const result = await toggleWishlistAction(listing.id || listing._id);
         if (result.success) {
           setIsWished(result.isWished || false); // Update state from server

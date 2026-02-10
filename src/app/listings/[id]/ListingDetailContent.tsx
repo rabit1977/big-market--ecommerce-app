@@ -262,7 +262,9 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
             <div className="md:hidden space-y-4 px-4 bg-background border-b py-6">
                 <div className="space-y-2">
                     <div className="flex items-center gap-2 mb-1">
-                       <span className="text-[10px] font-black uppercase text-primary bg-primary/10 px-2 py-0.5 rounded tracking-tighter">Verified Ad</span>
+                       {seller?.isVerified && (
+                         <span className="text-[10px] font-black uppercase text-primary bg-primary/10 px-2 py-0.5 rounded tracking-tighter">Verified Seller</span>
+                       )}
                        {condition && (
                          <span className="text-[10px] font-bold uppercase text-muted-foreground border border-border px-2 py-0.5 rounded tracking-tighter">
                             Condition: {String(condition)}
@@ -285,9 +287,11 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1">
                             <span className="font-bold text-sm text-foreground">{seller?.name || 'Seller'}</span>
-                            <BadgeCheck className="w-4 h-4 text-primary" />
+                            {seller?.isVerified && <BadgeCheck className="w-4 h-4 text-primary" />}
                         </div>
-                        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Member since 2024</p>
+                        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                          Member since {seller?.createdAt ? new Date(seller.createdAt).getFullYear() : 'N/A'}
+                        </p>
                     </div>
                     <button 
                       onClick={() => setIsFavorite(!isFavorite)}
@@ -373,60 +377,60 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
 
             {/* Owner Dashboard - Visible only to owner */}
             {session?.user?.id === listing.userId && (
-                <div className="bg-card rounded-2xl p-6 md:p-8 shadow-xl border border-border space-y-6">
-                    <div className="flex items-center justify-between">
-                        <div className="space-y-1">
-                            <h3 className="text-foreground font-black uppercase tracking-tight text-lg">Owner Dashboard</h3>
-                            <p className="text-muted-foreground text-sm">Manage your listing and view performance</p>
+                <div className="bg-card rounded-xl md:rounded-2xl p-4 sm:p-6 md:p-8 shadow-xl border border-border space-y-4 md:space-y-6">
+                    <div className="flex items-center justify-between gap-2">
+                        <div className="space-y-0.5 md:space-y-1 min-w-0 flex-1">
+                            <h3 className="text-foreground font-black uppercase tracking-tight text-sm sm:text-base md:text-lg truncate">Owner Dashboard</h3>
+                            <p className="text-muted-foreground text-xs sm:text-sm line-clamp-1">Manage your listing and view performance</p>
                         </div>
-                        <BadgeCheck className="w-8 h-8 text-green-500" />
+                        <BadgeCheck className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-green-500 shrink-0" />
                     </div>
 
                     {/* Stats Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div className="bg-muted border border-border rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 group hover:bg-accent transition-colors">
-                            <Eye className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
+                        <div className="bg-muted border border-border rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1 sm:gap-1.5 md:gap-2 group hover:bg-accent transition-colors">
+                            <Eye className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-primary group-hover:scale-110 transition-transform" />
                             <div>
-                                <div className="text-2xl font-black text-foreground">{listing.viewCount || 0}</div>
-                                <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Total Views</div>
+                                <div className="text-lg sm:text-xl md:text-2xl font-black text-foreground">{listing.viewCount || 0}</div>
+                                <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Total Views</div>
                             </div>
                         </div>
-                        <div className="bg-muted border border-border rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 group hover:bg-accent transition-colors">
-                            <MessageSquare className="w-6 h-6 text-green-500 group-hover:scale-110 transition-transform" />
+                        <div className="bg-muted border border-border rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1 sm:gap-1.5 md:gap-2 group hover:bg-accent transition-colors">
+                            <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-green-500 group-hover:scale-110 transition-transform" />
                             <div>
                                 {/* We need to fetch this dynamically */}
                                 <ListingStats listingId={listing._id} />
                             </div>
                         </div>
                         {/* Placeholders for future stats */}
-                        <div className="bg-muted border border-border rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 group hover:bg-accent transition-colors opacity-50">
-                            <Heart className="w-6 h-6 text-primary" />
+                        <div className="bg-muted border border-border rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1 sm:gap-1.5 md:gap-2 group hover:bg-accent transition-colors opacity-50">
+                            <Heart className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-primary" />
                             <div>
-                                <div className="text-2xl font-black text-foreground">-</div>
-                                <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Favorites</div>
+                                <div className="text-lg sm:text-xl md:text-2xl font-black text-foreground">-</div>
+                                <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Favorites</div>
                             </div>
                         </div>
-                         <div className="bg-muted border border-border rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 group hover:bg-accent transition-colors opacity-50">
-                            <Share2 className="w-6 h-6 text-primary" />
+                         <div className="bg-muted border border-border rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1 sm:gap-1.5 md:gap-2 group hover:bg-accent transition-colors opacity-50">
+                            <Share2 className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-primary" />
                             <div>
-                                <div className="text-2xl font-black text-foreground">-</div>
-                                <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Shares</div>
+                                <div className="text-lg sm:text-xl md:text-2xl font-black text-foreground">-</div>
+                                <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Shares</div>
                             </div>
                         </div>
                     </div>
 
                     {/* Actions */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
-                        <Button asChild variant="outline" className="h-12 bg-transparent border-border text-foreground hover:bg-accent border-2">
-                            <Link href={`/listings/edit/${listing._id}`}>
-                                <Edit className="w-4 h-4 mr-2" />
-                                Edit Listing
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-2.5 md:gap-3 pt-1 md:pt-2">
+                        <Button asChild variant="outline" className="h-10 sm:h-11 md:h-12 bg-transparent border-border text-foreground hover:bg-accent border-2 text-xs sm:text-sm">
+                            <Link href={`/listings/edit/${listing._id}`} className="flex items-center justify-center gap-1.5 sm:gap-2">
+                                <Edit className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                                <span className="truncate">Edit Listing</span>
                             </Link>
                         </Button>
-                        <Button asChild variant="default" className="h-12 bg-primary hover:bg-primary/90 text-white font-bold">
-                             <Link href={`/messages?listing=${listing._id}`}>
-                                <Mail className="w-4 h-4 mr-2" />
-                                View Messages
+                        <Button asChild variant="default" className="h-10 sm:h-11 md:h-12 bg-primary hover:bg-primary/90 text-white font-bold text-xs sm:text-sm">
+                             <Link href={`/messages?listing=${listing._id}`} className="flex items-center justify-center gap-1.5 sm:gap-2">
+                                <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                                <span className="truncate">View Messages</span>
                             </Link>
                         </Button>
                         <DeleteListingButton listingId={listing._id} />
@@ -512,9 +516,11 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                        <div>
                           <div className="flex items-center gap-1.5 mb-0.5">
                              <h4 className="font-black text-foreground text-lg">{seller?.name || 'Loading...'}</h4> 
-                             <BadgeCheck className="w-5 h-5 text-primary" />
+                             {seller?.isVerified && <BadgeCheck className="w-5 h-5 text-primary" />}
                           </div>
-                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Verified Seller since 2024</p>
+                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                            {seller?.isVerified ? 'Verified' : 'Member'} since {seller?.createdAt ? new Date(seller.createdAt).getFullYear() : 'N/A'}
+                          </p>
                        </div>
                     </div>
 
@@ -594,12 +600,12 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
 function ListingStats({ listingId }: { listingId: string }) {
     const stats = useConvexQuery(api.messages.getListingStats, { listingId: listingId as Id<"listings"> });
     
-    if (!stats) return <div className="text-sm font-bold text-slate-500">Loading...</div>;
+    if (!stats) return <div className="text-xs sm:text-sm font-bold text-muted-foreground">Loading...</div>;
 
     return (
         <>
-            <div className="text-2xl font-black text-foreground">{stats.totalConversations}</div>
-            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Inquiries</div>
+            <div className="text-lg sm:text-xl md:text-2xl font-black text-foreground">{stats.totalConversations}</div>
+            <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Inquiries</div>
         </>
     );
 }
@@ -626,17 +632,17 @@ function DeleteListingButton({ listingId }: { listingId: string }) {
     return (
         <Button 
             variant="destructive" 
-            className="h-12 bg-red-600 hover:bg-red-700 text-white font-bold"
+            className="h-10 sm:h-11 md:h-12 bg-red-600 hover:bg-red-700 text-white font-bold text-xs sm:text-sm sm:col-span-2 md:col-span-1 min-w-0"
             onClick={handleDelete}
             disabled={isDeleting}
         >
             {isDeleting ? (
                 "Deleting..." 
             ) : (
-                <>
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Delete Listing
-                </>
+                <div className="flex items-center justify-center gap-1.5 sm:gap-2 min-w-0 w-full">
+                    <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                    <span className="truncate">Delete Listing</span>
+                </div>
             )}
         </Button>
     );

@@ -81,6 +81,7 @@ export const syncUser = mutation({
         name: args.name,
         image: args.image,
         role: args.role || "USER",
+        createdAt: Date.now(),
       });
     }
   },
@@ -361,5 +362,25 @@ export const cancelMembership = mutation({
     });
 
     return { success: true };
+  },
+});
+
+// Migration: Add createdAt to existing users who don't have it
+export const backfillCreatedAt = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const users = await ctx.db.query("users").collect();
+    let updated = 0;
+    
+    for (const user of users) {
+      if (!user.createdAt) {
+        await ctx.db.patch(user._id, {
+          createdAt: Date.now(), // Use current time as fallback
+        });
+        updated++;
+      }
+    }
+    
+    return { message: `Updated ${updated} users with createdAt field` };
   },
 });
