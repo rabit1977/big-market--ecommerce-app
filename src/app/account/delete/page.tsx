@@ -36,35 +36,38 @@ export default function DeleteAccountPage() {
     };
 
     return (
-        <div className="min-h-screen pt-24 pb-12 bg-muted/10">
-            <div className="container max-w-xl mx-auto px-4">
-                <Card className="border-destructive/50">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-destructive">
-                             <AlertTriangle className="w-6 h-6" />
+        <div className="min-h-screen pt-16 md:pt-20 pb-8 bg-muted/20">
+            <div className="container max-w-xl mx-auto px-3 md:px-4">
+                <Card className="border-destructive/30 shadow-sm rounded-2xl overflow-hidden">
+                    <CardHeader className="p-4 md:p-6 pb-3 md:pb-4">
+                        <CardTitle className="flex items-center gap-2 text-destructive text-base md:text-lg">
+                             <div className="p-1.5 bg-destructive/10 rounded-lg">
+                                <AlertTriangle className="w-4 h-4 md:w-5 md:h-5" />
+                             </div>
                              Delete Account
                         </CardTitle>
-                        <CardDescription>
+                        <CardDescription className="text-xs md:text-sm mt-1 leading-relaxed">
                             This action is permanent and cannot be undone. All your data, including listings and messages, will be permanently removed.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-6">
-                        <div className="bg-destructive/10 p-4 rounded-lg text-destructive text-sm font-medium">
-                            Warning: You are about to delete your account. This action is irreversible.
+                    <CardContent className="p-4 md:p-6 pt-0 md:pt-0 space-y-4 md:space-y-5">
+                        <div className="bg-destructive/5 dark:bg-destructive/10 p-3 rounded-lg text-destructive text-xs md:text-sm font-medium">
+                            ⚠️ Warning: You are about to delete your account. This action is irreversible.
                         </div>
 
-                        <div className="space-y-2">
-                             <Label>Type "DELETE" to confirm</Label>
+                        <div className="space-y-1.5">
+                             <Label className="text-xs md:text-sm font-semibold">Type &quot;DELETE&quot; to confirm</Label>
                              <Input 
                                 value={confirmation}
                                 onChange={(e) => setConfirmation(e.target.value)}
                                 placeholder="DELETE"
+                                className="h-9 md:h-10 text-sm"
                              />
                         </div>
 
                         <Button 
                             variant="destructive" 
-                            className="w-full" 
+                            className="w-full h-10 md:h-11 rounded-xl font-bold text-sm" 
                             disabled={confirmation !== 'DELETE' || isDeleting}
                             onClick={handleDelete}
                         >
@@ -75,7 +78,7 @@ export default function DeleteAccountPage() {
                                 </>
                             ) : (
                                 <>
-                                    <Trash2 className="w-4 h-4 mr-2" />
+                                    <Trash2 className="w-3.5 h-3.5 mr-2" />
                                     Permanently Delete Account
                                 </>
                             )}

@@ -24,8 +24,8 @@ export default async function MessagesPage() {
   });
 
   return (
-    <div className="min-h-screen pt-24 pb-12 bg-background">
-      <div className="container-wide">
+    <div className="min-h-screen pt-16 md:pt-20 pb-8 bg-background">
+      <div className="container-wide px-3 md:px-4">
         <AppBreadcrumbs />
         <MessagesClient
           conversations={conversations as any}

@@ -20,8 +20,6 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
-// MOCK_DATA removed
-
 export default function ListingStatsPage() {
     const { data: session } = useSession();
     const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
@@ -48,24 +46,24 @@ export default function ListingStatsPage() {
     const totalClicks = chartData.reduce((acc, curr) => acc + (curr.clicks || 0), 0);
 
     return (
-        <div className="min-h-screen pt-20 md:pt-24 pb-12 bg-gray-50/50">
-            <div className="container max-w-4xl mx-auto px-2 md:px-4">
+        <div className="min-h-screen pt-16 md:pt-20 pb-8 bg-muted/20">
+            <div className="container max-w-4xl mx-auto px-3 md:px-4">
                 
                 {/* Header */}
-                <div className="mb-6 md:mb-8 px-2 md:px-0">
-                    <Link href="/my-listings" className="text-xs md:text-sm text-muted-foreground flex items-center gap-1 hover:text-foreground mb-4">
-                        <ChevronLeft className="w-4 h-4" /> Back to My Listings
+                <div className="mb-4 md:mb-6">
+                    <Link href="/my-listings" className="text-xs text-muted-foreground flex items-center gap-1 hover:text-foreground mb-3">
+                        <ChevronLeft className="w-3.5 h-3.5" /> Back to My Listings
                     </Link>
-                    <h1 className="text-xl md:text-2xl font-black text-slate-900 uppercase tracking-tight">Statistics Overview</h1>
-                    <p className="text-xs md:text-sm text-muted-foreground">Performance of all your listings</p>
+                    <h1 className="text-lg md:text-2xl font-black text-foreground uppercase tracking-tight">Statistics Overview</h1>
+                    <p className="text-[11px] md:text-sm text-muted-foreground">Performance of all your listings</p>
                 </div>
 
                 {/* Date Filter Card */}
-                <Card className="mb-4 md:mb-6 border-slate-200 overflow-hidden shadow-sm">
-                    <CardContent className="p-3 md:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                        <div className="space-y-1">
-                            <h3 className="font-black text-slate-900 uppercase tracking-tight text-sm">Review Period</h3>
-                            <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">
+                <Card className="mb-3 md:mb-5 border-border overflow-hidden shadow-sm">
+                    <CardContent className="p-3 md:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div className="space-y-0.5">
+                            <h3 className="font-bold text-foreground uppercase tracking-tight text-xs">Review Period</h3>
+                            <p className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                                 {format(dateRange.from, 'dd MMM yyyy')} - {format(dateRange.to, 'dd MMM yyyy')}
                             </p>
                         </div>
@@ -75,11 +73,11 @@ export default function ListingStatsPage() {
                                 <Button
                                     variant={"outline"}
                                     className={cn(
-                                        "w-full sm:w-[260px] justify-start text-left font-bold text-xs h-11 border-2 border-slate-100 rounded-xl",
+                                        "w-full sm:w-[240px] justify-start text-left font-bold text-xs h-9 border border-border rounded-lg",
                                         !dateRange && "text-muted-foreground"
                                     )}
                                 >
-                                    <CalendarIcon className="mr-2 h-4 w-4 text-blue-500" />
+                                    <CalendarIcon className="mr-2 h-3.5 w-3.5 text-primary" />
                                     {dateRange?.from ? (
                                         dateRange.to ? (
                                             <>
@@ -95,7 +93,7 @@ export default function ListingStatsPage() {
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent 
-                                className="w-[320px] sm:w-auto p-0" 
+                                className="w-[300px] sm:w-auto p-0" 
                                 align="center" 
                                 sideOffset={8}
                             >
@@ -112,33 +110,62 @@ export default function ListingStatsPage() {
                                         }
                                     }}
                                     numberOfMonths={1}
-                                    className="rounded-xl border shadow-2xl bg-white"
+                                    className="rounded-xl border shadow-xl bg-background"
                                 />
                             </PopoverContent>
                         </Popover>
                     </CardContent>
                 </Card>
 
+                {/* Summary Cards — above chart on mobile */}
+                <div className="grid grid-cols-2 gap-2.5 md:gap-4 mb-3 md:mb-5">
+                    <Card className="border-l-3 md:border-l-4 border-l-orange-400 shadow-sm overflow-hidden">
+                        <CardContent className="p-3 md:p-4 flex items-center justify-between">
+                            <div>
+                                <div className="text-lg md:text-2xl font-black text-foreground leading-none mb-0.5">{totalViews}</div>
+                                <div className="text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-widest">Views</div>
+                            </div>
+                            <div className="w-8 h-8 rounded-full bg-orange-500/10 flex items-center justify-center">
+                                <Eye className="w-3.5 h-3.5 md:w-4 md:h-4 text-orange-500" />
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="border-l-3 md:border-l-4 border-l-blue-500 shadow-sm overflow-hidden">
+                        <CardContent className="p-3 md:p-4 flex items-center justify-between">
+                            <div>
+                                <div className="text-lg md:text-2xl font-black text-foreground leading-none mb-0.5">{totalClicks}</div>
+                                <div className="text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-widest">Inquiries</div>
+                            </div>
+                            <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
+                                <MousePointerClick className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-500" />
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
                 {/* Chart Section */}
-                <Card className="mb-4 md:mb-6 border-slate-200 shadow-sm overflow-hidden">
-                    <CardContent className="p-4 md:p-6">
-                        <div className="h-[200px] md:h-[300px] w-full">
+                <Card className="mb-3 md:mb-5 border-border shadow-sm overflow-hidden">
+                    <CardContent className="p-3 md:p-5">
+                        <div className="h-[180px] md:h-[280px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={chartData} margin={{ top: 20, right: 0, left: -25, bottom: 0 }}>
-                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
+                                <BarChart data={chartData} margin={{ top: 10, right: 0, left: -30, bottom: 0 }}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-border" />
                                     <XAxis 
                                         dataKey="date" 
-                                        fontSize={9} 
+                                        fontSize={8} 
                                         tickLine={false} 
                                         axisLine={false}
                                         tickFormatter={(val) => format(new Date(val), 'dd.MM')}
                                         minTickGap={20}
+                                        className="fill-muted-foreground"
                                     />
                                     <YAxis 
-                                        fontSize={9} 
+                                        fontSize={8} 
                                         tickLine={false} 
                                         axisLine={false}
                                         tickCount={5}
+                                        className="fill-muted-foreground"
                                     />
                                     <Tooltip 
                                         cursor={{ fill: 'transparent' }}
@@ -146,7 +173,7 @@ export default function ListingStatsPage() {
                                             if (active && payload && payload.length) {
                                                 const data = payload[0].payload;
                                                 return (
-                                                    <div className="bg-slate-800 text-white text-[10px] rounded-lg p-2 shadow-xl border border-white/10">
+                                                    <div className="bg-popover text-popover-foreground text-[10px] rounded-lg p-2 shadow-xl border border-border">
                                                         <div className="font-bold mb-1">{format(new Date(data.date), 'dd MMMM yyyy')}</div>
                                                         <div className="flex justify-between gap-4">
                                                             <span>Views:</span>
@@ -162,75 +189,48 @@ export default function ListingStatsPage() {
                                             return null;
                                         }}
                                     />
-                                    <Bar dataKey="views" fill="#FB923C" radius={[2, 2, 0, 0]} maxBarSize={20} />
-                                    <Bar dataKey="clicks" fill="#3B82F6" radius={[2, 2, 0, 0]} maxBarSize={20} /> 
+                                    <Bar dataKey="views" fill="#FB923C" radius={[2, 2, 0, 0]} maxBarSize={16} />
+                                    <Bar dataKey="clicks" fill="#3B82F6" radius={[2, 2, 0, 0]} maxBarSize={16} /> 
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
                         
-                        <div className="flex justify-center gap-6 mt-4">
-                            <div className="flex items-center gap-2">
+                        <div className="flex justify-center gap-5 mt-3">
+                            <div className="flex items-center gap-1.5">
                                 <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Views</span>
+                                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Views</span>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1.5">
                                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Inquiries</span>
+                                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Inquiries</span>
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
-                {/* Summary Cards */}
-                <div className="grid grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-6">
-                    <Card className="border-l-4 border-l-orange-400 shadow-sm overflow-hidden">
-                        <CardContent className="p-3 md:p-4 flex items-center justify-between">
-                            <div>
-                                <div className="text-xl md:text-3xl font-black text-slate-900 leading-none mb-1">{totalViews}</div>
-                                <div className="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">Views</div>
-                            </div>
-                            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-orange-50 flex items-center justify-center">
-                                <Eye className="w-4 h-4 md:w-5 md:h-5 text-orange-500" />
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="border-l-4 border-l-blue-500 shadow-sm overflow-hidden">
-                        <CardContent className="p-3 md:p-4 flex items-center justify-between">
-                            <div>
-                                <div className="text-xl md:text-3xl font-black text-slate-900 leading-none mb-1">{totalClicks}</div>
-                                <div className="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">Inquiries</div>
-                            </div>
-                            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-blue-50 flex items-center justify-center">
-                                <MousePointerClick className="w-4 h-4 md:w-5 md:h-5 text-blue-500" />
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-
                 {/* Data Table */}
-                <Card className="overflow-hidden shadow-sm border-slate-200 rounded-xl">
-                    <div className="bg-slate-50 px-4 py-3 border-b">
-                        <h4 className="text-xs font-black text-slate-900 uppercase tracking-tight">Daily Breakdown</h4>
+                <Card className="overflow-hidden shadow-sm border-border rounded-xl">
+                    <div className="bg-muted/50 px-3 md:px-4 py-2.5 border-b">
+                        <h4 className="text-[10px] md:text-xs font-black text-foreground uppercase tracking-tight">Daily Breakdown</h4>
                     </div>
                     <div className="overflow-x-auto">
-                        <table className="w-full text-xs md:text-sm text-left">
-                            <thead className="text-[10px] md:text-xs text-muted-foreground uppercase bg-slate-50/50 border-b">
+                        <table className="w-full text-xs text-left">
+                            <thead className="text-[9px] md:text-[10px] text-muted-foreground uppercase bg-muted/30 border-b">
                                 <tr>
-                                    <th className="px-4 md:px-6 py-3 font-bold tracking-wider">Date</th>
-                                    <th className="px-4 md:px-6 py-3 font-bold tracking-wider text-right">Views</th>
-                                    <th className="px-4 md:px-6 py-3 font-bold tracking-wider text-right">Inq.</th>
-                                    <th className="px-4 md:px-6 py-3 font-bold tracking-wider text-right">Activity</th>
+                                    <th className="px-3 md:px-5 py-2.5 font-bold tracking-wider">Date</th>
+                                    <th className="px-3 md:px-5 py-2.5 font-bold tracking-wider text-right">Views</th>
+                                    <th className="px-3 md:px-5 py-2.5 font-bold tracking-wider text-right">Inq.</th>
+                                    <th className="px-3 md:px-5 py-2.5 font-bold tracking-wider text-right">Total</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-100">
+                            <tbody className="divide-y divide-border/50">
                                 {chartData.slice().reverse().map((row, i) => (
-                                    <tr key={i} className="bg-white hover:bg-slate-50 transition-colors">
-                                        <td className="px-4 md:px-6 py-3 font-bold text-slate-900">{format(new Date(row.date), 'dd.MM')}</td>
-                                        <td className="px-4 md:px-6 py-3 text-right font-medium">{row.views}</td>
-                                        <td className="px-4 md:px-6 py-3 text-right font-medium">{row.clicks}</td>
-                                        <td className="px-4 md:px-6 py-3 text-right">
-                                            <span className="bg-slate-100 px-2 py-0.5 rounded-full font-black text-slate-700">
+                                    <tr key={i} className="bg-card hover:bg-muted/30 transition-colors">
+                                        <td className="px-3 md:px-5 py-2 font-bold text-foreground text-[11px]">{format(new Date(row.date), 'dd.MM')}</td>
+                                        <td className="px-3 md:px-5 py-2 text-right font-medium text-[11px]">{row.views}</td>
+                                        <td className="px-3 md:px-5 py-2 text-right font-medium text-[11px]">{row.clicks}</td>
+                                        <td className="px-3 md:px-5 py-2 text-right">
+                                            <span className="bg-muted px-1.5 py-0.5 rounded-full font-black text-foreground text-[10px]">
                                                 {row.total}
                                             </span>
                                         </td>
@@ -238,7 +238,7 @@ export default function ListingStatsPage() {
                                 ))}
                                 {chartData.length === 0 && (
                                     <tr>
-                                        <td colSpan={4} className="px-6 py-8 text-center text-slate-400 font-bold uppercase tracking-widest text-xs">
+                                        <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground font-bold uppercase tracking-widest text-[10px]">
                                             No data available for this range
                                         </td>
                                     </tr>

@@ -126,7 +126,7 @@ export default function PricingPage() {
     };
 
     return (
-        <div className="min-h-screen pt-20 sm:pt-24 pb-12 sm:pb-20 bg-slate-50/50">
+        <div className="min-h-screen pt-16 md:pt-20 pb-8 md:pb-16 bg-muted/20">
             <div className="container-wide mb-8">
                 <AppBreadcrumbs />
             </div>

@@ -3,16 +3,15 @@
 import { UserAvatar } from '@/components/shared/user-avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
 import { useMutation, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import {
     ArrowLeft,
     Image as ImageIcon,
     MessageSquare,
-    MoreVertical,
     Search,
     Send,
 } from 'lucide-react';
@@ -54,10 +53,9 @@ interface MessagesClientProps {
 }
 
 export function MessagesClient({
-  conversations: initialConversations, // We can use this as initial data or just ignore if we want purely dynamic
+  conversations: initialConversations,
   userId,
 }: MessagesClientProps) {
-  // Use Convex Query for real-time updates
   const conversations = (useQuery(api.messages.getConversations, { userId }) as Conversation[] | undefined) || initialConversations;
   
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
@@ -65,7 +63,6 @@ export function MessagesClient({
   const [searchQuery, setSearchQuery] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Messages Query
   const messages = (useQuery(api.messages.getConversation, 
     selectedConversation ? {
       listingId: selectedConversation.listingId as any,
@@ -85,7 +82,6 @@ export function MessagesClient({
     scrollToBottom();
   }, [messages]);
 
-  // Handle initial selection from URL if present
   useEffect(() => {
       const params = new URLSearchParams(window.location.search);
       const listingId = params.get('listingId');
@@ -99,8 +95,6 @@ export function MessagesClient({
 
   const handleSelectConversation = async (conversation: Conversation) => {
     setSelectedConversation(conversation);
-    
-    // Mark as read
     if (conversation.unreadCount && conversation.unreadCount > 0) {
         await markReadMutation({
             listingId: conversation.listingId as any,
@@ -112,7 +106,6 @@ export function MessagesClient({
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !selectedConversation) return;
-
     try {
         await sendMessageMutation({
             content: newMessage,
@@ -130,152 +123,169 @@ export function MessagesClient({
     conv.listing?.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const showChatOnMobile = !!selectedConversation;
+
   return (
-    <div className="min-h-screen bg-background py-8">
-      <div className="container-wide max-w-7xl">
-        <h1 className="text-4xl font-bold mb-8">Messages</h1>
+    <div className="space-y-3 md:space-y-4">
+      {/* Header */}
+      <div className="flex items-center gap-2.5">
+        <div className="p-1.5 md:p-2 bg-primary/10 rounded-lg md:rounded-xl">
+          <MessageSquare className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+        </div>
+        <div>
+          <h1 className="text-base md:text-xl font-black tracking-tight text-foreground">Messages</h1>
+          <p className="text-[10px] md:text-xs text-muted-foreground font-medium">
+            {filteredConversations.length} conversation{filteredConversations.length !== 1 ? 's' : ''}
+          </p>
+        </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6 h-[calc(100vh-200px)]">
-          {/* Conversations List */}
-          <Card className="flex flex-col overflow-hidden">
-            {/* Search */}
-            <div className="p-4 border-b">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search conversations..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
+      {/* Chat Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-0 lg:gap-3 h-[calc(100vh-180px)] md:h-[calc(100vh-200px)]">
+        
+        {/* Conversations Sidebar */}
+        <div className={cn(
+          "bg-card border border-border rounded-xl md:rounded-2xl flex flex-col overflow-hidden",
+          showChatOnMobile ? "hidden lg:flex" : "flex"
+        )}>
+          {/* Search */}
+          <div className="p-2.5 md:p-3 border-b border-border/50">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+              <Input
+                placeholder="Search conversations..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-8 h-8 md:h-9 text-xs md:text-sm bg-muted/50 border-0 rounded-lg focus-visible:ring-1"
+              />
             </div>
+          </div>
 
-            {/* Conversation List */}
-            <ScrollArea className="flex-1">
-              {filteredConversations.length > 0 ? (
-                <div className="divide-y text-left">
-                  {filteredConversations.map((conversation) => (
-                    <ConversationItem
-                      key={conversation._id}
-                      conversation={conversation}
-                      isSelected={
-                        selectedConversation?._id === conversation._id
-                      }
-                      onClick={() => handleSelectConversation(conversation)}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-                  <MessageSquare className="w-12 h-12 text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">
-                    {searchQuery
-                      ? 'No conversations found'
-                      : 'No messages yet'}
-                  </p>
-                </div>
-              )}
-            </ScrollArea>
-          </Card>
-
-          {/* Chat Area */}
-          <Card className="flex flex-col overflow-hidden">
-            {selectedConversation ? (
-              <>
-                {/* Chat Header */}
-                <div className="p-4 border-b flex items-center gap-4">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="lg:hidden"
-                    onClick={() => setSelectedConversation(null)}
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                  </Button>
-
-                  <Link
-                    href={`/listings/${selectedConversation.listingId}`}
-                    className="flex items-center gap-3 flex-1 hover:bg-muted/50 p-2 rounded-lg transition-colors"
-                  >
-                    {selectedConversation.listing?.thumbnail && (
-                      <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted shrink-0">
-                        <Image
-                          src={selectedConversation.listing.thumbnail}
-                          alt={selectedConversation.listing.title}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold line-clamp-1">
-                        {selectedConversation.listing?.title}
-                      </p>
-                      <p className="text-sm text-primary font-bold">
-                        €{selectedConversation.listing?.price.toLocaleString()}
-                      </p>
-                    </div>
-                  </Link>
-
-                  <Button variant="ghost" size="icon">
-                    <MoreVertical className="w-4 h-4" />
-                  </Button>
-                </div>
-
-                {/* Messages */}
-                <ScrollArea className="flex-1 p-4">
-                  <div className="space-y-4">
-                    {messages.map((message: any) => (
-                      <MessageBubble
-                        key={message._id}
-                        message={message}
-                        isOwn={message.senderId === userId}
-                      />
-                    ))}
-                    <div ref={messagesEndRef} />
-                  </div>
-                </ScrollArea>
-
-                {/* Input */}
-                <div className="p-4 border-t">
-                  <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon">
-                      <ImageIcon className="w-4 h-4" />
-                    </Button>
-                    <Input
-                      placeholder="Type a message..."
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                          e.preventDefault();
-                          handleSendMessage();
-                        }
-                      }}
-                      className="flex-1"
-                    />
-                    <Button
-                      onClick={handleSendMessage}
-                      disabled={!newMessage.trim()}
-                    >
-                      <Send className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </>
+          {/* Conversation List */}
+          <ScrollArea className="flex-1">
+            {filteredConversations.length > 0 ? (
+              <div className="divide-y divide-border/50">
+                {filteredConversations.map((conversation) => (
+                  <ConversationItem
+                    key={conversation._id}
+                    conversation={conversation}
+                    isSelected={selectedConversation?._id === conversation._id}
+                    onClick={() => handleSelectConversation(conversation)}
+                  />
+                ))}
+              </div>
             ) : (
-              <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-                <MessageSquare className="w-16 h-16 text-muted-foreground mb-4" />
-                <h3 className="text-xl font-semibold mb-2">
-                  Select a conversation
-                </h3>
-                <p className="text-muted-foreground">
-                  Choose a conversation from the list to start messaging
+              <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center mb-3">
+                  <MessageSquare className="w-5 h-5 text-muted-foreground" />
+                </div>
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                  {searchQuery ? 'No results' : 'No messages yet'}
                 </p>
               </div>
             )}
-          </Card>
+          </ScrollArea>
+        </div>
+
+        {/* Chat Area */}
+        <div className={cn(
+          "bg-card border border-border rounded-xl md:rounded-2xl flex flex-col overflow-hidden",
+          showChatOnMobile ? "flex" : "hidden lg:flex"
+        )}>
+          {selectedConversation ? (
+            <>
+              {/* Chat Header */}
+              <div className="p-2.5 md:p-3 border-b border-border/50 flex items-center gap-2.5">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="lg:hidden h-7 w-7 rounded-lg"
+                  onClick={() => setSelectedConversation(null)}
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                </Button>
+
+                <Link
+                  href={`/listings/${selectedConversation.listingId}`}
+                  className="flex items-center gap-2.5 flex-1 hover:bg-muted/50 p-1.5 rounded-lg transition-colors min-w-0"
+                >
+                  {selectedConversation.listing?.thumbnail && (
+                    <div className="relative w-9 h-9 md:w-10 md:h-10 rounded-lg overflow-hidden bg-muted shrink-0">
+                      <Image
+                        src={selectedConversation.listing.thumbnail}
+                        alt={selectedConversation.listing.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-xs md:text-sm line-clamp-1 text-foreground">
+                      {selectedConversation.listing?.title}
+                    </p>
+                    <p className="text-[10px] md:text-xs text-primary font-bold">
+                      €{selectedConversation.listing?.price.toLocaleString()}
+                    </p>
+                  </div>
+                </Link>
+              </div>
+
+              {/* Messages */}
+              <ScrollArea className="flex-1 p-3 md:p-4">
+                <div className="space-y-2.5 md:space-y-3">
+                  {messages.map((message: any) => (
+                    <MessageBubble
+                      key={message._id}
+                      message={message}
+                      isOwn={message.senderId === userId}
+                    />
+                  ))}
+                  <div ref={messagesEndRef} />
+                </div>
+              </ScrollArea>
+
+              {/* Input */}
+              <div className="p-2.5 md:p-3 border-t border-border/50 bg-muted/30">
+                <div className="flex items-center gap-1.5 md:gap-2">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg shrink-0 text-muted-foreground hover:text-foreground">
+                    <ImageIcon className="w-4 h-4" />
+                  </Button>
+                  <Input
+                    placeholder="Type a message..."
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }
+                    }}
+                    className="flex-1 h-8 md:h-9 text-xs md:text-sm bg-background border-border rounded-lg"
+                  />
+                  <Button
+                    onClick={handleSendMessage}
+                    disabled={!newMessage.trim()}
+                    size="icon"
+                    className="h-8 w-8 md:h-9 md:w-9 rounded-lg shrink-0"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-muted flex items-center justify-center mb-3">
+                <MessageSquare className="w-6 h-6 md:w-7 md:h-7 text-muted-foreground" />
+              </div>
+              <h3 className="text-sm md:text-base font-bold text-foreground mb-1">
+                Select a conversation
+              </h3>
+              <p className="text-[10px] md:text-xs text-muted-foreground font-medium max-w-[200px]">
+                Choose a conversation from the list to start messaging
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -299,35 +309,35 @@ function ConversationItem({
   return (
     <button
       onClick={onClick}
-      className={`
-        w-full p-4 flex items-start gap-3 hover:bg-muted/50 transition-colors text-left
-        ${isSelected ? 'bg-muted' : ''}
-      `}
+      className={cn(
+        "w-full p-2.5 md:p-3 flex items-start gap-2.5 hover:bg-muted/50 transition-colors text-left",
+        isSelected && "bg-primary/5 border-l-2 border-l-primary"
+      )}
     >
       <UserAvatar 
         user={{ id: conversation.otherUserId } as any}
         fallbackText={conversation.otherUserId.substring(0, 2).toUpperCase()}
-        className="shrink-0"
+        className="shrink-0 w-9 h-9 md:w-10 md:h-10"
       />
 
       <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-2 mb-1">
-          <p className="font-semibold line-clamp-1">
+        <div className="flex items-start justify-between gap-1.5 mb-0.5">
+          <p className="font-bold text-xs md:text-sm line-clamp-1 text-foreground">
             {conversation.listing?.title}
           </p>
-          <span className="text-xs text-muted-foreground shrink-0">
+          <span className="text-[9px] md:text-[10px] text-muted-foreground shrink-0 font-medium mt-0.5">
             {timeAgo}
           </span>
         </div>
-        <p className="text-sm text-muted-foreground line-clamp-2 mb-1">
+        <p className="text-[11px] md:text-xs text-muted-foreground line-clamp-1 mb-1">
           {conversation.lastMessage}
         </p>
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-primary">
+        <div className="flex items-center gap-1.5">
+          <span className="text-[10px] md:text-xs font-bold text-primary">
             €{conversation.listing?.price.toLocaleString()}
           </span>
           {conversation.unreadCount && conversation.unreadCount > 0 && (
-            <Badge variant="destructive" className="h-5 min-w-5 px-1.5">
+            <Badge className="h-4 min-w-4 px-1 text-[9px] font-bold bg-primary text-primary-foreground rounded-full">
               {conversation.unreadCount}
             </Badge>
           )}
@@ -352,23 +362,21 @@ function MessageBubble({
   return (
     <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
       <div
-        className={`
-          max-w-[70%] rounded-2xl px-4 py-2
-          ${
-            isOwn
-              ? 'bg-primary text-primary-foreground rounded-br-sm'
-              : 'bg-muted rounded-bl-sm'
-          }
-        `}
+        className={cn(
+          "max-w-[75%] rounded-2xl px-3 py-2",
+          isOwn
+            ? 'bg-primary text-primary-foreground rounded-br-sm'
+            : 'bg-muted rounded-bl-sm'
+        )}
       >
-        <p className="text-sm whitespace-pre-wrap break-words">
+        <p className="text-xs md:text-sm whitespace-pre-wrap break-words">
           {message.content}
         </p>
         <p
-          className={`
-            text-xs mt-1
-            ${isOwn ? 'text-primary-foreground/70' : 'text-muted-foreground'}
-          `}
+          className={cn(
+            "text-[9px] md:text-[10px] mt-0.5",
+            isOwn ? 'text-primary-foreground/60' : 'text-muted-foreground'
+          )}
         >
           {timeAgo}
         </p>

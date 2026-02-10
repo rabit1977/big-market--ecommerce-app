@@ -25,13 +25,13 @@ import { EditProfileForm, EditProfileFormValues } from './edit-user-form';
  */
 function ProfileSkeleton() {
   return (
-    <div className='max-w-3xl mx-auto space-y-6'>
-      <Skeleton className='h-48 w-full rounded-xl' />
-      <div className="flex gap-4">
-        <Skeleton className='h-32 w-32 rounded-xl -mt-16 border-4 border-white' />
+    <div className='max-w-3xl mx-auto space-y-3'>
+      <Skeleton className='h-24 md:h-36 w-full rounded-xl' />
+      <div className="flex gap-3">
+        <Skeleton className='h-16 w-16 md:h-20 md:w-20 rounded-lg -mt-8 md:-mt-10 border-3 border-background' />
       </div>
-      <Skeleton className='h-10 w-full' />
-      <Skeleton className='h-96 w-full' />
+      <Skeleton className='h-8 w-full' />
+      <Skeleton className='h-64 w-full rounded-xl' />
     </div>
   );
 }
@@ -123,8 +123,8 @@ export default function EditProfilePage() {
 
   if (user === undefined) {
     return (
-      <div className='min-h-screen pt-24 pb-12 bg-background'>
-        <div className='container mx-auto px-4'>
+      <div className='min-h-screen pt-16 md:pt-20 pb-8 bg-background'>
+        <div className='container mx-auto px-3 md:px-4'>
           <ProfileSkeleton />
         </div>
       </div>
@@ -136,29 +136,27 @@ export default function EditProfilePage() {
   }
 
   return (
-    <div className='min-h-screen pt-24 pb-12 bg-background'>
-      <div className='container max-w-4xl mx-auto px-4'>
+    <div className='min-h-screen pt-16 md:pt-20 pb-8 bg-background'>
+      <div className='container max-w-4xl mx-auto px-3 md:px-4'>
         <AppBreadcrumbs />
         {/* Header */}
-        <div className='mb-8 flex items-center justify-between'>
-          <div>
-              <Link href='/account' className="text-sm text-muted-foreground flex items-center gap-1 hover:text-foreground mb-2 transition-colors">
-                 <ArrowLeft className='h-4 w-4' /> Back to Account
+        <div className='mb-5 md:mb-8'>
+              <Link href='/account' className="text-xs md:text-sm text-muted-foreground flex items-center gap-1 hover:text-foreground mb-2 transition-colors">
+                 <ArrowLeft className='h-3.5 w-3.5' /> Back to Account
               </Link>
-              <h1 className='text-3xl font-black tracking-tighter text-foreground'>
+              <h1 className='text-lg md:text-2xl font-black tracking-tighter text-foreground'>
                 Edit Profile
               </h1>
-              <p className='text-muted-foreground font-medium'>
+              <p className='text-muted-foreground text-xs md:text-sm font-medium'>
                 Manage your public profile and preferences
               </p>
-          </div>
         </div>
 
-        <Card className="border-border shadow-sm bg-card overflow-hidden rounded-3xl">
+        <Card className="border-border shadow-sm bg-card overflow-hidden rounded-2xl md:rounded-3xl">
             <CardHeader className="sr-only">
                <CardTitle>Edit Profile Form</CardTitle>
             </CardHeader>
-            <CardContent className="p-0 sm:p-6 lg:p-8">
+            <CardContent className="p-0 sm:p-4 md:p-6 lg:p-8">
                 <EditProfileForm
                   user={user as any}
                   onSubmit={handleUpdateProfile}

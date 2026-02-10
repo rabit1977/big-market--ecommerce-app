@@ -35,34 +35,33 @@ export function MyListingsDashboardHeader() {
   });
 
   if (!dashboardData) return (
-      <div className="w-full h-48 bg-gray-100 animate-pulse rounded-3xl mb-8" />
+      <div className="w-full h-28 md:h-36 bg-muted animate-pulse rounded-xl md:rounded-2xl mb-4 md:mb-6" />
   );
 
   const { user, stats } = dashboardData;
   const isCompany = user.accountType === 'COMPANY';
   const displayName = isCompany && user.companyName ? user.companyName : user.name;
   
-  // Mock data for Renewal Stats until we have real logs
   const renewalStats = {
       daily: stats.renewedToday || 0,
-      weekly: 12, // Mock
-      monthly: 45 // Mock
+      weekly: 12,
+      monthly: 45
   };
 
   return (
-    <div className="space-y-6 mb-10">
+    <div className="space-y-3 md:space-y-4 mb-4 md:mb-6">
       {/* 1. Header Card: Identity & Wallet */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+      <div className="bg-card rounded-xl md:rounded-2xl p-3 md:p-5 shadow-sm border border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-5 relative overflow-hidden">
           {/* Background decoration */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/5 to-primary/10 rounded-full blur-3xl -z-0 opacity-50 translate-x-12 -translate-y-12" />
+          <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-primary/5 to-primary/10 rounded-full blur-3xl -z-0 opacity-50 translate-x-10 -translate-y-10" />
           
-          <div className="flex items-center gap-6 relative z-10 w-full md:w-auto">
+          <div className="flex items-center gap-3 md:gap-4 relative z-10 w-full md:w-auto">
              <div className="relative">
-                 <div className="w-20 h-20 rounded-full border-4 border-white shadow-md overflow-hidden bg-slate-100 flex items-center justify-center">
+                 <div className="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-background shadow-md overflow-hidden bg-muted flex items-center justify-center shrink-0">
                      {user.image ? (
                          <img src={user.image} alt={displayName || 'User'} className="w-full h-full object-cover" />
                      ) : (
-                         <span className="text-2xl font-bold text-slate-400">
+                         <span className="text-sm md:text-base font-bold text-muted-foreground">
                              {(displayName || 'U').slice(0, 2).toUpperCase()}
                          </span>
                      )}
@@ -71,8 +70,8 @@ export function MyListingsDashboardHeader() {
                      <TooltipProvider>
                          <Tooltip>
                              <TooltipTrigger asChild>
-                                 <div className="absolute -bottom-1 -right-1 bg-blue-500 text-white p-1 rounded-full border-2 border-white shadow-sm cursor-help">
-                                     <CheckCircle2 className="w-4 h-4" />
+                                 <div className="absolute -bottom-0.5 -right-0.5 bg-blue-500 text-white p-0.5 rounded-full border-2 border-background shadow-sm cursor-help">
+                                     <CheckCircle2 className="w-2.5 h-2.5" />
                                  </div>
                              </TooltipTrigger>
                              <TooltipContent>Verified Account</TooltipContent>
@@ -80,105 +79,101 @@ export function MyListingsDashboardHeader() {
                      </TooltipProvider>
                  )}
              </div>
-             <div>
-                 <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
+             <div className="min-w-0">
+                 <h1 className="text-sm md:text-lg font-black text-foreground flex items-center gap-1.5 truncate">
                      {displayName}
                      {user.membershipStatus === 'ACTIVE' && (
-                         <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-[10px] font-bold uppercase tracking-wider border border-amber-200 flex items-center gap-1">
-                             <Crown className="w-3 h-3" />
+                         <span className="px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[8px] md:text-[9px] font-bold uppercase tracking-wider border border-amber-500/20 flex items-center gap-0.5 shrink-0">
+                             <Crown className="w-2.5 h-2.5" />
                              {user.membershipTier}
                          </span>
                      )}
                  </h1>
-                 <p className="text-muted-foreground text-sm font-medium">
+                 <p className="text-muted-foreground text-[10px] md:text-xs font-medium">
                      {isCompany ? 'Verified Business Account' : 'Personal Account'}
                  </p>
                  
                  {user.membershipExpiresAt && (
-                     <div className="flex items-center gap-2 mt-2 text-xs text-slate-500">
-                         <Activity className="w-3 h-3 text-emerald-500" />
-                         <span>Subscription active until {format(new Date(user.membershipExpiresAt), 'MMM dd, yyyy')}</span>
+                     <div className="flex items-center gap-1.5 mt-1 text-[9px] md:text-[10px] text-muted-foreground">
+                         <Activity className="w-2.5 h-2.5 text-emerald-500" />
+                         <span>Active until {format(new Date(user.membershipExpiresAt), 'MMM dd, yyyy')}</span>
                      </div>
                  )}
              </div>
           </div>
 
-          <div className="flex items-center gap-4 relative z-10 w-full md:w-auto bg-slate-50 p-4 rounded-2xl border border-slate-100">
+          <div className="flex items-center gap-3 relative z-10 w-full md:w-auto bg-muted/50 p-2.5 md:p-3 rounded-lg md:rounded-xl border border-border/50">
               <div className="text-right flex-1 md:flex-none">
-                  <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Your Balance</div>
-                  <div className="text-2xl font-black text-slate-900">{user.credits.toFixed(2)} MKD</div>
+                  <div className="text-[8px] md:text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-0.5">Balance</div>
+                  <div className="text-base md:text-lg font-black text-foreground">{user.credits.toFixed(2)} <span className="text-[10px] md:text-xs font-bold text-muted-foreground">MKD</span></div>
               </div>
-              <Button asChild size="lg" className="rounded-xl font-bold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90">
+              <Button asChild size="sm" className="rounded-lg font-bold shadow-sm bg-primary hover:bg-primary/90 h-8 md:h-9 text-xs px-3">
                   <Link href="/wallet/top-up">
-                      <Plus className="w-5 h-5 mr-2" />
-                      Add Money
+                      <Plus className="w-3.5 h-3.5 mr-1" />
+                      Add
                   </Link>
               </Button>
           </div>
       </div>
 
       {/* 2. Scrollable Stats Section */}
-      <div className="flex overflow-x-auto pb-4 gap-4 snap-x md:grid md:grid-cols-4 md:overflow-visible md:pb-0 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-none">
+      <div className="flex overflow-x-auto pb-2 gap-2 md:gap-3 snap-x md:grid md:grid-cols-4 md:overflow-visible md:pb-0 -mx-3 px-3 md:mx-0 md:px-0 scrollbar-none">
           {/* Money Spent Today */}
-          <Card className="min-w-[260px] snap-center md:min-w-0 border-slate-200 shadow-sm hover:shadow-md transition-all bg-gradient-to-br from-white to-slate-50/50">
-              <CardContent className="p-5">
-                  <div className="flex items-center justify-between mb-4">
-                      <div className="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center text-rose-600">
-                          <DollarSign className="w-5 h-5" />
+          <Card className="min-w-[180px] md:min-w-0 snap-center border-border shadow-sm hover:shadow-md transition-all bg-card">
+              <CardContent className="p-3 md:p-4">
+                  <div className="flex items-center justify-between mb-2">
+                      <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-500">
+                          <DollarSign className="w-3.5 h-3.5 md:w-4 md:h-4" />
                       </div>
-                      <span className="text-xs font-bold text-rose-500 bg-rose-50 px-2 py-1 rounded-full">Today</span>
+                      <span className="text-[8px] md:text-[9px] font-bold text-rose-500 bg-rose-500/10 px-1.5 py-0.5 rounded-full uppercase tracking-wider">Today</span>
                   </div>
-                  <div className="space-y-1">
-                      <p className="text-sm font-medium text-muted-foreground">Spent Today</p>
-                      <h3 className="text-2xl font-black text-slate-900">{stats.spendToday.toFixed(2)} <span className="text-sm font-bold text-slate-400">MKD</span></h3>
-                  </div>
+                  <p className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-0.5">Spent</p>
+                  <h3 className="text-base md:text-lg font-black text-foreground">{stats.spendToday.toFixed(2)} <span className="text-[9px] font-bold text-muted-foreground">MKD</span></h3>
               </CardContent>
           </Card>
 
           {/* Renewal Stats */}
-          <Card className="min-w-[300px] snap-center md:min-w-0 border-slate-200 shadow-sm hover:shadow-md transition-all md:col-span-2 bg-white">
-              <CardContent className="p-5">
-                  <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                          <RefreshCw className="w-5 h-5" />
+          <Card className="min-w-[220px] md:min-w-0 snap-center border-border shadow-sm hover:shadow-md transition-all md:col-span-2 bg-card">
+              <CardContent className="p-3 md:p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                      <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                          <RefreshCw className="w-3.5 h-3.5 md:w-4 md:h-4" />
                       </div>
                       <div>
-                          <h3 className="font-bold text-slate-900">Renewal Activity</h3>
-                          <p className="text-xs text-muted-foreground">Listings renewed recently</p>
+                          <h3 className="font-bold text-foreground text-xs md:text-sm">Renewals</h3>
+                          <p className="text-[8px] md:text-[9px] text-muted-foreground font-medium">Recently renewed</p>
                       </div>
                   </div>
-                  <div className="grid grid-cols-3 gap-4 border-t pt-4">
+                  <div className="grid grid-cols-3 gap-2 md:gap-3 border-t border-border/50 pt-2">
                       <div>
-                          <p className="text-xs text-muted-foreground mb-1">Daily</p>
-                          <p className="text-xl font-black text-slate-900">{renewalStats.daily}</p>
+                          <p className="text-[8px] md:text-[9px] text-muted-foreground font-bold uppercase tracking-widest mb-0.5">Daily</p>
+                          <p className="text-sm md:text-base font-black text-foreground">{renewalStats.daily}</p>
                       </div>
-                      <div className="border-l pl-4">
-                          <p className="text-xs text-muted-foreground mb-1">Weekly</p>
-                          <p className="text-xl font-black text-slate-900">{renewalStats.weekly}</p>
+                      <div className="border-l border-border/50 pl-2 md:pl-3">
+                          <p className="text-[8px] md:text-[9px] text-muted-foreground font-bold uppercase tracking-widest mb-0.5">Weekly</p>
+                          <p className="text-sm md:text-base font-black text-foreground">{renewalStats.weekly}</p>
                       </div>
-                      <div className="border-l pl-4">
-                          <p className="text-xs text-muted-foreground mb-1">Monthly</p>
-                          <p className="text-xl font-black text-slate-900">{renewalStats.monthly}</p>
+                      <div className="border-l border-border/50 pl-2 md:pl-3">
+                          <p className="text-[8px] md:text-[9px] text-muted-foreground font-bold uppercase tracking-widest mb-0.5">Monthly</p>
+                          <p className="text-sm md:text-base font-black text-foreground">{renewalStats.monthly}</p>
                       </div>
                   </div>
               </CardContent>
           </Card>
 
           {/* Advertising Stats */}
-          <Card className="min-w-[260px] snap-center md:min-w-0 border-slate-200 shadow-sm hover:shadow-md transition-all bg-gradient-to-br from-amber-50 to-white">
-              <CardContent className="p-5">
-                  <div className="flex items-center justify-between mb-4">
-                      <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
-                          <Megaphone className="w-5 h-5" />
+          <Card className="min-w-[180px] md:min-w-0 snap-center border-border shadow-sm hover:shadow-md transition-all bg-card">
+              <CardContent className="p-3 md:p-4">
+                  <div className="flex items-center justify-between mb-2">
+                      <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500">
+                          <Megaphone className="w-3.5 h-3.5 md:w-4 md:h-4" />
                       </div>
-                      <Link href="/my-listings/stats" className="text-xs font-bold text-primary hover:underline flex items-center">
-                          Details <ArrowRight className="w-3 h-3 ml-1" />
+                      <Link href="/my-listings/stats" className="text-[8px] md:text-[9px] font-bold text-primary hover:underline flex items-center uppercase tracking-wider">
+                          Details <ArrowRight className="w-2.5 h-2.5 ml-0.5" />
                       </Link>
                   </div>
-                  <div className="space-y-1">
-                      <p className="text-sm font-medium text-muted-foreground">Total Views</p>
-                      <h3 className="text-2xl font-black text-slate-900">{stats.totalViews.toLocaleString()}</h3>
-                  </div>
+                  <p className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-0.5">Total Views</p>
+                  <h3 className="text-base md:text-lg font-black text-foreground">{stats.totalViews.toLocaleString()}</h3>
               </CardContent>
           </Card>
       </div>
