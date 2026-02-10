@@ -19,6 +19,7 @@ import type * as cleanup from "../cleanup.js";
 import type * as cleanupFavorites from "../cleanupFavorites.js";
 import type * as clearListings from "../clearListings.js";
 import type * as clearSeedData from "../clearSeedData.js";
+import type * as contact from "../contact.js";
 import type * as debug from "../debug.js";
 import type * as favorites from "../favorites.js";
 import type * as history from "../history.js";
@@ -60,6 +61,7 @@ declare const fullApi: ApiFromModules<{
   cleanupFavorites: typeof cleanupFavorites;
   clearListings: typeof clearListings;
   clearSeedData: typeof clearSeedData;
+  contact: typeof contact;
   debug: typeof debug;
   favorites: typeof favorites;
   history: typeof history;

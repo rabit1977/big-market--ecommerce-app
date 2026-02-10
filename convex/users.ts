@@ -243,6 +243,35 @@ export const deleteAccount = mutation({
   },
 });
 
+export const completeRegistration = mutation({
+  args: {
+    externalId: v.string(),
+    city: v.string(),
+    municipality: v.string(),
+    phone: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.externalId))
+      .unique();
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    await ctx.db.patch(user._id, {
+      city: args.city,
+      municipality: args.municipality,
+      phone: args.phone,
+      registrationComplete: true,
+      termsAcceptedAt: Date.now(),
+    });
+
+    return user._id;
+  },
+});
+
 export const getMyDashboardStats = query({
   args: { externalId: v.string() },
   handler: async (ctx, args) => {

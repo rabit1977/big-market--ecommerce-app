@@ -24,6 +24,8 @@ export default defineSchema({
     hasWhatsapp: v.optional(v.boolean()),
     hasViber: v.optional(v.boolean()),
     
+    registrationComplete: v.optional(v.boolean()),
+    termsAcceptedAt: v.optional(v.number()),
     marketingEmails: v.optional(v.boolean()),
     orderEmails: v.optional(v.boolean()),
     reviewEmails: v.optional(v.boolean()),
@@ -243,4 +245,14 @@ export default defineSchema({
   }).index("by_user", ["userId"])
     .index("by_user_listing", ["userId", "listingId"])
     .index("by_user_time", ["userId", "viewedAt"]),
+
+  contactSubmissions: defineTable({
+    name: v.string(),
+    email: v.string(),
+    phone: v.optional(v.string()),
+    subject: v.string(),
+    message: v.string(),
+    status: v.string(), // "NEW", "READ", "RESOLVED"
+    createdAt: v.number(),
+  }).index("by_status", ["status"]),
 });

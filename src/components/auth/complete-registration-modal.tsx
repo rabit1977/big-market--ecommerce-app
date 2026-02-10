@@ -1,0 +1,184 @@
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { useMutation, useQuery } from 'convex/react';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { api } from '../../../convex/_generated/api';
+
+const CITIES = [
+    "Skopje", "Bitola", "Kumanovo", "Prilep", "Tetovo", "Veles", "Stip", "Ohrid", "Gostivar", "Strumica",
+    "Kavadarci", "Kocani", "Kicevo", "Struga", "Radovis", "Gevgelija", "Debar", "Kriva Palanka", "Sveti Nikole", "Negotino",
+    "Delcevo", "Vinica", "Resen", "Probistip", "Berovo", "Kratovo", "Bogdanci", "Krusevo", "Makedonski Brod", "Demir Kapija"
+];
+
+const MUNICIPALITIES = [
+    "Aerodrom", "Centar", "Karpos", "Kisela Voda", "Gazi Baba", "Butel", "Chair", "Gjorce Petrov", "Saraj", "Suto Orizari",
+    "Aracinovo", "Ilinden", "Petrovec", "Sopiste", "Studenicani", "Zelenikovo", "Cucer Sandevo",
+    ...CITIES.filter(c => c !== "Skopje") // Add other cities as municipalities for simplicity
+];
+
+export function CompleteRegistrationModal() {
+  const { data: session } = useSession();
+  const [isOpen, setIsOpen] = useState(false);
+  const [city, setCity] = useState('');
+  const [municipality, setMunicipality] = useState('');
+  const [phone, setPhone] = useState('');
+  const [agreed, setAgreed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // We use "skip" if no user ID, but the query hook handles "skip" by passing "skip" as the argument? 
+  // No, convex/react useQuery supports "skip" token from the second argument conditionally? 
+  // Actually the standard pattern is `useQuery(api.foo, args)` and pass "skip" if args not ready.
+  // But standard `useQuery` expects exact args. 
+  // Convex React `useQuery` signatures: `useQuery(api.func, args)` or `useQuery(api.func, "skip")`.
+  
+  const user = useQuery(api.users.getByExternalId, session?.user?.id ? { externalId: session.user.id } : "skip");
+  const completeRegistration = useMutation(api.users.completeRegistration);
+
+  useEffect(() => {
+    // Only check if we have a loaded user
+    if (user) {
+        // Condition: Not marked as complete AND (missing phone OR missing city)
+        // We check for specific fields to be sure, in case `registrationComplete` flag wasn't set for old users
+        const needsCompletion = !user.registrationComplete || (!user.phone || !user.city);
+        
+        if (needsCompletion) {
+            setIsOpen(true);
+            // Pre-fill if they have some data
+            if (user.city) setCity(user.city);
+            if (user.phone) setPhone(user.phone);
+            if (user.municipality) setMunicipality(user.municipality);
+        }
+    }
+  }, [user]);
+
+  const handleSubmit = async () => {
+    if (!city || !municipality || !phone) {
+        toast.error('Please fill in all fields');
+        return;
+    }
+    if (!agreed) {
+        toast.error('You must agree to the Terms of Use');
+        return;
+    }
+
+    setIsSubmitting(true);
+    try {
+        await completeRegistration({
+            externalId: session!.user!.id,
+            city,
+            municipality,
+            phone
+        });
+        setIsOpen(false);
+        toast.success('Registration completed!');
+    } catch (error) {
+        toast.error('An error occurred. Please try again.');
+        console.error(error);
+    } finally {
+        setIsSubmitting(false);
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <Dialog open={isOpen} onOpenChange={(open) => {
+        // Prevent closing by clicking outside if it's mandatory
+        // For better UX we allow closing but it will pop up again on refresh/nav if not completed
+        // The user asked "when someone for the first time creates profile", so this acts as a gate.
+        // We'll enforce it by not allowing close essentially (or re-opening).
+        // setOpen(open)
+    }}>
+      <DialogContent 
+        className="sm:max-w-[425px]" 
+        onInteractOutside={(e) => e.preventDefault()} 
+        onEscapeKeyDown={(e) => e.preventDefault()}
+        showCloseButton={false}
+      >
+        <DialogHeader>
+          <DialogTitle>Complete Registration</DialogTitle>
+          <DialogDescription>
+            Please enter your location and phone number to complete your registration.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid gap-2">
+            <Label htmlFor="location">City</Label>
+             <Select onValueChange={setCity} value={city}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select City" />
+              </SelectTrigger>
+              <SelectContent className="max-h-[200px]">
+                {CITIES.sort().map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="municipality">Municipality</Label>
+             <Select onValueChange={setMunicipality} value={municipality}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select Municipality" />
+              </SelectTrigger>
+               <SelectContent className="max-h-[200px]">
+                {MUNICIPALITIES.sort().map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="phone">Phone Number</Label>
+            <Input 
+                id="phone" 
+                value={phone} 
+                onChange={(e) => setPhone(e.target.value)} 
+                placeholder="07x xxx xxx" 
+            />
+          </div>
+          <div className="flex items-start space-x-2 pt-2">
+             <Checkbox 
+                id="terms" 
+                checked={agreed} 
+                onCheckedChange={(c) => setAgreed(c as boolean)} 
+                className="mt-1"
+             />
+             <label
+                htmlFor="terms"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-muted-foreground"
+              >
+                I agree to the{' '}
+                <Link href="/privacy" className="text-primary hover:underline underline-offset-4" target="_blank">
+                  Terms of Use & Privacy Policy
+                </Link>
+              </label>
+          </div>
+        </div>
+        <DialogFooter>
+          <Button onClick={handleSubmit} disabled={isSubmitting} className="w-full bg-primary font-bold">
+            {isSubmitting ? 'Saving...' : 'Save & Continue'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
