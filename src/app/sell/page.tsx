@@ -24,7 +24,7 @@ export default async function SellPage() {
   const categories = await fetchQuery(api.categories.list);
 
   return (
-    <div className="min-h-screen bg-background pt-16 md:pt-20 pb-8">
+    <div className="min-h-screen bg-background pt-4 md:pt-6 pb-8">
       <div className="container-wide px-3 md:px-4">
         <AppBreadcrumbs />
         <PostListingWizard categories={categories} userId={session.user.id || ""} />

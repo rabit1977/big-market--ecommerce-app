@@ -62,7 +62,7 @@ const AccountPage = async () => {
 
   return (
     <AuthGuard>
-      <div className='min-h-screen bg-muted/20 pb-12 pt-16 md:pt-20'>
+      <div className='min-h-screen bg-muted/20 pb-12 pt-4 md:pt-6'>
         <div className='container-wide space-y-5 md:space-y-8'>
           {/* Breadcrumbs */}
           <div className="px-1">

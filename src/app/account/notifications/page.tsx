@@ -20,7 +20,7 @@ export default async function NotificationsPage() {
   const initialData = await getNotificationsAction({ page: 1, limit: 20 });
 
   return (
-    <div className="container-wide pt-16 md:pt-20 pb-8 px-3 md:px-4">
+    <div className="container-wide pt-4 md:pt-6 pb-8 px-3 md:px-4">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-lg md:text-2xl font-black tracking-tighter text-foreground mb-1">Notifications</h1>
         <p className="text-muted-foreground text-xs md:text-sm mb-5 md:mb-8">

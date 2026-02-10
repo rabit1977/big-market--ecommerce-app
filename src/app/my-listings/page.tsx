@@ -29,7 +29,7 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
   }
 
   return (
-    <div className='container-wide pt-16 md:pt-20 min-h-screen pb-12 bg-muted/10 px-3 md:px-4'>
+    <div className='container-wide pt-4 md:pt-6 min-h-screen pb-12 bg-muted/10 px-3 md:px-4'>
       <AppBreadcrumbs />
       {/* Dashboard Stats Header */}
       <MyListingsDashboardHeader />

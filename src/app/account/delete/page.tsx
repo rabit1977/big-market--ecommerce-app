@@ -36,7 +36,7 @@ export default function DeleteAccountPage() {
     };
 
     return (
-        <div className="min-h-screen pt-16 md:pt-20 pb-8 bg-muted/20">
+        <div className="min-h-screen pt-4 md:pt-6 pb-8 bg-muted/20">
             <div className="container max-w-xl mx-auto px-3 md:px-4">
                 <Card className="border-destructive/30 shadow-sm rounded-2xl overflow-hidden">
                     <CardHeader className="p-4 md:p-6 pb-3 md:pb-4">

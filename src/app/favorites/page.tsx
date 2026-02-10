@@ -52,7 +52,7 @@ export default function FavoritesPage() {
 
   if (status === 'loading') {
       return (
-        <div className="min-h-screen pt-16 md:pt-20 flex items-center justify-center">
+        <div className="min-h-screen pt-4 md:pt-6 flex items-center justify-center">
           <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
         </div>
       );
@@ -60,7 +60,7 @@ export default function FavoritesPage() {
 
   if (status === 'unauthenticated') {
      return (
-         <div className="min-h-screen pt-16 md:pt-20 flex flex-col items-center justify-center gap-3 px-4">
+         <div className="min-h-screen pt-4 md:pt-6 flex flex-col items-center justify-center gap-3 px-4">
              <h1 className="text-lg font-bold text-foreground">Please Sign In</h1>
              <p className="text-xs text-muted-foreground">You need to be logged in to view favorites.</p>
              <Link href="/auth"><Button size="sm" className="rounded-lg font-bold text-xs">Sign In</Button></Link>
@@ -69,7 +69,7 @@ export default function FavoritesPage() {
   }
 
   return (
-    <div className='min-h-screen pt-16 md:pt-20 pb-8 bg-muted/10'>
+    <div className='min-h-screen pt-4 md:pt-6 pb-8 bg-muted/10'>
       <div className='container-wide mx-auto px-3 md:px-4'>
         <AppBreadcrumbs />
         

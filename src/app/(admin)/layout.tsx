@@ -25,7 +25,7 @@ export default function AdminLayout({
           {/* Main Content with bottom padding on mobile */}
           <main className='flex-1 overflow-x-hidden pb-20 lg:pb-0'>
             <div className='container-wide py-6 lg:py-8'>
-              <div className="mb-6">
+              <div className="mb-3">
                 <AppBreadcrumbs />
               </div>
               <div className='page-enter'>{children}</div>

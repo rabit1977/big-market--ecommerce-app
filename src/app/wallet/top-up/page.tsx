@@ -45,7 +45,7 @@ export default function TopUpPage() {
   };
 
   return (
-    <div className="min-h-screen pt-16 md:pt-20 pb-8 bg-muted/20">
+    <div className="min-h-screen pt-4 md:pt-6 pb-8 bg-muted/20">
       <div className="container max-w-2xl mx-auto px-3 md:px-4">
         
         <div className="flex items-center gap-3 mb-5 md:mb-8">

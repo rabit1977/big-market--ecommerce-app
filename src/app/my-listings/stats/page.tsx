@@ -46,7 +46,7 @@ export default function ListingStatsPage() {
     const totalClicks = chartData.reduce((acc, curr) => acc + (curr.clicks || 0), 0);
 
     return (
-        <div className="min-h-screen pt-16 md:pt-20 pb-8 bg-muted/20">
+        <div className="min-h-screen pt-4 md:pt-6 pb-8 bg-muted/20">
             <div className="container max-w-4xl mx-auto px-3 md:px-4">
                 
                 {/* Header */}

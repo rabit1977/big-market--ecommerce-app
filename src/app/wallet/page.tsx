@@ -40,7 +40,7 @@ export default function WalletPage() {
     if (!user) return <div className="p-20 text-center text-muted-foreground">Loading Wallet...</div>;
 
     return (
-        <div className="min-h-screen pt-16 md:pt-20 pb-8 bg-muted/20">
+        <div className="min-h-screen pt-4 md:pt-6 pb-8 bg-muted/20">
             <div className="container max-w-3xl mx-auto px-3 md:px-4">
                 <AppBreadcrumbs />
                 

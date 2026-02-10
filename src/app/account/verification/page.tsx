@@ -55,9 +55,9 @@ export default function VerificationPage() {
     if (!user) return <div className="p-20 text-center text-muted-foreground">Loading...</div>;
 
     return (
-        <div className="min-h-screen pt-16 md:pt-20 pb-8 bg-muted/20">
+        <div className="min-h-screen pt-4 md:pt-6 pb-8 bg-muted/20">
             <div className="container max-w-2xl mx-auto px-3 md:px-4">
-                <div className="mb-4 md:mb-6">
+                <div className="mb-2 md:mb-3">
                     <AppBreadcrumbs />
                 </div>
                 <div className="flex items-center gap-2.5 mb-5 md:mb-8">
@@ -145,7 +145,7 @@ export default function VerificationPage() {
                                 Until you are subscribed to a plan, you cannot upload verified listings. Upgrade your account to unlock full selling potential.
                             </p>
 
-                            <Button size="default" className="rounded-xl font-bold px-6 shadow-sm text-sm" onClick={() => window.location.href = '/pricing'}>
+                            <Button size="default" className="rounded-xl font-bold px-6 shadow-sm text-sm" onClick={() => window.location.href = '/premium'}>
                                 View Subscription Plans
                             </Button>
                         </CardContent>

@@ -6,34 +6,35 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  BadgeCheck,
-  BarChart,
-  ChevronRight,
-  CreditCard,
-  Heart,
-  Home,
-  LayoutDashboard,
-  Lock,
-  LogOut,
-  MessageSquare,
-  Package,
-  Pencil,
-  Settings,
-  ShieldCheck,
-  Star,
-  Store,
-  Trash,
-  User,
-  Wallet,
-  X
+    BadgeCheck,
+    BarChart,
+    ChevronRight,
+    CreditCard,
+    Crown,
+    Heart,
+    Home,
+    LayoutDashboard,
+    Lock,
+    LogOut,
+    MessageSquare,
+    Package,
+    Pencil,
+    Settings,
+    ShieldCheck,
+    Star,
+    Store,
+    Trash,
+    User,
+    Wallet,
+    X
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -177,6 +178,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
     { href: '/account', icon: Settings, label: 'Edit Profile' },
     { href: '/account/password', icon: Lock, label: 'Change Password' },
     { href: '/account/verification', icon: ShieldCheck, label: 'Verification' },
+    { href: '/premium', icon: Crown, label: 'Subscription Plans', iconColor: 'text-amber-500' },
   ];
 
   const adminItems: MenuItem[] = user?.role === 'ADMIN' ? [

@@ -110,7 +110,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   return (
     <div className="bg-background min-h-screen pb-20">
       {/* Header */}
-      <div className="bg-card border-b border-border/50 py-8  mb-8 mt-4">
+      <div className="bg-card border-b border-border/50 py-4 md:py-6 mb-6">
         <div className="container-wide">
           <div className="">
             <AppBreadcrumbs />

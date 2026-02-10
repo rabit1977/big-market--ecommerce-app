@@ -123,7 +123,7 @@ export default function EditProfilePage() {
 
   if (user === undefined) {
     return (
-      <div className='min-h-screen pt-16 md:pt-20 pb-8 bg-background'>
+      <div className='min-h-screen pt-4 md:pt-6 pb-8 bg-background'>
         <div className='container mx-auto px-3 md:px-4'>
           <ProfileSkeleton />
         </div>
@@ -136,7 +136,7 @@ export default function EditProfilePage() {
   }
 
   return (
-    <div className='min-h-screen pt-16 md:pt-20 pb-8 bg-background'>
+    <div className='min-h-screen pt-4 md:pt-6 pb-8 bg-background'>
       <div className='container max-w-4xl mx-auto px-3 md:px-4'>
         <AppBreadcrumbs />
         {/* Header */}

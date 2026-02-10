@@ -1,12 +1,12 @@
 'use client';
 
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { cn } from '@/lib/utils';
 import { Home } from 'lucide-react';
@@ -26,6 +26,7 @@ const routeMap: Record<string, string> = {
   messages: 'Messages',
   listings: 'Browse Listings',
   pricing: 'Pricing Plans',
+  premium: 'Premium Plans',
   success: 'Success',
   admin: 'Admin Panel',
   dashboard: 'Dashboard',
@@ -51,7 +52,7 @@ export function AppBreadcrumbs({ className, customLabel }: AppBreadcrumbsProps) 
   const pathSegments = pathname.split('/').filter(Boolean);
   
   return (
-    <Breadcrumb className={cn("mb-6", className)}>
+    <Breadcrumb className={cn("mb-3", className)}>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
