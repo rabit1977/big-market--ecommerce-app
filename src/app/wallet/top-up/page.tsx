@@ -1,12 +1,12 @@
 'use client';
 
 
+import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useMutation } from 'convex/react';
-import { Check, ChevronLeft, FileText, Loader2, Minus, Plus } from 'lucide-react';
+import { Check, FileText, Loader2, Minus, Plus } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -48,10 +48,9 @@ export default function TopUpPage() {
     <div className="min-h-screen pt-4 md:pt-6 pb-8 bg-muted/20">
       <div className="container max-w-2xl mx-auto px-3 md:px-4">
         
+        <AppBreadcrumbs />
+
         <div className="flex items-center gap-3 mb-5 md:mb-8">
-            <Link href="/wallet" className="p-1.5 -ml-1 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
-                <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
-            </Link>
             <h1 className="text-lg md:text-2xl font-black tracking-tighter text-foreground">Top Up Account</h1>
         </div>
 

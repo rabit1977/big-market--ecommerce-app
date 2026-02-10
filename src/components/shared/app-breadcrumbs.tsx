@@ -19,9 +19,14 @@ const routeMap: Record<string, string> = {
   account: 'My Account',
   edit: 'Edit Profile',
   verification: 'Account Verification',
+  password: 'Change Password',
+  delete: 'Delete Account',
+  addresses: 'My Addresses',
+  notifications: 'Notifications',
   wallet: 'My Wallet',
   'top-up': 'Top Up',
   'my-listings': 'My Listings',
+  stats: 'Statistics',
   favorites: 'Favorites',
   messages: 'Messages',
   listings: 'Browse Listings',
@@ -52,7 +57,7 @@ export function AppBreadcrumbs({ className, customLabel }: AppBreadcrumbsProps) 
   const pathSegments = pathname.split('/').filter(Boolean);
   
   return (
-    <Breadcrumb className={cn("mb-3", className)}>
+    <Breadcrumb className={cn("mb-6", className)}>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>

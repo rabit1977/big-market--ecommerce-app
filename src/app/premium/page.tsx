@@ -11,10 +11,14 @@ import {
     Check,
     ChevronRight,
     Crown,
+    Globe,
     Headphones,
     Infinity as InfinityIcon,
+    Layers,
     Rocket,
+    Search,
     Shield,
+    ShoppingBag,
     Sparkles,
     Star,
     TrendingUp,
@@ -37,23 +41,22 @@ const plans = [
   {
     id: 'basic',
     name: 'Basic',
-    tagline: 'Start selling for free',
-    price: { monthly: 0, yearly: 0 },
+    tagline: 'For individuals',
+    price: 0,
     icon: Zap,
-    gradient: 'from-slate-500 to-slate-600',
     bgGlow: 'bg-slate-500/5',
     borderColor: 'border-border',
     iconBg: 'bg-slate-500/10',
     iconColor: 'text-slate-600 dark:text-slate-400',
     features: [
       { text: 'Up to 3 active listings', included: true },
-      { text: 'Basic visibility', included: true },
-      { text: 'Standard support', included: true },
-      { text: '48h listing approval', included: true },
-      { text: 'Verified Seller Badge', included: false },
-      { text: 'Featured listings', included: false },
-      { text: 'Analytics dashboard', included: false },
-      { text: 'Priority support', included: false },
+      { text: 'Standard search placement', included: true },
+      { text: 'Basic support', included: true },
+      { text: 'Up to 48h listing approval', included: true },
+      { text: 'Seller verification badge', included: false },
+      { text: 'Search priority boost', included: false },
+      { text: 'Performance analytics', included: false },
+      { text: 'Custom store URL', included: false },
     ] as PlanFeature[],
     cta: 'Current Plan',
     popular: false,
@@ -61,48 +64,46 @@ const plans = [
   {
     id: 'pro',
     name: 'Pro',
-    tagline: 'Everything you need to grow',
-    price: { monthly: 19, yearly: 199 },
+    tagline: 'For regular sellers',
+    price: 250,
     icon: Crown,
-    gradient: 'from-primary to-primary/80',
     bgGlow: 'bg-primary/5',
     borderColor: 'border-primary/30',
     iconBg: 'bg-primary/10',
     iconColor: 'text-primary',
     features: [
-      { text: 'Up to 50 active listings', included: true },
-      { text: 'Verified Seller Badge', included: true, highlight: true },
-      { text: 'Priority approval (1h)', included: true },
-      { text: '3 Featured listings / month', included: true },
-      { text: 'Detailed analytics', included: true },
-      { text: 'Priority support', included: true },
-      { text: 'API access', included: false },
-      { text: 'Dedicated account manager', included: false },
+      { text: 'Up to 100 active listings', included: true },
+      { text: 'Seller verification badge', included: true, highlight: true },
+      { text: 'Boosted search ranking', included: true },
+      { text: 'Your logo displayed on ads', included: true },
+      { text: 'Custom store URL (big-market.mk/yourshop)', included: true },
+      { text: 'In-depth analytics', included: true },
+      { text: 'Priority email support', included: true },
+      { text: 'Manage up to 500 listings', included: false },
     ] as PlanFeature[],
-    cta: 'Upgrade to Pro',
+    cta: 'Get Pro',
     popular: true,
     badge: 'Most Popular',
   },
   {
     id: 'business',
     name: 'Business',
-    tagline: 'For agencies & dealers',
-    price: { monthly: 49, yearly: 499 },
+    tagline: 'For shops & agencies',
+    price: 450,
     icon: Rocket,
-    gradient: 'from-amber-500 to-orange-500',
     bgGlow: 'bg-amber-500/5',
     borderColor: 'border-amber-500/20',
     iconBg: 'bg-amber-500/10',
     iconColor: 'text-amber-600 dark:text-amber-400',
     features: [
-      { text: 'Unlimited active listings', included: true, highlight: true },
-      { text: 'Verified Seller Badge', included: true },
-      { text: 'Instant listing approval', included: true },
-      { text: 'Unlimited Featured listings', included: true },
-      { text: 'Full analytics dashboard', included: true },
-      { text: 'API Access', included: true },
+      { text: 'Manage up to 500 listings', included: true, highlight: true },
+      { text: 'Seller verification badge', included: true },
+      { text: 'Top placement in search', included: true },
+      { text: 'Logo + detailed brand info on ads', included: true },
+      { text: 'Custom store URL', included: true },
+      { text: 'Advanced analytics dashboard', included: true },
       { text: 'Dedicated account manager', included: true },
-      { text: 'Multi-user access', included: true },
+      { text: 'Multi-user team access', included: true },
     ] as PlanFeature[],
     cta: 'Go Business',
     popular: false,
@@ -110,32 +111,65 @@ const plans = [
   },
 ];
 
+const premiumPerks = [
+  {
+    icon: Search,
+    title: 'Search Visibility',
+    description: 'All your products appear in regular search results with priority placement — buyers find you first.',
+  },
+  {
+    icon: Globe,
+    title: 'Your Own Store URL',
+    description: 'Get a branded link like big-market.mk/yourshop that leads directly to all your listings in one place.',
+  },
+  {
+    icon: BadgeCheck,
+    title: 'Brand Identity on Ads',
+    description: 'Your logo, company name, and a short description are shown on every listing you publish.',
+  },
+  {
+    icon: Layers,
+    title: 'Simple Management',
+    description: 'Add, edit, and organize all your products from a single dashboard — no technical skills needed.',
+  },
+  {
+    icon: ShoppingBag,
+    title: 'Your Online Storefront',
+    description: 'Use Big Market as your own sales channel and reach over 2 million monthly visitors.',
+  },
+  {
+    icon: BarChart3,
+    title: 'Real-Time Analytics',
+    description: 'See exactly how your listings perform — views, clicks, and engagement broken down day by day.',
+  },
+];
+
 const benefits = [
   {
     icon: BadgeCheck,
-    title: 'Verified Seller Badge',
-    description: 'Build trust with buyers through verified status',
+    title: 'Verified Status',
+    description: 'Earn buyer trust with a visible verification badge',
     color: 'text-primary',
     bg: 'bg-primary/10',
   },
   {
     icon: TrendingUp,
-    title: 'Higher Visibility',
-    description: 'Your listings rank higher in search results',
+    title: 'More Exposure',
+    description: 'Your ads rank higher and get seen by more people',
     color: 'text-green-500',
     bg: 'bg-green-500/10',
   },
   {
     icon: BarChart3,
-    title: 'Analytics Dashboard',
-    description: 'Track views, clicks, and engagement metrics',
+    title: 'Analytics',
+    description: 'Understand what works with detailed stats',
     color: 'text-blue-500',
     bg: 'bg-blue-500/10',
   },
   {
     icon: Headphones,
-    title: 'Priority Support',
-    description: 'Get help faster with dedicated support',
+    title: 'Fast Support',
+    description: 'Get answers quickly from a dedicated team',
     color: 'text-purple-500',
     bg: 'bg-purple-500/10',
   },
@@ -144,7 +178,6 @@ const benefits = [
 export default function PremiumPage() {
   const { data: session } = useSession();
   const router = useRouter();
-  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
   const [isProcessing, setIsProcessing] = useState<string | null>(null);
 
   const handleSubscribe = async (planId: string) => {
@@ -160,20 +193,18 @@ export default function PremiumPage() {
     }
 
     setIsProcessing(planId);
-    const toastId = toast.loading('Preparing secure checkout...');
+    const toastId = toast.loading('Setting up secure checkout...');
 
     try {
       const plan = plans.find((p) => p.id === planId);
       if (!plan) throw new Error('Plan not found');
 
-      const price = billingCycle === 'monthly' ? plan.price.monthly : plan.price.yearly;
-
       const { url } = await createStripeCheckoutSession(
         session.user.id,
         session.user.email,
         plan.name.toUpperCase(),
-        price,
-        billingCycle
+        plan.price,
+        'yearly'
       );
 
       toast.dismiss(toastId);
@@ -185,30 +216,23 @@ export default function PremiumPage() {
       }
     } catch (error) {
       toast.dismiss(toastId);
-      toast.error('Checkout failed. Please try again.');
+      toast.error('Something went wrong. Please try again.');
       console.error(error);
       setIsProcessing(null);
     }
   };
 
-  const savings = (plan: (typeof plans)[number]) => {
-    if (plan.price.monthly === 0) return 0;
-    return Math.round(((plan.price.monthly * 12 - plan.price.yearly) / (plan.price.monthly * 12)) * 100);
-  };
-
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section — Mobile-first gradient */}
+      {/* Hero */}
       <section className="relative overflow-hidden">
-        {/* Background Pattern */}
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.08),transparent_50%)] pointer-events-none" />
 
         <div className="container-wide relative pt-4 sm:pt-6 pb-8 sm:pb-12">
-          <AppBreadcrumbs className="mb-3 sm:mb-4" />
+          <AppBreadcrumbs className="mb-6 sm:mb-8" />
 
           <div className="text-center max-w-3xl mx-auto">
-            {/* Premium Badge */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -216,7 +240,7 @@ export default function PremiumPage() {
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
               <span className="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
-                Premium Plans
+                Premium Membership
               </span>
             </motion.div>
 
@@ -226,9 +250,9 @@ export default function PremiumPage() {
               transition={{ delay: 0.1 }}
               className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-foreground tracking-tight leading-[1.15] mb-4"
             >
-              Sell faster. <br className="sm:hidden" />
+              Reach more buyers. <br className="sm:hidden" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70">
-                Get verified.
+                Grow your sales.
               </span>
             </motion.h1>
 
@@ -236,50 +260,26 @@ export default function PremiumPage() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed mb-8"
+              className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed mb-3"
             >
-              Unlock verified seller status, boost your listings, and grow your business
-              with premium features trusted by thousands of sellers.
+              Over 2 million people visit Big Market every month. With a premium membership,
+              you tap into that audience directly — saving time and money compared to
+              running your own online store.
             </motion.p>
 
-            {/* Billing Toggle */}
-            <motion.div
+            <motion.p
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="inline-flex items-center gap-3 p-1.5 rounded-full bg-muted/50 border border-border/50"
+              transition={{ delay: 0.25 }}
+              className="text-xs text-muted-foreground/70 max-w-md mx-auto mb-6"
             >
-              <button
-                onClick={() => setBillingCycle('monthly')}
-                className={cn(
-                  'px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300',
-                  billingCycle === 'monthly'
-                    ? 'bg-background text-foreground shadow-sm border border-border/50'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                Monthly
-              </button>
-              <button
-                onClick={() => setBillingCycle('yearly')}
-                className={cn(
-                  'relative px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300',
-                  billingCycle === 'yearly'
-                    ? 'bg-background text-foreground shadow-sm border border-border/50'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                Yearly
-                <span className="absolute -top-2.5 -right-2 px-1.5 py-0.5 rounded-full bg-green-500 text-[9px] font-bold text-white shadow-sm">
-                  -20%
-                </span>
-              </button>
-            </motion.div>
+              All plans are billed yearly. Prices shown exclude 18% VAT.
+            </motion.p>
           </div>
         </div>
       </section>
 
-      {/* Plans Grid — Mobile: vertical stack, Desktop: 3 columns */}
+      {/* Plans */}
       <section className="container-wide pb-12 sm:pb-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6 max-w-5xl mx-auto">
           {plans.map((plan, index) => (
@@ -295,7 +295,6 @@ export default function PremiumPage() {
                   : `${plan.borderColor} hover:border-primary/20 shadow-sm hover:shadow-md`
               )}
             >
-              {/* Popular Badge */}
               {plan.badge && (
                 <div className="absolute top-0 right-0 z-10">
                   <div
@@ -311,9 +310,8 @@ export default function PremiumPage() {
                 </div>
               )}
 
-              {/* Card Content */}
               <div className={cn('p-5 sm:p-6 md:p-7', plan.bgGlow)}>
-                {/* Plan Header */}
+                {/* Header */}
                 <div className="flex items-center gap-3 mb-4">
                   <div className={cn('p-2.5 rounded-xl', plan.iconBg)}>
                     <plan.icon className={cn('w-5 h-5', plan.iconColor)} />
@@ -327,21 +325,27 @@ export default function PremiumPage() {
                 {/* Price */}
                 <div className="mb-5">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-3xl sm:text-4xl font-black text-foreground">
-                      €{billingCycle === 'monthly' ? plan.price.monthly : plan.price.yearly}
-                    </span>
-                    <span className="text-sm text-muted-foreground font-medium">
-                      /{billingCycle === 'monthly' ? 'mo' : 'year'}
-                    </span>
+                    {plan.price === 0 ? (
+                      <span className="text-3xl sm:text-4xl font-black text-foreground">Free</span>
+                    ) : (
+                      <>
+                        <span className="text-3xl sm:text-4xl font-black text-foreground">
+                          {plan.price}
+                        </span>
+                        <span className="text-sm text-muted-foreground font-medium">
+                          MKD/year
+                        </span>
+                      </>
+                    )}
                   </div>
-                  {billingCycle === 'yearly' && plan.price.yearly > 0 && (
-                    <p className="text-xs text-green-600 dark:text-green-400 font-bold mt-1">
-                      Save {savings(plan)}% • €{((plan.price.monthly * 12 - plan.price.yearly) / 12).toFixed(0)}/mo saved
+                  {plan.price > 0 && (
+                    <p className="text-[10px] text-muted-foreground/60 mt-1">
+                      + 18% VAT
                     </p>
                   )}
                 </div>
 
-                {/* Features List */}
+                {/* Features */}
                 <div className="space-y-2.5 mb-6">
                   {plan.features.map((feature, i) => (
                     <div key={i} className="flex items-start gap-2.5">
@@ -371,7 +375,7 @@ export default function PremiumPage() {
                   ))}
                 </div>
 
-                {/* CTA Button */}
+                {/* CTA */}
                 <Button
                   onClick={() => handleSubscribe(plan.id)}
                   disabled={!!isProcessing || plan.id === 'basic'}
@@ -406,15 +410,61 @@ export default function PremiumPage() {
         </div>
       </section>
 
-      {/* Benefits Section */}
+      {/* What You Get */}
       <section className="border-t border-border/50 bg-muted/20">
+        <div className="container-wide py-12 sm:py-16">
+          <div className="text-center mb-8 sm:mb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-4"
+            >
+              <Crown className="w-3.5 h-3.5 text-primary" />
+              <span className="text-[10px] font-bold text-primary uppercase tracking-wider">
+                What&apos;s Included
+              </span>
+            </motion.div>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-foreground tracking-tight mb-2">
+              Everything a premium member gets
+            </h2>
+            <p className="text-sm text-muted-foreground max-w-lg mx-auto">
+              Tools and visibility designed to help you sell more, faster
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 max-w-5xl mx-auto">
+            {premiumPerks.map((perk, i) => (
+              <motion.div
+                key={perk.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.08 * i + 0.2 }}
+                className="group p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-card border border-border/50 hover:border-primary/20 transition-all duration-300 hover:shadow-md"
+              >
+                <div className="flex items-start gap-3.5">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                    <perk.icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-xs sm:text-sm font-bold text-foreground mb-1">{perk.title}</h3>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground leading-relaxed">{perk.description}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Premium */}
+      <section className="border-t border-border/50">
         <div className="container-wide py-12 sm:py-16">
           <div className="text-center mb-8 sm:mb-10">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-foreground tracking-tight mb-2">
-              Why go Premium?
+              Why upgrade?
             </h2>
             <p className="text-sm text-muted-foreground">
-              Everything you need to succeed on Big Market
+              The advantages of being a Big Market premium member
             </p>
           </div>
 
@@ -438,10 +488,20 @@ export default function PremiumPage() {
         </div>
       </section>
 
-      {/* Trust Section */}
-      <section className="border-t border-border/50">
+      {/* Payment & Trust */}
+      <section className="border-t border-border/50 bg-muted/10">
         <div className="container-wide py-12 sm:py-16">
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-8">
+              <h3 className="text-base sm:text-lg font-black text-foreground mb-2">
+                How to pay
+              </h3>
+              <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+                We accept all major credit and debit cards through Stripe. You can also
+                pay via bank transfer from any bank or post office.
+              </p>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 text-center">
               <div className="flex flex-col items-center gap-2">
                 <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center">
@@ -454,8 +514,8 @@ export default function PremiumPage() {
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                   <Users className="w-5 h-5 text-primary" />
                 </div>
-                <span className="text-xs font-bold text-foreground">10,000+ Sellers</span>
-                <span className="text-[10px] text-muted-foreground">Trust Big Market Premium</span>
+                <span className="text-xs font-bold text-foreground">2,000,000+ visitors</span>
+                <span className="text-[10px] text-muted-foreground">Every month on Big Market</span>
               </div>
               <div className="flex flex-col items-center gap-2">
                 <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center">
@@ -477,11 +537,10 @@ export default function PremiumPage() {
           className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-sm shadow-xl shadow-primary/20"
         >
           <Crown className="w-4 h-4 mr-2" />
-          {isProcessing === 'pro' ? 'Processing...' : 'Upgrade to Pro — €199/year'}
+          {isProcessing === 'pro' ? 'Processing...' : 'Get Pro — 250 MKD/year'}
         </Button>
       </div>
 
-      {/* Bottom spacer for mobile sticky CTA */}
       <div className="h-20 md:hidden" />
     </div>
   );

@@ -1,6 +1,7 @@
 
 'use client';
 
+import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,8 +13,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useQuery } from 'convex/react';
 import { format } from 'date-fns';
-import { CalendarIcon, ChevronLeft, Eye, MousePointerClick } from 'lucide-react';
-import Link from 'next/link';
+import { CalendarIcon, Eye, MousePointerClick } from 'lucide-react';
 import { use, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { api } from '../../../../../convex/_generated/api';
@@ -48,11 +48,10 @@ export default function ListingStatsPage({ params }: PageProps) {
         <div className="min-h-screen pt-4 md:pt-6 pb-8 bg-muted/20">
             <div className="container max-w-4xl mx-auto px-3 md:px-4">
                 
+                <AppBreadcrumbs />
+
                 {/* Header */}
                 <div className="mb-4 md:mb-6">
-                    <Link href="/my-listings" className="text-xs text-muted-foreground flex items-center gap-1 hover:text-foreground mb-2">
-                        <ChevronLeft className="w-3.5 h-3.5" /> Back to My Listings
-                    </Link>
                     <h1 className="text-lg md:text-2xl font-black text-foreground tracking-tight">Statistics Overview</h1>
                     <p className="text-[10px] md:text-sm text-muted-foreground">Performance for listing #{id.slice(-6)}</p>
                 </div>

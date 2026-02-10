@@ -1,158 +1,280 @@
 'use client';
 
 import { cn } from "@/lib/utils";
-import { Check, ShieldCheck, Star, Trophy, Zap } from "lucide-react";
+import { BadgeCheck, Check, Crown, Eye, Megaphone, Rocket, Sparkles, Star, TrendingUp, Zap } from "lucide-react";
+import Link from "next/link";
 import { Button } from "../ui/button";
 
 const plans = [
   {
-    name: "Starter",
+    name: "Basic",
     price: "Free",
-    description: "Perfect for secondary selling",
-    icon: <Zap className="w-6 h-6 text-slate-400" />,
-    badgeColor: "bg-slate-100 text-slate-600",
+    description: "For individuals",
+    icon: Zap,
+    iconColor: "text-muted-foreground",
+    iconBg: "bg-muted",
+    borderColor: "border-border",
     features: [
       "Up to 3 active listings",
-      "Standard visibility",
+      "Standard search placement",
       "Basic support",
-      "Standard profile"
     ],
-    cta: "Start Free",
-    popular: false
+    cta: "Current Plan",
+    popular: false,
+    disabled: true,
   },
   {
-    name: "Professional",
-    price: "€9.99",
-    period: "/mo",
-    description: "Best for active sellers",
-    icon: <ShieldCheck className="w-6 h-6 text-primary" />,
-    badgeColor: "bg-primary/10 text-primary",
+    name: "Pro",
+    price: "250",
+    period: " MKD/year",
+    description: "For regular sellers",
+    icon: BadgeCheck,
+    iconColor: "text-primary",
+    iconBg: "bg-primary/10",
+    borderColor: "border-primary/30",
     features: [
-      "Verified Blue Badge",
-      "Up to 15 active listings",
-      "Priority in search results",
-      "Social media integration",
-      "Email support"
+      "Seller verification badge",
+      "Up to 100 active listings",
+      "Boosted search ranking",
+      "Custom store URL",
+      "In-depth analytics",
     ],
-    cta: "Join Pro",
-    popular: false
+    cta: "Get Pro",
+    popular: true,
+    disabled: false,
   },
   {
     name: "Business",
-    price: "€29.99",
-    period: "/mo",
-    description: "Maximize your sales reach",
-    icon: <Star className="w-6 h-6 text-amber-500" />,
-    badgeColor: "bg-amber-100 text-amber-600",
+    price: "450",
+    period: " MKD/year",
+    description: "For shops & agencies",
+    icon: Crown,
+    iconColor: "text-amber-500",
+    iconBg: "bg-amber-500/10",
+    borderColor: "border-amber-500/30",
     features: [
-      "Verified Gold Badge",
-      "Unlimited active listings",
-      "High priority placement",
-      "Detailed listing analytics",
-      "24/7 Priority support",
-      "Featured Badge on items"
+      "Manage up to 500 listings",
+      "Top placement in search",
+      "Logo + brand info on ads",
+      "Dedicated account manager",
+      "Advanced analytics",
+      "Multi-user team access",
     ],
-    cta: "Get Started",
-    popular: true
+    cta: "Go Business",
+    popular: false,
+    disabled: false,
+  },
+];
+
+const addOns = [
+  {
+    icon: TrendingUp,
+    name: "Featured Listing",
+    description: "Pin your ad to the top of search results for 7 days",
+    price: "49 MKD",
+    color: "text-green-500",
+    bg: "bg-green-500/10",
   },
   {
-    name: "Elite",
-    price: "€99.99",
-    period: "/mo",
-    description: "Elite enterprise dominance",
-    icon: <Trophy className="w-6 h-6 text-primary" />,
-    badgeColor: "bg-primary/10 text-primary",
-    features: [
-      "Exclusive 'Elite' Member Badge",
-      "Top-tier priority placement",
-      "Daily Daily Advertising Spots",
-      "Auto-Carousel on Home Page",
-      "Personal Account Manager",
-      "No listing fees ever",
-      "Custom Brand page"
-    ],
-    cta: "Elite Access",
-    popular: false
-  }
+    icon: Star,
+    name: "Highlight Ad",
+    description: "Make your listing stand out with a highlighted border",
+    price: "29 MKD",
+    color: "text-amber-500",
+    bg: "bg-amber-500/10",
+  },
+  {
+    icon: Eye,
+    name: "Gallery Boost",
+    description: "Add up to 20 photos instead of the standard 5",
+    price: "19 MKD",
+    color: "text-blue-500",
+    bg: "bg-blue-500/10",
+  },
+  {
+    icon: Megaphone,
+    name: "Homepage Spotlight",
+    description: "Feature your listing on the homepage carousel for 3 days",
+    price: "99 MKD",
+    color: "text-primary",
+    bg: "bg-primary/10",
+  },
 ];
 
 export function MembershipSection() {
   return (
-    <section className="py-12 md:py-24 relative overflow-hidden">
+    <section className="py-12 md:py-20 relative overflow-hidden bg-muted/30">
       {/* Background Decor */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 opacity-30">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[128px]" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[128px]" />
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-primary/8 rounded-full blur-[100px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-primary/5 rounded-full blur-[100px]" />
       </div>
 
-      <div className="container px-4 mx-auto">
-        <div className="max-w-3xl mx-auto text-center mb-10 md:mb-16">
-          <h2 className="text-2xl md:text-5xl font-black tracking-tight mb-3 md:mb-4">
-            Choose Your <span className="text-primary text-glow">Membership</span>
+      <div className="container-wide px-3 md:px-4">
+        {/* Header */}
+        <div className="max-w-2xl mx-auto text-center mb-8 md:mb-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-4">
+            <Sparkles className="w-3.5 h-3.5 text-primary" />
+            <span className="text-[10px] font-bold text-primary uppercase tracking-wider">
+              Premium Membership
+            </span>
+          </div>
+          <h2 className="text-2xl md:text-4xl lg:text-5xl font-black tracking-tight text-foreground mb-3">
+            Reach more buyers.{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70">
+              Grow your sales.
+            </span>
           </h2>
-          <p className="text-sm md:text-xl text-muted-foreground">
-            Empower your store with professional tools and reach thousands of buyers daily.
+          <p className="text-sm md:text-base text-muted-foreground max-w-lg mx-auto">
+            Over 2 million people browse Big Market every month. A premium membership
+            puts your products in front of all of them.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-8">
+        {/* Plans Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
           {plans.map((plan) => (
             <div
               key={plan.name}
               className={cn(
-                "relative group p-6 md:p-8 rounded-2xl md:rounded-3xl transition-all duration-500",
-                "bg-white border border-slate-200 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 text-slate-900 dark:text-slate-900",
-                plan.popular && "ring-2 ring-primary shadow-xl shadow-primary/20 md:scale-105 z-20"
+                "relative group rounded-2xl md:rounded-3xl border-2 p-5 md:p-7 transition-all duration-300",
+                "bg-card hover:shadow-lg",
+                plan.popular
+                  ? "border-primary shadow-xl shadow-primary/10 md:scale-[1.03]"
+                  : `${plan.borderColor} hover:border-primary/30 shadow-sm`
               )}
             >
               {plan.popular && (
-                <div className="absolute -top-3 md:-top-4 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] md:text-xs font-bold px-3 py-1 md:px-4 md:py-1.5 rounded-full tracking-wider uppercase whitespace-nowrap">
-                  Most Popular
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <div className="bg-primary text-white text-[10px] font-bold px-3.5 py-1 rounded-full tracking-wider uppercase whitespace-nowrap flex items-center gap-1.5">
+                    <Rocket className="w-3 h-3" />
+                    Most Popular
+                  </div>
                 </div>
               )}
 
-              <div className="flex items-start justify-between mb-6 md:mb-8">
-                <div className={cn("p-2 md:p-3 rounded-xl md:rounded-2xl", plan.badgeColor)}>
-                  {/* Scale icon for mobile */}
-                  <div className="w-5 h-5 md:w-6 md:h-6 flex items-center justify-center">
-                    {plan.icon}
-                  </div>
+              {/* Plan Header */}
+              <div className="flex items-center gap-3 mb-4">
+                <div className={cn("p-2.5 rounded-xl", plan.iconBg)}>
+                  <plan.icon className={cn("w-5 h-5", plan.iconColor)} />
                 </div>
-                <div className="text-right">
-                  <div className="text-xl md:text-3xl font-black text-slate-900">{plan.price}</div>
-                  {plan.period && <div className="text-[10px] md:text-sm text-slate-500">{plan.period}</div>}
+                <div>
+                  <h3 className="font-bold text-foreground text-base">
+                    {plan.name}
+                  </h3>
+                  <p className="text-[10px] md:text-xs text-muted-foreground">
+                    {plan.description}
+                  </p>
                 </div>
               </div>
 
-              <div className="mb-6 md:mb-8">
-                <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-1 md:mb-2">{plan.name}</h3>
-                <p className="text-slate-500 text-[12px] md:text-sm leading-snug">{plan.description}</p>
+              {/* Price */}
+              <div className="flex items-baseline gap-1 mb-5">
+                <span className="text-2xl md:text-3xl font-black text-foreground">
+                  {plan.price}
+                </span>
+                {plan.period && (
+                  <span className="text-xs text-muted-foreground font-medium">
+                    {plan.period}
+                  </span>
+                )}
               </div>
 
-              <div className="space-y-2 md:space-y-4 mb-6 md:mb-8">
+              {/* Features */}
+              <div className="space-y-2.5 mb-6">
                 {plan.features.map((feature) => (
-                  <div key={feature} className="flex items-start gap-2 md:gap-3 text-[12px] md:text-sm">
-                    <div className="mt-0.5 md:mt-1 bg-emerald-100 p-0.5 rounded-full shrink-0">
-                      <Check className="w-3 h-3 md:w-3.5 md:h-3.5 text-emerald-600" />
+                  <div
+                    key={feature}
+                    className="flex items-center gap-2 text-xs md:text-sm"
+                  >
+                    <div className="p-0.5 rounded-full bg-emerald-500/10 shrink-0">
+                      <Check className="w-3 h-3 text-emerald-500" />
                     </div>
-                    <span className="text-slate-600 font-medium leading-tight">{feature}</span>
+                    <span className="text-muted-foreground font-medium">
+                      {feature}
+                    </span>
                   </div>
                 ))}
               </div>
 
+              {/* CTA */}
               <Button
+                asChild={!plan.disabled}
                 size="sm"
                 className={cn(
-                  "w-full rounded-xl md:rounded-2xl h-10 md:h-12 font-bold transition-all duration-300 text-sm md:text-base",
-                  plan.popular 
-                    ? "bg-primary text-white hover:bg-primary/90 md:hover:scale-[1.02]" 
-                    : "bg-slate-900 text-white hover:bg-slate-800 md:hover:scale-[1.02] shadow-lg"
+                  "w-full rounded-xl h-10 md:h-11 font-bold text-sm transition-all",
+                  plan.popular
+                    ? "bg-primary text-white hover:bg-primary/90 shadow-md shadow-primary/20"
+                    : plan.disabled
+                      ? "bg-muted text-muted-foreground cursor-default"
+                      : "bg-foreground text-background hover:bg-foreground/90"
                 )}
+                disabled={plan.disabled}
               >
-                {plan.cta}
+                {plan.disabled ? (
+                  plan.cta
+                ) : (
+                  <Link href="/premium">{plan.cta}</Link>
+                )}
               </Button>
             </div>
           ))}
+        </div>
+
+        {/* Add-on Subscriptions */}
+        <div className="mt-12 md:mt-16 max-w-4xl mx-auto">
+          <div className="text-center mb-6 md:mb-8">
+            <h3 className="text-lg md:text-2xl font-black text-foreground tracking-tight mb-1.5">
+              Boost individual listings
+            </h3>
+            <p className="text-xs md:text-sm text-muted-foreground">
+              One-time add-ons to give any listing extra visibility — no membership required
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            {addOns.map((addon) => (
+              <div
+                key={addon.name}
+                className="group bg-card border border-border/50 hover:border-primary/20 rounded-xl md:rounded-2xl p-4 md:p-5 transition-all duration-300 hover:shadow-md"
+              >
+                <div className="flex items-start gap-3 mb-3">
+                  <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-110", addon.bg)}>
+                    <addon.icon className={cn("w-4 h-4", addon.color)} />
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="text-xs md:text-sm font-bold text-foreground">{addon.name}</h4>
+                    <p className="text-[10px] md:text-xs text-muted-foreground leading-relaxed mt-0.5">{addon.description}</p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between pt-3 border-t border-border/50">
+                  <span className="text-sm md:text-base font-black text-foreground">{addon.price}</span>
+                  <Button
+                    asChild
+                    size="sm"
+                    variant="outline"
+                    className="h-7 md:h-8 rounded-lg text-[10px] md:text-xs font-bold border-border hover:border-primary/50 hover:bg-primary/5 px-3"
+                  >
+                    <Link href="/premium">Learn more</Link>
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* View All Plans CTA */}
+        <div className="text-center mt-8 md:mt-10">
+          <Button
+            asChild
+            variant="outline"
+            className="rounded-full font-bold text-xs md:text-sm px-6 h-9 md:h-10 border-border hover:border-primary/50 hover:bg-primary/5"
+          >
+            <Link href="/premium">
+              Compare all plans & add-ons
+              <Sparkles className="w-3.5 h-3.5 ml-2 text-primary" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>

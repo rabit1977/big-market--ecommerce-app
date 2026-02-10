@@ -56,7 +56,7 @@ export default function PasswordPage() {
     return (
         <div className="min-h-screen pt-4 md:pt-6 pb-8 bg-muted/20">
             <div className="container max-w-xl mx-auto px-3 md:px-4">
-                <div className="mb-2 md:mb-3">
+                <div className="mb-6 md:mb-3">
                     <AppBreadcrumbs />
                 </div>
                 <Card className="border-border shadow-sm rounded-2xl overflow-hidden">
