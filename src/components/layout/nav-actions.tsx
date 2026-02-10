@@ -4,375 +4,441 @@ import { getUnreadCountAction } from '@/actions/notification-actions';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-    BadgeCheck,
-    BarChart,
-    CreditCard,
-    Heart,
-    Home,
-    LayoutDashboard,
-    Lock,
-    LogOut,
-    MessageSquare,
-    Package,
-    Pencil,
-    Settings,
-    ShieldCheck,
-    Star,
-    Store,
-    Trash,
-    User,
-    Wallet
+  BadgeCheck,
+  BarChart,
+  ChevronRight,
+  CreditCard,
+  Heart,
+  Home,
+  LayoutDashboard,
+  Lock,
+  LogOut,
+  MessageSquare,
+  Package,
+  Pencil,
+  Settings,
+  ShieldCheck,
+  Star,
+  Store,
+  Trash,
+  User,
+  Wallet,
+  X
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 interface NavActionsProps {
   initialWishlistCount: number;
 }
 
+// Menu item definition for clean rendering
+interface MenuItem {
+  href: string;
+  icon: React.ElementType;
+  label: string;
+  badge?: number;
+  highlight?: boolean;
+  iconColor?: string;
+  showOnDesktop?: boolean;
+  adminOnly?: boolean;
+  danger?: boolean;
+}
+
 export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [hasMounted, setHasMounted] = useState(false);
   const { data: session } = useSession();
   const user = session?.user;
   const [wishlistCount, setWishlistCount] = useState(initialWishlistCount);
   const [notificationCount, setNotificationCount] = useState(0);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [lastSeenAlertCount, setLastSeenAlertCount] = useState(0);
+  const panelRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
+  useEffect(() => { setHasMounted(true); }, []);
+  useEffect(() => { setWishlistCount(initialWishlistCount); }, [initialWishlistCount]);
 
-  useEffect(() => {
-    setWishlistCount(initialWishlistCount);
-  }, [initialWishlistCount]);
+  // Close panel on route change
+  useEffect(() => { setIsPanelOpen(false); }, [pathname]);
 
   // Poll for unread notifications
   useEffect(() => {
     if (!user) return;
-
     const fetchUnreadCount = async () => {
       try {
         const count = await getUnreadCountAction();
         setNotificationCount(count);
-      } catch (error) {
-        // Silently fail
-      }
+      } catch { /* Silently fail */ }
     };
-
     fetchUnreadCount();
     const interval = setInterval(fetchUnreadCount, 30000);
     return () => clearInterval(interval);
   }, [user]);
 
-  // Handle logout
-  const handleLogout = useCallback(() => {
-    signOut();
-  }, []);
+  const handleLogout = useCallback(() => { signOut(); }, []);
 
-  const alertCount = notificationCount; // User Badge only tracks notifications now
+  const alertCount = notificationCount;
 
-  // Handle menu open change
-  const handleOpenChange = useCallback(
-    (open: boolean) => {
-      setIsDropdownOpen(open);
-      if (open) {
-        setLastSeenAlertCount(alertCount);
+  const handlePanelToggle = useCallback(() => {
+    setIsPanelOpen(prev => {
+      if (!prev) setLastSeenAlertCount(alertCount);
+      return !prev;
+    });
+  }, [alertCount]);
+
+  // Close on click outside
+  useEffect(() => {
+    if (!isPanelOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
+        setIsPanelOpen(false);
       }
-    },
-    [alertCount]
-  );
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [isPanelOpen]);
 
-  // Render a skeleton loader until the component has mounted on the client
+  // Close on Escape
+  useEffect(() => {
+    if (!isPanelOpen) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsPanelOpen(false);
+    };
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [isPanelOpen]);
+
+  // Lock body scroll when panel is open
+  useEffect(() => {
+    if (isPanelOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      if (scrollY) window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    }
+    return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+    };
+  }, [isPanelOpen]);
+
   if (!hasMounted) {
     return (
       <div className='flex items-center gap-1 sm:gap-2'>
-        <Skeleton className='h-10 w-10 rounded-full' />
+        <Skeleton className='h-9 w-9 rounded-full' />
       </div>
     );
   }
 
-  return (
-    <div className='flex items-center gap-1 sm:gap-2'>
-      {/* Wishlist Heart Icon (Visible on all screens via NavActions) */}
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-                asChild
-                variant='ghost'
-                size='icon'
-                className='relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10'
-            >
-                <Link href="/favorites">
-                    <Heart className="h-5 w-5" />
-                    <AnimatePresence>
-                        {wishlistCount > 0 && (
-                            <motion.span
-                                key='wishlist-badge'
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                exit={{ scale: 0 }}
-                                className='absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
-                            >
-                                {wishlistCount > 9 ? '9+' : wishlistCount}
-                            </motion.span>
-                        )}
-                    </AnimatePresence>
-                </Link>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Favorites</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+  // ─── Menu sections ───
+  const quickActions: MenuItem[] = [
+    { href: '/sell', icon: Pencil, label: 'Post New Listing', highlight: true, iconColor: 'text-primary' },
+    { href: '/premium', icon: Star, label: 'Become Premium', iconColor: 'text-amber-500' },
+  ];
 
-      {/* Messages Icon (Visible on md+ screens) */}
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-                asChild
-                variant='ghost'
-                size='icon'
-                className='relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10'
-            >
-                <Link href="/messages">
-                    <MessageSquare className={cn("h-5 w-5", notificationCount > 0 && "text-primary")} />
-                    <AnimatePresence>
-                        {notificationCount > 0 && (
-                            <motion.span
-                                key='messages-badge'
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                exit={{ scale: 0 }}
-                                className='absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
-                            >
-                                {notificationCount > 9 ? '9+' : notificationCount}
-                            </motion.span>
-                        )}
-                    </AnimatePresence>
-                </Link>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Messages</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+  const mobileOnlyItems: MenuItem[] = [
+    { href: '/', icon: Home, label: 'Home' },
+    { href: '/listings', icon: Store, label: 'Browse Listings' },
+    { href: '/messages', icon: MessageSquare, label: 'Messages', badge: notificationCount, iconColor: 'text-primary' },
+    { href: '/favorites', icon: Heart, label: 'Favorites', badge: wishlistCount, iconColor: 'text-primary' },
+  ];
 
-      {/* User Menu */}
-      {user ? (
-        <DropdownMenu open={isDropdownOpen} onOpenChange={handleOpenChange} modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant='ghost'
-              className='relative h-10 w-10 rounded-full hover:bg-muted/50 data-[state=open]:bg-muted/50 ml-1 p-0'
-            >
-              <UserAvatar
-                user={user}
-                className='h-9 w-9 border-2 border-background shadow-sm'
-              />
-              {/* Alert Badge (Notifications only) */}
-              <AnimatePresence>
-                {alertCount > 0 &&
-                  alertCount > lastSeenAlertCount &&
-                  !isDropdownOpen && (
-                    <motion.span
-                      key='user-badge'
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0 }}
-                      className='absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
-                    >
-                      {alertCount > 9 ? '9+' : alertCount}
-                    </motion.span>
-                  )}
-              </AnimatePresence>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className='w-80 p-0 rounded-xl shadow-xl flex flex-col'
-            align='end'
-            sideOffset={8}
-          >
-            <div className='p-4 border-b bg-card'>
-               <div className='flex items-start gap-3'>
-                  <UserAvatar user={user} className='h-12 w-12 border border-border' />
-                  <div className='flex-1 overflow-hidden'>
-                     <div className='flex items-center gap-1'>
-                        <span className='font-bold text-lg truncate'>
-                            {(user as any).accountType === 'COMPANY' && (user as any).companyName 
-                                ? (user as any).companyName 
-                                : user.name}
-                        </span>
-                        <BadgeCheck className='w-4 h-4 text-primary' />
-                     </div>
-                     <div className='text-xs text-muted-foreground truncate'>{user.email}</div>
-                  </div>
-               </div>
-            </div>
+  const accountItems: MenuItem[] = [
+    { href: '/my-listings', icon: Package, label: 'My Listings' },
+    { href: '/my-listings/stats', icon: BarChart, label: 'Ad Statistics' },
+    { href: '/wallet', icon: CreditCard, label: 'Account Overview' },
+    { href: '/wallet/top-up', icon: Wallet, label: 'Top Up Account' },
+  ];
 
-            {/* Main Actions */}
-            <div className='p-2 grid gap-2'>
-               <Button asChild variant="outline" className='justify-between border-primary/20 text-primary hover:bg-primary/10 h-10'>
-                  <Link href="/sell">
-                     <span className='flex items-center gap-2'><Pencil className='w-4 h-4' /> Post New Listing</span>
-                     <span className='text-xs font-normal'>Free</span>
-                  </Link>
-               </Button>
-               <Button asChild variant="outline" className='justify-between border-orange-200 text-orange-600 hover:bg-orange-50 h-10'>
-                  <Link href="/premium">
-                     <span className='flex items-center gap-2'><Star className='w-4 h-4' /> Become Premium</span>
-                  </Link>
-               </Button>
-            </div>
+  const settingsItems: MenuItem[] = [
+    { href: '/account', icon: Settings, label: 'Edit Profile' },
+    { href: '/account/password', icon: Lock, label: 'Change Password' },
+    { href: '/account/verification', icon: ShieldCheck, label: 'Verification' },
+  ];
 
-            <DropdownMenuSeparator />
+  const adminItems: MenuItem[] = user?.role === 'ADMIN' ? [
+    { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Admin Panel', iconColor: 'text-primary' },
+  ] : [];
 
-            {/* Scrollable area for all menu items */}
-            <div className='flex-1 overflow-y-auto max-h-[60vh] p-1 overscroll-contain'>
-               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5 md:hidden'>
-                  <Link href="/" className='flex items-center gap-3'>
-                     <Home className='w-4 h-4 text-muted-foreground' />
-                     <span className='flex-1'>Home</span>
-                  </Link>
-               </DropdownMenuItem>
-               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5 md:hidden'>
-                  <Link href="/listings" className='flex items-center gap-3'>
-                     <Store className='w-4 h-4 text-muted-foreground' />
-                     <span className='flex-1'>Browse Listings</span>
-                  </Link>
-               </DropdownMenuItem>
-               
-               {/* Prominent Messages and Favorites - Hidden on desktop as they are in the header */}
-               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5 bg-primary/5 my-1 md:hidden'>
-                  <Link href="/messages" className='flex items-center gap-3 font-bold text-foreground'>
-                     <MessageSquare className='w-4 h-4 text-primary' />
-                     <span className='flex-1'>My Messages</span>
-                     {notificationCount > 0 && <Badge className='h-5 bg-primary hover:bg-primary/90'>{notificationCount}</Badge>}
-                  </Link>
-               </DropdownMenuItem>
+  const dangerItems: MenuItem[] = [
+    { href: '/account/delete', icon: Trash, label: 'Delete Account', danger: true },
+  ];
 
-               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5 bg-primary/5 my-1 md:hidden'>
-                  <Link href="/favorites" className='flex items-center gap-3 font-bold text-foreground'>
-                     <Heart className='w-4 h-4 text-primary' />
-                     <span className='flex-1'>Favorites</span>
-                  </Link>
-               </DropdownMenuItem>
+  const renderMenuItem = (item: MenuItem, onNavigate: () => void) => {
+    const isActive = pathname === item.href;
+    return (
+      <Link
+        key={item.href}
+        href={item.href}
+        onClick={onNavigate}
+        className={cn(
+          "flex items-center gap-2.5 py-2 px-2.5 rounded-lg text-[13px] font-medium transition-all group",
+          isActive
+            ? "bg-primary/8 text-primary font-semibold"
+            : item.danger
+              ? "text-muted-foreground hover:text-destructive hover:bg-destructive/5"
+              : item.highlight
+                ? "text-primary bg-primary/5 hover:bg-primary/10 font-semibold"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+        )}
+      >
+        <item.icon className={cn("w-3.5 h-3.5 shrink-0", item.iconColor || (isActive ? "text-primary" : ""), item.danger && "group-hover:text-destructive")} />
+        <span className='flex-1'>{item.label}</span>
+        {item.badge && item.badge > 0 ? (
+          <Badge className='h-[18px] min-w-[18px] px-1 bg-primary hover:bg-primary/90 text-[9px] font-bold'>
+            {item.badge > 99 ? '99+' : item.badge}
+          </Badge>
+        ) : (
+          <ChevronRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-40 group-hover:translate-x-0 transition-all" />
+        )}
+      </Link>
+    );
+  };
 
-               <DropdownMenuSeparator className="my-1" />
-
-               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5'>
-                  <Link href="/account/verification" className='flex items-center gap-3'>
-                     <ShieldCheck className='w-4 h-4 text-muted-foreground' />
-                     <span className='flex-1'>Verification</span>
-                  </Link>
-               </DropdownMenuItem>
-               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5'>
-                  <Link href="/wallet/top-up" className='flex items-center gap-3'>
-                     <Wallet className='w-4 h-4 text-muted-foreground' />
-                     <span className='flex-1'>Top up account</span>
-                  </Link>
-               </DropdownMenuItem>
-               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5'>
-                  <Link href="/wallet" className='flex items-center gap-3'>
-                     <CreditCard className='w-4 h-4 text-muted-foreground' />
-                     <span className='flex-1'>Account overview</span>
-                  </Link>
-               </DropdownMenuItem>
-
-               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5 my-1 bg-amber-50/50 border border-amber-100'>
-                  <Link href="/my-listings" className='flex items-center gap-3 font-bold text-amber-900'>
-                     <Package className='w-4 h-4 text-amber-600' />
-                     <span className='flex-1'>My Listings</span>
-                  </Link>
-               </DropdownMenuItem>
-               
-               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5'>
-                  <Link href="/my-listings/stats" className='flex items-center gap-3'>
-                     <BarChart className='w-4 h-4 text-muted-foreground' />
-                     <span className='flex-1'>Ad Statistics</span>
-                  </Link>
-               </DropdownMenuItem>
-
-               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5'>
-                  <Link href="/account" className='flex items-center gap-3'>
-                     <Settings className='w-4 h-4 text-muted-foreground' />
-                     <span className='flex-1'>Edit Profile</span>
-                  </Link>
-               </DropdownMenuItem>
-               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5'>
-                  <Link href="/account/password" className='flex items-center gap-3'>
-                     <Lock className='w-4 h-4 text-muted-foreground' />
-                     <span className='flex-1'>Change Password</span>
-                  </Link>
-               </DropdownMenuItem>
-               
-               {user.role === 'ADMIN' && (
-                 <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5 text-primary'>
-                    <Link href="/admin/dashboard" className='flex items-center gap-3 font-bold'>
-                       <LayoutDashboard className='w-4 h-4' />
-                       <span className='flex-1'>Admin Panel</span>
-                    </Link>
-                 </DropdownMenuItem>
-               )}
-
-               <DropdownMenuItem asChild className='rounded-md focus:bg-muted py-2.5 text-muted-foreground hover:text-destructive'>
-                  <Link href="/account/delete" className='flex items-center gap-3'>
-                     <Trash className='w-4 h-4' />
-                     <span className='flex-1'>Delete Account</span>
-                  </Link>
-               </DropdownMenuItem>
-            </div>
-
-            <DropdownMenuSeparator />
-
-            {/* Footer */}
-            <div className='p-2'>
-               <Button 
-                 onClick={handleLogout}
-                 variant="outline" 
-                 className='w-full border-primary/20 text-primary hover:bg-primary hover:text-white'
-               >
-                 <LogOut className='w-4 h-4 mr-2' />
-                 Log out
-               </Button>
-            </div>
-
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ) : (
-        <Button
-          asChild
-          variant='ghost'
-          size='sm'
-          className='h-10 px-4 rounded-full font-bold hover:bg-muted ml-2'
-        >
-          <Link href='/auth'>
-            <User className='h-4 w-4 mr-2' />
-            Login
-          </Link>
-        </Button>
-      )}
+  const renderSectionLabel = (label: string) => (
+    <div className='px-2.5 pt-2.5 pb-1'>
+      <span className='text-[9px] font-black uppercase tracking-widest text-muted-foreground/40'>
+        {label}
+      </span>
     </div>
+  );
+
+  return (
+    <>
+      <div className='flex items-center gap-1 sm:gap-1.5'>
+        {/* Desktop: Favorites */}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                asChild variant='ghost' size='icon'
+                className='relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10'
+              >
+                <Link href="/favorites">
+                  <Heart className="h-4.5 w-4.5" />
+                  <AnimatePresence>
+                    {wishlistCount > 0 && (
+                      <motion.span key='wishlist-badge' initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                        className='absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
+                      >
+                        {wishlistCount > 9 ? '9+' : wishlistCount}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Favorites</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        {/* Desktop: Messages */}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                asChild variant='ghost' size='icon'
+                className='relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10'
+              >
+                <Link href="/messages">
+                  <MessageSquare className={cn("h-4.5 w-4.5", notificationCount > 0 && "text-primary")} />
+                  <AnimatePresence>
+                    {notificationCount > 0 && (
+                      <motion.span key='messages-badge' initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                        className='absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
+                      >
+                        {notificationCount > 9 ? '9+' : notificationCount}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Messages</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        {/* User Avatar Trigger */}
+        {user ? (
+          <button
+            onClick={handlePanelToggle}
+            className='relative ml-0.5 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50'
+          >
+            <UserAvatar
+              user={user}
+              className='h-8 w-8 md:h-9 md:w-9 border-2 border-background shadow-sm hover:shadow-md transition-shadow'
+            />
+            <AnimatePresence>
+              {alertCount > 0 && alertCount > lastSeenAlertCount && !isPanelOpen && (
+                <motion.span key='user-badge' initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                  className='absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
+                >
+                  {alertCount > 9 ? '9+' : alertCount}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </button>
+        ) : (
+          <Button asChild variant='ghost' size='sm' className='h-9 px-3 rounded-full font-bold hover:bg-muted ml-1'>
+            <Link href='/auth'>
+              <User className='h-4 w-4 mr-1.5' />
+              Login
+            </Link>
+          </Button>
+        )}
+      </div>
+
+      {/* ───── User Account Panel (portaled, slides from right) ───── */}
+      {user && typeof document !== 'undefined' && createPortal(
+        <AnimatePresence mode='wait'>
+          {isPanelOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className='fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm'
+                onClick={() => setIsPanelOpen(false)}
+              />
+
+              {/* Panel */}
+              <motion.div
+                ref={panelRef}
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                className='fixed top-0 bottom-0 right-0 z-[60] w-[80%] max-w-xs bg-background shadow-2xl flex flex-col overflow-hidden'
+              >
+                {/* Panel Header — User Info */}
+                <div className='px-4 pt-4 pb-3 border-b shrink-0'>
+                  <div className='flex items-center justify-between mb-3'>
+                    <div className='flex items-center gap-2.5 min-w-0'>
+                      <UserAvatar user={user} className='h-9 w-9 border-2 border-border shadow-sm shrink-0' />
+                      <div className='overflow-hidden min-w-0'>
+                        <div className='flex items-center gap-1'>
+                          <span className='font-bold text-[13px] truncate'>
+                            {(user as any).accountType === 'COMPANY' && (user as any).companyName 
+                              ? (user as any).companyName 
+                              : user.name}
+                          </span>
+                          <BadgeCheck className='w-3 h-3 text-primary shrink-0' />
+                        </div>
+                        <p className='text-[10px] text-muted-foreground truncate leading-tight'>{user.email}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setIsPanelOpen(false)}
+                      className='h-7 w-7 rounded-full hover:bg-muted flex items-center justify-center shrink-0 text-muted-foreground hover:text-foreground transition-colors'
+                    >
+                      <X className='h-3.5 w-3.5' />
+                    </button>
+                  </div>
+
+                  {/* Quick Actions */}
+                  <div className='grid grid-cols-2 gap-1.5'>
+                    <Link
+                      href='/sell'
+                      onClick={() => setIsPanelOpen(false)}
+                      className='flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-white text-[11px] font-bold hover:bg-primary/90 transition-colors shadow-sm'
+                    >
+                      <Pencil className='w-3 h-3' />
+                      Post Ad
+                    </Link>
+                    <Link
+                      href='/premium'
+                      onClick={() => setIsPanelOpen(false)}
+                      className='flex items-center justify-center gap-1.5 py-2 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[11px] font-bold hover:bg-amber-500/20 transition-colors border border-amber-500/20'
+                    >
+                      <Star className='w-3 h-3' />
+                      Premium
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Scrollable Menu */}
+                <div className='flex-1 overflow-y-auto overscroll-contain py-1'>
+                  {/* Mobile navigation — visible only below md */}
+                  <div className='md:hidden'>
+                    {renderSectionLabel('Navigation')}
+                    <div className='px-1.5'>
+                      {mobileOnlyItems.map(item => renderMenuItem(item, () => setIsPanelOpen(false)))}
+                    </div>
+                    <div className='mx-3 my-1 h-px bg-border/30' />
+                  </div>
+
+                  {/* Listings section */}
+                  {renderSectionLabel('Listings')}
+                  <div className='px-1.5'>
+                    {accountItems.map(item => renderMenuItem(item, () => setIsPanelOpen(false)))}
+                  </div>
+                  <div className='mx-3 my-1 h-px bg-border/30' />
+
+                  {/* Account & Settings */}
+                  {renderSectionLabel('Account')}
+                  <div className='px-1.5'>
+                    {settingsItems.map(item => renderMenuItem(item, () => setIsPanelOpen(false)))}
+                  </div>
+
+                  {/* Admin */}
+                  {adminItems.length > 0 && (
+                    <>
+                      <div className='mx-3 my-1 h-px bg-border/30' />
+                      {renderSectionLabel('Administration')}
+                      <div className='px-1.5'>
+                        {adminItems.map(item => renderMenuItem(item, () => setIsPanelOpen(false)))}
+                      </div>
+                    </>
+                  )}
+
+                  {/* Danger zone */}
+                  <div className='mx-3 my-1 h-px bg-border/30' />
+                  <div className='px-1.5 pb-1'>
+                    {dangerItems.map(item => renderMenuItem(item, () => setIsPanelOpen(false)))}
+                  </div>
+                </div>
+
+                {/* Footer — Logout */}
+                <div className='border-t px-3 py-2 shrink-0'>
+                  <button
+                    onClick={() => { setIsPanelOpen(false); handleLogout(); }}
+                    className='flex items-center justify-center gap-1.5 w-full py-2 rounded-lg bg-muted/40 hover:bg-destructive/10 text-muted-foreground hover:text-destructive text-[12px] font-semibold transition-colors'
+                  >
+                    <LogOut className='w-3.5 h-3.5' />
+                    Log Out
+                  </button>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+    </>
   );
 };
