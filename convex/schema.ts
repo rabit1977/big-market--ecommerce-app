@@ -26,6 +26,7 @@ export default defineSchema({
     
     registrationComplete: v.optional(v.boolean()),
     termsAcceptedAt: v.optional(v.number()),
+    
     marketingEmails: v.optional(v.boolean()),
     orderEmails: v.optional(v.boolean()),
     reviewEmails: v.optional(v.boolean()),
@@ -36,9 +37,16 @@ export default defineSchema({
     // New fields for Classifieds features
     // New fields for Classifieds features
     isVerified: v.optional(v.boolean()),
+    verificationStatus: v.optional(v.string()), // "unverified", "pending_payment", "pending_approval", "verified"
     credits: v.optional(v.number()),
     idDocument: v.optional(v.string()),
-    // Subscription System
+    
+    // Subscription & Limits
+    listingLimit: v.optional(v.number()), // Total listings allowed (e.g., 50)
+    listingsPostedCount: v.optional(v.number()), // Track usage
+    canRefreshListings: v.optional(v.boolean()), // Toggle ability to refresh/bump daily
+    
+    // Legacy/Alternative System? (Keeping for compatibility)
     membershipTier: v.optional(v.string()), // 'FREE', 'BASIC', 'PRO', 'ELITE'
     membershipStatus: v.optional(v.string()), // 'ACTIVE', 'EXPIRED', 'PENDING'
     membershipExpiresAt: v.optional(v.number()),

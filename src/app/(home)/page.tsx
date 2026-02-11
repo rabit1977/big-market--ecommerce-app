@@ -2,7 +2,6 @@ import { CategoryGrid } from '@/components/home/category-grid';
 import { FeaturedListings } from '@/components/home/featured-listings';
 import { Hero } from '@/components/home/hero';
 import { LatestListingsClient } from '@/components/home/latest-listings-client';
-import { MembershipSection } from '@/components/home/membership-section';
 import { StatsSection } from '@/components/home/stats-section';
 import { fetchQuery } from 'convex/nextjs';
 import { api } from '../../../convex/_generated/api';
@@ -49,8 +48,7 @@ export default async function HomePage() {
       {/* Category Grid */}
       <CategoryGrid categories={categories} />
 
-      {/* Membership Features & Plans */}
-      <MembershipSection />
+
 
       {/* Stats Section */}
       <StatsSection listingCount={listings.length} />
