@@ -19,16 +19,19 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { ALL_MUNICIPALITIES, MACEDONIA_CITIES } from '@/lib/constants/locations';
 import { useMutation, useQuery } from 'convex/react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { api } from '../../../convex/_generated/api';
-import { MACEDONIA_CITIES, ALL_MUNICIPALITIES } from '@/lib/constants/locations';
+
+import { useRouter } from 'next/navigation';
 
 export function CompleteRegistrationModal() {
   const { data: session } = useSession();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [city, setCity] = useState('');
   const [municipality, setMunicipality] = useState('');
@@ -72,19 +75,27 @@ export function CompleteRegistrationModal() {
         return;
     }
 
+    if (!session?.user?.id) {
+        toast.error('Session expired. Please refresh.');
+        return;
+    }
+
     setIsSubmitting(true);
     try {
+        console.log('Completing registration for:', session.user.id, { city, municipality, phone });
         await completeRegistration({
             externalId: session!.user!.id,
             city,
             municipality,
             phone
         });
+        toast.success('Profile saved! Redirecting to verification...');
+        router.push('/premium'); // Redirect to premium page for verification
         setIsOpen(false);
-        toast.success('Registration completed!');
-    } catch (error) {
-        toast.error('An error occurred. Please try again.');
-        console.error(error);
+    } catch (error: any) {
+        const errorMessage = error.message || 'An error occurred. Please try again.';
+        toast.error(errorMessage);
+        console.error('Registration failed:', error);
     } finally {
         setIsSubmitting(false);
     }
