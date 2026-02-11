@@ -1,12 +1,12 @@
 'use client';
 
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { cn } from '@/lib/utils';
 import { Home } from 'lucide-react';
@@ -57,7 +57,7 @@ export function AppBreadcrumbs({ className, customLabel }: AppBreadcrumbsProps) 
   const pathSegments = pathname.split('/').filter(Boolean);
   
   return (
-    <Breadcrumb className={cn("mb-6 bg-card w-fit px-4 py-2 rounded-full border border-border/60 shadow-sm", className)}>
+    <Breadcrumb className={cn("mb-6 bg-card w-fit max-w-full overflow-hidden px-4 py-2 rounded-full border border-border mix-blend-mode-screen:normal shadow-sm", className)}>
       <BreadcrumbList className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground flex-nowrap overflow-x-auto no-scrollbar">
         <BreadcrumbItem className="shrink-0">
           <BreadcrumbLink asChild>
@@ -87,7 +87,7 @@ export function AppBreadcrumbs({ className, customLabel }: AppBreadcrumbsProps) 
               <BreadcrumbSeparator className="opacity-50 shrink-0" />
               <BreadcrumbItem className="shrink-0 whitespace-nowrap">
                 {isLast ? (
-                  <BreadcrumbPage className="font-black text-foreground line-clamp-1 max-w-[150px] sm:max-w-[300px] truncate">
+                  <BreadcrumbPage className="font-black text-foreground line-clamp-1 max-w-fit sm:max-w-fit truncate">
                     {label}
                   </BreadcrumbPage>
                 ) : (

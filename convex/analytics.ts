@@ -101,15 +101,11 @@ export const getUserStats = query({
       .withIndex("by_userId", (q) => q.eq("userId", args.userId))
       .collect();
 
-    if (listings.length === 0) return [];
+    if (listings.length === 0) return { dailyStats: [], totalFavorites: 0 };
 
     const listingIds = listings.map((l) => l._id);
 
     // 2. Fetch analytics for these listings
-    // Optimization: Depending on volume, we might need a more efficient way than iterating
-    // but for now, we'll fetch events and filter in memory if needed or use Promise.all if we had a by_listing index call per listing
-    // Since we have 'by_listing' index on analytics, we can do parallel queries
-    
     const allEvents = await Promise.all(
         listingIds.map(async (id) => {
             return await ctx.db
@@ -137,7 +133,19 @@ export const getUserStats = query({
         };
     }
 
-    // 4. Aggregate real data
+    // 4. Fetch Favorites Count
+    const favorites = await Promise.all(
+        listingIds.map(async (id) => {
+            const favs = await ctx.db
+                .query("favorites")
+                .withIndex("by_listing", (q) => q.eq("listingId", id))
+                .collect();
+            return favs.length;
+        })
+    );
+    const totalFavorites = favorites.reduce((acc, curr) => acc + curr, 0);
+
+    // 5. Aggregate real data
     events.forEach(ev => {
         const dateKey = new Date(ev.createdAt).toISOString().split('T')[0];
         
@@ -151,6 +159,73 @@ export const getUserStats = query({
         }
     });
 
-    return Object.values(dailyStats).sort((a, b) => a.date.localeCompare(b.date));
+    return {
+        dailyStats: Object.values(dailyStats).sort((a, b) => a.date.localeCompare(b.date)),
+        totalFavorites
+    };
+  },
+});
+
+export const getDetailedListingStats = query({
+  args: { 
+    listingId: v.id("listings"),
+    days: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const days = args.days || 30;
+    const now = Date.now();
+    const startTime = now - (days * 24 * 60 * 60 * 1000);
+
+    // 1. Fetch Analytics Events
+    const events = await ctx.db
+      .query("analytics")
+      .withIndex("by_listing", (q) => q.eq("data.listingId", args.listingId))
+      .filter((q) => q.gte(q.field("createdAt"), startTime))
+      .collect();
+
+    // 2. Fetch Favorites Count
+    const favorites = await ctx.db
+      .query("favorites")
+      .withIndex("by_listing", (q) => q.eq("listingId", args.listingId))
+      .collect();
+      
+    const favoritesCount = favorites.length;
+
+    // 3. Group by Date
+    const dailyStats: Record<string, { date: string, views: number, clicks: number }> = {};
+    
+    // Initialize last 'days' with 0
+    for(let i = 0; i < days; i++) {
+        const d = new Date(now - (i * 24 * 60 * 60 * 1000));
+        const dateKey = d.toISOString().split('T')[0];
+        dailyStats[dateKey] = {
+            date: dateKey,
+            views: 0,
+            clicks: 0
+        };
+    }
+
+    // Aggregate real data
+    events.forEach(ev => {
+        const dateKey = new Date(ev.createdAt).toISOString().split('T')[0];
+        if (dailyStats[dateKey]) {
+             if (ev.eventType === 'view_listing') {
+                 dailyStats[dateKey].views++;
+             } else if (ev.eventType === 'click_contact' || ev.eventType === 'click_call') {
+                 dailyStats[dateKey].clicks++;
+             }
+        }
+    });
+
+    // Calculate totals
+    const totalViews = events.filter(e => e.eventType === 'view_listing').length;
+    const totalClicks = events.filter(e => e.eventType === 'click_contact' || e.eventType === 'click_call').length;
+
+    return {
+        dailyStats: Object.values(dailyStats).sort((a, b) => a.date.localeCompare(b.date)),
+        totalFavorites: favoritesCount,
+        totalViews,
+        totalClicks
+    };
   },
 });

@@ -4,7 +4,6 @@ import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import { Button } from '@/components/ui/button';
 import { useQuery as useConvexQuery, useMutation } from 'convex/react';
-import { formatDistanceToNow } from 'date-fns';
 import {
     BadgeCheck,
     ChevronLeft,
@@ -15,10 +14,12 @@ import {
     MapPin,
     MessageSquare,
     MoreVertical,
+    MousePointerClick,
     Phone,
     Share2,
     ShieldAlert,
     Trash2,
+    TrendingUp
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -106,7 +107,6 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
   const mainImage = images[selectedImage] || listing.thumbnail || '/placeholder-listing.jpg';
   
   const date = listing.createdAt ? new Date(listing.createdAt) : new Date();
-  const timeAgo = formatDistanceToNow(date, { addSuffix: true });
   
   // Use state to handle hydration mismatch for date formatting
   const [publishDate, setPublishDate] = useState<string>('');
@@ -160,9 +160,9 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
          </div>
       </div>
 
-      <div className="container-wide max-w-6xl mx-auto px-0 md:px-4 md:py-8">
+      <div className="container-wide max-w-6xl mx-auto md:px-4 md:py-8">
         <AppBreadcrumbs 
-          className="px-4 md:px-0 mb-4 md:mb-6" 
+          className="mb-4 md:mb-6" 
           customLabel={listing.title}
         />
         
@@ -387,50 +387,20 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                     </div>
 
                     {/* Stats Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
-                        <div className="bg-muted border border-border rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1 sm:gap-1.5 md:gap-2 group hover:bg-accent transition-colors">
-                            <Eye className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-primary group-hover:scale-110 transition-transform" />
-                            <div>
-                                <div className="text-lg sm:text-xl md:text-2xl font-black text-foreground">{listing.viewCount || 0}</div>
-                                <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Total Views</div>
-                            </div>
-                        </div>
-                        <div className="bg-muted border border-border rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1 sm:gap-1.5 md:gap-2 group hover:bg-accent transition-colors">
-                            <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-green-500 group-hover:scale-110 transition-transform" />
-                            <div>
-                                {/* We need to fetch this dynamically */}
-                                <ListingStats listingId={listing._id} />
-                            </div>
-                        </div>
-                        {/* Placeholders for future stats */}
-                        <div className="bg-muted border border-border rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1 sm:gap-1.5 md:gap-2 group hover:bg-accent transition-colors opacity-50">
-                            <Heart className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-primary" />
-                            <div>
-                                <div className="text-lg sm:text-xl md:text-2xl font-black text-foreground">-</div>
-                                <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Favorites</div>
-                            </div>
-                        </div>
-                         <div className="bg-muted border border-border rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1 sm:gap-1.5 md:gap-2 group hover:bg-accent transition-colors opacity-50">
-                            <Share2 className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-primary" />
-                            <div>
-                                <div className="text-lg sm:text-xl md:text-2xl font-black text-foreground">-</div>
-                                <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Shares</div>
-                            </div>
-                        </div>
-                    </div>
+                    <OwnerListingStats listingId={listing._id} currentViewCount={listing.viewCount} />
 
                     {/* Actions */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-2.5 md:gap-3 pt-1 md:pt-2">
                         <Button asChild variant="outline" className="h-10 sm:h-11 md:h-12 bg-transparent border-border text-foreground hover:bg-accent border-2 text-xs sm:text-sm">
-                            <Link href={`/listings/edit/${listing._id}`} className="flex items-center justify-center gap-1.5 sm:gap-2">
-                                <Edit className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                                <span className="truncate">Edit Listing</span>
+                            <Link href={`/my-listings/stats/${listing._id}`} className="flex items-center justify-center gap-1.5 sm:gap-2">
+                                <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                                <span className="truncate">Full Analytics</span>
                             </Link>
                         </Button>
-                        <Button asChild variant="default" className="h-10 sm:h-11 md:h-12 bg-primary hover:bg-primary/90 text-white font-bold text-xs sm:text-sm">
-                             <Link href={`/messages?listing=${listing._id}`} className="flex items-center justify-center gap-1.5 sm:gap-2">
-                                <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                                <span className="truncate">View Messages</span>
+                        <Button asChild variant="outline" className="h-10 sm:h-11 md:h-12 bg-transparent border-border text-foreground hover:bg-accent border-2 text-xs sm:text-sm">
+                            <Link href={`/my-listings/${listing._id}/edit`} className="flex items-center justify-center gap-1.5 sm:gap-2">
+                                <Edit className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                                <span className="truncate">Edit Listing</span>
                             </Link>
                         </Button>
                         <DeleteListingButton listingId={listing._id} />
@@ -597,16 +567,62 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
 );
 }
 
-function ListingStats({ listingId }: { listingId: string }) {
-    const stats = useConvexQuery(api.messages.getListingStats, { listingId: listingId as Id<"listings"> });
+function OwnerListingStats({ listingId, currentViewCount }: { listingId: string, currentViewCount?: number }) {
+    const stats = useConvexQuery(api.analytics.getDetailedListingStats, { listingId: listingId as Id<"listings">, days: 30 });
     
-    if (!stats) return <div className="text-xs sm:text-sm font-bold text-muted-foreground">Loading...</div>;
+    // Fallback while loading
+    const totalViews = stats ? stats.totalViews : (currentViewCount || 0);
+    const totalClicks = stats ? stats.totalClicks : 0;
+    const totalFavorites = stats ? stats.totalFavorites : 0;
+    
+    if (!stats) return (
+         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 opacity-50">
+             {[1, 2, 3, 4].map(i => (
+                 <div key={i} className="bg-muted border border-border rounded-lg md:rounded-xl p-4 h-24 animate-pulse"></div>
+             ))}
+         </div>
+    );
 
     return (
-        <>
-            <div className="text-lg sm:text-xl md:text-2xl font-black text-foreground">{stats.totalConversations}</div>
-            <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Inquiries</div>
-        </>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
+            {/* Views */}
+            <div className="bg-muted border border-border rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1 sm:gap-1.5 md:gap-2 group hover:bg-accent transition-colors">
+                <Eye className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-primary group-hover:scale-110 transition-transform" />
+                <div>
+                    <div className="text-lg sm:text-xl md:text-2xl font-black text-foreground">{totalViews}</div>
+                    <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Total Views</div>
+                </div>
+            </div>
+
+            {/* Leads / Clicks */}
+            <div className="bg-muted border border-border rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1 sm:gap-1.5 md:gap-2 group hover:bg-accent transition-colors">
+                <MousePointerClick className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-blue-500 group-hover:scale-110 transition-transform" />
+                <div>
+                    <div className="text-lg sm:text-xl md:text-2xl font-black text-foreground">{totalClicks}</div>
+                    <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Leads</div>
+                </div>
+            </div>
+
+            {/* Favorites */}
+            <div className="bg-muted border border-border rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1 sm:gap-1.5 md:gap-2 group hover:bg-accent transition-colors">
+                <Heart className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-rose-500 group-hover:scale-110 transition-transform" />
+                <div>
+                    <div className="text-lg sm:text-xl md:text-2xl font-black text-foreground">{totalFavorites}</div>
+                    <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Favorites</div>
+                </div>
+            </div>
+
+            {/* Engagement Rate (Ratio) */}
+            <div className="bg-muted border border-border rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1 sm:gap-1.5 md:gap-2 group hover:bg-accent transition-colors">
+                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-500 group-hover:scale-110 transition-transform" />
+                <div>
+                    <div className="text-lg sm:text-xl md:text-2xl font-black text-foreground">
+                        {totalViews > 0 ? ((totalClicks / totalViews) * 100).toFixed(1) : '0.0'}%
+                    </div>
+                    <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Ratio</div>
+                </div>
+            </div>
+        </div>
     );
 }
 

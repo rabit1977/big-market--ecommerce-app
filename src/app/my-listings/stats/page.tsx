@@ -13,7 +13,7 @@ import { api } from '@/lib/convex-server';
 import { cn } from '@/lib/utils';
 import { useQuery } from 'convex/react';
 import { format } from 'date-fns';
-import { CalendarIcon, ChevronDown, Eye, MousePointerClick, TrendingUp } from 'lucide-react';
+import { CalendarIcon, ChevronDown, Eye, Heart, MousePointerClick, TrendingUp } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
@@ -27,21 +27,22 @@ export default function ListingStatsPage() {
 
     const days = Math.ceil((dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24));
 
-    const stats = useQuery(api.analytics.getUserStats, 
+    const statsData = useQuery(api.analytics.getUserStats, 
         session?.user?.id ? { 
             userId: session.user.id, 
             days: days > 0 ? days : 30 
         } : "skip"
     );
 
-    const chartData = stats?.map(s => ({
+    const chartData = statsData?.dailyStats?.map((s: { date: string, views: number, clicks: number }) => ({
         ...s,
         formattedDate: format(new Date(s.date), 'dd MMM'),
         total: (s.views || 0) + (s.clicks || 0)
     })) || [];
 
-    const totalViews = chartData.reduce((acc, curr) => acc + (curr.views || 0), 0);
-    const totalClicks = chartData.reduce((acc, curr) => acc + (curr.clicks || 0), 0);
+    const totalViews = chartData.reduce((acc: number, curr: any) => acc + (curr.views || 0), 0);
+    const totalClicks = chartData.reduce((acc: number, curr: any) => acc + (curr.clicks || 0), 0);
+    const totalFavorites = statsData?.totalFavorites || 0;
     const engagementRate = totalViews > 0 ? ((totalClicks / totalViews) * 100).toFixed(1) : '0.0';
 
     return (
@@ -106,77 +107,102 @@ export default function ListingStatsPage() {
                 </div>
 
                 {/* KPI Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-8">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-6 mb-6">
                     {/* Views Card */}
-                    <Card className="rounded-2xl md:rounded-3xl border border-border shadow-sm bg-card overflow-hidden group hover:border-orange-500/30 transition-all cursor-default">
-                        <CardContent className="p-5 md:p-6 flex flex-col justify-between h-full relative">
-                             <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
-                                <Eye className="w-16 h-16 text-orange-500" />
-                             </div>
-                            <div className="flex items-center justify-between mb-4 relative z-10">
-                                <div className="p-2.5 rounded-2xl bg-orange-500/10 text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-colors shadow-sm">
-                                    <Eye className="w-5 h-5" />
+                    <Card className="rounded-2xl md:rounded-[2rem] border border-border shadow-sm bg-card overflow-hidden group hover:border-orange-500/30 transition-all cursor-default relative">
+                         <div className="absolute top-0 right-0 p-2 md:p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                            <Eye className="w-12 h-12 md:w-24 md:h-24 transform rotate-12" />
+                         </div>
+                        <CardContent className="p-3 md:p-6 flex flex-col justify-between h-full relative z-10 gap-2 md:gap-0">
+                            <div className="flex items-center justify-between mb-1 md:mb-4">
+                                <div className="p-1.5 md:p-3 rounded-xl md:rounded-2xl bg-orange-500/10 text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-colors shadow-sm">
+                                    <Eye className="w-3.5 h-3.5 md:w-5 md:h-5" />
                                 </div>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-muted px-2 py-1 rounded-lg">
+                                <span className="text-[8px] md:text-[9px] absolute bottom-2.5 right-2.5 font-black uppercase tracking-widest text-muted-foreground bg-muted px-1.5 py-0.5 rounded-md md:rounded-lg ">
                                     Total
                                 </span>
                             </div>
-                            <div className="relative z-10">
-                                <div className="text-3xl md:text-4xl font-black text-foreground tracking-tighter mb-1 group-hover:text-orange-500 transition-colors">
+                            <div>
+                                <div className="text-xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tighter mb-0.5 group-hover:text-orange-500 transition-colors">
                                     {totalViews}
                                 </div>
-                                <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                                <div className="text-[9px] md:text-xs font-bold text-muted-foreground uppercase  tracking-widest truncate">
                                     Total Views
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
-                    {/* Clicks Card */}
-                    <Card className="rounded-2xl md:rounded-3xl border border-border shadow-sm bg-card overflow-hidden group hover:border-blue-500/30 transition-all cursor-default">
-                        <CardContent className="p-5 md:p-6 flex flex-col justify-between h-full relative">
-                            <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
-                                <MousePointerClick className="w-16 h-16 text-blue-500" />
-                            </div>
-                            <div className="flex items-center justify-between mb-4 relative z-10">
-                                <div className="p-2.5 rounded-2xl bg-blue-500/10 text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-colors shadow-sm">
-                                    <MousePointerClick className="w-5 h-5" />
+                    {/* Clicks (Leads) Card */}
+                    <Card className="rounded-2xl md:rounded-[2rem] border border-border shadow-sm bg-card overflow-hidden group hover:border-blue-500/30 transition-all cursor-default relative">
+                        <div className="absolute top-0 right-0 p-2 md:p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                            <MousePointerClick className="w-12 h-12 md:w-24 md:h-24 transform -rotate-12" />
+                        </div>
+                        <CardContent className="p-3 md:p-6 flex flex-col justify-between h-full relative z-10 gap-2 md:gap-0">
+                            <div className="flex items-center justify-between mb-1 md:mb-4">
+                                <div className="p-1.5 md:p-3 rounded-xl md:rounded-2xl bg-blue-500/10 text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-colors shadow-sm">
+                                    <MousePointerClick className="w-3.5 h-3.5 md:w-5 md:h-5" />
                                 </div>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-muted px-2 py-1 rounded-lg">
+                                <span className="text-[8px] md:text-[9px] absolute bottom-2.5 right-3.5 font-black uppercase tracking-widest text-muted-foreground bg-muted px-1.5 py-0.5 rounded-md md:rounded-lg">
                                     Total
                                 </span>
                             </div>
-                            <div className="relative z-10">
-                                <div className="text-3xl md:text-4xl font-black text-foreground tracking-tighter mb-1 group-hover:text-blue-500 transition-colors">
+                            <div>
+                                <div className="text-xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tighter mb-0.5 group-hover:text-blue-500 transition-colors">
                                     {totalClicks}
                                 </div>
-                                <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                                    Total Inquiries
+                                <div className="text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-widest truncate">
+                                    Leads
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Favorites (Saved) Card */}
+                    <Card className="rounded-2xl md:rounded-[2rem] border border-border shadow-sm bg-card overflow-hidden group hover:border-rose-500/30 transition-all cursor-default relative">
+                        <div className="absolute top-0 right-0 p-2 md:p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                            <Heart className="w-12 h-12 md:w-24 md:h-24 transform rotate-12" />
+                        </div>
+                        <CardContent className="p-3 md:p-6 flex flex-col justify-between h-full relative z-10 gap-2 md:gap-0">
+                            <div className="flex items-center justify-between mb-1 md:mb-4">
+                                <div className="p-1.5 md:p-3 rounded-xl md:rounded-2xl bg-rose-500/10 text-rose-500 group-hover:bg-rose-500 group-hover:text-white transition-colors shadow-sm">
+                                    <Heart className="w-3.5 h-3.5 md:w-5 md:h-5 fill-current" />
+                                </div>
+                                <span className="text-[8px] md:text-[9px] absolute bottom-2.5 right-3.5 font-black uppercase tracking-widest text-muted-foreground bg-muted px-1.5 py-0.5 rounded-md md:rounded-lg">
+                                    Total
+                                </span>
+                            </div>
+                            <div>
+                                <div className="text-xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tighter mb-0.5 group-hover:text-rose-500 transition-colors">
+                                    {totalFavorites}
+                                </div>
+                                <div className="text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-widest truncate">
+                                    Favorites
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Ratio Card */}
-                    <Card className="rounded-2xl md:rounded-3xl border border-border shadow-sm bg-card overflow-hidden group hover:border-green-500/30 transition-all cursor-default">
-                        <CardContent className="p-5 md:p-6 flex flex-col justify-between h-full relative">
-                            <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
-                                <TrendingUp className="w-16 h-16 text-green-500" />
-                            </div>
-                            <div className="flex items-center justify-between mb-4 relative z-10">
-                                <div className="p-2.5 rounded-2xl bg-green-500/10 text-green-500 group-hover:bg-green-500 group-hover:text-white transition-colors shadow-sm">
-                                    <TrendingUp className="w-5 h-5" />
+                    <Card className="rounded-2xl md:rounded-[2rem] border border-border shadow-sm bg-card overflow-hidden group hover:border-emerald-500/30 transition-all cursor-default relative">
+                        <div className="absolute top-0 right-0 p-2 md:p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                            <TrendingUp className="w-12 h-12 md:w-24 md:h-24 transform -rotate-6" />
+                        </div>
+                        <CardContent className="p-3 md:p-6 flex flex-col justify-between h-full relative z-10 gap-2 md:gap-0">
+                            <div className="flex items-center justify-between mb-1 md:mb-4">
+                                <div className="p-1.5 md:p-3 rounded-xl md:rounded-2xl bg-emerald-500/10 text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-colors shadow-sm">
+                                    <TrendingUp className="w-3.5 h-3.5 md:w-5 md:h-5" />
                                 </div>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-muted px-2 py-1 rounded-lg">
-                                    Av. Ratio
+                                <span className="text-[8px] md:text-[9px] absolute bottom-2.5 right-3.5 font-black uppercase tracking-widest text-muted-foreground bg-muted px-1.5 py-0.5 rounded-md md:rounded-lg">
+                                    Average
                                 </span>
                             </div>
-                            <div className="relative z-10">
-                                <div className="text-3xl md:text-4xl font-black text-foreground tracking-tighter mb-1 group-hover:text-green-500 transition-colors">
+                            <div>
+                                <div className="text-xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tighter mb-0.5 group-hover:text-emerald-500 transition-colors">
                                     {engagementRate}%
                                 </div>
-                                <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                                    Engagement Rate
+                                <div className="text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-widest truncate">
+                                    Interest Rate
                                 </div>
                             </div>
                         </CardContent>
@@ -200,13 +226,13 @@ export default function ListingStatsPage() {
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-                                        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Inquiries</span>
+                                        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Leads</span>
                                     </div>
                                 </div>
                             </div>
                             <CardContent className="p-4 md:p-6 flex-1 min-h-[300px]">
                                 <div className="h-full w-full min-h-[250px] md:min-h-[300px]">
-                                    {!stats ? (
+                                    {!statsData ? (
                                         <div className="h-full w-full flex items-center justify-center text-muted-foreground text-xs font-bold">Loading chart data...</div>
                                     ) : chartData.length === 0 ? (
                                         <div className="h-full w-full flex items-center justify-center text-muted-foreground text-xs font-bold">No activity recorded for this period.</div>
@@ -247,7 +273,7 @@ export default function ListingStatsPage() {
                                                                             <span className="font-black text-orange-500 bg-orange-500/10 px-1.5 py-0.5 rounded">{d.views}</span>
                                                                         </div>
                                                                         <div className="flex justify-between items-center gap-8">
-                                                                            <span className="text-muted-foreground font-bold text-[10px] uppercase tracking-wider">Inquiries</span>
+                                                                            <span className="text-muted-foreground font-bold text-[10px] uppercase tracking-wider">Leads</span>
                                                                             <span className="font-black text-blue-500 bg-blue-500/10 px-1.5 py-0.5 rounded">{d.clicks}</span>
                                                                         </div>
                                                                     </div>
