@@ -4,6 +4,7 @@ import { useSidebar } from '@/lib/context/sidebar-context';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Header } from './header';
+import { MobileBottomNav } from './mobile-bottom-nav';
 import { MobileSidebar } from './mobile-sidebar';
 
 interface MobileSidebarWrapperProps {
@@ -45,6 +46,7 @@ export function MobileSidebarWrapper({
         toggleMobileMenu={sidebar.toggle}
         initialWishlistCount={initialWishlistCount}
       />
+      <MobileBottomNav wishlistCount={initialWishlistCount} />
       <MobileSidebar isOpen={sidebar.isOpen} onClose={sidebar.close} />
     </>
   );

@@ -53,7 +53,6 @@ export default async function RootLayout({
             </Suspense>
             <main className='min-h-auto pb-20 lg:pb-0'>{children}</main>
             <FooterWrapper />
-
             <Toast />
           </div>
         </Providers>

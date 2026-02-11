@@ -74,7 +74,7 @@ export function StatsSection({ listingCount }: StatsProps) {
   });
 
   return (
-    <div className="bg-muted/30 border-y">
+    <div className="bg-muted/30 border-t">
       <div className="container-wide py-8 md:py-16">
         <motion.div
           variants={containerVariants}
@@ -101,10 +101,10 @@ export function StatsSection({ listingCount }: StatsProps) {
 
                 {/* Value */}
                 <div className="space-y-0.5 md:space-y-1">
-                  <p className="text-xl md:text-4xl font-bold tracking-tight">
+                  <p className="text-lg md:text-2xl font-bold tracking-tight">
                     {stat.value}
                   </p>
-                  <p className="text-[10px] md:text-sm text-muted-foreground font-medium uppercase tracking-wider">
+                  <p className="text-[10px] md:text-sm text-muted-foreground/60 font-medium uppercase tracking-wider">
                     {stat.label}
                   </p>
                 </div>

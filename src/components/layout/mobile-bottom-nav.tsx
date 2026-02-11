@@ -1,99 +1,126 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
-import { Heart, Home, Menu, PlusCircle, Search } from 'lucide-react';
+import { Heart, Home, PlusCircle, Search, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 interface MobileBottomNavProps {
-  onMenuClick: () => void;
   wishlistCount?: number;
 }
 
-const navItems = [
-  { href: '/', icon: Home, label: 'Home' },
-  { href: '/listings', icon: Search, label: 'Browse' },
-  { href: '/sell', icon: PlusCircle, label: 'Sell', highlight: true },
-  { href: '/favorites', icon: Heart, label: 'Favorites', showBadge: true },
-];
-
-/**
- * Mobile Bottom Navigation Bar
- * Shows on mobile devices with favorites quick access
- */
 export function MobileBottomNav({ 
-  onMenuClick, 
   wishlistCount = 0
 }: MobileBottomNavProps) {
   const pathname = usePathname();
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // User Logic: "when you scroll down you show the mobile nabar bottom"
+      // Interpretation: 
+      // - Scrolling DOWN (current > last) -> SHOW
+      // - Scrolling UP (current < last) -> HIDE
+      // - At TOP -> SHOW (default)
+      
+      if (currentScrollY <= 10) {
+        setIsVisible(true); // Always show at top
+      } else if (currentScrollY > lastScrollY) {
+         // Scrolling DOWN
+         setIsVisible(true); 
+      } else if (currentScrollY < lastScrollY && Math.abs(currentScrollY - lastScrollY) > 5) {
+         // Scrolling UP (significant amount)
+         setIsVisible(false);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
 
   const isActive = (href: string) => {
-    if (href === '/') return pathname === '/';
-    return pathname.startsWith(href);
+      if (href === '/') return pathname === '/';
+      return pathname.startsWith(href);
   };
 
+  const navItems = [
+    {
+      label: 'Home',
+      icon: Home,
+      href: '/',
+    },
+    {
+      label: 'Categories',
+      icon: Search,
+      href: '/categories', 
+    },
+    {
+      label: 'Sell',
+      icon: PlusCircle,
+      href: '/sell',
+      primary: true,
+    },
+    {
+      label: 'Favorites',
+      icon: Heart,
+      href: '/favorites',
+      showBadge: true
+    },
+    {
+      label: 'Profile',
+      icon: User,
+      href: '/my-listings', // Simplified for now, usually checks auth
+    },
+  ];
+
   return (
-    <nav 
-      className='fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-lg border-t border-border lg:hidden'
-      aria-label='Mobile navigation'
+    <div
+      className={cn(
+        'fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border/50 pb-[env(safe-area-inset-bottom)] transition-all duration-300 md:hidden',
+        isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
+      )}
     >
-      <div className='flex items-center justify-around h-16 px-2'>
+      <div className="flex items-center justify-around h-16 px-2">
         {navItems.map((item) => {
-          const active = isActive(item.href);
-          const badgeCount = item.href === '/favorites' ? wishlistCount : 0;
-          
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'relative flex flex-col items-center justify-center gap-1 py-2 px-4 rounded-xl transition-all duration-200',
-                item.highlight 
-                  ? 'text-primary font-semibold' 
-                  : active 
-                    ? 'text-primary' 
-                    : 'text-muted-foreground hover:text-foreground'
-              )}
-            >
-              {active && (
-                <motion.div
-                  layoutId='mobileNavActive'
-                  className='absolute inset-0 bg-primary/10 rounded-xl'
-                  transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-              <div className='relative z-10'>
-                <item.icon className={cn('h-5 w-5', active && 'scale-110')} />
-                {item.showBadge && badgeCount > 0 && (
-                  <span className='absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center'>
-                    {badgeCount > 9 ? '9+' : badgeCount}
-                  </span>
-                )}
-              </div>
-              <span className={cn(
-                'text-[10px] font-medium z-10',
-                active && 'font-semibold'
-              )}>
-                {item.label}
-              </span>
-            </Link>
-          );
+            const active = isActive(item.href);
+            const badgeCount = item.href === '/favorites' ? wishlistCount : 0;
+            
+            return (
+                <Link
+                    key={item.label}
+                    href={item.href}
+                    className={cn(
+                    'group flex flex-col items-center justify-center w-full h-full gap-1 active:scale-95 transition-all relative',
+                    item.primary ? '-mt-8' : ''
+                    )}
+                >
+                    {item.primary ? (
+                    <div className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/25 border-[4px] border-background group-hover:scale-105 transition-transform">
+                        <item.icon className="w-7 h-7" />
+                    </div>
+                    ) : (
+                        <div className={cn("flex flex-col items-center gap-1", active ? "text-primary" : "text-muted-foreground hover:text-foreground")}>
+                            <div className="relative">
+                                <item.icon className={cn("w-6 h-6 transition-all", active ? "fill-current" : "stroke-[1.5]")} />
+                                {item.showBadge && badgeCount > 0 && (
+                                    <span className='absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center border border-background'>
+                                        {badgeCount > 9 ? '9+' : badgeCount}
+                                    </span>
+                                )}
+                            </div>
+                            <span className="text-[10px] font-medium">{item.label}</span>
+                        </div>
+                    )}
+                </Link>
+            )
         })}
-        
-        {/* Menu Button */}
-        <button
-          onClick={onMenuClick}
-          className='flex flex-col items-center justify-center gap-1 py-2 px-4 rounded-xl text-muted-foreground hover:text-foreground transition-colors'
-          aria-label='Open menu'
-        >
-          <Menu className='h-5 w-5' />
-          <span className='text-[10px] font-medium'>Menu</span>
-        </button>
       </div>
-      
-      {/* Safe area spacer for iOS */}
-      <div className='h-[env(safe-area-inset-bottom)]' />
-    </nav>
+    </div>
   );
 }

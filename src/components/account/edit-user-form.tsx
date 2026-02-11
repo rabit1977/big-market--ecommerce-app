@@ -17,6 +17,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { ALL_MUNICIPALITIES, MACEDONIA_CITIES } from '@/lib/constants/locations';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Camera, Loader2, MessageCircle, Phone } from 'lucide-react';
@@ -61,9 +62,6 @@ const genderOptions = [
   { value: 'other', label: 'Other' },
 ];
 
-const MUNICIPALITIES = [
-    "Aerodrom", "Centar", "Karpos", "Kisela Voda", "Gazi Baba", "Butel", "Chair", "Gjorce Petrov", "Saraj", "Suto Orizari"
-];
 
 export function EditProfileForm({
   user,
@@ -309,12 +307,10 @@ export function EditProfileForm({
                             <SelectValue placeholder="Select City" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
-                           <SelectItem value="skopje">Skopje</SelectItem>
-                           <SelectItem value="bitola">Bitola</SelectItem>
-                           <SelectItem value="kumanovo">Kumanovo</SelectItem>
-                           <SelectItem value="ohrid">Ohrid</SelectItem>
-                           <SelectItem value="tetovo">Tetovo</SelectItem>
+                        <SelectContent className="max-h-[250px]">
+                           {MACEDONIA_CITIES.map(c => (
+                               <SelectItem key={c} value={c}>{c}</SelectItem>
+                           ))}
                         </SelectContent>
                       </Select>
                       <FormMessage className="text-[10px]" />
@@ -334,9 +330,9 @@ export function EditProfileForm({
                             <SelectValue placeholder="Select Municipality" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
-                           {MUNICIPALITIES.map(m => (
-                               <SelectItem key={m} value={m.toLowerCase()}>{m}</SelectItem>
+                        <SelectContent className="max-h-[250px]">
+                           {ALL_MUNICIPALITIES.map(m => (
+                               <SelectItem key={m} value={m}>{m}</SelectItem>
                            ))}
                         </SelectContent>
                       </Select>

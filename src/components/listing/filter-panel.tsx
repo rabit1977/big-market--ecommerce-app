@@ -8,11 +8,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { MapPin, X } from 'lucide-react';
@@ -69,6 +69,11 @@ export function FilterPanel({ onFilterChange, categories, initialFilters, idPref
   const [filters, setFilters] = useState<FilterState>(initialFilters || {
     sortBy: 'newest',
   });
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   
   // Initialize price range from props or default
   const [priceRange, setPriceRange] = useState<[number, number]>([
@@ -226,6 +231,8 @@ export function FilterPanel({ onFilterChange, categories, initialFilters, idPref
       onFilterChange(newFilters);
       setDynamicFilters({});
   };
+
+  if (!isMounted) return null;
 
   return (
     <div className="space-y-3">

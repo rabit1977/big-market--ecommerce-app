@@ -1,13 +1,13 @@
 'use client';
 
 import {
-  Facebook,
-  Instagram,
-  Linkedin,
-  ShieldCheck,
-  Twitter,
-  Users,
-  Zap
+    Facebook,
+    Instagram,
+    Linkedin,
+    ShieldCheck,
+    Twitter,
+    Users,
+    Zap
 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -20,7 +20,7 @@ export function Footer() {
   }, []);
 
   return (
-    <footer className='border-t border-border/40 bg-card/30 pt-6 pb-6 backdrop-blur-sm'>
+    <footer className='border-t mt-0 border-border/40 bg-card/30 pt-6 pb-6 backdrop-blur-sm'>
       <div className='container mx-auto px-4 max-w-7xl'>
         
         {/* Top Section: Brand & App */}

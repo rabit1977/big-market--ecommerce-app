@@ -25,18 +25,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { api } from '../../../convex/_generated/api';
-
-const CITIES = [
-    "Skopje", "Bitola", "Kumanovo", "Prilep", "Tetovo", "Veles", "Stip", "Ohrid", "Gostivar", "Strumica",
-    "Kavadarci", "Kocani", "Kicevo", "Struga", "Radovis", "Gevgelija", "Debar", "Kriva Palanka", "Sveti Nikole", "Negotino",
-    "Delcevo", "Vinica", "Resen", "Probistip", "Berovo", "Kratovo", "Bogdanci", "Krusevo", "Makedonski Brod", "Demir Kapija"
-];
-
-const MUNICIPALITIES = [
-    "Aerodrom", "Centar", "Karpos", "Kisela Voda", "Gazi Baba", "Butel", "Chair", "Gjorce Petrov", "Saraj", "Suto Orizari",
-    "Aracinovo", "Ilinden", "Petrovec", "Sopiste", "Studenicani", "Zelenikovo", "Cucer Sandevo",
-    ...CITIES.filter(c => c !== "Skopje") // Add other cities as municipalities for simplicity
-];
+import { MACEDONIA_CITIES, ALL_MUNICIPALITIES } from '@/lib/constants/locations';
 
 export function CompleteRegistrationModal() {
   const { data: session } = useSession();
@@ -130,8 +119,8 @@ export function CompleteRegistrationModal() {
               <SelectTrigger>
                 <SelectValue placeholder="Select City" />
               </SelectTrigger>
-              <SelectContent className="max-h-[200px]">
-                {CITIES.sort().map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+               <SelectContent className="max-h-[200px]">
+                {MACEDONIA_CITIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
@@ -142,7 +131,7 @@ export function CompleteRegistrationModal() {
                 <SelectValue placeholder="Select Municipality" />
               </SelectTrigger>
                <SelectContent className="max-h-[200px]">
-                {MUNICIPALITIES.sort().map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                {ALL_MUNICIPALITIES.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>

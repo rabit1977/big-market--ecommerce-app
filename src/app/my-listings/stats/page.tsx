@@ -34,10 +34,10 @@ export default function ListingStatsPage() {
     );
 
     // Process data similar to dashboard
-    const chartData = statsData?.dailyStats?.map((d: { date: string, views: number, clicks: number, favorites: number }) => ({
+    const chartData = statsData?.dailyStats?.map((d: { date: string, views: number, clicks: number }) => ({
         ...d,
         formattedDate: format(new Date(d.date), 'dd MMM'),
-        total: d.views + d.clicks + (d.favorites || 0)
+        total: d.views + d.clicks
     })) || [];
 
     const totalViews = chartData.reduce((acc: number, curr: any) => acc + curr.views, 0);
@@ -47,7 +47,7 @@ export default function ListingStatsPage() {
     const engagementRate = totalViews > 0 ? ((totalClicks / totalViews) * 100).toFixed(1) : '0.0';
 
     return (
-        <div className="min-h-screen pt-4 md:pt-8 pb-20 bg-background">
+        <div className="min-h-screen pt-4 md:pt-8 pb-8 bg-background">
             <div className="container max-w-5xl mx-auto px-4">
                 
                 <AppBreadcrumbs className="mb-6" />
