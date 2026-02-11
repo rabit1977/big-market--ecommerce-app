@@ -155,12 +155,12 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
       // Submit to Convex
       await createListing(listingData);
       
-      // Redirect to success page or listing
-      window.location.href = '/listings';
+      // Redirect to my-listings page
+      import('sonner').then(({ toast }) => toast.success('Listing submitted for approval!'));
+      window.location.href = '/my-listings';
     } catch (error: any) {
       console.error('Error creating listing:', error);
-      // Show specific error message to user
-      alert(`Failed to create listing: ${error.message || 'Unknown error'}`);
+      import('sonner').then(({ toast }) => toast.error(`Failed to create listing: ${error.message || 'Unknown error'}`));
     } finally {
       setIsSubmitting(false);
     }
@@ -340,12 +340,12 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
                 {isSubmitting ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Publishing...
+                    Submitting...
                   </>
                 ) : (
                   <>
                     <Check className="w-4 h-4" />
-                    Publish Listing
+                    Submit for Review
                   </>
                 )}
               </Button>

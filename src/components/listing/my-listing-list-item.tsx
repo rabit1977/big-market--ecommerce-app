@@ -19,7 +19,7 @@ import { cn } from '@/lib/utils';
 import { formatPrice } from '@/lib/utils/formatters';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
-import { BarChart2, CheckCircle, Edit, ExternalLink, Mail, RefreshCw, Trash2 } from 'lucide-react';
+import { BarChart2, CheckCircle, Clock, Edit, ExternalLink, Mail, RefreshCw, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTransition } from 'react';
@@ -95,6 +95,11 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
              {listing.status === 'SOLD' && (
                  <Badge variant="secondary" className="bg-foreground text-background border-0 text-[10px] uppercase tracking-wider font-bold h-6 px-2 rounded-lg">
                     Sold Out
+                 </Badge>
+             )}
+             {listing.status === 'PENDING_APPROVAL' && (
+                 <Badge className="bg-amber-500 hover:bg-amber-600 text-white border-0 shadow-lg shadow-amber-500/20 text-[10px] uppercase tracking-wider font-bold h-6 px-2 rounded-lg">
+                    <Clock className="w-3 h-3 mr-1" /> Pending Approval
                  </Badge>
              )}
           </div>

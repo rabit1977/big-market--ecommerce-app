@@ -314,7 +314,7 @@ export async function renewListingAction(id: string) {
 // GET USER'S LISTINGS
 // ============================================
 
-export async function getMyListingsAction(status?: 'ACTIVE' | 'PENDING' | 'SOLD' | 'EXPIRED', search?: string) {
+export async function getMyListingsAction(status?: 'ACTIVE' | 'PENDING' | 'SOLD' | 'EXPIRED' | 'PENDING_APPROVAL', search?: string) {
   try {
     const session = await auth();
     if (!session?.user?.id) {

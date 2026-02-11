@@ -272,7 +272,7 @@ export const create = mutation({
   handler: async (ctx, args) => {
     return await ctx.db.insert("listings", {
       ...args,
-      status: "ACTIVE",
+      status: "PENDING_APPROVAL",
       createdAt: Date.now(),
       viewCount: 0,
     });
