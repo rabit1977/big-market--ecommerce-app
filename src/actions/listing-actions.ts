@@ -311,8 +311,60 @@ export async function renewListingAction(id: string) {
 
 
 // ============================================
-// GET USER'S LISTINGS
+// APPROVE / REJECT LISTING
 // ============================================
+
+export async function approveListingAction(id: string) {
+  try {
+    const session = await auth();
+    if (!session?.user || session.user.role !== 'ADMIN') {
+      return { success: false, error: 'Unauthorized' };
+    }
+
+    await convex.mutation(api.listings.update, {
+      id: id as any,
+      status: 'ACTIVE',
+      createdAt: Date.now(), // Refresh timestamp on approval? Optional.
+    });
+
+    revalidatePath('/admin/listings');
+    revalidatePath('/listings');
+    revalidatePath(`/listings/${id}`);
+
+    return { success: true, message: 'Listing approved successfully' };
+  } catch (error: any) {
+    console.error('Error approving listing:', error);
+    return { success: false, error: 'Failed to approve listing' };
+  }
+}
+
+export async function rejectListingAction(id: string, reason?: string) {
+  try {
+    const session = await auth();
+    if (!session?.user || session.user.role !== 'ADMIN') {
+      return { success: false, error: 'Unauthorized' };
+    }
+
+    // Option 1: Mark as REJECTED
+    await convex.mutation(api.listings.update, {
+      id: id as any,
+      status: 'REJECTED', 
+      // reason: reason // Add if we have schema support
+    });
+    
+    // Option 2: Delete?
+    // User might want to see why it was rejected. Let's keep it as REJECTED for now.
+
+    revalidatePath('/admin/listings');
+    revalidatePath('/listings'); 
+    revalidatePath(`/listings/${id}`);
+
+    return { success: true, message: 'Listing rejected' };
+  } catch (error: any) {
+    console.error('Error rejecting listing:', error);
+    return { success: false, error: 'Failed to reject listing' };
+  }
+}
 
 export async function getMyListingsAction(status?: 'ACTIVE' | 'PENDING' | 'SOLD' | 'EXPIRED' | 'PENDING_APPROVAL', search?: string) {
   try {

@@ -110,6 +110,7 @@ export const update = mutation({
     image: v.optional(v.string()),
     resetToken: v.optional(v.string()),
     resetTokenExpiry: v.optional(v.number()),
+    isVerified: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const { id, ...data } = args;

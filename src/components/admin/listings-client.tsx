@@ -1,11 +1,11 @@
 'use client';
 
-import { deleteMultipleListingsAction } from '@/actions/listing-actions';
+import { approveListingAction, deleteMultipleListingsAction, rejectListingAction } from '@/actions/listing-actions';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Listing } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { Edit, MapPin, Package, Trash2 } from 'lucide-react';
+import { Check, Edit, MapPin, Package, Trash2, X } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
@@ -138,10 +138,49 @@ export function ListingsClient({ listings }: ListingsClientProps) {
               </div>
             </div>
 
+
+
             {/* Actions */}
             <div className='flex items-center gap-2 mt-2 sm:mt-0 sm:ml-auto'>
+               {listing.status === 'PENDING_APPROVAL' ? (
+                   <>
+                       <Button 
+                           variant="outline" 
+                           size="sm" 
+                           className="h-8 w-8 p-0 text-green-600 border-green-200 hover:bg-green-50 hover:text-green-700 dark:hover:bg-green-900/20"
+                           title="Approve"
+                           onClick={() => startTransition(async () => {
+                               const result = await approveListingAction(listing.id);
+                               if (result.success) toast.success('Listing approved');
+                               else toast.error(result.error);
+                               router.refresh();
+                           })}
+                           disabled={isPending}
+                       >
+                           <Check className="h-4 w-4" />
+                           <span className="sr-only">Approve</span>
+                       </Button>
+                       <Button 
+                           variant="outline" 
+                           size="sm" 
+                           className="h-8 w-8 p-0 text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/20"
+                           title="Reject"
+                           onClick={() => startTransition(async () => {
+                               const result = await rejectListingAction(listing.id);
+                               if (result.success) toast.success('Listing rejected');
+                               else toast.error(result.error);
+                               router.refresh();
+                           })}
+                            disabled={isPending}
+                       >
+                           <X className="h-4 w-4" />
+                           <span className="sr-only">Reject</span>
+                       </Button>
+                   </>
+               ) : null}
+
                <Button variant="outline" size="sm" asChild className="h-8 w-8 p-0">
-                   <Link href={`/admin/listings/${listing.id}/edit`}>
+                   <Link href={`/listings/${listing.id}/edit`}>
                        <Edit className="h-4 w-4" />
                        <span className="sr-only">Edit</span>
                    </Link>

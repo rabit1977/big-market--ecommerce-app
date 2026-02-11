@@ -3,6 +3,7 @@ import { ListingsClient } from '@/components/admin/listings-client';
 import { Button } from '@/components/ui/button';
 import { PaginationControls } from '@/components/ui/pagination';
 import { api, convex } from '@/lib/convex-server';
+import { cn } from '@/lib/utils';
 import { Layers, Package, PlusCircle, Tag } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -147,9 +148,32 @@ export default async function AdminListingsPage(props: AdminListingsPageProps) {
         </div>
       </div>
 
-      {/* Filters Placeholder */}
-      <div className="bg-card p-4 rounded-xl border border-border/50">
-          <p className="text-sm text-muted-foreground">Filters coming soon...</p>
+      {/* Filters */}
+      <div className="bg-card p-1 rounded-xl border border-border/50 inline-flex gap-1 overflow-x-auto max-w-full">
+          {[
+              { label: 'All', value: 'all' },
+              { label: 'Pending Approval', value: 'PENDING_APPROVAL' },
+              { label: 'Active', value: 'ACTIVE' },
+              { label: 'Sold', value: 'SOLD' },
+          ].map((s) => {
+              const isActive = (s.value === 'all' && !status) || status === s.value;
+              return (
+                  <Button
+                      key={s.value}
+                      variant="ghost" 
+                      size="sm"
+                      asChild
+                      className={cn(
+                          "rounded-lg font-bold text-xs uppercase tracking-wider h-8",
+                          isActive ? "bg-primary/10 text-primary hover:bg-primary/20" : "text-muted-foreground hover:bg-muted"
+                      )}
+                  >
+                      <Link href={`/admin/listings?status=${s.value}${category ? `&category=${category}` : ''}`}>
+                          {s.label}
+                      </Link>
+                  </Button>
+              );
+          })}
       </div>
 
       {/* Stats Grid */}

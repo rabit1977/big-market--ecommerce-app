@@ -11,6 +11,7 @@ export interface User {
   updatedAt: Date | number;
   externalId: string;
   emailVerified?: Date | number | null;
+  isVerified?: boolean;
 }
 
 export interface Review {

@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteUserFromAdminAction } from '@/actions/user-actions';
+import { deleteUserFromAdminAction, updateUserAction } from '@/actions/user-actions';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { User } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { Edit, Eye, MoreHorizontal, Shield, Trash2, UserCog, User as UserIcon } from 'lucide-react';
+import { Check, Edit, Eye, MoreHorizontal, Shield, Trash2, UserCog, User as UserIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -203,6 +203,32 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                             <Edit className='h-4 w-4 mr-2' />
                             Edit User
                           </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                            className='cursor-pointer'
+                            onSelect={() => startTransition(async () => {
+                                const newStatus = !user.isVerified;
+                                const result = await updateUserAction(user.id, { isVerified: newStatus });
+                                if (result.success) {
+                                  toast.success(`User ${newStatus ? 'verified' : 'unverified'} successfully`);
+                                  router.refresh();
+                                } else {
+                                  toast.error(result.error);
+                                }
+                            })}
+                        >
+                            {user.isVerified ? (
+                                <>
+                                    <Shield className='h-4 w-4 mr-2 text-destructive' />
+                                    Unverify User
+                                </>
+                            ) : (
+                                <>
+                                    <Check className='h-4 w-4 mr-2 text-green-500' />
+                                    Verify User
+                                </>
+                            )}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
