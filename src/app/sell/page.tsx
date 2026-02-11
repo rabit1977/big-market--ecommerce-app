@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 import { PostListingWizard } from '@/components/sell/post-listing-wizard';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
-import { fetchQuery } from 'convex/nextjs';
+import { convex } from '@/lib/convex-server';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { api } from '../../../convex/_generated/api';
@@ -21,7 +21,7 @@ export default async function SellPage() {
   }
 
   // Fetch categories
-  const categories = await fetchQuery(api.categories.list);
+  const categories = await convex.query(api.categories.list);
 
   return (
     <div className="min-h-screen bg-background pt-4 md:pt-6 pb-8">
