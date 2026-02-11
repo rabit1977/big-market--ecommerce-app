@@ -1,12 +1,12 @@
 'use client';
 
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { cn } from '@/lib/utils';
 import { Home } from 'lucide-react';
@@ -29,7 +29,7 @@ const routeMap: Record<string, string> = {
   stats: 'Statistics',
   favorites: 'Favorites',
   messages: 'Messages',
-  listings: 'Browse Listings',
+  listings: 'Listings',
   pricing: 'Pricing Plans',
   premium: 'Premium Plans',
   success: 'Success',
@@ -57,13 +57,12 @@ export function AppBreadcrumbs({ className, customLabel }: AppBreadcrumbsProps) 
   const pathSegments = pathname.split('/').filter(Boolean);
   
   return (
-    <Breadcrumb className={cn("mb-6", className)}>
-      <BreadcrumbList>
-        <BreadcrumbItem>
+    <Breadcrumb className={cn("mb-6 bg-card w-fit px-4 py-2 rounded-full border border-border/60 shadow-sm", className)}>
+      <BreadcrumbList className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground flex-nowrap overflow-x-auto no-scrollbar">
+        <BreadcrumbItem className="shrink-0">
           <BreadcrumbLink asChild>
             <Link href="/" className="flex items-center gap-1 hover:text-primary transition-colors">
               <Home className="h-3.5 w-3.5" />
-              <span className="sr-only">Home</span>
             </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
@@ -71,19 +70,29 @@ export function AppBreadcrumbs({ className, customLabel }: AppBreadcrumbsProps) 
         {pathSegments.map((segment, index) => {
           const href = `/${pathSegments.slice(0, index + 1).join('/')}`;
           const isLast = index === pathSegments.length - 1;
-          const label = (isLast && customLabel) ? customLabel : (routeMap[segment] || segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' '));
+          
+          let label = routeMap[segment] || segment.replace(/-/g, ' ');
+          
+          if (segment.length > 20 && !routeMap[segment]) {
+              label = segment.slice(0, 15) + '...';
+          }
+           
+          // If we have a custom label for the last item, use it
+          if (isLast && customLabel) {
+              label = customLabel;
+          }
 
           return (
             <React.Fragment key={href}>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
+              <BreadcrumbSeparator className="opacity-50 shrink-0" />
+              <BreadcrumbItem className="shrink-0 whitespace-nowrap">
                 {isLast ? (
-                  <BreadcrumbPage className="font-bold text-foreground line-clamp-1">
+                  <BreadcrumbPage className="font-black text-foreground line-clamp-1 max-w-[150px] sm:max-w-[300px] truncate">
                     {label}
                   </BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
-                    <Link href={href} className="hover:text-primary transition-colors capitalize">
+                    <Link href={href} className="hover:text-primary transition-colors hover:underline underline-offset-4 decoration-2">
                       {label}
                     </Link>
                   </BreadcrumbLink>

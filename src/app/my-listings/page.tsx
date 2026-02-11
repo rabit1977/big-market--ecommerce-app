@@ -25,50 +25,52 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
       if (error === 'Unauthorized') {
           redirect('/auth/signin'); 
       }
-      return <div className="p-8 text-center text-destructive">Error loading listings: {error}</div>;
+      return <div className="p-8 text-center text-destructive font-bold text-sm uppercase tracking-wide">Error loading listings: {error}</div>;
   }
 
   return (
-    <div className='container-wide pt-4 md:pt-6 min-h-screen pb-12 bg-muted/10 px-3 md:px-4'>
-      <AppBreadcrumbs />
+    <div className='container max-w-5xl mx-auto pt-4 md:pt-8 min-h-screen pb-20 bg-background px-4'>
+      <AppBreadcrumbs className="mb-6 md:mb-8" />
+      
       {/* Dashboard Stats Header */}
       <MyListingsDashboardHeader />
 
       {/* Listings Section Header */}
-      <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 md:mb-6'>
+      <div className='flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8 border-b border-border pb-4 md:pb-6'>
         <div>
-           <h2 className='text-base md:text-xl font-black tracking-tight text-foreground'>Your Ads</h2>
-           <p className='text-muted-foreground text-[10px] md:text-sm font-medium'>Manage your active and sold items</p>
+           <h2 className='text-2xl md:text-3xl font-black tracking-tight text-foreground uppercase leading-none'>My Listings</h2>
+           <div className="h-1 w-12 bg-primary rounded-full mt-2 mb-2" />
+           <p className='text-muted-foreground text-xs md:text-sm font-bold uppercase tracking-wider'>Manage your active and sold items</p>
         </div>
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex items-center gap-3 w-full md:w-auto">
             <MyListingsSearch />
-            <Button asChild className="gap-1.5 rounded-lg md:rounded-full font-bold shadow-sm bg-primary hover:bg-primary/90 shrink-0 h-8 md:h-9 text-xs md:text-sm px-3 md:px-4">
+            <Button asChild className="gap-2 rounded-full font-black shadow-xl shadow-primary/20 bg-primary hover:bg-primary/90 shrink-0 h-10 md:h-12 text-xs md:text-sm px-6 uppercase tracking-tight transition-all hover:scale-105">
                 <Link href="/sell">
-                    <Plus className="h-3.5 w-3.5 stroke-[3]" />
-                    <span className="hidden sm:inline">Post New Ad</span>
-                    <span className="sm:hidden">Post</span>
+                    <Plus className="h-4 w-4 stroke-[3]" />
+                    <span className="hidden sm:inline">Post Ad</span>
+                    <span className="sm:hidden">Post Listing</span>
                 </Link>
             </Button>
         </div>
       </div>
 
       {listings && listings.length > 0 ? (
-          <div className='flex flex-col gap-2.5 md:gap-4'>
+          <div className='flex flex-col gap-3 md:gap-4'>
               {listings.map((listing: ListingWithRelations) => (
                   <MyListingListItem key={listing.id} listing={listing} />
               ))}
           </div>
       ) : (
-          <div className='text-center py-12 md:py-16 bg-card rounded-2xl border border-dashed border-border'>
-              <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Package className="h-6 w-6 text-muted-foreground" />
+          <div className='text-center py-16 md:py-24 bg-card rounded-[2rem] border-2 border-dashed border-border/60 hover:border-primary/20 transition-all duration-300 group shadow-sm'>
+              <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:bg-primary/10 transition-all duration-300">
+                  <Package className="h-8 w-8 text-muted-foreground group-hover:text-primary transition-colors" />
               </div>
-              <h3 className='text-sm md:text-base font-bold text-foreground'>No listings yet</h3>
-              <p className='text-muted-foreground max-w-sm mx-auto mt-1 mb-4 text-xs md:text-sm'>
+              <h3 className='text-xl md:text-2xl font-black text-foreground uppercase tracking-tight mb-2'>No listings yet</h3>
+              <p className='text-muted-foreground max-w-sm mx-auto mb-8 text-xs md:text-sm font-bold'>
                   You haven&apos;t posted any ads yet. Start selling today!
               </p>
-              <Button asChild size="sm" className="rounded-lg font-bold text-xs md:text-sm">
-                  <Link href="/sell">Create your first listing</Link>
+              <Button asChild size="lg" className="rounded-full font-black text-sm uppercase tracking-wider shadow-xl shadow-primary/20 h-12 px-8 hover:scale-105 transition-transform">
+                  <Link href="/sell">Create Listing</Link>
               </Button>
           </div>
       )}
