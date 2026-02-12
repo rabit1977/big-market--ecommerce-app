@@ -177,8 +177,11 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   const settingsItems: MenuItem[] = [
     { href: '/account', icon: Settings, label: 'Edit Profile' },
     { href: '/account/password', icon: Lock, label: 'Change Password' },
-    { href: '/account/verification', icon: ShieldCheck, label: 'Verification' },
-    { href: '/premium', icon: Crown, label: 'Subscription Plans', iconColor: 'text-amber-500' },
+    // Only show Verification and Premium for non-admins
+    ...(user?.role !== 'ADMIN' ? [
+        { href: '/account/verification', icon: ShieldCheck, label: 'Verification' },
+        { href: '/premium', icon: Crown, label: 'Subscription Plans', iconColor: 'text-amber-500' },
+    ] : [])
   ];
 
   const adminItems: MenuItem[] = user?.role === 'ADMIN' ? [
@@ -231,6 +234,25 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   return (
     <>
       <div className='flex items-center gap-1 sm:gap-1.5'>
+        {/* Desktop: Admin Dashboard */}
+        {user?.role === 'ADMIN' && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  asChild variant='ghost' size='icon'
+                  className='relative hidden md:flex h-9 w-9 rounded-full text-primary hover:bg-primary/10'
+                >
+                  <Link href="/admin/dashboard">
+                    <LayoutDashboard className="h-4.5 w-4.5" />
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Admin Dashboard</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
+
         {/* Desktop: Favorites */}
         <TooltipProvider>
           <Tooltip>
@@ -385,6 +407,17 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
 
                 {/* Scrollable Menu */}
                 <div className='flex-1 overflow-y-auto overscroll-contain py-1'>
+                  {/* Admin Section (First) */}
+                  {adminItems.length > 0 && (
+                    <>
+                      {renderSectionLabel('Administration')}
+                      <div className='px-1.5'>
+                        {adminItems.map(item => renderMenuItem(item, () => setIsPanelOpen(false)))}
+                      </div>
+                      <div className='mx-3 my-1 h-px bg-border/30' />
+                    </>
+                  )}
+
                   {/* Mobile navigation — visible only below md */}
                   <div className='md:hidden'>
                     {renderSectionLabel('Navigation')}
@@ -406,17 +439,6 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                   <div className='px-1.5'>
                     {settingsItems.map(item => renderMenuItem(item, () => setIsPanelOpen(false)))}
                   </div>
-
-                  {/* Admin */}
-                  {adminItems.length > 0 && (
-                    <>
-                      <div className='mx-3 my-1 h-px bg-border/30' />
-                      {renderSectionLabel('Administration')}
-                      <div className='px-1.5'>
-                        {adminItems.map(item => renderMenuItem(item, () => setIsPanelOpen(false)))}
-                      </div>
-                    </>
-                  )}
 
                   {/* Danger zone */}
                   <div className='mx-3 my-1 h-px bg-border/30' />

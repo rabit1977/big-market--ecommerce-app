@@ -74,16 +74,34 @@ export const syncUser = mutation({
         role: args.role || existing.role,
       });
       return existing._id;
-    } else {
-      return await ctx.db.insert("users", {
-        externalId: args.externalId,
-        email: args.email,
-        name: args.name,
-        image: args.image,
-        role: args.role || "USER",
-        createdAt: Date.now(),
-      });
     }
+
+    // Fallback: Check by email to prevent duplicates (especially for Credentials users)
+    if (args.email) {
+      const existingByEmail = await ctx.db
+        .query("users")
+        .withIndex("by_email", (q) => q.eq("email", args.email))
+        .first();
+
+      if (existingByEmail) {
+        await ctx.db.patch(existingByEmail._id, {
+          externalId: args.externalId, // Update externalId to match current auth provider/session
+          name: args.name || existingByEmail.name,
+          image: args.image || existingByEmail.image,
+          role: existingByEmail.role, // Keep existing role (important for keeping ADMIN status)
+        });
+        return existingByEmail._id;
+      }
+    }
+
+    return await ctx.db.insert("users", {
+      externalId: args.externalId,
+      email: args.email,
+      name: args.name,
+      image: args.image,
+      role: args.role || "USER",
+      createdAt: Date.now(),
+    });
   },
 });
 
@@ -414,3 +432,5 @@ export const backfillCreatedAt = mutation({
     return { message: `Updated ${updated} users with createdAt field` };
   },
 });
+
+
