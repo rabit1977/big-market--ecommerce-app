@@ -226,7 +226,7 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
           if (listingId) {
               res = await updateListingAction(listingId, listingData);
               if (res.success) {
-                  if (onSuccess) {
+                  if (onSuccess && initialData) {
                       onSuccess(initialData as any); 
                   } else {
                       toast.success('Updated successfully');
