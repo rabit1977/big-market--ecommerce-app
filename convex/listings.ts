@@ -488,6 +488,15 @@ export const update = mutation({
   },
   handler: async (ctx, args) => {
     const { id, ...patch } = args;
+    
+    // Track price history if price is changing
+    if (patch.price !== undefined) {
+      const existingListing = await ctx.db.get(id);
+      if (existingListing && existingListing.price !== patch.price) {
+        (patch as any).previousPrice = existingListing.price;
+      }
+    }
+
     await ctx.db.patch(id, patch);
   },
 });

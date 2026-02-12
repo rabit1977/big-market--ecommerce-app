@@ -121,7 +121,12 @@ export const ListingCard = memo(
                    Currently Available • Verified
                 </div>
 
-                <div className="pt-0.5 sm:pt-1">
+                <div className="pt-0.5 sm:pt-1 flex flex-col">
+                    {listing.previousPrice && listing.previousPrice > listing.price && (
+                        <span className="text-[10px] sm:text-[11px] font-bold text-muted-foreground/50 line-through leading-none mb-0.5">
+                            {formatPrice(listing.previousPrice)}
+                        </span>
+                    )}
                     <span className="text-base sm:text-lg font-bold text-primary">
                       {formatPrice(listing.price)}
                     </span>
@@ -166,9 +171,14 @@ export const ListingCard = memo(
                             <MapPin className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                             {listing.city || 'Skopje'}
                         </span>
-                        <span className="text-sm sm:text-base md:text-xl font-bold text-primary">
-                          {formatPrice(listing.price)}
-                        </span>
+                         {listing.previousPrice && listing.previousPrice > listing.price && (
+                             <span className="text-[10px] sm:text-[11px] font-bold text-muted-foreground/50 line-through leading-none mb-0.5">
+                                 {formatPrice(listing.previousPrice)}
+                             </span>
+                         )}
+                         <span className="text-sm sm:text-base md:text-xl font-bold text-primary">
+                           {formatPrice(listing.price)}
+                         </span>
                     </div>
                     
                     {/* List View Heart - Moved to Content Bottom Right */}

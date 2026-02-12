@@ -2,6 +2,17 @@
 
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { UserAvatar } from '@/components/shared/user-avatar';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from '@/components/ui/button';
 import { useQuery as useConvexQuery, useMutation } from 'convex/react';
 import {
@@ -10,6 +21,7 @@ import {
     Edit,
     Eye,
     Heart,
+    History,
     Mail,
     MapPin,
     MessageSquare,
@@ -47,6 +59,7 @@ interface ListingDetailContentProps {
     contactEmail?: string;
     specifications?: Record<string, any>;
     status: string;
+    previousPrice?: number;
   };
 }
 
@@ -187,6 +200,19 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                 <Heart className={`w-4 h-4 ${isFavorite ? 'fill-current' : ''}`} />
                 {isFavorite ? 'Saved' : 'Save Ad'}
              </button>
+
+             {session?.user?.id === listing.userId && (
+                <>
+                  <Link 
+                    href={`/my-listings/${listing._id}/edit`}
+                    className="flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-sm font-bold text-primary hover:bg-primary/20 transition-all shadow-sm"
+                  >
+                     <Edit className="w-4 h-4" />
+                     Edit Ad
+                  </Link>
+                  <DeleteListingButton listingId={listing._id} compact />
+                </>
+             )}
           </div>
         </div>
 
@@ -274,11 +300,18 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                     <h1 className="text-xl font-bold text-foreground leading-tight">
                         {listing.title}
                     </h1>
-                    <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-black text-primary">
-                            {listing.price > 0 ? `${listing.price.toLocaleString()} €` : 'Price on request'}
-                        </span>
-                        {listing.price > 0 && <span className="text-xs font-bold text-muted-foreground uppercase tracking-tighter">Fixed</span>}
+                    <div className="flex flex-col">
+                        {listing.previousPrice && listing.previousPrice > listing.price && (
+                            <span className="text-xs font-bold text-muted-foreground/50 line-through mb-[-2px]">
+                                {listing.previousPrice.toLocaleString()} €
+                            </span>
+                        )}
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-3xl font-black text-primary">
+                                {listing.price > 0 ? `${listing.price.toLocaleString()} €` : 'Price on request'}
+                            </span>
+                            {listing.price > 0 && <span className="text-xs font-bold text-muted-foreground uppercase tracking-tighter">Fixed</span>}
+                        </div>
                     </div>
                 </div>
 
@@ -375,39 +408,8 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                </p>
             </div>
 
-            {/* Owner Dashboard - Visible only to owner */}
-            {session?.user?.id === listing.userId && (
-                <div className="bg-card rounded-xl md:rounded-2xl p-4 sm:p-6 md:p-8 shadow-xl border border-border space-y-4 md:space-y-6">
-                    <div className="flex items-center justify-between gap-2">
-                        <div className="space-y-0.5 md:space-y-1 min-w-0 flex-1">
-                            <h3 className="text-foreground font-black uppercase tracking-tight text-sm sm:text-base md:text-lg truncate">Owner Dashboard</h3>
-                            <p className="text-muted-foreground text-xs sm:text-sm line-clamp-1">Manage your listing and view performance</p>
-                        </div>
-                        <BadgeCheck className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-green-500 shrink-0" />
-                    </div>
-
-                    {/* Stats Grid */}
-                    <OwnerListingStats listingId={listing._id} currentViewCount={listing.viewCount} />
-
-                    {/* Actions */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-2.5 md:gap-3 pt-1 md:pt-2">
-                        <Button asChild variant="outline" className="h-10 sm:h-11 md:h-12 bg-transparent border-border text-foreground hover:bg-accent border-2 text-xs sm:text-sm">
-                            <Link href={`/my-listings/stats/${listing._id}`} className="flex items-center justify-center gap-1.5 sm:gap-2">
-                                <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                                <span className="truncate">Full Analytics</span>
-                            </Link>
-                        </Button>
-                        <Button asChild variant="outline" className="h-10 sm:h-11 md:h-12 bg-transparent border-border text-foreground hover:bg-accent border-2 text-xs sm:text-sm">
-                            <Link href={`/my-listings/${listing._id}/edit`} className="flex items-center justify-center gap-1.5 sm:gap-2">
-                                <Edit className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                                <span className="truncate">Edit Listing</span>
-                            </Link>
-                        </Button>
-                        <DeleteListingButton listingId={listing._id} />
-                    </div>
-                </div>
-            )}
           </div>
+
 
           {/* Right Column (lg:col-span-4) - Hidden/Transformed on Mobile */}
           <div className="hidden md:block md:col-span-5 lg:col-span-4 space-y-6">
@@ -425,7 +427,13 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                        </div>
                    </div>
                    
-                   <div className="p-6 bg-muted rounded-2xl flex flex-col gap-1 border border-border">
+                   <div className="p-6 bg-muted rounded-2xl flex flex-col gap-1 border border-border relative overflow-hidden">
+                       {listing.previousPrice && listing.previousPrice > listing.price && (
+                           <div className="absolute top-3 right-4 flex items-center gap-1.5 opacity-60">
+                               <History className="w-3 h-3" />
+                               <span className="text-xs font-bold line-through">{listing.previousPrice.toLocaleString()} €</span>
+                           </div>
+                       )}
                        <div className="text-4xl font-black text-primary tracking-tighter">
                           {listing.price > 0 ? `${listing.price.toLocaleString()} €` : 'Call for Price'}
                        </div>
@@ -474,7 +482,6 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                            <span>Posted: {publishDate}</span>
                        </div>
                    </div>
-                </div>
 
                 {/* Seller Profile Card */}
                 <div className="bg-card border border-border rounded-3xl p-6 md:p-6 shadow-sm overflow-hidden relative">
@@ -564,7 +571,8 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
             </div>
         </div>
       </div>
-);
+    </div>
+  );
 }
 
 function OwnerListingStats({ listingId, currentViewCount }: { listingId: string, currentViewCount?: number }) {
@@ -626,18 +634,16 @@ function OwnerListingStats({ listingId, currentViewCount }: { listingId: string,
     );
 }
 
-function DeleteListingButton({ listingId }: { listingId: string }) {
+function DeleteListingButton({ listingId, compact }: { listingId: string, compact?: boolean }) {
     const [isDeleting, setIsDeleting] = useState(false);
     const deleteListing = useMutation(api.listings.remove);
     const router = useRouter();
 
     const handleDelete = async () => {
-        if (!confirm("Are you sure you want to delete this listing? This action cannot be undone.")) return;
-        
         setIsDeleting(true);
         try {
             await deleteListing({ id: listingId as Id<"listings"> });
-            router.push('/');
+            router.push('/my-listings');
         } catch (error) {
             console.error("Failed to delete listing", error);
             alert("Failed to delete listing. Please try again.");
@@ -646,20 +652,47 @@ function DeleteListingButton({ listingId }: { listingId: string }) {
     };
 
     return (
-        <Button 
-            variant="destructive" 
-            className="h-10 sm:h-11 md:h-12 bg-red-600 hover:bg-red-700 text-white font-bold text-xs sm:text-sm sm:col-span-2 md:col-span-1 min-w-0"
-            onClick={handleDelete}
-            disabled={isDeleting}
-        >
-            {isDeleting ? (
-                "Deleting..." 
-            ) : (
-                <div className="flex items-center justify-center gap-1.5 sm:gap-2 min-w-0 w-full">
-                    <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                    <span className="truncate">Delete Listing</span>
-                </div>
-            )}
-        </Button>
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button 
+                    variant={compact ? "ghost" : "destructive"}
+                    className={compact 
+                        ? "h-9 px-4 rounded-full border border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 font-bold text-sm transition-all"
+                        : "h-10 sm:h-11 md:h-12 bg-red-600 hover:bg-red-700 text-white font-bold text-xs sm:text-sm sm:col-span-2 md:col-span-1 min-w-0"
+                    }
+                    disabled={isDeleting}
+                >
+                    {isDeleting ? (
+                        "..." 
+                    ) : (
+                        <div className="flex items-center justify-center gap-1.5 sm:gap-2 min-w-0 w-full">
+                            <Trash2 className="w-4 h-4 shrink-0" />
+                            {!compact && <span className="truncate">Delete Listing</span>}
+                            {compact && <span>Delete</span>}
+                        </div>
+                    )}
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="rounded-[2.5rem] border-2 border-border p-10 max-w-md">
+                <AlertDialogHeader className="space-y-4">
+                    <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-2">
+                        <Trash2 className="w-8 h-8 text-red-600" />
+                    </div>
+                    <AlertDialogTitle className="text-3xl font-black uppercase tracking-tight text-center">Delete Listing?</AlertDialogTitle>
+                    <AlertDialogDescription className="font-bold text-muted-foreground text-center text-base">
+                        This action is permanent and cannot be undone. Are you sure you want to remove this ad from Big Market?
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter className="flex-col sm:flex-row gap-3 pt-6">
+                    <AlertDialogCancel className="rounded-full font-black uppercase text-xs tracking-widest h-14 border-2 flex-1">Keep Listing</AlertDialogCancel>
+                    <AlertDialogAction 
+                        onClick={handleDelete}
+                        className="rounded-full bg-red-600 hover:bg-red-700 text-white font-black uppercase text-xs tracking-widest h-14 shadow-xl shadow-red-200 flex-1"
+                    >
+                        Delete Permanently
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     );
 }

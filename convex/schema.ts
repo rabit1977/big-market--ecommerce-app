@@ -105,6 +105,7 @@ export default defineSchema({
     isAffordable: v.optional(v.boolean()), // For 'Povolni'
     isPromoted: v.optional(v.boolean()), // For promoted/featured listings
     promotionTier: v.optional(v.string()), // 'GOLD', 'SILVER', etc.
+    previousPrice: v.optional(v.number()),
   })
     .index("by_category", ["category"])
     .index("by_userId", ["userId"])
