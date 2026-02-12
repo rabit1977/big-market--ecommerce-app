@@ -68,7 +68,15 @@ const NAME_TO_ICON: Record<string, any> = {
 const getCategories = cache(async () => {
     // 1. Fetch all active categories (flat list)
     // We use the new getWithCounts query which returns counting per slug
-    const categoriesWithRawCounts = await convex.query(api.categories.getWithCounts);
+    let categoriesWithRawCounts;
+    try {
+        categoriesWithRawCounts = await convex.query(api.categories.getWithCounts);
+    } catch (e) {
+        console.error("Error fetching categories:", e);
+        return [];
+    }
+    
+    if (!categoriesWithRawCounts || !Array.isArray(categoriesWithRawCounts)) return [];
 
     // 2. Build Hierarchy & Aggregate Counts
     const categoryMap = new Map<string, any>();
@@ -97,6 +105,7 @@ const getCategories = cache(async () => {
     });
 
     // 3. Recursive Count Aggregation
+    // 3. Recursive Count Aggregation
     const calculateTotalCount = (node: any): number => {
         let sum = node.count || 0;
         if (node.children && node.children.length > 0) {
@@ -115,7 +124,12 @@ const getCategories = cache(async () => {
 });
 
 export default async function CategoriesPage() {
-  const categories = await getCategories();
+  let categories: any[] = [];
+  try {
+    categories = await getCategories();
+  } catch (err) {
+    console.error("Failed to load categories:", err);
+  }
 
   return (
     <div className='min-h-screen bg-background'>
