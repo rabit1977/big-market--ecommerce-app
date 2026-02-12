@@ -114,8 +114,9 @@ export const authConfig = {
       }
 
       // 5. After Payment, if still Pending Approval, redirect to Pending page
+      // EXCEPT for the home page, allowing them to see the landing page
       if (isLoggedIn && isSubscribed && isPending) {
-         if (!nextUrl.pathname.startsWith('/auth/pending')) {
+         if (!nextUrl.pathname.startsWith('/auth/pending') && nextUrl.pathname !== '/') {
             return Response.redirect(new URL('/auth/pending', nextUrl));
          }
          return true;

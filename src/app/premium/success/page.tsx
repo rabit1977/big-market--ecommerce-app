@@ -63,7 +63,7 @@ function SuccessContent() {
             </p>
             <div className="pt-6">
                 <Button asChild size="lg" className="w-full rounded-xl font-bold bg-amber-500 hover:bg-amber-600">
-                    <Link href="/auth/pending">Finish Signup & Wait for Approval</Link>
+                    <Link href="/">Back to Home</Link>
                 </Button>
             </div>
           </>

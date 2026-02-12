@@ -7,7 +7,7 @@ export const metadata = {
 
 export default async function AdminDashboardPage() {
   const [listings, users] = await Promise.all([
-    convex.query(api.listings.list, {}),
+    convex.query(api.listings.list, { status: 'ALL' }),
     convex.query(api.users.list, {})
   ]);
 

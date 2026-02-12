@@ -49,6 +49,11 @@ export default defineSchema({
     listingsPostedCount: v.optional(v.number()), // Track usage
     canRefreshListings: v.optional(v.boolean()), // Toggle ability to refresh/bump daily
     
+    // Renewal Quota Tracking
+    monthlyRenewalsUsed: v.optional(v.number()), // Track 15 renewals per month
+    lastRenewalTimestamp: v.optional(v.number()), // Enforce once daily
+    lastRenewalMonth: v.optional(v.number()), // Track month for quota reset
+    
     // Legacy/Alternative System? (Keeping for compatibility)
     membershipTier: v.optional(v.string()), // 'FREE', 'BASIC', 'PRO', 'ELITE'
     membershipStatus: v.optional(v.string()), // 'ACTIVE', 'EXPIRED', 'PENDING'
@@ -104,6 +109,9 @@ export default defineSchema({
     .index("by_category", ["category"])
     .index("by_userId", ["userId"])
     .index("by_status", ["status"])
+    .index("by_createdAt", ["createdAt"])
+    .index("by_status_createdAt", ["status", "createdAt"])
+    .index("by_userId_createdAt", ["userId", "createdAt"])
     .searchIndex("search_title", {
       searchField: "title",
       filterFields: ["status", "category"],

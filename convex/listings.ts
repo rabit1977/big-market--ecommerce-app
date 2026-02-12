@@ -4,7 +4,11 @@ import { mutation, query } from "./_generated/server";
 export const get = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("listings").order("desc").collect();
+    return await ctx.db
+      .query("listings")
+      .withIndex("by_status", (q) => q.eq("status", "ACTIVE"))
+      .order("desc")
+      .collect();
   },
 });
 
@@ -31,15 +35,24 @@ export const list = query({
   handler: async (ctx, args) => {
     console.log("API list called with args:", args);
 
-    // 1. Fetch EVERYTHING (simplest, most robust approach given < 10k listings)
-    let results = await ctx.db.query("listings").order("desc").collect();
+    // 1. Fetch data based on status (default to ACTIVE)
+    const statusFilter = args.status || "ACTIVE";
+    let results;
+    if (statusFilter === "ALL") {
+      results = await ctx.db
+        .query("listings")
+        .withIndex("by_createdAt")
+        .order("desc")
+        .collect();
+    } else {
+      results = await ctx.db
+        .query("listings")
+        .withIndex("by_status_createdAt", (q) => q.eq("status", statusFilter))
+        .order("desc")
+        .collect();
+    }
     
     // 2. Filter Loops
-    
-    // Status
-    if (args.status) {
-      results = results.filter(r => r.status === args.status);
-    }
     
     // Category - exact match or hierarchical match (case-insensitive)
     if (args.category && args.category !== 'all') {
@@ -230,7 +243,7 @@ export const getByUser = query({
   handler: async (ctx, args) => {
     const listings = await ctx.db
       .query("listings")
-      .withIndex("by_userId", (q) => q.eq("userId", args.userId))
+      .withIndex("by_userId_createdAt", (q) => q.eq("userId", args.userId))
       .order("desc") 
       .collect();
 
@@ -270,13 +283,137 @@ export const create = mutation({
     promotionTier: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert("listings", {
+    // Check Listing Limit (50 per year/total for verified)
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
+      .unique();
+
+    if (!user) throw new Error("User not found");
+
+    const limit = user.listingLimit ?? 50;
+    const currentCount = user.listingsPostedCount ?? 0;
+
+    if (currentCount >= limit && user.role !== 'ADMIN') {
+        throw new Error(`Limit reached: You can only post up to ${limit} listings.`);
+    }
+
+    const listingId = await ctx.db.insert("listings", {
       ...args,
-      status: "PENDING_APPROVAL", // Enforce pending approval
+      status: "PENDING_APPROVAL", 
       createdAt: Date.now(),
       viewCount: 0,
     });
+
+    // Increment count
+    await ctx.db.patch(user._id, {
+        listingsPostedCount: currentCount + 1
+    });
+
+    return listingId;
   },
+});
+
+export const renewListing = mutation({
+  args: { 
+    id: v.id("listings"),
+    userId: v.string() 
+  },
+  handler: async (ctx, args) => {
+    const listing = await ctx.db.get(args.id);
+    if (!listing) throw new Error("Listing not found");
+    if (listing.userId !== args.userId) throw new Error("Unauthorized");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
+      .unique();
+
+    if (!user) throw new Error("User not found");
+
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentDay = now.getDate();
+    const currentYear = now.getFullYear();
+
+    // 1. Reset Monthly Quota if Month Changed
+    let monthlyUsed = user.monthlyRenewalsUsed ?? 0;
+    if (user.lastRenewalMonth !== currentMonth) {
+        monthlyUsed = 0;
+    }
+
+    // 2. Check Monthly Limit (15)
+    if (monthlyUsed >= 15 && user.role !== 'ADMIN') {
+        throw new Error("Monthly renewal limit (15) reached.");
+    }
+
+    // 3. Check Daily Limit (Once per day per user)
+    if (user.lastRenewalTimestamp) {
+        const lastDate = new Date(user.lastRenewalTimestamp);
+        if (lastDate.getDate() === currentDay && 
+            lastDate.getMonth() === currentMonth && 
+            lastDate.getFullYear() === currentYear &&
+            user.role !== 'ADMIN') {
+            throw new Error("You have already renewed a listing today. Only one renewal per day is allowed.");
+        }
+    }
+
+    // 4. Perform Renewal (Update createdAt to move to top)
+    await ctx.db.patch(args.id, {
+        createdAt: Date.now(),
+        // Keep active status if it was already active
+        status: listing.status === 'PENDING_APPROVAL' ? 'PENDING_APPROVAL' : 'ACTIVE'
+    });
+
+    // 5. Update User Stats
+    await ctx.db.patch(user._id, {
+        monthlyRenewalsUsed: monthlyUsed + 1,
+        lastRenewalTimestamp: Date.now(),
+        lastRenewalMonth: currentMonth
+    });
+
+    return { success: true, remainingMonthly: 14 - monthlyUsed };
+  }
+});
+
+export const getRenewalStats = query({
+    args: { userId: v.string() },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
+            .unique();
+        
+        if (!user) return null;
+
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentDay = now.getDate();
+        
+        let monthlyUsed = user.monthlyRenewalsUsed ?? 0;
+        if (user.lastRenewalMonth !== currentMonth) {
+            monthlyUsed = 0;
+        }
+
+        let hasUsedToday = false;
+        if (user.lastRenewalTimestamp) {
+            const lastDate = new Date(user.lastRenewalTimestamp);
+            if (lastDate.getDate() === currentDay && 
+                lastDate.getMonth() === currentMonth && 
+                lastDate.getFullYear() === now.getFullYear()) {
+                hasUsedToday = true;
+            }
+        }
+
+        return {
+            usedThisMonth: monthlyUsed,
+            limitMonthly: 15,
+            remainingMonthly: 15 - monthlyUsed,
+            hasUsedToday,
+            totalLimit: user.listingLimit ?? 50,
+            totalPosted: user.listingsPostedCount ?? 0
+        };
+    }
 });
 
 export const search = query({
@@ -284,7 +421,9 @@ export const search = query({
   handler: async (ctx, args) => {
     return await ctx.db
       .query("listings")
-      .withSearchIndex("search_title", (q) => q.search("title", args.query))
+      .withSearchIndex("search_title", (q) => 
+        q.search("title", args.query).eq("status", "ACTIVE")
+      )
       .collect();
   },
 });

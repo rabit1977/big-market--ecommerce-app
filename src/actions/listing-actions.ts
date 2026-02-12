@@ -13,6 +13,19 @@ async function requireAdmin() {
   return session;
 }
 
+async function requireApproved(id: string) {
+    const listing = await convex.query(api.listings.getById, { id: id as any });
+    if (!listing) throw new Error("Listing not found");
+    if (listing.status === 'PENDING_APPROVAL') {
+        // Allow admins to bypass this if needed (optional, but requested by user to block even the owner)
+        const session = await auth();
+        if (session?.user?.role !== 'ADMIN') {
+            throw new Error("Action blocked: This listing is waiting for administrator approval.");
+        }
+    }
+    return listing;
+}
+
 export async function approveListing(id: string) {
     try {
         await requireAdmin();
@@ -49,6 +62,8 @@ export async function deleteListingAction(id: string) {
     try {
         const session = await auth();
         if (!session?.user) return { success: false, error: "Unauthorized" };
+        
+        await requireApproved(id);
 
         await convex.mutation(api.listings.remove, { id: id as any });
         revalidatePath('/my-listings');
@@ -62,6 +77,8 @@ export async function markAsSoldAction(id: string) {
     try {
         const session = await auth();
         if (!session?.user) return { success: false, error: "Unauthorized" };
+
+        await requireApproved(id);
 
         await convex.mutation(api.listings.update, { 
             id: id as any, 
@@ -78,15 +95,79 @@ export async function markAsSoldAction(id: string) {
 export async function renewListingAction(id: string) {
     try {
         const session = await auth();
+        if (!session?.user?.id) return { success: false, error: "Unauthorized" };
+
+        await requireApproved(id);
+
+        const res = await convex.mutation(api.listings.renewListing, { 
+            id: id as any,
+            userId: session.user.id
+        });
+
+        revalidatePath('/my-listings');
+        return { success: true, data: res };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
+}
+
+export async function getRenewalStatsAction() {
+    try {
+        const session = await auth();
+        if (!session?.user?.id) return { success: false, error: "Unauthorized" };
+
+        const stats = await convex.query(api.listings.getRenewalStats, { 
+            userId: session.user.id 
+        });
+
+        return { success: true, stats };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
+}
+
+export async function createListingAction(data: any) {
+    try {
+        const session = await auth();
+        if (!session?.user?.id) return { success: false, error: "Unauthorized" };
+
+        const listingId = await convex.mutation(api.listings.create, {
+            ...data,
+            userId: session.user.id,
+        });
+
+        revalidatePath('/my-listings');
+        return { success: true, listing: { id: listingId } };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
+}
+
+export async function updateListingAction(id: string, data: any) {
+    try {
+        const session = await auth();
         if (!session?.user) return { success: false, error: "Unauthorized" };
 
-        await convex.mutation(api.listings.update, { 
-            id: id as any, 
-            createdAt: Date.now(),
-            status: 'ACTIVE'
+        await requireApproved(id);
+
+        await convex.mutation(api.listings.update, {
+            id: id as any,
+            ...data,
         });
+
         revalidatePath('/my-listings');
+        revalidatePath(`/listings/${id}`);
         return { success: true };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
+}
+
+export async function getCategoryTemplateAction(categoryId: string) {
+    try {
+        // Categories table holds the template in this schema
+        const category = await convex.query(api.categories.getById, { id: categoryId as any });
+        return { success: true, data: category };
     } catch (e: any) {
         return { success: false, error: e.message };
     }
@@ -117,6 +198,24 @@ export async function getMyListingsAction(q?: string): Promise<{ success: boolea
         })) as unknown as ListingWithRelations[];
 
         return { success: true, listings: mappedListings };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
+}
+export async function getListingByIdAction(id: string): Promise<{ success: boolean; listing?: ListingWithRelations; error?: string }> {
+    try {
+        const listing = await convex.query(api.listings.getById, { id: id as any });
+        if (!listing) return { success: false, error: "Listing not found" };
+
+        return { 
+            success: true, 
+            listing: {
+                ...listing,
+                id: listing._id,
+                updatedAt: new Date(listing.createdAt || listing._creationTime),
+                images: (listing.images || []).map((url: string) => ({ url })),
+            } as unknown as ListingWithRelations
+        };
     } catch (e: any) {
         return { success: false, error: e.message };
     }

@@ -2,12 +2,15 @@
 
 import { DashboardCard } from '@/components/admin/dashboard-card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn, formatCurrency } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
     Activity,
     Calendar,
+    Eye,
     Layers,
     Package,
     Sparkles,
@@ -130,8 +133,6 @@ export default function DashboardClient({
     };
   }, [listings, users]);
 
-  if (!isReady) return <DashboardSkeleton />;
-
   const greeting = currentTime 
     ? currentTime.getHours() < 12 
       ? 'Good morning' 
@@ -139,6 +140,8 @@ export default function DashboardClient({
         ? 'Good afternoon' 
         : 'Good evening'
     : 'Welcome';
+
+  if (!isReady) return <DashboardSkeleton />;
 
   return (
     <motion.div
@@ -285,24 +288,50 @@ export default function DashboardClient({
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.7 + index * 0.05 }}
-                    className='flex items-center justify-between py-3 px-4 -mx-4 rounded-xl hover:bg-muted/50 transition-colors cursor-pointer group'
+                    className='flex items-center justify-between py-3 px-4 -mx-4 rounded-xl hover:bg-muted/50 transition-colors group'
                   >
                     <div className='flex items-center gap-3 flex-1 min-w-0'>
-                        <div className='w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center'>
+                        <div className='w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0'>
                             <Package className='h-4 w-4 text-primary' />
                         </div>
                         <div className='flex-1 min-w-0'>
-                            <p className='font-medium text-sm truncate group-hover:text-primary transition-colors'>
+                            <Link href={`/admin/listings/${listing.id}`} className='font-bold text-sm truncate group-hover:text-primary transition-colors block'>
                                 {listing.title}
-                            </p>
-                            <p className='text-xs text-muted-foreground'>
+                            </Link>
+                            <p className='text-[10px] text-muted-foreground uppercase tracking-widest font-bold'>
                                 {listing.category}
                             </p>
                         </div>
                     </div>
-                    <div className='text-right ml-4'>
-                        <Badge variant='outline'>{listing.status}</Badge>
-                        <p className='text-xs font-bold mt-1'>${listing.price}</p>
+                    
+                    <div className='flex items-center gap-3 ml-4'>
+                        <div className='text-right hidden sm:block'>
+                            <Badge 
+                                variant="outline"
+                                className={cn(
+                                    "text-[10px] uppercase tracking-tighter",
+                                    listing.status === 'ACTIVE' && "bg-emerald-500/10 text-emerald-600 border-emerald-500/10",
+                                    listing.status === 'PENDING_APPROVAL' && "bg-amber-500/10 text-amber-600 border-amber-500/10"
+                                )}
+                            >
+                                {listing.status === 'PENDING_APPROVAL' ? 'Pending' : listing.status}
+                            </Badge>
+                            <p className='text-xs font-black mt-0.5'>{formatCurrency(listing.price)}</p>
+                        </div>
+
+                        {/* Quick Action Mini-Menu */}
+                        <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
+                            <Button 
+                                size="icon" 
+                                variant="ghost" 
+                                className="h-8 w-8 rounded-full text-muted-foreground hover:text-primary"
+                                asChild
+                            >
+                                <Link href={`/listings/${listing.id}`} target="_blank">
+                                    <Eye className="h-4 w-4" />
+                                </Link>
+                            </Button>
+                        </div>
                     </div>
                   </motion.div>
                 ))}
