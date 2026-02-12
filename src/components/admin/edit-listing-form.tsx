@@ -26,7 +26,7 @@ export function EditListingForm({ listing, categories }: EditListingFormProps) {
   };
 
   return (
-    <div className='glass-card rounded-[2.5rem] p-8 sm:p-10 shadow-xl shadow-black/5 border border-border/60'>
+    <div className='w-full'>
         <ListingForm 
             categories={categories}
             initialData={listing}

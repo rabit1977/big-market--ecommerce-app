@@ -1,7 +1,8 @@
-import { auth, signOut } from '@/auth';
+import { auth } from '@/auth';
+import { SignOutButton } from '@/components/auth/sign-out-button';
 import { Button } from '@/components/ui/button';
 import { fetchQuery } from 'convex/nextjs';
-import { CheckCircle2, Clock, LogOut, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, Clock, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { api } from '../../../../convex/_generated/api';
 
@@ -64,22 +65,7 @@ export default async function PendingApprovalPage() {
                   </Button>
               )}
 
-              <form
-                action={async () => {
-                  'use server';
-                  await signOut({ redirectTo: '/' });
-                }}
-              >
-                <Button 
-                  type="submit" 
-                  variant="outline" 
-                  size="lg" 
-                  className="w-full rounded-xl border-amber-500/20 hover:bg-amber-500/10 hover:text-amber-500 transition-all font-bold gap-2"
-                >
-                  <LogOut className="h-4 w-4" />
-                  Sign Out
-                </Button>
-              </form>
+              <SignOutButton className="w-full rounded-xl border-amber-500/20 hover:bg-amber-500/10 hover:text-amber-500 transition-all font-bold gap-2" />
             </div>
         </div>
       </div>

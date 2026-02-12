@@ -51,18 +51,26 @@ export default async function EditListingPage({ params }: EditPageProps) {
   }
 
   return (
-      <div className="container max-w-5xl mx-auto pt-4 md:pt-8 min-h-screen pb-20 bg-background px-4">
-           <AppBreadcrumbs />
-           
-           <div className="mb-6 md:mb-8 border-b border-border pb-6">
-                <h1 className="text-2xl md:text-3xl font-black tracking-tight text-foreground uppercase leading-none mb-2">Edit Listing</h1>
-                <p className="text-muted-foreground text-xs md:text-sm font-bold uppercase tracking-wider">
-                    Update details for <span className="text-primary">&quot;{listing.title}&quot;</span>
-                </p>
-           </div>
-           
-           <div className="bg-card rounded-[2rem] border border-border shadow-md p-6 md:p-8">
-                <UserEditListingForm listing={listing as any} categories={categories as any} />
+      <div className="container max-w-4xl mx-auto pt-8 md:pt-12 min-h-screen pb-20 bg-background px-4">
+           <div className="flex flex-col gap-8">
+               <div className="space-y-4">
+                   <AppBreadcrumbs />
+                    <div className="space-y-2">
+                        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground uppercase leading-none">
+                            Edit <span className="text-primary">Listing</span>
+                        </h1>
+                        <p className="text-muted-foreground text-sm font-bold uppercase tracking-widest opacity-70">
+                            Updating: {listing.title}
+                        </p>
+                    </div>
+               </div>
+               
+               <div className="bg-card rounded-[2.5rem] border border-border/60 shadow-2xl shadow-primary/5 p-8 md:p-12 relative overflow-hidden">
+                    {/* Decorative element */}
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-10 -mt-10" />
+                    
+                    <UserEditListingForm listing={listing as any} categories={categories as any} />
+               </div>
            </div>
       </div>
   );

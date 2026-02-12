@@ -76,11 +76,14 @@ export const authConfig = {
       const user = auth?.user as any;
       
       const isPricing = nextUrl.pathname.startsWith('/premium') || nextUrl.pathname.startsWith('/checkout');
+      const isAuth = nextUrl.pathname.startsWith('/auth') && !nextUrl.pathname.startsWith('/auth/pending');
+
       const isOnProtected =
         nextUrl.pathname.startsWith('/account') ||
         nextUrl.pathname.startsWith('/my-listings') ||
         nextUrl.pathname.startsWith('/sell') ||
-        nextUrl.pathname.startsWith('/admin');
+        nextUrl.pathname.startsWith('/admin') ||
+        nextUrl.pathname.startsWith('/auth/pending');
 
       const isPending = user?.accountStatus === 'PENDING_APPROVAL';
       const isSuspended = user?.accountStatus === 'SUSPENDED' || user?.accountStatus === 'BANNED';
@@ -92,8 +95,8 @@ export const authConfig = {
          return Response.redirect(new URL('/auth/suspended', nextUrl));
       }
 
-      // 2. Allow access to signout for everyone
-      if (nextUrl.pathname.startsWith('/auth/signout')) return true;
+      // 2. Allow access to signout and home page for everyone
+      if (nextUrl.pathname.startsWith('/auth/signout') || nextUrl.pathname === '/') return true;
 
       // 3. Enforce Registration Completion first
       if (isLoggedIn && !isRegistrationComplete) {
@@ -126,12 +129,12 @@ export const authConfig = {
       if (isOnProtected) {
         if (isLoggedIn) {
             // If they are logged in but got here, they must be approved or admin
-            if (isPending && user?.role !== 'ADMIN') {
+            if (isPending && user?.role !== 'ADMIN' && !nextUrl.pathname.startsWith('/auth/pending')) {
                 return Response.redirect(new URL('/auth/pending', nextUrl));
             }
             return true;
         }
-        return false;
+        return false; // Redirect to sign-in
       }
 
       return true;

@@ -26,7 +26,7 @@ export function UserEditListingForm({ listing, categories }: UserEditListingForm
   };
 
   return (
-    <div className='bg-card rounded-3xl p-6 sm:p-10 shadow-sm border border-border/60'>
+    <div className='w-full'>
         <ListingForm 
             categories={categories}
             initialData={listing}
