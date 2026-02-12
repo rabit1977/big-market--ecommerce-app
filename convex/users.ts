@@ -174,7 +174,7 @@ export const updateByExternalId = mutation({
     const user = await ctx.db
       .query("users")
       .withIndex("by_externalId", (q) => q.eq("externalId", externalId))
-      .unique();
+      .first();
     if (!user) throw new Error("User not found");
     await ctx.db.patch(user._id, data);
     return user._id;
@@ -273,7 +273,7 @@ export const completeRegistration = mutation({
     const user = await ctx.db
       .query("users")
       .withIndex("by_externalId", (q) => q.eq("externalId", args.externalId))
-      .unique();
+      .first();
 
     if (!user) {
       throw new Error("User not found");
