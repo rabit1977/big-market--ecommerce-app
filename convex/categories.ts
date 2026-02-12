@@ -24,8 +24,8 @@ export const getWithCounts = query({
       // Direct count for the primary category
       counts.set(l.category, (counts.get(l.category) || 0) + 1);
       
-      // If there's a subcategory, count it too
-      if (l.subCategory) {
+      // If there's a subcategory and it's different from category, count it too
+      if (l.subCategory && l.subCategory !== l.category) {
         counts.set(l.subCategory, (counts.get(l.subCategory) || 0) + 1);
       }
     });

@@ -26,7 +26,7 @@ async function requireApproved(id: string) {
     return listing;
 }
 
-export async function approveListing(id: string) {
+export async function approveListingAction(id: string) {
     try {
         await requireAdmin();
         await convex.mutation(api.listings.approveListing, { id: id as any });
@@ -37,7 +37,7 @@ export async function approveListing(id: string) {
     }
 }
 
-export async function rejectListing(id: string) {
+export async function rejectListingAction(id: string) {
     try {
         await requireAdmin();
         await convex.mutation(api.listings.rejectListing, { id: id as any });

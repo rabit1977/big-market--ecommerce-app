@@ -1,6 +1,6 @@
 'use client';
 
-import { approveListingAction, deleteMultipleListingsAction, rejectListingAction } from '@/actions/listing-actions';
+import { approveListingAction, deleteListingAction, rejectListingAction } from '@/actions/listing-actions';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Listing } from '@/lib/types';
@@ -47,14 +47,12 @@ export function ListingsClient({ listings }: ListingsClientProps) {
     if (selectedIds.length === 0) return;
 
     startTransition(async () => {
-      const result = await deleteMultipleListingsAction(selectedIds);
-      if (result.success) {
-        toast.success(result.message);
-        setSelectedIds([]);
-        router.refresh();
-      } else {
-        toast.error(result.error);
+      for (const id of selectedIds) {
+          await deleteListingAction(id);
       }
+      toast.success('Deleted selected listings');
+      setSelectedIds([]);
+      router.refresh();
     });
   };
 

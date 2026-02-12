@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Heart, Home, PlusCircle, Search, User } from 'lucide-react';
+import { Heart, Home, LayoutGrid, PlusCircle, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -57,7 +57,7 @@ export function MobileBottomNav({
     },
     {
       label: 'Categories',
-      icon: Search,
+      icon: LayoutGrid,
       href: '/categories', 
     },
     {
