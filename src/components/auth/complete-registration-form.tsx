@@ -5,6 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { ALL_MUNICIPALITIES, MACEDONIA_CITIES } from '@/lib/constants/locations';
 import { Loader2, Sparkles, UserCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
@@ -55,26 +63,40 @@ export function CompleteRegistrationForm() {
             
             <div className='space-y-2'>
               <Label htmlFor='city'>City</Label>
-              <Input
-                id='city'
-                required
-                placeholder='e.g. Skopje'
-                value={formData.city}
-                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+              <Select 
+                value={formData.city} 
+                onValueChange={(value) => setFormData({ ...formData, city: value })}
                 disabled={isPending}
-              />
+                required
+              >
+                <SelectTrigger id="city" className="h-11 rounded-xl">
+                  <SelectValue placeholder="Select City" />
+                </SelectTrigger>
+                <SelectContent>
+                  {MACEDONIA_CITIES.map(city => (
+                    <SelectItem key={city} value={city}>{city}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className='space-y-2'>
               <Label htmlFor='municipality'>Municipality</Label>
-              <Input
-                id='municipality'
-                required
-                placeholder='e.g. Centar'
-                value={formData.municipality}
-                onChange={(e) => setFormData({ ...formData, municipality: e.target.value })}
+              <Select 
+                value={formData.municipality} 
+                onValueChange={(value) => setFormData({ ...formData, municipality: value })}
                 disabled={isPending}
-              />
+                required
+              >
+                <SelectTrigger id="municipality" className="h-11 rounded-xl">
+                  <SelectValue placeholder="Select Municipality" />
+                </SelectTrigger>
+                <SelectContent className="max-h-[300px]">
+                  {ALL_MUNICIPALITIES.map(m => (
+                    <SelectItem key={m} value={m}>{m}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className='space-y-2'>

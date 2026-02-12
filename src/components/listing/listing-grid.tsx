@@ -2,11 +2,11 @@
 
 import { Button } from '@/components/ui/button';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
 import { ListingWithRelations } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -14,7 +14,7 @@ import { useMutation, useQuery } from 'convex/react';
 import { ArrowUpDown, LayoutGrid, List, Save, SlidersHorizontal } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { api } from '../../../convex/_generated/api';
 import { ListingCard } from './listing-card';
@@ -50,7 +50,12 @@ export function ListingGrid({
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   // Fetch user favorites to sync "Like" state
   const favorites = useQuery(api.favorites.get, session?.user?.id ? { userId: session.user.id } : "skip");
@@ -115,21 +120,25 @@ export function ListingGrid({
         {/* Desktop Controls */}
         <div className="flex items-center gap-2 w-full sm:w-auto">
            {/* Sort Dropdown */}
-           <Select value={sortBy} onValueChange={onSortChange}>
-            <SelectTrigger className="h-9 w-full sm:w-[180px] text-xs">
-              <div className="flex items-center gap-2">
-                <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" />
-                <SelectValue placeholder="Sort option" />
-              </div>
-            </SelectTrigger>
-            <SelectContent>
-              {sortOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value} className="text-xs">
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+           {mounted ? (
+             <Select value={sortBy} onValueChange={onSortChange}>
+              <SelectTrigger className="h-9 w-full sm:w-[180px] text-xs">
+                <div className="flex items-center gap-2">
+                  <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" />
+                  <SelectValue placeholder="Sort option" />
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                {sortOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value} className="text-xs">
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+           ) : (
+             <div className="h-9 w-full sm:w-[180px] bg-muted animate-pulse rounded-md" />
+           )}
             {/* Save Search (Desktop) */}
             {showSaveSearch && (
               <Button 

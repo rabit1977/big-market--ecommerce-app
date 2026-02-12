@@ -91,7 +91,8 @@ export function CompleteRegistrationModal() {
         });
         toast.success('Profile saved!');
         setIsOpen(false);
-        router.refresh();
+        // Force a hard refresh and redirect to premium page for subscription
+        window.location.href = '/premium';
     } catch (error: any) {
         const errorMessage = error.message || 'An error occurred. Please try again.';
         toast.error(errorMessage);

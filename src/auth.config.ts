@@ -26,9 +26,16 @@ export const authConfig = {
           const userId = (token.id || user?.id) as string;
           const { api, convex } = await import('@/lib/convex-server');
           
-          const convexUser = await convex.query(api.users.getByExternalId, { 
+          let convexUser = await convex.query(api.users.getByExternalId, { 
               externalId: userId
           });
+
+          // Fallback for credential users where externalId might be "pending"
+          if (!convexUser && token.email) {
+              convexUser = await convex.query(api.users.getByEmail, { 
+                  email: token.email as string 
+              });
+          }
 
           if (convexUser) {
               token.id = convexUser.externalId; 
@@ -37,7 +44,7 @@ export const authConfig = {
               token.accountType = convexUser.accountType;
               token.companyName = convexUser.companyName;
               token.accountStatus = convexUser.accountStatus;
-              token.registrationComplete = convexUser.registrationComplete;
+              token.registrationComplete = !!convexUser.registrationComplete;
           } else if (user) {
               // Fallback for very first render if fetch fails or race condition (should be rare due to sync above)
               token.id = user.id;
@@ -72,7 +79,14 @@ export const authConfig = {
 
       const isPending = user?.accountStatus === 'PENDING_APPROVAL';
       const isSuspended = user?.accountStatus === 'SUSPENDED' || user?.accountStatus === 'BANNED';
-      const isRegistrationComplete = user?.registrationComplete;
+      const isRegistrationComplete = !!user?.registrationComplete;
+
+      console.log('Authorized check:', { 
+        path: nextUrl.pathname, 
+        isLoggedIn, 
+        isRegistrationComplete,
+        accountStatus: user?.accountStatus 
+      });
 
       // Allow access to pricing/checkout for everyone, including pending users
       if (isPricing) return true;
@@ -101,3 +115,5 @@ export const authConfig = {
   },
   providers: [], // Configured in auth.ts
 } satisfies NextAuthConfig;
+
+export default authConfig;

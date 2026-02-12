@@ -247,12 +247,31 @@ export async function getUserStatsAction() {
 export async function approveUserAction(userId: string) {
   try {
     await requireAdmin();
+    
+    // Check if user has active subscription
+    const user = await convex.query(api.users.getById, { id: userId as any });
+    
+    if (!user) {
+        return { success: false, error: 'User not found' };
+    }
+
+    if (user.membershipStatus !== 'ACTIVE') {
+        return { 
+            success: false, 
+            error: 'User must have an active subscription to be approved.' 
+        };
+    }
+
     await convex.mutation(api.users.approveUser, { id: userId as any });
     revalidatePath('/admin/users');
     revalidatePath(`/admin/users/${userId}`);
     return { success: true, message: 'User approved successfully' };
   } catch (error) {
-    return { success: false, error: 'Failed to approve user' };
+    console.error('approveUserAction Error:', error);
+    return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Failed to approve user' 
+    };
   }
 }
 

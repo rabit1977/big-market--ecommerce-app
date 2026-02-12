@@ -23,7 +23,7 @@ export async function createStripeCheckoutSession(
       line_items: [
         {
           price_data: {
-            currency: 'eur',
+            currency: 'mkd',
             product_data: {
               name: `${planName} Plan (${duration})`,
               description: `Subscription to ${planName} features for ${duration === 'monthly' ? '1 month' : '1 year'}`,
