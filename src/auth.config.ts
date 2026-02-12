@@ -71,7 +71,14 @@ export const authConfig = {
       }
       return session;
     },
-    authorized({ auth, request: { nextUrl } }) {
+    authorized({ auth, request }) {
+      const { nextUrl } = request;
+      
+      // Allow preflight requests and internal next requests to pass through
+      if (request.method === "OPTIONS" || nextUrl.pathname.startsWith('/_next')) {
+        return true;
+      }
+
       const isLoggedIn = !!auth?.user;
       const user = auth?.user as any;
       
