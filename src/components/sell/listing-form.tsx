@@ -35,24 +35,37 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   
-  // Try to determine category ID from initialData
+  // Enhanced category recognition (ID, Name, or Slug)
   const getInitialCategoryId = () => {
-      const targetCategoryName = initialData?.subCategory || initialData?.category;
-      if (!targetCategoryName) return '';
+      // Prioritize subCategory for leaf selection, fall back to category
+      const target = initialData?.subCategory || initialData?.category;
+      if (!target) return '';
       
-      const cat = categories.find(c => c.name === targetCategoryName);
-      return cat?.id || '';
+      const normalizedTarget = String(target).toLowerCase().trim();
+      
+      const cat = categories.find(c => {
+          const id = String(c.id || (c as any)._id).toLowerCase();
+          const name = String(c.name).toLowerCase();
+          const slug = String((c as any).slug || '').toLowerCase();
+          
+          return id === normalizedTarget || 
+                 name === normalizedTarget || 
+                 slug === normalizedTarget ||
+                 // Special case for "Home & Garden" vs "Home Garden"
+                 name.replace('&', 'and').replace(/\s+/g, '-') === normalizedTarget.replace(/\s+/g, '-');
+      });
+      return cat?.id || (cat as any)?._id || '';
   };
 
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>(getInitialCategoryId());
   
   // Track Parent and Child category separately for UI
-  const initialCat = categories.find(c => c.id === selectedCategoryId);
+  const initialCat = categories.find(c => (c.id || (c as any)._id) === selectedCategoryId);
   const [mainCatId, setMainCatId] = useState<string>(
-      initialCat?.parentId ? initialCat.parentId : (initialCat ? initialCat.id : '')
+      initialCat?.parentId ? initialCat.parentId : (initialCat ? (initialCat.id || (initialCat as any)._id) : '')
   );
   const [subCatId, setSubCatId] = useState<string>(
-      initialCat?.parentId ? initialCat.id : ''
+      initialCat?.parentId ? (initialCat.id || (initialCat as any)._id) : ''
   );
 
   const [templateFields, setTemplateFields] = useState<any[]>([]);
@@ -72,6 +85,7 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
       city: initialData?.city || '',
       state: (initialData as any)?.region || '',
       phone: initialData?.contactPhone || '',
+      email: (initialData as any)?.contactEmail || '',
   });
 
   // Effect to load template if initial category is set
@@ -93,7 +107,6 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
           } else {
               setTemplateFields([]);
           }
-          // Set Title Placeholder if available
           setTitlePlaceholder(template.titlePlaceholder || 'e.g. iPhone 14 Pro Max');
       } else {
           setTemplateFields([]);
@@ -121,34 +134,34 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
   
   const renderCategorySelects = () => {
       return (
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-                <Label className="text-[13px] font-bold text-foreground">Main Category</Label>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <div className="space-y-1">
+                <Label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Main Category</Label>
                 <Select value={mainCatId} onValueChange={handleMainCatChange}>
-                    <SelectTrigger className="h-10 rounded-xl bg-background border-border/50">
-                        <SelectValue placeholder="Select Main Category" />
+                    <SelectTrigger className="h-9 rounded-lg bg-background/40 border-border/40 text-xs shadow-none focus:ring-1 focus:ring-primary/20 transition-all">
+                        <SelectValue placeholder="Category..." />
                     </SelectTrigger>
                     <SelectContent>
                         {mainCategories.map(c => (
-                            <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                            <SelectItem key={c.id || (c as any)._id} value={c.id || (c as any)._id} className="text-xs">{c.name}</SelectItem>
                         ))}
                     </SelectContent>
                 </Select>
             </div>
 
-            <div className="space-y-1.5">
-                <Label className="text-[13px] font-bold text-foreground">Sub Category</Label>
+            <div className="space-y-1">
+                <Label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Sub Category</Label>
                 <Select 
                     value={subCatId} 
                     onValueChange={handleSubCatChange}
                     disabled={subCategories.length === 0}
                 >
-                    <SelectTrigger className="h-10 rounded-xl bg-background border-border/50">
-                        <SelectValue placeholder={subCategories.length === 0 ? "No Sub-categories" : "Select Sub-category"} />
+                    <SelectTrigger className="h-9 rounded-lg bg-background/40 border-border/40 text-xs shadow-none">
+                        <SelectValue placeholder={subCategories.length === 0 ? "General" : "Subcategory..."} />
                     </SelectTrigger>
                     <SelectContent>
                         {subCategories.map(c => (
-                            <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                            <SelectItem key={c.id || (c as any)._id} value={c.id || (c as any)._id} className="text-xs">{c.name}</SelectItem>
                         ))}
                     </SelectContent>
                 </Select>
@@ -179,56 +192,48 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
       }
 
       startTransition(async () => {
-          const currentCategory = categories.find(c => c.id === selectedCategoryId);
-          let mainCategoryName = currentCategory?.name || '';
-          let subCategoryName = ''; // Default if no parent
+          const currentCategory = categories.find(c => (c.id || (c as any)._id) === selectedCategoryId);
+          let categorySlug = (currentCategory as any)?.slug || '';
+          let subCategorySlug = ''; 
 
-          // If current category has a parent, then IT IS the subcategory
           if (currentCategory?.parentId) {
-              const parent = categories.find(p => p.id === currentCategory.parentId);
+              const parent = categories.find(p => (p.id || (p as any)._id) === currentCategory.parentId);
               if (parent) {
-                  mainCategoryName = parent.name;
-                  subCategoryName = currentCategory.name;
+                  categorySlug = (parent as any).slug;
+                  subCategorySlug = (currentCategory as any).slug;
               }
           }
 
-          // Prepare data object matching CreateListingData inputs
-          const listingData = {
+          const listingData: any = {
               title: formData.title,
               description: formData.description,
               price: parseFloat(formData.price),
-              category: mainCategoryName,
-              subCategory: subCategoryName || undefined,
+              category: categorySlug,
+              subCategory: subCategorySlug || undefined,
               city: formData.city,
-              region: formData.state,
-              contactPhone: formData.phone,
+              region: formData.state || undefined,
+              contactPhone: formData.phone || undefined,
+              contactEmail: formData.email || undefined,
               specifications: specifications,
-              thumbnail: images[0],
-              images: images.map((url, index) => ({
-                  url,
-                  alt: formData.title,
-                  position: index
-              })),
-              features: [], 
-              tags: []
+              images: images,
+              thumbnail: images[0] || '',
+              status: initialData?.status || 'PENDING_APPROVAL',
           };
 
           let res;
-          if (initialData?.id) {
-              // Update
-              res = await updateListingAction(initialData.id, listingData);
+          if (initialData?.id || (initialData as any)?._id) {
+              res = await updateListingAction((initialData.id || (initialData as any)._id), listingData);
               if (res.success) {
                   if (onSuccess) {
                       onSuccess(initialData as any); 
                   } else {
-                      toast.success('Listing updated!');
-                      router.push(`/listings/${initialData.id}`);
+                      toast.success('Updated successfully');
+                      router.push(`/listings/${(initialData.id || (initialData as any)._id)}`);
                   }
               } else {
-                  toast.error(res.error || 'Failed to update listing');
+                  toast.error(res.error || 'Failed to update');
               }
           } else {
-              // Create
               res = await createListingAction(listingData);
               if (res.success && 'listing' in res && res.listing) {
                   if (onSuccess) {
@@ -238,27 +243,27 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
                       router.push(`/listings/${res.listing.id}`);
                   }
               } else {
-                  toast.error('error' in res ? res.error : 'Failed to create listing');
+                  toast.error('error' in res ? res.error : 'Failed to create');
               }
           }
       });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Info Section */}
-        <div className="space-y-5">
-            <div>
-                <h3 className="text-base font-black text-foreground uppercase tracking-tight">Basic Information</h3>
-                <p className="text-[12px] text-muted-foreground font-medium">Core details about your listing.</p>
+        <div className="space-y-4">
+            <div className="flex items-center gap-3">
+                <div className="h-px flex-1 bg-border/30" />
+                <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] whitespace-nowrap">Basic Information</h3>
+                <div className="h-px flex-1 bg-border/30" />
             </div>
             
-            <div className="grid gap-4">
-                {/* Category Selection */}
+            <div className="grid gap-3.5">
                 {renderCategorySelects()}
 
-                <div className="grid gap-1.5">
-                    <Label htmlFor="title" className="text-[13px] font-bold">Listing Title</Label>
+                <div className="grid gap-1">
+                    <Label htmlFor="title" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Listing Title</Label>
                     <Input 
                         id="title"
                         name="title" 
@@ -266,13 +271,13 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
                         value={formData.title} 
                         onChange={handleInputChange} 
                         required 
-                        className="h-10 rounded-xl bg-background/50 border-border/50 text-sm"
+                        className="h-9 rounded-lg bg-background/30 border-border/40 text-xs shadow-none"
                     />
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="grid gap-1.5">
-                        <Label htmlFor="price" className="text-[13px] font-bold">Price</Label>
+                <div className="grid sm:grid-cols-2 gap-3">
+                    <div className="grid gap-1">
+                        <Label htmlFor="price" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Price</Label>
                         <div className="relative">
                             <Input 
                                 id="price"
@@ -282,13 +287,13 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
                                 value={formData.price} 
                                 onChange={handleInputChange} 
                                 required 
-                                className="h-10 rounded-xl pl-9 bg-background/50 border-border/50 text-sm"
+                                className="h-9 rounded-lg pl-8 bg-background/30 border-border/40 text-xs shadow-none"
                             />
-                            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-xs">€</span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-[10px]">€</span>
                         </div>
                     </div>
-                    <div className="grid gap-1.5">
-                         <Label htmlFor="phone" className="text-[13px] font-bold">Contact Phone</Label>
+                    <div className="grid gap-1">
+                         <Label htmlFor="phone" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Contact Phone</Label>
                          <Input 
                             id="phone"
                             name="phone" 
@@ -296,18 +301,31 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
                             value={formData.phone} 
                             onChange={handleInputChange} 
                             required 
-                            className="h-10 rounded-xl bg-background/50 border-border/50 text-sm"
+                            className="h-9 rounded-lg bg-background/30 border-border/40 text-xs shadow-none"
                          />
                     </div>
                 </div>
 
-                <div className="grid gap-1.5">
-                    <Label htmlFor="description" className="text-[13px] font-bold">Full Description</Label>
+                <div className="grid gap-1">
+                    <Label htmlFor="email" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Contact Email</Label>
+                    <Input 
+                       id="email"
+                       name="email" 
+                       type="email"
+                       placeholder="your@email.com" 
+                       value={formData.email} 
+                       onChange={handleInputChange} 
+                       className="h-9 rounded-lg bg-background/30 border-border/40 text-xs shadow-none"
+                    />
+                </div>
+
+                <div className="grid gap-1">
+                    <Label htmlFor="description" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Description</Label>
                     <Textarea 
                         id="description"
                         name="description" 
-                        placeholder="Describe your item in detail..." 
-                        className="h-32 rounded-xl resize-none bg-background/50 border-border/50 text-sm" 
+                        placeholder="Describe your item..." 
+                        className="h-28 rounded-xl resize-none bg-background/30 border-border/40 text-xs shadow-none" 
                         value={formData.description} 
                         onChange={handleInputChange} 
                         required 
@@ -317,38 +335,40 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
         </div>
 
         {/* Images Section */}
-        <div className="space-y-5 pt-5 border-t border-border/40">
-            <div>
-                <h3 className="text-base font-black text-foreground uppercase tracking-tight">Media & Gallery</h3>
-                <p className="text-[12px] text-muted-foreground font-medium">Upload photos to showcase your item.</p>
+        <div className="space-y-4 pt-4 border-t border-border/20">
+            <div className="flex items-center gap-3">
+                <div className="h-px flex-1 bg-border/20" />
+                <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] whitespace-nowrap">Media & Gallery</h3>
+                <div className="h-px flex-1 bg-border/20" />
             </div>
-            <div className="bg-muted/20 p-4 rounded-2xl border border-dashed border-border/60">
+            <div className="bg-muted/10 p-3 rounded-2xl border border-dashed border-border/40">
                 <ListingImageUpload value={images} onChange={setImages} />
             </div>
         </div>
 
         {/* Dynamic Specifications Section */}
         {templateFields.length > 0 && (
-            <div className="space-y-5 pt-5 border-t border-border/40">
-                <div>
-                    <h3 className="text-base font-black text-foreground uppercase tracking-tight">Specification Details</h3>
-                    <p className="text-[12px] text-muted-foreground font-medium">Additional details for the selected category.</p>
+            <div className="space-y-4 pt-4 border-t border-border/20">
+                <div className="flex items-center gap-3">
+                    <div className="h-px flex-1 bg-border/20" />
+                    <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] whitespace-nowrap">Specifications</h3>
+                    <div className="h-px flex-1 bg-border/20" />
                 </div>
-                <div className="grid sm:grid-cols-2 gap-4 p-5 bg-muted/10 rounded-2xl border border-border/30">
+                <div className="grid sm:grid-cols-2 gap-3 p-4 bg-primary/5 rounded-2xl border border-primary/10">
                     {templateFields.map((field: any, idx) => (
-                        <div key={idx} className="grid gap-1.5">
-                            <Label className="text-[13px] font-bold">{field.label || field.name}</Label>
+                        <div key={idx} className="grid gap-1">
+                            <Label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">{field.label || field.name}</Label>
                             {field.type === 'select' ? (
                                  <Select 
                                     value={specifications[field.key || field.name] || ''}
                                     onValueChange={(val) => handleSpecChange(field.key || field.name, val)}
                                  >
-                                    <SelectTrigger className="h-10 rounded-xl bg-background border-border/50 text-sm">
-                                        <SelectValue placeholder={`Select ${field.label || field.name}...`} />
+                                    <SelectTrigger className="h-9 rounded-lg bg-background/60 border-border/40 text-xs shadow-none">
+                                        <SelectValue placeholder={`Select...`} />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {field.options?.map((opt: string) => (
-                                            <SelectItem key={opt} value={opt} className="text-sm">{opt}</SelectItem>
+                                            <SelectItem key={opt} value={opt} className="text-xs">{opt}</SelectItem>
                                         ))}
                                     </SelectContent>
                                  </Select>
@@ -358,7 +378,7 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
                                     placeholder={field.placeholder || ''}
                                     value={specifications[field.key || field.name] || ''}
                                     onChange={(e) => handleSpecChange(field.key || field.name, e.target.value)}
-                                    className="h-10 rounded-xl bg-background border-border/50 text-sm"
+                                    className="h-9 rounded-lg bg-background/60 border-border/40 text-xs shadow-none"
                                 />
                             )}
                         </div>
@@ -368,14 +388,15 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
         )}
 
         {/* Location Section */}
-        <div className="space-y-5 pt-5 border-t border-border/40">
-            <div>
-                <h3 className="text-base font-black text-foreground uppercase tracking-tight">Location Details</h3>
-                <p className="text-[12px] text-muted-foreground font-medium">Where can buyer find this item?</p>
+        <div className="space-y-4 pt-4 border-t border-border/20">
+            <div className="flex items-center gap-3">
+                <div className="h-px flex-1 bg-border/20" />
+                <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] whitespace-nowrap">Location</h3>
+                <div className="h-px flex-1 bg-border/20" />
             </div>
-            <div className="grid sm:grid-cols-2 gap-4">
-                 <div className="grid gap-1.5">
-                     <Label htmlFor="city" className="text-[13px] font-bold">City</Label>
+            <div className="grid sm:grid-cols-2 gap-3">
+                 <div className="grid gap-1">
+                     <Label htmlFor="city" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">City</Label>
                      <Input 
                         id="city"
                         name="city" 
@@ -383,42 +404,42 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
                         value={formData.city} 
                         onChange={handleInputChange} 
                         required 
-                        className="h-10 rounded-xl bg-background/50 border-border/50 text-sm"
+                        className="h-9 rounded-lg bg-background/30 border-border/40 text-xs shadow-none"
                     />
                  </div>
-                 <div className="grid gap-1.5">
-                     <Label htmlFor="state" className="text-[13px] font-bold">Region / State</Label>
+                 <div className="grid gap-1">
+                     <Label htmlFor="state" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Region</Label>
                      <Input 
                         id="state"
                         name="state" 
                         placeholder="e.g. Karpos" 
                         value={formData.state} 
                         onChange={handleInputChange} 
-                        className="h-10 rounded-xl bg-background/50 border-border/50 text-sm"
+                        className="h-9 rounded-lg bg-background/30 border-border/40 text-xs shadow-none"
                     />
                  </div>
             </div>
         </div>
 
         {/* Submit Section */}
-        <div className="flex items-center justify-end gap-3 pt-8 border-t border-border/40">
+        <div className="flex items-center justify-end gap-3 pt-6">
             <Button 
                 type="button" 
                 variant="ghost" 
-                className="font-bold rounded-xl h-10 px-6 text-xs uppercase tracking-widest"
+                className="font-black rounded-lg h-9 px-5 text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground"
                 onClick={() => router.back()}
             >
                 Cancel
             </Button>
             <Button 
                 type="submit" 
-                size="lg" 
+                size="sm" 
                 disabled={isPending}
-                className="font-bold rounded-full h-10 px-8 bg-primary text-primary-foreground text-xs uppercase tracking-widest shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
+                className="font-black rounded-full h-9 px-8 bg-primary text-primary-foreground text-[10px] uppercase tracking-widest shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all active:scale-95"
             >
                 {isPending ? (
                     <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
                         Saving...
                     </>
                 ) : (initialData ? 'Save Changes' : 'Publish Listing')}
