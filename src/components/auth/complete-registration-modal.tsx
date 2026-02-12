@@ -89,9 +89,9 @@ export function CompleteRegistrationModal() {
             municipality,
             phone
         });
-        toast.success('Profile saved! Redirecting to verification...');
-        router.push('/premium'); // Redirect to premium page for verification
+        toast.success('Profile saved!');
         setIsOpen(false);
+        router.refresh();
     } catch (error: any) {
         const errorMessage = error.message || 'An error occurred. Please try again.';
         toast.error(errorMessage);
