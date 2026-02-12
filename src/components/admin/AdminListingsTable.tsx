@@ -1,6 +1,6 @@
 'use client';
 
-import { approveListing, deleteListingAction, rejectListing } from '@/actions/listing-actions';
+import { approveListingAction, deleteListingAction, rejectListingAction } from '@/actions/listing-actions';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -41,7 +41,7 @@ export function AdminListingsTable({ listings }: AdminListingsTableProps) {
   const handleApprove = (id: string) => {
     startTransition(async () => {
         try {
-            const res = await approveListing(id);
+            const res = await approveListingAction(id);
             if (res.success) {
                 toast.success('Listing approved');
                 router.refresh();
@@ -57,7 +57,7 @@ export function AdminListingsTable({ listings }: AdminListingsTableProps) {
   const handleReject = (id: string) => {
     startTransition(async () => {
         try {
-            const res = await rejectListing(id);
+            const res = await rejectListingAction(id);
             if (res.success) {
                 toast.success('Listing rejected');
                 router.refresh();

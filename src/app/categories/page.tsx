@@ -35,6 +35,20 @@ const CATEGORY_IMAGES: Record<string, string> = {
   'watches-jewelry': 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80&w=800',
   'baby-children-products': 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&q=80&w=800',
   'sports-activities': 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80&w=800',
+  'health-beauty': 'https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&q=80&w=800',
+  'books-literature': 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=800',
+  'office-school-supplies': 'https://images.unsplash.com/photo-1576402120038-f80e9803bba8?auto=format&fit=crop&q=80&w=800',
+  'hobby-animals': 'https://images.unsplash.com/photo-1579308018265-288252251fd4?auto=format&fit=crop&q=80&w=800',
+  'antiques-art': 'https://images.unsplash.com/photo-1555580436-07978253a633?auto=format&fit=crop&q=80&w=800',
+  'business-machines-tools': 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800',
+  'food-cooking': 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=800',
+  'shops-trade': 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=800',
+  'services-repairs': 'https://images.unsplash.com/photo-1581093458891-2f3a693246a4?auto=format&fit=crop&q=80&w=800',
+  'employment': 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=800',
+  'events-nightlife': 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800',
+  'vacation-tourism': 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&q=80&w=800',
+  'personal-contacts': 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800',
+  'napravete-sami': 'https://images.unsplash.com/photo-1503387837-b65c3f356390?auto=format&fit=crop&q=80&w=800',
 };
 
 // Fallback lookup by name if slug missing or different

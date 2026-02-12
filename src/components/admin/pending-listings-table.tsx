@@ -1,6 +1,6 @@
 'use client';
 
-import { approveListing, rejectListing } from '@/actions/listing-actions';
+import { approveListingAction, rejectListingAction } from '@/actions/listing-actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -30,7 +30,7 @@ export function PendingListingsTable({ listings }: PendingListingsTableProps) {
   const handleApprove = (id: string) => {
     startTransition(async () => {
         try {
-            const res = await approveListing(id);
+            const res = await approveListingAction(id);
             if (res.success) {
                 toast.success('Listing approved');
                 router.refresh();
@@ -46,7 +46,7 @@ export function PendingListingsTable({ listings }: PendingListingsTableProps) {
   const handleReject = (id: string) => {
     startTransition(async () => {
         try {
-            const res = await rejectListing(id);
+            const res = await rejectListingAction(id);
             if (res.success) {
                 toast.success('Listing rejected');
                 router.refresh();

@@ -535,7 +535,7 @@ const MACEDONIAN_CATEGORIES: CategoryInput[] = [  {
   { name: "Watches and Jewelry", slug: "watches-jewelry" },
   { name: "Baby and Children's Products", slug: "baby-children-products" },
   { name: "Health, Beauty and Equipment", slug: "health-beauty" },
-  { name: "CD, DVD, VHS Music, Movies", slug: "multimedia-movies" },
+
   { name: "Books and Literature", slug: "books-literature" },
   { name: "Office and School Supplies", slug: "office-school-supplies" },
   { name: "Leisure and Hobby, Animals", slug: "hobby-animals" },
