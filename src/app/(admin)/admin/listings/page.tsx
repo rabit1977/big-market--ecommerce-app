@@ -24,7 +24,6 @@ export default async function AdminListingsPage({ searchParams }: AdminListingsP
   return (
     <div className="flex flex-col gap-6 p-6">
       <div className="flex flex-col gap-2">
-        <AppBreadcrumbs />
         <div className="flex items-center justify-between">
             <div>
                 <h1 className="text-3xl font-bold tracking-tight">Manage Listings</h1>

@@ -1,5 +1,5 @@
-// Recommended NextAuth v5 middleware pattern
-export { auth as default } from './auth';
+// Recommended NextAuth v5 pattern, renamed to proxy as per convention
+export { auth as proxy } from './auth';
 
 export const config = {
   // Matcher for the proxy

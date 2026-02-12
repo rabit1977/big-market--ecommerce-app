@@ -221,14 +221,16 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
           };
 
           let res;
-          if (initialData?.id || (initialData as any)?._id) {
-              res = await updateListingAction((initialData.id || (initialData as any)._id), listingData);
+          const listingId = initialData?.id || (initialData as any)?._id;
+          
+          if (listingId) {
+              res = await updateListingAction(listingId, listingData);
               if (res.success) {
                   if (onSuccess) {
                       onSuccess(initialData as any); 
                   } else {
                       toast.success('Updated successfully');
-                      router.push(`/listings/${(initialData.id || (initialData as any)._id)}`);
+                      router.push(`/listings/${listingId}`);
                   }
               } else {
                   toast.error(res.error || 'Failed to update');
