@@ -1,6 +1,5 @@
 import { getWishlistAction } from '@/actions/wishlist-actions';
 import { AnalyticsProvider } from '@/components/analytics-provider';
-import { CompleteRegistrationModal } from '@/components/auth/complete-registration-modal';
 import { FooterWrapper } from '@/components/layout/footer-wrapper';
 import { MobileSidebarWrapper } from '@/components/layout/mobile-sidebar-wrapper';
 import { Toast } from '@/components/toast';
@@ -43,7 +42,6 @@ export default async function RootLayout({
       <body className={inter.className}>
         <Providers>
           <AnalyticsProvider />
-          <CompleteRegistrationModal />
           <CommandPalette />
           <div className='min-h-screen bg-background text-foreground'>
             <Suspense fallback={<div className="h-16 w-full bg-background" />}>

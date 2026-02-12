@@ -58,7 +58,7 @@ export default async function PendingApprovalPage() {
                     size="lg" 
                     className="w-full rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold gap-2 animate-pulse"
                   >
-                    <Link href="/pricing">
+                    <Link href="/premium">
                       Subscribe for Approval
                     </Link>
                   </Button>

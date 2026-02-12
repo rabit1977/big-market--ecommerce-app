@@ -58,11 +58,12 @@ function SuccessContent() {
             </div>
             <h1 className="text-3xl font-black tracking-tight text-foreground">Payment Successful!</h1>
             <p className="text-muted-foreground text-lg">
-                Your subscription has been activated. Thank you for your purchase!
+                Your subscription has been activated and your registration is now complete. 
+                Your account is currently pending administrator verification.
             </p>
             <div className="pt-6">
-                <Button asChild size="lg" className="w-full rounded-xl font-bold">
-                    <Link href="/auth/pending">Continue to Dashboard</Link>
+                <Button asChild size="lg" className="w-full rounded-xl font-bold bg-amber-500 hover:bg-amber-600">
+                    <Link href="/auth/pending">Finish Signup & Wait for Approval</Link>
                 </Button>
             </div>
           </>

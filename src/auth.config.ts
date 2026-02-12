@@ -45,12 +45,14 @@ export const authConfig = {
               token.companyName = convexUser.companyName;
               token.accountStatus = convexUser.accountStatus;
               token.registrationComplete = !!convexUser.registrationComplete;
+              token.membershipStatus = convexUser.membershipStatus || 'INACTIVE';
           } else if (user) {
               // Fallback for very first render if fetch fails or race condition (should be rare due to sync above)
               token.id = user.id;
               token.role = (user as any).role || 'USER';
               token.accountStatus = 'PENDING_APPROVAL';
               token.registrationComplete = false;
+              token.membershipStatus = 'INACTIVE';
           }
       }
 
@@ -65,51 +67,72 @@ export const authConfig = {
         (session.user as any).companyName = token.companyName;
         (session.user as any).accountStatus = token.accountStatus;
         (session.user as any).registrationComplete = token.registrationComplete;
+        (session.user as any).membershipStatus = token.membershipStatus;
       }
       return session;
     },
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const user = auth?.user as any;
+      
       const isPricing = nextUrl.pathname.startsWith('/premium') || nextUrl.pathname.startsWith('/checkout');
       const isOnProtected =
         nextUrl.pathname.startsWith('/account') ||
         nextUrl.pathname.startsWith('/my-listings') ||
-        nextUrl.pathname.startsWith('/sell');
+        nextUrl.pathname.startsWith('/sell') ||
+        nextUrl.pathname.startsWith('/admin');
 
       const isPending = user?.accountStatus === 'PENDING_APPROVAL';
       const isSuspended = user?.accountStatus === 'SUSPENDED' || user?.accountStatus === 'BANNED';
       const isRegistrationComplete = !!user?.registrationComplete;
+      const isSubscribed = user?.membershipStatus === 'ACTIVE';
 
-      console.log('Authorized check:', { 
-        path: nextUrl.pathname, 
-        isLoggedIn, 
-        isRegistrationComplete,
-        accountStatus: user?.accountStatus 
-      });
-
-      // Allow access to pricing/checkout for everyone, including pending users
-      if (isPricing) return true;
-
-      // 1. Enforce Registration Completion
-      if (isLoggedIn && !isRegistrationComplete && !nextUrl.pathname.startsWith('/auth/complete-registration') && !nextUrl.pathname.startsWith('/auth/signout')) {
-          return Response.redirect(new URL('/auth/complete-registration', nextUrl));
-      }
-
-      // 2. Redirect pending users (but allow complete-registration)
-      if (isLoggedIn && isPending && isRegistrationComplete && !nextUrl.pathname.startsWith('/auth/pending') && !nextUrl.pathname.startsWith('/auth/signout')) {
-         return Response.redirect(new URL('/auth/pending', nextUrl));
-      }
-      
-      // Redirect suspended users
+      // 1. Redirect suspended users immediately
       if (isLoggedIn && isSuspended && !nextUrl.pathname.startsWith('/auth/suspended') && !nextUrl.pathname.startsWith('/auth/signout')) {
          return Response.redirect(new URL('/auth/suspended', nextUrl));
       }
 
+      // 2. Allow access to signout for everyone
+      if (nextUrl.pathname.startsWith('/auth/signout')) return true;
+
+      // 3. Enforce Registration Completion first
+      if (isLoggedIn && !isRegistrationComplete) {
+          if (!nextUrl.pathname.startsWith('/auth/complete-registration')) {
+              return Response.redirect(new URL('/auth/complete-registration', nextUrl));
+          }
+          return true;
+      }
+
+      // 4. After registration, enforce Payment (Subscription)
+      // Only enforce if they are NOT an admin (admins might not need subs)
+      if (isLoggedIn && isRegistrationComplete && !isSubscribed && user?.role !== 'ADMIN') {
+          // Allow access to pricing and success pages
+          if (isPricing || nextUrl.pathname.startsWith('/premium/success')) return true;
+          
+          // Redirect everything else to premium for payment
+          return Response.redirect(new URL('/premium', nextUrl));
+      }
+
+      // 5. After Payment, if still Pending Approval, redirect to Pending page
+      if (isLoggedIn && isSubscribed && isPending) {
+         if (!nextUrl.pathname.startsWith('/auth/pending')) {
+            return Response.redirect(new URL('/auth/pending', nextUrl));
+         }
+         return true;
+      }
+
+      // 6. Handle general protected routes
       if (isOnProtected) {
-        if (isLoggedIn) return true;
+        if (isLoggedIn) {
+            // If they are logged in but got here, they must be approved or admin
+            if (isPending && user?.role !== 'ADMIN') {
+                return Response.redirect(new URL('/auth/pending', nextUrl));
+            }
+            return true;
+        }
         return false;
       }
+
       return true;
     },
   },

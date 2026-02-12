@@ -37,9 +37,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             
             const passwordsMatch = await bcrypt.compare(password, user.password);
             if (passwordsMatch) {
-                if (user.accountStatus === 'PENDING_APPROVAL') {
-                    throw new Error("Your account is pending approval.");
-                }
+                // Protection for unapproved users is now handled by middleware (auth.config.ts)
+                // This allows them to have a session to complete registration and pay fees.
                 if (user.accountStatus === 'SUSPENDED' || user.accountStatus === 'BANNED') {
                     throw new Error("Your account has been suspended.");
                 }
