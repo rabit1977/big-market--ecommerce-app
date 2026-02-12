@@ -8,6 +8,35 @@ export const list = query({
   },
 });
 
+export const getWithCounts = query({
+  args: {},
+  handler: async (ctx) => {
+    const categories = await ctx.db.query("categories")
+      .filter(q => q.eq(q.field("isActive"), true))
+      .collect();
+    
+    const activeListings = await ctx.db.query("listings")
+      .withIndex("by_status", q => q.eq("status", "ACTIVE"))
+      .collect();
+      
+    const counts = new Map<string, number>();
+    activeListings.forEach(l => {
+      // Direct count for the primary category
+      counts.set(l.category, (counts.get(l.category) || 0) + 1);
+      
+      // If there's a subcategory, count it too
+      if (l.subCategory) {
+        counts.set(l.subCategory, (counts.get(l.subCategory) || 0) + 1);
+      }
+    });
+
+    return categories.map(cat => ({
+      ...cat,
+      count: counts.get(cat.slug) || 0
+    }));
+  }
+});
+
 export const getBySlug = query({
   args: { slug: v.string() },
   handler: async (ctx, args) => {
