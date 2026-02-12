@@ -92,7 +92,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
     return () => clearInterval(interval);
   }, [user]);
 
-  const handleLogout = useCallback(() => { signOut(); }, []);
+  const handleLogout = useCallback(() => { signOut({ callbackUrl: '/' }); }, []);
 
   const alertCount = notificationCount;
 

@@ -225,7 +225,7 @@ export const AdminSidebar = () => {
                 <span>Settings</span>
             </Link>
             <button
-                onClick={() => signOut()}
+                onClick={() => signOut({ callbackUrl: '/' })}
                 className='flex items-center justify-center gap-2 w-full rounded-xl bg-background/50 border border-border/50 px-3 py-2 text-[10px] font-bold hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all shadow-sm'
             >
                 <LogOut className='h-3 w-3' />
@@ -280,7 +280,7 @@ export const AdminMobileHeader = () => {
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                         className="rounded-lg text-destructive focus:text-destructive cursor-pointer"
-                        onClick={() => signOut()}
+                        onClick={() => signOut({ callbackUrl: '/' })}
                     >
                         <LogOut className="mr-2 h-4 w-4" />
                         Log out
@@ -423,7 +423,7 @@ export const AdminBottomNav = () => {
                                 <Settings className="h-4 w-4" />
                                 <span className="text-xs font-semibold">Settings</span>
                             </Link>
-                            <button onClick={() => signOut()} className="flex items-center justify-center gap-2 p-3 rounded-xl bg-background border border-border/50 hover:border-destructive/50 hover:text-destructive transition-colors shadow-sm">
+                            <button onClick={() => signOut({ callbackUrl: '/' })} className="flex items-center justify-center gap-2 p-3 rounded-xl bg-background border border-border/50 hover:border-destructive/50 hover:text-destructive transition-colors shadow-sm">
                                 <LogOut className="h-4 w-4" />
                                 <span className="text-xs font-semibold">Logout</span>
                             </button>

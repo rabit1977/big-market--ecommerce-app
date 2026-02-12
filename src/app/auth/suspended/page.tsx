@@ -32,7 +32,7 @@ export default function SuspendedPage() {
             <form
               action={async () => {
                 'use server';
-                await signOut({ redirectTo: '/auth' });
+                await signOut({ redirectTo: '/' });
               }}
             >
               <Button 

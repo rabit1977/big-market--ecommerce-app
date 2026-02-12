@@ -1,4 +1,4 @@
-import { auth, signOut, signOut } from '@/auth';
+import { auth, signOut } from '@/auth';
 import { Button } from '@/components/ui/button';
 import { fetchQuery } from 'convex/nextjs';
 import { CheckCircle2, Clock, LogOut, ShieldCheck } from 'lucide-react';
@@ -67,7 +67,7 @@ export default async function PendingApprovalPage() {
               <form
                 action={async () => {
                   'use server';
-                  await signOut({ redirectTo: '/auth' });
+                  await signOut({ redirectTo: '/' });
                 }}
               >
                 <Button 
