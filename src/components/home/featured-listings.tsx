@@ -29,6 +29,9 @@ interface FeaturedListingsProps {
 
 export function FeaturedListings({ listings }: FeaturedListingsProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  
+  if (!listings || !Array.isArray(listings)) return null;
+
   const featuredListings = listings.slice(0, 10);
 
   const scroll = (direction: 'left' | 'right') => {

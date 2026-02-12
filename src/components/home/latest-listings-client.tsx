@@ -18,7 +18,10 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
   const [sortBy, setSortBy] = useState<string>('newest');
   
   // Apply sorting client-side for "Latest Listings"
+  // Apply sorting client-side for "Latest Listings"
   const sortedListings = useMemo(() => {
+    if (!initialListings || !Array.isArray(initialListings)) return [];
+    
     return [...initialListings].sort((a, b) => {
       if (sortBy === 'price-low') return a.price - b.price;
       if (sortBy === 'price-high') return b.price - a.price;

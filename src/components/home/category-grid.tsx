@@ -3,32 +3,32 @@
 import { Card } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 import {
-  Baby as BabyIcon,
-  Book,
-  Briefcase,
-  Building2,
-  Calendar,
-  Camera,
-  Car,
-  ChevronRight,
-  CircleEllipsis,
-  Computer,
-  Disc,
-  Dumbbell,
-  Shirt as Fashion,
-  Guitar,
-  Heart,
-  Home,
-  LucideIcon,
-  Palette,
-  Plane,
-  ShoppingBag,
-  Smartphone,
-  Sofa,
-  Users,
-  Utensils,
-  Watch,
-  Wrench
+    Baby as BabyIcon,
+    Book,
+    Briefcase,
+    Building2,
+    Calendar,
+    Camera,
+    Car,
+    ChevronRight,
+    CircleEllipsis,
+    Computer,
+    Disc,
+    Dumbbell,
+    Shirt as Fashion,
+    Guitar,
+    Heart,
+    Home,
+    LucideIcon,
+    Palette,
+    Plane,
+    ShoppingBag,
+    Smartphone,
+    Sofa,
+    Users,
+    Utensils,
+    Watch,
+    Wrench
 } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -142,12 +142,14 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
   const { open, setActiveCategory } = useSidebar();
 
   // Filter to show only main categories (no parentId)
-  const mainCategories = useMemo(() => 
-    categories
-    .filter(cat => !cat.parentId)
-    .sort((a, b) => b._creationTime - a._creationTime)
-    .slice(0, 30) // Show all main categories
-  , [categories]);
+  const mainCategories = useMemo(() => {
+    if (!categories || !Array.isArray(categories)) return [];
+    
+    return categories
+      .filter(cat => !cat.parentId)
+      .sort((a, b) => b._creationTime - a._creationTime)
+      .slice(0, 30); // Show all main categories
+  }, [categories]);
 
   return (
     <div className="container-wide py-6 sm:py-8 md:py-12">

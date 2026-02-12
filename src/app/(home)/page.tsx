@@ -17,11 +17,20 @@ import { api } from '../../../convex/_generated/api';
  * - Latest listings
  */
 export default async function HomePage() {
-  // Fetch categories and listings in parallel
-  const [categories, allListings] = await Promise.all([
-    fetchQuery(api.categories.list),
-    fetchQuery(api.listings.get),
-  ]);
+  let categories: any[] = [];
+  let allListings: any[] = [];
+  let error = null;
+
+  try {
+    // Fetch categories and listings in parallel
+    [categories, allListings] = await Promise.all([
+        fetchQuery(api.categories.list),
+        fetchQuery(api.listings.get),
+    ]);
+  } catch (e) {
+    console.error("Error fetching homepage data:", e);
+    error = e;
+  }
 
   // Limit listings for display
   const listings = allListings.slice(0, 16);
