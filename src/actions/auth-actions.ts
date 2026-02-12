@@ -158,3 +158,31 @@ export async function resetPasswordAction(data: {
     // For now, return success as a placeholder if we don't have the full flow.
     return { success: false, error: 'Reset password not yet fully migrated to Convex' };
 }
+
+export async function completeRegistrationAction(data: {
+  city: string;
+  municipality: string;
+  phone: string;
+}) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+        return { success: false, error: 'Unauthorized' };
+    }
+
+    await convex.mutation(api.users.completeRegistration, {
+        externalId: session.user.id,
+        city: data.city,
+        municipality: data.municipality,
+        phone: data.phone,
+    });
+    
+    // Hard revalidate to ensure session updates on next request
+    revalidatePath('/', 'layout');
+
+    return { success: true };
+  } catch (error: any) {
+    console.error('Complete Registration Error:', error);
+    return { success: false, error: error.message || 'Failed to complete registration' };
+  }
+}

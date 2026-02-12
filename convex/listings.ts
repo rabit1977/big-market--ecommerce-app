@@ -272,7 +272,7 @@ export const create = mutation({
   handler: async (ctx, args) => {
     return await ctx.db.insert("listings", {
       ...args,
-      status: "PENDING_APPROVAL",
+      status: "PENDING_APPROVAL", // Enforce pending approval
       createdAt: Date.now(),
       viewCount: 0,
     });
@@ -285,6 +285,34 @@ export const search = query({
     return await ctx.db
       .query("listings")
       .withSearchIndex("search_title", (q) => q.search("title", args.query))
+      .collect();
+  },
+});
+
+// Admin: Approve Listing
+export const approveListing = mutation({
+  args: { id: v.id("listings") },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, { status: "ACTIVE" });
+  },
+});
+
+// Admin: Reject Listing
+export const rejectListing = mutation({
+  args: { id: v.id("listings") },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, { status: "REJECTED" });
+  },
+});
+
+// Admin: Get Pending Listings
+export const getPendingListings = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db
+      .query("listings")
+      .withIndex("by_status", (q) => q.eq("status", "PENDING_APPROVAL"))
+      .order("desc")
       .collect();
   },
 });

@@ -33,8 +33,10 @@ export async function getAllUsersAction(): Promise<{ success: boolean; data: Use
           id: u._id as string,
           _id: u._id as string,
           role: (u.role as 'USER' | 'ADMIN') || 'USER',
-          createdAt: new Date(u._creationTime),
-          updatedAt: new Date(u._creationTime),
+          createdAt: new Date(u._creationTime || u.createdAt || Date.now()),
+          updatedAt: new Date(u._creationTime || u.createdAt || Date.now()),
+          accountStatus: u.accountStatus, // Return status
+          membershipStatus: u.membershipStatus,
       })),
     };
   } catch (error) {
@@ -71,10 +73,11 @@ export async function getUserByIdAction(userId: string): Promise<{ success: bool
           id: user._id as string,
           _id: user._id as string,
           role: (user.role as 'USER' | 'ADMIN') || 'USER',
-          createdAt: new Date(user._creationTime),
-          updatedAt: new Date(user._creationTime),
+          createdAt: new Date(user._creationTime || (user as any).createdAt || Date.now()),
+          updatedAt: new Date(user._creationTime || (user as any).createdAt || Date.now()),
           orders: [], // No orders in classifieds
           reviews: [], // Placeholder
+          accountStatus: user.accountStatus,
       },
     };
   } catch (error) {
@@ -235,5 +238,37 @@ export async function getUserStatsAction() {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to fetch user stats',
     };
+  }
+}
+
+/**
+ * Approve user (admin only)
+ */
+export async function approveUserAction(userId: string) {
+  try {
+    await requireAdmin();
+    await convex.mutation(api.users.approveUser, { id: userId as any });
+    revalidatePath('/admin/users');
+    revalidatePath(`/admin/users/${userId}`);
+    return { success: true, message: 'User approved successfully' };
+  } catch (error) {
+    return { success: false, error: 'Failed to approve user' };
+  }
+}
+
+/**
+ * Reject/Suspend user (admin only)
+ */
+export async function rejectUserAction(userId: string) {
+  try {
+    const session = await requireAdmin();
+    if (session.user.id === userId) return { success: false, error: 'Cannot reject yourself' };
+
+    await convex.mutation(api.users.rejectUser, { id: userId as any });
+    revalidatePath('/admin/users');
+    revalidatePath(`/admin/users/${userId}`);
+    return { success: true, message: 'User suspended successfully' };
+  } catch (error) {
+    return { success: false, error: 'Failed to suspend user' };
   }
 }

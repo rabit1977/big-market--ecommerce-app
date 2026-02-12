@@ -1,12 +1,12 @@
 'use client';
 
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { cn } from '@/lib/utils';
 import { Home } from 'lucide-react';
@@ -29,6 +29,7 @@ const routeMap: Record<string, string> = {
   stats: 'Statistics',
   favorites: 'Favorites',
   messages: 'Messages',
+  'trade-in': 'Trade In',
   listings: 'Listings',
   pricing: 'Pricing Plans',
   premium: 'Premium Plans',

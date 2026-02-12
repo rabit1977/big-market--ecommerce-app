@@ -1,5 +1,6 @@
 import { DefaultSession } from 'next-auth';
-import { UserRole } from './src/generated/prisma/client';
+
+
 
 declare module 'next-auth' {
   /**
@@ -8,9 +9,13 @@ declare module 'next-auth' {
   interface Session {
     user: {
       id: string;
-      role: UserRole;
+      role: "ADMIN" | "USER";
       bio?: string | null;
       createdAt: Date; // 🔥 Add createdAt here
+      accountStatus?: string;
+      registrationComplete?: boolean;
+      accountType?: string;
+      companyName?: string;
     } & DefaultSession['user'];
   }
 
@@ -19,9 +24,13 @@ declare module 'next-auth' {
    */
   interface User {
     id: string;
-    role: UserRole;
+    role: "ADMIN" | "USER";
     bio?: string | null;
     createdAt: Date; // 🔥 Add createdAt here
+    accountStatus?: string;
+    registrationComplete?: boolean;
+    accountType?: string;
+    companyName?: string;
   }
 }
 
@@ -31,8 +40,12 @@ declare module 'next-auth/jwt' {
    */
   interface JWT {
     id: string;
-    role: UserRole;
+    role: "ADMIN" | "USER";
     bio?: string | null;
     createdAt: Date; // 🔥 Add createdAt here
+    accountStatus?: string;
+    registrationComplete?: boolean;
+    accountType?: string;
+    companyName?: string;
   }
 }

@@ -12,6 +12,10 @@ export interface User {
   externalId: string;
   emailVerified?: Date | number | null;
   isVerified?: boolean;
+  accountStatus?: string;
+  verificationStatus?: string;
+  membershipStatus?: string;
+  registrationComplete?: boolean;
 }
 
 export interface Review {

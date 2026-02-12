@@ -37,6 +37,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             
             const passwordsMatch = await bcrypt.compare(password, user.password);
             if (passwordsMatch) {
+                if (user.accountStatus === 'PENDING_APPROVAL') {
+                    throw new Error("Your account is pending approval.");
+                }
+                if (user.accountStatus === 'SUSPENDED' || user.accountStatus === 'BANNED') {
+                    throw new Error("Your account has been suspended.");
+                }
+
                 return {
                     id: user.externalId === "pending" ? user._id : user.externalId,
                     email: user.email,

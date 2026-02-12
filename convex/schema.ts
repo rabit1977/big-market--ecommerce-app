@@ -41,6 +41,9 @@ export default defineSchema({
     credits: v.optional(v.number()),
     idDocument: v.optional(v.string()),
     
+    // Status
+    accountStatus: v.optional(v.string()), // 'ACTIVE', 'PENDING_APPROVAL', 'SUSPENDED', 'BANNED'
+    
     // Subscription & Limits
     listingLimit: v.optional(v.number()), // Total listings allowed (e.g., 50)
     listingsPostedCount: v.optional(v.number()), // Track usage

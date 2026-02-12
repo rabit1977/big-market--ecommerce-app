@@ -17,7 +17,7 @@ export const getByEmail = query({
     return await ctx.db
       .query("users")
       .withIndex("by_email", (q) => q.eq("email", args.email))
-      .first(); // Changed from .unique() to handle duplicates gracefully
+      .first();
   },
 });
 
@@ -30,7 +30,6 @@ export const createWithPassword = mutation({
     bio: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Check if user already exists to prevent duplicates
     const existing = await ctx.db
       .query("users")
       .withIndex("by_email", (q) => q.eq("email", args.email))
@@ -48,6 +47,7 @@ export const createWithPassword = mutation({
         role: args.role || "USER",
         bio: args.bio,
         createdAt: Date.now(),
+        accountStatus: "PENDING_APPROVAL",
     });
   },
 });
@@ -76,7 +76,7 @@ export const syncUser = mutation({
       return existing._id;
     }
 
-    // Fallback: Check by email to prevent duplicates (especially for Credentials users)
+    // Fallback: Check by email
     if (args.email) {
       const existingByEmail = await ctx.db
         .query("users")
@@ -85,10 +85,10 @@ export const syncUser = mutation({
 
       if (existingByEmail) {
         await ctx.db.patch(existingByEmail._id, {
-          externalId: args.externalId, // Update externalId to match current auth provider/session
+          externalId: args.externalId,
           name: args.name || existingByEmail.name,
           image: args.image || existingByEmail.image,
-          role: existingByEmail.role, // Keep existing role (important for keeping ADMIN status)
+          role: existingByEmail.role,
         });
         return existingByEmail._id;
       }
@@ -101,6 +101,7 @@ export const syncUser = mutation({
       image: args.image,
       role: args.role || "USER",
       createdAt: Date.now(),
+      accountStatus: "PENDING_APPROVAL",
     });
   },
 });
@@ -111,6 +112,7 @@ export const list = query({
     return await ctx.db.query("users").collect();
   },
 });
+
 export const getById = query({
   args: { id: v.id("users") },
   handler: async (ctx, args) => {
@@ -129,6 +131,7 @@ export const update = mutation({
     resetToken: v.optional(v.string()),
     resetTokenExpiry: v.optional(v.number()),
     isVerified: v.optional(v.boolean()),
+    accountStatus: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const { id, ...data } = args;
@@ -157,7 +160,7 @@ export const updateByExternalId = mutation({
     marketingEmails: v.optional(v.boolean()),
     orderEmails: v.optional(v.boolean()),
     reviewEmails: v.optional(v.boolean()),
-    city: v.optional(v.string()), // Added city
+    city: v.optional(v.string()),
     
     // Extended fields
     banner: v.optional(v.string()),
@@ -195,10 +198,9 @@ export const requestVerification = mutation({
     
     if (!user) throw new Error("User not found");
     
-    // In a real app, this would set status to "PENDING". 
-    // For demo, we auto-verify.
     await ctx.db.patch(user._id, {
-        isVerified: true,
+        isVerified: false,
+        verificationStatus: "pending_approval",
         idDocument: args.idDocument,
         phone: args.phone,
     });
@@ -235,7 +237,7 @@ export const changePassword = mutation({
   handler: async (ctx, args) => {
     const user = await ctx.db
       .query("users")
-      .withIndex("by_externalId", (q) => q.eq("externalId", args.externalId)) // Corrected index name
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.externalId))
       .unique();
 
     if (!user) throw new Error("User not found");
@@ -249,16 +251,22 @@ export const deleteAccount = mutation({
   handler: async (ctx, args) => {
     const user = await ctx.db
       .query("users")
-      .withIndex("by_externalId", (q) => q.eq("externalId", args.externalId)) // Corrected index name
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.externalId))
       .unique();
 
     if (!user) throw new Error("User not found");
 
+    // Delete all listings by this user
+    const listings = await ctx.db
+      .query("listings")
+      .withIndex("by_userId", (q) => q.eq("userId", args.externalId))
+      .collect();
+
+    for (const listing of listings) {
+      await ctx.db.delete(listing._id);
+    }
+
     await ctx.db.delete(user._id);
-    
-    // Also delete listings? 
-    // For now, let's keep it simple or user might want to keep content.
-    // Ideally we cascade delete.
   },
 });
 
@@ -334,13 +342,14 @@ export const getMyDashboardStats = query({
              membershipStatus: user.membershipStatus || 'INACTIVE',
              membershipExpiresAt: user.membershipExpiresAt,
              companyName: user.companyName,
-             accountType: user.accountType
+             accountType: user.accountType,
+             accountStatus: user.accountStatus,
          },
          stats: {
              activeListings,
              totalViews,
              spendToday,
-             renewedToday: 0 // Placeholder
+             renewedToday: 0
          }
      };
   }
@@ -351,7 +360,7 @@ export const upgradeMembership = mutation({
     externalId: v.string(),
     plan: v.string(),
     duration: v.string(), // 'monthly' | 'yearly'
-    price: v.number(),    // Added price argument
+    price: v.number(),
   },
   handler: async (ctx, args) => {
     const user = await ctx.db
@@ -383,7 +392,8 @@ export const upgradeMembership = mutation({
         membershipStatus: 'ACTIVE',
         membershipTier: args.plan,
         membershipExpiresAt: expiresAt.getTime(),
-        isVerified: true, // Auto-verify on subscription as per user request
+        verificationStatus: "pending_approval", 
+        isVerified: false, 
     });
 
     return { success: true, expiresAt: expiresAt.getTime() };
@@ -404,7 +414,7 @@ export const cancelMembership = mutation({
 
     await ctx.db.patch(user._id, {
         membershipStatus: 'INACTIVE',
-        membershipExpiresAt: undefined, // Or keep expiration but set status to canceling? User asked to unsubscribe "from earlier", implies immediate removal or reset. Let's reset for now to "unverify" them.
+        membershipExpiresAt: undefined,
         isVerified: false,
         membershipTier: 'FREE' 
     });
@@ -413,7 +423,6 @@ export const cancelMembership = mutation({
   },
 });
 
-// Migration: Add createdAt to existing users who don't have it
 export const backfillCreatedAt = mutation({
   args: {},
   handler: async (ctx) => {
@@ -423,7 +432,7 @@ export const backfillCreatedAt = mutation({
     for (const user of users) {
       if (!user.createdAt) {
         await ctx.db.patch(user._id, {
-          createdAt: Date.now(), // Use current time as fallback
+          createdAt: Date.now(),
         });
         updated++;
       }
@@ -433,5 +442,46 @@ export const backfillCreatedAt = mutation({
   },
 });
 
+// Admin Mutations
+export const approveUser = mutation({
+  args: { id: v.id("users") },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, {
+      accountStatus: "ACTIVE",
+    });
+  },
+});
 
+export const rejectUser = mutation({
+  args: { id: v.id("users") },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, {
+      accountStatus: "SUSPENDED",
+    });
+  },
+});
 
+export const approveVerification = mutation({
+   args: { id: v.id("users") },
+   handler: async (ctx, args) => {
+      await ctx.db.patch(args.id, {
+          isVerified: true,
+          verificationStatus: "verified",
+      });
+   }
+});
+
+export const backfillAccountStatus = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const users = await ctx.db.query("users").collect();
+    let updated = 0;
+    for (const user of users) {
+       if (!user.accountStatus) {
+           await ctx.db.patch(user._id, { accountStatus: "ACTIVE" });
+           updated++;
+       }
+    }
+    return { message: `Backfilled ${updated} users to ACTIVE` };
+  }
+});

@@ -1,28 +1,28 @@
 'use client';
 
-import { deleteUserFromAdminAction, updateUserAction } from '@/actions/user-actions';
+import { approveUserAction, deleteUserFromAdminAction, rejectUserAction } from '@/actions/user-actions';
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { User } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { Check, Edit, Eye, MoreHorizontal, Shield, Trash2, UserCog, User as UserIcon } from 'lucide-react';
+import { Ban, CheckCircle, Clock, Edit, Eye, MoreHorizontal, Shield, Trash2, UserCog, User as UserIcon, XCircle } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -32,6 +32,16 @@ import { toast } from 'sonner';
 interface UsersDataTableProps {
   users: User[];
 }
+
+const getStatusColor = (status?: string) => {
+    switch (status) {
+        case 'ACTIVE': return 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20';
+        case 'PENDING_APPROVAL': return 'bg-amber-500/10 text-amber-500 border-amber-500/20';
+        case 'SUSPENDED': return 'bg-red-500/10 text-red-500 border-red-500/20';
+        case 'BANNED': return 'bg-destructive/10 text-destructive border-destructive/20';
+        default: return 'bg-secondary text-secondary-foreground border-border';
+    }
+};
 
 /**
  * Mobile-optimized Users Data Table
@@ -139,6 +149,16 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                     )}
                     {(user.role || 'user').toUpperCase()}
                   </Badge>
+                  
+                  <Badge 
+                        variant="outline" 
+                        className={cn('text-[9px] sm:text-[10px] px-1.5 py-0 h-5 ml-2', getStatusColor(user.accountStatus || 'ACTIVE'))}
+                    >
+                        {user.accountStatus === 'PENDING_APPROVAL' && <Clock className="h-2.5 w-2.5 mr-0.5" />}
+                        {user.accountStatus === 'ACTIVE' && <CheckCircle className="h-2.5 w-2.5 mr-0.5" />}
+                        {(user.accountStatus === 'SUSPENDED' || user.accountStatus === 'BANNED') && <Ban className="h-2.5 w-2.5 mr-0.5" />}
+                        {(user.accountStatus || 'ACTIVE').replace('_', ' ')}
+                   </Badge>
                 </div>
 
                 {/* Email */}
@@ -205,31 +225,96 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                            className='cursor-pointer'
-                            onSelect={() => startTransition(async () => {
-                                const newStatus = !user.isVerified;
-                                const result = await updateUserAction(user.id, { isVerified: newStatus });
-                                if (result.success) {
-                                  toast.success(`User ${newStatus ? 'verified' : 'unverified'} successfully`);
-                                  router.refresh();
-                                } else {
-                                  toast.error(result.error);
-                                }
-                            })}
-                        >
-                            {user.isVerified ? (
-                                <>
-                                    <Shield className='h-4 w-4 mr-2 text-destructive' />
-                                    Unverify User
-                                </>
-                            ) : (
-                                <>
-                                    <Check className='h-4 w-4 mr-2 text-green-500' />
-                                    Verify User
-                                </>
-                            )}
-                        </DropdownMenuItem>
+                        
+                        {user.accountStatus === 'PENDING_APPROVAL' && (
+                            <>
+                                <DropdownMenuItem
+                                    className={cn(
+                                        'cursor-pointer focus:text-emerald-500', 
+                                        user.membershipStatus !== 'ACTIVE' ? 'opacity-50 cursor-not-allowed' : 'text-emerald-500'
+                                    )}
+                                    // Prevent action if not subscribed
+                                    onSelect={(e) => {
+                                        if (user.membershipStatus !== 'ACTIVE') {
+                                            e.preventDefault();
+                                            toast.error('User must have an active subscription to be approved.');
+                                            return;
+                                        }
+                                        
+                                        startTransition(async () => {
+                                            const result = await approveUserAction(user.id);
+                                            if (result.success) {
+                                                toast.success('User approved');
+                                                router.refresh();
+                                            } else {
+                                                toast.error(result.error);
+                                            }
+                                        });
+                                    }}
+                                >
+                                    <CheckCircle className='h-4 w-4 mr-2' />
+                                    Approve User
+                                    {user.membershipStatus !== 'ACTIVE' && (
+                                        <span className="ml-2 text-[10px] bg-red-100 text-red-800 px-1 rounded">
+                                            No Sub
+                                        </span>
+                                    )}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    className='cursor-pointer text-destructive focus:text-destructive'
+                                    onSelect={() => startTransition(async () => {
+                                        const result = await rejectUserAction(user.id);
+                                        if (result.success) {
+                                            toast.success('User rejected/suspended');
+                                            router.refresh();
+                                        } else {
+                                            toast.error(result.error);
+                                        }
+                                    })}
+                                >
+                                    <XCircle className='h-4 w-4 mr-2' />
+                                    Reject User
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                            </>
+                        )}
+                        
+                        {(user.accountStatus === 'ACTIVE' || !user.accountStatus) && (
+                            <DropdownMenuItem
+                                className='cursor-pointer text-orange-500 focus:text-orange-500'
+                                onSelect={() => startTransition(async () => {
+                                    const result = await rejectUserAction(user.id);
+                                    if (result.success) {
+                                        toast.success('User suspended');
+                                        router.refresh();
+                                    } else {
+                                        toast.error(result.error);
+                                    }
+                                })}
+                            >
+                                <Ban className='h-4 w-4 mr-2' />
+                                Suspend User
+                            </DropdownMenuItem>
+                        )}
+
+                        {user.accountStatus === 'SUSPENDED' && (
+                              <DropdownMenuItem
+                                className='cursor-pointer text-emerald-500 focus:text-emerald-500'
+                                onSelect={() => startTransition(async () => {
+                                    const result = await approveUserAction(user.id);
+                                    if (result.success) {
+                                        toast.success('User reactivated');
+                                        router.refresh();
+                                    } else {
+                                        toast.error(result.error);
+                                    }
+                                })}
+                            >
+                                <CheckCircle className='h-4 w-4 mr-2' />
+                                Reactivate User
+                            </DropdownMenuItem>
+                        )}
+                        
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           className='text-destructive focus:text-destructive cursor-pointer'

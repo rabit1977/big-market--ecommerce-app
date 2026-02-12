@@ -1,11 +1,11 @@
 'use client';
 
-import { getAllCategoriesAction } from '@/actions/listing-actions';
+import { getPublicCategoriesAction } from '@/actions/category-actions';
 import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,13 +14,13 @@ import { useOnClickOutside } from '@/lib/hooks/useOnClickOutside';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-    ChevronRight,
-    Grid3X3,
-    Moon,
-    Search,
-    Sun,
-    X,
-    Zap
+  ChevronRight,
+  Grid3X3,
+  Moon,
+  Search,
+  Sun,
+  X,
+  Zap
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
@@ -44,7 +44,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
 
   useEffect(() => {
     if (isOpen && categories.length === 0) {
-      getAllCategoriesAction().then((res) => {
+      getPublicCategoriesAction().then((res) => {
         if (res.success && res.categories) {
           setCategories(res.categories);
         }

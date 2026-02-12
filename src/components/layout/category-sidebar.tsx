@@ -1,6 +1,6 @@
 'use client';
 
-import { getAllCategoriesAction } from '@/actions/listing-actions';
+import { getPublicCategoriesAction } from '@/actions/category-actions';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -25,7 +25,7 @@ export function CategorySidebar() {
 
   useEffect(() => {
     if (open && categories.length === 0) {
-      getAllCategoriesAction().then((res) => {
+      getPublicCategoriesAction().then((res) => {
         if (res.success && res.categories) {
             setCategories(res.categories.map(c => ({
               ...c,

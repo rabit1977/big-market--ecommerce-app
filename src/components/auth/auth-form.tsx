@@ -220,7 +220,7 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
         return;
       }
 
-      toast.success('Account created! Logging you in...');
+      // Account created, now logging in...
 
       const signInResult = await signIn('credentials', {
         email: formData.email,

@@ -18,22 +18,32 @@ export const authConfig = {
               image: user.image || undefined,
               role: (user as any).role || 'USER',
           });
+      }
 
-          // 2. Fetch the actual user from Convex to get the correct role and Convex ID
-          // This is useful if the role was changed in the Convex dashboard
+      // Always fetch fresh user data to ensure accountStatus/registrationComplete are up to date
+      // This is critical for the registration flow to work without requiring re-login
+      if (token.id || (user && user.id)) {
+          const userId = (token.id || user?.id) as string;
+          const { api, convex } = await import('@/lib/convex-server');
+          
           const convexUser = await convex.query(api.users.getByExternalId, { 
-              externalId: user.id! 
+              externalId: userId
           });
 
           if (convexUser) {
-              token.id = convexUser.externalId; // Keep using externalId as the primary reference
+              token.id = convexUser.externalId; 
               token.role = convexUser.role || 'USER';
-              token.convexId = convexUser._id; // Store original Convex ID just in case
+              token.convexId = convexUser._id;
               token.accountType = convexUser.accountType;
               token.companyName = convexUser.companyName;
-          } else {
+              token.accountStatus = convexUser.accountStatus;
+              token.registrationComplete = convexUser.registrationComplete;
+          } else if (user) {
+              // Fallback for very first render if fetch fails or race condition (should be rare due to sync above)
               token.id = user.id;
               token.role = (user as any).role || 'USER';
+              token.accountStatus = 'PENDING_APPROVAL';
+              token.registrationComplete = false;
           }
       }
 
@@ -46,15 +56,41 @@ export const authConfig = {
         // Add custom fields to session user type
         (session.user as any).accountType = token.accountType;
         (session.user as any).companyName = token.companyName;
+        (session.user as any).accountStatus = token.accountStatus;
+        (session.user as any).registrationComplete = token.registrationComplete;
       }
       return session;
     },
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
+      const user = auth?.user as any;
+      const isPricing = nextUrl.pathname.startsWith('/premium') || nextUrl.pathname.startsWith('/checkout');
       const isOnProtected =
         nextUrl.pathname.startsWith('/account') ||
         nextUrl.pathname.startsWith('/my-listings') ||
         nextUrl.pathname.startsWith('/sell');
+
+      const isPending = user?.accountStatus === 'PENDING_APPROVAL';
+      const isSuspended = user?.accountStatus === 'SUSPENDED' || user?.accountStatus === 'BANNED';
+      const isRegistrationComplete = user?.registrationComplete;
+
+      // Allow access to pricing/checkout for everyone, including pending users
+      if (isPricing) return true;
+
+      // 1. Enforce Registration Completion
+      if (isLoggedIn && !isRegistrationComplete && !nextUrl.pathname.startsWith('/auth/complete-registration') && !nextUrl.pathname.startsWith('/auth/signout')) {
+          return Response.redirect(new URL('/auth/complete-registration', nextUrl));
+      }
+
+      // 2. Redirect pending users (but allow complete-registration)
+      if (isLoggedIn && isPending && isRegistrationComplete && !nextUrl.pathname.startsWith('/auth/pending') && !nextUrl.pathname.startsWith('/auth/signout')) {
+         return Response.redirect(new URL('/auth/pending', nextUrl));
+      }
+      
+      // Redirect suspended users
+      if (isLoggedIn && isSuspended && !nextUrl.pathname.startsWith('/auth/suspended') && !nextUrl.pathname.startsWith('/auth/signout')) {
+         return Response.redirect(new URL('/auth/suspended', nextUrl));
+      }
 
       if (isOnProtected) {
         if (isLoggedIn) return true;

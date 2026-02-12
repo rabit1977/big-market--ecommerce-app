@@ -34,8 +34,8 @@ export async function createStripeCheckoutSession(
         },
       ],
       mode: 'payment', // Using 'payment' for simplicity, 'subscription' requires Stripe Product IDs
-      success_url: `${APP_URL}/pricing/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${APP_URL}/pricing`,
+      success_url: `${APP_URL}/premium/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${APP_URL}/premium`,
       metadata: {
         userId,
         plan: planName,

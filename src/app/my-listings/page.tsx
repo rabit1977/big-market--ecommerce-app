@@ -1,3 +1,4 @@
+
 import { getMyListingsAction } from '@/actions/listing-actions';
 import { MyListingsDashboardHeader } from '@/components/listing/dashboard-header';
 import { MyListingListItem } from '@/components/listing/my-listing-list-item';
@@ -19,7 +20,7 @@ interface MyListingsPageProps {
 
 export default async function MyListingsPage({ searchParams }: MyListingsPageProps) {
   const { q } = await searchParams;
-  const { success, listings, error } = await getMyListingsAction(undefined, q);
+  const { success, listings, error } = await getMyListingsAction(q);
 
   if (!success) {
       if (error === 'Unauthorized') {
