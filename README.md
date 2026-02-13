@@ -1,6 +1,6 @@
 # Big Market Classifieds Platform
 
-This is a modern, high-performance classifieds marketplace built with Next.js 15, Convex, and Tailwind CSS. It is inspired by platforms like Reklama5 and Big Market, tailored for the Macedonian market.
+This is a modern, high-performance classifieds marketplace built with Next.js 15, Convex, and Tailwind CSS. It is inspired by platforms like ebay, temu, aliexpress and Big Market, tailored for the Macedonian market.
 
 ## Features
 

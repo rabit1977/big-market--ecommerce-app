@@ -74,8 +74,8 @@ export function StatsSection({ listingCount }: StatsProps) {
   });
 
   return (
-    <div className="bg-muted/30 border-t">
-      <div className="container-wide py-8 md:py-16">
+    <div className="bg-muted/30">
+      <div className="container-wide py-12 md:py-20">
         <motion.div
           variants={containerVariants}
           initial="hidden"

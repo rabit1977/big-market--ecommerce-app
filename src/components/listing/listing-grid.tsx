@@ -104,7 +104,7 @@ export function ListingGrid({
         <div className="lg:hidden w-full">
            <Button 
              variant="outline" 
-             className="w-full flex items-center justify-center gap-2 h-10 border-dashed"
+             className="w-full flex items-center justify-center gap-2 h-10"
              onClick={onOpenFilters}
            >
              <SlidersHorizontal className="h-4 w-4" />
@@ -170,7 +170,6 @@ export function ListingGrid({
               <List className="h-4 w-4" />
             </Button>
           </div>
-
         </div>
       </div>
       

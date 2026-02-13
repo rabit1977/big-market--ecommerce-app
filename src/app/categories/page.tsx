@@ -153,8 +153,8 @@ export default async function CategoriesPage() {
       </div>
 
       <div className='container-wide py-8 sm:py-12'>
-        {/* Categories Grid - Mobile: 2 cols, Desktop: Adaptive */}
-        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-6'>
+        {/* Categories Grid - Mobile: 3 cols, Desktop: Adaptive */}
+        <div className='grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-6'>
           {categories.map((category, index) => {
             const Icon = NAME_TO_ICON[category.name] || Globe;
             const imageUrl = category.image || CATEGORY_IMAGES[category.slug];

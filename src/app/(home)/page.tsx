@@ -1,4 +1,3 @@
-import { CategoryGrid } from '@/components/home/category-grid';
 import { FeaturedListings } from '@/components/home/featured-listings';
 import { Hero } from '@/components/home/hero';
 import { LatestListingsClient } from '@/components/home/latest-listings-client';
@@ -11,7 +10,6 @@ import { api } from '../../../convex/_generated/api';
  * 
  * Big Market-inspired classifieds homepage with:
  * - Hero section with search
- * - Category grid
  * - Platform statistics
  * - Featured listings
  * - Latest listings
@@ -54,9 +52,10 @@ export default async function HomePage({ searchParams }: PageProps) {
   // Limit listings for display
   const now = Date.now();
   
-  // 1. Get all currently promoted listings for the horizontal scroll (Excluding Auto Daily Refresh)
+  // 1. Get all currently promoted listings for the horizontal scroll (Excluding non-featured tiers)
+  const nonFeaturedTiers = ['AUTO_DAILY_REFRESH', 'LISTING_HIGHLIGHT', 'VISUAL_HIGHLIGHT', 'HIGHLIGHT'];
   const featuredListings = allListings
-    .filter((l: any) => l.isPromoted && l.promotionTier !== 'AUTO_DAILY_REFRESH' && (!l.promotionExpiresAt || l.promotionExpiresAt > now))
+    .filter((l: any) => l.isPromoted && !nonFeaturedTiers.includes(l.promotionTier || '') && (!l.promotionExpiresAt || l.promotionExpiresAt > now))
     .slice(0, 15);
 
   // 2. Latest listings includes EVERYTHING, ordered by newest first (but our backend query 'get' already handles promotion sorting)
@@ -73,16 +72,12 @@ export default async function HomePage({ searchParams }: PageProps) {
       )}
 
       {/* 3. Latest Listings */}
-      <div className="container-wide py-6 bg-muted/20">
+      <div className="container-wide py-12 bg-muted/20">
         <LatestListingsClient 
           initialListings={latestListings as any} 
           categories={categories} 
         />
       </div>
-      {/* Category Grid */}
-      <CategoryGrid categories={categories} />
-
-
 
       {/* Stats Section */}
       <StatsSection listingCount={allListings.length} />
