@@ -1,9 +1,11 @@
 import { getListingByIdAction } from '@/actions/listing-actions';
 import { auth } from '@/auth';
+import { PromotionButton } from '@/components/listing/promotion-button';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle2, Crown, Eye, Rocket, Zap } from 'lucide-react';
+import { CheckCircle2, Crown, Eye, Star, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 
@@ -33,29 +35,30 @@ export default async function ListingSuccessPage({ params }: ListingSuccessPageP
 
   const promotionOptions = [
     {
+      title: 'Top Positioning',
+      price: '160 MKD',
+      subPrice: '+ VAT',
+      duration: '14 days',
+      description: 'Always at the top before others. Your ad will be displayed at the top of search results related to criteria for 14 days, rotating with other top-positioned ads.',
+      icon: Star,
+      color: 'text-amber-500',
+      bg: 'bg-amber-500/10',
+      border: 'border-amber-500/20',
+      gradient: 'to-amber-500/10',
+      badge: 'Best Results'
+    },
+    {
       title: 'Premium Sector',
       price: '100 MKD',
       subPrice: '+ VAT',
       duration: '14 days',
       description: 'Maximum visibility and improved reach. Your ad will be especially recognizable, getting more visitors and responses. Exclusive ads are shown on the right side of search results.',
       icon: Crown,
-      color: 'text-amber-500',
-      bg: 'bg-amber-500/10',
-      border: 'border-amber-500/20',
-      gradient: 'to-amber-500/10',
-      badge: 'Most Popular'
-    },
-    {
-      title: 'Top Positioning',
-      price: '160 MKD',
-      subPrice: '+ VAT',
-      duration: '14 days',
-      description: 'Always at the top before others. Your ad will be displayed at the top of search results related to criteria for 14 days, rotating with other top-positioned ads.',
-      icon: Rocket,
       color: 'text-blue-500',
       bg: 'bg-blue-500/10',
       border: 'border-blue-500/20',
       gradient: 'to-blue-500/10',
+      badge: 'Highly Popular'
     },
     {
         title: 'Listing Highlight',
@@ -72,7 +75,7 @@ export default async function ListingSuccessPage({ params }: ListingSuccessPageP
     {
         title: 'Auto Daily Refresh',
         price: '60 MKD',
-        subPrice: '',
+        subPrice: '+ VAT',
         duration: '14 days',
         description: 'For 14 days, your ad is automatically refreshed daily as if it were just published, starting at 13:00.',
         icon: Zap,
@@ -112,7 +115,7 @@ export default async function ListingSuccessPage({ params }: ListingSuccessPageP
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
             <div className="text-center space-y-2">
                 <h2 className="text-2xl font-black uppercase tracking-tight flex items-center justify-center gap-2">
-                    <Rocket className="h-6 w-6 text-primary" />
+                    <Zap className="h-6 w-6 text-primary animate-pulse" />
                     Boost Your Sales
                 </h2>
                 <p className="text-muted-foreground font-medium">
@@ -155,9 +158,14 @@ export default async function ListingSuccessPage({ params }: ListingSuccessPageP
                             </p>
                         </CardContent>
                         <CardFooter>
-                            <Button className="w-full rounded-xl font-bold uppercase tracking-wide group" variant="outline">
-                                Select Option
-                            </Button>
+                            <PromotionButton 
+                                listingId={listing.id}
+                                userId={session.user.id!}
+                                userEmail={session.user.email || ''}
+                                title={option.title}
+                                tier={option.title.toUpperCase().replace(/\s+/g, '_')}
+                                price={parseFloat(option.price.split(' ')[0])}
+                            />
                         </CardFooter>
                         <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 pointer-events-none bg-gradient-to-tr from-transparent via-transparent ${option.gradient} transition-opacity`} />
                     </Card>

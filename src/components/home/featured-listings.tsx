@@ -1,12 +1,11 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { formatDistanceToNow } from 'date-fns';
-import { ChevronLeft, ChevronRight, MapPin, Star } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Crown, Eye, MapPin, Star, Zap } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 interface Listing {
   _id: string;
@@ -21,26 +20,44 @@ interface Listing {
   createdAt: number;
   viewCount?: number;
   _creationTime: number;
+  isPromoted?: boolean;
+  promotionTier?: string;
+  promotionExpiresAt?: number;
 }
 
 interface FeaturedListingsProps {
   listings: Listing[];
 }
 
+
 export function FeaturedListings({ listings }: FeaturedListingsProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [activeDot, setActiveDot] = useState(0);
   
   if (!listings || !Array.isArray(listings)) return null;
 
-  const featuredListings = listings.slice(0, 10);
+  const featuredListings = listings.slice(0, 15);
 
-  const scroll = (direction: 'left' | 'right') => {
+  const handleScroll = () => {
     if (scrollContainerRef.current) {
-      const scrollAmount = 400;
-      scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+        const totalItems = featuredListings.length;
+        // Simplified dot calculation
+        const scrollPercent = scrollLeft / (scrollWidth - clientWidth || 1);
+        const dotIndex = Math.min(Math.round(scrollPercent * 4), 4);
+        setActiveDot(isNaN(dotIndex) ? 0 : dotIndex);
+    }
+  };
+
+  const scrollToDot = (index: number) => {
+    if (scrollContainerRef.current) {
+      const { scrollWidth, clientWidth } = scrollContainerRef.current;
+      const targetScroll = (index / 4) * (scrollWidth - clientWidth);
+      scrollContainerRef.current.scrollTo({
+        left: targetScroll,
         behavior: 'smooth'
       });
+      setActiveDot(index);
     }
   };
 
@@ -49,41 +66,30 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
   }
 
   return (
-    <div className="bg-card/50 backdrop-blur-sm border-t">
-      <div className="container-wide py-4 sm:py-6 md:py-8">
-        <div className="flex items-center justify-between mb-3 sm:mb-4 px-0">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-               <span className="flex h-2 w-2 rounded-full bg-orange-500 animate-pulse" />
-               <h2 className="text-xl md:text-2xl font-black tracking-tight">
-                  Hot Deals
-               </h2>
+    <div className="bg-gradient-to-b from-primary/5 via-transparent to-transparent">
+      <div className="container-wide py-5 sm:py-8">
+        <div className="flex flex-col gap-4 mb-5 sm:mb-8 px-0">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+               <div className="flex items-center gap-2">
+                 <div className="relative flex items-center justify-center">
+                    <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping scale-150" />
+                    <span className="relative flex h-2 w-2 rounded-full bg-primary" />
+                 </div>
+                 <h2 className="text-lg md:text-xl font-black tracking-tighter uppercase italic text-foreground">
+                    Top Deals & Boosted
+                 </h2>
+              </div>
+              <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.2em] opacity-80">
+                Premium Community Spotlight
+              </p>
             </div>
-            <p className="text-muted-foreground font-medium text-xs">
-              Premium community picks hand-selected for you
-            </p>
-          </div>
-          
-          <div className="flex items-center gap-2">
-             <button 
-               onClick={() => scroll('left')}
-               className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white border shadow-sm dark:bg-accent/50 text-muted-foreground dark:hover:text-foreground
-               dark:hover:bg-accent transition-all active:scale-95 cursor-pointer group hover:bg-primary/5"
-             >
-                <ChevronLeft className="w-6 h-6 group-hover:text-primary" />
-             </button>
-             <button 
-               onClick={() => scroll('right')}
-               className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white border shadow-sm dark:bg-accent/50 text-muted-foreground dark:hover:text-foreground
-               dark:hover:bg-accent transition-all active:scale-95 cursor-pointer group hover:bg-primary/5"
-             >
-                <ChevronRight className="w-6 h-6 group-hover:text-primary" />
-             </button>
+
              <Link 
                href="/listings?featured=true" 
-               className="ml-2 inline-flex items-center text-sm font-bold text-primary hover:text-primary/80 bg-primary/5 px-4 py-2 rounded-xl transition-all"
+               className="inline-flex items-center text-[9px] font-black uppercase tracking-widest text-primary border-b-2 border-primary/20 hover:border-primary transition-all pb-0.5"
              >
-               View All
+               Explore All
              </Link>
           </div>
         </div>
@@ -91,63 +97,80 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
         <div className="relative group">
           <div 
             ref={scrollContainerRef}
-            className="flex gap-3 sm:gap-4 md:gap-5 overflow-x-auto no-scrollbar pb-4 sm:pb-8 scroll-smooth snap-x snap-mandatory"
+            onScroll={handleScroll}
+            className="flex gap-2.5 sm:gap-4 overflow-x-auto no-scrollbar pb-2 scroll-smooth snap-x snap-mandatory"
           >
             {featuredListings.map((listing) => {
-              const imageUrl = listing.thumbnail || listing.images[0] || '/placeholder-listing.jpg';
-              const timeAgo = formatDistanceToNow(new Date(listing.createdAt), { addSuffix: true });
+              const imageUrl = listing.thumbnail || (listing.images && listing.images[0]) || '/placeholder-listing.jpg';
+              const isElite = (listing as any).promotionTier === 'ELITE_PRIORITY' || (listing as any).promotionTier === 'TOP_POSITIONING';
+              const isPremium = (listing as any).promotionTier === 'PREMIUM_SPOTLIGHT' || (listing as any).promotionTier === 'PREMIUM_SECTOR';
+              const isDaily = (listing as any).promotionTier === 'DAILY_BUMP' || (listing as any).promotionTier === 'AUTO_DAILY_REFRESH';
+              const isVisual = (listing as any).promotionTier === 'VISUAL_HIGHLIGHT' || (listing as any).promotionTier === 'LISTING_HIGHLIGHT';
 
               return (
                 <div 
                   key={listing._id} 
-                  className="min-w-[130px] sm:min-w-[170px] md:min-w-[200px] snap-start"
+                  className="min-w-[120px] w-[120px] sm:min-w-[150px] sm:w-[150px] snap-start"
                 >
                   <Link href={`/listings/${listing._id}`}>
-                    <Card className="group h-full overflow-hidden border-border/40 hover:border-primary/50 hover:shadow-[0_20px_50px_rgba(255,0,0,0.05)] transition-all duration-500 rounded-lg sm:rounded-xl md:rounded-2xl bg-white/80 dark:bg-card/40 dark:backdrop-blur-md backdrop-blur-sm p-0 gap-0">
-                      {/* Image Container */}
-                      <div className="relative aspect-[4/3] overflow-hidden bg-white">
-                        <div className="absolute top-1 left-1 z-10">
-                          <Badge className="bg-orange-500/90 backdrop-blur-md hover:bg-orange-600 text-white border-0 shadow-lg rounded-full font-bold uppercase tracking-tighter text-[9px]">
-                            <Star className="w-2.5 h-2.5 fill-current" />
-                          </Badge>
-                        </div>
-
+                    <Card className={cn(
+                        "group relative h-full overflow-hidden border-border/40 p-0 hover:border-primary/30 transition-all duration-500 rounded-xl bg-card shadow-sm hover:shadow-lg",
+                        isElite && "ring-1 ring-amber-400/30 bg-amber-400/[0.02]",
+                        isVisual && "bg-emerald-100/30 dark:bg-emerald-500/10 border-emerald-400/30 dark:border-emerald-500/30 shadow-md ring-1 ring-emerald-500/20"
+                    )}>
+                      {/* Image - Flush and fixed height */}
+                      <div className={cn(
+                        "relative aspect-[4/3] overflow-hidden -mt-px -mx-px",
+                        !isVisual && "bg-muted"
+                      )}>
                         <Image
                           src={imageUrl}
                           alt={listing.title}
                           fill
-                          className="object-cover group-hover:scale-110 transition-transform duration-700"
-                          sizes="(max-width: 640px) 150px, 220px"
+                          className="object-cover group-hover:scale-105 transition-transform duration-700"
                         />
                         
-                        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                        
-                        <div className="absolute bottom-3 left-3 right-3 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 hidden sm:flex items-center justify-between">
-                           <span className="text-white text-[10px] font-bold bg-white/20 backdrop-blur-md px-2 py-1 rounded-md border border-white/30">
-                               Quick View
-                           </span>
-                        </div>
+                        {/* Icon Badge - Top Left inside image */}
+                        {!isVisual && (
+                          <div className="absolute top-1.5 left-1.5 z-20">
+                             <div className={cn(
+                                 "w-5 h-5 sm:w-6 sm:h-6 rounded-lg flex items-center justify-center shadow-lg backdrop-blur-md border border-white/20 transition-transform group-hover:scale-110",
+                                 isElite ? "bg-amber-400" : 
+                                 isPremium ? "bg-blue-600" : 
+                                 isDaily ? "bg-purple-600" :
+                                 isVisual ? "bg-emerald-600" : "bg-orange-500"
+                             )}>
+                                {isElite ? (
+                                  <div className="bg-white rounded-full p-0.5 shadow-sm">
+                                    <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-500 fill-amber-500" />
+                                  </div>
+                                ) : 
+                                 isPremium ? <Crown className="w-3 h-3 text-white" /> :
+                                 isDaily ? <Zap className="w-3 h-3 text-white" /> :
+                                 isVisual ? <Eye className="w-3 h-3 text-white" /> :
+                                 <Star className="w-3 h-3 text-white fill-current" />}
+                             </div>
+                          </div>
+                        )}
                       </div>
 
-                      {/* Content */}
-                      <div className="p-2 sm:p-3 space-y-1.5 sm:space-y-2">
-                        <div className="space-y-1">
-                          <h3 className="font-bold text-[10px] sm:text-[11px] lg:text-xs leading-tight line-clamp-2 text-muted-foreground group-hover:text-foreground transition-colors h-[2rem] sm:h-[2.5rem]">
-                            {listing.title}
-                          </h3>
-                        </div>
-
-
-                        <div className="pt-1.5 sm:pt-2 border-t border-border/50 flex items-center justify-between gap-1 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground font-medium">
-                        <div className="flex flex-col gap-0.5 sm:gap-1">
-                          <div className="text-xs sm:text-sm md:text-base font-black text-foreground leading-none">
-                            €{listing.price.toLocaleString()}
-                          </div>
-                        </div>
-                           <div className="bg-primary/10 p-1 rounded-md shrink-0 flex items-center gap-1">
-                              <MapPin className="w-3 h-3 text-primary" />
-                           <span className="truncate">{listing.city}</span>
-                           </div>
+                      {/* Ultra Compact Info */}
+                      <div className={cn(
+                        "p-2 pt-1.5 space-y-0.5",
+                        !isVisual && "bg-card"
+                      )}>
+                        <h3 className="font-bold text-[9px] leading-tight line-clamp-1 text-foreground/80 group-hover:text-primary transition-colors">
+                          {listing.title}
+                        </h3>
+                        
+                        <div className="flex items-center justify-between">
+                           <span className="text-[10px] font-black text-primary">
+                             {listing.price.toLocaleString()} MKD
+                           </span>
+                           <span className="text-[8px] text-muted-foreground/60 font-bold flex items-center">
+                              <MapPin className="w-2 h-2 mr-0.5" />
+                              {listing.city.split(' ')[0]}
+                           </span>
                         </div>
                       </div>
                     </Card>
@@ -155,6 +178,20 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
                 </div>
               );
             })}
+          </div>
+
+          {/* New Modern Pagination Dots */}
+          <div className="flex items-center justify-center gap-1.5 mt-4">
+             {[...Array(5)].map((_, i) => (
+                <button 
+                  key={i} 
+                  onClick={() => scrollToDot(i)}
+                  className={cn(
+                    "h-1 rounded-full transition-all duration-300 cursor-pointer",
+                    activeDot === i ? "w-6 bg-primary" : "w-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                  )} 
+                />
+             ))}
           </div>
         </div>
       </div>

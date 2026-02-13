@@ -8,6 +8,7 @@ import {
     BarChart,
     Bell,
     ChevronRight,
+    DollarSign,
     Home,
     Layers,
     LayoutDashboard,
@@ -33,6 +34,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 const navLinks = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard, description: 'Overview & stats' },
+  { href: '/admin/revenue', label: 'Revenue', icon: DollarSign, description: 'Earnings & transactions' },
   { href: '/admin/listings', label: 'Listings', icon: Package, description: 'Manage listings' },
   { href: '/admin/categories', label: 'Categories', icon: Layers, description: 'Manage hierarchy' },
   { href: '/admin/users', label: 'Users', icon: Users, description: 'User management' },

@@ -4,12 +4,66 @@ import { convex } from '@/lib/convex-server';
 import Stripe from 'stripe';
 import { api } from '../../convex/_generated/api';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error('STRIPE_SECRET_KEY is missing');
+}
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2026-01-28.clover' as any,
   typescript: true,
 });
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
+/**
+ * Creates a Stripe checkout session for listing promotion
+ */
+export async function createPromotionCheckoutSession(
+  listingId: string,
+  userId: string,
+  userEmail: string,
+  promotionName: string,
+  promotionTier: string, // e.g., 'PREMIUM', 'TOP_POSITION'
+  priceAmount: number
+) {
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'mkd',
+            product_data: {
+              name: `Listing Promotion: ${promotionName}`,
+              description: `Upgrade listing ${listingId} with ${promotionName} for 14 days`,
+            },
+            unit_amount: Math.round(priceAmount * 100), // Stripe expects cents
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: `${APP_URL}/?promoted=true&listingId=${listingId}&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${APP_URL}/listings/${listingId}/success`, // Return to success selection page
+      metadata: {
+        userId,
+        listingId,
+        tier: promotionTier,
+        type: 'LISTING_PROMOTION' // Distinct from SUBSCRIPTION
+      },
+      customer_email: userEmail,
+    });
+
+    return { url: session.url };
+  } catch (error) {
+    console.error('Error creating Stripe promotion session:', error);
+    throw new Error('Failed to create checkout session');
+  }
+}
+
+/**
+ * Existing subscription checkout (kept for reference/compatibility)
+ */
 export async function createStripeCheckoutSession(
   userId: string,
   userEmail: string,
@@ -28,18 +82,19 @@ export async function createStripeCheckoutSession(
               name: `${planName} Plan (${duration})`,
               description: `Subscription to ${planName} features for ${duration === 'monthly' ? '1 month' : '1 year'}`,
             },
-            unit_amount: Math.round(priceAmount * 100), // Stripe expects cents
+            unit_amount: Math.round(priceAmount * 100),
           },
           quantity: 1,
         },
       ],
-      mode: 'payment', // Using 'payment' for simplicity, 'subscription' requires Stripe Product IDs
+      mode: 'payment',
       success_url: `${APP_URL}/premium/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${APP_URL}/premium`,
       metadata: {
         userId,
         plan: planName,
         duration,
+        type: 'SUBSCRIPTION'
       },
       customer_email: userEmail,
     });
@@ -56,14 +111,36 @@ export async function verifyStripePayment(sessionId: string) {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
     if (session.payment_status === 'paid') {
-      const { userId, plan, duration } = session.metadata || {};
+      const { userId, plan, duration, listingId, tier, type } = session.metadata || {};
+
+      if (type === 'LISTING_PROMOTION') {
+         if (!listingId || !tier) throw new Error('Missing promotion metadata');
+         
+         // Apply promotion directly for immediate feedback
+         await convex.mutation(api.promotions.applyPromotion, {
+             listingId: listingId as any,
+             tier: tier
+         });
+
+         // Record Transaction
+         await convex.mutation(api.transactions.record, {
+             userId: userId || 'unknown',
+             amount: (session.amount_total || 0) / 100,
+             type: 'PROMOTION',
+             description: `Listing Promotion: ${tier}`,
+             status: 'COMPLETED',
+             stripeId: sessionId,
+             metadata: session.metadata
+         });
+
+         return { success: true, type: 'PROMOTION', tier };
+      }
 
       if (!userId || !plan || !duration) {
         throw new Error('Missing metadata in Stripe session');
       }
 
       // Perform the upgrade within Convex
-      // Note: We're calling the mutation from the server using the http client
       const amount = (session.amount_total || 0) / 100;
       
       await convex.mutation(api.users.upgradeMembership, {
@@ -71,6 +148,17 @@ export async function verifyStripePayment(sessionId: string) {
         plan: plan,
         duration: duration,
         price: amount,
+      });
+
+      // Record Transaction for Subscription (Duplicate check handled by mutation)
+      await convex.mutation(api.transactions.record, {
+          userId: userId,
+          amount: amount,
+          type: 'SUBSCRIPTION',
+          description: `${plan} Membership (${duration})`,
+          status: 'COMPLETED',
+          stripeId: sessionId,
+          metadata: session.metadata
       });
 
       return { success: true, plan };

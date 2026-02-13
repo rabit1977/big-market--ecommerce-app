@@ -255,6 +255,17 @@
     @apply mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 max-w-(--breakpoint-2xl) w-full;
   }
 
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
   /* ===== Page Wrapper - Consistent backgrounds ===== */
   .page-wrapper {
     @apply min-h-screen bg-background;

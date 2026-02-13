@@ -31,6 +31,7 @@ export interface Listing {
   isPromoted?: boolean;
   promotionTier?: string;
   priority?: number;
+  promotionExpiresAt?: number;
   previousPrice?: number;
 }
 

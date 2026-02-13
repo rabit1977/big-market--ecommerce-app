@@ -40,9 +40,15 @@ export async function POST(req: Request) {
         const session = event.data.object as Stripe.Checkout.Session;
         
         if (session.payment_status === 'paid') {
-          const { userId, plan, duration } = session.metadata || {};
+          const { userId, plan, duration, type, listingId, tier } = session.metadata || {};
           
-          if (userId && plan && duration) {
+          if (type === 'LISTING_PROMOTION' && listingId && tier) {
+            await convex.mutation(api.promotions.applyPromotion, {
+              listingId: listingId as any,
+              tier: tier,
+            });
+            console.log(`🚀 Promoted listing ${listingId} with ${tier}`);
+          } else if (userId && plan && duration) {
             const amount = (session.amount_total || 0) / 100;
             
             await convex.mutation(api.users.upgradeMembership, {

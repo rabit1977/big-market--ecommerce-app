@@ -16,7 +16,26 @@ import { api } from '../../../convex/_generated/api';
  * - Featured listings
  * - Latest listings
  */
-export default async function HomePage() {
+import { verifyStripePayment } from '@/actions/stripe-actions';
+
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function HomePage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const sessionId = params.session_id as string;
+  const promoted = params.promoted === 'true';
+
+  // If redirected from a successful promotion payment, verify it server-side immediately
+  if (sessionId && promoted) {
+    try {
+      await verifyStripePayment(sessionId);
+    } catch (e) {
+      console.error("Failed to verify promotion on homepage:", e);
+    }
+  }
+
   let categories: any[] = [];
   let allListings: any[] = [];
   let error = null;
@@ -33,10 +52,15 @@ export default async function HomePage() {
   }
 
   // Limit listings for display
-  const listings = allListings.slice(0, 16);
-  // Only show promoted listings in Hot Deals section
-  const featuredListings = allListings.filter((l: any) => l.isPromoted).slice(0, 8);
-  const latestListings = listings.slice(0, 12);
+  const now = Date.now();
+  
+  // 1. Get all currently promoted listings for the horizontal scroll
+  const featuredListings = allListings
+    .filter((l: any) => l.isPromoted && (!l.promotionExpiresAt || l.promotionExpiresAt > now))
+    .slice(0, 15);
+
+  // 2. Latest listings includes EVERYTHING, ordered by newest first (but our backend query 'get' already handles promotion sorting)
+  const latestListings = allListings.slice(0, 12);
 
   return (
     <>
@@ -61,7 +85,7 @@ export default async function HomePage() {
 
 
       {/* Stats Section */}
-      <StatsSection listingCount={listings.length} />
+      <StatsSection listingCount={allListings.length} />
     </>
   );
 }

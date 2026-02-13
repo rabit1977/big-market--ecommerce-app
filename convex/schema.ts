@@ -105,11 +105,13 @@ export default defineSchema({
     isAffordable: v.optional(v.boolean()), // For 'Povolni'
     isPromoted: v.optional(v.boolean()), // For promoted/featured listings
     promotionTier: v.optional(v.string()), // 'GOLD', 'SILVER', etc.
+    promotionExpiresAt: v.optional(v.number()),
     previousPrice: v.optional(v.number()),
   })
     .index("by_category", ["category"])
     .index("by_userId", ["userId"])
     .index("by_status", ["status"])
+    .index("by_promoted", ["isPromoted"])
     .index("by_createdAt", ["createdAt"])
     .index("by_status_createdAt", ["status", "createdAt"])
     .index("by_userId_createdAt", ["userId", "createdAt"])
@@ -245,8 +247,11 @@ export default defineSchema({
     type: v.string(), // "TOPUP", "SPEND", "REFUND"
     description: v.string(),
     status: v.string(), // "COMPLETED", "PENDING", "FAILED"
+    stripeId: v.optional(v.string()), // To prevent duplicate syncing
+    metadata: v.optional(v.any()),
     createdAt: v.number(),
-  }).index("by_user", ["userId"]),
+  }).index("by_user", ["userId"])
+    .index("by_stripeId", ["stripeId"]), // For efficient duplicate checking
 
   verificationRequests: defineTable({
     userId: v.string(),

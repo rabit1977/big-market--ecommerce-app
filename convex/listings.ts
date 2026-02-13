@@ -4,26 +4,47 @@ import { mutation, query } from "./_generated/server";
 export const get = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db
+    const listings = await ctx.db
       .query("listings")
       .withIndex("by_status", (q) => q.eq("status", "ACTIVE"))
       .order("desc")
       .collect();
+
+    const now = Date.now();
+    return listings.sort((a, b) => {
+        const isTopA = a.isPromoted && a.promotionTier === 'ELITE_PRIORITY' && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
+        const isTopB = b.isPromoted && b.promotionTier === 'ELITE_PRIORITY' && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
+        
+        if (isTopA && !isTopB) return -1;
+        if (!isTopA && isTopB) return 1;
+
+        // General promoted (any tier) next
+        const isPromotedA = a.isPromoted && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
+        const isPromotedB = b.isPromoted && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
+        
+        if (isPromotedA && !isPromotedB) return -1;
+        if (!isPromotedA && isPromotedB) return 1;
+
+        return (b.createdAt || b._creationTime) - (a.createdAt || a._creationTime);
+    });
   },
 });
 
 export const getFeatured = query({
   args: {},
   handler: async (ctx) => {
-    // Only return ACTIVE listings that have isPromoted set to true
+    const now = Date.now();
     const listings = await ctx.db
       .query("listings")
       .withIndex("by_status", (q) => q.eq("status", "ACTIVE"))
       .order("desc")
       .collect();
       
-    // Filter for promoted listings
-    return listings.filter(l => l.isPromoted === true);
+    // Filter for ACTIVE promoted listings
+    return listings.filter(l => 
+        l.isPromoted === true && 
+        (!l.promotionExpiresAt || l.promotionExpiresAt > now)
+    );
   },
 });
 
@@ -220,20 +241,36 @@ export const list = query({
 
     console.log(`Returning ${results.length} listings`);
 
-    // Sort logic
+    // Final sorting: Promoted (Top Positioning) first, then by user choice
+    const now = Date.now();
     return results.sort((a, b) => {
-      switch (args.sort) {
-          case 'price-asc': // Low to High
-              return a.price - b.price;
-          case 'price-desc': // High to Low
-              return b.price - a.price;
-          case 'oldest':
-              return (a.createdAt || 0) - (b.createdAt || 0);
-          case 'newest':
-          default:
-              // Fallback to Date
-              return (b.createdAt || b._creationTime) - (a.createdAt || a._creationTime);
-      }
+        // Helper to check if a listing has an active ELITE_PRIORITY promotion
+        const isTopA = a.isPromoted && a.promotionTier === 'ELITE_PRIORITY' && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
+        const isTopB = b.isPromoted && b.promotionTier === 'ELITE_PRIORITY' && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
+
+        if (isTopA && !isTopB) return -1;
+        if (!isTopA && isTopB) return 1;
+
+        // General promoted (any tier) next
+        const isPromotedA = a.isPromoted && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
+        const isPromotedB = b.isPromoted && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
+        
+        if (isPromotedA && !isPromotedB) return -1;
+        if (!isPromotedA && isPromotedB) return 1;
+
+        // Standard sorting
+        switch (args.sort) {
+            case 'price-asc': // Low to High
+                return a.price - b.price;
+            case 'price-desc': // High to Low
+                return b.price - a.price;
+            case 'oldest':
+                return (a.createdAt || 0) - (b.createdAt || 0);
+            case 'newest':
+            default:
+                // Fallback to Date
+                return (b.createdAt || b._creationTime) - (a.createdAt || a._creationTime);
+        }
     });
   },
 });
