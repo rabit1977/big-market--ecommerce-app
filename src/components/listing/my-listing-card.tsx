@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteListingAction, markAsSoldAction, renewListingAction } from '@/actions/listing-actions';
+import { deleteListingAction, renewListingAction } from '@/actions/listing-actions';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -24,7 +24,7 @@ import { ListingWithRelations } from '@/lib/types/listing';
 import { formatPrice } from '@/lib/utils/formatters';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
-import { Clock, Edit, MoreVertical, RefreshCw, Tag, Trash } from 'lucide-react';
+import { Clock, Edit, MoreVertical, RefreshCw, Trash } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTransition } from 'react';
@@ -48,16 +48,7 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
         });
     };
 
-    const handleMarkSold = async () => {
-        startTransition(async () => {
-            const res = await markAsSoldAction(listing.id!);
-            if(res.success) {
-                toast.success('Marked as sold');
-            } else {
-                toast.error(res.error || 'Failed to update');
-            }
-        });
-    };
+
 
     const handleRenew = async () => {
         startTransition(async () => {
@@ -109,12 +100,7 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
                           </Link>
                       </DropdownMenuItem>
                       
-                      {listing.status === 'ACTIVE' && (
-                          <DropdownMenuItem onClick={handleMarkSold}>
-                              <Tag className="h-4 w-4 mr-2" />
-                              Mark as Sold
-                          </DropdownMenuItem>
-                      )}
+
 
                       {listing.status !== 'ACTIVE' && (
                           <DropdownMenuItem onClick={handleRenew}>

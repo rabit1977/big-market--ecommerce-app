@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteListingAction, getRenewalStatsAction, markAsSoldAction, renewListingAction } from '@/actions/listing-actions';
+import { deleteListingAction, getRenewalStatsAction, renewListingAction } from '@/actions/listing-actions';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -46,16 +46,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
         });
     };
 
-    const handleMarkSold = async () => {
-        startTransition(async () => {
-             const res = await markAsSoldAction(listing.id!);
-             if(res.success) {
-                 toast.success('Marked as sold');
-             } else {
-                 toast.error(res.error || 'Failed to update');
-             }
-        });
-    };
+
 
     const handleRenewClick = async () => {
         if (listing.status === 'PENDING_APPROVAL') return;
@@ -115,11 +106,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                     <CheckCircle className="w-3 h-3 mr-1" /> Active
                  </Badge>
              )}
-             {listing.status === 'SOLD' && (
-                 <Badge variant="secondary" className="bg-foreground text-background border-0 text-[10px] uppercase tracking-wider font-bold h-6 px-2 rounded-lg">
-                    Sold Out
-                 </Badge>
-             )}
+
              {listing.status === 'PENDING_APPROVAL' && (
                  <Badge className="bg-amber-500 hover:bg-amber-600 text-white border-0 shadow-lg shadow-amber-500/20 text-[10px] uppercase tracking-wider font-bold h-6 px-2 rounded-lg">
                     <Clock className="w-3 h-3 mr-1" /> Pending Approval
