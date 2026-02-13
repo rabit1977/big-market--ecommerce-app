@@ -17,7 +17,7 @@ export default async function AdminListingsPage({ searchParams }: AdminListingsP
     ? await convex.query(api.admin.getPromotedListings) 
     : await convex.query(api.listings.list, { status });
   
-  const serializedListings = (listings || []).map(l => ({
+  const serializedListings = (listings || []).map((l: any) => ({
       ...l,
       _id: l._id,
       id: l._id,

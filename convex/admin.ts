@@ -65,3 +65,13 @@ export const getDailyDeltas = query({
     };
   },
 });
+
+export const getPromotedListings = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db
+      .query("listings")
+      .withIndex("by_promoted", (q) => q.eq("isPromoted", true))
+      .collect();
+  },
+});
