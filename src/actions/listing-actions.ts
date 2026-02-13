@@ -73,23 +73,7 @@ export async function deleteListingAction(id: string) {
     }
 }
 
-export async function markAsSoldAction(id: string) {
-    try {
-        const session = await auth();
-        if (!session?.user) return { success: false, error: "Unauthorized" };
 
-        await requireApproved(id);
-
-        await convex.mutation(api.listings.update, { 
-            id: id as any, 
-            status: 'SOLD' 
-        });
-        revalidatePath('/my-listings');
-        return { success: true };
-    } catch (e: any) {
-        return { success: false, error: e.message };
-    }
-}
 
 
 export async function renewListingAction(id: string) {

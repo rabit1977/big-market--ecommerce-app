@@ -64,3 +64,40 @@ export const runDailyRefreshes = mutation({
     return { count: listingsToRefresh.length };
   },
 });
+
+export const checkExpiringPromotions = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const now = Date.now();
+    const tomorrow = now + 24 * 60 * 60 * 1000;
+    const dayAfterTomorrow = tomorrow + 24 * 60 * 60 * 1000;
+
+    // Find promoted listings expiring between 24 and 48 hours from now
+    const expiringListings = await ctx.db
+      .query("listings")
+      .withIndex("by_promoted", (q) => q.eq("isPromoted", true))
+      .filter((q) => 
+        q.and(
+          q.gt(q.field("promotionExpiresAt"), tomorrow),
+          q.lt(q.field("promotionExpiresAt"), dayAfterTomorrow)
+        )
+      )
+      .collect();
+
+    console.log(`Sending expiry notifications for ${expiringListings.length} listings...`);
+
+    for (const listing of expiringListings) {
+      await ctx.db.insert("notifications", {
+        userId: listing.userId,
+        type: "PROMOTION_EXPIRING",
+        title: "Promotion Ending Soon",
+        message: `Your promotion for "${listing.title}" expires in 24 hours. Renew now to keep your position!`,
+        link: `/listings/${listing._id}`,
+        isRead: false,
+        createdAt: now,
+      });
+    }
+
+    return { count: expiringListings.length };
+  },
+});

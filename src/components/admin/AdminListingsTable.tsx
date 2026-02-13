@@ -103,8 +103,6 @@ export function AdminListingsTable({ listings }: AdminListingsTableProps) {
               return <Badge className="bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 border-amber-500/20 gap-1"><Clock className="w-3 h-3" /> Pending</Badge>;
           case 'REJECTED':
               return <Badge variant="destructive" className="gap-1"><XCircle className="w-3 h-3" /> Rejected</Badge>;
-          case 'SOLD':
-              return <Badge variant="secondary" className="gap-1">Sold</Badge>;
           default:
               return <Badge variant="outline">{status}</Badge>;
       }

@@ -9,6 +9,7 @@
  */
 
 import type * as activityLogs from "../activityLogs.js";
+import type * as admin from "../admin.js";
 import type * as analytics from "../analytics.js";
 import type * as categories from "../categories.js";
 import type * as checkCategories from "../checkCategories.js";
@@ -55,6 +56,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   activityLogs: typeof activityLogs;
+  admin: typeof admin;
   analytics: typeof analytics;
   categories: typeof categories;
   checkCategories: typeof checkCategories;

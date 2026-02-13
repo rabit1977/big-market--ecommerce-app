@@ -88,7 +88,7 @@ export default defineSchema({
     thumbnail: v.optional(v.string()),
     city: v.string(),
     region: v.optional(v.string()),
-    status: v.string(), // ACTIVE, SOLD, etc
+    status: v.string(), // ACTIVE, PENDING_APPROVAL, REJECTED, etc
     userId: v.string(), // Links to externalId
     createdAt: v.number(),
     viewCount: v.optional(v.number()),

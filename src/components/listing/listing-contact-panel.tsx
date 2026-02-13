@@ -21,8 +21,7 @@ import {
     MapPin,
     Phone,
     Shield,
-    User,
-    XCircle
+    User
 } from 'lucide-react';
 import { useMemo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
@@ -42,20 +41,7 @@ export function ListingContactPanel({
 
   // Status config
   const isActive = listing.status === 'ACTIVE';
-  const isSold = listing.status === 'SOLD';
-
   const statusConfig = useMemo(() => {
-    if (isSold) {
-      return {
-        label: 'Sold',
-        sublabel: 'No longer available',
-        color: 'text-red-600 dark:text-red-400',
-        bgColor: 'bg-red-500/10',
-        borderColor: 'border-red-500/20',
-        dotColor: 'bg-red-500',
-        icon: XCircle,
-      };
-    }
     if (!isActive) {
         return {
             label: listing.status,
@@ -76,7 +62,7 @@ export function ListingContactPanel({
       dotColor: 'bg-emerald-500',
       icon: CheckCircle,
     };
-  }, [isActive, isSold, listing.status]);
+  }, [isActive, listing.status]);
 
   const handleToggleWishlist = () => {
     startTransition(async () => {

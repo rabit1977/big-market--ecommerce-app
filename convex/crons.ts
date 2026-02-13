@@ -10,4 +10,10 @@ crons.daily(
   api.promotions.runDailyRefreshes
 );
 
+crons.daily(
+  "daily-promotion-expiry-check",
+  { hourUTC: 12, minuteUTC: 30 },
+  api.promotions.checkExpiringPromotions
+);
+
 export default crons;

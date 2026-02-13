@@ -3,7 +3,7 @@ import { QuestionsClient } from '@/components/admin/questions-client';
 import { MessageCircle } from 'lucide-react';
 
 export const metadata = {
-  title: 'Admin Questions | ElectroAdmin',
+  title: 'Q&A Management | Admin',
   description: 'Manage product Q&A',
 };
 
@@ -28,7 +28,7 @@ export default async function AdminQuestionsPage(props: AdminQuestionsPageProps)
         <div className='space-y-1'>
           <h1 className='text-xl sm:text-2xl lg:text-4xl font-black tracking-tight text-foreground flex items-center gap-2 sm:gap-3 flex-wrap'>
             <MessageCircle className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
-            Questions & Answers
+            Q&A Management
             <span className='inline-flex items-center justify-center px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-primary/10 text-primary text-xs font-bold ring-1 ring-inset ring-primary/20'>
               {total || 0}
             </span>

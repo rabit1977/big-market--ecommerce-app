@@ -257,13 +257,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                    </div>
                 </div>
 
-                {listing.status === 'SOLD' && (
-                  <div className="absolute inset-0 bg-black/70 backdrop-blur-[2px] flex items-center justify-center">
-                    <div className="bg-red-600 text-white text-3xl font-black px-12 py-4 rounded-xl shadow-2xl skew-x-[-12deg] border-4 border-white/20">
-                       SOLD OUT
-                    </div>
-                  </div>
-                )}
+
             </div>
 
             {/* Thumbnail Grid - Optimized Scrollable */}

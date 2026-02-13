@@ -59,7 +59,6 @@ export function DashboardClient({
   stats,
 }: DashboardClientProps) {
   const activeListings = userListings.filter((l) => l.status === 'ACTIVE');
-  const soldListings = userListings.filter((l) => l.status === 'SOLD');
   const expiredListings = userListings.filter((l) => l.status === 'EXPIRED');
 
   const handleEdit = (id: string) => {
@@ -73,10 +72,7 @@ export function DashboardClient({
     }
   };
 
-  const handleMarkAsSold = async (id: string) => {
-    // TODO: Implement update mutation
-    console.log('Marking as sold:', id);
-  };
+
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -148,14 +144,10 @@ export function DashboardClient({
 
         {/* Tabs */}
         <Tabs defaultValue="active" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+          <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid">
             <TabsTrigger value="active" className="gap-2">
               <CheckCircle2 className="w-4 h-4" />
               Active ({activeListings.length})
-            </TabsTrigger>
-            <TabsTrigger value="sold" className="gap-2">
-              <Package className="w-4 h-4" />
-              Sold ({soldListings.length})
             </TabsTrigger>
             <TabsTrigger value="favorites" className="gap-2">
               <Heart className="w-4 h-4" />
@@ -177,7 +169,6 @@ export function DashboardClient({
                     listing={listing}
                     onEdit={handleEdit}
                     onDelete={handleDelete}
-                    onMarkAsSold={handleMarkAsSold}
                   />
                 ))}
               </div>
@@ -191,29 +182,6 @@ export function DashboardClient({
                     <Button>Post Your First Listing</Button>
                   </Link>
                 }
-              />
-            )}
-          </TabsContent>
-
-          {/* Sold Listings */}
-          <TabsContent value="sold" className="space-y-4">
-            {soldListings.length > 0 ? (
-              <div className="grid grid-cols-1 gap-4">
-                {soldListings.map((listing) => (
-                  <ListingCard
-                    key={listing._id}
-                    listing={listing}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                    isSold
-                  />
-                ))}
-              </div>
-            ) : (
-              <EmptyState
-                icon={CheckCircle2}
-                title="No sold listings"
-                description="Items you've marked as sold will appear here"
               />
             )}
           </TabsContent>
@@ -271,14 +239,10 @@ function ListingCard({
   listing,
   onEdit,
   onDelete,
-  onMarkAsSold,
-  isSold = false,
 }: {
   listing: Listing;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-  onMarkAsSold?: (id: string) => void;
-  isSold?: boolean;
 }) {
   const imageUrl = listing.thumbnail || listing.images[0] || '/placeholder-listing.jpg';
   const timeAgo = formatDistanceToNow(new Date(listing.createdAt), {
@@ -297,11 +261,7 @@ function ListingCard({
               fill
               className="object-cover"
             />
-            {isSold && (
-              <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                <Badge className="bg-green-600">SOLD</Badge>
-              </div>
-            )}
+
           </div>
         </Link>
 
@@ -337,12 +297,7 @@ function ListingCard({
                     View
                   </Link>
                 </DropdownMenuItem>
-                {!isSold && onMarkAsSold && (
-                  <DropdownMenuItem onClick={() => onMarkAsSold(listing._id)}>
-                    <CheckCircle2 className="w-4 h-4 mr-2" />
-                    Mark as Sold
-                  </DropdownMenuItem>
-                )}
+
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => onDelete(listing._id)}

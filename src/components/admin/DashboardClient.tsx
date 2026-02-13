@@ -15,7 +15,6 @@ import {
     Package,
     Sparkles,
     Star,
-    Tag,
     Users
 } from 'lucide-react';
 import Link from 'next/link';
@@ -116,7 +115,6 @@ export default function DashboardClient({
     });
 
     const activeListings = listings.filter(l => l.status === 'ACTIVE').length;
-    const soldListings = listings.filter(l => l.status === 'SOLD').length;
 
     const listingTrend = calculateTrend(recentListings.length, previousListings.length);
     const userTrend = calculateTrend(recentUsers.length, previousUsers.length);
@@ -124,7 +122,6 @@ export default function DashboardClient({
     return {
         totalListings: listings.length,
         activeListings,
-        soldListings,
         totalUsers: users.length,
         recentListingsCount: recentListings.length,
         listingTrend,
@@ -229,13 +226,12 @@ export default function DashboardClient({
             href: '/admin/users',
           },
           {
-            title: 'Sold Items',
-            value: stats.soldListings,
-            icon: Tag,
-            description: 'Completed deals',
-            // trend: {}, 
+            title: 'Promoted',
+            value: listings.filter(l => (l as any).isPromoted).length,
+            icon: Sparkles,
+            description: 'Active promotions',
             color: 'emerald' as const,
-            href: '/admin/listings?status=SOLD',
+            href: '/admin/listings?promoted=true',
           },
           {
             title: 'Activity',

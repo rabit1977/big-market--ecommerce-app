@@ -1,5 +1,4 @@
 import { AdminListingsTable } from '@/components/admin/AdminListingsTable';
-import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { api, convex } from '@/lib/convex-server';
 
 export const metadata = {
@@ -7,12 +6,16 @@ export const metadata = {
 };
 
 interface AdminListingsPageProps {
-    searchParams: Promise<{ status?: string }>;
+    searchParams: Promise<{ status?: string; promoted?: string }>;
 }
 
 export default async function AdminListingsPage({ searchParams }: AdminListingsPageProps) {
-  const { status = 'ALL' } = await searchParams;
-  const listings = await convex.query(api.listings.list, { status });
+  const { status = 'ALL', promoted } = await searchParams;
+  const isPromoted = promoted === 'true';
+  
+  const listings = isPromoted 
+    ? await convex.query(api.admin.getPromotedListings) 
+    : await convex.query(api.listings.list, { status });
   
   const serializedListings = (listings || []).map(l => ({
       ...l,
@@ -26,8 +29,12 @@ export default async function AdminListingsPage({ searchParams }: AdminListingsP
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
             <div>
-                <h1 className="text-3xl font-bold tracking-tight">Manage Listings</h1>
-                <p className="text-muted-foreground">Monitor and manage all listings on the platform.</p>
+                <h1 className="text-3xl font-bold tracking-tight">
+                    {isPromoted ? 'Promoted Listings' : 'Manage Listings'}
+                </h1>
+                <p className="text-muted-foreground">
+                    {isPromoted ? 'View and monitor all currently promoted/featured listings.' : 'Monitor and manage all listings on the platform.'}
+                </p>
             </div>
             {/* Simple Status Filter Links */}
             <div className="flex items-center gap-2 bg-muted p-1 rounded-lg">
@@ -36,7 +43,6 @@ export default async function AdminListingsPage({ searchParams }: AdminListingsP
                     { label: 'Pending', value: 'PENDING_APPROVAL' },
                     { label: 'Active', value: 'ACTIVE' },
                     { label: 'Rejected', value: 'REJECTED' },
-                    { label: 'Sold', value: 'SOLD' }
                 ].map((s) => (
                     <a 
                         key={s.value} 

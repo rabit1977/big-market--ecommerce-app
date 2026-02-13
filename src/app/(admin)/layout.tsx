@@ -1,4 +1,4 @@
-import { AdminBottomNav, AdminMobileHeader, AdminSidebar } from '@/components/admin/admin-sidebar';
+import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import AdminAuthGuard from '@/components/auth/admin-auth-guard';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 
@@ -9,32 +9,20 @@ export default function AdminLayout({
 }) {
   return (
     <AdminAuthGuard>
-      <div className='flex min-h-screen relative'>
-        {/* Background Pattern */}
-        <div className='fixed inset-0 -z-10 bg-gradient-to-br from-muted/30 via-background to-muted/20 dark:from-background dark:via-background dark:to-muted/10' />
-        <div className='fixed inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(99,102,241,0.05),transparent)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(99,102,241,0.1),transparent)]' />
+      <div className='min-h-screen bg-background font-sans antialiased'>
         
-        {/* Admin Sidebar */}
         <AdminSidebar />
         
-        {/* Content Wrapper */}
-        <div className="flex-1 flex flex-col min-w-0 pt-16 lg:pt-0">
-          {/* Mobile Header */}
-          <AdminMobileHeader />
-          
-          {/* Main Content with bottom padding on mobile */}
-          <main className='flex-1 overflow-x-hidden pb-20 lg:pb-0'>
-            <div className='container-wide py-6 lg:py-8'>
-              <div className="mb-3">
-                <AppBreadcrumbs />
-              </div>
-              <div className='page-enter'>{children}</div>
-            </div>
-          </main>
+        <div className="lg:pl-64 flex flex-col min-h-screen transition-all duration-300 ease-in-out">
+            <main className="flex-1 py-20 lg:py-8 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto w-full">
+                <div className="mb-6">
+                    <AppBreadcrumbs />
+                </div>
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    {children}
+                </div>
+            </main>
         </div>
-
-        {/* Bottom Navigation for Mobile/Tablet */}
-        <AdminBottomNav />
       </div>
     </AdminAuthGuard>
   );

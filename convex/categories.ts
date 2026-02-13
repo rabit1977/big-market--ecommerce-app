@@ -8,6 +8,26 @@ export const list = query({
   },
 });
 
+export const getRoot = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db
+      .query("categories")
+      .filter((q) => q.eq(q.field("parentId"), null))
+      .collect();
+  },
+});
+
+export const getChildren = query({
+  args: { parentId: v.id("categories") },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("categories")
+      .withIndex("by_parentId", (q) => q.eq("parentId", args.parentId))
+      .collect();
+  },
+});
+
 export const getWithCounts = query({
   args: {},
   handler: async (ctx) => {
