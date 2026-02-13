@@ -208,8 +208,22 @@ export default async function CategoriesPage() {
         </div>
         
         {categories.length === 0 && (
-             <div className="text-center py-20 text-muted-foreground">
-                 <p>No categories found.</p>
+             <div className="text-center py-24 bg-card border border-border/50 rounded-3xl max-w-lg mx-auto">
+                 <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Globe className="w-8 h-8 text-muted-foreground/30" />
+                 </div>
+                 <h2 className="text-xl font-bold mb-2">No categories found</h2>
+                 <p className="text-muted-foreground mb-8 text-sm px-8">
+                     We couldn't load any categories. If this is a new environment, you may need to seed the database.
+                 </p>
+                 <div className="flex flex-col gap-2 px-12">
+                     <Link href="/" className="text-primary font-bold text-sm hover:underline">
+                        Return Home
+                     </Link>
+                     <p className="text-[10px] text-muted-foreground mt-4">
+                        Admin: Run `npx convex run seed:seedCategories` to populate data.
+                     </p>
+                 </div>
              </div>
         )}
 

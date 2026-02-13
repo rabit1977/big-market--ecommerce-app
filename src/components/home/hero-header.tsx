@@ -78,6 +78,7 @@ export const HeroHeader = () => {
 
             {/* Mobile: Filter Toggle Button - Rounded Pill */}
             <button
+              type="button"
               onClick={() => setShowFilters(!showFilters)}
               className={cn(
                 "md:hidden flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-300",
@@ -103,6 +104,7 @@ export const HeroHeader = () => {
             {QUICK_FILTERS.map((filter) => (
               <button
                 key={filter.id}
+                type="button"
                 onClick={() => toggleFilter(filter.id)}
                 className={cn(
                   "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold border transition-all duration-300 active:scale-95",

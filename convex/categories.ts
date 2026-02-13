@@ -35,7 +35,7 @@ export const getWithCounts = query({
   args: {},
   handler: async (ctx) => {
     const categories = await ctx.db.query("categories")
-      .filter(q => q.eq(q.field("isActive"), true))
+      .filter(q => q.neq(q.field("isActive"), false))
       .collect();
     
     const activeListings = await ctx.db.query("listings")
