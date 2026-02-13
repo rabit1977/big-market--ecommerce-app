@@ -13,7 +13,10 @@ export const getRoot = query({
   handler: async (ctx) => {
     return await ctx.db
       .query("categories")
-      .filter((q) => q.eq(q.field("parentId"), null))
+      .filter((q) => q.or(
+        q.eq(q.field("parentId"), undefined),
+        q.eq(q.field("parentId"), null)
+      ))
       .collect();
   },
 });
