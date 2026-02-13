@@ -54,9 +54,9 @@ export default async function HomePage({ searchParams }: PageProps) {
   // Limit listings for display
   const now = Date.now();
   
-  // 1. Get all currently promoted listings for the horizontal scroll
+  // 1. Get all currently promoted listings for the horizontal scroll (Excluding Auto Daily Refresh)
   const featuredListings = allListings
-    .filter((l: any) => l.isPromoted && (!l.promotionExpiresAt || l.promotionExpiresAt > now))
+    .filter((l: any) => l.isPromoted && l.promotionTier !== 'AUTO_DAILY_REFRESH' && (!l.promotionExpiresAt || l.promotionExpiresAt > now))
     .slice(0, 15);
 
   // 2. Latest listings includes EVERYTHING, ordered by newest first (but our backend query 'get' already handles promotion sorting)

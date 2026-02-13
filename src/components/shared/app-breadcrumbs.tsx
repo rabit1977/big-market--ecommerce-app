@@ -27,6 +27,7 @@ const routeMap: Record<string, string> = {
   'top-up': 'Top Up',
   'my-listings': 'My Listings',
   stats: 'Statistics',
+  categories: 'Explore Categories',
   favorites: 'Favorites',
   messages: 'Messages',
   'trade-in': 'Trade In',

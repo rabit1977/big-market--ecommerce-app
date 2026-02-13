@@ -18,9 +18,10 @@ export const get = query({
         if (isTopA && !isTopB) return -1;
         if (!isTopA && isTopB) return 1;
 
-        // General promoted (any tier) next
-        const isPromotedA = a.isPromoted && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
-        const isPromotedB = b.isPromoted && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
+        // General promoted (any tier) next, EXCEPT AUTO_DAILY_REFRESH
+        // Auto Daily Refresh only benefits from createdAt, it's not a sticky/high-vis slot
+        const isPromotedA = a.isPromoted && a.promotionTier !== 'AUTO_DAILY_REFRESH' && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
+        const isPromotedB = b.isPromoted && b.promotionTier !== 'AUTO_DAILY_REFRESH' && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
         
         if (isPromotedA && !isPromotedB) return -1;
         if (!isPromotedA && isPromotedB) return 1;
@@ -40,9 +41,10 @@ export const getFeatured = query({
       .order("desc")
       .collect();
       
-    // Filter for ACTIVE promoted listings
+    // Filter for ACTIVE promoted listings (Excluding Auto Daily Refresh)
     return listings.filter(l => 
         l.isPromoted === true && 
+        l.promotionTier !== 'AUTO_DAILY_REFRESH' &&
         (!l.promotionExpiresAt || l.promotionExpiresAt > now)
     );
   },
@@ -251,9 +253,9 @@ export const list = query({
         if (isTopA && !isTopB) return -1;
         if (!isTopA && isTopB) return 1;
 
-        // General promoted (any tier) next
-        const isPromotedA = a.isPromoted && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
-        const isPromotedB = b.isPromoted && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
+        // General promoted (any tier) next, EXCEPT AUTO_DAILY_REFRESH
+        const isPromotedA = a.isPromoted && a.promotionTier !== 'AUTO_DAILY_REFRESH' && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
+        const isPromotedB = b.isPromoted && b.promotionTier !== 'AUTO_DAILY_REFRESH' && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
         
         if (isPromotedA && !isPromotedB) return -1;
         if (!isPromotedA && isPromotedB) return 1;
