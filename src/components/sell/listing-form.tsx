@@ -242,7 +242,7 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
                       onSuccess(res.listing as any); 
                   } else {
                       toast.success('Listing created!');
-                      router.push(`/listings/${res.listing.id}`);
+                      router.push(`/listings/${res.listing.id}/success`);
                   }
               } else {
                   toast.error('error' in res ? res.error : 'Failed to create');

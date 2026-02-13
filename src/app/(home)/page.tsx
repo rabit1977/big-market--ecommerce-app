@@ -34,7 +34,8 @@ export default async function HomePage() {
 
   // Limit listings for display
   const listings = allListings.slice(0, 16);
-  const featuredListings = listings.slice(0, 8);
+  // Only show promoted listings in Hot Deals section
+  const featuredListings = allListings.filter((l: any) => l.isPromoted).slice(0, 8);
   const latestListings = listings.slice(0, 12);
 
   return (

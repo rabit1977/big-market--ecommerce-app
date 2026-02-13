@@ -52,14 +52,19 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
   const [isPending, startTransition] = useTransition();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState('');
 
   const handleDeleteClick = useCallback((user: User) => {
     setUserToDelete(user);
+    setDeleteConfirmation('');
     setShowDeleteDialog(true);
   }, []);
 
   const handleConfirmDelete = useCallback(async () => {
     if (!userToDelete) return;
+    
+    // extra safety check
+    if (deleteConfirmation !== `Delete ${userToDelete.name || 'User'}`) return;
 
     startTransition(async () => {
       try {
@@ -69,6 +74,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
           toast.success(result.message || `User "${userToDelete.name}" deleted successfully`);
           setShowDeleteDialog(false);
           setUserToDelete(null);
+          setDeleteConfirmation('');
           router.refresh();
         } else {
           toast.error(result.error || 'Failed to delete user');
@@ -78,11 +84,12 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
         toast.error(error instanceof Error ? error.message : 'Failed to delete user');
       }
     });
-  }, [userToDelete, router]);
+  }, [userToDelete, router, deleteConfirmation]);
 
   const handleCancelDelete = useCallback(() => {
     setShowDeleteDialog(false);
     setUserToDelete(null);
+    setDeleteConfirmation('');
   }, []);
 
   if (users.length === 0) {
@@ -348,6 +355,21 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
               ({userToDelete?.email}) and remove all their data from the system.
             </AlertDialogDescription>
           </AlertDialogHeader>
+          
+          <div className="space-y-2">
+              <label htmlFor="confirm-delete" className="block text-sm font-medium text-foreground">
+                  To confirm, type <span className="font-bold select-all">Delete {userToDelete?.name || 'User'}</span> below:
+              </label>
+              <input
+                id="confirm-delete"
+                type="text"
+                className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                placeholder={`Delete ${userToDelete?.name || 'User'}`}
+                value={deleteConfirmation}
+                onChange={(e) => setDeleteConfirmation(e.target.value)}
+                autoComplete="off"
+              />
+          </div>
           <AlertDialogFooter className='flex-col sm:flex-row gap-2'>
             <AlertDialogCancel 
               onClick={handleCancelDelete}
@@ -357,8 +379,14 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleConfirmDelete}
-              disabled={isPending}
+              onClick={(e) => {
+                if (deleteConfirmation !== `Delete ${userToDelete?.name || 'User'}`) {
+                    e.preventDefault();
+                    return;
+                }
+                handleConfirmDelete();
+              }}
+              disabled={isPending || deleteConfirmation !== `Delete ${userToDelete?.name || 'User'}`}
               className='w-full sm:w-auto bg-destructive text-destructive-foreground hover:bg-destructive/90'
             >
               {isPending ? (

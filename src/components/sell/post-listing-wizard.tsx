@@ -153,11 +153,12 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
       };
 
       // Submit to Convex
-      await createListing(listingData);
+      // Submit to Convex
+      const listingId = await createListing(listingData);
       
-      // Redirect to my-listings page
+      // Redirect to success page
       import('sonner').then(({ toast }) => toast.success('Listing submitted for approval!'));
-      window.location.href = '/my-listings';
+      window.location.href = `/listings/${listingId}/success`;
     } catch (error: any) {
       console.error('Error creating listing:', error);
       import('sonner').then(({ toast }) => toast.error(`Failed to create listing: ${error.message || 'Unknown error'}`));

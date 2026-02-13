@@ -12,6 +12,21 @@ export const get = query({
   },
 });
 
+export const getFeatured = query({
+  args: {},
+  handler: async (ctx) => {
+    // Only return ACTIVE listings that have isPromoted set to true
+    const listings = await ctx.db
+      .query("listings")
+      .withIndex("by_status", (q) => q.eq("status", "ACTIVE"))
+      .order("desc")
+      .collect();
+      
+    // Filter for promoted listings
+    return listings.filter(l => l.isPromoted === true);
+  },
+});
+
 export const list = query({
   args: { 
     category: v.optional(v.string()), 
