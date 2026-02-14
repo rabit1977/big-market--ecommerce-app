@@ -23,7 +23,8 @@ export const PROMOTIONS = [
         bgColor: 'bg-amber-500/5',
         borderColor: 'border-amber-500/20',
         badgeColor: 'bg-amber-500',
-        icon: 'Star'
+        icon: 'Star',
+        isMain: false
     },
     {
         id: 'PREMIUM_SECTOR',
@@ -35,7 +36,8 @@ export const PROMOTIONS = [
         bgColor: 'bg-blue-500/5',
         borderColor: 'border-blue-500/20',
         badgeColor: 'bg-blue-500',
-        icon: 'Crown'
+        icon: 'Crown',
+        isMain: false
     },
     {
         id: 'LISTING_HIGHLIGHT',
@@ -47,7 +49,8 @@ export const PROMOTIONS = [
         bgColor: 'bg-emerald-500/5',
         borderColor: 'border-emerald-500/20',
         badgeColor: 'bg-emerald-600',
-        icon: 'Eye'
+        icon: 'Eye',
+        isMain: false
     },
     {
         id: 'AUTO_DAILY_REFRESH',
@@ -59,7 +62,8 @@ export const PROMOTIONS = [
         bgColor: 'bg-purple-600/5',
         borderColor: 'border-purple-600/20',
         badgeColor: 'bg-purple-600',
-        icon: 'Zap'
+        icon: 'Zap',
+        isMain: false
     }
 ] as const;
 
