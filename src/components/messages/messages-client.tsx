@@ -334,7 +334,7 @@ export function MessagesClient({
               </ScrollArea>
 
               {/* Input Area */}
-              <div className="p-2.5 md:p-3 border-t border-border/50 bg-muted/30 relative z-[60]">
+              <div className="p-2.5 md:p-3 border-t border-border/50 bg-background relative z-[100] pb-safe">
                 <form 
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -356,16 +356,21 @@ export function MessagesClient({
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
-                        // Form onSubmit will handle this
+                        e.preventDefault();
+                        handleSendMessage();
                       }
                     }}
-                    className="flex-1 h-10 md:h-11 text-sm md:text-base bg-background border-border rounded-xl focus-visible:ring-primary shadow-sm px-4"
+                    className="flex-1 h-10 md:h-11 text-sm md:text-base bg-secondary/50 border-transparent focus:bg-background focus:border-primary/20 rounded-xl focus-visible:ring-offset-0 px-4"
                   />
                   <Button
-                    type="submit"
+                    type="button" 
+                    onClick={(e) => {
+                        e.preventDefault();
+                        handleSendMessage();
+                    }}
                     disabled={!newMessage.trim() || !activeConversation}
                     size="icon"
-                    className="h-10 w-10 md:h-11 md:w-11 rounded-xl shrink-0 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all z-10"
+                    className="h-10 w-10 md:h-11 md:w-11 rounded-xl shrink-0 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all z-10 touch-manipulation active:scale-95"
                   >
                     <Send className="w-5 h-5" />
                   </Button>

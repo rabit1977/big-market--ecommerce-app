@@ -275,6 +275,11 @@
     @apply py-12 sm:py-16 lg:py-20;
   }
 
+  /* Safe Area Utilities */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
   /* Premium Glassmorphism */
   .glass {
     @apply backdrop-blur-xl;
