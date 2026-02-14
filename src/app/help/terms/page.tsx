@@ -16,6 +16,7 @@ import {
     Globe,
     Info,
     Key,
+    LayoutList,
     Lock,
     Mail,
     MapPin,
@@ -195,6 +196,31 @@ export default function TermsPage() {
                                         <div className="space-y-6">
                                             <p>Користиме колачиња (Cookies) за оптимизирање на нашите услуги и правилно функционирање на платформата. Колачињата се мали текстуални датотеки кои се зачувуваат на Вашиот компјутер.</p>
                                             <p>Поделени се според функцијата: задолжителни, за перформанси, за функционалност, за рекламирање и за сесија. Информациите се анонимни. Можете да ги исклучите во подесувањата на вашиот пребарувач, но во тој случај некои функции нема да бидат достапни.</p>
+                                        </div>
+                                    </AccordionContent>
+                                </AccordionItem>
+                                
+                                <AccordionItem value="ads" id="ads" className="border-b border-border/50 px-6 md:px-10">
+                                    <AccordionTrigger className="hover:no-underline py-8 text-left group">
+                                        <div className="flex items-center gap-5">
+                                            <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                                <LayoutList className="w-6 h-6 text-blue-600" />
+                                            </div>
+                                            <div>
+                                                <div className="font-black text-xl">Објавување и Управување со огласи</div>
+                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Posting & Managing Ads</div>
+                                            </div>
+                                        </div>
+                                    </AccordionTrigger>
+                                    <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
+                                        <div className="space-y-6">
+                                            <p><strong>Објавување огласи:</strong> Биг Маркет нуди професионална околина за комерцијални и приватни огласи. Со секое објавување, корисникот гарантира дека информациите (наслов, опис, цена) се точни, вистинити и не доведуваат во заблуда.</p>
+                                            
+                                            <p><strong>Квалитет на содржина:</strong> За одржување на високиот стандард, сите огласи мора да содржат реални и квалитетни фотографии. Платформата го задржува правото да отстрани содржини кои се преземени од трети страни без дозвола или имаат слаба видливост.</p>
+                                            
+                                            <p><strong>Времетраење и Обнова:</strong> Огласите имаат однапред дефиниран рок на траење. Корисникот е одговорен за навремено ажурирање на достапноста на предметот или услугата. Промовираните огласи добиваат приоритетен статус во период од **14 дена**.</p>
+                                            
+                                            <p><strong>Фер-плеј политика:</strong> Строго е забрането дуплирање на огласи за ист предмет во различни категории или локации. Системското прекршување на ова правило води кон автоматска суспензија на корисничкиот профил.</p>
                                         </div>
                                     </AccordionContent>
                                 </AccordionItem>

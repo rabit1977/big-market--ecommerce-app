@@ -103,10 +103,10 @@ const helpCategories = [
         icon: BadgeCheck,
         color: 'text-blue-600',
         bgColor: 'bg-blue-600/10',
-        href: '/account/verification',
+        href: '/help/certification',
         items: [
-            { label: 'How to get certified', href: '/account/verification' },
-            { label: 'Benefits of Verified Badge', href: '/premium' }
+            { label: 'How to get certified', href: '/help/certification#steps' },
+            { label: 'Benefits of Verified Badge', href: '/help/certification#benefits' }
         ]
     }
 ];
