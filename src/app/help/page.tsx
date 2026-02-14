@@ -22,6 +22,7 @@ import {
     UserPlus
 } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const helpCategories = [
     {
@@ -108,16 +109,38 @@ const helpCategories = [
             { label: 'How to get certified', href: '/help/certification#steps' },
             { label: 'Benefits of Verified Badge', href: '/help/certification#benefits' }
         ]
+    },
+    {
+        title: 'Questions & Answers',
+        description: 'Common inquiries regarding listing management, security, and account operations.',
+        icon: CircleHelp,
+        color: 'text-orange-500',
+        bgColor: 'bg-orange-500/10',
+        href: '/help/faq',
+        items: [
+            { label: 'How to contact sellers', href: '/help/faq#contact' },
+            { label: 'Modifying your ads', href: '/help/faq#editing' }
+        ]
     }
 ];
 
 const socialLinks = [
-    { label: 'Facebook', value: 'bigmarket.facebook', icon: ExternalLink, href: '#' },
-    { label: 'Marketing', value: 'Advertise with us', icon: Flag, href: '#' },
-    { label: 'About Us', value: 'Who we are', icon: BadgeCheck, href: '#' },
+    { label: 'Facebook', value: 'Big Market Official', icon: ExternalLink, href: '#' },
+    { label: 'Partner with us', value: 'Affiliate & Marketing', icon: Flag, href: '/services' },
+    { label: 'About Us', value: 'The Trusted Marketplace', icon: BadgeCheck, href: '/about' },
 ];
 
 export default function HelpPage() {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) {
+        return <div className="min-h-screen bg-background" />;
+    }
+
     return (
         <div className="min-h-screen bg-background pb-20">
             {/* Hero Section */}
@@ -139,7 +162,6 @@ export default function HelpPage() {
                         <p className="text-lg text-muted-foreground mb-10">
                             Search our knowledge base or browse categories below to find answers to your questions.
                         </p>
-
                         <div className="relative max-w-xl mx-auto group">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <Input 
