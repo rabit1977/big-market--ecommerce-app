@@ -26,6 +26,18 @@ export const PROMOTIONS = [
         icon: 'Star'
     },
     {
+        id: 'PREMIUM_SECTOR',
+        title: 'Premium Sector',
+        description: 'Maximum visibility and improved reach. Your ad will be especially recognizable, getting more visitors and responses. Exclusive ads are shown on the right side of search results.',
+        days: '14 days',
+        price: 100,
+        color: 'text-blue-500',
+        bgColor: 'bg-blue-500/5',
+        borderColor: 'border-blue-500/20',
+        badgeColor: 'bg-blue-500',
+        icon: 'Crown'
+    },
+    {
         id: 'LISTING_HIGHLIGHT',
         title: 'Listing Highlight',
         description: 'Your ad will be marked with a different background color in search results, separating it from other classifieds and catching the eye directly.',
