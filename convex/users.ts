@@ -318,18 +318,33 @@ export const getMyDashboardStats = query({
      const activeListings = listings.filter(l => l.status === 'ACTIVE').length;
      const totalViews = listings.reduce((acc, curr) => acc + (curr.viewCount || 0), 0);
      
-     // 2. Spend Today
+     // 2. Spend Stats
      const now = new Date();
      const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
      
      const transactions = await ctx.db
         .query("transactions")
         .withIndex("by_user", (q) => q.eq("userId", args.externalId))
-        .filter(q => q.gte(q.field("createdAt"), startOfDay))
         .collect();
         
      const spendToday = transactions
-        .filter(t => t.type === 'SPEND' || t.type === 'PROMOTE')
+        .filter(t => t.createdAt >= startOfDay && (
+            t.type === 'SPEND' || 
+            t.type === 'PROMOTE' || 
+            t.type === 'PROMOTION' || 
+            t.type === 'LISTING_PROMOTION' ||
+            t.type === 'SUBSCRIPTION'
+        ))
+        .reduce((acc, curr) => acc + curr.amount, 0);
+
+     const totalSpend = transactions
+        .filter(t => 
+            t.type === 'SPEND' || 
+            t.type === 'PROMOTE' || 
+            t.type === 'PROMOTION' || 
+            t.type === 'LISTING_PROMOTION' || 
+            t.type === 'SUBSCRIPTION'
+        )
         .reduce((acc, curr) => acc + curr.amount, 0);
           
      return {
@@ -344,12 +359,18 @@ export const getMyDashboardStats = query({
              companyName: user.companyName,
              accountType: user.accountType,
              accountStatus: user.accountStatus,
+             // Quotas
+             listingLimit: user.listingLimit || 50, // Default to 50 as per request
+             listingsPostedCount: user.listingsPostedCount || 0,
+             monthlyRenewalsUsed: user.monthlyRenewalsUsed || 0,
+             canRefreshListings: user.canRefreshListings,
          },
          stats: {
              activeListings,
              totalViews,
              spendToday,
-             renewedToday: 0
+             totalSpend,
+             renewedToday: user.monthlyRenewalsUsed || 0 // Using this as a proxy for "Renewals Used" generally
          }
      };
   }

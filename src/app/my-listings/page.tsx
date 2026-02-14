@@ -14,12 +14,25 @@ export const metadata = {
   title: 'My Listings',
 };
 
+import { verifyStripePayment } from '@/actions/stripe-actions';
+
+// ... other imports ...
+
 interface MyListingsPageProps {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; session_id?: string; promoted?: string }>;
 }
 
 export default async function MyListingsPage({ searchParams }: MyListingsPageProps) {
-  const { q } = await searchParams;
+  const { q, session_id, promoted } = await searchParams;
+
+  if (session_id && promoted === 'true') {
+      try {
+          await verifyStripePayment(session_id);
+      } catch (e) {
+          console.error("Failed to verify promotion:", e);
+      }
+  }
+
   const { success, listings, error } = await getMyListingsAction(q);
 
   if (!success) {

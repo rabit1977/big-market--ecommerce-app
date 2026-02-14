@@ -43,7 +43,7 @@ export async function createPromotionCheckoutSession(
         },
       ],
       mode: 'payment',
-      success_url: `${APP_URL}/?promoted=true&listingId=${listingId}&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${APP_URL}/my-listings?promoted=true&listingId=${listingId}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${APP_URL}/listings/${listingId}/success`, // Return to success selection page
       metadata: {
         userId,

@@ -390,9 +390,7 @@ export const renewListing = mutation({
 
     const now = new Date();
     const currentMonth = now.getMonth();
-    const currentDay = now.getDate();
-    const currentYear = now.getFullYear();
-
+    
     // 1. Reset Monthly Quota if Month Changed
     let monthlyUsed = user.monthlyRenewalsUsed ?? 0;
     if (user.lastRenewalMonth !== currentMonth) {
@@ -404,32 +402,21 @@ export const renewListing = mutation({
         throw new Error("Monthly renewal limit (15) reached.");
     }
 
-    // 3. Check Daily Limit (Once per day per user)
-    if (user.lastRenewalTimestamp) {
-        const lastDate = new Date(user.lastRenewalTimestamp);
-        if (lastDate.getDate() === currentDay && 
-            lastDate.getMonth() === currentMonth && 
-            lastDate.getFullYear() === currentYear &&
-            user.role !== 'ADMIN') {
-            throw new Error("You have already renewed a listing today. Only one renewal per day is allowed.");
-        }
-    }
-
-    // 4. Perform Renewal (Update createdAt to move to top)
+    // 3. Perform Renewal (Update createdAt to move to top)
     await ctx.db.patch(args.id, {
         createdAt: Date.now(),
         // Keep active status if it was already active
         status: listing.status === 'PENDING_APPROVAL' ? 'PENDING_APPROVAL' : 'ACTIVE'
     });
 
-    // 5. Update User Stats
+    // 4. Update User Stats
     await ctx.db.patch(user._id, {
         monthlyRenewalsUsed: monthlyUsed + 1,
         lastRenewalTimestamp: Date.now(),
         lastRenewalMonth: currentMonth
     });
 
-    return { success: true, remainingMonthly: 14 - monthlyUsed };
+    return { success: true, remainingMonthly: 15 - (monthlyUsed + 1) };
   }
 });
 
@@ -445,28 +432,17 @@ export const getRenewalStats = query({
 
         const now = new Date();
         const currentMonth = now.getMonth();
-        const currentDay = now.getDate();
         
         let monthlyUsed = user.monthlyRenewalsUsed ?? 0;
         if (user.lastRenewalMonth !== currentMonth) {
             monthlyUsed = 0;
         }
 
-        let hasUsedToday = false;
-        if (user.lastRenewalTimestamp) {
-            const lastDate = new Date(user.lastRenewalTimestamp);
-            if (lastDate.getDate() === currentDay && 
-                lastDate.getMonth() === currentMonth && 
-                lastDate.getFullYear() === now.getFullYear()) {
-                hasUsedToday = true;
-            }
-        }
-
         return {
             usedThisMonth: monthlyUsed,
             limitMonthly: 15,
             remainingMonthly: 15 - monthlyUsed,
-            hasUsedToday,
+            hasUsedToday: false, // Deprecated concept
             totalLimit: user.listingLimit ?? 50,
             totalPosted: user.listingsPostedCount ?? 0
         };
@@ -561,6 +537,24 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("listings") },
   handler: async (ctx, args) => {
+    // 1. Find the listing to get the owner
+    const listing = await ctx.db.get(args.id);
+    if (!listing) return; // Already deleted or not found
+
+    // 2. Find the user
+    const user = await ctx.db
+        .query("users")
+        .withIndex("by_externalId", (q) => q.eq("externalId", listing.userId))
+        .unique();
+
+    // 3. Decrement count if user exists and count > 0
+    if (user && (user.listingsPostedCount || 0) > 0) {
+        await ctx.db.patch(user._id, {
+            listingsPostedCount: (user.listingsPostedCount || 1) - 1
+        });
+    }
+
+    // 4. Delete the listing
     await ctx.db.delete(args.id);
   },
 });

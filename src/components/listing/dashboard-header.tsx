@@ -42,11 +42,11 @@ export function MyListingsDashboardHeader() {
   const isCompany = user.accountType === 'COMPANY';
   const displayName = isCompany && user.companyName ? user.companyName : user.name;
   
-  const renewalStats = {
-      daily: stats.renewedToday || 0,
-      weekly: 12,
-      monthly: 45
-  };
+  // Quota Limits (User specific or defaults)
+  const renewalsLimit = 15; 
+  const renewalsUsed = user.monthlyRenewalsUsed || 0;
+  const listingsLimit = user.listingLimit || 50;
+  const listingsUsed = user.listingsPostedCount || 0;
 
   return (
     <div className="space-y-4 md:space-y-6 mb-6 md:mb-8">
@@ -118,23 +118,26 @@ export function MyListingsDashboardHeader() {
 
       {/* 2. Scrollable Stats Section */}
       <div className="flex overflow-x-auto pb-4 gap-3 md:gap-4 snap-x md:grid md:grid-cols-4 md:overflow-visible md:pb-0 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-none">
-          {/* Money Spent Today */}
+          {/* Money Spent Total */}
           <Card className="min-w-[200px] md:min-w-0 snap-center rounded-[1.5rem] border-border shadow-sm hover:shadow-md hover:border-rose-500/30 transition-all bg-card group cursor-default">
               <CardContent className="p-4 md:p-5 flex flex-col justify-between h-full">
                   <div className="flex items-center justify-between mb-3">
                       <div className="w-9 h-9 md:w-10 md:h-10 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500 group-hover:bg-rose-500 group-hover:text-white transition-colors">
                           <DollarSign className="w-5 h-5" />
                       </div>
-                      <span className="text-[9px] font-black text-rose-500 bg-rose-500/10 px-2 py-1 rounded-lg uppercase tracking-wider">Today</span>
+                      <span className="text-[9px] font-black text-rose-500 bg-rose-500/10 px-2 py-1 rounded-lg uppercase tracking-wider">Lifetime</span>
                   </div>
                   <div>
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Spent</p>
-                      <h3 className="text-xl md:text-2xl font-black text-foreground tracking-tight group-hover:text-rose-500 transition-colors">{stats.spendToday.toFixed(2)} <span className="text-[10px] font-bold text-muted-foreground">MKD</span></h3>
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Total Spent</p>
+                      <h3 className="text-xl md:text-2xl font-black text-foreground tracking-tight group-hover:text-rose-500 transition-colors">
+                          {/* @ts-ignore - totalSpend added in backend but types might flag */}
+                          {(stats.totalSpend || 0).toFixed(2)} <span className="text-[10px] font-bold text-muted-foreground">MKD</span>
+                      </h3>
                   </div>
               </CardContent>
           </Card>
 
-          {/* Renewal Stats */}
+          {/* Renewal & Listing Quotas */}
           <Card className="min-w-[280px] md:min-w-0 snap-center rounded-[1.5rem] border-border shadow-sm hover:shadow-md hover:border-primary/30 transition-all md:col-span-2 bg-card group cursor-default">
               <CardContent className="p-4 md:p-5">
                   <div className="flex items-center gap-3 mb-4">
@@ -142,22 +145,24 @@ export function MyListingsDashboardHeader() {
                           <RefreshCw className="w-5 h-5" />
                       </div>
                       <div>
-                          <h3 className="font-black text-foreground text-sm uppercase tracking-tight">Renewals</h3>
-                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Recent Activity</p>
+                          <h3 className="font-black text-foreground text-sm uppercase tracking-tight">Account Limits</h3>
+                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Quota Usage</p>
                       </div>
                   </div>
-                  <div className="grid grid-cols-3 gap-4 border-t border-border/50 pt-3">
+                  <div className="grid grid-cols-2 gap-4 border-t border-border/50 pt-3">
                       <div>
-                          <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest mb-1">Daily</p>
-                          <p className="text-lg md:text-xl font-black text-foreground group-hover:text-primary transition-colors">{renewalStats.daily}</p>
+                          <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest mb-1">Renewals</p>
+                          <div className="flex items-baseline gap-1">
+                            <p className="text-lg md:text-xl font-black text-foreground group-hover:text-primary transition-colors">{renewalsUsed}</p>
+                            <span className="text-xs font-bold text-muted-foreground">/ {renewalsLimit}</span>
+                          </div>
                       </div>
                       <div className="border-l-2 border-border/50 pl-4">
-                          <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest mb-1">Weekly</p>
-                          <p className="text-lg md:text-xl font-black text-foreground">{renewalStats.weekly}</p>
-                      </div>
-                      <div className="border-l-2 border-border/50 pl-4">
-                          <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest mb-1">Monthly</p>
-                          <p className="text-lg md:text-xl font-black text-foreground">{renewalStats.monthly}</p>
+                          <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest mb-1">Listings Posted</p>
+                          <div className="flex items-baseline gap-1">
+                            <p className="text-lg md:text-xl font-black text-foreground">{listingsUsed}</p>
+                            <span className="text-xs font-bold text-muted-foreground">/ {listingsLimit}</span>
+                          </div>
                       </div>
                   </div>
               </CardContent>

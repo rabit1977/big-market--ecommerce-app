@@ -66,14 +66,17 @@ export const getRevenueStats = query({
     const now = new Date();
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
 
-    // Filter transactions for TODAY only
-    const transactions = await ctx.db
+    // Get ALL transactions
+    const allTransactions = await ctx.db
         .query("transactions")
-        .filter(q => q.gte(q.field("createdAt"), startOfDay))
         .collect();
 
+    // Filter for TODAY for daily stats if needed, but Total Revenue should be ALL time
+    const transactions = allTransactions; 
+
     // Initialize aggregators
-    let totalRevenue = 0; // This will now represent "Revenue Today"
+    let totalRevenue = 0; 
+    let revenueToday = 0;
     
     // Revenue by Source
     let verificationRevenue = 0;
@@ -89,30 +92,72 @@ export const getRevenueStats = query({
     };
 
     for (const t of transactions) {
-        if (t.status !== 'COMPLETED') continue;
+        // Basic invalid check
+        if (t.status && t.status !== 'COMPLETED') continue;
 
+        // Sum Total Revenue (All Time)
         totalRevenue += t.amount;
+
+        // Sum Today's Revenue
+        if (t.createdAt >= startOfDay) {
+            revenueToday += t.amount;
+        }
 
         if (t.type === 'SUBSCRIPTION') {
             verificationRevenue += t.amount;
         } else if (t.type === 'PROMOTION' || t.type === 'LISTING_PROMOTION') {
             promotionRevenue += t.amount;
             
-            // Description format from sync: "Listing Promotion: TIER_NAME" or just "TIER_NAME"
-            const desc = t.description.toUpperCase().replace(/_/g, ' '); // Normalize underscores to spaces for easier matching
+            // Description check for tiers...
+                // Description format from sync: "Listing Promotion: TIER_NAME" or just "TIER_NAME"
+                // const desc = (t.description || "").toUpperCase().replace(/_/g, ' '); 
+                const desc = typeof t.description === 'string' ? t.description.toUpperCase().replace(/_/g, ' ') : "";
             
             if (desc.includes('TOP POSITIONING')) {
                 revenueByTier['TOP_POSITIONING'] += t.amount;
             } else if (desc.includes('PREMIUM SECTOR') || desc.includes('ELITE PRIORITY')) {
-                revenueByTier['PREMIUM_SECTOR'] += t.amount;
-            } else if (desc.includes('LISTING HIGHLIGHT')) {
-                revenueByTier['LISTING_HIGHLIGHT'] += t.amount;
-            } else if (desc.includes('DAILY REFRESH') || desc.includes('AUTO DAILY REFRESH')) {
-                revenueByTier['AUTO_DAILY_REFRESH'] += t.amount;
-            } else {
-                revenueByTier['OTHER'] += t.amount;
+                // ... map accordingly
             }
+             // ... simplify the loop to just sum totals, reusing existing logic structure but without the date filter blocking it.
         }
+    }
+
+    // Re-implementing the loop cleanly with the correct logic:
+    
+    // Reset counters to be safe
+    totalRevenue = 0;
+    verificationRevenue = 0;
+    promotionRevenue = 0;
+    
+    // Revenue by Tier (for promotions)
+    const tierStats: Record<string, number> = {
+        "TOP_POSITIONING": 0,
+        "PREMIUM_SECTOR": 0,
+        "LISTING_HIGHLIGHT": 0,
+        "AUTO_DAILY_REFRESH": 0
+    };
+
+    for (const t of transactions) {
+         if (t.status !== 'COMPLETED') continue;
+
+         totalRevenue += t.amount;
+         
+         if (t.createdAt >= startOfDay) {
+             revenueToday += t.amount;
+         }
+
+         if (t.type === 'SUBSCRIPTION') {
+             verificationRevenue += t.amount;
+         } else if (t.type === 'PROMOTION' || t.type === 'LISTING_PROMOTION') {
+             promotionRevenue += t.amount;
+             
+             const desc = (t.description || "").toUpperCase().replace(/_/g, ' ');
+             
+             if (desc.includes('TOP POSITIONING')) tierStats['TOP_POSITIONING'] += t.amount;
+             else if (desc.includes('PREMIUM SECTOR') || desc.includes('ELITE PRIORITY')) tierStats['PREMIUM_SECTOR'] += t.amount;
+             else if (desc.includes('LISTING HIGHLIGHT')) tierStats['LISTING_HIGHLIGHT'] += t.amount;
+             else if (desc.includes('DAILY REFRESH') || desc.includes('AUTO DAILY REFRESH')) tierStats['AUTO_DAILY_REFRESH'] += t.amount;
+         }
     }
 
     // VAT Calculation (18%)
@@ -140,13 +185,13 @@ export const getRevenueStats = query({
     );
 
     return {
-        totalRevenue, // Gross Total (Inclusive of VAT)
+        totalRevenue, // Gross Total (Inclusive of VAT) - Now ALL TIME
         netRevenue,   // Net Total (Exclusive of VAT)
         vatRevenue,   // VAT Amount
-        monthRevenue: totalRevenue, 
+        monthRevenue: revenueToday, // Using 'revenueToday' logic for the "today" stat if UI asks for month/today
         verificationRevenue,
         promotionRevenue,
-        revenueByTier,
+        revenueByTier: tierStats,
         recentTransactions: recentWithUser
     };
   },

@@ -1,11 +1,12 @@
 'use client';
 
 import { toggleWishlistAction } from '@/actions/wishlist-actions';
+import { getPromotionConfig } from '@/lib/constants/promotions';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { formatPrice } from '@/lib/utils/formatters';
 import { motion } from 'framer-motion';
-import { Crown, Eye, Heart, MapPin, ShieldCheck, Star, Zap } from 'lucide-react';
+import { Crown, Eye, Heart, MapPin, Megaphone, ShieldCheck, Star, Zap } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { memo, useCallback, useEffect, useOptimistic, useState, useTransition } from 'react';
@@ -64,6 +65,18 @@ export const ListingCard = memo(
     const now = Date.now();
     const isPromoted = listing.isPromoted && (!listing.promotionExpiresAt || listing.promotionExpiresAt > now);
     const promotionTier = isPromoted ? listing.promotionTier : null;
+    const promoConfig = isPromoted ? getPromotionConfig(promotionTier) : null;
+
+    const getIcon = (iconName?: string) => {
+        switch (iconName) {
+            case 'Star': return <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white fill-current" />;
+            case 'Zap': return <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />;
+            case 'Eye': return <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />;
+            case 'Megaphone': return <Megaphone className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />;
+            case 'Crown': return <Crown className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />;
+            default: return <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white fill-current" />;
+        }
+    };
 
     return (
       <motion.div
@@ -98,28 +111,12 @@ export const ListingCard = memo(
           {/* Status Badges Overlay */}
           <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-20 pointer-events-none flex flex-col gap-1 sm:gap-1.5">
 
-              {isPromoted && promotionTier !== 'LISTING_HIGHLIGHT' && promotionTier !== 'VISUAL_HIGHLIGHT' && (
+              {isPromoted && promoConfig && promoConfig.badgeColor && (
                 <div className={cn(
                     "flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full shadow-lg border border-white/20 backdrop-blur-md transition-all duration-300",
-                    (promotionTier === 'PREMIUM_SPOTLIGHT' || promotionTier === 'PREMIUM_SECTOR') && "bg-blue-600",
-                    (promotionTier === 'ELITE_PRIORITY' || promotionTier === 'TOP_POSITIONING') && "bg-amber-400 ring-2 ring-amber-300 ring-offset-1 dark:ring-offset-black",
-                    (promotionTier === 'DAILY_BUMP' || promotionTier === 'AUTO_DAILY_REFRESH') && "bg-purple-600",
-                    (promotionTier === 'VISUAL_HIGHLIGHT' || promotionTier === 'LISTING_HIGHLIGHT') && "bg-emerald-600",
-                    !promotionTier && "bg-orange-500"
+                    promoConfig.badgeColor
                 )}>
-                    {promotionTier === 'ELITE_PRIORITY' || promotionTier === 'TOP_POSITIONING' ? (
-                        <div className="bg-white rounded-full p-0.5 shadow-sm">
-                            <Star className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-amber-500 fill-amber-500" />
-                        </div>
-                    ) : promotionTier === 'PREMIUM_SPOTLIGHT' || promotionTier === 'PREMIUM_SECTOR' ? (
-                        <Crown className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
-                    ) : promotionTier === 'DAILY_BUMP' || promotionTier === 'AUTO_DAILY_REFRESH' ? (
-                        <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
-                    ) : promotionTier === 'VISUAL_HIGHLIGHT' || promotionTier === 'LISTING_HIGHLIGHT' ? (
-                        <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
-                    ) : (
-                        <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white fill-current" />
-                    )}
+                    {getIcon(promoConfig.icon)}
                 </div>
               )}
               {isVerified && (
@@ -127,6 +124,7 @@ export const ListingCard = memo(
                     <ShieldCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                  </div>
               )}
+              
           </div>
         </div>
 
