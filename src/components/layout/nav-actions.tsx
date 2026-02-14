@@ -187,7 +187,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   
   const supportItems: MenuItem[] = [
     { href: '/help', icon: HelpCircle, label: 'Help Center' },
-    { href: '/contact', icon: MessageSquare, label: 'Contact Support' },
+    { href: '/messages?type=SUPPORT', icon: MessageSquare, label: 'Live Support Chat', iconColor: 'text-primary' },
   ];
 
   const adminItems: MenuItem[] = user?.role === 'ADMIN' ? [

@@ -10,18 +10,32 @@ export const metadata = {
   description: 'Your conversations on Big Market',
 };
 
-export default async function MessagesPage() {
+interface MessagesPageProps {
+  searchParams: Promise<{ listingId?: string; type?: string }>;
+}
+
+export default async function MessagesPage({ searchParams }: MessagesPageProps) {
   // Check authentication
   const session = await auth();
+  const { listingId } = await searchParams;
   
   if (!session?.user) {
-    redirect('/auth/signin?callbackUrl=/messages');
+    redirect(`/auth/signin?callbackUrl=/messages${listingId ? `?listingId=${listingId}` : ''}`);
   }
 
   // Fetch conversations
   const conversations = await fetchQuery(api.messages.getConversations, {
     userId: session.user.id!,
   });
+
+  // If we have a listingId and no existing conversation, fetch the listing to start a virtual one
+  let listingDetails = null;
+  if (listingId) {
+      const exists = conversations.find(c => c.listingId === listingId);
+      if (!exists) {
+          listingDetails = await fetchQuery(api.listings.getById, { id: listingId as any });
+      }
+  }
 
   return (
     <div className="min-h-screen pt-4 md:pt-6 pb-8 bg-background">
@@ -30,6 +44,7 @@ export default async function MessagesPage() {
         <MessagesClient
           conversations={conversations as any}
           userId={session.user.id!}
+          newConversationListing={listingDetails as any}
         />
       </div>
     </div>

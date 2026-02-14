@@ -14,6 +14,7 @@ import {
     MessageSquare,
     Search,
     Send,
+    ShieldAlert,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -31,7 +32,8 @@ interface Message {
 
 interface Conversation {
   _id: string;
-  listingId: string;
+  type?: 'LISTING' | 'SUPPORT';
+  listingId?: string;
   buyerId: string;
   sellerId: string;
   lastMessageAt: number;
@@ -45,20 +47,35 @@ interface Conversation {
     images: string[];
   } | null;
   otherUserId: string;
+  otherUser?: {
+    name?: string;
+    image?: string;
+    isVerified?: boolean;
+  };
 }
 
 interface MessagesClientProps {
   conversations: Conversation[];
   userId: string;
+  newConversationListing?: {
+    _id: string;
+    title: string;
+    price: number;
+    thumbnail?: string;
+    images: string[];
+    userId: string;
+  } | null;
 }
 
 export function MessagesClient({
   conversations: initialConversations,
   userId,
+  newConversationListing,
 }: MessagesClientProps) {
   const conversations = (useQuery(api.messages.getConversations, { userId }) as Conversation[] | undefined) || initialConversations;
   
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
+  const [virtualConversation, setVirtualConversation] = useState<Conversation | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -83,45 +100,84 @@ export function MessagesClient({
   }, [messages]);
 
   useEffect(() => {
-      const params = new URLSearchParams(window.location.search);
-      const listingId = params.get('listingId');
-      if (listingId && conversations) {
-          const found = conversations.find(c => c.listingId === listingId);
-          if (found) {
-              handleSelectConversation(found);
-          }
+    const params = new URLSearchParams(window.location.search);
+    const listingId = params.get('listingId');
+    const type = params.get('type');
+    
+    if (conversations) {
+      if (listingId) {
+        const found = conversations.find((c) => c.listingId === listingId);
+        if (found) {
+          handleSelectConversation(found);
+        } else if (newConversationListing && newConversationListing._id === listingId) {
+            // Start virtual chat for listing
+            setVirtualConversation({
+                _id: 'virtual-listing-' + listingId,
+                type: 'LISTING',
+                listingId: listingId,
+                buyerId: userId,
+                sellerId: newConversationListing.userId,
+                otherUserId: newConversationListing.userId,
+                lastMessageAt: Date.now(),
+                listing: newConversationListing,
+            } as any);
+        }
+      } else if (type === 'SUPPORT') {
+        const found = conversations.find((c) => c.type === 'SUPPORT');
+        if (found) {
+          handleSelectConversation(found);
+        } else {
+          // Virtual support conversation
+          setVirtualConversation({
+            _id: 'virtual-support',
+            type: 'SUPPORT',
+            buyerId: userId,
+            sellerId: 'ADMIN',
+            otherUserId: 'ADMIN',
+            lastMessageAt: Date.now(),
+          } as any);
+        }
       }
-  }, [conversations]);
+    }
+  }, [conversations, userId, newConversationListing]);
 
   const handleSelectConversation = async (conversation: Conversation) => {
+    setVirtualConversation(null);
     setSelectedConversation(conversation);
     if (conversation.unreadCount && conversation.unreadCount > 0) {
-        await markReadMutation({
-            listingId: conversation.listingId as any,
-            userId: userId,
-            otherUserId: conversation.otherUserId
-        });
+      await markReadMutation({
+        listingId: (conversation.listingId as any) || undefined,
+        userId: userId,
+        otherUserId: conversation.otherUserId,
+      });
     }
   };
+
+  const activeConversation = selectedConversation || virtualConversation;
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !selectedConversation) return;
+    if (!newMessage.trim() || !activeConversation) return;
     try {
-        await sendMessageMutation({
-            content: newMessage,
-            listingId: selectedConversation.listingId as any,
-            senderId: userId,
-            receiverId: selectedConversation.otherUserId,
-        });
-        setNewMessage('');
+      await sendMessageMutation({
+        content: newMessage,
+        listingId: (activeConversation.listingId as any) || undefined,
+        senderId: userId,
+        receiverId: activeConversation.otherUserId,
+        type: activeConversation.type,
+      });
+      setNewMessage('');
+      // If it was virtual, the query will eventually pick up the new real conversation
+      // and the useEffect will select it.
     } catch (error) {
-        console.error("Failed to send", error);
+      console.error("Failed to send", error);
     }
   };
 
-  const filteredConversations = (conversations || []).filter((conv) =>
-    conv.listing?.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredConversations = (conversations || []).filter((conv) => {
+    const titleMatch = conv.listing?.title.toLowerCase().includes(searchQuery.toLowerCase()) || false;
+    const supportMatch = conv.type === 'SUPPORT' && 'support'.includes(searchQuery.toLowerCase());
+    return titleMatch || supportMatch;
+  });
 
   const showChatOnMobile = !!selectedConversation;
 
@@ -163,8 +219,15 @@ export function MessagesClient({
 
           {/* Conversation List */}
           <ScrollArea className="flex-1">
-            {filteredConversations.length > 0 ? (
+            {(filteredConversations.length > 0 || virtualConversation) ? (
               <div className="divide-y divide-border/50">
+                {virtualConversation && (
+                  <ConversationItem
+                    conversation={virtualConversation}
+                    isSelected={true}
+                    onClick={() => {}}
+                  />
+                )}
                 {filteredConversations.map((conversation) => (
                   <ConversationItem
                     key={conversation._id}
@@ -192,7 +255,7 @@ export function MessagesClient({
           "bg-card border border-border rounded-xl md:rounded-2xl flex flex-col overflow-hidden",
           showChatOnMobile ? "flex" : "hidden lg:flex"
         )}>
-          {selectedConversation ? (
+          {activeConversation ? (
             <>
               {/* Chat Header */}
               <div className="p-2.5 md:p-3 border-b border-border/50 flex items-center gap-2.5">
@@ -200,46 +263,69 @@ export function MessagesClient({
                   variant="ghost"
                   size="icon"
                   className="lg:hidden h-7 w-7 rounded-lg"
-                  onClick={() => setSelectedConversation(null)}
+                  onClick={() => {
+                      setSelectedConversation(null);
+                      setVirtualConversation(null);
+                  }}
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                 </Button>
 
-                <Link
-                  href={`/listings/${selectedConversation.listingId}`}
-                  className="flex items-center gap-2.5 flex-1 hover:bg-muted/50 p-1.5 rounded-lg transition-colors min-w-0"
-                >
-                  {selectedConversation.listing?.thumbnail && (
-                    <div className="relative w-9 h-9 md:w-10 md:h-10 rounded-lg overflow-hidden bg-muted shrink-0">
-                      <Image
-                        src={selectedConversation.listing.thumbnail}
-                        alt={selectedConversation.listing.title}
-                        fill
-                        className="object-cover"
-                      />
+                {activeConversation.type === 'SUPPORT' ? (
+                  <div className="flex items-center gap-2.5 flex-1 p-1.5 rounded-lg min-w-0">
+                    <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <ShieldAlert className="w-5 h-5 text-primary" />
                     </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-xs md:text-sm line-clamp-1 text-foreground">
-                      {selectedConversation.listing?.title}
-                    </p>
-                    <p className="text-[10px] md:text-xs text-primary font-bold">
-                      €{selectedConversation.listing?.price.toLocaleString()}
-                    </p>
+                    <div>
+                      <p className="font-bold text-xs md:text-sm text-foreground">Big Market Support</p>
+                      <p className="text-[10px] md:text-xs text-muted-foreground font-medium">Internal Help Desk</p>
+                    </div>
                   </div>
-                </Link>
+                ) : (
+                  <Link
+                    href={`/listings/${activeConversation.listingId}`}
+                    className="flex items-center gap-2.5 flex-1 hover:bg-muted/50 p-1.5 rounded-lg transition-colors min-w-0"
+                  >
+                    {activeConversation.listing?.thumbnail && (
+                      <div className="relative w-9 h-9 md:w-10 md:h-10 rounded-lg overflow-hidden bg-muted shrink-0">
+                        <Image
+                          src={activeConversation.listing.thumbnail}
+                          alt={activeConversation.listing.title}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-xs md:text-sm line-clamp-1 text-foreground">
+                        {activeConversation.listing?.title}
+                      </p>
+                      <p className="text-[10px] md:text-xs text-primary font-bold">
+                        €{activeConversation.listing?.price.toLocaleString()}
+                      </p>
+                    </div>
+                  </Link>
+                )}
               </div>
 
               {/* Messages */}
               <ScrollArea className="flex-1 p-3 md:p-4">
                 <div className="space-y-2.5 md:space-y-3">
-                  {messages.map((message: any) => (
-                    <MessageBubble
-                      key={message._id}
-                      message={message}
-                      isOwn={message.senderId === userId}
-                    />
-                  ))}
+                  {messages.length > 0 ? (
+                    messages.map((message: any) => (
+                      <MessageBubble
+                        key={message._id}
+                        message={message}
+                        isOwn={message.senderId === userId}
+                      />
+                    ))
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-full py-12 text-center opacity-40">
+                      <MessageSquare className="w-8 h-8 mb-2" />
+                      <p className="text-xs font-bold uppercase tracking-widest">No messages yet</p>
+                      <p className="text-[10px] max-w-[150px] mx-auto">Send your first message to start the conversation.</p>
+                    </div>
+                  )}
                   <div ref={messagesEndRef} />
                 </div>
               </ScrollArea>
@@ -306,6 +392,8 @@ function ConversationItem({
     addSuffix: true,
   });
 
+  const isSupport = conversation.type === 'SUPPORT';
+
   return (
     <button
       onClick={onClick}
@@ -314,16 +402,22 @@ function ConversationItem({
         isSelected && "bg-primary/5 border-l-2 border-l-primary"
       )}
     >
-      <UserAvatar 
-        user={{ id: conversation.otherUserId } as any}
-        fallbackText={conversation.otherUserId.substring(0, 2).toUpperCase()}
-        className="shrink-0 w-9 h-9 md:w-10 md:h-10"
-      />
+      {isSupport ? (
+        <div className="shrink-0 w-9 h-9 md:w-10 md:h-10 rounded-full bg-primary/10 flex items-center justify-center">
+          <ShieldAlert className="w-5 h-5 text-primary" />
+        </div>
+      ) : (
+        <UserAvatar 
+          user={{ id: conversation.otherUserId } as any}
+          fallbackText={conversation.otherUserId.substring(0, 2).toUpperCase()}
+          className="shrink-0 w-9 h-9 md:w-10 md:h-10"
+        />
+      )}
 
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-1.5 mb-0.5">
           <p className="font-bold text-xs md:text-sm line-clamp-1 text-foreground">
-            {conversation.listing?.title}
+            {isSupport ? "Big Market Support" : (conversation.listing?.title || "Unknown Listing")}
           </p>
           <span className="text-[9px] md:text-[10px] text-muted-foreground shrink-0 font-medium mt-0.5">
             {timeAgo}
@@ -333,9 +427,11 @@ function ConversationItem({
           {conversation.lastMessage}
         </p>
         <div className="flex items-center gap-1.5">
-          <span className="text-[10px] md:text-xs font-bold text-primary">
-            €{conversation.listing?.price.toLocaleString()}
-          </span>
+          {!isSupport && (
+            <span className="text-[10px] md:text-xs font-bold text-primary">
+              €{conversation.listing?.price.toLocaleString()}
+            </span>
+          )}
           {conversation.unreadCount && conversation.unreadCount > 0 && (
             <Badge className="h-4 min-w-4 px-1 text-[9px] font-bold bg-primary text-primary-foreground rounded-full">
               {conversation.unreadCount}

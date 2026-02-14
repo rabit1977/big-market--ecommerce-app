@@ -4,28 +4,48 @@ import { mutation, query } from "./_generated/server";
 export const send = mutation({
   args: {
     content: v.string(),
-    listingId: v.id("listings"),
+    listingId: v.optional(v.id("listings")),
     senderId: v.string(),
     receiverId: v.string(),
+    type: v.optional(v.string()), // 'LISTING' or 'SUPPORT'
   },
   handler: async (ctx, args) => {
-    // 1. Check if conversation rights exist
-    const existingConversation = await ctx.db
-      .query("conversations")
-      .withIndex("by_listing", (q) => q.eq("listingId", args.listingId))
-      .filter((q) =>
-        q.or(
-          q.and(
-            q.eq(q.field("buyerId"), args.senderId),
-            q.eq(q.field("sellerId"), args.receiverId)
-          ),
-          q.and(
-            q.eq(q.field("buyerId"), args.receiverId),
-            q.eq(q.field("sellerId"), args.senderId)
+    const type = args.type || (args.listingId ? "LISTING" : "SUPPORT");
+    const participantIds = [args.senderId, args.receiverId].sort();
+
+    // 1. Check if conversation exists
+    let existingConversation;
+    
+    if (args.listingId) {
+      existingConversation = await ctx.db
+        .query("conversations")
+        .withIndex("by_listing", (q) => q.eq("listingId", args.listingId!))
+        .filter((q) =>
+          q.or(
+            q.and(
+              q.eq(q.field("buyerId"), args.senderId),
+              q.eq(q.field("sellerId"), args.receiverId)
+            ),
+            q.and(
+              q.eq(q.field("buyerId"), args.receiverId),
+              q.eq(q.field("sellerId"), args.senderId)
+            )
           )
         )
-      )
-      .first();
+        .first();
+    } else {
+      // Support or generic chat
+      existingConversation = await ctx.db
+        .query("conversations")
+        .withIndex("by_type", (q) => q.eq("type", type))
+        .filter((q) => 
+          q.and(
+            q.eq(q.field("buyerId"), participantIds[0]),
+            q.eq(q.field("sellerId"), participantIds[1])
+          )
+        )
+        .first();
+    }
 
     // 2. Create or Update Conversation
     if (existingConversation) {
@@ -37,18 +57,23 @@ export const send = mutation({
     } else {
       // Create new
       await ctx.db.insert("conversations", {
+        type,
         listingId: args.listingId,
-        buyerId: args.senderId,
-        sellerId: args.receiverId,
+        buyerId: args.listingId ? args.senderId : participantIds[0],
+        sellerId: args.listingId ? args.receiverId : participantIds[1],
         lastMessage: args.content,
         lastMessageAt: Date.now(),
         unreadCount: 1,
+        participantIds,
       });
     }
 
     // 3. Insert Message
     return await ctx.db.insert("messages", {
-      ...args,
+      content: args.content,
+      listingId: args.listingId,
+      senderId: args.senderId,
+      receiverId: args.receiverId,
       read: false,
       createdAt: Date.now(),
     });
@@ -64,22 +89,37 @@ export const list = query({
 
 export const getConversation = query({
   args: {
-    listingId: v.id("listings"),
+    listingId: v.optional(v.id("listings")),
     userA: v.string(),
     userB: v.string(),
   },
   handler: async (ctx, args) => {
-    const messages = await ctx.db
-      .query("messages")
-      .withIndex("by_listing", (q) => q.eq("listingId", args.listingId))
-      .collect();
+    let messages;
+    if (args.listingId) {
+      messages = await ctx.db
+        .query("messages")
+        .withIndex("by_listing", (q) => q.eq("listingId", args.listingId!))
+        .collect();
+    } else {
+      messages = await ctx.db
+        .query("messages")
+        .filter((q) =>
+          q.or(
+            q.and(q.eq(q.field("senderId"), args.userA), q.eq(q.field("receiverId"), args.userB)),
+            q.and(q.eq(q.field("senderId"), args.userB), q.eq(q.field("receiverId"), args.userA))
+          )
+        )
+        .collect();
+    }
 
-    // Filter for just these two users
-    return messages.filter(
-      (m) =>
-        (m.senderId === args.userA && m.receiverId === args.userB) ||
-        (m.senderId === args.userB && m.receiverId === args.userA)
-    ).sort((a, b) => a.createdAt - b.createdAt);
+    // Filter and sort
+    return messages
+      .filter(
+        (m) =>
+          (m.senderId === args.userA && m.receiverId === args.userB) ||
+          (m.senderId === args.userB && m.receiverId === args.userA)
+      )
+      .sort((a, b) => a.createdAt - b.createdAt);
   },
 });
 
@@ -122,10 +162,10 @@ export const getConversations = query({
       .order("desc")
       .collect();
 
-    // Fetch listing details for each conversation
+    // Fetch details for each conversation
     const conversationsWithDetails = await Promise.all(
       conversations.map(async (conv) => {
-        const listing = await ctx.db.get(conv.listingId);
+        const listing = conv.listingId ? await ctx.db.get(conv.listingId) : null;
         const otherUserId =
           conv.buyerId === args.userId ? conv.sellerId : conv.buyerId;
 
@@ -167,7 +207,7 @@ export const getUnreadCount = query({
 // Mark conversation as read
 export const markConversationAsRead = mutation({
   args: {
-    listingId: v.id("listings"),
+    listingId: v.optional(v.id("listings")),
     userId: v.string(),
     otherUserId: v.string(),
   },
@@ -176,7 +216,9 @@ export const markConversationAsRead = mutation({
       .query("messages")
       .filter((q) =>
         q.and(
-          q.eq(q.field("listingId"), args.listingId),
+          args.listingId 
+            ? q.eq(q.field("listingId"), args.listingId)
+            : q.eq(q.field("listingId"), undefined),
           q.eq(q.field("senderId"), args.otherUserId),
           q.eq(q.field("receiverId"), args.userId),
           q.eq(q.field("read"), false)
@@ -189,11 +231,12 @@ export const markConversationAsRead = mutation({
     );
 
     // Update conversation unread count
-    const conversation = await ctx.db
-      .query("conversations")
-      .filter((q) =>
-        q.and(
-          q.eq(q.field("listingId"), args.listingId),
+    let conversation;
+    if (args.listingId) {
+      conversation = await ctx.db
+        .query("conversations")
+        .withIndex("by_listing", (q) => q.eq("listingId", args.listingId!))
+        .filter((q) =>
           q.or(
             q.and(
               q.eq(q.field("buyerId"), args.userId),
@@ -205,8 +248,19 @@ export const markConversationAsRead = mutation({
             )
           )
         )
-      )
-      .first();
+        .first();
+    } else {
+        const participantIds = [args.userId, args.otherUserId].sort();
+        conversation = await ctx.db
+            .query("conversations")
+            .filter((q) => 
+                q.and(
+                    q.eq(q.field("buyerId"), participantIds[0]),
+                    q.eq(q.field("sellerId"), participantIds[1])
+                )
+            )
+            .first();
+    }
 
     if (conversation) {
       await ctx.db.patch(conversation._id, { unreadCount: 0 });

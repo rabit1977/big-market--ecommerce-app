@@ -140,7 +140,7 @@ export default defineSchema({
 
   messages: defineTable({
     content: v.string(),
-    listingId: v.id("listings"),
+    listingId: v.optional(v.id("listings")),
     senderId: v.string(),
     receiverId: v.string(),
     read: v.boolean(),
@@ -151,15 +151,18 @@ export default defineSchema({
     .index("by_conversation", ["senderId", "receiverId", "listingId"]),
 
   conversations: defineTable({
-    listingId: v.id("listings"),
-    buyerId: v.string(),
-    sellerId: v.string(),
+    type: v.optional(v.string()), // 'LISTING' or 'SUPPORT'
+    listingId: v.optional(v.id("listings")),
+    buyerId: v.string(), // For SUPPORT chat, this is the user
+    sellerId: v.string(), // For SUPPORT chat, this is 'ADMIN'
     lastMessageAt: v.number(),
     lastMessage: v.optional(v.string()),
     unreadCount: v.optional(v.number()),
+    participantIds: v.optional(v.array(v.string())), // Better for multi-type lookups
   }).index("by_buyer", ["buyerId"])
     .index("by_seller", ["sellerId"])
     .index("by_listing", ["listingId"])
+    .index("by_type", ["type"])
     .index("by_participants", ["buyerId", "sellerId", "listingId"]),
     
   analytics: defineTable({
