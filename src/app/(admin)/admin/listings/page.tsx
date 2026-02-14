@@ -32,6 +32,7 @@ export default async function AdminListingsPage({ searchParams }: AdminListingsP
                 <h1 className="text-3xl font-bold tracking-tight">
                     {isPromoted ? 'Promoted Listings' : 'Manage Listings'}
                 </h1>
+                
                 <p className="text-muted-foreground">
                     {isPromoted ? 'View and monitor all currently promoted/featured listings.' : 'Monitor and manage all listings on the platform.'}
                 </p>
