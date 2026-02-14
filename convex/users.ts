@@ -506,3 +506,30 @@ export const backfillAccountStatus = mutation({
     return { message: `Backfilled ${updated} users to ACTIVE` };
   }
 });
+
+// Admin: Get full user details including listings and transactions
+export const getAdminUserDetails = query({
+  args: { id: v.id("users") },
+  handler: async (ctx, args) => {
+    const user = await ctx.db.get(args.id);
+    if (!user) return null;
+
+    // Get user's listings
+    const listings = await ctx.db
+      .query("listings")
+      .withIndex("by_userId", (q) => q.eq("userId", user.externalId))
+      .collect();
+
+    // Get user's transactions
+    const transactions = await ctx.db
+      .query("transactions")
+      .withIndex("by_user", (q) => q.eq("userId", user.externalId))
+      .collect();
+
+    return {
+      ...user,
+      listings,
+      transactions,
+    };
+  },
+});

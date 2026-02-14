@@ -2,7 +2,7 @@
 
 import { auth } from '@/auth';
 import { api, convex } from '@/lib/convex-server';
-import { User, UserWithRelations } from '@/lib/types';
+import { User } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 export type UserRole = 'USER' | 'ADMIN';
 
@@ -50,13 +50,13 @@ export async function getAllUsersAction(): Promise<{ success: boolean; data: Use
 }
 
 /**
- * Get user by ID (admin only)
+ * Get user by ID with full details (admin only)
  */
-export async function getUserByIdAction(userId: string): Promise<{ success: boolean; data: UserWithRelations | null; error?: string }> {
+export async function getUserByIdAction(userId: string): Promise<{ success: boolean; data: any | null; error?: string }> {
   try {
     await requireAdmin();
 
-    const user = await convex.query(api.users.getById, { id: userId as any });
+    const user = await convex.query(api.users.getAdminUserDetails, { id: userId as any });
 
     if (!user) {
       return {
@@ -75,9 +75,14 @@ export async function getUserByIdAction(userId: string): Promise<{ success: bool
           role: (user.role as 'USER' | 'ADMIN') || 'USER',
           createdAt: new Date(user._creationTime || (user as any).createdAt || Date.now()),
           updatedAt: new Date(user._creationTime || (user as any).createdAt || Date.now()),
-          orders: [], // No orders in classifieds
-          reviews: [], // Placeholder
+          listings: user.listings || [],
+          transactions: user.transactions || [],
           accountStatus: user.accountStatus,
+          membershipStatus: user.membershipStatus,
+          membershipExpiresAt: user.membershipExpiresAt,
+          membershipTier: user.membershipTier,
+          isVerified: user.isVerified,
+          verificationStatus: user.verificationStatus,
       },
     };
   } catch (error) {
