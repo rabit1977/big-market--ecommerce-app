@@ -333,33 +333,43 @@ export function MessagesClient({
                 </div>
               </ScrollArea>
 
-              {/* Input */}
-              <div className="p-2.5 md:p-3 border-t border-border/50 bg-muted/30">
-                <div className="flex items-center gap-1.5 md:gap-2">
-                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg shrink-0 text-muted-foreground hover:text-foreground">
-                    <ImageIcon className="w-4 h-4" />
+              {/* Input Area */}
+              <div className="p-2.5 md:p-3 border-t border-border/50 bg-muted/30 relative z-[60]">
+                <form 
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }}
+                  className="flex items-center gap-2 md:gap-3"
+                >
+                  <Button 
+                    type="button" 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-9 w-9 md:h-10 md:w-10 rounded-xl shrink-0 text-muted-foreground hover:text-foreground hover:bg-muted"
+                  >
+                    <ImageIcon className="w-5 h-5" />
                   </Button>
                   <Input
                     placeholder="Type a message..."
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyPress={(e) => {
+                    onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleSendMessage();
+                        // Form onSubmit will handle this
                       }
                     }}
-                    className="flex-1 h-8 md:h-9 text-xs md:text-sm bg-background border-border rounded-lg"
+                    className="flex-1 h-10 md:h-11 text-sm md:text-base bg-background border-border rounded-xl focus-visible:ring-primary shadow-sm px-4"
                   />
                   <Button
-                    onClick={handleSendMessage}
-                    disabled={!newMessage.trim()}
+                    type="submit"
+                    disabled={!newMessage.trim() || !activeConversation}
                     size="icon"
-                    className="h-8 w-8 md:h-9 md:w-9 rounded-lg shrink-0"
+                    className="h-10 w-10 md:h-11 md:w-11 rounded-xl shrink-0 bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
                   >
-                    <Send className="w-3.5 h-3.5" />
+                    <Send className="w-5 h-5" />
                   </Button>
-                </div>
+                </form>
               </div>
             </>
           ) : (
