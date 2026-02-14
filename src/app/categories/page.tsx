@@ -7,12 +7,10 @@ import {
   Car,
   Globe,
   GraduationCap,
-  Hammer,
   Home,
   PawPrint,
   Shirt,
   Smartphone,
-  Tractor,
   Truck,
   Wrench,
   Zap
@@ -27,79 +25,124 @@ export const metadata: Metadata = {
   description: 'Browse listings by category',
 };
 
-// Map category names to high-quality images (Unsplash)
-// Keys must match the 'slug' field in the database
+// Map category slugs to high-quality images (Unsplash)
+// Keys MUST match the exact 'slug' field from the seed data
 const CATEGORY_IMAGES: Record<string, string> = {
-  // 1. Motor Vehicles
-  'motor-vehicles': 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800',
-  'cars': 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800',
-  'motorcycles-above-50cc': 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&q=80&w=800',
-  'mopeds-under-50cc': 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?auto=format&fit=crop&q=80&w=800',
-  'electric-scooters': 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&q=80&w=800', // Reusing motorcycle image for now or find better
-  'buses': 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=800',
-  'vans': 'https://images.unsplash.com/photo-1565043589221-1a6fd4970404?auto=format&fit=crop&q=80&w=800', // Generic van/truck
-  'trucks': 'https://images.unsplash.com/photo-1586191582110-37d4554b51cc?auto=format&fit=crop&q=80&w=800', // Truck
-  'trailers': 'https://images.unsplash.com/photo-1586191582110-37d4554b51cc?auto=format&fit=crop&q=80&w=800', // Reusing truck
-  'damaged-vehicles-parts': 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=800', // Mechanical parts
-  'camping-vehicles': 'https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?auto=format&fit=crop&q=80&w=800',
-  'agricultural-vehicles': 'https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&q=80&w=800',
-
-  // 2. Real Estate (Assuming standard slugs if not seen in top list, but good to have defaults)
+  // 1. Real Estate
   'real-estate': 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=800',
-  'apartments': 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=800',
-  'houses': 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=800',
+  'flats-apartments': 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=800',
+  'houses-villas': 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=800',
   'land': 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=800',
-  'commercial': 'https://images.unsplash.com/photo-1486406140926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800',
+  'commercial-property': 'https://images.unsplash.com/photo-1486406140926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800',
 
-  // 3. Heavy Duty
-  'heavy-duty-construction': 'https://images.unsplash.com/photo-1581093588401-fbb073d74026?auto=format&fit=crop&q=80&w=800', // Construction
-  
-  // 4. Boats
-  'boats-yachts-jetskis': 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?auto=format&fit=crop&q=80&w=800',
+  // 2. Vehicles
+  'vehicles': 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800',
+  'cars': 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800',
+  'motorcycles': 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&q=80&w=800',
+  'trucks-vans': 'https://images.unsplash.com/photo-1586191582110-37d4554b51cc?auto=format&fit=crop&q=80&w=800',
+  'boats': 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?auto=format&fit=crop&q=80&w=800',
 
-  // 5. Electronics (Standard)
+  // 3. Electronics
   'electronics': 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=800',
-  'computers': 'https://images.unsplash.com/photo-1587831990711-23ca6441447b?auto=format&fit=crop&q=80&w=800', 
   'mobile-phones': 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=800',
+  'computers-laptops': 'https://images.unsplash.com/photo-1587831990711-23ca6441447b?auto=format&fit=crop&q=80&w=800',
+  'tablets': 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=800',
+  'tvs-audio': 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&q=80&w=800',
+  'cameras': 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=800',
 
-  // 6. Home & Garden
+  // 4. Jobs
+  'jobs': 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=800',
+  'full-time': 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=800',
+  'part-time': 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=800',
+  'freelance': 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800',
+  'internships': 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800',
+
+  // 5. Services
+  'services': 'https://images.unsplash.com/photo-1581093458791-9d15482442f6?auto=format&fit=crop&q=80&w=800',
+  'home-services': 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=800',
+  'business-services': 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800',
+  'personal-services': 'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800',
+
+  // 6. Fashion
+  'fashion': 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=80&w=800',
+  'mens-clothing': 'https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?auto=format&fit=crop&q=80&w=800',
+  'womens-clothing': 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800',
+  'shoes': 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800',
+  'accessories': 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=80&w=800',
+
+  // 7. Home & Garden
   'home-garden': 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=800',
   'furniture': 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800',
-  'garden': 'https://images.unsplash.com/photo-1585320806207-196c8131b254?auto=format&fit=crop&q=80&w=800',
-  
-  // 7. Fashion
-  'fashion': 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=80&w=800',
-  'clothing': 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800',
+  'appliances': 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&q=80&w=800',
+  'home-decor': 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=800',
+  'garden-outdoor': 'https://images.unsplash.com/photo-1585320806207-196c8131b254?auto=format&fit=crop&q=80&w=800',
 
-  // 8. Sports
+  // 8. Sports & Leisure
   'sports-leisure': 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80&w=800',
+  'sports-equipment': 'https://images.unsplash.com/photo-1461896836934-bd45ba680baa?auto=format&fit=crop&q=80&w=800',
+  'bicycles': 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&q=80&w=800',
+  'gym-fitness': 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=800',
 
-  // 9. Jobs
-  'jobs': 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=800',
+  // 9. Pets
+  'pets': 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&q=80&w=800',
+  'dogs': 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&q=80&w=800',
+  'cats': 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=800',
+  'pet-accessories': 'https://images.unsplash.com/photo-1583337130417-13104dec14c3?auto=format&fit=crop&q=80&w=800',
 
-  // 10. Services
-  'services': 'https://images.unsplash.com/photo-1581093458891-2f3a693246a4?auto=format&fit=crop&q=80&w=800',
+  // 10. Education
+  'education': 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=800',
+  'tutoring': 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800',
+  'courses': 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=800',
 };
 
-// Fallback lookup by name if slug missing or different
+// Fallback icon lookup by category name (for cases where image fails to load)
 const NAME_TO_ICON: Record<string, any> = {
-  'Motor Vehicles': Car,
+  'Real Estate': Home,
+  'Flats / Apartments': Home,
+  'Houses / Villas': Home,
+  'Land': Home,
+  'Commercial Property': Home,
+  'Vehicles': Car,
   'Cars': Car,
   'Motorcycles': Bike,
-  'Real Estate': Home,
-  'Heavy Duty / Construction / Forklifts': Tractor,
-  'Boats / Yachts / Jet Skis': Anchor,
+  'Trucks & Vans': Truck,
+  'Boats': Anchor,
   'Electronics': Smartphone,
+  'Mobile Phones': Smartphone,
+  'Computers & Laptops': Smartphone,
+  'Tablets': Smartphone,
+  'TVs & Audio': Smartphone,
+  'Cameras': Smartphone,
   'Jobs': Briefcase,
-  'Home & Garden': Zap,
+  'Full Time': Briefcase,
+  'Part Time': Briefcase,
+  'Freelance': Briefcase,
+  'Internships': Briefcase,
   'Services': Wrench,
-  'Sports & Leisure': Bike,
+  'Home Services': Wrench,
+  'Business Services': Wrench,
+  'Personal Services': Wrench,
   'Fashion': Shirt,
+  "Men's Clothing": Shirt,
+  "Women's Clothing": Shirt,
+  'Shoes': Shirt,
+  'Accessories': Shirt,
+  'Home & Garden': Zap,
+  'Furniture': Zap,
+  'Appliances': Zap,
+  'Home Decor': Zap,
+  'Garden & Outdoor': Zap,
+  'Sports & Leisure': Bike,
+  'Sports Equipment': Bike,
+  'Bicycles': Bike,
+  'Gym & Fitness': Bike,
   'Pets': PawPrint,
+  'Dogs': PawPrint,
+  'Cats': PawPrint,
+  'Pet Accessories': PawPrint,
   'Education': GraduationCap,
-  'Tools': Hammer,
-  'Buses': Truck,
-  'Trucks': Truck,
+  'Tutoring': GraduationCap,
+  'Courses': GraduationCap,
 };
 
 // Fetch categories with counts - cached to avoid excessive requests

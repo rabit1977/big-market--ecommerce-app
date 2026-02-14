@@ -533,3 +533,199 @@ export const getAdminUserDetails = query({
     };
   },
 });
+
+// ============================================================
+// COMPREHENSIVE USER DASHBOARD STATS (Real-time)
+// ============================================================
+export const getUserDashboardStats = query({
+  args: { externalId: v.string() },
+  handler: async (ctx, args) => {
+    // 1. Get User
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.externalId))
+      .unique();
+    if (!user) return null;
+
+    const userId = args.externalId;
+    const now = Date.now();
+
+    // Time boundaries
+    const oneDayAgo = now - 24 * 60 * 60 * 1000;
+    const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
+    const oneMonthAgo = now - 30 * 24 * 60 * 60 * 1000;
+    const oneYearAgo = now - 365 * 24 * 60 * 60 * 1000;
+
+    // 2. Listings
+    const listings = await ctx.db
+      .query("listings")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .collect();
+
+    const activeListings = listings.filter((l) => l.status === "ACTIVE");
+    const pendingListings = listings.filter((l) => l.status === "PENDING_APPROVAL");
+    const promotedListings = listings.filter(
+      (l) => l.isPromoted && l.promotionExpiresAt && l.promotionExpiresAt > now
+    );
+    const totalViews = listings.reduce((sum, l) => sum + (l.viewCount || 0), 0);
+
+    // 3. Transactions (with time-bucketed spending)
+    const transactions = await ctx.db
+      .query("transactions")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
+
+    const completedTransactions = transactions.filter(
+      (t) => t.status === "COMPLETED"
+    );
+
+    const spentDaily = completedTransactions
+      .filter((t) => t.createdAt >= oneDayAgo)
+      .reduce((sum, t) => sum + t.amount, 0);
+    const spentWeekly = completedTransactions
+      .filter((t) => t.createdAt >= oneWeekAgo)
+      .reduce((sum, t) => sum + t.amount, 0);
+    const spentMonthly = completedTransactions
+      .filter((t) => t.createdAt >= oneMonthAgo)
+      .reduce((sum, t) => sum + t.amount, 0);
+    const spentYearly = completedTransactions
+      .filter((t) => t.createdAt >= oneYearAgo)
+      .reduce((sum, t) => sum + t.amount, 0);
+    const spentAllTime = completedTransactions.reduce(
+      (sum, t) => sum + t.amount,
+      0
+    );
+
+    // 4. Favorites
+    const favorites = await ctx.db
+      .query("favorites")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
+
+    // 5. Conversations / Messages
+    const sentMessages = await ctx.db
+      .query("messages")
+      .withIndex("by_sender", (q) => q.eq("senderId", userId))
+      .collect();
+    const receivedMessages = await ctx.db
+      .query("messages")
+      .withIndex("by_receiver", (q) => q.eq("receiverId", userId))
+      .collect();
+    const unreadMessages = receivedMessages.filter((m) => !m.read);
+
+    // Unique conversations (unique listing+other-party combos)
+    const conversationSet = new Set<string>();
+    [...sentMessages, ...receivedMessages].forEach((m) => {
+      const other = m.senderId === userId ? m.receiverId : m.senderId;
+      conversationSet.add(`${m.listingId}:${other}`);
+    });
+
+    // 6. Renewal Stats
+    const currentMonth = new Date(now).getMonth();
+    let monthlyRenewalsUsed = user.monthlyRenewalsUsed ?? 0;
+    if (user.lastRenewalMonth !== currentMonth) {
+      monthlyRenewalsUsed = 0;
+    }
+
+    let canRenewNow = true;
+    let hoursUntilRenew = 0;
+    if (user.lastRenewalTimestamp) {
+      const hoursSince =
+        (now - user.lastRenewalTimestamp) / (1000 * 60 * 60);
+      if (hoursSince < 24) {
+        canRenewNow = false;
+        hoursUntilRenew = Math.ceil(24 - hoursSince);
+      }
+    }
+
+    // 7. Promotion Stats
+    const promotionTransactions = completedTransactions.filter(
+      (t) => t.description && t.description.toLowerCase().includes("promot")
+    );
+    const promotionSpentMonthly = promotionTransactions
+      .filter((t) => t.createdAt >= oneMonthAgo)
+      .reduce((sum, t) => sum + t.amount, 0);
+    const promotionSpentAllTime = promotionTransactions.reduce(
+      (sum, t) => sum + t.amount,
+      0
+    );
+
+    // 8. Recent transactions (last 10)
+    const recentTransactions = [...completedTransactions]
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, 10);
+
+    return {
+      // Profile
+      profile: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        image: user.image,
+        phone: user.phone,
+        city: user.city,
+        accountType: user.accountType,
+        companyName: user.companyName,
+        createdAt: user.createdAt || user._creationTime,
+        bio: user.bio,
+      },
+      // Verification & membership
+      verification: {
+        isVerified: user.isVerified ?? false,
+        verificationStatus: user.verificationStatus ?? "unverified",
+        accountStatus: user.accountStatus ?? "ACTIVE",
+        membershipTier: user.membershipTier ?? "FREE",
+        membershipStatus: user.membershipStatus ?? "EXPIRED",
+        membershipExpiresAt: user.membershipExpiresAt,
+      },
+      // Listings overview
+      listings: {
+        total: listings.length,
+        active: activeListings.length,
+        pending: pendingListings.length,
+        promoted: promotedListings.length,
+        totalViews,
+        limit: user.listingLimit ?? 50,
+        posted: user.listingsPostedCount ?? 0,
+        promotedDetails: promotedListings.map((l) => ({
+          _id: l._id,
+          title: l.title,
+          promotionTier: l.promotionTier,
+          promotionExpiresAt: l.promotionExpiresAt,
+          daysLeft: l.promotionExpiresAt
+            ? Math.max(0, Math.ceil((l.promotionExpiresAt - now) / (1000 * 60 * 60 * 24)))
+            : 0,
+        })),
+      },
+      // Spending breakdowns
+      spending: {
+        daily: spentDaily,
+        weekly: spentWeekly,
+        monthly: spentMonthly,
+        yearly: spentYearly,
+        allTime: spentAllTime,
+        promotionMonthly: promotionSpentMonthly,
+        promotionAllTime: promotionSpentAllTime,
+      },
+      // Renewals
+      renewals: {
+        usedThisMonth: monthlyRenewalsUsed,
+        limitMonthly: 15,
+        remainingMonthly: 15 - monthlyRenewalsUsed,
+        canRenewNow,
+        hoursUntilRenew,
+        lastRenewalAt: user.lastRenewalTimestamp,
+      },
+      // Social
+      social: {
+        favoritesCount: favorites.length,
+        conversationsCount: conversationSet.size,
+        totalMessagesSent: sentMessages.length,
+        totalMessagesReceived: receivedMessages.length,
+        unreadMessages: unreadMessages.length,
+      },
+      // Recent transactions
+      recentTransactions,
+    };
+  },
+});
