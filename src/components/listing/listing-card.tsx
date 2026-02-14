@@ -137,6 +137,11 @@ export const ListingCard = memo(
                     <ShieldCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                  </div>
               )}
+              {listing.status === 'PENDING_APPROVAL' && (
+                 <div className="bg-amber-500 text-white rounded-md px-1.5 py-0.5 shadow-md text-[9px] font-bold uppercase tracking-wider">
+                    Pending
+                 </div>
+              )}
               
           </div>
         </div>
