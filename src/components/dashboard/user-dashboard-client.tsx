@@ -16,24 +16,31 @@ import {
     ArrowUpRight,
     BadgeCheck,
     BarChart3,
+    Bell,
+    Bookmark,
     CalendarClock,
     Clock,
     CreditCard,
     Crown,
     Eye,
     Heart,
+    History,
     ListChecks,
+    MessageCircleQuestion,
     MessageSquare,
     Package,
     Plus,
     RefreshCw,
+    Search,
     Shield,
     Sparkles,
+    Star,
     TrendingUp,
     User,
-    Wallet
+    Wallet,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { api } from '../../../convex/_generated/api';
@@ -124,12 +131,14 @@ export function UserDashboardClient({ userId }: UserDashboardClientProps) {
 
             <div className="container-wide max-w-7xl py-6 sm:py-10 space-y-6 sm:space-y-8">
                 {/* ═══════════════════════ TOP STATS GRID ═══════════════════════ */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
                     <StatCard icon={Package} label="Total Listings" value={stats.listings.total} color="blue" />
                     <StatCard icon={ListChecks} label="Active" value={stats.listings.active} color="green" />
                     <StatCard icon={Eye} label="Total Views" value={stats.listings.totalViews.toLocaleString()} color="purple" />
                     <StatCard icon={Sparkles} label="Promoted" value={stats.listings.promoted} color="amber" />
                     <StatCard icon={Heart} label="Favorites" value={stats.social.favoritesCount} color="rose" />
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
                     <StatCard
                         icon={MessageSquare}
                         label="Messages"
@@ -137,6 +146,16 @@ export function UserDashboardClient({ userId }: UserDashboardClientProps) {
                         color="orange"
                         badge={stats.social.unreadMessages > 0 ? stats.social.unreadMessages : undefined}
                     />
+                    <StatCard icon={Bookmark} label="Saved Searches" value={stats.savedSearches.count} color="blue" />
+                    <StatCard icon={History} label="Recently Viewed" value={stats.recentlyViewed.totalViewed} color="purple" />
+                    <StatCard
+                        icon={Bell}
+                        label="Notifications"
+                        value={stats.notifications.total}
+                        color="amber"
+                        badge={stats.notifications.unread > 0 ? stats.notifications.unread : undefined}
+                    />
+                    <StatCard icon={Star} label="Reviews Written" value={stats.activity.reviewsWritten} color="green" />
                 </div>
 
                 {/* ═══════════════════════ MAIN CONTENT ═══════════════════════ */}
@@ -331,6 +350,97 @@ export function UserDashboardClient({ userId }: UserDashboardClientProps) {
                                 </div>
                             )}
                         </Card>
+
+                        {/* ─── Recently Viewed Listings ─── */}
+                        <Card className="p-5 sm:p-6 rounded-2xl border-border/50">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                                        <History className="w-5 h-5 text-purple-600" />
+                                    </div>
+                                    <h2 className="font-black text-lg tracking-tight">Recently Viewed</h2>
+                                </div>
+                                <Badge variant="outline" className="text-[10px] font-bold">{stats.recentlyViewed.totalViewed} total</Badge>
+                            </div>
+                            {stats.recentlyViewed.items.length === 0 ? (
+                                <div className="text-center py-6 border-2 border-dashed border-border/50 rounded-xl">
+                                    <History className="w-7 h-7 text-muted-foreground/30 mx-auto mb-2" />
+                                    <p className="text-xs text-muted-foreground font-medium">No browsing history yet</p>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    {stats.recentlyViewed.items.map((item: any) => (
+                                        <Link key={item._id} href={`/listings/${item.listingId}`}>
+                                            <div className="flex items-center gap-3 p-2.5 rounded-xl bg-muted/30 border border-border/30 hover:bg-muted/50 transition-colors group">
+                                                <div className="w-12 h-12 rounded-lg bg-muted overflow-hidden shrink-0 relative">
+                                                    {item.thumbnail ? (
+                                                        <Image src={item.thumbnail} alt={item.title} fill className="object-cover" sizes="48px" />
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center">
+                                                            <Eye className="w-4 h-4 text-muted-foreground/40" />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="font-bold text-xs truncate group-hover:text-primary transition-colors">{item.title}</p>
+                                                    <p className="text-[10px] text-muted-foreground font-medium">
+                                                        {formatDistanceToNow(item.viewedAt, { addSuffix: true })}
+                                                    </p>
+                                                </div>
+                                                <span className="text-xs font-black shrink-0">{formatPrice(item.price)}</span>
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </Card>
+
+                        {/* ─── My Favorites ─── */}
+                        <Card className="p-5 sm:p-6 rounded-2xl border-border/50">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-9 h-9 rounded-xl bg-rose-500/10 flex items-center justify-center">
+                                        <Heart className="w-5 h-5 text-rose-600" />
+                                    </div>
+                                    <h2 className="font-black text-lg tracking-tight">My Favorites</h2>
+                                </div>
+                                <Link href="/favorites">
+                                    <Button variant="ghost" size="sm" className="text-xs font-bold">View All →</Button>
+                                </Link>
+                            </div>
+                            {stats.favoritesDetails.length === 0 ? (
+                                <div className="text-center py-6 border-2 border-dashed border-border/50 rounded-xl">
+                                    <Heart className="w-7 h-7 text-muted-foreground/30 mx-auto mb-2" />
+                                    <p className="text-xs text-muted-foreground font-medium">No favorites yet</p>
+                                    <Link href="/listings" className="mt-2 inline-block">
+                                        <Button variant="outline" size="sm" className="text-xs rounded-xl">Browse Listings</Button>
+                                    </Link>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    {stats.favoritesDetails.map((fav: any) => (
+                                        <Link key={fav._id} href={`/listings/${fav.listingId}`}>
+                                            <div className="flex items-center gap-3 p-2.5 rounded-xl bg-muted/30 border border-border/30 hover:bg-muted/50 transition-colors group">
+                                                <div className="w-12 h-12 rounded-lg bg-muted overflow-hidden shrink-0 relative">
+                                                    {fav.thumbnail ? (
+                                                        <Image src={fav.thumbnail} alt={fav.title} fill className="object-cover" sizes="48px" />
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center">
+                                                            <Heart className="w-4 h-4 text-rose-400/40" />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="font-bold text-xs truncate group-hover:text-primary transition-colors">{fav.title}</p>
+                                                    <p className="text-[10px] text-muted-foreground font-medium">{fav.city}</p>
+                                                </div>
+                                                <span className="text-xs font-black shrink-0">{formatPrice(fav.price)}</span>
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </Card>
                     </div>
 
                     {/* RIGHT COLUMN (1/3) — Sidebar */}
@@ -411,6 +521,97 @@ export function UserDashboardClient({ userId }: UserDashboardClientProps) {
                                     Open Messages
                                 </Button>
                             </Link>
+                        </Card>
+
+                        {/* ─── Saved Searches ─── */}
+                        <Card className="p-5 rounded-2xl border-border/50">
+                            <div className="flex items-center gap-2 mb-4">
+                                <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                                    <Bookmark className="w-4 h-4 text-blue-600" />
+                                </div>
+                                <h3 className="font-bold text-sm">Saved Searches</h3>
+                                <Badge variant="outline" className="ml-auto text-[10px] font-bold">{stats.savedSearches.count}</Badge>
+                            </div>
+                            {stats.savedSearches.items.length === 0 ? (
+                                <div className="text-center py-4 border-2 border-dashed border-border/50 rounded-xl">
+                                    <Search className="w-5 h-5 text-muted-foreground/30 mx-auto mb-1" />
+                                    <p className="text-[10px] text-muted-foreground font-medium">No saved searches</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-1.5">
+                                    {stats.savedSearches.items.slice(0, 5).map((s: any) => (
+                                        <Link key={s._id} href={s.url}>
+                                            <div className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors group">
+                                                <div className="flex items-center gap-2 min-w-0">
+                                                    <Search className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                                                    <span className="text-xs font-bold truncate group-hover:text-primary transition-colors">{s.name}</span>
+                                                </div>
+                                                {s.isEmailAlert && (
+                                                    <Badge className="bg-blue-500/10 text-blue-600 border-0 text-[8px] px-1.5 shrink-0">Alert</Badge>
+                                                )}
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </Card>
+
+                        {/* ─── Notifications ─── */}
+                        <Card className="p-5 rounded-2xl border-border/50">
+                            <div className="flex items-center gap-2 mb-4">
+                                <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                                    <Bell className="w-4 h-4 text-amber-600" />
+                                </div>
+                                <h3 className="font-bold text-sm">Notifications</h3>
+                                {stats.notifications.unread > 0 && (
+                                    <Badge className="bg-destructive text-white text-[10px] ml-auto">{stats.notifications.unread} new</Badge>
+                                )}
+                            </div>
+                            {stats.notifications.recent.length === 0 ? (
+                                <div className="text-center py-4 border-2 border-dashed border-border/50 rounded-xl">
+                                    <Bell className="w-5 h-5 text-muted-foreground/30 mx-auto mb-1" />
+                                    <p className="text-[10px] text-muted-foreground font-medium">No notifications</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-1.5">
+                                    {stats.notifications.recent.map((n: any) => (
+                                        <div key={n._id} className={cn("p-2.5 rounded-xl border transition-colors", n.isRead ? 'bg-muted/20 border-border/20' : 'bg-primary/5 border-primary/20')}>
+                                            <div className="flex items-start gap-2">
+                                                {!n.isRead && <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5" />}
+                                                <div className="min-w-0">
+                                                    <p className={cn("text-xs truncate", n.isRead ? 'font-medium' : 'font-bold')}>{n.title}</p>
+                                                    <p className="text-[10px] text-muted-foreground truncate">{n.message}</p>
+                                                    <p className="text-[9px] text-muted-foreground/70 mt-0.5">
+                                                        {formatDistanceToNow(n.createdAt, { addSuffix: true })}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </Card>
+
+                        {/* ─── Activity Summary ─── */}
+                        <Card className="p-5 rounded-2xl border-border/50">
+                            <div className="flex items-center gap-2 mb-4">
+                                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                                    <MessageCircleQuestion className="w-4 h-4 text-emerald-600" />
+                                </div>
+                                <h3 className="font-bold text-sm">Activity</h3>
+                            </div>
+                            <div className="space-y-3">
+                                <InfoRow label="Reviews Written" value={<span className="text-xs font-black">{stats.activity.reviewsWritten}</span>} />
+                                {stats.activity.reviewsWritten > 0 && (
+                                    <InfoRow label="Avg. Rating Given" value={
+                                        <div className="flex items-center gap-1">
+                                            <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                                            <span className="text-xs font-black">{stats.activity.averageRatingGiven}</span>
+                                        </div>
+                                    } />
+                                )}
+                                <InfoRow label="Questions Asked" value={<span className="text-xs font-black">{stats.activity.questionsAsked}</span>} />
+                            </div>
                         </Card>
 
                         {/* ─── Quick Actions ─── */}

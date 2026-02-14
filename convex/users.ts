@@ -540,6 +540,23 @@ export const getAdminUserDetails = query({
 export const getUserDashboardStats = query({
   args: { externalId: v.string() },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    // Security Check: Allow if user is accessing their own dashboard OR if they are an admin
+    if (args.externalId !== identity.subject) {
+      const requester = await ctx.db
+        .query("users")
+        .withIndex("by_externalId", (q) => q.eq("externalId", identity.subject))
+        .unique();
+      
+      if (!requester || requester.role !== "ADMIN") {
+        throw new Error("Unauthorized");
+      }
+    }
+
     // 1. Get User
     const user = await ctx.db
       .query("users")
@@ -655,6 +672,85 @@ export const getUserDashboardStats = query({
       .sort((a, b) => b.createdAt - a.createdAt)
       .slice(0, 10);
 
+    // 9. Saved Searches
+    const savedSearches = await ctx.db
+      .query("savedSearches")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
+
+    // 10. Recently Viewed (last 8 with listing details)
+    const recentlyViewedRaw = await ctx.db
+      .query("recentlyViewed")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
+    const recentlyViewedSorted = [...recentlyViewedRaw]
+      .sort((a, b) => b.viewedAt - a.viewedAt)
+      .slice(0, 8);
+    const recentlyViewedPopulated = await Promise.all(
+      recentlyViewedSorted.map(async (rv) => {
+        const listing = await ctx.db.get(rv.listingId);
+        if (!listing) return null;
+        return {
+          _id: rv._id,
+          listingId: rv.listingId,
+          viewedAt: rv.viewedAt,
+          title: listing.title,
+          price: listing.price,
+          thumbnail: listing.thumbnail || listing.images?.[0],
+          status: listing.status,
+        };
+      })
+    );
+
+    // 11. Favorites with populated listing details (last 6)
+    const recentFavorites = [...favorites].slice(0, 6);
+    const favoritesPopulated = await Promise.all(
+      recentFavorites.map(async (fav) => {
+        const listing = await ctx.db.get(fav.listingId);
+        if (!listing) return null;
+        return {
+          _id: fav._id,
+          listingId: fav.listingId,
+          title: listing.title,
+          price: listing.price,
+          thumbnail: listing.thumbnail || listing.images?.[0],
+          city: listing.city,
+          status: listing.status,
+        };
+      })
+    );
+
+    // 12. Notifications
+    const notifications = await ctx.db
+      .query("notifications")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
+    const unreadNotifications = notifications.filter((n) => !n.isRead);
+    const recentNotifications = [...notifications]
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, 5)
+      .map((n) => ({
+        _id: n._id,
+        type: n.type,
+        title: n.title,
+        message: n.message,
+        isRead: n.isRead,
+        link: n.link,
+        createdAt: n.createdAt,
+      }));
+
+    // 13. Reviews written by this user
+    const reviews = await ctx.db
+      .query("reviews")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
+
+    // 14. Q&A Activity
+    const questions = await ctx.db
+      .query("questions")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
+
     return {
       // Profile
       profile: {
@@ -726,6 +822,38 @@ export const getUserDashboardStats = query({
       },
       // Recent transactions
       recentTransactions,
+      // Saved searches
+      savedSearches: {
+        count: savedSearches.length,
+        items: savedSearches.map((s) => ({
+          _id: s._id,
+          name: s.name || s.query,
+          query: s.query,
+          url: s.url,
+          isEmailAlert: s.isEmailAlert ?? false,
+        })),
+      },
+      // Recently viewed
+      recentlyViewed: {
+        totalViewed: recentlyViewedRaw.length,
+        items: recentlyViewedPopulated.filter(Boolean),
+      },
+      // Favorites with details
+      favoritesDetails: favoritesPopulated.filter(Boolean),
+      // Notifications
+      notifications: {
+        total: notifications.length,
+        unread: unreadNotifications.length,
+        recent: recentNotifications,
+      },
+      // Reviews & Q&A
+      activity: {
+        reviewsWritten: reviews.length,
+        averageRatingGiven: reviews.length > 0
+          ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / reviews.length) * 10) / 10
+          : 0,
+        questionsAsked: questions.length,
+      },
     };
   },
 });
