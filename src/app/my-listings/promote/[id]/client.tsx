@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
-import { PROMOTIONS } from '@/lib/constants/promotions';
+import { PROMOTIONS, getPromotionConfig } from '@/lib/constants/promotions';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { Check, CreditCard, Megaphone } from 'lucide-react';
@@ -26,6 +26,11 @@ export function PromotePageClient({ listing, user }: PromotePageClientProps) {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const togglePromotion = (id: string) => {
+      // Block if listing already has an active promotion
+      if (isPromoted) {
+          toast.error(`This listing already has an active promotion (${getDaysRemaining(listing.promotionExpiresAt)} days left). Wait for it to expire before promoting again.`);
+          return;
+      }
       // Enforce single selection
       setSelectedPromotions(prev => 
           prev.includes(id) ? [] : [id]
@@ -88,10 +93,26 @@ export function PromotePageClient({ listing, user }: PromotePageClientProps) {
       return Math.ceil(diff / (1000 * 60 * 60 * 24));
   };
 
-  const isPromoted = listing.isPromoted && listing.promotionExpiresAt && listing.promotionExpiresAt > Date.now();
+  const isPromoted = !!(listing.isPromoted && listing.promotionExpiresAt && listing.promotionExpiresAt > Date.now());
 
   return (
     <div className="space-y-8">
+
+        {/* Active Promotion Banner */}
+        {isPromoted && (
+            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-5 flex items-start gap-3">
+                <Check className="w-5 h-5 text-emerald-500 mt-0.5 shrink-0" />
+                <div>
+                    <h3 className="font-bold text-emerald-700 dark:text-emerald-300 mb-1">This listing is already promoted</h3>
+                    <p className="text-sm text-muted-foreground">
+                        Current promotion: <strong className="text-foreground">{getPromotionConfig(listing.promotionTier)?.title || listing.promotionTier}</strong>
+                        {' '}&bull;{' '}
+                        <strong>{getDaysRemaining(listing.promotionExpiresAt)} days</strong> remaining.
+                        You can select a new promotion after the current one expires.
+                    </p>
+                </div>
+            </div>
+        )}
         
         {/* Promotion Options */}
         <div className="space-y-4">
@@ -109,13 +130,14 @@ export function PromotePageClient({ listing, user }: PromotePageClientProps) {
                     return (
                     <div 
                         key={promo.id}
-                        onClick={() => togglePromotion(promo.id)}
+                        onClick={() => !isPromoted && togglePromotion(promo.id)}
                         className={cn(
-                            "relative flex flex-col md:flex-row items-stretch rounded-2xl border-2 transition-all cursor-pointer group hover:shadow-md overflow-hidden bg-card",
+                            "relative flex flex-col md:flex-row items-stretch rounded-2xl border-2 transition-all overflow-hidden bg-card",
+                            isPromoted ? "cursor-not-allowed opacity-60" : "cursor-pointer group hover:shadow-md",
                             selectedPromotions.includes(promo.id) 
                                 ? `${promo.borderColor} ${promo.bgColor} shadow-sm` 
                                 : "border-border/40 hover:border-primary/10",
-                            isActive && "ring-2 ring-emerald-500 border-emerald-500/20 opacity-80"
+                            isActive && "ring-2 ring-emerald-500 border-emerald-500/20"
                         )}
                     >
                         {/* Very Big Image Section */}
@@ -233,7 +255,7 @@ export function PromotePageClient({ listing, user }: PromotePageClientProps) {
                 <Button 
                     size="lg" 
                     className="w-full h-11 md:h-12 text-sm md:text-lg font-black uppercase tracking-wider shadow-xl shadow-primary/20 hover:scale-[1.01] transition-all bg-primary hover:bg-primary/90"
-                    disabled={selectedPromotions.length === 0 || isProcessing}
+                    disabled={selectedPromotions.length === 0 || isProcessing || isPromoted}
                     onClick={handlePayment}
                 >
                     {isProcessing ? (

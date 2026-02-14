@@ -210,10 +210,10 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                             </AlertDialogTitle>
                             <AlertDialogDescription asChild className="space-y-3 pt-2">
                                 <div className="space-y-3">
-                                    {renewalStats?.hasUsedToday ? ( 
+                                    {!renewalStats?.canRenewNow ? ( 
                                         <div className="bg-amber-500/10 p-3 rounded-xl border border-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-bold flex gap-3">
                                             <AlertTriangle className="w-5 h-5 shrink-0" />
-                                            <p>You have already renewed a listing today.</p> 
+                                            <p>You can renew again in {renewalStats?.hoursUntilRenew} hour{renewalStats?.hoursUntilRenew !== 1 ? 's' : ''}. Renewals are allowed once every 24 hours.</p> 
                                         </div>
                                     ) : renewalStats?.remainingMonthly <= 0 ? (
                                         <div className="bg-destructive/10 p-3 rounded-xl border border-destructive/20 text-destructive text-xs font-bold flex gap-3">
@@ -235,7 +235,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                         </AlertDialogHeader>
                         <AlertDialogFooter className="gap-2 sm:gap-0 mt-2">
                             <AlertDialogCancel className="rounded-xl font-bold uppercase text-[10px] sm:text-xs h-10 transition-all border-border/50">Cancel</AlertDialogCancel>
-                            {renewalStats?.remainingMonthly > 0 && ( 
+                            {renewalStats?.canRenewNow && renewalStats?.remainingMonthly > 0 && ( 
                                 <AlertDialogAction 
                                     onClick={handleConfirmRenew} 
                                     className="bg-primary hover:bg-primary/90 text-white rounded-xl font-black uppercase text-[10px] sm:text-xs h-10 shadow-lg shadow-primary/20"

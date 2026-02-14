@@ -52,10 +52,10 @@ export default async function HomePage({ searchParams }: PageProps) {
   // Limit listings for display
   const now = Date.now();
   
-  // 1. Get all currently promoted listings for the horizontal scroll (Excluding non-featured tiers)
-  const nonFeaturedTiers = ['AUTO_DAILY_REFRESH', 'LISTING_HIGHLIGHT', 'VISUAL_HIGHLIGHT', 'HIGHLIGHT'];
+  // 1. Get promoted listings for the featured carousel (only Na Pocetna Strana & Top Positioning)
+  const featuredTiers = ['HOMEPAGE', 'TOP_POSITIONING'];
   const featuredListings = allListings
-    .filter((l: any) => l.isPromoted && !nonFeaturedTiers.includes(l.promotionTier || '') && (!l.promotionExpiresAt || l.promotionExpiresAt > now))
+    .filter((l: any) => l.isPromoted && featuredTiers.includes(l.promotionTier || '') && (!l.promotionExpiresAt || l.promotionExpiresAt > now))
     .slice(0, 15);
 
   // 2. Latest listings includes EVERYTHING, ordered by newest first (but our backend query 'get' already handles promotion sorting)

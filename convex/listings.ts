@@ -388,8 +388,8 @@ export const renewListing = mutation({
 
     if (!user) throw new Error("User not found");
 
-    const now = new Date();
-    const currentMonth = now.getMonth();
+    const now = Date.now();
+    const currentMonth = new Date(now).getMonth();
     
     // 1. Reset Monthly Quota if Month Changed
     let monthlyUsed = user.monthlyRenewalsUsed ?? 0;
@@ -397,22 +397,30 @@ export const renewListing = mutation({
         monthlyUsed = 0;
     }
 
-    // 2. Check Monthly Limit (15)
+    // 2. Enforce 24-hour cooldown (admins bypass)
+    if (user.role !== 'ADMIN' && user.lastRenewalTimestamp) {
+        const hoursSinceLast = (now - user.lastRenewalTimestamp) / (1000 * 60 * 60);
+        if (hoursSinceLast < 24) {
+            const hoursLeft = Math.ceil(24 - hoursSinceLast);
+            throw new Error(`You can renew again in ${hoursLeft} hour${hoursLeft !== 1 ? 's' : ''}. Renewals are allowed once every 24 hours.`);
+        }
+    }
+
+    // 3. Check Monthly Limit (15)
     if (monthlyUsed >= 15 && user.role !== 'ADMIN') {
         throw new Error("Monthly renewal limit (15) reached.");
     }
 
-    // 3. Perform Renewal (Update createdAt to move to top)
+    // 4. Perform Renewal (Update createdAt to move to top)
     await ctx.db.patch(args.id, {
-        createdAt: Date.now(),
-        // Keep active status if it was already active
+        createdAt: now,
         status: listing.status === 'PENDING_APPROVAL' ? 'PENDING_APPROVAL' : 'ACTIVE'
     });
 
-    // 4. Update User Stats
+    // 5. Update User Stats
     await ctx.db.patch(user._id, {
         monthlyRenewalsUsed: monthlyUsed + 1,
-        lastRenewalTimestamp: Date.now(),
+        lastRenewalTimestamp: now,
         lastRenewalMonth: currentMonth
     });
 
@@ -430,19 +438,35 @@ export const getRenewalStats = query({
         
         if (!user) return null;
 
-        const now = new Date();
-        const currentMonth = now.getMonth();
+        const now = Date.now();
+        const currentMonth = new Date(now).getMonth();
         
         let monthlyUsed = user.monthlyRenewalsUsed ?? 0;
         if (user.lastRenewalMonth !== currentMonth) {
             monthlyUsed = 0;
         }
 
+        // Calculate 24-hour cooldown
+        let canRenewNow = true;
+        let hoursUntilRenew = 0;
+        let nextRenewAt: number | null = null;
+
+        if (user.lastRenewalTimestamp) {
+            const hoursSinceLast = (now - user.lastRenewalTimestamp) / (1000 * 60 * 60);
+            if (hoursSinceLast < 24) {
+                canRenewNow = false;
+                hoursUntilRenew = Math.ceil(24 - hoursSinceLast);
+                nextRenewAt = user.lastRenewalTimestamp + (24 * 60 * 60 * 1000);
+            }
+        }
+
         return {
             usedThisMonth: monthlyUsed,
             limitMonthly: 15,
             remainingMonthly: 15 - monthlyUsed,
-            hasUsedToday: false, // Deprecated concept
+            canRenewNow,
+            hoursUntilRenew,
+            nextRenewAt,
             totalLimit: user.listingLimit ?? 50,
             totalPosted: user.listingsPostedCount ?? 0
         };
