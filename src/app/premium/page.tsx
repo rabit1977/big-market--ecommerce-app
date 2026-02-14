@@ -27,19 +27,19 @@ import { toast } from 'sonner';
 const faqs = [
   {
     q: 'How can I activate my ad promotion?',
-    a: 'It\'s simple. If you have already submitted your ad, open it and click the "Promote" link next to the star icon and follow the instructions. Registered users can activate promotions directly from their profile.',
+    a: 'Activating a promotion is seamless. If you have already submitted your ad, simply open it and click the "Promote" link next to the star icon to choose your boost. Registered users can also manage activations directly from their account dashboard for maximum efficiency.',
   },
   {
     q: 'How long do ads remain promoted?',
-    a: 'Your ad will remain promoted for 14 days. After this period, the ad continues to be published but as a free standard ad.',
+    a: 'All professional boosts remain active for a full 14-day cycle. Once this period expires, your listing transitions back to a standard free ad automatically, ensuring your ad stays published without interruption.',
   },
   {
-    q: 'Why doesn\'t my premium ad appear?',
-    a: 'All promoted ads are placed on the search page and display in rotation based on search criteria: region, category, and keywords contained in your title.',
+    q: 'Why doesn\'t my premium ad appear at the very top?',
+    a: 'To ensure maximum fairness and variety, all promoted ads are displayed on the search page in a dynamic rotation. Listings are surfaced based on relevant viewer criteria: the region, the category, and specific keywords contained in your title.',
   },
   {
-    q: 'How can I pay?',
-    a: 'Paying with a debit/credit card is the most convenient way with no risk. You can also pay via bank transfer/invoice.',
+    q: 'What payment methods are supported?',
+    a: 'We recommend paying with a debit or credit card for instant activation and secure processing. Alternatively, we also support bank transfers via pro-forma invoicing for your convenience.',
   },
 ];
 

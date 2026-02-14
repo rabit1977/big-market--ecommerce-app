@@ -20,6 +20,7 @@ import {
     CreditCard,
     Crown,
     Heart,
+    HelpCircle,
     Home,
     LayoutDashboard,
     Lock,
@@ -183,6 +184,11 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
         { href: '/premium', icon: Crown, label: 'Subscription Plans', iconColor: 'text-amber-500' },
     ] : [])
   ];
+  
+  const supportItems: MenuItem[] = [
+    { href: '/help', icon: HelpCircle, label: 'Help Center' },
+    { href: '/contact', icon: MessageSquare, label: 'Contact Support' },
+  ];
 
   const adminItems: MenuItem[] = user?.role === 'ADMIN' ? [
     { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Admin Panel', iconColor: 'text-primary' },
@@ -302,6 +308,23 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
               </Button>
             </TooltipTrigger>
             <TooltipContent>Messages</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        {/* Desktop & Mobile: Help Center */}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                asChild variant='ghost' size='icon'
+                className='relative h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 border border-border/40'
+              >
+                <Link href="/help">
+                  <HelpCircle className="h-4.5 w-4.5" />
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Help Center</TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
@@ -434,7 +457,14 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                   </div>
                   <div className='mx-3 my-1 h-px bg-border/30' />
 
+                    {/* Support & Help */}
+                  {renderSectionLabel('Support')}
+                  <div className='px-1.5'>
+                    {supportItems.map(item => renderMenuItem(item, () => setIsPanelOpen(false)))}
+                  </div>
+
                   {/* Account & Settings */}
+                  <div className='mx-3 my-1 h-px bg-border/30' />
                   {renderSectionLabel('Account')}
                   <div className='px-1.5'>
                     {settingsItems.map(item => renderMenuItem(item, () => setIsPanelOpen(false)))}

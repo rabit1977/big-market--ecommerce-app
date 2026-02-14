@@ -15,28 +15,43 @@ import { toast } from 'sonner';
 interface FormData {
   name: string;
   email: string;
+  phone: string;
   subject: string;
   message: string;
+  captchaResult: string;
 }
 
 interface FormErrors {
   name?: string;
   email?: string;
+  phone?: string;
   subject?: string;
   message?: string;
+  captchaResult?: string;
 }
 
 const INITIAL_FORM_STATE: FormData = {
   name: '',
   email: '',
+  phone: '',
   subject: '',
   message: '',
+  captchaResult: '',
 };
 
 export const ContactContent = () => {
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isPending, startTransition] = useTransition();
+
+  // Simple math captcha state
+  const [captcha, setCaptcha] = useState({ a: 7, b: 3, result: 10 });
+
+  const refreshCaptcha = useCallback(() => {
+    const a = Math.floor(Math.random() * 10) + 1;
+    const b = Math.floor(Math.random() * 10) + 1;
+    setCaptcha({ a, b, result: a + b });
+  }, []);
 
   /**
    * Validate form fields
@@ -45,33 +60,35 @@ export const ContactContent = () => {
     const newErrors: FormErrors = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    } else if (formData.name.trim().length < 2) {
-      newErrors.name = 'Name must be at least 2 characters';
+      newErrors.name = 'Full name is required';
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = 'Email address is required';
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = 'Please enter a valid business email';
     }
 
-    if (!formData.subject.trim()) {
-      newErrors.subject = 'Subject is required';
-    } else if (formData.subject.trim().length < 3) {
-      newErrors.subject = 'Subject must be at least 3 characters';
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+    }
+
+    if (!formData.subject.trim() || formData.subject === 'Select an inquiry type') {
+      newErrors.subject = 'Please select a subject';
     }
 
     if (!formData.message.trim()) {
-      newErrors.message = 'Message is required';
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = 'Message must be at least 10 characters';
+      newErrors.message = 'Please enter your message';
+    }
+
+    if (parseInt(formData.captchaResult) !== captcha.result) {
+      newErrors.captchaResult = 'Invalid calculation. Try again.';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [formData]);
+  }, [formData, captcha.result]);
 
   /**
    * Handle input changes
@@ -104,13 +121,14 @@ export const ContactContent = () => {
         // Simulate API call
         setTimeout(() => {
           console.log('Form submitted:', formData);
-          toast("Message sent! We'll be in touch soon.");
+          toast.success("Message sent successfully! Our team will contact you within 24 hours.");
           setFormData(INITIAL_FORM_STATE);
           setErrors({});
-        }, 1000);
+          refreshCaptcha();
+        }, 1500);
       });
     },
-    [formData, validateForm]
+    [formData, validateForm, refreshCaptcha]
   );
 
   return (
@@ -153,61 +171,110 @@ export const ContactContent = () => {
               <form onSubmit={handleSubmit} className='space-y-6' noValidate>
                 <div className='grid sm:grid-cols-2 gap-6'>
                   <div className='space-y-2'>
-                    <Label htmlFor='name' className='font-semibold'>Name</Label>
+                    <Label htmlFor='name' className='font-semibold'>Full Name</Label>
                     <Input
                       id='name'
                       name='name'
-                      placeholder='John Doe'
+                      placeholder='e.g. Marko Petrovski'
                       value={formData.name}
                       onChange={handleChange}
                       disabled={isPending}
-                      className={`h-12 bg-secondary/20 border-border/50 focus:border-primary/50 transition-all ${errors.name ? 'border-red-500' : ''}`}
+                      className={`h-12 bg-secondary/15 border-border/40 focus:border-primary/50 transition-all rounded-xl ${errors.name ? 'border-red-500 ring-1 ring-red-500/20' : ''}`}
                     />
-                    {errors.name && <p className='text-sm text-red-500'>{errors.name}</p>}
+                    {errors.name && <p className='text-[10px] font-bold text-red-500 uppercase tracking-wider'>{errors.name}</p>}
                   </div>
                   <div className='space-y-2'>
-                    <Label htmlFor='email' className='font-semibold'>Email</Label>
+                    <Label htmlFor='email' className='font-semibold'>Business Email</Label>
                     <Input
                       id='email'
                       name='email'
                       type='email'
-                      placeholder='john@example.com'
+                      placeholder='name@company.com'
                       value={formData.email}
                       onChange={handleChange}
                       disabled={isPending}
-                      className={`h-12 bg-secondary/20 border-border/50 focus:border-primary/50 transition-all ${errors.email ? 'border-red-500' : ''}`}
+                      className={`h-12 bg-secondary/15 border-border/40 focus:border-primary/50 transition-all rounded-xl ${errors.email ? 'border-red-500 ring-1 ring-red-500/20' : ''}`}
                     />
-                    {errors.email && <p className='text-sm text-red-500'>{errors.email}</p>}
+                    {errors.email && <p className='text-[10px] font-bold text-red-500 uppercase tracking-wider'>{errors.email}</p>}
+                  </div>
+                </div>
+
+                <div className='grid sm:grid-cols-2 gap-6'>
+                  <div className='space-y-2'>
+                    <Label htmlFor='phone' className='font-semibold'>Phone Number</Label>
+                    <Input
+                      id='phone'
+                      name='phone'
+                      type='tel'
+                      placeholder='+389 XX XXX XXX'
+                      value={formData.phone}
+                      onChange={handleChange}
+                      disabled={isPending}
+                      className={`h-12 bg-secondary/15 border-border/40 focus:border-primary/50 transition-all rounded-xl ${errors.phone ? 'border-red-500 ring-1 ring-red-500/20' : ''}`}
+                    />
+                    {errors.phone && <p className='text-[10px] font-bold text-red-500 uppercase tracking-wider'>{errors.phone}</p>}
+                  </div>
+                  <div className='space-y-2'>
+                    <Label htmlFor='subject' className='font-semibold'>Inquiry Type</Label>
+                    <select
+                        id='subject'
+                        name='subject'
+                        value={formData.subject}
+                        onChange={handleChange as any}
+                        disabled={isPending}
+                        className={`w-full h-12 px-3 bg-secondary/15 border-border/40 border focus:border-primary/50 transition-all rounded-xl text-sm outline-none appearance-none ${errors.subject ? 'border-red-500 ring-1 ring-red-500/20' : ''}`}
+                    >
+                        <option value="">Choose a category</option>
+                        <option value="GENERAL">General Information</option>
+                        <option value="TECHNICAL">Technical Support</option>
+                        <option value="PREMIUM">Premium Services & Billing</option>
+                        <option value="VERIFICATION">Identity Verification</option>
+                        <option value="REPORT">Report a Listing/User</option>
+                    </select>
+                    {errors.subject && <p className='text-[10px] font-bold text-red-500 uppercase tracking-wider'>{errors.subject}</p>}
                   </div>
                 </div>
 
                 <div className='space-y-2'>
-                  <Label htmlFor='subject' className='font-semibold'>Subject</Label>
-                  <Input
-                    id='subject'
-                    name='subject'
-                    placeholder='How can we help?'
-                    value={formData.subject}
-                    onChange={handleChange}
-                    disabled={isPending}
-                    className={`h-12 bg-secondary/20 border-border/50 focus:border-primary/50 transition-all ${errors.subject ? 'border-red-500' : ''}`}
-                  />
-                   {errors.subject && <p className='text-sm text-red-500'>{errors.subject}</p>}
-                </div>
-
-                <div className='space-y-2'>
-                  <Label htmlFor='message' className='font-semibold'>Message</Label>
+                  <Label htmlFor='message' className='font-semibold'>Message Content</Label>
                   <Textarea
                     id='message'
                     name='message'
-                    placeholder='Tell us more about your inquiry...'
+                    placeholder='Provide as much detail as possible to help us assist you better...'
                     value={formData.message}
                     onChange={handleChange}
                     disabled={isPending}
-                    rows={6}
-                    className={`bg-secondary/20 border-border/50 focus:border-primary/50 transition-all resize-none ${errors.message ? 'border-red-500' : ''}`}
+                    rows={5}
+                    className={`bg-secondary/15 border-border/40 focus:border-primary/50 transition-all resize-none rounded-xl ${errors.message ? 'border-red-500 ring-1 ring-red-500/20' : ''}`}
                   />
-                  {errors.message && <p className='text-sm text-red-500'>{errors.message}</p>}
+                  {errors.message && <p className='text-[10px] font-bold text-red-500 uppercase tracking-wider'>{errors.message}</p>}
+                </div>
+
+                <div className='space-y-4 p-5 rounded-2xl bg-primary/5 border border-primary/10'>
+                    <div className='flex items-center justify-between'>
+                        <Label htmlFor='captchaResult' className='font-bold text-sm'>
+                            Security Verification: <span className='text-primary ml-1'>{captcha.a} + {captcha.b} = ?</span>
+                        </Label>
+                        <Button 
+                            type="button" 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-7 text-[10px] uppercase font-black tracking-widest"
+                            onClick={refreshCaptcha}
+                        >
+                            Refresh
+                        </Button>
+                    </div>
+                    <Input
+                        id='captchaResult'
+                        name='captchaResult'
+                        placeholder='Enter the sum'
+                        value={formData.captchaResult}
+                        onChange={handleChange}
+                        disabled={isPending}
+                        className={`h-11 bg-background border-border/40 focus:border-primary/50 transition-all rounded-xl ${errors.captchaResult ? 'border-red-500' : ''}`}
+                    />
+                    {errors.captchaResult && <p className='text-[10px] font-bold text-red-500 uppercase tracking-wider'>{errors.captchaResult}</p>}
                 </div>
 
                 <Button
