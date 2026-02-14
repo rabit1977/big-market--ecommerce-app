@@ -92,8 +92,9 @@ const helpCategories = [
         bgColor: 'bg-slate-500/10',
         href: '/help/terms',
         items: [
-            { label: 'Terms of Use', href: '/help/terms' },
-            { label: 'Privacy Policy', href: '/help/privacy' }
+            { label: 'Privacy & Data Protection', href: '/help/terms#privacy' },
+            { label: 'Registration & Verification', href: '/help/terms#registration' },
+            { label: 'Prohibited Content Rules', href: '/help/terms#prohibited' }
         ]
     },
     {

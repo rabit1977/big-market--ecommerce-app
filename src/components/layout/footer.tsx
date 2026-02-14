@@ -104,10 +104,10 @@ export function Footer() {
             <div className='flex flex-col gap-3'>
                 <h3 className='font-black text-[10px] uppercase tracking-widest text-foreground/70'>Legal</h3>
                 <ul className='space-y-2'>
-                    <li><Link href="/safety" className='text-xs font-medium text-muted-foreground hover:text-primary transition-all duration-300 hover:pl-1 block w-fit'>Safety Guidelines</Link></li>
-                    <li><Link href="/terms" className='text-xs font-medium text-muted-foreground hover:text-primary transition-all duration-300 hover:pl-1 block w-fit'>Terms of Service</Link></li>
-                    <li><Link href="/privacy" className='text-xs font-medium text-muted-foreground hover:text-primary transition-all duration-300 hover:pl-1 block w-fit'>Privacy Policy</Link></li>
-                    <li><Link href="/cookies" className='text-xs font-medium text-muted-foreground hover:text-primary transition-all duration-300 hover:pl-1 block w-fit'>Cookie Policy</Link></li>
+                    <li><Link href="/help/safety" className='text-xs font-medium text-muted-foreground hover:text-primary transition-all duration-300 hover:pl-1 block w-fit'>Safety Guidelines</Link></li>
+                    <li><Link href="/help/terms" className='text-xs font-medium text-muted-foreground hover:text-primary transition-all duration-300 hover:pl-1 block w-fit'>Terms of Service</Link></li>
+                    <li><Link href="/help/terms#privacy" className='text-xs font-medium text-muted-foreground hover:text-primary transition-all duration-300 hover:pl-1 block w-fit'>Privacy Policy</Link></li>
+                    <li><Link href="/help/terms#cookies" className='text-xs font-medium text-muted-foreground hover:text-primary transition-all duration-300 hover:pl-1 block w-fit'>Cookie Policy</Link></li>
                 </ul>
             </div>
         </div>
@@ -118,8 +118,8 @@ export function Footer() {
                 <p>&copy; {currentYear} Big Market. All rights reserved.</p>
                 <div className="hidden md:block w-0.5 h-0.5 rounded-full bg-border" />
                 <div className='flex gap-3'>
-                    <Link href="/privacy" className="hover:text-foreground transition-colors duration-300">Privacy</Link>
-                    <Link href="/terms" className="hover:text-foreground transition-colors duration-300">Terms</Link>
+                    <Link href="/help/terms#privacy" className="hover:text-foreground transition-colors duration-300">Privacy</Link>
+                    <Link href="/help/terms" className="hover:text-foreground transition-colors duration-300">Terms</Link>
                     <Link href="/sitemap" className="hover:text-foreground transition-colors duration-300">Sitemap</Link>
                 </div>
             </div>

@@ -1,21 +1,24 @@
 'use client';
 
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 import {
-    ArrowRight,
     BadgeCheck,
     Briefcase,
     CheckCircle2,
-    Clock,
     CreditCard,
     Globe,
     HelpCircle,
     LayoutDashboard,
     PieChart,
-    ShieldCheck,
     Store
 } from 'lucide-react';
 import Link from 'next/link';
@@ -112,18 +115,187 @@ export default function PaymentsBillingPage() {
                             </Button>
                         </section>
 
-                        {/* Terms of Service Snippet */}
+                        {/* Terms of Service Section */}
                         <section id="terms">
-                            <h2 className="text-2xl font-black mb-6">Subscription Policies & Terms</h2>
-                            <div className="prose prose-sm max-w-none text-muted-foreground space-y-4 leading-relaxed">
-                                <p>By enrolling in our Premium Membership, you acknowledge and agree to the following professional terms of service:</p>
-                                <ul className="list-disc pl-5 space-y-2">
-                                    <li><strong>Eligibility:</strong> Services are strictly reserved for individuals and entities aged 18 and over.</li>
-                                    <li><strong>Service Availability:</strong> We guarantee a 95% annual uptime for professional business tools, excluding scheduled maintenance and infrastructure upgrades.</li>
-                                    <li><strong>Technology Requirements:</strong> For optimal performance, professional users must utilize modern browser technologies including enabled Cookies and JavaScript.</li>
-                                    <li><strong>Billing & Refunds:</strong> Subscriptions are non-refundable upon activation. You may cancel your renewal at any time through your dashboard settings.</li>
-                                </ul>
+                            <h2 className="text-2xl font-black mb-6">Rules & Terms / Правила и Услови</h2>
+                            <div className="bg-muted/30 rounded-[2rem] border border-border/50 overflow-hidden">
+                                <Accordion type="single" collapsible className="w-full">
+                                    <AccordionItem value="privacy" className="border-b border-border/50 px-6">
+                                        <AccordionTrigger className="hover:no-underline py-6 text-left">
+                                            <span className="font-bold">Privacy Policy & Data Protection / Заштита на лични податоци</span>
+                                        </AccordionTrigger>
+                                        <AccordionContent className="pb-6 text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                                            Заштитата и сигурноста на вашите лични податоци се една од приоритетните задачи на Реклама5. Ние посветуваме особено внимание на правото на приватноста и заштитата на личните податоци на нашите корисници. Ние го цениме Вашиот интерес за нашата веб страница и Ви благодариме за посетата на нашиот веб-сајт.
+
+                                            Кога креирате кориснички профил на Реклама5.мк, ние ги собираме и чуваме податоците потребни за да го креирате Вашиот профил. Со користење на веб-страната на Реклама5 и верифицирањето на Вашиот кориснички профил, се согласувате за собирање, обработка и користење на Вашите лични податоци од нашата компанија.
+
+                                            Тие податоци се:
+                                            - Име и Презиме
+                                            - E-маил адреса
+                                            - Телефон за контакт
+                                            - Локација
+                                            - Податоци на огласот
+                                            - ИП адреса
+
+                                            Податоците кои ги собираме, се чуваат кај нас во согласност со прописите за заштита на личните податоци.
+                                            За подетални информации посетете ја веб страницата Дирекцијата за заштита на лични податоци на Р.С.Македонија dzlp.mk.
+
+                                            Вашите лични податоци се користат исклучиво за овозможување на нашите услуги и подобрување на истите. Личните податоци нема да бидат откриени без ваша согласност на трети лица. Обработка на Вашите лични податоци за друга цел, може да се врши врз основа на Ваша претходна писмена согласност. Од наша страна се користат соодветни технички безбедносни мерки за да ги заштитиме Вашите податоци доставени до нас. Нашите безбедносни мерки постојано се унапредуваат во согласност со технолошкиот развој, но сепак не може во целост да се гарантира дека безбедносните мерки ќе спречат трети лица од нелегална употреба на истите. Од тие причини доколку имате сознанија за такво нешто, Ве молиме веднаш да не известите како би можеле соодветно да реагираме.
+
+                                            Во секој момент Вие може да извршите промена, ажурирање, корекција или целосно отстранување на Вашите лични податоци и информации, со соодветно барање доставено до нашата компанија.
+
+                                            Плаќање со платежни картички се врши со податоци кои поради безбедност при комуникацијата преку интернет се шифрираат со користење посебен SSL (Secure Socket Layer) протокол.
+
+                                            Од безбедносни причини вашата IP адреса ќе се евидентира во нашиот систем. Во случај на измама или злоупотреба истата IP адреса ќе биде доставена до надлежните органи. Секако Реклама5.мк исто така во истражна постапка најтесно соработува со властите.
+
+                                            Согласно Законот за заштита на лични податоци, овие информации ќе бидат архивирани во нашата компанија во рок не подолг од една година по завршување на рокот на траење на Вашиот кориснички профил, по кое нешто истите ќе бидат избришани.
+
+                                            Пред истекот на овој рок, податоците можат да бидат избришани, врз основа на ваше писмено барање, со тоа што сите евентуално одговорности поради тоа ќе паднат на Ваш товар, односно нашата компанија нема да ги сони последиците кои евентуално можат да произлезат од Вашето барање.
+
+                                            Со поднесување на вашите податоци за употреба, вие се согласувате за ваквото складирање на податоци и трансфер на истите према трети лица, по ваше барање. При тоа се превземаат сите соодветни мерки со цел обезбедување и заштита на вашите лични податоци во согласност со законските прописи. Податоците ќе бидат складирани на посебни безбедносни сервери и истите ќе бидат соодветно криптирани за поголема безбедност.
+
+                                            При тоа напоменуваме дека електронските преноси на информации не се целосно безбедни и не можеме да гарантираме целосна заштита и безбедност на истите. Нашата компанија гарантира дека ќе ги превземе сите неопходни мерки за заштита на податоците кои ги добиваме по електронски пат.
+                                        </AccordionContent>
+                                    </AccordionItem>
+
+                                    <AccordionItem value="registration" className="border-b border-border/50 px-6">
+                                        <AccordionTrigger className="hover:no-underline py-6 text-left">
+                                            <span className="font-bold">Registration & Verification / Регистрација и Верификација</span>
+                                        </AccordionTrigger>
+                                        <AccordionContent className="pb-6 text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                                            Реклама5.мк им нуди на своите корисници он-лајн услуга. За користење на услугите на Реклама5.мк е потребна регистрација, а за секоја платена услуга корисникот е информиран за содржината како и за цените и условите за плаќање. Услугата на Реклама5.мк е во оперативна должност непрекинато седум дена во неделата со 90% расположливост во текот на годината. Од ова се изземени случаите на испад поради одржување и надградба на софтверот, како и времето кога услугата не е достапна на интернет поради технички или други проблеми кои не се под влијание на Реклама5.мк.
+
+                                            За користење на сервисот Реклама5 во целост, клиентот мора да ги користи најновите пребарувачки технологии или да го овозможи нивното функционирање на својот компјутер (на пр. активирање на Java Skript, Cookies, Pop-ups).
+
+                                            Поради безбедносни причини Верификација на профилот е задолжителна. Откако ќе го верифицирате, можете 1 година бесплатно да внесувате огласи исто така бесплатно да ги менувате вашите огласи. Вкупно можете да управувате до 50 огласи на годишно ниво. Цената за верификацијта е 98 ден + ддв (116 ден.) за 1 година.
+
+                                            Од страна на нашата компанија во согласност со законот за заштита на лични податоци, ќе бидат применети сите технички и организациски мерки за заштита од случајно или незаконско уништување на личните податоци.
+                                        </AccordionContent>
+                                    </AccordionItem>
+
+                                    <AccordionItem value="auth-tech" className="border-b border-border/50 px-6">
+                                        <AccordionTrigger className="hover:no-underline py-6 text-left">
+                                            <span className="font-bold">Social Login & Tech / Најава и Технологија</span>
+                                        </AccordionTrigger>
+                                        <AccordionContent className="pb-6 text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                                            Функцијата Social Login служи за поедноставена и безбедна автентикација на корисниците преку Google, Facebook или Apple. Трансферот на податоци зависи од вашите поставки кај третиот провајдер.
+
+                                            Согласно Законот за заштита на личните податоци, со активирање на полето за согласност (checkbox), дозволувате вчитување на содржини од надворешни платформи (YouTube, TikTok, Facebook и Instagram). Со овој чин, вашата IP-адреса и технички податоци се пренесуваат до соодветните даватели.
+
+                                            Ние користиме мапи од OpenStreetMap (Leaflet) и Google Maps. Вашата IP-адреса може да се пренесе до серверите на OpenStreetMap и Google за прикажување на мапските податоци.
+                                        </AccordionContent>
+                                    </AccordionItem>
+
+                                    <AccordionItem value="cookies" className="border-b border-border/50 px-6">
+                                        <AccordionTrigger className="hover:no-underline py-6 text-left">
+                                            <span className="font-bold">Cookie Policy / Политика на колачиња (Cookies)</span>
+                                        </AccordionTrigger>
+                                        <AccordionContent className="pb-6 text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                                            Со цел да ја направиме Реклама5 полесна и подостапна за употреба, ние користиме колачиња (Cookies). Колачињата се мали текстуални датотеки кои се зачувуваат на Вашиот компјутер. Оваа информација е анонимна и не содржи лични податоци. Скоро сите веб пребарувачи се поставени автоматски да ги примаат колачињата, но можете да ги деактивирате во подесувањата.
+                                        </AccordionContent>
+                                    </AccordionItem>
+
+                                    <AccordionItem value="marketing" className="border-b border-border/50 px-6">
+                                        <AccordionTrigger className="hover:no-underline py-6 text-left">
+                                            <span className="font-bold">Marketing & Communication / Маркетинг и Комуникација</span>
+                                        </AccordionTrigger>
+                                        <AccordionContent className="pb-6 text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                                            Реклама5 ги користи вашите податоци за директен маркетинг само со ваша претходна согласност. Пораките можат да се испраќаат преку Е-пошта, SMS, Desktop нотификации, Viber, WhatsApp или телефонски повици. Во секоја е-порака се наоѓа линк „Откажи се" (Unsubscribe).
+
+                                            Со кликнување на копчињата за контакт преку WhatsApp или Viber, вие директно пристапувате до надворешни платформи. Нашата платформа нема пристап до вашата приватна комуникација.
+
+                                            Реклама5 не толерира спам (масовно создавање на содржински идентични прилози).
+                                        </AccordionContent>
+                                    </AccordionItem>
+
+                                    <AccordionItem value="prohibited" className="border-b border-border/50 px-6">
+                                        <AccordionTrigger className="hover:no-underline py-6 text-left">
+                                            <span className="font-bold">Prohibited Content / Недопуштени содржини</span>
+                                        </AccordionTrigger>
+                                        <AccordionContent className="pb-6 text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                                            Oсобено е недопуштиво да се даваат огласи со следнава содржина:
+                                            - Рекламирање на други интернет страници и фирми.
+                                            - Несериозни понуди за работа.
+                                            - Игри на среќа, кредити и заеми без целосен податок.
+                                            - Инвестиции, хартии од вредност, акции.
+                                            - Навредливи, расистички или порнографски содржини.
+                                            - Понуди за проституција.
+                                            
+                                            Недопуштени предмети: украдени предмети, дроги, радиоактивни супстанци, оружје, лекови на рецепт, човечки органи.
+                                            
+                                            Огласот се дава само еднаш и само на една локација. Повеќекратно давање оглас со идентична содржина не е дозволено.
+                                        </AccordionContent>
+                                    </AccordionItem>
+
+                                    <AccordionItem value="responsibility-security" className="border-b border-border/50 px-6">
+                                        <AccordionTrigger className="hover:no-underline py-6 text-left">
+                                            <span className="font-bold">Responsibility & Security / Одговорност и Безбедност</span>
+                                        </AccordionTrigger>
+                                        <AccordionContent className="pb-6 text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                                            Корисниците се обврзуваат да даваат исклучиво вистинити податоци. Одговорноста за содржината на огласите лежи исклучиво кај авторите.
+
+                                            Чувајте ја Вашата лозинка во тајност. Избегнувајте употреба на истата лозинка за други веб страници.
+
+                                            За да ја користите оваа страница морате да имате наполнето 18 години. Реклама5 го задржува правото да ја прекине или суспендира регистрацијата на корисникот во секое време доколку не се почитуваат условите.
+                                        </AccordionContent>
+                                    </AccordionItem>
+
+                                    <AccordionItem value="legal" className="border-none px-6">
+                                        <AccordionTrigger className="hover:no-underline py-6 text-left">
+                                            <span className="font-bold">Legal Notice & Contact / Правни напомени и Контакт</span>
+                                        </AccordionTrigger>
+                                        <AccordionContent className="pb-6 text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                                            Имајте предвид дека политиката за приватност и условите на употреба можат во секое време да бидат променети.
+
+                                            Бигмедиа Дооел
+                                            6333 Радолишта, Струга
+                                            
+                                            Ажурирано на: 05.01.2026 година.
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                </Accordion>
                             </div>
+                        </section>
+
+                        {/* Contact Form Section */}
+                        <section id="contact-form" className="p-8 md:p-10 rounded-[2.5rem] bg-background border border-border/50 shadow-sm">
+                            <h2 className="text-2xl font-black mb-8">Direct Contact / Директен Контакт</h2>
+                            <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold px-1">Вашето Име / Your Name</label>
+                                    <input type="text" className="w-full rounded-2xl border border-border bg-muted/30 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold px-1">Вашиот Е-Маил / Your Email</label>
+                                    <input type="email" className="w-full rounded-2xl border border-border bg-muted/30 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold px-1">Предмет / Subject</label>
+                                    <select className="w-full rounded-2xl border border-border bg-muted/30 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all">
+                                        <option>Општо прашање</option>
+                                        <option>Техничка поддршка</option>
+                                        <option>Плаќање и фактури</option>
+                                        <option>Пријава на злоупотреба</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold px-1">Вашиот Телефон / Your Phone</label>
+                                    <input type="tel" className="w-full rounded-2xl border border-border bg-muted/30 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" />
+                                </div>
+                                <div className="md:col-span-2 space-y-2">
+                                    <label className="text-sm font-bold px-1">Текст на пораката / Message</label>
+                                    <textarea rows={5} className="w-full rounded-2xl border border-border bg-muted/30 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none"></textarea>
+                                </div>
+                                <div className="md:col-span-2 space-y-4">
+                                    <div className="flex items-center gap-4 p-4 rounded-2xl bg-muted/50 border border-border/50 w-fit">
+                                        <span className="font-bold text-sm">Внесете го точниот резултат / Security Check: <span className="text-primary">15 + 7 = ?</span></span>
+                                        <input type="text" className="w-16 rounded-xl border border-border bg-background px-3 py-2 text-center font-bold focus:outline-none focus:ring-2 focus:ring-primary/20" />
+                                    </div>
+                                    <Button className="w-full md:w-auto px-12 py-6 rounded-2xl font-black text-lg shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+                                        Испрати Порака / Send Message
+                                    </Button>
+                                </div>
+                            </form>
                         </section>
                     </div>
 
@@ -163,7 +335,7 @@ export default function PaymentsBillingPage() {
                                 <Button className="w-full rounded-xl font-bold h-12" asChild>
                                     <Link href="/premium">Upgrade Now</Link>
                                 </Button>
-                            </div>
+                            </CardContent>
                         </Card>
 
                         {/* Payment Methods */}
