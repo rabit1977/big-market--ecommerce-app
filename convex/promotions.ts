@@ -15,11 +15,17 @@ export const applyPromotion = mutation({
     const DURATION_DAYS = 14;
     const expiresAt = Date.now() + (DURATION_DAYS * 24 * 60 * 60 * 1000);
 
+    // Determine new status: 
+    // If it was PENDING_APPROVAL, keep it pending (admin must still approve).
+    // If it was REJECTED, maybe move to PENDING_APPROVAL for re-review? For now, let's keep it safe.
+    // Otherwise (ACTIVE or undefined), set to ACTIVE.
+    const newStatus = listing.status === 'PENDING_APPROVAL' ? 'PENDING_APPROVAL' : 'ACTIVE';
+
     const updates: any = { 
         isPromoted: true, 
         promotionTier: args.tier,
         promotionExpiresAt: expiresAt,
-        status: 'ACTIVE' // Activate immediately upon payment
+        status: newStatus 
     };
     
     // For refresh or top tiers, we bump the date to keep it at top
