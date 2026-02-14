@@ -365,7 +365,7 @@ export function MessagesClient({
                     type="submit"
                     disabled={!newMessage.trim() || !activeConversation}
                     size="icon"
-                    className="h-10 w-10 md:h-11 md:w-11 rounded-xl shrink-0 bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
+                    className="h-10 w-10 md:h-11 md:w-11 rounded-xl shrink-0 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all z-10"
                   >
                     <Send className="w-5 h-5" />
                   </Button>
@@ -469,13 +469,13 @@ function MessageBubble({
   });
 
   return (
-    <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
+    <div className={cn("flex w-full mb-3", isOwn ? "justify-end" : "justify-start")}>
       <div
         className={cn(
-          "max-w-[75%] rounded-2xl px-3 py-2",
+          "max-w-[80%] sm:max-w-[70%] rounded-2xl px-4 py-2.5 shadow-sm",
           isOwn
-            ? 'bg-primary text-primary-foreground rounded-br-sm'
-            : 'bg-muted rounded-bl-sm'
+            ? 'bg-primary text-primary-foreground rounded-br-none'
+            : 'bg-muted text-foreground rounded-bl-none'
         )}
       >
         <p className={cn(

@@ -49,13 +49,26 @@ export const send = mutation({
 
     // 2. Create or Update Conversation
     if (existingConversation) {
-      await ctx.db.patch(existingConversation._id, {
+      const isBuyer = existingConversation.buyerId === args.senderId;
+      const updates: any = {
         lastMessage: args.content,
         lastMessageAt: Date.now(),
-        unreadCount: (existingConversation.unreadCount || 0) + 1,
-      });
+      };
+
+      if (isBuyer) {
+        // Sender is buyer, so increment seller's unread count
+        updates.sellerUnreadCount = (existingConversation.sellerUnreadCount || 0) + 1;
+      } else {
+        // Sender is seller, so increment buyer's unread count
+        updates.buyerUnreadCount = (existingConversation.buyerUnreadCount || 0) + 1;
+      }
+
+      await ctx.db.patch(existingConversation._id, updates);
     } else {
       // Create new
+      // Determine initial unread count: receiver gets 1 unread
+      const isSenderBuyer = (args.listingId ? args.senderId : participantIds[0]) === args.senderId;
+      
       await ctx.db.insert("conversations", {
         type,
         listingId: args.listingId,
@@ -63,7 +76,8 @@ export const send = mutation({
         sellerId: args.listingId ? args.receiverId : participantIds[1],
         lastMessage: args.content,
         lastMessageAt: Date.now(),
-        unreadCount: 1,
+        buyerUnreadCount: isSenderBuyer ? 0 : 1, // If sender is buyer, buyer has read it (0). If sender is seller, buyer has 1 unread.
+        sellerUnreadCount: isSenderBuyer ? 1 : 0, // If sender is buyer, seller has 1 unread.
         participantIds,
       });
     }
@@ -169,10 +183,14 @@ export const getConversations = query({
         const otherUserId =
           conv.buyerId === args.userId ? conv.sellerId : conv.buyerId;
 
+        // Calculate unread count for THIS user
+        const unreadCount = conv.buyerId === args.userId ? conv.buyerUnreadCount : conv.sellerUnreadCount;
+
         return {
           ...conv,
           listing,
           otherUserId,
+          unreadCount, // Inject dynamic unread count for frontend compatibility
         };
       })
     );
@@ -196,7 +214,10 @@ export const getUnreadCount = query({
       .collect();
 
     const totalUnread = conversations.reduce(
-      (sum, conv) => sum + (conv.unreadCount || 0),
+      (sum, conv) => {
+          const count = conv.buyerId === args.userId ? conv.buyerUnreadCount : conv.sellerUnreadCount;
+          return sum + (count || 0);
+      },
       0
     );
 
@@ -263,7 +284,11 @@ export const markConversationAsRead = mutation({
     }
 
     if (conversation) {
-      await ctx.db.patch(conversation._id, { unreadCount: 0 });
+      if (conversation.buyerId === args.userId) {
+          await ctx.db.patch(conversation._id, { buyerUnreadCount: 0 });
+      } else {
+          await ctx.db.patch(conversation._id, { sellerUnreadCount: 0 });
+      }
     }
 
     return messages.length;
@@ -279,40 +304,12 @@ export const getListingStats = query({
       .withIndex("by_listing", (q) => q.eq("listingId", args.listingId))
       .collect();
 
-    // 2. Calculate unique interlocutors (people who messaged about this)
-    // Actually conversations are unique per pair (buyer, seller, listing).
-    // So conversations.length IS the number of chats.
-    
-    // 3. Count unread messages for the seller (current user will be seller if calling this)
-    // We can't easily know who is calling without passing userId or checking auth.
-    // Ideally we assume the caller is the owner.
-    // Let's return the total unread count across all conversations for this listing.
-    // However, unreadCount in conversation is for the USER who has unread messages.
-    // Wait, `unreadCount` in schema:
-    // lastMessageAt: v.number(), lastMessage: v.optional(v.string()), unreadCount: v.optional(v.number())
-    // The current schema implementation of `unreadCount` in `conversations` table is slightly ambiguous
-    // if it doesn't specify WHO has unread messages.
-    // Usually unreadCount is per-user-conversation status. 
-    // But here `conversations` is a shared record between buyer and seller.
-    // If we look at `send` mutation:
-    // unreadCount: (existingConversation.unreadCount || 0) + 1
-    // It just increments. It doesn't say for whom.
-    // AND `markConversationAsRead` clears it.
-    // This implies `unreadCount` is simpler/shared or buggy?
-    // Actually, looking at `getUnreadCount`: it sums up `unreadCount` for all conversations where user is buyer OR seller.
-    // This suggests `unreadCount` implies messages waiting for *someone*.
-    // If I send a message, unreadCount goes up. If I am the sender, it shouldn't be unread for ME.
-    // The current implementation in `send` increments it blindly.
-    // So `unreadCount` effectively means "messages since last read by ANYONE"?
-    // Or maybe it assumes the receiver has unread messages?
-    // `markConversationAsRead` clears it when a specific user reads it.
-    // This schema is a bit simplistic for dual-sided unread counts (usually you need `buyerUnreadCount` and `sellerUnreadCount`).
-    
-    // For now, let's just return what we have: total conversations (leads).
+    // 2. Count unread messages (assuming caller is the SELLER here, as this is for "My Listings")
+    // If the conversation listingId matches, the creator of the listing is the seller.
     
     return {
         totalConversations: conversations.length,
-        totalUnread: conversations.reduce((acc, curr) => acc + (curr.unreadCount || 0), 0),
+        totalUnread: conversations.reduce((acc, curr) => acc + (curr.sellerUnreadCount || 0), 0),
     };
   },
 });

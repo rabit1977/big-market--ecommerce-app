@@ -157,7 +157,8 @@ export default defineSchema({
     sellerId: v.string(), // For SUPPORT chat, this is 'ADMIN'
     lastMessageAt: v.number(),
     lastMessage: v.optional(v.string()),
-    unreadCount: v.optional(v.number()),
+    buyerUnreadCount: v.number(),
+    sellerUnreadCount: v.number(),
     participantIds: v.optional(v.array(v.string())), // Better for multi-type lookups
   }).index("by_buyer", ["buyerId"])
     .index("by_seller", ["sellerId"])
