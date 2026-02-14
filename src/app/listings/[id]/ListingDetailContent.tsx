@@ -40,6 +40,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { api } from '../../../../convex/_generated/api';
 import { Id } from '../../../../convex/_generated/dataModel';
+import { cn } from '@/lib/utils';
 
 interface ListingDetailContentProps {
   listing: {
@@ -290,6 +291,14 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                             Condition: {String(condition)}
                          </span>
                        )}
+                       {listing.status !== 'ACTIVE' && (
+                         <span className={cn(
+                            "text-[10px] font-black uppercase px-2 py-0.5 rounded tracking-tighter",
+                            listing.status === 'PENDING_APPROVAL' ? "bg-amber-100 text-amber-700 border border-amber-200" : "bg-red-100 text-red-700 border border-red-200"
+                         )}>
+                            {listing.status === 'PENDING_APPROVAL' ? 'Pending Approval' : listing.status}
+                         </span>
+                       )}
                     </div>
                     <h1 className="text-xl font-bold text-foreground leading-tight">
                         {listing.title}
@@ -426,6 +435,14 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                    </div>
                    
                    <div className="p-6 bg-muted rounded-2xl flex flex-col gap-1 border border-border relative overflow-hidden">
+                       {listing.status !== 'ACTIVE' && (
+                         <div className={cn(
+                            "absolute top-3 left-4 text-[9px] font-black uppercase px-2 py-0.5 rounded-full border shadow-sm z-10",
+                            listing.status === 'PENDING_APPROVAL' ? "bg-amber-100 text-amber-700 border-amber-200" : "bg-red-100 text-red-700 border-red-200"
+                         )}>
+                            {listing.status === 'PENDING_APPROVAL' ? 'Pending Approval' : listing.status}
+                         </div>
+                       )}
                        {listing.previousPrice && listing.previousPrice > listing.price && (
                            <div className="absolute top-3 right-4 flex items-center gap-1.5 opacity-60">
                                <History className="w-3 h-3" />

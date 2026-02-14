@@ -182,7 +182,7 @@ export function MessagesClient({
     return titleMatch || supportMatch;
   });
 
-  const showChatOnMobile = !!selectedConversation;
+  const showChatOnMobile = !!activeConversation;
 
   return (
     <div className="space-y-3 md:space-y-4">
