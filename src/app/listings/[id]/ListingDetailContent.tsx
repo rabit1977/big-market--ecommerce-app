@@ -328,33 +328,37 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                     </button>
                 </div>
                 
-                {/* Mobile Contact Shortcuts */}
-                <div className="grid grid-cols-2 gap-3 pt-4">
-                    <Link 
-                      href={`/messages?listingId=${listing._id}`}
-                      onClick={() => handleContactClick('contact')}
-                      className="flex items-center justify-center gap-2 py-3.5 bg-primary text-white rounded-xl font-black text-sm uppercase tracking-tight shadow-lg shadow-primary/20 active:scale-95 transition-all"
-                    >
-                        <MessageSquare className="w-4 h-4" />
-                        Send Message
-                    </Link>
-                    {contactPhone && (
-                        <a 
-                          href={`tel:${contactPhone}`}
-                          onClick={() => handleContactClick('call')}
-                          className="flex items-center justify-center gap-2 py-3.5 bg-green-500 text-white rounded-xl font-black text-sm uppercase tracking-tight shadow-lg shadow-green-200 active:scale-95 transition-all"
-                        >
-                            <Phone className="w-4 h-4" />
-                            Call Now
-                        </a>
-                    )}
-                </div>
-                
-                {contactEmail && (
-                    <div className="mt-3 flex items-center justify-center p-3 bg-accent rounded-xl text-xs font-bold text-muted-foreground border border-border gap-2">
-                        <Mail className="w-4 h-4" />
-                        <span>Email: {contactEmail}</span>
-                    </div>
+                {session?.user?.id !== listing.userId && (
+                    <>
+                        {/* Mobile Contact Shortcuts */}
+                        <div className="grid grid-cols-2 gap-3 pt-4">
+                            <Link 
+                            href={`/messages?listingId=${listing._id}`}
+                            onClick={() => handleContactClick('contact')}
+                            className="flex items-center justify-center gap-2 py-3.5 bg-primary text-white rounded-xl font-black text-sm uppercase tracking-tight shadow-lg shadow-primary/20 active:scale-95 transition-all"
+                            >
+                                <MessageSquare className="w-4 h-4" />
+                                Send Message
+                            </Link>
+                            {contactPhone && (
+                                <a 
+                                href={`tel:${contactPhone}`}
+                                onClick={() => handleContactClick('call')}
+                                className="flex items-center justify-center gap-2 py-3.5 bg-green-500 text-white rounded-xl font-black text-sm uppercase tracking-tight shadow-lg shadow-green-200 active:scale-95 transition-all"
+                                >
+                                    <Phone className="w-4 h-4" />
+                                    Call Now
+                                </a>
+                            )}
+                        </div>
+                        
+                        {contactEmail && (
+                            <div className="mt-3 flex items-center justify-center p-3 bg-accent rounded-xl text-xs font-bold text-muted-foreground border border-border gap-2">
+                                <Mail className="w-4 h-4" />
+                                <span>Email: {contactEmail}</span>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
 
@@ -436,38 +440,42 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                        </div>
                    </div>
 
-                   <div className="space-y-3 pt-2">
-                      <Button asChild className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-lg uppercase tracking-tight shadow-xl shadow-primary/20 group">
-                         <Link href={`/messages?listingId=${listing._id}`} onClick={() => handleContactClick('contact')}>
-                            <MessageSquare className="mr-2 h-6 w-6 group-hover:scale-110 transition-transform" />
-                            Send Message
-                         </Link>
-                      </Button>
-                      
-                       {/* Phone Number Display */}
-                       <div className="flex w-full gap-2 overflow-hidden">
-                           {contactPhone && (
-                                <Button asChild variant="outline" className="flex-1 min-w-0 h-14 rounded-2xl border-2 border-border font-black text-sm lg:text-base text-foreground hover:bg-accent group">
-                                    <a href={`tel:${contactPhone}`} onClick={() => handleContactClick('call')} className="flex items-center justify-center truncate px-3">
-                                        <Phone className="shrink-0 mr-2 h-5 w-5 text-green-500" />
-                                        <span className="truncate">{contactPhone}</span>
-                                    </a>
+                   {session?.user?.id !== listing.userId && (
+                     <>
+                        <div className="space-y-3 pt-2">
+                            <Button asChild className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-lg uppercase tracking-tight shadow-xl shadow-primary/20 group">
+                                <Link href={`/messages?listingId=${listing._id}`} onClick={() => handleContactClick('contact')}>
+                                    <MessageSquare className="mr-2 h-6 w-6 group-hover:scale-110 transition-transform" />
+                                    Send Message
+                                </Link>
+                            </Button>
+                            
+                            {/* Phone Number Display */}
+                            <div className="flex w-full gap-2 overflow-hidden">
+                                {contactPhone && (
+                                        <Button asChild variant="outline" className="flex-1 min-w-0 h-14 rounded-2xl border-2 border-border font-black text-sm lg:text-base text-foreground hover:bg-accent group">
+                                            <a href={`tel:${contactPhone}`} onClick={() => handleContactClick('call')} className="flex items-center justify-center truncate px-3">
+                                                <Phone className="shrink-0 mr-2 h-5 w-5 text-green-500" />
+                                                <span className="truncate">{contactPhone}</span>
+                                            </a>
+                                        </Button>
+                                )}
+
+                                <Button asChild variant="outline" className="w-14 h-14 px-0 rounded-2xl border-2 border-border text-muted-foreground hover:bg-accent">
+                                        <a href={`sms:${contactPhone || ''}`}>
+                                            <MessageSquare className="h-6 w-6" />
+                                        </a>
                                 </Button>
-                           )}
+                            </div>
+                        </div>
 
-                           <Button asChild variant="outline" className="w-14 h-14 px-0 rounded-2xl border-2 border-border text-muted-foreground hover:bg-accent">
-                                <a href={`sms:${contactPhone || ''}`}>
-                                    <MessageSquare className="h-6 w-6" />
-                                </a>
-                           </Button>
-                       </div>
-                   </div>
-
-                   {/* Email Display */}
-                   {contactEmail && (
-                       <div className="flex items-center justify-center p-3 bg-muted rounded-xl text-xs font-bold text-muted-foreground border border-border gap-2">
-                           <span>Email: {contactEmail}</span>
-                       </div>
+                        {/* Email Display */}
+                        {contactEmail && (
+                            <div className="flex items-center justify-center p-3 bg-muted rounded-xl text-xs font-bold text-muted-foreground border border-border gap-2">
+                                <span>Email: {contactEmail}</span>
+                            </div>
+                        )}
+                     </>
                    )}
 
                        <div className="flex items-center justify-center pt-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest gap-4">
@@ -565,6 +573,30 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
             </div>
         </div>
       </div>
+
+      {/* Sticky Bottom Contact Bar (Mobile Only) */}
+      {session?.user?.id !== listing.userId && (
+        <div className="fixed bottom-0 left-0 right-0 z-[60] p-4 bg-background/80 backdrop-blur-lg border-t border-border shadow-[0_-10px_30px_rgba(0,0,0,0.05)] md:hidden flex gap-3 animate-in fade-in slide-in-from-bottom-full duration-500">
+            {contactPhone && (
+                <a 
+                    href={`tel:${contactPhone}`}
+                    onClick={() => handleContactClick('call')}
+                    className="flex-[0.4] flex items-center justify-center gap-2 py-3.5 bg-green-500 text-white rounded-2xl font-black text-sm uppercase tracking-tight shadow-lg shadow-green-200 active:scale-95 transition-all"
+                >
+                    <Phone className="w-4 h-4" />
+                    Call
+                </a>
+            )}
+            <Link 
+                href={`/messages?listingId=${listing._id}`}
+                onClick={() => handleContactClick('contact')}
+                className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-primary text-white rounded-2xl font-black text-sm uppercase tracking-tight shadow-xl shadow-primary/20 active:scale-95 transition-all"
+            >
+                <MessageSquare className="w-4 h-4" />
+                Message Seller
+            </Link>
+        </div>
+      )}
     </div>
   );
 }

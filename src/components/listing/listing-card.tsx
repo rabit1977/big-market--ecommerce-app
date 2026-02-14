@@ -100,12 +100,16 @@ export const ListingCard = memo(
           (promotionTier === 'LISTING_HIGHLIGHT' || promotionTier === 'VISUAL_HIGHLIGHT') && "bg-emerald-100/30 dark:bg-emerald-500/10 border-emerald-400/30 dark:border-emerald-500/30 shadow-md ring-1 ring-emerald-500/20"
         )}
       >
-        {/* Main Card Link - Lower Z-Index */}
-        <Link href={`/listings/${listing.id || listing._id}`} className="absolute inset-0 z-0" aria-label={`View ${listing.title}`} />
+        {/* Main Card Link - Higher Z-Index but below heart button */}
+        <Link 
+          href={`/listings/${listing.id || listing._id}`} 
+          className="absolute inset-0 z-20" 
+          aria-label={`View ${listing.title}`} 
+        />
 
         {/* Image Section */}
         <div className={cn(
-          "relative shrink-0 overflow-hidden z-10 pointer-events-none",
+          "relative shrink-0 overflow-hidden z-10",
           !(promotionTier === 'LISTING_HIGHLIGHT' || promotionTier === 'VISUAL_HIGHLIGHT') && "bg-white",
           isGrid ? "aspect-[4/3] w-full" : "w-24 sm:w-32 md:w-48 h-full" // Reduced width
         )}>
@@ -139,7 +143,7 @@ export const ListingCard = memo(
 
         {/* Content Section */}
         <div className={cn(
-          "flex flex-1 flex-col justify-between relative z-10 pointer-events-none min-w-0",
+          "flex flex-1 flex-col justify-between relative z-10 min-w-0",
           !(promotionTier === 'LISTING_HIGHLIGHT' || promotionTier === 'VISUAL_HIGHLIGHT') && "bg-card",
           isGrid ? "p-2 sm:p-3 space-y-1 sm:space-y-1.5" : "p-2 sm:p-3 md:p-3.5" // Tighter padding
         )}>
