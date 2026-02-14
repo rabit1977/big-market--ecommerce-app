@@ -36,37 +36,25 @@ export const getDailyDeltas = query({
 
     const newUsers = await ctx.db
       .query("users")
-      .filter((q) => 
-        q.and(
-          q.neq(q.field("createdAt"), undefined),
-          q.gt(q.field("createdAt"), startOfToday)
-        )
-      )
+      .withIndex("by_createdAt", (q) => q.gt("createdAt", startOfToday))
       .collect();
 
     const newListings = await ctx.db
       .query("listings")
-      .filter((q) => 
-        q.and(
-          q.neq(q.field("createdAt"), undefined),
-          q.gt(q.field("createdAt"), startOfToday)
-        )
-      )
+      .withIndex("by_createdAt", (q) => q.gt("createdAt", startOfToday))
       .collect();
 
     const todayTransactions = await ctx.db
       .query("transactions")
-      .filter((q) => 
-        q.and(
-          q.neq(q.field("createdAt"), undefined),
-          q.gt(q.field("createdAt"), startOfToday),
-          q.eq(q.field("type"), "TOPUP"),
-          q.eq(q.field("status"), "COMPLETED")
-        )
-      )
+      .withIndex("by_createdAt", (q) => q.gt("createdAt", startOfToday))
       .collect();
 
-    const revenueToday = todayTransactions.reduce((acc, t) => acc + (t.amount || 0), 0);
+    // Filter transactions in memory for specific types/status
+    const validTransactions = todayTransactions.filter(t => 
+        t.type === "TOPUP" && t.status === "COMPLETED"
+    );
+
+    const revenueToday = validTransactions.reduce((acc, t) => acc + (t.amount || 0), 0);
 
     return {
       newUsers: newUsers.length,

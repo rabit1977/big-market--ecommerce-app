@@ -59,7 +59,8 @@ export default defineSchema({
     membershipStatus: v.optional(v.string()), // 'ACTIVE', 'EXPIRED', 'PENDING'
     membershipExpiresAt: v.optional(v.number()),
   }).index("by_externalId", ["externalId"])
-    .index("by_email", ["email"]),
+    .index("by_email", ["email"])
+    .index("by_createdAt", ["createdAt"]),
 
   categories: defineTable({
     name: v.string(),
@@ -251,7 +252,8 @@ export default defineSchema({
     metadata: v.optional(v.any()),
     createdAt: v.number(),
   }).index("by_user", ["userId"])
-    .index("by_stripeId", ["stripeId"]), // For efficient duplicate checking
+    .index("by_stripeId", ["stripeId"]) // For efficient duplicate checking
+    .index("by_createdAt", ["createdAt"]),
 
   verificationRequests: defineTable({
     userId: v.string(),
