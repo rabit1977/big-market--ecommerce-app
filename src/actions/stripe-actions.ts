@@ -13,7 +13,24 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   typescript: true,
 });
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+import { headers } from 'next/headers';
+
+/**
+ * Gets the base URL for the application, handling both local and deployed environments.
+ */
+async function getBaseUrl() {
+  const host = (await headers()).get('host');
+  const protocol = (await headers()).get('x-forwarded-proto') || 'http';
+  
+  // If NEXT_PUBLIC_APP_URL is set and not localhost, use it.
+  // Otherwise, use the dynamic host from headers.
+  const envUrl = process.env.NEXT_PUBLIC_APP_URL;
+  if (envUrl && !envUrl.includes('localhost') && !envUrl.includes('127.0.0.1')) {
+    return envUrl;
+  }
+  
+  return `${protocol}://${host}`;
+}
 
 /**
  * Creates a Stripe checkout session for listing promotion
@@ -27,6 +44,7 @@ export async function createPromotionCheckoutSession(
   priceAmount: number
 ) {
   try {
+    const baseUrl = await getBaseUrl();
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -43,8 +61,8 @@ export async function createPromotionCheckoutSession(
         },
       ],
       mode: 'payment',
-      success_url: `${APP_URL}/my-listings?promoted=true&listingId=${listingId}&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${APP_URL}/listings/${listingId}/success`, // Return to success selection page
+      success_url: `${baseUrl}/my-listings?promoted=true&listingId=${listingId}&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/listings/${listingId}/success`, // Return to success selection page
       metadata: {
         userId,
         listingId,
@@ -72,6 +90,7 @@ export async function createStripeCheckoutSession(
   duration: 'monthly' | 'yearly'
 ) {
   try {
+    const baseUrl = await getBaseUrl();
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -88,8 +107,8 @@ export async function createStripeCheckoutSession(
         },
       ],
       mode: 'payment',
-      success_url: `${APP_URL}/premium/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${APP_URL}/premium`,
+      success_url: `${baseUrl}/premium/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/premium`,
       metadata: {
         userId,
         plan: planName,
