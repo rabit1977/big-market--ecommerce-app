@@ -16,21 +16,21 @@ interface ValueCardProps {
 const values = [
   {
     icon: <Zap className='h-8 w-8 text-primary group-hover:text-white transition-colors duration-300' />,
-    title: 'Innovation',
+    title: 'Modern Platform',
     description:
-      'We constantly seek out the latest and greatest in technology to bring you products that shape the future.',
+      'We build and maintain a high-performance digital environment where users can connect and trade with ultimate efficiency.',
   },
   {
     icon: <ShieldCheck className='h-8 w-8 text-primary group-hover:text-white transition-colors duration-300' />,
-    title: 'Quality',
+    title: 'Trust & Safety',
     description:
-      'Our products are chosen for their reliability and performance, ensuring you get the best value for your money.',
+      'Our priority is maintaining the integrity of our community through rigorous verification and proactive platform moderation.',
   },
   {
     icon: <Heart className='h-8 w-8 text-primary group-hover:text-white transition-colors duration-300' />,
-    title: 'User First',
+    title: 'Community First',
     description:
-      "Your satisfaction is our priority. We're here to help you every step of the way.",
+      "We provide the tools and support for our users to grow their personal or business reach in a professional marketplace.",
   },
 ];
 
@@ -113,14 +113,10 @@ export const AboutContent = () => {
           </div>
           <div className='space-y-6 text-lg leading-relaxed text-muted-foreground'>
             <p>
-              Founded with a vision to redefine digital commerce, Big Market was born from a simple idea: to make
-              the latest technology and a secure marketplace accessible to everyone. We&apos;re a team
-              of innovators who believe that buying and selling should be
-              effortless, secure, and exciting.
+              Founded with a vision to redefine the digital classifieds landscape, Big Market was established to provide a sophisticated, high-tech infrastructure where individuals and businesses can host their listings. We are the administrators and maintainers of this professional ecosystem, committed to ensuring a secure and efficient connection between buyers and sellers.
             </p>
             <p>
-              From individual listings to enterprise-level business solutions, every aspect of our platform is designed to provide value. We stand behind our community with a
-              commitment to safety and service that is second to none.
+              Our role is to provide the cutting-edge tools, verification systems, and moderation standards that make commerce possible. We don't sell the items—we empower our community to do so with confidence and reach.
             </p>
           </div>
         </div>

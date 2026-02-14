@@ -2,7 +2,7 @@ import { PlaceholderPage } from '@/components/shared/placeholder-page';
 
 export const metadata = {
   title: 'Advertise | Big Market',
-  description: 'Advertise your business or products on the largest classifieds platform.',
+  description: 'Advertise your business or items on the largest classifieds platform.',
 };
 
 export default function AdvertisePage() {

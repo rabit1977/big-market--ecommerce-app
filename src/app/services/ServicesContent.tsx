@@ -30,7 +30,7 @@ const services: Service[] = [
   {
     title: 'Professional Shop URL',
     description:
-      'Get a personalized brand URL to showcase your products and establish business authority.',
+      'Get a personalized brand URL to showcase your items and establish business authority.',
     icon: Globe,
   },
   {

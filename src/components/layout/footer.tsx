@@ -34,7 +34,7 @@ export function Footer() {
                     <span className="text-lg font-black tracking-tighter text-foreground italic uppercase">BIG <span className="text-primary not-italic font-bold">MARKET</span></span>
                 </Link>
                 <p className='text-muted-foreground text-xs leading-relaxed max-w-xs'>
-                    The safest and fastest growing marketplace in Macedonia.
+                    Macedonia&apos;s leading classifieds hosting platform. Connecting buyers and sellers in a secure and professional ecosystem.
                 </p>
                 
                 {/* Trust Badges */}
