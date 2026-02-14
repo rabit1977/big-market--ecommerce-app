@@ -6,12 +6,13 @@ import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { formatPrice } from '@/lib/utils/formatters';
 import { motion } from 'framer-motion';
-import { Crown, Eye, Heart, MapPin, Megaphone, ShieldCheck, Star, Zap } from 'lucide-react';
+import { Heart, MapPin, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { memo, useCallback, useEffect, useOptimistic, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
+import { PromotionIcon } from './promotion-icon';
 
 interface ListingCardProps {
   listing: ListingWithRelations;
@@ -67,17 +68,25 @@ export const ListingCard = memo(
     const promotionTier = isPromoted ? listing.promotionTier : null;
     const promoConfig = isPromoted ? getPromotionConfig(promotionTier) : null;
 
-    const getIcon = (iconName?: string) => {
-        switch (iconName) {
-            case 'Star': return <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white fill-current" />;
-            case 'Zap': return <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />;
-            case 'Eye': return <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />;
-            case 'Megaphone': return <Megaphone className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />;
-            case 'Crown': return <Crown className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />;
-            default: return <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white fill-current" />;
-        }
+// ... removed import from here
+
+// ... (keep surrounding imports)
+
+    const getIcon = (iconName?: string) => { // DELETED
+       // ...
     };
 
+    // ... inside component ...
+              {isPromoted && promoConfig && promoConfig.badgeColor && (
+                <div className={cn(
+                    "flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full shadow-lg border border-white/20 backdrop-blur-md transition-all duration-300",
+                    promoConfig.badgeColor
+                )}>
+                    <PromotionIcon iconName={promoConfig.icon} className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white fill-current" />
+                </div>
+              )}
+
+    // ... (adjusting sizing)
     return (
       <motion.div
         layout
@@ -87,7 +96,7 @@ export const ListingCard = memo(
         transition={{ duration: 0.2 }}
         className={cn(
           "group relative flex bg-card border border-border/50 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden",
-          isGrid ? "flex-col h-full rounded-xl" : "flex-row h-28 sm:h-32 md:h-44 rounded-lg",
+          isGrid ? "flex-col h-full rounded-xl" : "flex-row h-24 sm:h-28 md:h-40 rounded-lg", // Reduced height
           (promotionTier === 'LISTING_HIGHLIGHT' || promotionTier === 'VISUAL_HIGHLIGHT') && "bg-emerald-100/30 dark:bg-emerald-500/10 border-emerald-400/30 dark:border-emerald-500/30 shadow-md ring-1 ring-emerald-500/20"
         )}
       >
@@ -98,7 +107,7 @@ export const ListingCard = memo(
         <div className={cn(
           "relative shrink-0 overflow-hidden z-10 pointer-events-none",
           !(promotionTier === 'LISTING_HIGHLIGHT' || promotionTier === 'VISUAL_HIGHLIGHT') && "bg-white",
-          isGrid ? "aspect-[4/3] w-full" : "w-28 sm:w-36 md:w-56 h-full"
+          isGrid ? "aspect-[4/3] w-full" : "w-24 sm:w-32 md:w-48 h-full" // Reduced width
         )}>
           <Image
             src={activeImage}
@@ -113,10 +122,10 @@ export const ListingCard = memo(
 
               {isPromoted && promoConfig && promoConfig.badgeColor && (
                 <div className={cn(
-                    "flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full shadow-lg border border-white/20 backdrop-blur-md transition-all duration-300",
+                    "flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full shadow-lg border border-white/20 backdrop-blur-md transition-all duration-300", // Slightly smaller
                     promoConfig.badgeColor
                 )}>
-                    {getIcon(promoConfig.icon)}
+                    <PromotionIcon iconName={promoConfig.icon} className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-white fill-current" />
                 </div>
               )}
               {isVerified && (
@@ -132,7 +141,7 @@ export const ListingCard = memo(
         <div className={cn(
           "flex flex-1 flex-col justify-between relative z-10 pointer-events-none min-w-0",
           !(promotionTier === 'LISTING_HIGHLIGHT' || promotionTier === 'VISUAL_HIGHLIGHT') && "bg-card",
-          isGrid ? "p-2 sm:p-3 space-y-1 sm:space-y-1.5" : "p-2 sm:p-3 md:p-4"
+          isGrid ? "p-2 sm:p-3 space-y-1 sm:space-y-1.5" : "p-2 sm:p-3 md:p-3.5" // Tighter padding
         )}>
            
            {isGrid ? (
@@ -151,7 +160,7 @@ export const ListingCard = memo(
                             {formatPrice(listing.previousPrice)}
                         </span>
                     )}
-                    <span className="text-base sm:text-lg font-bold text-primary">
+                    <span className="text-sm sm:text-base font-bold text-primary"> {/* Smaller price */}
                       {formatPrice(listing.price)}
                     </span>
                 </div>
@@ -183,7 +192,7 @@ export const ListingCard = memo(
                     </span>
                 </div>
 
-                 <div className="hidden sm:block text-[11px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">
+                 <div className="hidden sm:block text-[10px] sm:text-[11px] text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2"> {/* Smaller description */}
                      {listing.description.length > 150 
                          ? `${listing.description.substring(0, 150)}...` 
                          : listing.description}
@@ -196,11 +205,11 @@ export const ListingCard = memo(
                             {listing.city || 'Skopje'}
                         </span>
                          {listing.previousPrice && listing.previousPrice > listing.price && (
-                             <span className="text-[10px] sm:text-[11px] font-bold text-muted-foreground/50 line-through leading-none mb-0.5">
+                             <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground/50 line-through leading-none mb-0.5">
                                  {formatPrice(listing.previousPrice)}
                              </span>
                          )}
-                         <span className="text-sm sm:text-base md:text-xl font-bold text-primary">
+                         <span className="text-sm sm:text-base md:text-lg font-bold text-primary"> {/* Smaller price */}
                            {formatPrice(listing.price)}
                          </span>
                     </div>
@@ -208,7 +217,7 @@ export const ListingCard = memo(
                     {/* List View Heart - Moved to Content Bottom Right */}
                     <Button
                       size="icon" variant="ghost" onClick={handleToggleWishlist}
-                      className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 -mr-1.5 -mb-1.5 sm:-mr-2 sm:-mb-2 pointer-events-auto hover:bg-muted/50 z-30", optimisticIsWished ? "text-red-500" : "text-muted-foreground")}
+                      className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 -mr-1.5 -mb-1.5 sm:-mr-2 sm:-mb-2 pointer-events-auto hover:bg-muted/50 z-30", optimisticIsWished ? "text-red-500" : "text-muted-foreground")}
                     >
                       <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", optimisticIsWished && "fill-current")} />
                     </Button>

@@ -1,6 +1,7 @@
 'use client';
 
 import { createPromotionCheckoutSession } from '@/actions/stripe-actions';
+import { PromotionIcon } from '@/components/listing/promotion-icon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -8,7 +9,7 @@ import { Switch } from '@/components/ui/switch';
 import { PROMOTIONS } from '@/lib/constants/promotions';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
-import { Check, CreditCard, Eye, Megaphone, Star, Zap } from 'lucide-react';
+import { Check, CreditCard, Megaphone } from 'lucide-react';
 import { User } from 'next-auth';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -29,15 +30,6 @@ export function PromotePageClient({ listing, user }: PromotePageClientProps) {
       setSelectedPromotions(prev => 
           prev.includes(id) ? [] : [id]
       );
-  };
-
-  const getIcon = (iconName: string) => {
-      switch (iconName) {
-          case 'Star': return <Star className="w-3.5 h-3.5 fill-current" />;
-          case 'Zap': return <Zap className="w-3.5 h-3.5 fill-current" />;
-          case 'Eye': return <Eye className="w-3.5 h-3.5 fill-current" />;
-          case 'Megaphone': default: return <Megaphone className="w-3.5 h-3.5 fill-current" />;
-      }
   };
 
   const subtotal = PROMOTIONS
@@ -146,7 +138,7 @@ export function PromotePageClient({ listing, user }: PromotePageClientProps) {
                                 "absolute top-3 right-3 p-1.5 rounded-full shadow-sm text-white",
                                 promo.color.replace('text-', 'bg-')
                             )}>
-                                {getIcon(promo.icon)}
+                                <PromotionIcon iconName={promo.icon} className="w-3.5 h-3.5 fill-current" />
                             </div>
                             
                             {/* Mobile Price Overlay */}
@@ -156,9 +148,9 @@ export function PromotePageClient({ listing, user }: PromotePageClientProps) {
                         </div>
 
                         {/* Content Section */}
-                        <div className="flex-1 p-5 md:p-6 flex flex-col justify-between gap-4">
+                        <div className="flex-1 p-4 md:p-6 flex flex-col justify-between gap-3 md:gap-4">
                             <div className="flex justify-between items-start gap-4">
-                                <div className="space-y-2">
+                                <div className="space-y-1.5 md:space-y-2">
                                     <h3 className={cn("font-black text-lg md:text-xl leading-tight", promo.color)}>
                                         {promo.title}
                                     </h3>
@@ -240,7 +232,7 @@ export function PromotePageClient({ listing, user }: PromotePageClientProps) {
 
                 <Button 
                     size="lg" 
-                    className="w-full h-14 text-base md:text-lg font-black uppercase tracking-wider shadow-xl shadow-primary/20 hover:scale-[1.01] transition-all bg-primary hover:bg-primary/90"
+                    className="w-full h-11 md:h-12 text-sm md:text-lg font-black uppercase tracking-wider shadow-xl shadow-primary/20 hover:scale-[1.01] transition-all bg-primary hover:bg-primary/90"
                     disabled={selectedPromotions.length === 0 || isProcessing}
                     onClick={handlePayment}
                 >

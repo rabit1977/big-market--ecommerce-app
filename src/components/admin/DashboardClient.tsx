@@ -1,24 +1,27 @@
 'use client';
 
 import { DashboardCard } from '@/components/admin/dashboard-card';
+import { PromotionIcon } from '@/components/listing/promotion-icon';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getPromotionConfig } from '@/lib/constants/promotions';
 import { cn, formatCurrency } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-    Activity,
-    Calendar,
-    Eye,
-    Layers,
-    Package,
-    Sparkles,
-    Star,
-    Users
+  Activity,
+  Calendar,
+  Eye,
+  Layers,
+  Package,
+  Sparkles,
+  Star,
+  Users
 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
+import { email } from 'zod';
 
 export function DashboardSkeleton() {
   return (
@@ -49,12 +52,7 @@ type DashboardUser = {
   name: string | null;
   email: string | null;
   createdAt: Date;
-  updatedAt: Date; // Keep as Date if passed as Date, or string if serialized. Usually Date in client comp if not serialized? 
-                   // Wait, server keys are Dates, but crossing boundary makes them strings if not carefully handled.
-                   // Next.js passes dates as Dates only in SC -> Client if using specific tricks or they are strings.
-                   // Assuming strings or Dates. Let's assume passed as serialized JSON or Dates.
-                   // If passing from Page (SC) to Client, they must be serializable. Dates convert to strings in JSON.
-                   // I should treat them as strings or parse them.
+  updatedAt: Date;
 };
 
 type DashboardListing = {
@@ -222,7 +220,7 @@ export default function DashboardClient({
             icon: Users,
             description: 'Registered accounts',
             trend: stats.userTrend,
-            color: 'violet' as const, // Mapped to primary in DashboardCard
+            color: 'violet' as const, 
             href: '/admin/users',
           },
           {
@@ -238,7 +236,6 @@ export default function DashboardClient({
             value: 'View',
             icon: Activity,
             description: 'Audit logs',
-            // trend: {},
             color: 'amber' as const,
             href: '/admin/activity',
           },
@@ -278,59 +275,77 @@ export default function DashboardClient({
           <CardContent>
             <div className='space-y-1'>
               <AnimatePresence mode='popLayout'>
-                {stats.recentListingsData.map((listing, index) => (
-                  <motion.div
-                    key={listing.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.7 + index * 0.05 }}
-                    className='flex items-center justify-between py-3 px-4 -mx-4 rounded-xl hover:bg-muted/50 transition-colors group'
-                  >
-                    <div className='flex items-center gap-3 flex-1 min-w-0'>
-                        <div className='w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0'>
-                            <Package className='h-4 w-4 text-primary' />
+                {stats.recentListingsData.map((listing, index) => {
+                  const isPromoted = (listing as any).isPromoted;
+                  const promoConfig = isPromoted ? getPromotionConfig((listing as any).promotionTier) : null;
+                  
+                  return (
+                    <motion.div
+                      key={listing.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.7 + index * 0.05 }}
+                      className='flex items-center justify-between py-3 px-4 -mx-4 rounded-xl hover:bg-muted/50 transition-colors group'
+                    >
+                      <div className='flex items-center gap-3 flex-1 min-w-0'>
+                        <div className={cn(
+                            'w-10 h-10 rounded-full flex items-center justify-center shrink-0',
+                            promoConfig ? promoConfig.badgeColor : 'bg-primary/10'
+                        )}>
+                            {promoConfig ? (
+                                <PromotionIcon iconName={promoConfig.icon} className="h-4 w-4 text-white fill-current" />
+                            ) : (
+                                <Package className='h-4 w-4 text-primary' />
+                            )}
                         </div>
                         <div className='flex-1 min-w-0'>
                             <Link href={`/admin/listings/${listing.id}`} className='font-bold text-sm truncate group-hover:text-primary transition-colors block'>
                                 {listing.title}
                             </Link>
-                            <p className='text-[10px] text-muted-foreground uppercase tracking-widest font-bold'>
+                            <p className='text-[10px] text-muted-foreground uppercase tracking-widest font-bold flex items-center gap-1.5'>
                                 {listing.category}
+                                {isPromoted && (
+                                    <span className="text-[9px] text-primary/80 font-black flex items-center gap-0.5">
+                                        <Sparkles className="w-2.5 h-2.5" />
+                                        PROMOTED
+                                    </span>
+                                )}
                             </p>
                         </div>
-                    </div>
-                    
-                    <div className='flex items-center gap-3 ml-4'>
-                        <div className='text-right hidden sm:block'>
-                            <Badge 
-                                variant="outline"
-                                className={cn(
-                                    "text-[10px] uppercase tracking-tighter",
-                                    listing.status === 'ACTIVE' && "bg-emerald-500/10 text-emerald-600 border-emerald-500/10",
-                                    listing.status === 'PENDING_APPROVAL' && "bg-amber-500/10 text-amber-600 border-amber-500/10"
-                                )}
-                            >
-                                {listing.status === 'PENDING_APPROVAL' ? 'Pending' : listing.status}
-                            </Badge>
-                            <p className='text-xs font-black mt-0.5'>{formatCurrency(listing.price)}</p>
-                        </div>
+                      </div>
+                      
+                      <div className='flex items-center gap-3 ml-4'>
+                          <div className='text-right hidden sm:block'>
+                              <Badge 
+                                  variant="outline"
+                                  className={cn(
+                                      "text-[10px] uppercase tracking-tighter",
+                                      listing.status === 'ACTIVE' && "bg-emerald-500/10 text-emerald-600 border-emerald-500/10",
+                                      listing.status === 'PENDING_APPROVAL' && "bg-amber-500/10 text-amber-600 border-amber-500/10"
+                                  )}
+                              >
+                                  {listing.status === 'PENDING_APPROVAL' ? 'Pending' : listing.status}
+                              </Badge>
+                              <p className='text-xs font-black mt-0.5'>{formatCurrency(listing.price)}</p>
+                          </div>
 
-                        {/* Quick Action Mini-Menu */}
-                        <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
-                            <Button 
-                                size="icon" 
-                                variant="ghost" 
-                                className="h-8 w-8 rounded-full text-muted-foreground hover:text-primary"
-                                asChild
-                            >
-                                <Link href={`/listings/${listing.id}`} target="_blank">
-                                    <Eye className="h-4 w-4" />
-                                </Link>
-                            </Button>
-                        </div>
-                    </div>
-                  </motion.div>
-                ))}
+                          {/* Quick Action Mini-Menu */}
+                          <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
+                              <Button 
+                                  size="icon" 
+                                  variant="ghost" 
+                                  className="h-8 w-8 rounded-full text-muted-foreground hover:text-primary"
+                                  asChild
+                              >
+                                  <Link href={`/listings/${listing.id}`} target="_blank">
+                                      <Eye className="h-4 w-4" />
+                                  </Link>
+                              </Button>
+                          </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </AnimatePresence>
               {stats.recentListingsData.length === 0 && (
                 <div className='text-center py-12'>

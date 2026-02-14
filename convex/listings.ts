@@ -12,15 +12,15 @@ export const get = query({
 
     const now = Date.now();
     return listings.sort((a, b) => {
-        const isTopA = a.isPromoted && a.promotionTier === 'ELITE_PRIORITY' && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
-        const isTopB = b.isPromoted && b.promotionTier === 'ELITE_PRIORITY' && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
+        const isTopA = a.isPromoted && a.promotionTier === 'TOP_POSITIONING' && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
+        const isTopB = b.isPromoted && b.promotionTier === 'TOP_POSITIONING' && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
         
         if (isTopA && !isTopB) return -1;
         if (!isTopA && isTopB) return 1;
 
-        // General promoted (any tier) next, EXCEPT AUTO_DAILY_REFRESH, LISTING_HIGHLIGHT, and VISUAL_HIGHLIGHT
+        // General promoted (any tier) next, EXCEPT AUTO_DAILY_REFRESH and LISTING_HIGHLIGHT
         // These tiers don't benefit from sticky/featured positioning
-        const featuredTiers = ['AUTO_DAILY_REFRESH', 'LISTING_HIGHLIGHT', 'VISUAL_HIGHLIGHT', 'HIGHLIGHT'];
+        const featuredTiers = ['AUTO_DAILY_REFRESH', 'LISTING_HIGHLIGHT'];
         const isPromotedA = a.isPromoted && !featuredTiers.includes(a.promotionTier || '') && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
         const isPromotedB = b.isPromoted && !featuredTiers.includes(b.promotionTier || '') && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
         
@@ -43,7 +43,7 @@ export const getFeatured = query({
       .collect();
       
     // Filter for ACTIVE promoted listings (Excluding non-featured tiers)
-    const featuredTiers = ['AUTO_DAILY_REFRESH', 'LISTING_HIGHLIGHT', 'VISUAL_HIGHLIGHT', 'HIGHLIGHT'];
+    const featuredTiers = ['AUTO_DAILY_REFRESH', 'LISTING_HIGHLIGHT'];
     return listings.filter(l => 
         l.isPromoted === true && 
         !featuredTiers.includes(l.promotionTier || '') &&
@@ -248,15 +248,15 @@ export const list = query({
     // Final sorting: Promoted (Top Positioning) first, then by user choice
     const now = Date.now();
     return results.sort((a, b) => {
-        // Helper to check if a listing has an active ELITE_PRIORITY promotion
-        const isTopA = a.isPromoted && a.promotionTier === 'ELITE_PRIORITY' && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
-        const isTopB = b.isPromoted && b.promotionTier === 'ELITE_PRIORITY' && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
+        // Helper to check if a listing has an active TOP_POSITIONING promotion
+        const isTopA = a.isPromoted && a.promotionTier === 'TOP_POSITIONING' && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
+        const isTopB = b.isPromoted && b.promotionTier === 'TOP_POSITIONING' && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
 
         if (isTopA && !isTopB) return -1;
         if (!isTopA && isTopB) return 1;
 
         // General promoted (any tier) next, EXCEPT non-featured tiers
-        const featuredTiers = ['AUTO_DAILY_REFRESH', 'LISTING_HIGHLIGHT', 'VISUAL_HIGHLIGHT', 'HIGHLIGHT'];
+        const featuredTiers = ['AUTO_DAILY_REFRESH', 'LISTING_HIGHLIGHT'];
         const isPromotedA = a.isPromoted && !featuredTiers.includes(a.promotionTier || '') && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
         const isPromotedB = b.isPromoted && !featuredTiers.includes(b.promotionTier || '') && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
         

@@ -1,11 +1,13 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
+import { getPromotionConfig } from '@/lib/constants/promotions';
 import { cn } from '@/lib/utils';
-import { Crown, Eye, MapPin, Star, Zap } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
+import { PromotionIcon } from '../listing/promotion-icon';
 
 interface Listing {
   _id: string;
@@ -102,10 +104,13 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
           >
             {featuredListings.map((listing) => {
               const imageUrl = listing.thumbnail || (listing.images && listing.images[0]) || '/placeholder-listing.jpg';
-              const isElite = (listing as any).promotionTier === 'ELITE_PRIORITY' || (listing as any).promotionTier === 'TOP_POSITIONING';
-              const isPremium = (listing as any).promotionTier === 'PREMIUM_SPOTLIGHT' || (listing as any).promotionTier === 'PREMIUM_SECTOR';
-              const isDaily = (listing as any).promotionTier === 'DAILY_BUMP' || (listing as any).promotionTier === 'AUTO_DAILY_REFRESH';
-              const isVisual = (listing as any).promotionTier === 'VISUAL_HIGHLIGHT' || (listing as any).promotionTier === 'LISTING_HIGHLIGHT';
+              // Use centralized config
+              const promoConfig = (listing as any).isPromoted ? getPromotionConfig((listing as any).promotionTier) : null;
+              
+              // Fallback styles if promoConfig is missing but listing isPromoted (shouldn't happen often)
+              const badgeColor = promoConfig?.badgeColor || "bg-primary";
+              const borderColor = promoConfig?.borderColor || "border-primary/30";
+              const bgColor = promoConfig?.bgColor || "bg-card";
 
               return (
                 <div 
@@ -115,13 +120,11 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
                   <Link href={`/listings/${listing._id}`}>
                     <Card className={cn(
                         "group relative h-full overflow-hidden border-border/40 p-0 hover:border-primary/30 transition-all duration-500 rounded-xl bg-card shadow-sm hover:shadow-lg",
-                        isElite && "ring-1 ring-amber-400/30 bg-amber-400/[0.02]",
-                        isVisual && "bg-emerald-100/30 dark:bg-emerald-500/10 border-emerald-400/30 dark:border-emerald-500/30 shadow-md ring-1 ring-emerald-500/20"
+                        promoConfig && `ring-1 ring-inset ${borderColor.replace('border-', 'ring-')} ${bgColor.replace('bg-', 'bg-opacity-10 bg-')}`
                     )}>
                       {/* Image - Flush and fixed height */}
                       <div className={cn(
-                        "relative aspect-[4/3] overflow-hidden -mt-px -mx-px",
-                        !isVisual && "bg-muted"
+                        "relative aspect-[4/3] overflow-hidden -mt-px -mx-px bg-muted"
                       )}>
                         <Image
                           src={imageUrl}
@@ -131,24 +134,15 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
                         />
                         
                         {/* Icon Badge - Top Left inside image */}
-                        {!isVisual && (
+                        {promoConfig && (
                           <div className="absolute top-1.5 left-1.5 z-20">
                              <div className={cn(
                                  "w-5 h-5 sm:w-6 sm:h-6 rounded-lg flex items-center justify-center shadow-lg backdrop-blur-md border border-white/20 transition-transform group-hover:scale-110",
-                                 isElite ? "bg-amber-400" : 
-                                 isPremium ? "bg-blue-600" : 
-                                 isDaily ? "bg-purple-600" :
-                                 isVisual ? "bg-emerald-600" : "bg-orange-500"
+                                 badgeColor
                              )}>
-                                {isElite ? (
-                                  <div className="bg-white rounded-full p-0.5 shadow-sm">
-                                    <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-500 fill-amber-500" />
-                                  </div>
-                                ) : 
-                                 isPremium ? <Crown className="w-3 h-3 text-white" /> :
-                                 isDaily ? <Zap className="w-3 h-3 text-white" /> :
-                                 isVisual ? <Eye className="w-3 h-3 text-white" /> :
-                                 <Star className="w-3 h-3 text-white fill-current" />}
+                                <div className="text-white">
+                                    <PromotionIcon iconName={promoConfig.icon} className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" />
+                                </div>
                              </div>
                           </div>
                         )}
@@ -157,7 +151,7 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
                       {/* Ultra Compact Info */}
                       <div className={cn(
                         "p-2 pt-1.5 space-y-0.5",
-                        !isVisual && "bg-card"
+                        (!promoConfig?.bgColor) && "bg-card"
                       )}>
                         <h3 className="font-bold text-[9px] leading-tight line-clamp-1 text-foreground/80 group-hover:text-primary transition-colors">
                           {listing.title}

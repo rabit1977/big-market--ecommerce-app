@@ -20,11 +20,12 @@ import { cn } from '@/lib/utils';
 import { formatPrice } from '@/lib/utils/formatters';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
-import { AlertTriangle, BarChart2, CheckCircle, Clock, Edit, ExternalLink, Eye, Mail, Megaphone, RefreshCw, Sparkles, Star, Trash2, Zap } from 'lucide-react';
+import { AlertTriangle, BarChart2, CheckCircle, Clock, Edit, ExternalLink, Mail, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
+import { PromotionIcon } from './promotion-icon';
 
 interface MyListingListItemProps {
   listing: ListingWithRelations;
@@ -83,15 +84,11 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
     const promoConfig = isPromoted ? getPromotionConfig(listing.promotionTier) : null;
     const daysLeft = isPromoted && listing.promotionExpiresAt ? Math.ceil((listing.promotionExpiresAt - Date.now()) / (1000 * 60 * 60 * 24)) : 0;
 
-    const getIcon = (iconName?: string) => {
-        switch (iconName) {
-            case 'Star': return <Star className="w-3 h-3 mr-1" />;
-            case 'Zap': return <Zap className="w-3 h-3 mr-1" />;
-            case 'Eye': return <Eye className="w-3 h-3 mr-1" />;
-            case 'Megaphone': return <Megaphone className="w-3 h-3 mr-1" />;
-            default: return <Star className="w-3 h-3 mr-1" />;
-        }
-    };
+// ... removed import from here
+
+// ... (keep surrounding imports)
+
+    // const getIcon = ... (DELETED)
 
     return (
       <motion.div
@@ -105,7 +102,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
         )}
       >
         {/* Image Section */}
-        <div className="relative w-28 sm:w-40 md:w-56 aspect-[4/3] sm:aspect-square md:aspect-video bg-muted shrink-0 overflow-hidden">
+        <div className="relative w-24 sm:w-36 md:w-48 aspect-[4/3] sm:aspect-square md:aspect-video bg-muted shrink-0 overflow-hidden">
           <Image
             src={activeImage}
             alt={listing.title}
@@ -130,7 +127,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
 
              {isPromoted && promoConfig && (
                  <Badge className={cn("text-white border-0 shadow-lg text-[10px] uppercase tracking-wider font-bold h-6 px-2 rounded-lg flex items-center", promoConfig.badgeColor)}>
-                    {getIcon(promoConfig.icon)}
+                    <PromotionIcon iconName={promoConfig.icon} className="w-3 h-3 mr-1 fill-current/50" />
                     {daysLeft} days left
                  </Badge>
              )}
@@ -138,10 +135,10 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
         </div>
 
         {/* Content Section */}
-        <div className="flex-1 flex flex-col p-3 sm:p-4 md:p-5 min-w-0">
-            <div className="flex justify-between items-start gap-3 mb-2">
+        <div className="flex-1 flex flex-col p-2.5 sm:p-4 md:p-5 min-w-0"> {/* Reduced padding */}
+            <div className="flex justify-between items-start gap-3 mb-1.5 sm:mb-2">
                 <Link href={`/listings/${listing.id}`} className="block min-w-0 group/link">
-                   <h3 className="font-bold text-sm sm:text-lg md:text-xl leading-tight group-hover/link:text-primary transition-colors line-clamp-1 mb-1 text-foreground">
+                   <h3 className="font-bold text-sm sm:text-base md:text-lg leading-tight group-hover/link:text-primary transition-colors line-clamp-1 mb-1 text-foreground"> {/* Smaller Title */}
                       {listing.title}
                    </h3>
                    <div className="flex items-center gap-2 text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-wider">
@@ -157,7 +154,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
             </div>
 
             <div className="mb-3 sm:mb-4">
-                <div className="text-lg sm:text-2xl font-black text-primary tracking-tight">
+                <div className="text-base sm:text-lg md:text-xl font-black text-primary tracking-tight"> {/* Smaller Price */}
                     {formatPrice(listing.price)}
                 </div>
                 
@@ -177,7 +174,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
             </div>
 
             {/* Main Action Button */}
-            <div className="flex flex-row gap-2 mt-auto mb-3">
+            <div className="flex flex-row gap-2 mt-auto mb-2 sm:mb-3">
                 <Button 
                     asChild
                     className={cn(
@@ -213,9 +210,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                             </AlertDialogTitle>
                             <AlertDialogDescription asChild className="space-y-3 pt-2">
                                 <div className="space-y-3">
-                                    {renewalStats?.hasUsedToday ? ( // This check might be redundant if backend doesn't enforce, but UI can still show it or we remove it. I'll leave it but arguably "hasUsedToday" comes from getRenewalStats which I modified to allow multiple. Wait, getRenewalStats still returns things. I'll leave the UI as is for now, main focus is the button.
-                                        // Actually, if I removed the restriction, I should remove this warning too, but the user didn't explicitly ask for UI cleanup of Renew, just the functionality. 
-                                        // However, I should focus on adding the Promote button.
+                                    {renewalStats?.hasUsedToday ? ( 
                                         <div className="bg-amber-500/10 p-3 rounded-xl border border-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-bold flex gap-3">
                                             <AlertTriangle className="w-5 h-5 shrink-0" />
                                             <p>You have already renewed a listing today.</p> 
@@ -240,7 +235,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                         </AlertDialogHeader>
                         <AlertDialogFooter className="gap-2 sm:gap-0 mt-2">
                             <AlertDialogCancel className="rounded-xl font-bold uppercase text-[10px] sm:text-xs h-10 transition-all border-border/50">Cancel</AlertDialogCancel>
-                            {renewalStats?.remainingMonthly > 0 && ( /* Removed !hasUsedToday check */
+                            {renewalStats?.remainingMonthly > 0 && ( 
                                 <AlertDialogAction 
                                     onClick={handleConfirmRenew} 
                                     className="bg-primary hover:bg-primary/90 text-white rounded-xl font-black uppercase text-[10px] sm:text-xs h-10 shadow-lg shadow-primary/20"
@@ -254,7 +249,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
             </div>
 
             {/* Icon Actions Row */}
-            <div className="flex items-center justify-between border-t border-border/50 pt-3 mt-1 sm:px-2">
+            <div className="flex items-center justify-between border-t border-border/50 pt-2 sm:pt-3 mt-1 sm:px-2"> {/* Reduced padding top */}
                 <div className="flex gap-4 sm:gap-8 w-full justify-between sm:justify-start">
                     
                     <AlertDialog>
