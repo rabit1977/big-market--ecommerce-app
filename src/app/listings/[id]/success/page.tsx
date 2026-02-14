@@ -1,11 +1,13 @@
 import { getListingByIdAction } from '@/actions/listing-actions';
 import { auth } from '@/auth';
 import { PromotionButton } from '@/components/listing/promotion-button';
-
+import { PromotionIcon } from '@/components/listing/promotion-icon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle2, Crown, Eye, Star, Zap } from 'lucide-react';
+import { PROMOTIONS } from '@/lib/constants/promotions';
+import { cn } from '@/lib/utils';
+import { CheckCircle2, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 
@@ -33,59 +35,6 @@ export default async function ListingSuccessPage({ params }: ListingSuccessPageP
     redirect('/');
   }
 
-  const promotionOptions = [
-    {
-      title: 'Top Positioning',
-      price: '160 MKD',
-      subPrice: '+ VAT',
-      duration: '14 days',
-      description: 'Always at the top before others. Your ad will be displayed at the top of search results related to criteria for 14 days, rotating with other top-positioned ads.',
-      icon: Star,
-      color: 'text-amber-500',
-      bg: 'bg-amber-500/10',
-      border: 'border-amber-500/20',
-      gradient: 'to-amber-500/10',
-      badge: 'Best Results'
-    },
-    {
-      title: 'Premium Sector',
-      price: '100 MKD',
-      subPrice: '+ VAT',
-      duration: '14 days',
-      description: 'Maximum visibility and improved reach. Your ad will be especially recognizable, getting more visitors and responses. Exclusive ads are shown on the right side of search results.',
-      icon: Crown,
-      color: 'text-blue-500',
-      bg: 'bg-blue-500/10',
-      border: 'border-blue-500/20',
-      gradient: 'to-blue-500/10',
-      badge: 'Highly Popular'
-    },
-    {
-        title: 'Listing Highlight',
-        price: '60 MKD',
-        subPrice: '+ VAT',
-        duration: '14 days',
-        description: 'Your ad will be marked with a different background color in search results, separating it from other classifieds and catching the eye directly.',
-        icon: Eye,
-        color: 'text-emerald-500',
-        bg: 'bg-emerald-500/10',
-        border: 'border-emerald-500/20',
-        gradient: 'to-emerald-500/10',
-    },
-    {
-        title: 'Auto Daily Refresh',
-        price: '60 MKD',
-        subPrice: '+ VAT',
-        duration: '14 days',
-        description: 'For 14 days, your ad is automatically refreshed daily as if it were just published, starting at 13:00.',
-        icon: Zap,
-        color: 'text-purple-500',
-        bg: 'bg-purple-500/10',
-        border: 'border-purple-500/20',
-        gradient: 'to-purple-500/10',
-    }
-  ];
-
   return (
     <div className="container max-w-5xl mx-auto py-12 px-4">
       <div className="max-w-3xl mx-auto space-y-12">
@@ -97,7 +46,7 @@ export default async function ListingSuccessPage({ params }: ListingSuccessPageP
             </div>
             <h1 className="text-3xl md:text-4xl font-black tracking-tight">Listing Submitted!</h1>
             <p className="text-muted-foreground text-lg max-w-lg mx-auto">
-                Your listing <span className="font-bold text-foreground">"{listing.title}"</span> has been successfully created and is waiting for admin approval.
+                Your listing <span className="font-bold text-foreground">&quot;{listing.title}&quot;</span> has been successfully created and is waiting for admin approval.
             </p>
             <div className="flex justify-center gap-4 pt-4">
                 <Button variant="outline" asChild className="rounded-full">
@@ -111,7 +60,7 @@ export default async function ListingSuccessPage({ params }: ListingSuccessPageP
 
         <Separator />
 
-        {/* Promotion Section */}
+        {/* Promotion Section — Synced from PROMOTIONS constant */}
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
             <div className="text-center space-y-2">
                 <h2 className="text-2xl font-black uppercase tracking-tight flex items-center justify-center gap-2">
@@ -124,37 +73,38 @@ export default async function ListingSuccessPage({ params }: ListingSuccessPageP
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
-                {promotionOptions.map((option, i) => (
-                    <Card key={i} className={`relative overflow-hidden border-2 transition-all hover:scale-[1.02] hover:shadow-xl ${option.border}`}>
-                        {option.badge && (
+                {PROMOTIONS.map((promo, i) => (
+                    <Card key={promo.id} className={cn(
+                        "relative overflow-hidden border-2 transition-all hover:scale-[1.02] hover:shadow-xl group",
+                        promo.borderColor
+                    )}>
+                        {promo.isMain && (
                             <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-bl-xl">
-                                {option.badge}
+                                Popular
                             </div>
                         )}
                         <CardHeader className="pb-3">
                             <div className="flex items-start justify-between">
-                                <div className={`p-3 rounded-2xl ${option.bg} ${option.color} ring-1 ring-inset ring-black/5`}>
-                                    <option.icon className="h-6 w-6" />
+                                <div className={cn("p-3 rounded-2xl ring-1 ring-inset ring-black/5", promo.bgColor, promo.color)}>
+                                    <PromotionIcon iconName={promo.icon} className="h-6 w-6" />
                                 </div>
                                 <div className="text-right">
                                     <div className="text-xl font-black tracking-tight text-foreground">
-                                        {option.price}
+                                        {promo.price} MKD
                                     </div>
-                                    {option.subPrice && (
-                                        <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                                            {option.subPrice}
-                                        </div>
-                                    )}
+                                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                                        + VAT
+                                    </div>
                                 </div>
                             </div>
-                            <CardTitle className="text-lg font-bold pt-2">{option.title}</CardTitle>
+                            <CardTitle className="text-lg font-bold pt-2">{promo.title}</CardTitle>
                             <CardDescription className="font-bold text-xs uppercase tracking-wider text-primary">
-                                {option.duration}
+                                {promo.days}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <p className="text-sm text-muted-foreground leading-relaxed">
-                                {option.description}
+                                {promo.description}
                             </p>
                         </CardContent>
                         <CardFooter>
@@ -162,12 +112,11 @@ export default async function ListingSuccessPage({ params }: ListingSuccessPageP
                                 listingId={listing.id}
                                 userId={session.user.id!}
                                 userEmail={session.user.email || ''}
-                                title={option.title}
-                                tier={option.title.toUpperCase().replace(/\s+/g, '_')}
-                                price={parseFloat(option.price.split(' ')[0])}
+                                title={promo.title}
+                                tier={promo.id}
+                                price={promo.price}
                             />
                         </CardFooter>
-                        <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 pointer-events-none bg-gradient-to-tr from-transparent via-transparent ${option.gradient} transition-opacity`} />
                     </Card>
                 ))}
             </div>

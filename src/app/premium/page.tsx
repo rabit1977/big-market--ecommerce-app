@@ -1,71 +1,28 @@
 'use client';
 
 import { createStripeCheckoutSession } from '@/actions/stripe-actions';
+import { PromotionIcon } from '@/components/listing/promotion-icon';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { PROMOTIONS } from '@/lib/constants/promotions';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import {
     Activity,
-    ArrowUpCircle,
     BadgeCheck,
     Briefcase,
     Check,
-    Clock,
     CreditCard,
-    Crown,
     HelpCircle,
-    Megaphone,
+    Rocket,
     User
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-
-const promoOptions = [
-  {
-    title: 'Premium Sector',
-    duration: '14 days',
-    price: 100,
-    description: 'Maximum visibility and improved reach. Your ad will be especially recognizable, getting more visitors and responses. Exclusive ads are shown on the right side of search results.',
-    icon: Crown,
-    color: 'text-amber-500',
-    bg: 'bg-amber-500/10',
-    border: 'border-amber-500/20',
-  },
-  {
-    title: 'Top Positioning',
-    duration: '14 days',
-    price: 160,
-    description: 'Always at the top before others. Your ad will be displayed at the top of search results related to criteria for 14 days, rotating with other top-positioned ads.',
-    icon: ArrowUpCircle,
-    color: 'text-blue-500',
-    bg: 'bg-blue-500/10',
-    border: 'border-blue-500/20',
-  },
-  {
-    title: 'Listing Highlight',
-    duration: '14 days',
-    price: 60,
-    description: 'Your ad will be marked with a different background color in search results, separating it from other classifieds and catching the eye directly.',
-    icon: Megaphone,
-    color: 'text-green-500',
-    bg: 'bg-green-500/10',
-    border: 'border-green-500/20',
-  },
-  {
-    title: 'Auto Daily Refresh',
-    duration: '14 days',
-    price: 60,
-    description: 'For 14 days, your ad is automatically refreshed daily as if it were just published, starting at 13:00.',
-    icon: Clock,
-    color: 'text-purple-500',
-    bg: 'bg-purple-500/10',
-    border: 'border-purple-500/20',
-  },
-];
 
 const faqs = [
   {
@@ -265,11 +222,12 @@ export default function PremiumPage() {
         </div>
       </section>
 
-      {/* Promotion Options */}
+      {/* Promotion Options — Synced from PROMOTIONS constant */}
       <section className="bg-muted/30 py-16 border-y border-border/50">
         <div className="container-wide">
              <div className="text-center max-w-2xl mx-auto mb-12">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold mb-4">
+                    <Rocket className="w-3.5 h-3.5" />
                     Boost Your Sales
                 </div>
                 <h2 className="text-3xl font-black tracking-tight mb-4">Listing Promotion Options</h2>
@@ -278,30 +236,56 @@ export default function PremiumPage() {
                 </p>
              </div>
 
-             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {promoOptions.map((opt, i) => (
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+                {PROMOTIONS.map((promo, i) => (
                     <motion.div
-                        key={opt.title}
+                        key={promo.id}
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: i * 0.1 }}
-                        className={cn("bg-card border rounded-2xl p-6 hover:shadow-lg transition-all", opt.border)}
                     >
-                        <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center mb-4", opt.bg)}>
-                            <opt.icon className={cn("w-6 h-6", opt.color)} />
-                        </div>
-                        <h3 className="font-bold text-lg mb-1">{opt.title}</h3>
-                        <p className="text-xs font-semibold text-muted-foreground mb-4">{opt.duration}</p>
-                        <p className="text-sm text-muted-foreground mb-6 min-h-[80px] leading-relaxed">
-                            {opt.description}
-                        </p>
-                        <div className="mt-auto pt-4 border-t border-border/50 flex items-baseline justify-between">
-                             <span className="font-black text-xl">{opt.price} <span className="text-xs font-medium text-muted-foreground">MKD</span></span>
-                             <span className="text-[10px] uppercase font-bold text-muted-foreground">+ VAT</span>
-                        </div>
+                        <Card className={cn(
+                            "h-full border-2 hover:shadow-lg transition-all group relative overflow-hidden",
+                            promo.borderColor
+                        )}>
+                            {promo.isMain && (
+                                <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-bl-xl">
+                                    Popular
+                                </div>
+                            )}
+                            <CardHeader className="pb-3">
+                                <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center mb-3", promo.bgColor)}>
+                                    <PromotionIcon iconName={promo.icon} className={cn("w-6 h-6", promo.color)} />
+                                </div>
+                                <CardTitle className="text-lg font-bold">{promo.title}</CardTitle>
+                                <CardDescription className="font-bold text-xs uppercase tracking-wider text-primary">
+                                    {promo.days}
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-sm text-muted-foreground leading-relaxed min-h-[80px]">
+                                    {promo.description}
+                                </p>
+                            </CardContent>
+                            <CardFooter className="pt-4 border-t border-border/50">
+                                <div className="flex items-baseline justify-between w-full">
+                                    <span className="font-black text-xl">{promo.price} <span className="text-xs font-medium text-muted-foreground">MKD</span></span>
+                                    <span className="text-[10px] uppercase font-bold text-muted-foreground">+ VAT</span>
+                                </div>
+                            </CardFooter>
+                        </Card>
                     </motion.div>
                 ))}
+             </div>
+
+             <div className="text-center mt-8">
+                <p className="text-sm text-muted-foreground mb-4">
+                    To promote a specific listing, go to <strong>My Listings</strong> and click <strong>Promote</strong> on any listing.
+                </p>
+                <Button variant="outline" asChild className="rounded-full">
+                    <Link href="/my-listings">Go to My Listings</Link>
+                </Button>
              </div>
         </div>
       </section>
