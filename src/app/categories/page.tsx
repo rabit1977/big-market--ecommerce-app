@@ -1,16 +1,17 @@
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { api, convex } from '@/lib/convex-server';
 import {
-  Bike,
-  Briefcase,
-  Car,
-  Globe,
-  Home,
-  Music,
-  ShoppingBag,
-  Smartphone,
-  Wrench,
-  Zap
+    Bike,
+    Briefcase,
+    Car,
+    Globe,
+    GraduationCap,
+    Home,
+    PawPrint,
+    Shirt,
+    Smartphone,
+    Wrench,
+    Zap
 } from 'lucide-react';
 import { Metadata } from 'next';
 import Image from 'next/image';
@@ -24,32 +25,16 @@ export const metadata: Metadata = {
 
 // Map category names to high-quality images (Unsplash)
 const CATEGORY_IMAGES: Record<string, string> = {
-  'motor-vehicles': 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800',
   'real-estate': 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=800',
-  'home-appliances': 'https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&q=80&w=800',
-  'home-and-garden': 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=800',
-  'fashion-clothing-shoes': 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=80&w=800',
-  'mobile-phones-accessories': 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=800',
-  'computers': 'https://images.unsplash.com/photo-1587831990711-23ca6441447b?auto=format&fit=crop&q=80&w=800',
-  'tv-audio-video': 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&q=80&w=800',
-  'musical-instruments-equipment': 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&q=80&w=800',
-  'watches-jewelry': 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80&w=800',
-  'baby-children-products': 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&q=80&w=800',
-  'sports-activities': 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80&w=800',
-  'health-beauty': 'https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&q=80&w=800',
-  'books-literature': 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=800',
-  'office-school-supplies': 'https://images.unsplash.com/photo-1576402120038-f80e9803bba8?auto=format&fit=crop&q=80&w=800',
-  'hobby-animals': 'https://images.unsplash.com/photo-1579308018265-288252251fd4?auto=format&fit=crop&q=80&w=800',
-  'antiques-art': 'https://images.unsplash.com/photo-1555580436-07978253a633?auto=format&fit=crop&q=80&w=800',
-  'business-machines-tools': 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800',
-  'food-cooking': 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=800',
-  'shops-trade': 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=800',
-  'services-repairs': 'https://images.unsplash.com/photo-1581093458891-2f3a693246a4?auto=format&fit=crop&q=80&w=800',
-  'employment': 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=800',
-  'events-nightlife': 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800',
-  'vacation-tourism': 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&q=80&w=800',
-  'personal-contacts': 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800',
-  'napravete-sami': 'https://images.unsplash.com/photo-1503387837-b65c3f356390?auto=format&fit=crop&q=80&w=800',
+  'vehicles': 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800',
+  'electronics': 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=800',
+  'jobs': 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=800',
+  'services': 'https://images.unsplash.com/photo-1581093458891-2f3a693246a4?auto=format&fit=crop&q=80&w=800',
+  'fashion': 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=80&w=800',
+  'home-garden': 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=800',
+  'sports-leisure': 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80&w=800',
+  'pets': 'https://images.unsplash.com/photo-1579308018265-288252251fd4?auto=format&fit=crop&q=80&w=800',
+  'education': 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=800',
 };
 
 // Fallback lookup by name if slug missing or different
@@ -60,9 +45,10 @@ const NAME_TO_ICON: Record<string, any> = {
   'Jobs': Briefcase,
   'Home & Garden': Zap,
   'Services': Wrench,
-  'Sport': Bike,
-  'Shopping': ShoppingBag,
-  'Music': Music,
+  'Sports & Leisure': Bike,
+  'Fashion': Shirt,
+  'Pets': PawPrint,
+  'Education': GraduationCap,
 };
 
 // Fetch categories with counts - cached to avoid excessive requests
