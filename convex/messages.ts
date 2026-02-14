@@ -15,24 +15,38 @@ export const send = mutation({
 
     // 1. Check if conversation exists
     let existingConversation;
+
     
     if (args.listingId) {
       existingConversation = await ctx.db
         .query("conversations")
         .withIndex("by_listing", (q) => q.eq("listingId", args.listingId!))
-        .filter((q) =>
-          q.or(
-            q.and(
-              q.eq(q.field("buyerId"), args.senderId),
-              q.eq(q.field("sellerId"), args.receiverId)
-            ),
-            q.and(
-              q.eq(q.field("buyerId"), args.receiverId),
-              q.eq(q.field("sellerId"), args.senderId)
-            )
-          )
+        .filter((q) => 
+            // Check if participants match precisely (ignoring role)
+            // matching participantIds is safer than checking buyer/seller role permutations
+            q.eq(q.field("participantIds"), participantIds)
         )
         .first();
+        
+      // Fallback: If no participantIds field (legacy), check roles
+      if (!existingConversation) {
+          existingConversation = await ctx.db
+            .query("conversations")
+            .withIndex("by_listing", (q) => q.eq("listingId", args.listingId!))
+            .filter((q) =>
+              q.or(
+                q.and(
+                  q.eq(q.field("buyerId"), args.senderId),
+                  q.eq(q.field("sellerId"), args.receiverId)
+                ),
+                q.and(
+                  q.eq(q.field("buyerId"), args.receiverId),
+                  q.eq(q.field("sellerId"), args.senderId)
+                )
+              )
+            )
+            .first();
+      }
     } else {
       // Support or generic chat
       existingConversation = await ctx.db
@@ -184,7 +198,7 @@ export const getConversations = query({
           conv.buyerId === args.userId ? conv.sellerId : conv.buyerId;
 
         // Calculate unread count for THIS user
-        const unreadCount = conv.buyerId === args.userId ? conv.buyerUnreadCount : conv.sellerUnreadCount;
+        const unreadCount = (conv.buyerId === args.userId ? conv.buyerUnreadCount : conv.sellerUnreadCount) || 0;
 
         return {
           ...conv,

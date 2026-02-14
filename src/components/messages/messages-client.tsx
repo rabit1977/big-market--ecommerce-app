@@ -159,20 +159,35 @@ export function MessagesClient({
   const activeConversation = selectedConversation || virtualConversation;
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !activeConversation) return;
+    console.log("Handle sending...", { newMessage, activeConversation });
+    if (!newMessage.trim()) return;
+    
+    if (!activeConversation) {
+        console.error("No active conversation");
+        // Try to trigger selection if we have a pending listing
+        if (newConversationListing) {
+             console.log("Retrying virtual conversation set...");
+        } else {
+             alert("Please wait for the conversation to load or select one.");
+             return;
+        }
+    }
+
     try {
-      await sendMessageMutation({
-        content: newMessage,
-        listingId: (activeConversation.listingId as any) || undefined,
-        senderId: userId,
-        receiverId: activeConversation.otherUserId,
-        type: activeConversation.type,
-      });
-      setNewMessage('');
-      // If it was virtual, the query will eventually pick up the new real conversation
-      // and the useEffect will select it.
+      if (activeConversation) {
+          await sendMessageMutation({
+            content: newMessage,
+            listingId: (activeConversation.listingId as any) || undefined,
+            senderId: userId,
+            receiverId: activeConversation.otherUserId,
+            type: activeConversation.type,
+          });
+          setNewMessage('');
+          console.log("Message sent successfully");
+      }
     } catch (error) {
       console.error("Failed to send", error);
+      alert("Failed to send message. Please try again.");
     }
   };
 
@@ -366,11 +381,12 @@ export function MessagesClient({
                     type="button" 
                     onClick={(e) => {
                         e.preventDefault();
+                        e.stopPropagation();
                         handleSendMessage();
                     }}
-                    disabled={!newMessage.trim() || !activeConversation}
+                    disabled={!newMessage.trim()}
                     size="icon"
-                    className="h-10 w-10 md:h-11 md:w-11 rounded-xl shrink-0 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all z-10 touch-manipulation active:scale-95"
+                    className="h-10 w-10 md:h-11 md:w-11 rounded-xl shrink-0 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all z-10 touch-manipulation active:scale-95 cursor-pointer"
                   >
                     <Send className="w-5 h-5" />
                   </Button>
