@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card';
 
 import { motion } from 'framer-motion';
-import { Headset, LucideIcon, Package, ShieldCheck, Truck } from 'lucide-react';
+import { Globe, LucideIcon, MessageSquare, PieChart, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 
 interface Service {
@@ -22,28 +22,28 @@ interface Service {
 
 const services: Service[] = [
   {
-    title: 'Fast & Reliable Shipping',
+    title: 'Verified Listings',
     description:
-      'Get your products delivered quickly and safely to your doorstep with our efficient shipping network.',
-    icon: Truck,
-  },
-  {
-    title: '24/7 User Support',
-    description:
-      'Our dedicated support team is always available to assist you with any queries or issues.',
-    icon: Headset,
-  },
-  {
-    title: 'Quality Assurance',
-    description:
-      'We ensure all our products meet the highest quality standards for your satisfaction.',
+      'We manually review every listing to ensure accuracy and prevent fraudulent content for a safer market.',
     icon: ShieldCheck,
   },
   {
-    title: 'Easy Returns & Refunds',
+    title: 'Professional Shop URL',
     description:
-      'Hassle-free returns and quick refunds if you are not completely satisfied with your purchase.',
-    icon: Package,
+      'Get a personalized brand URL to showcase your products and establish business authority.',
+    icon: Globe,
+  },
+  {
+    title: 'Secure Messaging',
+    description:
+      'Communicate with buyers and sellers directly through our encrypted and monitored messaging system.',
+    icon: MessageSquare,
+  },
+  {
+    title: 'Advanced Analytics',
+    description:
+      'Track your listing performance, view counts, and engagement metrics with detailed business reports.',
+    icon: PieChart,
   },
 ];
 
@@ -67,9 +67,8 @@ export const ServicesContent = () => {
           </span>
         </h1>
         <p className='text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed'>
-          At Electro, we are committed to providing an exceptional shopping
-          experience. Discover the range of services designed to make your life
-          easier.
+          At Big Market, we are committed to providing the most secure and professional 
+          marketplace ecosystem in Macedonia. Discover the range of services designed to scale your sales.
         </p>
       </motion.section>
 

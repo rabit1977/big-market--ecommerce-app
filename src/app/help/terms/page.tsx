@@ -80,7 +80,7 @@ export default function TermsPage() {
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
                                         <div className="space-y-6">
-                                            <p>Заштитата и сигурноста на вашите лични податоци се една од приоритетните задачи на Реклама5. Ние посветуваме особено внимание на правото на приватноста и заштитата на личните податоци на нашите корисници.</p>
+                                            <p>Заштитата и сигурноста на вашите лични податоци претставуваат врвен приоритет за Биг Маркет. Ние посветуваме особено внимание на приватноста и интегритетот на информациите на нашите корисници, применувајќи највисоки стандарди за безбедност.</p>
                                             
                                             <div className="p-6 rounded-2xl bg-muted/30 border border-border/50">
                                                 <p className="font-bold text-foreground mb-3 text-sm uppercase tracking-wide">Податоци кои ги собираме:</p>
@@ -131,7 +131,7 @@ export default function TermsPage() {
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
                                         <div className="space-y-6">
-                                            <p>За користење на услугите на Реклама5.мк е потребна регистрација. Услугата на Реклама5.мк е во оперативна должност непрекинато седум дена во неделата со 90% расположливост во текот на годината.</p>
+                                            <p>За пристап до целосниот спектар на професионални услуги на Big Market, неопходна е валидна регистрација. Нашата платформа гарантира 90% достапност на годишно ниво, поддржана од континуирано техничко одржување и системски надградби.</p>
                                             
                                             <div className="p-8 rounded-[2rem] bg-emerald-500/5 border border-emerald-500/10">
                                                 <h4 className="font-black text-emerald-700 dark:text-emerald-400 mb-4 flex items-center gap-2">
@@ -259,11 +259,11 @@ export default function TermsPage() {
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
                                         <div className="space-y-6">
-                                            <p><strong>Директен Маркетинг:</strong> Пораките (Email, SMS, Viber, WhatsApp) се испраќаат само со Ваша претходна согласност. Можете да ја повлечете согласноста во секое време. По повлекувањето, вашите податоци за маркетинг се бришат од нашата база во рок од **14 дена**.</p>
+                                            <p><strong>Директен Маркетинг:</strong> Биг Маркет ги користи вашите податоци за маркетинг цели исклучиво со ваша претходна согласност. Секоја комуникација (Email, SMS, Viber, WhatsApp) вклучува опција за итна одјава. По повлекувањето, податоците се отстрануваат од нашата активна база во рок од **14 дена**.</p>
                                             
-                                            <p><strong>Viber & WhatsApp контакт:</strong> Со кликнување на копчињата за контакт, вие директно пристапувате до надворешни платформи (Meta и Rakuten). Нашата платформа нема пристап до вашата приватна комуникација. Доколку не сакате да примате пораки, испратете порака со содржина **"STOP"** и ние веднаш ќе ве избришеме од листата.</p>
+                                            <p><strong>Viber & WhatsApp комуникација:</strong> Нашата платформа овозможува директно поврзување со провајдерите, но нема пристап до вашата приватна содржина. За прекин на комуникацијата, доволно е да испратите порака со содржина **"STOP"**.</p>
                                             
-                                            <p><strong>Спам и Злоупотреба:</strong> Не толерираме масовно создавање на содржински идентични прилози. Ако забележите злоупотреба, контактирајте не на support@reklama5.mk.</p>
+                                            <p><strong>Политика против Спам:</strong> Строго е забрането генерирање на масовни огласи или нерелевантна содржина. При секое сомневање за злоупотреба, контактирајте го нашиот центар на support@bigmarket.mk.</p>
                                         </div>
                                     </AccordionContent>
                                 </AccordionItem>
@@ -282,9 +282,9 @@ export default function TermsPage() {
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
                                         <div className="space-y-6">
-                                            <p><strong>Лозинка:</strong> Чувајте ја Вашата лозинка во тајност. Избегнувајте употреба на истата лозинка за повеќе веб страници. Ако се сомневате во злоупотреба, веднаш променете ја.</p>
-                                            <p><strong>Старосна Граница:</strong> Морате да имате наполнето 18 години за да ја користите оваа страница.</p>
-                                            <p><strong>Суспензија:</strong> Реклама5 го задржува правото да ја прекине или суспендира регистрацијата на корисникот во секое време без претходна најава доколку не се почитуваат правилата.</p>
+                                            <p><strong>Сигурност на сметката:</strong> Одговорноста за лозинката и пристапот лежи кај корисникот. Биг Маркет препорачува користење на комплексни лозинки и редовна промена за максимална заштита.</p>
+                                            <p><strong>Старосна регулатива:</strong> Платформата е наменета исклучиво за полнолетни лица (18+ години).</p>
+                                            <p><strong>Суспензија:</strong> Биг Маркет го задржува правото да го ограничи или прекине пристапот на секој корисник кој не се придржува до дефинираните етички и законски норми на платформата.</p>
                                         </div>
                                     </AccordionContent>
                                 </AccordionItem>
@@ -303,7 +303,7 @@ export default function TermsPage() {
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
                                         <div className="space-y-8">
-                                            <p>Имајте предвид дека политиката за приватност и условите на употреба на Реклама5 можат во секое време да бидат променети и актуализирани. Со користење на услугите, Вие се согласувате на наведените услови.</p>
+                                            <p>Политиката за приватност и општите услови на Big Market подлежат на периодични измени со цел унапредување на услугите. Со користење на овие услуги, корисникот потврдува дека се согласува со актуелната верзија на документот.</p>
                                             
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-border/50">
                                                 <div className="space-y-4">
@@ -317,8 +317,8 @@ export default function TermsPage() {
                                                 <div className="space-y-4">
                                                     <h5 className="font-black text-xs uppercase tracking-widest text-primary">Контакт / Contact:</h5>
                                                     <div className="flex gap-2 text-sm">
-                                                        <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
-                                                        <span>support@reklama5.mk</span>
+                                                    <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
+                                                    <span>support@bigmarket.mk</span>
                                                     </div>
                                                     <div className="flex gap-2 text-sm">
                                                         <Phone className="w-4 h-4 text-muted-foreground shrink-0" />

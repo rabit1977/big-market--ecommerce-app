@@ -8,7 +8,7 @@ import { AboutSkeleton } from './AboutSkeleton';
 export const metadata: Metadata = {
   title: 'About Us',
   description:
-    "Learn about Electro's story, our values, and the team behind the innovation. Making technology accessible to everyone since 2023.",
+    "Learn about Big Market's story, our values, and the mission to build Macedonia's leading digital marketplace.",
 };
 
 const AboutPage = () => {

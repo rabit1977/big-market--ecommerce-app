@@ -1,13 +1,13 @@
 // app/contact/page.tsx
-import { ContactContent } from './ContactContent';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+import { ContactContent } from './ContactContent';
 import { ContactSkeleton } from './ContactSkeleton';
 
 export const metadata: Metadata = {
   title: 'Contact Us',
   description:
-    'Get in touch with Electro. We\'re here to help with your questions, orders, and support needs.',
+    'Get in touch with Big Market. We\'re here to help with your listings, business inquiries, and support needs.',
 };
 
 const ContactPage = () => {

@@ -79,7 +79,7 @@ export const ResetPasswordEmail = ({
           {/* Footer */}
           <Section className='bg-gray-50 py-6 px-10 text-center'>
             <Text className='text-gray-500 text-xs leading-normal m-1'>
-              © {new Date().getFullYear()} Electro Store. All rights reserved.
+              © {new Date().getFullYear()} Big Market. All rights reserved.
             </Text>
           </Section>
         </Container>

@@ -108,23 +108,19 @@ export const AboutContent = () => {
               id='story-heading'
               className='text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-tight'
             >
-              Building the Future of Tech Retail
+              Building the Future of Modern Marketplaces
             </h1>
           </div>
           <div className='space-y-6 text-lg leading-relaxed text-muted-foreground'>
             <p>
-              Founded in 2023, Electro was born from a simple idea: to make
-              the latest technology accessible to everyone. We&apos;re a team
-              of tech enthusiasts who believe that innovation should be
-              effortless and exciting. We&apos;ve dedicated ourselves to
-              curating a selection of products that are not only
-              high-performing but also beautifully designed.
+              Founded with a vision to redefine digital commerce, Big Market was born from a simple idea: to make
+              the latest technology and a secure marketplace accessible to everyone. We&apos;re a team
+              of innovators who believe that buying and selling should be
+              effortless, secure, and exciting.
             </p>
             <p>
-              From the smallest smart gadget to the most powerful computing
-              device, every product on our platform is hand-picked and
-              rigorously tested. We stand behind our products with a
-              commitment to quality and User service that is second to none.
+              From individual listings to enterprise-level business solutions, every aspect of our platform is designed to provide value. We stand behind our community with a
+              commitment to safety and service that is second to none.
             </p>
           </div>
         </div>
@@ -132,7 +128,7 @@ export const AboutContent = () => {
         <div className='relative h-[400px] sm:h-[500px] lg:h-[600px] rounded-[2rem] overflow-hidden shadow-2xl rotate-1 hover:rotate-0 transition-transform duration-500 border-8 border-background'>
           <Image
             src={aboutContent.storyImage}
-            alt='Electro office workspace with team collaboration'
+            alt='Big Market office workspace with team collaboration'
             fill
             sizes='(max-width: 768px) 100vw, 50vw'
             className='object-cover hover:scale-110 transition-transform duration-700'
@@ -196,7 +192,7 @@ export const AboutContent = () => {
             Meet The Minds
           </h2>
           <p className='text-lg text-muted-foreground max-w-2xl mx-auto'>
-            The passionate team driving innovation at Electro
+            The passionate team driving innovation at Big Market
           </p>
         </div>
 
