@@ -9,15 +9,16 @@ import { cn } from '@/lib/utils';
 import { useMutation, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import {
-    ArrowLeft,
-    Image as ImageIcon,
-    MessageSquare,
-    Search,
-    Send,
-    ShieldAlert,
+  ArrowLeft,
+  Image as ImageIcon,
+  MessageSquare,
+  Search,
+  Send,
+  ShieldAlert,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 
@@ -99,27 +100,29 @@ export function MessagesClient({
     scrollToBottom();
   }, [messages]);
 
+  const searchParams = useSearchParams();
+
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const listingId = params.get('listingId');
-    const type = params.get('type');
+    const listingIdParam = searchParams.get('listingId') || searchParams.get('listing');
+    const type = searchParams.get('type');
     
     if (conversations) {
-      if (listingId) {
-        const found = conversations.find((c) => c.listingId === listingId);
+      if (listingIdParam) {
+        const found = conversations.find((c) => c.listingId === listingIdParam);
         if (found) {
           handleSelectConversation(found);
-        } else if (newConversationListing && newConversationListing._id === listingId) {
+        } else if (newConversationListing && newConversationListing._id === listingIdParam) {
             // Start virtual chat for listing
             setVirtualConversation({
-                _id: 'virtual-listing-' + listingId,
+                _id: 'virtual-listing-' + listingIdParam,
                 type: 'LISTING',
-                listingId: listingId,
+                listingId: listingIdParam,
                 buyerId: userId,
                 sellerId: newConversationListing.userId,
                 otherUserId: newConversationListing.userId,
                 lastMessageAt: Date.now(),
                 listing: newConversationListing,
+                otherUser: (newConversationListing as any).seller,
             } as any);
         }
       } else if (type === 'SUPPORT') {
@@ -408,8 +411,8 @@ function ConversationItem({
         </div>
       ) : (
         <UserAvatar 
-          user={{ id: conversation.otherUserId } as any}
-          fallbackText={conversation.otherUserId.substring(0, 2).toUpperCase()}
+          user={conversation.otherUser || ({ id: conversation.otherUserId } as any)}
+          fallbackText={(conversation.otherUser?.name || conversation.otherUserId).substring(0, 2).toUpperCase()}
           className="shrink-0 w-9 h-9 md:w-10 md:h-10"
         />
       )}
@@ -465,13 +468,16 @@ function MessageBubble({
             : 'bg-muted rounded-bl-sm'
         )}
       >
-        <p className="text-xs md:text-sm whitespace-pre-wrap break-words">
+        <p className={cn(
+          "text-xs md:text-sm whitespace-pre-wrap break-words",
+          isOwn ? "text-white" : "text-foreground"
+        )}>
           {message.content}
         </p>
         <p
           className={cn(
             "text-[9px] md:text-[10px] mt-0.5",
-            isOwn ? 'text-primary-foreground/60' : 'text-muted-foreground'
+            isOwn ? 'text-white/70' : 'text-muted-foreground'
           )}
         >
           {timeAgo}

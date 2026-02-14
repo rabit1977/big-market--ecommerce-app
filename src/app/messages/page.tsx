@@ -11,13 +11,14 @@ export const metadata = {
 };
 
 interface MessagesPageProps {
-  searchParams: Promise<{ listingId?: string; type?: string }>;
+  searchParams: Promise<{ listingId?: string; listing?: string; type?: string }>;
 }
 
 export default async function MessagesPage({ searchParams }: MessagesPageProps) {
   // Check authentication
   const session = await auth();
-  const { listingId } = await searchParams;
+  const params = await searchParams;
+  const listingId = params.listingId || params.listing;
   
   if (!session?.user) {
     redirect(`/auth/signin?callbackUrl=/messages${listingId ? `?listingId=${listingId}` : ''}`);
@@ -28,12 +29,23 @@ export default async function MessagesPage({ searchParams }: MessagesPageProps) 
     userId: session.user.id!,
   });
 
-  // If we have a listingId and no existing conversation, fetch the listing to start a virtual one
+  // If we have a listingId and no existing conversation, fetch the listing (and seller) to start a virtual one
   let listingDetails = null;
   if (listingId) {
       const exists = conversations.find(c => c.listingId === listingId);
       if (!exists) {
-          listingDetails = await fetchQuery(api.listings.getById, { id: listingId as any });
+          const listing = await fetchQuery(api.listings.getById, { id: listingId as any });
+          if (listing && listing.userId !== session.user.id) {
+              const seller = await fetchQuery(api.users.getByExternalId, { externalId: listing.userId });
+              listingDetails = { 
+                  ...listing, 
+                  seller: seller ? {
+                      name: seller.name,
+                      image: seller.image,
+                      isVerified: seller.isVerified
+                  } : null 
+              };
+          }
       }
   }
 

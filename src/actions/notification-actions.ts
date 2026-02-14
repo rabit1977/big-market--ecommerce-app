@@ -74,6 +74,15 @@ export async function getUnreadCountAction(): Promise<number> {
   }
 }
 
+export async function getUnreadMessagesCountAction(): Promise<number> {
+  try {
+    const user = await requireAuth();
+    return await convex.query(api.messages.getUnreadCount, { userId: user.id });
+  } catch {
+    return 0;
+  }
+}
+
 export async function markNotificationAsReadAction(
   notificationId: string
 ): Promise<{ success: boolean; error?: string }> {

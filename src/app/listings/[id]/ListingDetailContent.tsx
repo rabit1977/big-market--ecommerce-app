@@ -331,7 +331,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                 {/* Mobile Contact Shortcuts */}
                 <div className="grid grid-cols-2 gap-3 pt-4">
                     <Link 
-                      href={`/messages?listing=${listing._id}`}
+                      href={`/messages?listingId=${listing._id}`}
                       onClick={() => handleContactClick('contact')}
                       className="flex items-center justify-center gap-2 py-3.5 bg-primary text-white rounded-xl font-black text-sm uppercase tracking-tight shadow-lg shadow-primary/20 active:scale-95 transition-all"
                     >
@@ -438,7 +438,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
 
                    <div className="space-y-3 pt-2">
                       <Button asChild className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-lg uppercase tracking-tight shadow-xl shadow-primary/20 group">
-                         <Link href={`/messages?listing=${listing._id}`} onClick={() => handleContactClick('contact')}>
+                         <Link href={`/messages?listingId=${listing._id}`} onClick={() => handleContactClick('contact')}>
                             <MessageSquare className="mr-2 h-6 w-6 group-hover:scale-110 transition-transform" />
                             Send Message
                          </Link>

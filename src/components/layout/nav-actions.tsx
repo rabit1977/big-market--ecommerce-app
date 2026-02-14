@@ -1,41 +1,41 @@
 'use client';
 
-import { getUnreadCountAction } from '@/actions/notification-actions';
+import { getUnreadCountAction, getUnreadMessagesCountAction } from '@/actions/notification-actions';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-    BadgeCheck,
-    BarChart,
-    ChevronRight,
-    CreditCard,
-    Crown,
-    Heart,
-    HelpCircle,
-    Home,
-    LayoutDashboard,
-    Lock,
-    LogOut,
-    MessageSquare,
-    Package,
-    Pencil,
-    Settings,
-    ShieldCheck,
-    Star,
-    Store,
-    Trash,
-    User,
-    Wallet,
-    X
+  BadgeCheck,
+  BarChart,
+  ChevronRight,
+  CreditCard,
+  Crown,
+  Heart,
+  HelpCircle,
+  Home,
+  LayoutDashboard,
+  Lock,
+  LogOut,
+  MessageSquare,
+  Package,
+  Pencil,
+  Settings,
+  ShieldCheck,
+  Star,
+  Store,
+  Trash,
+  User,
+  Wallet,
+  X
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -68,7 +68,8 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   const { data: session } = useSession();
   const user = session?.user;
   const [wishlistCount, setWishlistCount] = useState(initialWishlistCount);
-  const [notificationCount, setNotificationCount] = useState(0);
+  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
+  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [lastSeenAlertCount, setLastSeenAlertCount] = useState(0);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -79,23 +80,27 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   // Close panel on route change
   useEffect(() => { setIsPanelOpen(false); }, [pathname]);
 
-  // Poll for unread notifications
+  // Poll for counts
   useEffect(() => {
     if (!user) return;
-    const fetchUnreadCount = async () => {
+    const fetchCounts = async () => {
       try {
-        const count = await getUnreadCountAction();
-        setNotificationCount(count);
+        const [nTotal, mTotal] = await Promise.all([
+            getUnreadCountAction(),
+            getUnreadMessagesCountAction()
+        ]);
+        setUnreadNotificationsCount(nTotal);
+        setUnreadMessagesCount(mTotal);
       } catch { /* Silently fail */ }
     };
-    fetchUnreadCount();
-    const interval = setInterval(fetchUnreadCount, 30000);
+    fetchCounts();
+    const interval = setInterval(fetchCounts, 30000);
     return () => clearInterval(interval);
   }, [user]);
 
   const handleLogout = useCallback(() => { signOut({ callbackUrl: '/' }); }, []);
 
-  const alertCount = notificationCount;
+  const alertCount = unreadNotificationsCount;
 
   const handlePanelToggle = useCallback(() => {
     setIsPanelOpen(prev => {
@@ -164,7 +169,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   const mobileOnlyItems: MenuItem[] = [
     { href: '/', icon: Home, label: 'Home' },
     { href: '/listings', icon: Store, label: 'Browse Listings' },
-    { href: '/messages', icon: MessageSquare, label: 'Messages', badge: notificationCount, iconColor: 'text-primary' },
+    { href: '/messages', icon: MessageSquare, label: 'Messages', badge: unreadMessagesCount, iconColor: 'text-primary' },
     { href: '/favorites', icon: Heart, label: 'Favorites', badge: wishlistCount, iconColor: 'text-primary' },
   ];
 
@@ -294,13 +299,13 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                 className='relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10'
               >
                 <Link href="/messages">
-                  <MessageSquare className={cn("h-4.5 w-4.5", notificationCount > 0 && "text-primary")} />
+                  <MessageSquare className={cn("h-4.5 w-4.5", unreadMessagesCount > 0 && "text-primary")} />
                   <AnimatePresence>
-                    {notificationCount > 0 && (
+                    {unreadMessagesCount > 0 && (
                       <motion.span key='messages-badge' initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
                         className='absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
                       >
-                        {notificationCount > 9 ? '9+' : notificationCount}
+                        {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
                       </motion.span>
                     )}
                   </AnimatePresence>
@@ -339,11 +344,11 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
               className='h-8 w-8 md:h-9 md:w-9 border-2 border-background shadow-sm hover:shadow-md transition-shadow'
             />
             <AnimatePresence>
-              {alertCount > 0 && alertCount > lastSeenAlertCount && !isPanelOpen && (
+              {unreadNotificationsCount > 0 && unreadNotificationsCount > lastSeenAlertCount && !isPanelOpen && (
                 <motion.span key='user-badge' initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
                   className='absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
                 >
-                  {alertCount > 9 ? '9+' : alertCount}
+                  {unreadNotificationsCount > 9 ? '9+' : unreadNotificationsCount}
                 </motion.span>
               )}
             </AnimatePresence>
