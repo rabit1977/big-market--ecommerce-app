@@ -14,6 +14,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { useQuery as useConvexQuery, useMutation } from 'convex/react';
 import {
     BadgeCheck,
@@ -40,7 +41,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { api } from '../../../../convex/_generated/api';
 import { Id } from '../../../../convex/_generated/dataModel';
-import { cn } from '@/lib/utils';
 
 interface ListingDetailContentProps {
   listing: {
@@ -593,7 +593,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
 
       {/* Sticky Bottom Contact Bar (Mobile Only) */}
       {session?.user?.id !== listing.userId && (
-        <div className="fixed bottom-0 left-0 right-0 z-[60] p-4 bg-background/80 backdrop-blur-lg border-t border-border shadow-[0_-10px_30px_rgba(0,0,0,0.05)] md:hidden flex gap-3 animate-in fade-in slide-in-from-bottom-full duration-500">
+        <div className="fixed bottom-0 left-0 right-0 z-[100] p-4 bg-background/80 backdrop-blur-lg border-t border-border shadow-[0_-10px_30px_rgba(0,0,0,0.05)] md:hidden flex gap-3 animate-in fade-in slide-in-from-bottom-full duration-500 pointer-events-auto">
             {contactPhone && (
                 <a 
                     href={`tel:${contactPhone}`}
