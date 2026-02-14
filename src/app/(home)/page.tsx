@@ -55,11 +55,14 @@ export default async function HomePage({ searchParams }: PageProps) {
   // 1. Get promoted listings for the featured carousel (only Na Pocetna Strana & Top Positioning)
   const featuredTiers = ['HOMEPAGE', 'TOP_POSITIONING'];
   const featuredListings = allListings
-    .filter((l: any) => l.isPromoted && featuredTiers.includes(l.promotionTier || '') && (!l.promotionExpiresAt || l.promotionExpiresAt > now))
+    .filter((l: any) => l.status === 'ACTIVE' && l.isPromoted && featuredTiers.includes(l.promotionTier || '') && (!l.promotionExpiresAt || l.promotionExpiresAt > now))
     .slice(0, 15);
 
   // 2. Latest listings includes EVERYTHING, ordered by newest first (but our backend query 'get' already handles promotion sorting)
-  const latestListings = allListings.slice(0, 12);
+  // Double-check status just in case backend query leaks
+  const latestListings = allListings
+    .filter((l: any) => l.status === 'ACTIVE')
+    .slice(0, 12);
 
   return (
     <>
