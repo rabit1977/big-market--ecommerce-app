@@ -38,6 +38,20 @@ export default async function RootLayout({
       <head>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const saved = localStorage.getItem('app-palette');
+                  if (saved) {
+                    document.documentElement.setAttribute('data-palette', saved);
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
       </head>
       <body className={inter.className}>
         <Providers initialFavorites={wishlist}>
