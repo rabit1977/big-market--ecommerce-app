@@ -1,47 +1,52 @@
 'use client';
 
-import { getUnreadCountAction, getUnreadMessagesCountAction } from '@/actions/notification-actions';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { useQuery } from 'convex/react';
+import { formatDistanceToNow } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-    BadgeCheck,
-    BarChart,
-    ChevronRight,
-    CreditCard,
-    Crown,
-    Heart,
-    HelpCircle,
-    Home,
-    LayoutDashboard,
-    Lock,
-    LogOut,
-    MessageSquare,
-    Package,
-    Pencil,
-    Settings,
-    ShieldCheck,
-    Star,
-    Store,
-    Trash,
-    User,
-    Wallet,
-    X
+  BadgeCheck,
+  BarChart,
+  Bell,
+  ChevronRight,
+  CreditCard,
+  Crown,
+  Heart,
+  HelpCircle,
+  Home,
+  LayoutDashboard,
+  Lock,
+  LogOut,
+  MessageSquare,
+  Package,
+  Pencil,
+  Settings,
+  ShieldCheck,
+  Star,
+  Store,
+  Trash,
+  User,
+  Wallet,
+  X
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { api } from '../../../convex/_generated/api';
 import { PaletteSwitcher } from './palette-switcher';
 
 interface NavActionsProps {
@@ -68,47 +73,35 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   const [hasMounted, setHasMounted] = useState(false);
   const { data: session } = useSession();
   const user = session?.user;
-  const [wishlistCount, setWishlistCount] = useState(initialWishlistCount);
-  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
-  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
+  
+  // Real-time queries
+  const unreadNotificationsCount = useQuery(api.notifications.getUnreadCount, user?.id ? { userId: user.id } : "skip") || 0;
+  const unreadMessagesCount = useQuery(api.messages.getUnreadCount, user?.id ? { userId: user.id } : "skip") || 0;
+  
+  // Fetch recent notifications for hover (only if user exists, limit 5)
+  // We use key "skip" if no user, to prevent query execution
+  const recentNotifications = useQuery(api.notifications.list, user?.id ? { userId: user.id, limit: 5, unreadOnly: false, skip: 0 } : "skip");
+  
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [lastSeenAlertCount, setLastSeenAlertCount] = useState(0);
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { setHasMounted(true); }, []);
-  useEffect(() => { setWishlistCount(initialWishlistCount); }, [initialWishlistCount]);
 
   // Close panel on route change
   useEffect(() => { setIsPanelOpen(false); }, [pathname]);
 
-  // Poll for counts
-  useEffect(() => {
-    if (!user) return;
-    const fetchCounts = async () => {
-      try {
-        const [nTotal, mTotal] = await Promise.all([
-            getUnreadCountAction(),
-            getUnreadMessagesCountAction()
-        ]);
-        setUnreadNotificationsCount(nTotal);
-        setUnreadMessagesCount(mTotal);
-      } catch { /* Silently fail */ }
-    };
-    fetchCounts();
-    const interval = setInterval(fetchCounts, 30000);
-    return () => clearInterval(interval);
-  }, [user]);
-
   const handleLogout = useCallback(() => { signOut({ callbackUrl: '/' }); }, []);
 
-  const alertCount = unreadNotificationsCount;
+  // Total alert count for the avatar badge
+  const totalAlertCount = unreadNotificationsCount + unreadMessagesCount;
 
   const handlePanelToggle = useCallback(() => {
     setIsPanelOpen(prev => {
-      if (!prev) setLastSeenAlertCount(alertCount);
+      if (!prev) setLastSeenAlertCount(totalAlertCount);
       return !prev;
     });
-  }, [alertCount]);
+  }, [totalAlertCount]);
 
   // Close on click outside
   useEffect(() => {
@@ -171,7 +164,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
     { href: '/', icon: Home, label: 'Home' },
     { href: '/listings', icon: Store, label: 'Browse Listings' },
     { href: '/messages', icon: MessageSquare, label: 'Messages', badge: unreadMessagesCount, iconColor: 'text-primary' },
-    { href: '/favorites', icon: Heart, label: 'Favorites', badge: wishlistCount, iconColor: 'text-primary' },
+    { href: '/favorites', icon: Heart, label: 'Favorites', badge: initialWishlistCount, iconColor: 'text-primary' },
   ];
 
   const accountItems: MenuItem[] = [
@@ -276,11 +269,11 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                 <Link href="/favorites">
                   <Heart className="h-4.5 w-4.5" />
                   <AnimatePresence>
-                    {wishlistCount > 0 && (
+                    {initialWishlistCount > 0 && (
                       <motion.span key='wishlist-badge' initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
                         className='absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
                       >
-                        {wishlistCount > 9 ? '9+' : wishlistCount}
+                        {initialWishlistCount > 9 ? '9+' : initialWishlistCount}
                       </motion.span>
                     )}
                   </AnimatePresence>
@@ -334,26 +327,94 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
           </Tooltip>
         </TooltipProvider>
 
-        {/* User Avatar Trigger */}
+        {/* User Avatar Trigger with Hover Card */}
         {user ? (
-          <button
-            onClick={handlePanelToggle}
-            className='relative ml-0.5 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50'
-          >
-            <UserAvatar
-              user={user}
-              className='h-8 w-8 md:h-9 md:w-9 border-2 border-background shadow-sm hover:shadow-md transition-shadow'
-            />
-            <AnimatePresence>
-              {unreadNotificationsCount > 0 && unreadNotificationsCount > lastSeenAlertCount && !isPanelOpen && (
-                <motion.span key='user-badge' initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                  className='absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
-                >
-                  {unreadNotificationsCount > 9 ? '9+' : unreadNotificationsCount}
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </button>
+          <HoverCard openDelay={200}>
+            <HoverCardTrigger asChild>
+              <button
+                onClick={handlePanelToggle}
+                className='relative ml-0.5 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50'
+              >
+                <UserAvatar
+                  user={user}
+                  className='h-8 w-8 md:h-9 md:w-9 border-2 border-background shadow-sm hover:shadow-md transition-shadow'
+                />
+                <AnimatePresence>
+                  {totalAlertCount > 0 && totalAlertCount > lastSeenAlertCount && !isPanelOpen && (
+                    <motion.span key='user-badge' initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                      className='absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
+                    >
+                      {totalAlertCount > 9 ? '9+' : totalAlertCount}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </button>
+            </HoverCardTrigger>
+            
+            {/* Hover Content for Notifications */}
+            <HoverCardContent align="end" className="w-80 p-0 overflow-hidden shadow-xl border-border/60">
+                <div className="bg-muted/50 p-3 border-b border-border/50 flex items-center justify-between">
+                    <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">Notifications</span>
+                    {totalAlertCount > 0 && (
+                        <Badge className="h-5 px-1.5 bg-primary text-[10px] font-bold">{totalAlertCount} new</Badge>
+                    )}
+                </div>
+                
+                {/* Unread Messages Alert */}
+                {unreadMessagesCount > 0 && (
+                    <div className="p-2 border-b border-border/40">
+                         <Link href="/messages" className="flex items-center gap-3 p-2 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors group">
+                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                                <MessageSquare className="w-4 h-4 text-primary" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">
+                                    You have {unreadMessagesCount} unread message{unreadMessagesCount !== 1 ? 's' : ''}
+                                </p>
+                                <p className="text-[10px] text-muted-foreground font-medium">Click to view conversations</p>
+                            </div>
+                            <ChevronRight className="w-4 h-4 text-muted-foreground/50 group-hover:text-primary transition-colors" />
+                         </Link>
+                    </div>
+                )}
+                
+                {/* Notification List */}
+                <ScrollArea className="max-h-[300px]">
+                    {!recentNotifications || (recentNotifications.notifications.length === 0 && unreadMessagesCount === 0) ? (
+                        <div className="py-8 text-center px-4">
+                            <Bell className="w-8 h-8 text-muted-foreground/20 mx-auto mb-2" />
+                            <p className="text-xs font-medium text-muted-foreground">No new notifications</p>
+                        </div>
+                    ) : (
+                        <div className="p-1">
+                            {recentNotifications?.notifications.map((n) => (
+                                <Link 
+                                    key={n._id} 
+                                    href={n.link || '/account/notifications'}
+                                    className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors group relative"
+                                >
+                                    {!n.isRead && (
+                                        <span className="absolute left-1 top-3 w-1.5 h-1.5 rounded-full bg-primary" />
+                                    )}
+                                    <div className={cn("ml-2 min-w-0 flex-1", !n.isRead ? "font-semibold" : "opacity-80")}>
+                                        <p className="text-[11px] leading-tight mb-0.5 line-clamp-2">{n.message}</p>
+                                        <p className="text-[9px] text-muted-foreground">
+                                            {formatDistanceToNow(n.createdAt, { addSuffix: true })}
+                                        </p>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    )}
+                </ScrollArea>
+                
+                <div className="p-2 border-t border-border/40 bg-muted/20">
+                    <Button asChild variant="ghost" size="sm" className="w-full h-7 text-[10px] font-bold text-muted-foreground hover:text-primary">
+                        <Link href="/account/notifications">View All Notifications</Link>
+                    </Button>
+                </div>
+            </HoverCardContent>
+          </HoverCard>
         ) : (
           <Button asChild variant='ghost' size='sm' className='h-9 px-3 rounded-full font-bold hover:bg-muted ml-1'>
             <Link href='/auth'>

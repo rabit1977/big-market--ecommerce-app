@@ -66,6 +66,34 @@ export const toggle = mutation({
         userId: args.userId,
         listingId: args.listingId,
       });
+
+      // Notify the listing owner
+      const listing = await ctx.db.get(args.listingId);
+      if (listing && listing.userId !== args.userId) {
+          // Get the favoriting user's details for the notification
+          const favoritingUser = await ctx.db
+            .query("users")
+            .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
+            .first();
+
+          const userName = favoritingUser?.name || "Someone";
+
+          await ctx.db.insert("notifications", {
+              userId: listing.userId,
+              type: "FAVORITE",
+              title: "New Favorite",
+              message: `${userName} favorited your listing "${listing.title}"`,
+              link: `/listings/${listing._id}`,
+              isRead: false,
+              createdAt: Date.now(),
+              metadata: {
+                  listingId: listing._id,
+                  favoritedBy: args.userId,
+                  image: listing.thumbnail || listing.images[0]
+              }
+          });
+      }
+
       return true; // isWished: true
     }
   },
