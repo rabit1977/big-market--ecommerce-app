@@ -2,25 +2,25 @@
 
 import { approveListingAction, deleteListingAction, rejectListingAction } from '@/actions/listing-actions';
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/table';
 import { formatCurrency } from '@/lib/utils';
 import { AlertCircle, Check, CheckCircle, Clock, Eye, Trash2, XCircle } from 'lucide-react';
@@ -109,143 +109,157 @@ export function AdminListingsTable({ listings }: AdminListingsTableProps) {
   };
 
   return (
-    <div className="rounded-xl border bg-card overflow-hidden">
-        <div className="overflow-x-auto">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[80px]">Image</TableHead>
-            <TableHead className="min-w-[200px]">Listing Info</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Price</TableHead>
-            <TableHead>Added Date</TableHead>
-            <TableHead className="text-right">Management</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {listings.map((listing) => (
-            <TableRow key={listing._id} className="group">
-              <TableCell>
-                <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-muted border border-border">
-                    {listing.thumbnail || (listing.images && listing.images[0]) ? (
-                         <Image 
-                            src={listing.thumbnail || listing.images[0]} 
-                            alt={listing.title} 
-                            fill 
-                            className="object-cover" 
-                        />
-                    ) : (
-                        <div className="flex bg-muted h-full w-full items-center justify-center text-[10px] text-muted-foreground">No Img</div>
-                    )}
-                </div>
-              </TableCell>
-              <TableCell className="font-medium">
-                <div className="flex flex-col">
-                    <Link href={`/listings/${listing._id}`} className="font-bold hover:text-primary transition-colors line-clamp-1" target="_blank">
-                        {listing.title}
-                    </Link>
-                    <span className="text-[10px] text-muted-foreground font-mono uppercase tracking-tighter">ID: {listing._id.slice(-8)}</span>
-                </div>
-              </TableCell>
-              <TableCell>
-                {getStatusBadge(listing.status)}
-              </TableCell>
-              <TableCell>
-                <Badge variant="outline" className="font-medium text-[10px] uppercase tracking-wider">{listing.category}</Badge>
-              </TableCell>
-              <TableCell className="font-bold text-sm">{formatCurrency(listing.price)}</TableCell>
-              <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
-                {new Date(listing._creationTime).toLocaleDateString(undefined, {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                })}
-              </TableCell>
-              <TableCell className="text-right">
-                <div className="flex justify-end gap-1">
-                  {/* View Button */}
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors"
-                    asChild
-                    title="View Listing"
-                  >
-                    <Link href={`/listings/${listing._id}`} target="_blank">
-                        <Eye className="h-4 w-4" />
-                    </Link>
-                  </Button>
+      <div className="rounded-xl border bg-card flex flex-col h-[calc(100vh-220px)] overflow-hidden relative shadow-sm">
+        <div className="overflow-auto flex-1 w-full touch-pan-x touch-pan-y overscroll-contain">
+          <Table>
+            <TableHeader className="sticky top-0 z-20 bg-card shadow-sm after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1px] after:bg-border pointer-events-auto">
+              <TableRow className="hover:bg-transparent border-none">
+                <TableHead className="w-[80px] bg-card font-bold text-xs uppercase tracking-wider text-primary">Image</TableHead>
+                <TableHead className="min-w-[200px] bg-card font-bold text-xs uppercase tracking-wider text-primary">Listing Info</TableHead>
+                <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Status</TableHead>
+                <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Category</TableHead>
+                <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Price</TableHead>
+                <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Added Date</TableHead>
+                <TableHead className="text-right bg-card font-bold text-xs uppercase tracking-wider text-primary sticky right-0 z-30 shadow-l-sm">Management</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {listings.map((listing) => (
+                <TableRow key={listing._id} className="group hover:bg-muted/30 transition-colors">
+                  <TableCell>
+                    <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-muted border border-border shadow-sm group-hover:shadow-md transition-all">
+                        {listing.thumbnail || (listing.images && listing.images[0]) ? (
+                             <Image 
+                                src={listing.thumbnail || listing.images[0]} 
+                                alt={listing.title} 
+                                fill 
+                                className="object-cover" 
+                            />
+                        ) : (
+                            <div className="flex bg-muted h-full w-full items-center justify-center text-[10px] text-muted-foreground">No Img</div>
+                        )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    <div className="flex flex-col gap-0.5">
+                        <Link href={`/listings/${listing._id}`} className="font-bold hover:text-primary transition-colors line-clamp-1" target="_blank">
+                            {listing.title}
+                        </Link>
+                        <span className="text-[10px] text-muted-foreground font-mono uppercase tracking-tighter opacity-70">ID: {listing._id.slice(-8)}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {getStatusBadge(listing.status)}
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="secondary" className="font-bold text-[10px] uppercase tracking-wider bg-muted text-muted-foreground border-border/50">{listing.category}</Badge>
+                  </TableCell>
+                  <TableCell className="font-black text-sm tracking-tight">{formatCurrency(listing.price)}</TableCell>
+                  <TableCell className="text-xs font-medium text-muted-foreground whitespace-nowrap">
+                    {new Date(listing._creationTime).toLocaleDateString(undefined, {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                    })}
+                    <span className="block text-[10px] opacity-70">
+                        {new Date(listing._creationTime).toLocaleTimeString(undefined, {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right sticky right-0 bg-card/95 backdrop-blur-sm group-hover:bg-muted/90 transition-colors z-10 border-l border-border/50">
+                    <div className="flex justify-end gap-1">
+                      {/* View Button */}
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all"
+                        asChild
+                        title="View Listing"
+                      >
+                        <Link href={`/listings/${listing._id}`} target="_blank">
+                            <Eye className="h-4 w-4" />
+                        </Link>
+                      </Button>
 
-                  {/* Actions for Pending */}
-                  {listing.status === 'PENDING_APPROVAL' && (
-                    <>
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-8 w-8 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
-                            disabled={isPending}
-                            onClick={() => handleApprove(listing._id)}
-                            title="Approve"
-                        >
-                            <CheckCircle className="h-4 w-4" />
-                        </Button>
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-8 w-8 text-amber-600 hover:bg-amber-50 hover:text-amber-700"
-                            disabled={isPending}
-                            onClick={() => handleReject(listing._id)}
-                            title="Reject"
-                        >
-                            <XCircle className="h-4 w-4" />
-                        </Button>
-                    </>
-                  )}
-
-                  {/* Delete with Confirmation */}
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-8 w-8 text-destructive hover:bg-destructive/10"
-                            disabled={isPending}
-                            title="Delete"
-                        >
-                            <Trash2 className="h-4 w-4" />
-                        </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="rounded-2xl">
-                        <AlertDialogHeader>
-                            <AlertDialogTitle className="flex items-center gap-2 text-destructive font-black uppercase tracking-tight">
-                                <AlertCircle className="w-5 h-5" /> 
-                                Delete permanently?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription className="font-medium">
-                                This will permanently remove &quot;{listing.title}&quot; from the platform. This action cannot be undone.
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel className="rounded-full font-bold">Cancel</AlertDialogCancel>
-                            <AlertDialogAction 
-                                onClick={() => handleDelete(listing._id)} 
-                                className="bg-destructive hover:bg-destructive/90 rounded-full font-bold"
+                      {/* Actions for Pending */}
+                      {listing.status === 'PENDING_APPROVAL' && (
+                        <>
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-8 w-8 text-emerald-600 hover:bg-emerald-500/10 hover:text-emerald-700 rounded-lg"
+                                disabled={isPending}
+                                onClick={() => handleApprove(listing._id)}
+                                title="Approve"
                             >
-                                Delete Listing
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                                <CheckCircle className="h-4 w-4" />
+                            </Button>
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-8 w-8 text-amber-600 hover:bg-amber-500/10 hover:text-amber-700 rounded-lg"
+                                disabled={isPending}
+                                onClick={() => handleReject(listing._id)}
+                                title="Reject"
+                            >
+                                <XCircle className="h-4 w-4" />
+                            </Button>
+                        </>
+                      )}
+
+                      {/* Delete with Confirmation */}
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-8 w-8 text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 rounded-lg"
+                                disabled={isPending}
+                                title="Delete"
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="rounded-2xl border-destructive/20 shadow-2xl">
+                            <AlertDialogHeader>
+                                <AlertDialogTitle className="flex items-center gap-2 text-destructive font-black uppercase tracking-tight">
+                                    <AlertCircle className="w-5 h-5" /> 
+                                    Delete permanently?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription className="font-medium text-foreground/80">
+                                    This will permanently remove <span className="font-bold text-foreground">"{listing.title}"</span> from the platform. 
+                                    <br/><span className="text-xs text-muted-foreground mt-2 block">This action cannot be undone.</span>
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter className="gap-2 sm:gap-0">
+                                <AlertDialogCancel className="rounded-xl font-bold border-border/50 bg-muted/50 hover:bg-muted">Cancel</AlertDialogCancel>
+                                <AlertDialogAction 
+                                    onClick={() => handleDelete(listing._id)} 
+                                    className="bg-destructive hover:bg-destructive/90 text-white rounded-xl font-bold shadow-lg shadow-destructive/20"
+                                >
+                                    Yes, Delete Listing
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        
+        {/* Footer / Status Bar within the fixed container */}
+        <div className="bg-muted/40 border-t p-2 px-4 text-[10px] font-bold text-muted-foreground flex justify-between items-center shrink-0">
+            <span>Showing {listings.length} listings</span>
+            <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500/50"></span> Active
+                <span className="w-2 h-2 rounded-full bg-amber-500/50 ml-2"></span> Pending
+            </div>
+        </div>
       </div>
-    </div>
-  );
+);
 }

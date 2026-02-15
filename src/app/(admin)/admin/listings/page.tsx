@@ -27,7 +27,7 @@ export default async function AdminListingsPage({ searchParams }: AdminListingsP
   return (
     <div className="flex flex-col gap-6 p-6">
       <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 items-center justify-between">
             <div>
                 <h1 className="text-3xl font-bold tracking-tight">
                     {isPromoted ? 'Promoted Listings' : 'Manage Listings'}
