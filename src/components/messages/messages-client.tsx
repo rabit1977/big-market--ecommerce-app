@@ -90,7 +90,7 @@ export function MessagesClient({
 
   const messages = (useQuery(api.messages.getConversation, 
     activeConversation && activeConversation.otherUserId ? {
-      listingId: activeConversation.listingId as any,
+      listingId: activeConversation.listingId as never,
       userA: userId,
       userB: activeConversation.otherUserId
     } : "skip" // Only query if we have the other user ID
@@ -103,7 +103,7 @@ export function MessagesClient({
   useEffect(() => {
     if (activeConversation && activeConversation.unreadCount && activeConversation.unreadCount > 0) {
         markReadMutation({
-            listingId: (activeConversation.listingId as any),
+            listingId: (activeConversation.listingId as never),
             userId,
             otherUserId: activeConversation.otherUserId
         });
@@ -141,11 +141,13 @@ export function MessagesClient({
                 listingId: listingIdParam,
                 buyerId: userId,
                 sellerId: newConversationListing.userId,
-                otherUserId: newConversationListing.userId,
                 lastMessageAt: Date.now(),
+                otherUserId: newConversationListing.userId,
                 listing: newConversationListing,
-                otherUser: (newConversationListing as any).seller,
-            } as any);
+                otherUser: {
+                    name: "Seller", // Will be updated when messages start
+                }
+            });
         }
       } else if (type === 'SUPPORT') {
         const found = conversations.find((c) => c.type === 'SUPPORT');
@@ -160,11 +162,11 @@ export function MessagesClient({
             sellerId: 'ADMIN',
             otherUserId: 'ADMIN',
             lastMessageAt: Date.now(),
-          } as any);
+          } as never);
         }
       }
     }
-  }, [conversations, userId, newConversationListing]);
+  }, [conversations, newConversationListing, searchParams, userId]);
 
   const handleSelectConversation = async (conversation: Conversation) => {
     setVirtualConversation(null);
@@ -194,7 +196,7 @@ export function MessagesClient({
         await sendMessageMutation({
           content: 'Sent an image',
           imageUrl: data.url,
-          listingId: (activeConversation.listingId as any) || undefined,
+          listingId: (activeConversation.listingId as never) || undefined,
           senderId: userId,
           receiverId: activeConversation.otherUserId,
           type: activeConversation.type,
@@ -216,20 +218,14 @@ export function MessagesClient({
     
     if (!activeConversation) {
         console.error("No active conversation");
-        // Try to trigger selection if we have a pending listing
-        if (newConversationListing) {
-             console.log("Retrying virtual conversation set...");
-        } else {
-             alert("Please wait for the conversation to load or select one.");
-             return;
-        }
+        return;
     }
 
     try {
       if (activeConversation) {
           await sendMessageMutation({
             content: newMessage,
-            listingId: (activeConversation.listingId as any) || undefined,
+            listingId: (activeConversation.listingId as never) || undefined,
             senderId: userId,
             receiverId: activeConversation.otherUserId,
             type: activeConversation.type,
@@ -382,7 +378,7 @@ export function MessagesClient({
               <ScrollArea className="flex-1 p-3 md:p-4 min-h-0 h-full">
                 <div className="space-y-2.5 md:space-y-3">
                   {messages.length > 0 ? (
-                    messages.map((message: any) => (
+                    messages.map((message) => (
                       <MessageBubble
                         key={message._id}
                         message={message}
@@ -585,9 +581,9 @@ function MessageBubble({
           </div>
         )}
         <p className={cn(
-          "text-xs md:text-sm whitespace-pre-wrap break-words",
+          "text-xs whitespace-pre-wrap break-words",
           isOwn ? "text-white" : "text-foreground",
-          message.content === 'Sent an image' && "italic opacity-80"
+          message.content === 'Sent an image' && " opacity-80"
         )}>
           {message.content}
         </p>

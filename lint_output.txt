@@ -1,0 +1,16 @@
+
+C:\Users\rabit\OneDrive\Desktop\Nextjs Projects\Full Stack ecommerce app -2\classifieds-platform\src\components\messages\messages-client.tsx
+   91:9   warning  The 'messages' logical expression could make the dependencies of useEffect Hook (at line 111) change on every render. To fix this, wrap the initialization of 'messages' in its own useMemo() Hook  react-hooks/exhaustive-deps
+   91:9   warning  The 'messages' logical expression could make the dependencies of useEffect Hook (at line 123) change on every render. To fix this, wrap the initialization of 'messages' in its own useMemo() Hook  react-hooks/exhaustive-deps
+   93:50  error    Unexpected any. Specify a different type                                                                                                                                                            @typescript-eslint/no-explicit-any
+  106:57  error    Unexpected any. Specify a different type                                                                                                                                                            @typescript-eslint/no-explicit-any
+  147:55  error    Unexpected any. Specify a different type                                                                                                                                                            @typescript-eslint/no-explicit-any
+  148:18  error    Unexpected any. Specify a different type                                                                                                                                                            @typescript-eslint/no-explicit-any
+  163:16  error    Unexpected any. Specify a different type                                                                                                                                                            @typescript-eslint/no-explicit-any
+  167:6   warning  React Hook useEffect has a missing dependency: 'searchParams'. Either include it or remove the dependency array                                                                                     react-hooks/exhaustive-deps
+  197:55  error    Unexpected any. Specify a different type                                                                                                                                                            @typescript-eslint/no-explicit-any
+  232:57  error    Unexpected any. Specify a different type                                                                                                                                                            @typescript-eslint/no-explicit-any
+  385:44  error    Unexpected any. Specify a different type                                                                                                                                                            @typescript-eslint/no-explicit-any
+
+✖ 11 problems (8 errors, 3 warnings)
+
