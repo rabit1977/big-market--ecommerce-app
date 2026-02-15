@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getPromotionConfig } from '@/lib/constants/promotions';
 import { cn, formatCurrency } from '@/lib/utils';
+import { useQuery } from 'convex/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   Activity,
@@ -21,7 +22,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { email } from 'zod';
+import { api } from '../../../convex/_generated/api';
 
 export function DashboardSkeleton() {
   return (
@@ -47,28 +48,6 @@ export function DashboardSkeleton() {
   );
 }
 
-type DashboardUser = {
-  id: string;
-  name: string | null;
-  email: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-type DashboardListing = {
-  id: string;
-  title: string;
-  category: string;
-  status: string; // ACTIVE, SOLD
-  price: number;
-  createdAt: Date | string;
-};
-
-type DashboardContentProps = {
-  listings: DashboardListing[];
-  users: DashboardUser[];
-};
-
 function calculateTrend(current: number, previous: number) {
   if (previous === 0) {
     return current > 0 ? { value: 100, isPositive: true } : { value: 0, isPositive: true };
@@ -80,36 +59,49 @@ function calculateTrend(current: number, previous: number) {
   };
 }
 
-export default function DashboardClient({
-  listings,
-  users,
-}: DashboardContentProps) {
+export default function DashboardClient() {
   const [isReady, setIsReady] = useState(false);
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
 
+  // Fetch real-time data
+  const listingsData = useQuery(api.listings.list, { status: "ALL" });
+  const usersData = useQuery(api.users.list, {});
+  
+  const isLoading = listingsData === undefined || usersData === undefined;
+
   useEffect(() => {
-    const timer = setTimeout(() => setIsReady(true), 50); 
+    const timer = setTimeout(() => setIsReady(true), 100); 
     setCurrentTime(new Date());
     return () => clearTimeout(timer);
   }, []);
 
   const stats = useMemo(() => {
+    if (!listingsData || !usersData) return null;
+
+    const listings = listingsData.map(l => ({
+        ...l,
+        id: l._id,
+        createdAt: new Date(l._creationTime)
+    }));
+
+    const users = usersData.map(u => ({
+        ...u,
+        id: u._id,
+        createdAt: new Date(u._creationTime)
+    }));
+
     const now = new Date();
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
     const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
 
-    const parseDate = (d: Date | string) => new Date(d);
-
-    const recentListings = listings.filter(l => parseDate(l.createdAt) >= thirtyDaysAgo);
+    const recentListings = listings.filter(l => l.createdAt >= thirtyDaysAgo);
     const previousListings = listings.filter(l => {
-        const d = parseDate(l.createdAt);
-        return d >= sixtyDaysAgo && d < thirtyDaysAgo;
+        return l.createdAt >= sixtyDaysAgo && l.createdAt < thirtyDaysAgo;
     });
 
-    const recentUsers = users.filter(u => parseDate(u.createdAt) >= thirtyDaysAgo);
+    const recentUsers = users.filter(u => u.createdAt >= thirtyDaysAgo);
     const previousUsers = users.filter(u => {
-        const d = parseDate(u.createdAt);
-        return d >= sixtyDaysAgo && d < thirtyDaysAgo;
+        return u.createdAt >= sixtyDaysAgo && u.createdAt < thirtyDaysAgo;
     });
 
     const activeListings = listings.filter(l => l.status === 'ACTIVE').length;
@@ -124,9 +116,9 @@ export default function DashboardClient({
         recentListingsCount: recentListings.length,
         listingTrend,
         userTrend,
-        recentListingsData: recentListings.slice(0, 5)
+        recentListingsData: recentListings.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).slice(0, 5)
     };
-  }, [listings, users]);
+  }, [listingsData, usersData]);
 
   const greeting = currentTime 
     ? currentTime.getHours() < 12 
@@ -136,7 +128,7 @@ export default function DashboardClient({
         : 'Good evening'
     : 'Welcome';
 
-  if (!isReady) return <DashboardSkeleton />;
+  if (!isReady || isLoading || !stats) return <DashboardSkeleton />;
 
   return (
     <motion.div
@@ -225,7 +217,7 @@ export default function DashboardClient({
           },
           {
             title: 'Promoted',
-            value: listings.filter(l => (l as any).isPromoted).length,
+            value: listingsData?.filter(l => (l as any).isPromoted).length || 0,
             icon: Sparkles,
             description: 'Active promotions',
             color: 'emerald' as const,

@@ -343,3 +343,45 @@ export const getListingStats = query({
   },
 });
 
+// Get all support conversations (ADMIN ONLY)
+export const getSupportConversations = query({
+  args: {},
+  handler: async (ctx) => {
+    const conversations = await ctx.db
+      .query("conversations")
+      .withIndex("by_type", (q) => q.eq("type", "SUPPORT"))
+      .order("desc")
+      .collect();
+
+    // Fetch details
+    const conversationsWithDetails = await Promise.all(
+      conversations.map(async (conv) => {
+        // For support, buyer is the USER, seller is ADMIN
+        const userId = conv.buyerId;
+
+        const user = await ctx.db
+          .query("users")
+          .withIndex("by_externalId", (q) => q.eq("externalId", userId))
+          .first();
+
+        // Admin is 'seller', so unread count is sellerUnreadCount
+        const unreadCount = conv.sellerUnreadCount || 0;
+
+        return {
+          ...conv,
+          otherUserId: userId,
+          otherUser: user ? {
+             name: user.name,
+             image: user.image,
+             email: user.email,
+             isVerified: user.isVerified,
+             id: user.externalId,
+          } : { name: "Unknown User" },
+          unreadCount,
+        };
+      })
+    );
+
+    return conversationsWithDetails;
+  },
+});

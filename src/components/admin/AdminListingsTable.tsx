@@ -22,7 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { formatCurrency } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 import { AlertCircle, Check, CheckCircle, Clock, Eye, Trash2, XCircle } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -32,9 +32,10 @@ import { toast } from 'sonner';
 
 interface AdminListingsTableProps {
   listings: any[];
+  isPromotedView?: boolean;
 }
 
-export function AdminListingsTable({ listings }: AdminListingsTableProps) {
+export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTableProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -119,13 +120,29 @@ export function AdminListingsTable({ listings }: AdminListingsTableProps) {
                 <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Status</TableHead>
                 <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Category</TableHead>
                 <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Price</TableHead>
+                {isPromotedView && (
+                    <>
+                        <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Tier</TableHead>
+                        <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Expires</TableHead>
+                    </>
+                )}
                 <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Added Date</TableHead>
                 <TableHead className="text-right bg-card font-bold text-xs uppercase tracking-wider text-primary sticky right-0 z-30 shadow-l-sm">Management</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {listings.map((listing) => (
-                <TableRow key={listing._id} className="group hover:bg-muted/30 transition-colors">
+              {listings.map((listing) => {
+                // Calculate expiry status if promoted
+                const isExpired = isPromotedView && listing.promotionExpiresAt && listing.promotionExpiresAt < Date.now();
+                const daysLeft = isPromotedView && listing.promotionExpiresAt 
+                    ? Math.ceil((listing.promotionExpiresAt - Date.now()) / (1000 * 60 * 60 * 24)) 
+                    : 0;
+
+                return (
+                <TableRow key={listing._id} className={cn(
+                    "group hover:bg-muted/30 transition-colors",
+                    isExpired && "bg-destructive/5 opacity-70"
+                )}>
                   <TableCell>
                     <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-muted border border-border shadow-sm group-hover:shadow-md transition-all">
                         {listing.thumbnail || (listing.images && listing.images[0]) ? (
@@ -155,6 +172,29 @@ export function AdminListingsTable({ listings }: AdminListingsTableProps) {
                     <Badge variant="secondary" className="font-bold text-[10px] uppercase tracking-wider bg-muted text-muted-foreground border-border/50">{listing.category}</Badge>
                   </TableCell>
                   <TableCell className="font-black text-sm tracking-tight">{formatCurrency(listing.price)}</TableCell>
+                  
+                  {isPromotedView && (
+                    <>
+                        <TableCell>
+                            <Badge variant="outline" className="border-primary/20 bg-primary/5 text-primary text-[10px] font-bold uppercase tracking-wider">
+                                {(listing.promotionTier || 'Standard').replace(/_/g, ' ')}
+                            </Badge>
+                        </TableCell>
+                        <TableCell className="text-xs font-medium">
+                             {listing.promotionExpiresAt ? (
+                                <div className={cn("flex flex-col", isExpired ? "text-destructive font-bold" : "text-emerald-600 font-bold")}>
+                                    <span>{new Date(listing.promotionExpiresAt).toLocaleDateString()}</span>
+                                    <span className="text-[10px] opacity-80 font-normal">
+                                        {isExpired ? 'Expired' : `${daysLeft} days left`}
+                                    </span>
+                                </div>
+                             ) : (
+                                <span className="text-muted-foreground">-</span>
+                             )}
+                        </TableCell>
+                    </>
+                  )}
+
                   <TableCell className="text-xs font-medium text-muted-foreground whitespace-nowrap">
                     {new Date(listing._creationTime).toLocaleDateString(undefined, {
                         year: 'numeric',
@@ -247,7 +287,8 @@ export function AdminListingsTable({ listings }: AdminListingsTableProps) {
                     </div>
                   </TableCell>
                 </TableRow>
-              ))}
+              );
+              })}
             </TableBody>
           </Table>
         </div>
