@@ -14,6 +14,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from '@/components/ui/button';
+import { useFavorites } from '@/lib/context/favorites-context';
 import { cn } from '@/lib/utils';
 import { useQuery as useConvexQuery, useMutation } from 'convex/react';
 import {
@@ -67,7 +68,8 @@ interface ListingDetailContentProps {
 export function ListingDetailContent({ listing }: ListingDetailContentProps) {
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { isFavorite: isFavCheck, toggleFavorite } = useFavorites();
+  const isFavorite = isFavCheck(listing._id);
   const { data: session } = useSession();
   
   const recordVisit = useMutation(api.history.recordVisit);
@@ -191,7 +193,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                 Share
              </button>
              <button 
-               onClick={() => setIsFavorite(!isFavorite)}
+               onClick={() => toggleFavorite(listing._id)}
                className={`flex items-center gap-2 px-4 py-2 border rounded-full text-sm font-bold transition-all shadow-sm ${
                  isFavorite 
                  ? 'bg-primary/5 border-primary/20 text-primary' 
@@ -330,7 +332,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                         </p>
                     </div>
                     <button 
-                      onClick={() => setIsFavorite(!isFavorite)}
+                      onClick={() => toggleFavorite(listing._id)}
                       className={`p-2.5 rounded-full transition-colors ${isFavorite ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}
                     >
                         <Heart className={`w-6 h-6 ${isFavorite ? 'fill-current' : ''}`} />

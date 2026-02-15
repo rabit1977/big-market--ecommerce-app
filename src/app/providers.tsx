@@ -2,12 +2,19 @@
 'use client';
 
 import { ConvexClientProvider } from '@/components/convex-client-provider';
+import { FavoritesProvider } from '@/lib/context/favorites-context';
 import { SidebarProvider } from '@/lib/context/sidebar-context';
 import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from 'sonner';
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({ 
+  children,
+  initialFavorites = []
+}: { 
+  children: React.ReactNode;
+  initialFavorites?: string[];
+}) {
   return (
     <SessionProvider>
       <ThemeProvider
@@ -18,7 +25,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       >
         <ConvexClientProvider>
           <SidebarProvider>
-            {children}
+            <FavoritesProvider initialFavorites={initialFavorites}>
+              {children}
+            </FavoritesProvider>
             <Toaster position="bottom-center" richColors />
           </SidebarProvider>
         </ConvexClientProvider>

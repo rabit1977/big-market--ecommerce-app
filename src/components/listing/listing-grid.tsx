@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/select';
 import { ListingWithRelations } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation } from 'convex/react';
 import { ArrowUpDown, LayoutGrid, List, Save, SlidersHorizontal } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { usePathname, useSearchParams } from 'next/navigation';
@@ -57,9 +57,7 @@ export function ListingGrid({
     setMounted(true);
   }, []);
   
-  // Fetch user favorites to sync "Like" state
-  const favorites = useQuery(api.favorites.get, session?.user?.id ? { userId: session.user.id } : "skip");
-  const favoriteIds = new Set(favorites?.map((f: any) => f.listingId) || []);
+  /* Favorites logic centralized in ListingCard via Context */
   
   const saveSearchMutation = useMutation(api.searches.saveSearch);
 
@@ -201,7 +199,7 @@ export function ListingGrid({
               key={listing._id} 
               listing={listing} 
               viewMode={viewMode} 
-              initialIsWished={favoriteIds.has(listing._id) || (typeof listing.id === 'string' && favoriteIds.has(listing.id))}
+// initialIsWished deprecated
             />
           ))}
         </div>

@@ -1,7 +1,6 @@
 'use client';
 
 import { sendMessageAction } from '@/actions/message-actions';
-import { toggleWishlistAction } from '@/actions/wishlist-actions';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -10,6 +9,7 @@ import {
     TooltipProvider,
     TooltipTrigger
 } from '@/components/ui/tooltip';
+import { useFavorites } from '@/lib/context/favorites-context';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { formatPrice } from '@/lib/utils/formatters';
@@ -28,15 +28,15 @@ import { toast } from 'sonner';
 
 interface ListingContactPanelProps {
   listing: ListingWithRelations;
-  initialIsWished: boolean;
+  initialIsWished?: boolean;
 }
 
 export function ListingContactPanel({
   listing,
-  initialIsWished,
 }: ListingContactPanelProps) {
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const isWished = isFavorite(listing._id);
   const [isPending, startTransition] = useTransition();
-  const [isWished, setIsWished] = useState(initialIsWished);
   const [showPhone, setShowPhone] = useState(false);
 
   // Status config
@@ -65,19 +65,7 @@ export function ListingContactPanel({
   }, [isActive, listing.status]);
 
   const handleToggleWishlist = () => {
-    startTransition(async () => {
-      const result = await toggleWishlistAction(listing._id);
-
-      if (!result.success) {
-        toast.error(String(result.error || 'Wishlist update failed'));
-        return;
-      }
-
-      const wished = !!result.isWished;
-      setIsWished(wished);
-
-      toast.success(wished ? 'Added to favorites' : 'Removed from favorites');
-    });
+    toggleFavorite(listing._id);
   };
   
   const handleSendMessage = () => {

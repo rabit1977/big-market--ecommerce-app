@@ -40,7 +40,7 @@ export default async function RootLayout({
         <link rel='icon' href='/favicon.ico' />
       </head>
       <body className={inter.className}>
-        <Providers>
+        <Providers initialFavorites={wishlist}>
           <AnalyticsProvider />
           <CommandPalette />
           <div className='min-h-screen bg-background text-foreground'>

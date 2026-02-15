@@ -1,7 +1,7 @@
 'use client';
 
-import { toggleWishlistAction } from '@/actions/wishlist-actions';
 import { getPromotionConfig } from '@/lib/constants/promotions';
+import { useFavorites } from '@/lib/context/favorites-context';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { formatPrice } from '@/lib/utils/formatters';
@@ -9,52 +9,27 @@ import { motion } from 'framer-motion';
 import { Heart, MapPin, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { memo, useCallback, useEffect, useOptimistic, useState, useTransition } from 'react';
-import { toast } from 'sonner';
+import { memo, useCallback } from 'react';
 import { Button } from '../ui/button';
 import { PromotionIcon } from './promotion-icon';
 
 interface ListingCardProps {
   listing: ListingWithRelations;
-  initialIsWished?: boolean;
   viewMode?: 'grid' | 'list';
+  initialIsWished?: boolean; // Deprecated but kept for compatibility
 }
 
 export const ListingCard = memo(
-  ({ listing, initialIsWished = false, viewMode = 'list' }: ListingCardProps) => {
-    const [isPending, startTransition] = useTransition();
-    const [isWished, setIsWished] = useState(initialIsWished);
-    
-    // Sync state with prop if it changes (e.g. data loaded late)
-    useEffect(() => {
-        if (initialIsWished !== undefined) {
-            setIsWished(initialIsWished);
-        }
-    }, [initialIsWished]);
-
-    const [optimisticIsWished, setOptimisticIsWished] = useOptimistic(
-      isWished,
-      (state, newValue: boolean) => newValue
-    );
+  ({ listing, viewMode = 'list' }: ListingCardProps) => {
+    const { isFavorite, toggleFavorite } = useFavorites();
+    const isWished = isFavorite(listing.id || listing._id);
 
     // Wishlist toggle handler
     const handleToggleWishlist = useCallback((e: React.MouseEvent) => {
       e.preventDefault(); // Prevent navigation
       e.stopPropagation();
-      
-      const newValue = !optimisticIsWished;
-      
-      startTransition(async () => {
-        setOptimisticIsWished(newValue);
-        const result = await toggleWishlistAction(listing.id || listing._id);
-        if (result.success) {
-          setIsWished(result.isWished || false); // Update state from server
-        } else {
-          toast.error(result.error || 'Failed to update favorites');
-          setOptimisticIsWished(!newValue); // Revert on error
-        }
-      });
-    }, [listing.id, listing._id, optimisticIsWished, setOptimisticIsWished]);
+      toggleFavorite(listing.id || listing._id);
+    }, [listing.id, listing._id, toggleFavorite]);
 
     const activeImage = listing.images?.[0]?.url || listing.thumbnail || '/placeholder.png';
     const isGrid = viewMode === 'grid';
@@ -148,7 +123,7 @@ export const ListingCard = memo(
 
         {/* Content Section */}
         <div className={cn(
-          "flex flex-1 flex-col justify-between relative z-10 min-w-0",
+          "flex flex-1 flex-col justify-between relative z-30 pointer-events-none min-w-0",
           !(promotionTier === 'LISTING_HIGHLIGHT' || promotionTier === 'VISUAL_HIGHLIGHT') && "bg-card",
           isGrid ? "p-2 sm:p-3 space-y-1 sm:space-y-1.5" : "p-2 sm:p-3 md:p-3.5" // Tighter padding
         )}>
@@ -183,9 +158,9 @@ export const ListingCard = memo(
                     {/* Grid View Heart - Bottom Right */}
                     <Button
                       size="icon" variant="ghost" onClick={handleToggleWishlist}
-                      className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 -mr-1.5 -mb-1.5 sm:-mr-2 sm:-mb-2 pointer-events-auto hover:bg-muted/50 z-30 relative", optimisticIsWished ? "text-red-500" : "text-muted-foreground")}
+                      className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 -mr-1.5 -mb-1.5 sm:-mr-2 sm:-mb-2 pointer-events-auto hover:bg-muted/50 z-30 relative", isWished ? "text-red-500" : "text-muted-foreground")}
                     >
-                      <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", optimisticIsWished && "fill-current")} />
+                      <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", isWished && "fill-current")} />
                     </Button>
                 </div>
              </>
@@ -226,9 +201,9 @@ export const ListingCard = memo(
                     {/* List View Heart - Moved to Content Bottom Right */}
                     <Button
                       size="icon" variant="ghost" onClick={handleToggleWishlist}
-                      className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 -mr-1.5 -mb-1.5 sm:-mr-2 sm:-mb-2 pointer-events-auto hover:bg-muted/50 z-30", optimisticIsWished ? "text-red-500" : "text-muted-foreground")}
+                      className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 -mr-1.5 -mb-1.5 sm:-mr-2 sm:-mb-2 pointer-events-auto hover:bg-muted/50 z-30", isWished ? "text-red-500" : "text-muted-foreground")}
                     >
-                      <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", optimisticIsWished && "fill-current")} />
+                      <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", isWished && "fill-current")} />
                     </Button>
                 </div>
              </>

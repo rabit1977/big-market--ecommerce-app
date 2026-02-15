@@ -20,12 +20,13 @@ import { cn } from '@/lib/utils';
 import { formatPrice } from '@/lib/utils/formatters';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
-import { AlertTriangle, BarChart2, CheckCircle, Clock, Edit, ExternalLink, Mail, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
+import { AlertTriangle, BarChart2, CheckCircle, Clock, Edit, ExternalLink, Heart, Mail, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { PromotionIcon } from './promotion-icon';
+import { useFavorites } from '@/lib/context/favorites-context';
 
 interface MyListingListItemProps {
   listing: ListingWithRelations;
@@ -36,6 +37,10 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
     const [renewalStats, setRenewalStats] = useState<any>(null);
     const [isStatsLoading, setIsStatsLoading] = useState(false);
     const [isRenewDialogOpen, setIsRenewDialogOpen] = useState(false);
+    
+    // Favorites logic
+    const { isFavorite: isFavCheck, toggleFavorite } = useFavorites();
+    const isFavorite = isFavCheck(listing.id || listing._id);
 
     const handleDelete = async () => {
         startTransition(async () => {
@@ -132,6 +137,21 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                  </Badge>
              )}
           </div>
+          
+           {/* Favorite Button */}
+           <button 
+             onClick={(e) => {
+                 e.preventDefault();
+                 e.stopPropagation();
+                 toggleFavorite(listing.id || listing._id);
+             }}
+             className={cn(
+                 "absolute top-2 right-2 z-20 p-1.5 rounded-full bg-black/40 backdrop-blur-md text-white border border-white/10 transition-all hover:bg-black/60 opacity-0 group-hover:opacity-100",
+                 isFavorite && "bg-red-500/80 text-white border-red-500 hover:bg-red-500 opacity-100"
+             )}
+           >
+               <Heart className={cn("w-3.5 h-3.5 transition-transform active:scale-95", isFavorite && "fill-current")} />
+           </button>
         </div>
 
         {/* Content Section */}
