@@ -804,7 +804,7 @@ export const getUserDashboardStats = query({
         promotionAllTime: promotionSpentAllTime,
       },
       // Recent transactions
-      transactions: recentTransactions.map((t) => ({
+      recentTransactions: recentTransactions.map((t) => ({
         _id: t._id,
         amount: t.amount,
         type: t.type,
@@ -812,34 +812,63 @@ export const getUserDashboardStats = query({
         status: t.status,
         createdAt: t.createdAt,
       })),
-      // Activity Stats
-      counts: {
-        favorites: favorites.length,
-        savedSearches: savedSearches.length,
-        reviewsWritten: reviews.length,
-        questionsAsked: questions.length,
+
+      // Social Stats
+      social: {
+        favoritesCount: favorites.length,
+        conversationsCount: conversationSet.size,
         unreadMessages: unreadMessages.length,
-        activeConversations: conversationSet.size,
-        unreadNotifications: unreadNotifications.length,
+        totalMessagesSent: sentMessages.length,
+        totalMessagesReceived: receivedMessages.length,
       },
-      // Data collections
-      data: {
-        recentFavorites: favoritesPopulated.filter((f): f is NonNullable<typeof f> => f !== null),
-        recentlyViewed: recentlyViewedPopulated.filter((r): r is NonNullable<typeof r> => r !== null),
-        recentNotifications,
-        savedSearches: savedSearches.map((s) => ({
+
+      // Saved Searches
+      savedSearches: {
+        count: savedSearches.length,
+        items: savedSearches.map((s) => ({
           _id: s._id,
           name: s.name,
           query: s.query,
           filters: s.filters,
+          isEmailAlert: s.isEmailAlert,
+          url: s.url || `/listings?q=${encodeURIComponent(s.query || '')}`,
           createdAt: s._creationTime,
         })),
       },
-      // Operational
-      canRefreshListings: user.canRefreshListings ?? true,
-      monthlyRenewalsUsed,
-      canRenewNow,
-      hoursUntilRenew,
+
+      // Recently Viewed
+      recentlyViewed: {
+        totalViewed: recentlyViewedRaw.length,
+        items: recentlyViewedPopulated.filter((r): r is NonNullable<typeof r> => r !== null),
+      },
+
+      // Notifications
+      notifications: {
+        total: notifications.length,
+        unread: unreadNotifications.length,
+        recent: recentNotifications,
+      },
+
+      // Activity
+      activity: {
+        reviewsWritten: reviews.length,
+        questionsAsked: questions.length,
+        averageRatingGiven: reviews.length > 0 
+          ? (reviews.reduce((acc, r: any) => acc + (r.rating || 0), 0) / reviews.length).toFixed(1) 
+          : 0,
+      },
+
+      // Renewals
+      renewals: {
+        usedThisMonth: monthlyRenewalsUsed,
+        limitMonthly: (user as any).renewalLimit || 5, 
+        canRenewNow,
+        hoursUntilRenew,
+        lastRenewalAt: user.lastRenewalTimestamp,
+      },
+
+      // Favorites Details
+      favoritesDetails: favoritesPopulated.filter((f): f is NonNullable<typeof f> => f !== null),
     };
   },
 });

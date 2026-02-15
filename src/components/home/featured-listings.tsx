@@ -78,11 +78,11 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
                     <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping scale-150" />
                     <span className="relative flex h-2 w-2 rounded-full bg-primary" />
                  </div>
-                 <h2 className="text-lg md:text-xl font-black tracking-tighter uppercase italic text-foreground">
+                 <h2 className="text-lg md:text-xl font-black tracking-tighter uppercase text-foreground">
                     Top Deals & Boosted
                  </h2>
               </div>
-              <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.2em] opacity-80">
+              <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.2em] opacity-80">
                 Premium Community Spotlight
               </p>
             </div>
