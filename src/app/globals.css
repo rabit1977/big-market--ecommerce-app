@@ -177,8 +177,118 @@
 }
 
 /* ============================================
-   BASE LAYER
+   PALETTE SYSTEM (Premium Theming)
    ============================================ */
+
+/* Emerald Palette */
+[data-palette="emerald"] {
+  --primary: #10b981;
+  --ring: #10b981;
+  --sidebar-primary: #10b981;
+  --sidebar-ring: #10b981;
+}
+
+[data-palette="emerald"] .gradient-text,
+[data-palette="emerald"] .gradient-text-animate {
+  background-image: linear-gradient(135deg, #10b981, #34d399, #059669);
+}
+[data-palette="emerald"] .gradient-primary {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+/* Ocean Palette */
+[data-palette="ocean"] {
+  --primary: #3b82f6;
+  --ring: #3b82f6;
+  --sidebar-primary: #3b82f6;
+  --sidebar-ring: #3b82f6;
+}
+[data-palette="ocean"] .gradient-text,
+[data-palette="ocean"] .gradient-text-animate {
+  background-image: linear-gradient(135deg, #3b82f6, #60a5fa, #2563eb);
+}
+[data-palette="ocean"] .gradient-primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+/* Royal Palette */
+[data-palette="royal"] {
+  --primary: #f59e0b;
+  --ring: #f59e0b;
+  --sidebar-primary: #f59e0b;
+  --sidebar-ring: #f59e0b;
+}
+[data-palette="royal"] .gradient-text,
+[data-palette="royal"] .gradient-text-animate {
+  background-image: linear-gradient(135deg, #f59e0b, #fbbf24, #d97706);
+}
+[data-palette="royal"] .gradient-primary {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+/* Rose Palette */
+[data-palette="rose"] {
+  --primary: #e11d48;
+  --ring: #e11d48;
+  --sidebar-primary: #e11d48;
+  --sidebar-ring: #e11d48;
+}
+[data-palette="rose"] .gradient-text,
+[data-palette="rose"] .gradient-text-animate {
+  background-image: linear-gradient(135deg, #e11d48, #fb7185, #be123c);
+}
+[data-palette="rose"] .gradient-primary {
+  background: linear-gradient(135deg, #e11d48, #be123c);
+}
+
+/* Twitter Palette */
+[data-palette="twitter"] {
+  --primary: #1d9bf0;
+  --ring: #1d9bf0;
+  --sidebar-primary: #1d9bf0;
+  --sidebar-ring: #1d9bf0;
+}
+[data-palette="twitter"] .gradient-text,
+[data-palette="twitter"] .gradient-text-animate {
+  background-image: linear-gradient(135deg, #1d9bf0, #71c9f8, #0076b3);
+}
+[data-palette="twitter"] .gradient-primary {
+  background: linear-gradient(135deg, #1d9bf0, #0076b3);
+}
+
+/* Instagram Palette */
+[data-palette="instagram"] {
+  --primary: #e1306c;
+  --ring: #e1306c;
+  --sidebar-primary: #e1306c;
+  --sidebar-ring: #e1306c;
+}
+[data-palette="instagram"] .gradient-text,
+[data-palette="instagram"] .gradient-text-animate {
+  background-image: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+}
+[data-palette="instagram"] .gradient-primary {
+  background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);
+}
+
+/* TikTok Palette */
+[data-palette="tiktok"] {
+  --primary: #ff0050;
+  --ring: #00f2ea;
+  --sidebar-primary: #ff0050;
+  --sidebar-ring: #00f2ea;
+}
+[data-palette="tiktok"] .gradient-text,
+[data-palette="tiktok"] .gradient-text-animate {
+  background-image: linear-gradient(135deg, #ff0050, #000000, #00f2ea);
+}
+.dark [data-palette="tiktok"] .gradient-text,
+.dark [data-palette="tiktok"] .gradient-text-animate {
+    background-image: linear-gradient(135deg, #ff0050, #ffffff, #00f2ea);
+}
+[data-palette="tiktok"] .gradient-primary {
+  background: linear-gradient(135deg, #ff0050, #00f2ea);
+}
 
 @layer base {
   * {

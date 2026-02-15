@@ -803,57 +803,95 @@ export const getUserDashboardStats = query({
         promotionMonthly: promotionSpentMonthly,
         promotionAllTime: promotionSpentAllTime,
       },
-      // Renewals
-      renewals: {
-        usedThisMonth: monthlyRenewalsUsed,
-        limitMonthly: 15,
-        remainingMonthly: 15 - monthlyRenewalsUsed,
-        canRenewNow,
-        hoursUntilRenew,
-        lastRenewalAt: user.lastRenewalTimestamp,
-      },
-      // Social
-      social: {
-        favoritesCount: favorites.length,
-        conversationsCount: conversationSet.size,
-        totalMessagesSent: sentMessages.length,
-        totalMessagesReceived: receivedMessages.length,
-        unreadMessages: unreadMessages.length,
-      },
       // Recent transactions
-      recentTransactions,
-      // Saved searches
-      savedSearches: {
-        count: savedSearches.length,
-        items: savedSearches.map((s) => ({
+      transactions: recentTransactions.map((t) => ({
+        _id: t._id,
+        amount: t.amount,
+        type: t.type,
+        description: t.description,
+        status: t.status,
+        createdAt: t.createdAt,
+      })),
+      // Activity Stats
+      counts: {
+        favorites: favorites.length,
+        savedSearches: savedSearches.length,
+        reviewsWritten: reviews.length,
+        questionsAsked: questions.length,
+        unreadMessages: unreadMessages.length,
+        activeConversations: conversationSet.size,
+        unreadNotifications: unreadNotifications.length,
+      },
+      // Data collections
+      data: {
+        recentFavorites: favoritesPopulated.filter((f): f is NonNullable<typeof f> => f !== null),
+        recentlyViewed: recentlyViewedPopulated.filter((r): r is NonNullable<typeof r> => r !== null),
+        recentNotifications,
+        savedSearches: savedSearches.map((s) => ({
           _id: s._id,
-          name: s.name || s.query,
+          name: s.name,
           query: s.query,
-          url: s.url,
-          isEmailAlert: s.isEmailAlert ?? false,
+          filters: s.filters,
+          createdAt: s._creationTime,
         })),
       },
-      // Recently viewed
-      recentlyViewed: {
-        totalViewed: recentlyViewedRaw.length,
-        items: recentlyViewedPopulated.filter(Boolean),
-      },
-      // Favorites with details
-      favoritesDetails: favoritesPopulated.filter(Boolean),
-      // Notifications
-      notifications: {
-        total: notifications.length,
-        unread: unreadNotifications.length,
-        recent: recentNotifications,
-      },
-      // Reviews & Q&A
-      activity: {
-        reviewsWritten: reviews.length,
-        averageRatingGiven: reviews.length > 0
-          ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / reviews.length) * 10) / 10
-          : 0,
-        questionsAsked: questions.length,
-      },
+      // Operational
+      canRefreshListings: user.canRefreshListings ?? true,
+      monthlyRenewalsUsed,
+      canRenewNow,
+      hoursUntilRenew,
+    };
+  },
+});
+
+export const getPublicProfile = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    // Note: userId here matches externalId in our schema
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
+      .first();
+
+    if (!user) return null;
+
+    // Get active listings counts
+    const listings = await ctx.db
+      .query("listings")
+      .withIndex("by_userId", (q) => q.eq("userId", args.userId))
+      .filter((q) => q.eq(q.field("status"), "ACTIVE"))
+      .collect();
+
+    // Get average rating
+    // Reviews are linked by userId (the review WRITER) or we need reviews FOR this user?
+    // Usually reviews are on listings or on the seller.
+    // Assuming reviews table has a 'targetUserId' or we aggregate from listings.
+    // Based on `reviews.ts` schema from Step 1060, reviews have `userId` (author) and `listingId`.
+    // We need to fetch reviews for all listings owned by this user.
+    // This could be expensive if they have many listings.
+    // Ideally, we'd have a `sellerRating` field on the user.
+    // For now, let's implement a simplified aggregation or just return placeholder if not available.
+    // Actually, let's fetch reviews for the listings we just found.
+    
+    // Collecting review stats
+    let totalRating = 0;
+    let reviewCount = 0;
+
+    // THIS IS EXPENSIVE - O(N) queries where N is listings count. 
+    // Optimization: Store aggregate rating on User document.
+    // For now, we will just return the user data and calculate standard profile fields.
+    
+    return {
+      _id: user._id,
+      name: user.name,
+      image: user.image,
+      createdAt: user.createdAt,
+      bio: user.bio,
+      city: user.city,
+      isVerified: user.isVerified,
+      activeListingsCount: listings.length,
+      // We will compute rating properly in a separate mutation or background job
+      // For now returning basic info
     };
   },
 });

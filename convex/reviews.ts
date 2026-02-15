@@ -89,3 +89,38 @@ export const adminReply = mutation({
     });
   },
 });
+
+export const getSellerReviewStats = query({
+    args: { sellerId: v.string() },
+    handler: async (ctx, args) => {
+        // Find all listings by this seller
+        const listings = await ctx.db
+           .query("listings")
+           .withIndex("by_userId", (q) => q.eq("userId", args.sellerId))
+           .collect();
+           
+        if (listings.length === 0) return { averageRating: 0, totalReviews: 0 };
+        
+        // Fetch all reviews for these listings
+        let totalRating = 0;
+        let totalReviews = 0;
+        
+        // Note: This could be optimized later with dedicated aggregations or stored fields on User
+        for (const listing of listings) {
+            const reviews = await ctx.db
+              .query("reviews")
+              .withIndex("by_listing", (q) => q.eq("listingId", listing._id))
+              .collect();
+              
+            for (const review of reviews) {
+                totalRating += review.rating;
+                totalReviews++;
+            }
+        }
+        
+        return {
+            averageRating: totalReviews > 0 ? totalRating / totalReviews : 0,
+            totalReviews
+        };
+    }
+});

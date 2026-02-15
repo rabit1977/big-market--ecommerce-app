@@ -6,42 +6,43 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  BadgeCheck,
-  BarChart,
-  ChevronRight,
-  CreditCard,
-  Crown,
-  Heart,
-  HelpCircle,
-  Home,
-  LayoutDashboard,
-  Lock,
-  LogOut,
-  MessageSquare,
-  Package,
-  Pencil,
-  Settings,
-  ShieldCheck,
-  Star,
-  Store,
-  Trash,
-  User,
-  Wallet,
-  X
+    BadgeCheck,
+    BarChart,
+    ChevronRight,
+    CreditCard,
+    Crown,
+    Heart,
+    HelpCircle,
+    Home,
+    LayoutDashboard,
+    Lock,
+    LogOut,
+    MessageSquare,
+    Package,
+    Pencil,
+    Settings,
+    ShieldCheck,
+    Star,
+    Store,
+    Trash,
+    User,
+    Wallet,
+    X
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { PaletteSwitcher } from './palette-switcher';
 
 interface NavActionsProps {
   initialWishlistCount: number;
@@ -445,6 +446,13 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                       <div className='mx-3 my-1 h-px bg-border/30' />
                     </>
                   )}
+
+                  {/* Palette Selection Section */}
+                  {renderSectionLabel('App Style')}
+                  <div className='px-1.5 mb-2'>
+                    <PaletteSwitcher />
+                  </div>
+                  <div className='mx-3 my-1 h-px bg-border/30' />
 
                   {/* Mobile navigation — visible only below md */}
                   <div className='md:hidden'>

@@ -21,19 +21,16 @@ import {
     BadgeCheck,
     ChevronLeft,
     Edit,
-    Eye,
     Heart,
     History,
     Mail,
     MapPin,
     MessageSquare,
     MoreVertical,
-    MousePointerClick,
     Phone,
     Share2,
     ShieldAlert,
-    Trash2,
-    TrendingUp
+    Trash2
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -75,8 +72,10 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
   const recordVisit = useMutation(api.history.recordVisit);
   const trackEvent = useMutation(api.analytics.trackEvent);
 
-  // Fetch seller details using External ID (UUID) since listing.userId stores the auth provider ID
+  // Fetch seller details and stats
   const seller = useConvexQuery(api.users.getByExternalId, { externalId: listing.userId });
+  const sellerProfile = useConvexQuery(api.users.getPublicProfile, { userId: listing.userId });
+  const sellerReviewStats = useConvexQuery(api.reviews.getSellerReviewStats, { sellerId: listing.userId });
 
   useEffect(() => {
     // Session id for analytics
@@ -151,7 +150,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-12 border-b border-border">
       {/* Mobile Header (Big Market Style) */}
       <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-md  px-4 py-3 flex items-center justify-between shadow-sm md:hidden">
          <div className="flex items-center gap-3">
@@ -219,7 +218,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-0 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-0 md:gap-8 mb-12">
           {/* Left Column: Images, Specs, Description (lg:col-span-8) */}
           <div className="md:col-span-7 lg:col-span-8 space-y-4 md:space-y-6">
             
@@ -423,7 +422,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
           {/* Right Column (lg:col-span-4) - Hidden/Transformed on Mobile */}
           <div className="hidden md:block md:col-span-5 lg:col-span-4 space-y-6">
              {/* Sticky Actions Container */}
-             <div className="top-24 space-y-6 max-h-[calc(100vh-8rem)] overflow-y-auto pr-1 no-scrollbar">
+             <div className="sticky top-24 space-y-6 max-h-[calc(100vh-8rem)] overflow-y-auto pr-1 no-scrollbar z-10">
                 {/* Price & Primary Details */}
                 <div className="bg-card border-2 border-border rounded-3xl p-6 md:p-8 shadow-xl shadow-foreground/5 space-y-6">
                    <div className="space-y-2">
@@ -524,12 +523,22 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
 
                     <div className="grid grid-cols-2 gap-2">
                         <div className="p-3 bg-muted rounded-xl text-center border border-border">
-                           <div className="text-lg font-black text-foreground">12</div>
+                           <div className="text-lg font-black text-foreground">
+                             {sellerProfile ? sellerProfile.activeListingsCount : '-'}
+                           </div>
                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">Active Ads</p>
                         </div>
                         <div className="p-3 bg-muted rounded-xl text-center border border-border">
-                           <div className="text-lg font-black text-foreground">4.9</div>
-                           <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">Seller Rating</p>
+                           <div className="text-lg font-black text-foreground">
+                             {sellerReviewStats && sellerReviewStats.totalReviews > 0 
+                                ? sellerReviewStats.averageRating.toFixed(1) 
+                                : 'NEW'}
+                           </div>
+                           <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">
+                             {sellerReviewStats && sellerReviewStats.totalReviews > 0 
+                               ? `${sellerReviewStats.totalReviews} Review${sellerReviewStats.totalReviews !== 1 ? 's' : ''}` 
+                               : 'Seller Rating'}
+                           </p>
                         </div>
                     </div>
                 </div>
@@ -596,64 +605,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
   );
 }
 
-function OwnerListingStats({ listingId, currentViewCount }: { listingId: string, currentViewCount?: number }) {
-    const stats = useConvexQuery(api.analytics.getDetailedListingStats, { listingId: listingId as Id<"listings">, days: 30 });
-    
-    // Fallback while loading
-    const totalViews = stats ? stats.totalViews : (currentViewCount || 0);
-    const totalClicks = stats ? stats.totalClicks : 0;
-    const totalFavorites = stats ? stats.totalFavorites : 0;
-    
-    if (!stats) return (
-         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 opacity-50">
-             {[1, 2, 3, 4].map(i => (
-                 <div key={i} className="bg-muted border border-border rounded-lg md:rounded-xl p-4 h-24 animate-pulse"></div>
-             ))}
-         </div>
-    );
 
-    return (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
-            {/* Views */}
-            <div className="bg-muted border border-border rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1 sm:gap-1.5 md:gap-2 group hover:bg-accent transition-colors">
-                <Eye className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-primary group-hover:scale-110 transition-transform" />
-                <div>
-                    <div className="text-lg sm:text-xl md:text-2xl font-black text-foreground">{totalViews}</div>
-                    <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Total Views</div>
-                </div>
-            </div>
-
-            {/* Leads / Clicks */}
-            <div className="bg-muted border border-border rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1 sm:gap-1.5 md:gap-2 group hover:bg-accent transition-colors">
-                <MousePointerClick className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-blue-500 group-hover:scale-110 transition-transform" />
-                <div>
-                    <div className="text-lg sm:text-xl md:text-2xl font-black text-foreground">{totalClicks}</div>
-                    <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Leads</div>
-                </div>
-            </div>
-
-            {/* Favorites */}
-            <div className="bg-muted border border-border rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1 sm:gap-1.5 md:gap-2 group hover:bg-accent transition-colors">
-                <Heart className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-rose-500 group-hover:scale-110 transition-transform" />
-                <div>
-                    <div className="text-lg sm:text-xl md:text-2xl font-black text-foreground">{totalFavorites}</div>
-                    <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Favorites</div>
-                </div>
-            </div>
-
-            {/* Engagement Rate (Ratio) */}
-            <div className="bg-muted border border-border rounded-lg md:rounded-xl p-2 sm:p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1 sm:gap-1.5 md:gap-2 group hover:bg-accent transition-colors">
-                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-500 group-hover:scale-110 transition-transform" />
-                <div>
-                    <div className="text-lg sm:text-xl md:text-2xl font-black text-foreground">
-                        {totalViews > 0 ? ((totalClicks / totalViews) * 100).toFixed(1) : '0.0'}%
-                    </div>
-                    <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Ratio</div>
-                </div>
-            </div>
-        </div>
-    );
-}
 
 function DeleteListingButton({ listingId, compact }: { listingId: string, compact?: boolean }) {
     const [isDeleting, setIsDeleting] = useState(false);
