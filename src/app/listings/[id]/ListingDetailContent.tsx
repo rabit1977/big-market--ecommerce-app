@@ -591,31 +591,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                 </p>
             </div>
         </div>
-      </div>
-
-      {/* Sticky Bottom Contact Bar (Mobile Only) */}
-      {session?.user?.id !== listing.userId && (
-        <div className="fixed bottom-0 left-0 right-0 z-[100] p-4 bg-background/80 backdrop-blur-lg border-t border-border shadow-[0_-10px_30px_rgba(0,0,0,0.05)] md:hidden flex gap-3 animate-in fade-in slide-in-from-bottom-full duration-500 pointer-events-auto">
-            {contactPhone && (
-                <a 
-                    href={`tel:${contactPhone}`}
-                    onClick={() => handleContactClick('call')}
-                    className="flex-[0.4] flex items-center justify-center gap-2 py-3.5 bg-green-500 text-white rounded-2xl font-black text-sm uppercase tracking-tight shadow-lg shadow-green-200 active:scale-95 transition-all"
-                >
-                    <Phone className="w-4 h-4" />
-                    Call
-                </a>
-            )}
-            <Link 
-                href={`/messages?listingId=${listing._id}`}
-                onClick={() => handleContactClick('contact')}
-                className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-primary text-white rounded-2xl font-black text-sm uppercase tracking-tight shadow-xl shadow-primary/20 active:scale-95 transition-all"
-            >
-                <MessageSquare className="w-4 h-4" />
-                Message Seller
-            </Link>
-        </div>
-      )}
+      </div>    
     </div>
   );
 }
