@@ -183,16 +183,14 @@ export const markRead = mutation({
 export const getConversations = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    const conversations = await ctx.db
-      .query("conversations")
-      .filter((q) =>
-        q.or(
-          q.eq(q.field("buyerId"), args.userId),
-          q.eq(q.field("sellerId"), args.userId)
-        )
-      )
-      .order("desc")
-      .collect();
+    const [buyerConversations, sellerConversations] = await Promise.all([
+      ctx.db.query("conversations").withIndex("by_buyer", (q) => q.eq("buyerId", args.userId)).collect(),
+      ctx.db.query("conversations").withIndex("by_seller", (q) => q.eq("sellerId", args.userId)).collect(),
+    ]);
+
+    const conversations = [...buyerConversations, ...sellerConversations].sort(
+      (a, b) => (b.lastMessageAt || 0) - (a.lastMessageAt || 0)
+    );
 
     // Fetch details for each conversation
     const conversationsWithDetails = await Promise.all(
@@ -232,15 +230,12 @@ export const getConversations = query({
 export const getUnreadCount = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    const conversations = await ctx.db
-      .query("conversations")
-      .filter((q) =>
-        q.or(
-          q.eq(q.field("buyerId"), args.userId),
-          q.eq(q.field("sellerId"), args.userId)
-        )
-      )
-      .collect();
+    const [buyerConversations, sellerConversations] = await Promise.all([
+      ctx.db.query("conversations").withIndex("by_buyer", (q) => q.eq("buyerId", args.userId)).collect(),
+      ctx.db.query("conversations").withIndex("by_seller", (q) => q.eq("sellerId", args.userId)).collect(),
+    ]);
+
+    const conversations = [...buyerConversations, ...sellerConversations];
 
     const totalUnread = conversations.reduce(
       (sum, conv) => {

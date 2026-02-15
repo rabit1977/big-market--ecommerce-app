@@ -13,10 +13,7 @@ export const getRoot = query({
   handler: async (ctx) => {
     return await ctx.db
       .query("categories")
-      .filter((q) => q.or(
-        q.eq(q.field("parentId"), undefined),
-        q.eq(q.field("parentId"), null)
-      ))
+      .withIndex("by_parentId", (q) => q.eq("parentId", undefined))
       .collect();
   },
 });
@@ -34,24 +31,28 @@ export const getChildren = query({
 export const getWithCounts = query({
   args: {},
   handler: async (ctx) => {
-    const categories = await ctx.db.query("categories")
-      .filter(q => q.neq(q.field("isActive"), false))
+    // 1. Fetch active categories using index
+    const categories = await ctx.db
+      .query("categories")
+      .withIndex("by_isActive", (q) => q.eq("isActive", true))
       .collect();
     
-    const activeListings = await ctx.db.query("listings")
-      .withIndex("by_status", q => q.eq("status", "ACTIVE"))
+    // 2. Fetch only ACTIVE listings
+    const activeListings = await ctx.db
+      .query("listings")
+      .withIndex("by_status", (q) => q.eq("status", "ACTIVE"))
       .collect();
       
+    // 3. Fast Map aggregation
     const counts = new Map<string, number>();
-    activeListings.forEach(l => {
-      // Direct count for the primary category
-      counts.set(l.category, (counts.get(l.category) || 0) + 1);
-      
-      // If there's a subcategory and it's different from category, count it too
+    for (const l of activeListings) {
+      if (l.category) {
+        counts.set(l.category, (counts.get(l.category) || 0) + 1);
+      }
       if (l.subCategory && l.subCategory !== l.category) {
         counts.set(l.subCategory, (counts.get(l.subCategory) || 0) + 1);
       }
-    });
+    }
 
     return categories.map(cat => ({
       ...cat,

@@ -77,7 +77,8 @@ export default defineSchema({
     template: v.optional(v.any()), // JSON template for category-specific fields
     createdAt: v.number(),
   }).index("by_slug", ["slug"])
-    .index("by_parentId", ["parentId"]),
+    .index("by_parentId", ["parentId"])
+    .index("by_isActive", ["isActive"]),
 
   listings: defineTable({
     title: v.string(),
@@ -112,6 +113,8 @@ export default defineSchema({
     .index("by_category", ["category"])
     .index("by_userId", ["userId"])
     .index("by_status", ["status"])
+    .index("by_status_category", ["status", "category"])
+    .index("by_status_subCategory", ["status", "subCategory"])
     .index("by_promoted", ["isPromoted"])
     .index("by_createdAt", ["createdAt"])
     .index("by_status_createdAt", ["status", "createdAt"])
