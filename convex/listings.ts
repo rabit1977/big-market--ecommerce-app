@@ -338,6 +338,7 @@ export const create = mutation({
     isAffordable: v.optional(v.boolean()),
     isPromoted: v.optional(v.boolean()),
     promotionTier: v.optional(v.string()),
+    currency: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     // Check Listing Limit (50 per year/total for verified)
@@ -360,6 +361,7 @@ export const create = mutation({
       status: "PENDING_APPROVAL", 
       createdAt: Date.now(),
       viewCount: 0,
+      currency: args.currency || "MKD", // Default for legacy/omitted
     });
 
     // Increment count
@@ -539,6 +541,7 @@ export const update = mutation({
     isAffordable: v.optional(v.boolean()),
     isPromoted: v.optional(v.boolean()),
     promotionTier: v.optional(v.string()),
+    currency: v.optional(v.string()),
     
     // System Fields
     createdAt: v.optional(v.number()),

@@ -11,6 +11,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 import { ChevronLeft } from 'lucide-react';
 import { ListingFormData } from '../post-listing-wizard';
 
@@ -157,18 +158,37 @@ export function DetailsStep({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label htmlFor="price" className="text-sm font-semibold">
-              Price (€) <span className="text-destructive">*</span>
+              Price <span className="text-destructive">*</span>
             </Label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">€</span>
-              <Input
-                id="price"
-                type="number"
-                placeholder="0.00"
-                value={formData.price || ''}
-                onChange={(e) => updateFormData({ price: parseFloat(e.target.value) || 0 })}
-                className="h-11 pl-8 bg-background border-2 focus:border-primary"
-              />
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">
+                  {formData.currency === 'EUR' ? '€' : 'den'}
+                </span>
+                <Input
+                  id="price"
+                  type="number"
+                  placeholder="0"
+                  value={formData.price || ''}
+                  onChange={(e) => updateFormData({ price: parseFloat(e.target.value) || 0 })}
+                  className={cn(
+                    "h-11 bg-background border-2 focus:border-primary",
+                    formData.currency === 'EUR' ? "pl-8" : "pl-12"
+                  )}
+                />
+              </div>
+              <Select
+                value={formData.currency || 'MKD'}
+                onValueChange={(val) => updateFormData({ currency: val })}
+              >
+                <SelectTrigger className="h-11 w-[90px] border-2">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="MKD">MKD</SelectItem>
+                  <SelectItem value="EUR">EUR (€)</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

@@ -105,7 +105,7 @@ export function MyListingsDashboardHeader() {
           <div className="flex items-center gap-4 relative z-10 w-full md:w-auto bg-muted/50 p-3 md:p-4 rounded-3xl border border-border/50 hover:bg-muted transition-colors">
               <div className="text-right flex-1 md:flex-none">
                   <div className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-0.5">Balance</div>
-                  <div className="text-lg md:text-2xl font-black text-foreground leading-none">{user.credits.toFixed(2)} <span className="text-[10px] md:text-xs font-bold text-muted-foreground ml-0.5">MKD</span></div>
+                  <div className="text-lg md:text-2xl font-black text-foreground leading-none">{Math.round(user.credits)} <span className="text-[10px] md:text-xs font-bold text-muted-foreground ml-0.5">MKD</span></div>
               </div>
               <Button asChild size="sm" className="rounded-2xl font-black shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90 h-10 md:h-11 text-xs px-5 md:px-6 uppercase tracking-wider transition-all hover:scale-105">
                   <Link href="/wallet/top-up">
@@ -131,7 +131,7 @@ export function MyListingsDashboardHeader() {
                       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Total Spent</p>
                       <h3 className="text-xl md:text-2xl font-black text-foreground tracking-tight group-hover:text-rose-500 transition-colors">
                           {/* @ts-ignore - totalSpend added in backend but types might flag */}
-                          {(stats.totalSpend || 0).toFixed(2)} <span className="text-[10px] font-bold text-muted-foreground">MKD</span>
+                          {Math.round(stats.totalSpend || 0)} <span className="text-[10px] font-bold text-muted-foreground">MKD</span>
                       </h3>
                   </div>
               </CardContent>

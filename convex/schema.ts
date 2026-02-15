@@ -109,6 +109,7 @@ export default defineSchema({
     promotionTier: v.optional(v.string()), // 'GOLD', 'SILVER', etc.
     promotionExpiresAt: v.optional(v.number()),
     previousPrice: v.optional(v.number()),
+    currency: v.optional(v.string()), // 'EUR' | 'MKD'
   })
     .index("by_category", ["category"])
     .index("by_userId", ["userId"])

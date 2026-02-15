@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from '@/components/ui/button';
 import { useFavorites } from '@/lib/context/favorites-context';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 import { useQuery as useConvexQuery, useMutation } from 'convex/react';
 import {
     BadgeCheck,
@@ -307,12 +307,12 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                     <div className="flex flex-col">
                         {listing.previousPrice && listing.previousPrice > listing.price && (
                             <span className="text-xs font-bold text-muted-foreground/50 line-through mb-[-2px]">
-                                {listing.previousPrice.toLocaleString()} €
+                                {formatCurrency(listing.previousPrice, (listing as any).currency)}
                             </span>
                         )}
                         <div className="flex items-baseline gap-2">
                             <span className="text-3xl font-black text-primary">
-                                {listing.price > 0 ? `${listing.price.toLocaleString()} €` : 'Price on request'}
+                                {listing.price > 0 ? formatCurrency(listing.price, (listing as any).currency) : 'Price on request'}
                             </span>
                             {listing.price > 0 && <span className="text-xs font-bold text-muted-foreground uppercase tracking-tighter">Fixed</span>}
                         </div>

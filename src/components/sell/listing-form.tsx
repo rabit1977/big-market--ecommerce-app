@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { ListingImageUpload } from './listing-image-upload';
+import { cn } from '@/lib/utils';
 
 interface Category {
   id: string;
@@ -86,6 +87,7 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
       state: (initialData as any)?.region || '',
       phone: initialData?.contactPhone || '',
       email: (initialData as any)?.contactEmail || '',
+      currency: (initialData as any)?.currency || 'MKD',
   });
 
   // Effect to load template if initial category is set
@@ -208,6 +210,7 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
               title: formData.title,
               description: formData.description,
               price: parseFloat(formData.price),
+              currency: formData.currency,
               category: categorySlug,
               subCategory: subCategorySlug || undefined,
               city: formData.city,
@@ -280,18 +283,37 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
                 <div className="grid sm:grid-cols-2 gap-3">
                     <div className="grid gap-1">
                         <Label htmlFor="price" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Price</Label>
-                        <div className="relative">
-                            <Input 
-                                id="price"
-                                name="price" 
-                                type="number" 
-                                placeholder="0.00" 
-                                value={formData.price} 
-                                onChange={handleInputChange} 
-                                required 
-                                className="h-9 rounded-lg pl-8 bg-background/30 border-border/40 text-xs shadow-none"
-                            />
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-[10px]">€</span>
+                        <div className="flex gap-2">
+                            <div className="relative flex-1">
+                                <Input 
+                                    id="price"
+                                    name="price" 
+                                    type="number" 
+                                    placeholder="0" 
+                                    value={formData.price} 
+                                    onChange={handleInputChange} 
+                                    required 
+                                    className={cn(
+                                        "h-9 rounded-lg bg-background/30 border-border/40 text-xs shadow-none",
+                                        formData.currency === 'EUR' ? "pl-6" : "pl-10"
+                                    )}
+                                />
+                                <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-[10px]">
+                                    {formData.currency === 'EUR' ? '€' : 'den'}
+                                </span>
+                            </div>
+                            <Select 
+                                value={formData.currency} 
+                                onValueChange={(val) => setFormData(prev => ({ ...prev, currency: val }))}
+                            >
+                                <SelectTrigger className="h-9 w-[80px] rounded-lg bg-background/30 border-border/40 text-[10px] font-bold">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="MKD">MKD</SelectItem>
+                                    <SelectItem value="EUR">EUR</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
                     <div className="grid gap-1">

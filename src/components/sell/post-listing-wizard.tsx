@@ -32,6 +32,7 @@ export interface ListingFormData {
   title?: string;
   description?: string;
   price?: number;
+  currency?: string;
   condition?: string;
   city?: string;
   region?: string;
@@ -132,6 +133,7 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
         title: formData.title,
         description: formData.description || '',
         price: formData.price,
+        currency: formData.currency || 'MKD',
         category: formData.category,
         subCategory: formData.subCategory,
         city: formData.city,

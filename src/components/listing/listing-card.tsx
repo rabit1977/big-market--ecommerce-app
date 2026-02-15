@@ -4,7 +4,7 @@ import { getPromotionConfig } from '@/lib/constants/promotions';
 import { useFavorites } from '@/lib/context/favorites-context';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
-import { formatPrice } from '@/lib/utils/formatters';
+import { formatCurrency, formatPrice } from '@/lib/utils/formatters';
 import { motion } from 'framer-motion';
 import { Heart, MapPin, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
@@ -145,7 +145,7 @@ export const ListingCard = memo(
                         </span>
                     )}
                     <span className="text-sm sm:text-base font-bold text-primary"> {/* Smaller price */}
-                      {formatPrice(listing.price)}
+                        {formatCurrency(listing.price, (listing as any).currency)}
                     </span>
                 </div>
 
@@ -190,11 +190,11 @@ export const ListingCard = memo(
                         </span>
                          {listing.previousPrice && listing.previousPrice > listing.price && (
                              <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground/50 line-through leading-none mb-0.5">
-                                 {formatPrice(listing.previousPrice)}
+                                 {formatCurrency(listing.previousPrice, (listing as any).currency)}
                              </span>
                          )}
                          <span className="text-sm sm:text-base md:text-lg font-bold text-primary"> {/* Smaller price */}
-                           {formatPrice(listing.price)}
+                             {formatCurrency(listing.price, (listing as any).currency)}
                          </span>
                     </div>
                     

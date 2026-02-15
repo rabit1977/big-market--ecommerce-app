@@ -15,9 +15,9 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getPromotionConfig } from '@/lib/constants/promotions';
+import { useFavorites } from '@/lib/context/favorites-context';
 import { ListingWithRelations } from '@/lib/types/listing';
-import { cn } from '@/lib/utils';
-import { formatPrice } from '@/lib/utils/formatters';
+import { cn, formatCurrency } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
 import { AlertTriangle, BarChart2, CheckCircle, Clock, Edit, ExternalLink, Heart, Mail, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
@@ -26,7 +26,6 @@ import Link from 'next/link';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { PromotionIcon } from './promotion-icon';
-import { useFavorites } from '@/lib/context/favorites-context';
 
 interface MyListingListItemProps {
   listing: ListingWithRelations;
@@ -175,7 +174,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
 
             <div className="mb-3 sm:mb-4">
                 <div className="text-base sm:text-lg md:text-xl font-black text-primary tracking-tight"> {/* Smaller Price */}
-                    {formatPrice(listing.price)}
+                    {formatCurrency(listing.price, (listing as any).currency)}
                 </div>
                 
                 {/* Specs Summary */}

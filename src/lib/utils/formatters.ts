@@ -11,7 +11,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
  * @returns Formatted currency string (e.g., "$1,234.56")
  */
 export const formatPrice = (amount: number): string => {
-  return currencyFormatter.format(amount);
+    return formatCurrency(amount, 'MKD');
 };
 
 /**
@@ -25,14 +25,13 @@ export const priceFmt = formatPrice;
  */
 export const formatCurrency = (
   amount: number,
-  currency: string = 'USD',
-  locale: string = 'en-US',
+  currency: string = 'MKD',
+  locale: string = 'mk-MK',
 ): string => {
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 0,
   }).format(amount);
 };
 

@@ -238,16 +238,16 @@ export function PromotePageClient({ listing, user }: PromotePageClientProps) {
                     <div className="w-full md:w-auto min-w-[200px] space-y-2">
                         <div className="flex justify-between text-sm">
                             <span className="text-muted-foreground">Subtotal:</span>
-                            <span className="font-bold">{subtotal.toFixed(2)} MKD</span>
+                            <span className="font-bold">{Math.round(subtotal)} MKD</span>
                         </div>
                         <div className="flex justify-between text-sm">
                             <span className="text-muted-foreground">VAT (18%):</span>
-                            <span className="font-bold">{vatAmount.toFixed(2)} MKD</span>
+                            <span className="font-bold">{Math.round(vatAmount)} MKD</span>
                         </div>
                         <Separator />
                         <div className="flex justify-between items-baseline pt-1">
                             <span className="text-base font-black uppercase text-foreground">Total:</span>
-                            <span className="text-2xl font-black text-primary">{total.toFixed(2)} MKD</span>
+                            <span className="text-2xl font-black text-primary">{Math.round(total)} MKD</span>
                         </div>
                     </div>
                 </div>
@@ -263,7 +263,7 @@ export function PromotePageClient({ listing, user }: PromotePageClientProps) {
                     ) : (
                         <span className="flex items-center gap-2">
                             <CreditCard className="w-5 h-5" />
-                            Pay {total > 0 ? `${total.toFixed(2)} MKD` : 'Now'}
+                            Pay {total > 0 ? `${Math.round(total)} MKD` : 'Now'}
                         </span>
                     )}
                 </Button>

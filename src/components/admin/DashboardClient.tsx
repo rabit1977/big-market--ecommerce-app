@@ -318,7 +318,7 @@ export default function DashboardClient() {
                               >
                                   {listing.status === 'PENDING_APPROVAL' ? 'Pending' : listing.status}
                               </Badge>
-                              <p className='text-xs font-black mt-0.5'>{formatCurrency(listing.price)}</p>
+                              <p className='text-xs font-black mt-0.5'>{formatCurrency(listing.price, (listing as any).currency)}</p>
                           </div>
 
                           {/* Quick Action Mini-Menu */}

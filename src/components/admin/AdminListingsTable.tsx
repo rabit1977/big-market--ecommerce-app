@@ -178,7 +178,7 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                   <TableCell>
                     <Badge variant="secondary" className="font-bold text-[10px] uppercase tracking-wider bg-muted text-muted-foreground border-border/50">{listing.category}</Badge>
                   </TableCell>
-                  <TableCell className="font-black text-sm tracking-tight">{formatCurrency(listing.price)}</TableCell>
+                  <TableCell className="font-black text-sm tracking-tight">{formatCurrency(listing.price, (listing as any).currency)}</TableCell>
                   
                   {isPromotedView && (
                     <>

@@ -3,6 +3,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { formatCurrency } from '@/lib/utils/formatters';
 import {
     AlertCircle,
     CheckCircle2,
@@ -112,7 +113,7 @@ export function ReviewStep({ formData, categories }: ReviewStepProps) {
           {/* Price */}
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-bold text-primary">
-              €{formData.price?.toLocaleString() || '0'}
+              {formatCurrency(formData.price || 0, formData.currency)}
             </span>
             {formData.condition && (
               <Badge variant="outline" className="capitalize">
