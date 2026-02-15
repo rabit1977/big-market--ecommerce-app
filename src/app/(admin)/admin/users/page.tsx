@@ -93,7 +93,7 @@ export default async function AdminUsersPage() {
               All Registered Users
             </h2>
          </div>
-         <div className='p-8 pt-0'>
+         <div className='p-3 pt-0'>
           {users.length > 0 ? (
             <div className="mt-6">
                 <UsersDataTable users={users} />
