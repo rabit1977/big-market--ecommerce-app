@@ -35,20 +35,26 @@ export const getDailyDeltas = query({
       const now = new Date();
       const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
 
-      // Use filter instead of withIndex to handle cases where the index may not exist yet on production
-      const allUsers = await ctx.db.query("users").collect();
-      const newUsers = allUsers.filter(u => u.createdAt && u.createdAt > startOfToday);
+      const newUsers = await ctx.db
+        .query("users")
+        .withIndex("by_createdAt", (q) => q.gt("createdAt", startOfToday))
+        .collect();
 
-      const allListings = await ctx.db.query("listings").collect();
-      const newListings = allListings.filter(l => l.createdAt && l.createdAt > startOfToday);
+      const newListings = await ctx.db
+        .query("listings")
+        .withIndex("by_createdAt", (q) => q.gt("createdAt", startOfToday))
+        .collect();
 
-      const allTransactions = await ctx.db.query("transactions").collect();
-      const validTransactions = allTransactions.filter(t => 
-          t.createdAt && t.createdAt > startOfToday &&
+      const validTransactions = await ctx.db
+        .query("transactions")
+        .withIndex("by_createdAt", (q) => q.gt("createdAt", startOfToday))
+        .collect();
+      
+      const filteredTransactions = validTransactions.filter(t => 
           t.type === "TOPUP" && t.status === "COMPLETED"
       );
 
-      const revenueToday = validTransactions.reduce((acc, t) => acc + (t.amount || 0), 0);
+      const revenueToday = filteredTransactions.reduce((acc, t) => acc + (t.amount || 0), 0);
 
       return {
         newUsers: newUsers.length,

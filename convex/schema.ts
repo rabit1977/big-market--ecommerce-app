@@ -115,6 +115,7 @@ export default defineSchema({
     .index("by_promoted", ["isPromoted"])
     .index("by_createdAt", ["createdAt"])
     .index("by_status_createdAt", ["status", "createdAt"])
+    .index("by_userId_status", ["userId", "status"])
     .index("by_userId_createdAt", ["userId", "createdAt"])
     .searchIndex("search_title", {
       searchField: "title",

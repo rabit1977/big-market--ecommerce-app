@@ -887,8 +887,7 @@ export const getPublicProfile = query({
     // Get active listings counts
     const listings = await ctx.db
       .query("listings")
-      .withIndex("by_userId", (q) => q.eq("userId", args.userId))
-      .filter((q) => q.eq(q.field("status"), "ACTIVE"))
+      .withIndex("by_userId_status", (q) => q.eq("userId", args.userId).eq("status", "ACTIVE"))
       .collect();
 
     // Get average rating
