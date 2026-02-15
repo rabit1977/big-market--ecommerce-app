@@ -1,38 +1,49 @@
-import { mkdir, writeFile } from 'fs/promises';
+import { v2 as cloudinary } from 'cloudinary';
 import { NextRequest, NextResponse } from 'next/server';
-import { join } from 'path';
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(req: NextRequest) {
-  const data = await req.formData();
-  const file: File | null = data.get('file') as unknown as File;
-
-  if (!file) {
-    return NextResponse.json({ success: false, error: 'No file provided' });
-  }
-
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-
-  // Ensure uploads directory exists
-  const uploadDir = join(process.cwd(), 'public/uploads'); 
-  await mkdir(uploadDir, { recursive: true });
-
-  // Create a unique filename
-  // Replace anything that is not alphanumeric, dot, or dash with underscore
-  const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-  const filename = `${Date.now()}-${safeName}`;
-  const path = join(uploadDir, filename);
-
   try {
-    await writeFile(path, buffer);
-    console.log(`File saved to ${path}`);
+    const data = await req.formData();
+    const file: File | null = data.get('file') as unknown as File;
+
+    if (!file) {
+      return NextResponse.json({ success: false, error: 'No file provided' });
+    }
+
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    // Convert buffer to base64 for Cloudinary upload
+    const base64Data = buffer.toString('base64');
+    const fileUri = `data:${file.type};base64,${base64Data}`;
+
+    // Upload to Cloudinary with optimizations
+    const uploadResponse = await cloudinary.uploader.upload(fileUri, {
+      folder: 'classifieds-platform/uploads', // Organize in a folder
+      resource_type: 'auto',
+      quality: 'auto', // Smart compression
+      fetch_format: 'auto', // Automatic format selection (WebP, AVIF)
+    });
+
+    console.log(`File uploaded to Cloudinary: ${uploadResponse.secure_url}`);
     
-    // Return the public URL
-    const url = `/uploads/${filename}`;
-    return NextResponse.json({ success: true, url });
+    return NextResponse.json({ 
+      success: true, 
+      url: uploadResponse.secure_url 
+    });
 
   } catch (error) {
-    console.error('Error saving file:', error);
-    return NextResponse.json({ success: false, error: 'Failed to save file' });
+    console.error('Cloudinary upload error:', error);
+    return NextResponse.json({ 
+      success: false, 
+      error: 'Failed to upload to Cloudinary' 
+    });
   }
 }
