@@ -15,6 +15,13 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
   Table,
   TableBody,
   TableCell,
@@ -23,7 +30,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn, formatCurrency } from '@/lib/utils';
-import { AlertCircle, Check, CheckCircle, Clock, Eye, Trash2, XCircle } from 'lucide-react';
+import { AlertCircle, Check, CheckCircle, Clock, Eye, MoreHorizontal, Trash2, XCircle } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -223,67 +230,83 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                         </Link>
                       </Button>
 
-                      {/* Actions for Pending */}
-                      {listing.status === 'PENDING_APPROVAL' && (
-                        <>
-                            <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-8 w-8 text-emerald-600 hover:bg-emerald-500/10 hover:text-emerald-700 rounded-lg"
-                                disabled={isPending}
+                      {/* Actions Dropdown */}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-lg"
+                            disabled={isPending}
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Actions</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48 rounded-xl shadow-xl border-border/50">
+                          <DropdownMenuItem asChild className="cursor-pointer">
+                            <Link href={`/listings/${listing._id}`} target="_blank" className="flex items-center">
+                              <Eye className="h-4 w-4 mr-2" />
+                              View Listing
+                            </Link>
+                          </DropdownMenuItem>
+                          
+                          {listing.status === 'PENDING_APPROVAL' && (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem 
+                                className="text-emerald-600 focus:text-emerald-700 cursor-pointer"
                                 onClick={() => handleApprove(listing._id)}
-                                title="Approve"
-                            >
-                                <CheckCircle className="h-4 w-4" />
-                            </Button>
-                            <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-8 w-8 text-amber-600 hover:bg-amber-500/10 hover:text-amber-700 rounded-lg"
-                                disabled={isPending}
+                              >
+                                <CheckCircle className="h-4 w-4 mr-2" />
+                                Approve Listing
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                className="text-amber-600 focus:text-amber-700 cursor-pointer"
                                 onClick={() => handleReject(listing._id)}
-                                title="Reject"
-                            >
-                                <XCircle className="h-4 w-4" />
-                            </Button>
-                        </>
-                      )}
-
-                      {/* Delete with Confirmation */}
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-8 w-8 text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 rounded-lg"
-                                disabled={isPending}
-                                title="Delete"
-                            >
-                                <Trash2 className="h-4 w-4" />
-                            </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent className="rounded-2xl border-destructive/20 shadow-2xl">
-                            <AlertDialogHeader>
+                              >
+                                <XCircle className="h-4 w-4 mr-2" />
+                                Reject Listing
+                              </DropdownMenuItem>
+                            </>
+                          )}
+                          
+                          <DropdownMenuSeparator />
+                          
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <DropdownMenuItem 
+                                className="text-destructive focus:text-destructive cursor-pointer"
+                                onSelect={(e) => e.preventDefault()}
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete Listing
+                              </DropdownMenuItem>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent className="rounded-2xl border-destructive/20 shadow-2xl">
+                              <AlertDialogHeader>
                                 <AlertDialogTitle className="flex items-center gap-2 text-destructive font-black uppercase tracking-tight">
-                                    <AlertCircle className="w-5 h-5" /> 
-                                    Delete permanently?
+                                  <AlertCircle className="w-5 h-5" /> 
+                                  Delete permanently?
                                 </AlertDialogTitle>
                                 <AlertDialogDescription className="font-medium text-foreground/80">
-                                    This will permanently remove <span className="font-bold text-foreground">"{listing.title}"</span> from the platform. 
-                                    <br/><span className="text-xs text-muted-foreground mt-2 block">This action cannot be undone.</span>
+                                  This will permanently remove <span className="font-bold text-foreground">"{listing.title}"</span> from the platform. 
+                                  <br/><span className="text-xs text-muted-foreground mt-2 block">This action cannot be undone.</span>
                                 </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter className="gap-2 sm:gap-0">
+                              </AlertDialogHeader>
+                              <AlertDialogFooter className="gap-2 sm:gap-0">
                                 <AlertDialogCancel className="rounded-xl font-bold border-border/50 bg-muted/50 hover:bg-muted">Cancel</AlertDialogCancel>
                                 <AlertDialogAction 
-                                    onClick={() => handleDelete(listing._id)} 
-                                    className="bg-destructive hover:bg-destructive/90 text-white rounded-xl font-bold shadow-lg shadow-destructive/20"
+                                  onClick={() => handleDelete(listing._id)} 
+                                  className="bg-destructive hover:bg-destructive/90 text-white rounded-xl font-bold shadow-lg shadow-destructive/20"
                                 >
-                                    Yes, Delete Listing
+                                  Yes, Delete Listing
                                 </AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </TableCell>
                 </TableRow>

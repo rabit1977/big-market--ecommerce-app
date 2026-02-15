@@ -47,16 +47,16 @@ export default async function AdminUsersPage() {
       <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 animate-in fade-in slide-in-from-top-4 duration-500'>
         <div className='space-y-1'>
           <h1 className='text-3xl sm:text-4xl font-black tracking-tight text-foreground flex items-center gap-3'>
-            Customers
+      Admin & Users
             <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold ring-1 ring-inset ring-primary/20">
                {users.length}
             </span>
           </h1>
-          <p className='text-lg text-muted-foreground font-medium'>
+          <p className='text-xs md:text-sm text-muted-foreground font-medium'>
             Manage your store users and their roles
           </p>
         </div>
-        <Button asChild size="lg" className="rounded-full font-bold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all btn-premium">
+        <Button asChild className="rounded-full font-bold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all btn-premium">
           <Link href='/admin/users/create'>
             <UserPlus className='h-5 w-5 mr-2' />
             Add New User
@@ -71,15 +71,15 @@ export default async function AdminUsersPage() {
             { label: 'Administrators', value: adminCount, icon: Shield, color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/20' },
             { label: 'Regular Customers', value: userCount, icon: UserIcon, color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
         ].map((stat, i) => (
-             <div key={i} className={`glass-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl flex items-center justify-between hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group border gap-2 flex-row-reverse ${stat.border}`}>
+             <div key={i} className={`glass-card p-2 sm:p-6 rounded-2xl sm:rounded-3xl flex items-center justify-between hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group gap-2 flex-row-reverse ${stat.border}`}>
                 <div className='flex justify-between items-start mb-2'>
                     <div className={`p-2 sm:p-3 rounded-xl sm:rounded-2xl ${stat.bg} ${stat.color} ring-1 ring-inset ring-white/10 group-hover:scale-110 transition-transform`}>
-                       <stat.icon className='h-4 w-4 sm:h-6 sm:w-6' />
+                       <stat.icon className='h-3 w-3 sm:h-6 sm:w-6' />
                     </div>
                 </div>
                 <div className='flex flex-col items-start min-w-24'>
-                   <h3 className='text-xl sm:text-3xl font-black tracking-tight text-foreground'>{stat.value}</h3>
-                   <p className='text-[10px] sm:text-sm font-bold text-muted-foreground uppercase tracking-wider mt-0.5 sm:mt-1'>{stat.label}</p>
+                   <h3 className='text-base sm:text-xl md:text-2xl font-black tracking-tight text-foreground'>{stat.value}</h3>
+                   <p className='text-[8px] sm:text-xs md:text-sm font-bold text-muted-foreground uppercase tracking-wider mt-0.5 sm:mt-1'>{stat.label}</p>
                 </div>
              </div>
         ))}
