@@ -20,10 +20,12 @@ import {
 import { ALL_MUNICIPALITIES, MACEDONIA_CITIES } from '@/lib/constants/locations';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Camera, Loader2, MessageCircle, Phone } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import * as z from 'zod';
 
 /**
@@ -97,15 +99,58 @@ export function EditProfileForm({
   const bannerInputRef = useState<HTMLInputElement | null>(null);
   const logoInputRef = useState<HTMLInputElement | null>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: 'banner' | 'image') => {
+  const [bannerProgress, setBannerProgress] = useState<number | null>(null);
+  const [avatarProgress, setAvatarProgress] = useState<number | null>(null);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, fieldName: 'banner' | 'image') => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) return; 
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        form.setValue(fieldName, reader.result as string, { shouldDirty: true });
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+        toast.error('File too large (max 5MB)');
+        return;
+    }
+
+    const setProgress = fieldName === 'banner' ? setBannerProgress : setAvatarProgress;
+    
+    setProgress(0);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const xhr = new XMLHttpRequest();
+      
+      const uploadPromise = new Promise<{ success: boolean; url?: string }>((resolve, reject) => {
+        xhr.upload.addEventListener('progress', (event) => {
+          if (event.lengthComputable) {
+            const percentComplete = (event.loaded / event.total) * 100;
+            setProgress(percentComplete);
+          }
+        });
+
+        xhr.addEventListener('load', () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(JSON.parse(xhr.responseText));
+          } else {
+            reject(new Error('Upload failed'));
+          }
+        });
+
+        xhr.addEventListener('error', () => reject(new Error('Upload failed')));
+        xhr.open('POST', '/api/upload');
+        xhr.send(formData);
+      });
+
+      const data = await uploadPromise;
+      if (data.success && data.url) {
+        form.setValue(fieldName, data.url, { shouldDirty: true });
+        toast.success(`${fieldName === 'banner' ? 'Banner' : 'Avatar'} uploaded`);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to upload image');
+    } finally {
+      setProgress(null);
     }
   };
 
@@ -115,35 +160,102 @@ export function EditProfileForm({
         
         {/* Banner & Logo Section */}
         <div className="space-y-0">
-             {/* Banner Upload */}
-             <div 
-                className="relative w-full h-28 md:h-36 bg-muted rounded-xl overflow-hidden border border-dashed border-border group hover:border-primary/50 transition-colors cursor-pointer"
-                onClick={() => document.getElementById('banner-upload')?.click()}
-             >
-                 {form.watch('banner') ? (
-                     <Image src={form.watch('banner')!} alt="Banner" fill className="object-cover" />
-                 ) : (
-                     <div className="absolute inset-0 flex items-center justify-center text-muted-foreground flex-col gap-1.5">
-                         <Camera className="w-5 h-5 md:w-6 md:h-6 opacity-40" />
-                         <span className="text-[9px] md:text-[10px] uppercase font-bold tracking-widest opacity-60">Banner (1200 × 300px)</span>
-                     </div>
-                 )}
-                 <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors" />
-                 <input 
-                    id="banner-upload"
-                    type="file" 
-                    className="hidden" 
-                    accept="image/*"
-                    onChange={(e) => handleFileChange(e, 'banner')}
-                 />
-             </div>
+              {/* Banner Upload */}
+              <div 
+                 className="relative w-full h-28 md:h-36 bg-muted rounded-xl overflow-hidden border border-dashed border-border group hover:border-primary/50 transition-colors cursor-pointer"
+                 onClick={() => document.getElementById('banner-upload')?.click()}
+              >
+                  {form.watch('banner') ? (
+                      <Image src={form.watch('banner')!} alt="Banner" fill className="object-cover" />
+                  ) : (
+                      <div className="absolute inset-0 flex items-center justify-center text-muted-foreground flex-col gap-1.5">
+                          <Camera className="w-5 h-5 md:w-6 md:h-6 opacity-40" />
+                          <span className="text-[9px] md:text-[10px] uppercase font-bold tracking-widest opacity-60">Banner (1200 × 300px)</span>
+                      </div>
+                  )}
+                  <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors" />
+                  
+                  {/* Banner Progress Overlay */}
+                  <AnimatePresence>
+                    {bannerProgress !== null && (
+                        <motion.div 
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                            className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-20"
+                        >
+                            <div className="relative w-16 h-16">
+                                <svg className="w-full h-full -rotate-90">
+                                    <circle cx="50%" cy="50%" r="28" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-muted/30" />
+                                    <motion.circle 
+                                        cx="50%" cy="50%" r="28" stroke="currentColor" strokeWidth="4" fill="transparent" 
+                                        strokeDasharray="175.8" initial={{ strokeDashoffset: 175.8 }}
+                                        animate={{ strokeDashoffset: 175.8 - (175.8 * bannerProgress) / 100 }}
+                                        className="text-primary transition-all duration-300" 
+                                    />
+                                </svg>
+                                <span className="absolute inset-0 flex items-center justify-center text-xs font-black">{Math.round(bannerProgress)}%</span>
+                            </div>
+                        </motion.div>
+                    )}
+                  </AnimatePresence>
+                  
+                  <input 
+                     id="banner-upload"
+                     type="file" 
+                     className="hidden" 
+                     accept="image/*"
+                     onChange={(e) => handleFileChange(e, 'banner')}
+                  />
+              </div>
 
-             {/* Logo / Initials */}
-             <div className="relative -mt-10 md:-mt-12 ml-4 md:ml-6 w-20 h-20 md:w-24 md:h-24 bg-card rounded-xl shadow-lg border-2 border-background p-0.5 z-10">
-                 <div className="w-full h-full bg-primary rounded-lg flex items-center justify-center text-white text-xl md:text-2xl font-black shadow-inner">
-                    {form.watch('name')?.slice(0, 2).toUpperCase() || 'US'}
-                 </div>
-             </div>
+              {/* Logo / Avatar Upload */}
+              <div 
+                  className="relative -mt-10 md:-mt-12 ml-4 md:ml-6 w-20 h-20 md:w-24 md:h-24 bg-card rounded-xl shadow-lg border-2 border-background p-0.5 z-10 cursor-pointer group overflow-hidden"
+                  onClick={() => document.getElementById('logo-upload')?.click()}
+              >
+                  <div className="w-full h-full rounded-lg overflow-hidden relative">
+                    {form.watch('image') ? (
+                        <Image src={form.watch('image')!} alt="Avatar" fill className="object-cover" />
+                    ) : (
+                        <div className="w-full h-full bg-primary flex items-center justify-center text-white text-xl md:text-2xl font-black shadow-inner">
+                           {form.watch('name')?.slice(0, 2).toUpperCase() || 'US'}
+                        </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 flex items-center justify-center transition-colors">
+                        <Camera className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                  </div>
+
+                  {/* Avatar Progress Overlay */}
+                  <AnimatePresence>
+                    {avatarProgress !== null && (
+                        <motion.div 
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                            className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-20"
+                        >
+                            <div className="relative w-12 h-12">
+                                <svg className="w-full h-full -rotate-90">
+                                    <circle cx="50%" cy="50%" r="20" stroke="currentColor" strokeWidth="3" fill="transparent" className="text-muted/30" />
+                                    <motion.circle 
+                                        cx="50%" cy="50%" r="20" stroke="currentColor" strokeWidth="3" fill="transparent" 
+                                        strokeDasharray="125.6" initial={{ strokeDashoffset: 125.6 }}
+                                        animate={{ strokeDashoffset: 125.6 - (125.6 * avatarProgress) / 100 }}
+                                        className="text-primary transition-all duration-300" 
+                                    />
+                                </svg>
+                                <span className="absolute inset-0 flex items-center justify-center text-[10px] font-black">{Math.round(avatarProgress)}%</span>
+                            </div>
+                        </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <input 
+                     id="logo-upload"
+                     type="file" 
+                     className="hidden" 
+                     accept="image/*"
+                     onChange={(e) => handleFileChange(e, 'image')}
+                  />
+              </div>
         </div>
 
         {/* Account Type Toggle */}

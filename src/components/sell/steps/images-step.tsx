@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Image as ImageIcon, Star, Upload, X } from 'lucide-react';
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
@@ -44,47 +45,6 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
     }
   };
 
-  // Helper to compress image
-  const compressImage = async (file: File): Promise<string> => {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new globalThis.Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-
-          // Resize if too big (max 800px is enough for mobile/web listings usually)
-          const MAX_WIDTH = 1024;
-          const MAX_HEIGHT = 1024;
-
-          if (width > height) {
-            if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
-              width = MAX_WIDTH;
-            }
-          } else {
-            if (height > MAX_HEIGHT) {
-              width *= MAX_HEIGHT / height;
-              height = MAX_HEIGHT;
-            }
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
-
-          // Compress to JPEG with 0.6 quality (good balance)
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.6); 
-          resolve(dataUrl);
-        };
-        img.src = event.target?.result as string;
-      };
-      reader.readAsDataURL(file);
-    });
-  };
 
   const handleFiles = async (files: File[]) => {
     // Filter for images only
@@ -102,11 +62,25 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
       const file = imageFiles[i];
       
       try {
-        // Compress image before adding
-        const compressedDataUrl = await compressImage(file);
-        uploadedImages.push(compressedDataUrl);
+        const formDataUpload = new FormData();
+        formDataUpload.append('file', file);
+
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formDataUpload,
+        });
+
+        const data = await res.json();
+        
+        if (data.success && data.url) {
+          uploadedImages.push(data.url);
+        } else {
+          console.error("Upload failed", data.error);
+          import('sonner').then(({ toast }) => toast.error(`Failed to upload ${file.name}`));
+        }
       } catch (err) {
-        console.error("Failed to compress image", err);
+        console.error("Failed to upload image", err);
+        import('sonner').then(({ toast }) => toast.error(`Error uploading ${file.name}`));
       }
 
       setUploadProgress(((i + 1) / imageFiles.length) * 100);
@@ -152,41 +126,84 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
       {/* Upload Area */}
       <Card
         className={`
-          border-2 border-dashed transition-all
+          border-2 border-dashed transition-all cursor-pointer overflow-hidden relative
           ${
             isDragging
-              ? 'border-primary bg-primary/5'
-              : 'border-border hover:border-primary/50'
+              ? 'border-primary bg-primary/5 active:scale-[0.99]'
+              : 'border-border hover:border-primary/50 hover:bg-muted/30 active:scale-[0.98]'
           }
         `}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
+        onClick={() => document.getElementById('file-upload')?.click()}
       >
-        <label htmlFor="file-upload" className="cursor-pointer">
-          <div className="p-12 text-center">
-            <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-              <Upload className="w-8 h-8 text-primary" />
-            </div>
-            
-            <h3 className="font-semibold mb-2">
-              {isDragging ? 'Drop images here' : 'Upload Images'}
-            </h3>
-            
-            <p className="text-sm text-muted-foreground mb-4">
-              Drag and drop or click to browse
-            </p>
-            
-            <Button type="button" variant="outline" size="sm">
-              <ImageIcon className="w-4 h-4 mr-2" />
-              Choose Files
-            </Button>
-            
-            <p className="text-xs text-muted-foreground mt-4">
-              Supported: JPG, PNG, WebP (Max 5MB each)
-            </p>
+        <div className="p-10 md:p-14 text-center">
+          <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
+            <Upload className="w-8 h-8 text-primary" />
           </div>
-        </label>
+          
+          <h3 className="text-lg font-bold mb-2">
+            {isDragging ? 'Drop images here' : 'Add Photos'}
+          </h3>
+          
+          <p className="text-sm text-muted-foreground mb-6 max-w-xs mx-auto">
+            Drag and drop your photos here, or click to browse files
+          </p>
+          
+          <Button type="button" variant="secondary" className="rounded-xl shadow-sm border font-bold">
+            <ImageIcon className="w-4 h-4 mr-2" />
+            Select Files
+          </Button>
+          
+          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-6 opacity-60">
+            JPG, PNG, WebP • Max 5MB per image
+          </p>
+        </div>
+
+        {/* Overlaid Progress - Cool Visual */}
+        <AnimatePresence>
+          {uploadProgress !== null && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 z-50 bg-background/90 backdrop-blur-sm flex flex-col items-center justify-center p-8"
+            >
+              <div className="relative w-24 h-24 mb-6">
+                {/* Circular Progress Path */}
+                <svg className="w-full h-full transform -rotate-90">
+                  <circle
+                    cx="48"
+                    cy="48"
+                    r="40"
+                    stroke="currentColor"
+                    strokeWidth="8"
+                    fill="transparent"
+                    className="text-muted/20"
+                  />
+                  <motion.circle
+                    cx="48"
+                    cy="48"
+                    r="40"
+                    stroke="currentColor"
+                    strokeWidth="8"
+                    fill="transparent"
+                    strokeDasharray="251.2"
+                    initial={{ strokeDashoffset: 251.2 }}
+                    animate={{ strokeDashoffset: 251.2 - (251.2 * uploadProgress) / 100 }}
+                    className="text-primary"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-xl font-black">{Math.round(uploadProgress)}%</span>
+                </div>
+              </div>
+              <p className="text-sm font-bold animate-pulse text-primary tracking-tight">OPTIMIZING & UPLOADING...</p>
+              <p className="text-[10px] text-muted-foreground mt-1 uppercase font-black tracking-widest">To Cloudinary</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
         
         <input
           id="file-upload"
@@ -197,22 +214,6 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
           className="hidden"
         />
       </Card>
-
-      {/* Upload Progress */}
-      {uploadProgress !== null && (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span>Uploading...</span>
-            <span>{Math.round(uploadProgress)}%</span>
-          </div>
-          <div className="h-2 bg-muted rounded-full overflow-hidden">
-            <div
-              className="h-full bg-primary transition-all duration-300"
-              style={{ width: `${uploadProgress}%` }}
-            />
-          </div>
-        </div>
-      )}
 
       {/* Image Grid */}
       {images.length > 0 && (

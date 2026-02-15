@@ -8,10 +8,10 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { useMutation, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
+import { motion } from 'framer-motion';
 import {
   ArrowLeft,
   Image as ImageIcon,
-  Loader2,
   MessageSquare,
   Search,
   Send,
@@ -83,6 +83,7 @@ export function MessagesClient({
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -179,18 +180,36 @@ export function MessagesClient({
     if (!file || !activeConversation) return;
 
     setIsUploading(true);
+    setUploadProgress(0);
     const formData = new FormData();
     formData.append('file', file);
 
     try {
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
+      // Use XMLHttpRequest for progress tracking
+      const xhr = new XMLHttpRequest();
+      
+      const uploadPromise = new Promise<{ success: boolean; url?: string }>((resolve, reject) => {
+        xhr.upload.addEventListener('progress', (event) => {
+          if (event.lengthComputable) {
+            const percentComplete = (event.loaded / event.total) * 100;
+            setUploadProgress(percentComplete);
+          }
+        });
+
+        xhr.addEventListener('load', () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(JSON.parse(xhr.responseText));
+          } else {
+            reject(new Error('Upload failed'));
+          }
+        });
+
+        xhr.addEventListener('error', () => reject(new Error('Upload failed')));
+        xhr.open('POST', '/api/upload');
+        xhr.send(formData);
       });
 
-      if (!res.ok) throw new Error('Upload failed');
-
-      const data = await res.json();
+      const data = await uploadPromise;
       if (data.success && data.url) {
         // Send message with image immediately
         await sendMessageMutation({
@@ -208,6 +227,7 @@ export function MessagesClient({
       toast.error('Failed to upload image');
     } finally {
       setIsUploading(false);
+      setUploadProgress(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
@@ -419,10 +439,37 @@ export function MessagesClient({
                     size="icon" 
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isUploading}
-                    className="h-9 w-9 md:h-10 md:w-10 rounded-xl shrink-0 text-muted-foreground hover:text-foreground hover:bg-muted"
+                    className="h-9 w-9 md:h-10 md:w-10 rounded-xl shrink-0 text-muted-foreground hover:text-foreground hover:bg-muted relative overflow-hidden"
                   >
                     {isUploading ? (
-                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <div className="relative flex items-center justify-center w-full h-full">
+                        <svg className="absolute inset-0 w-full h-full p-1.5 -rotate-90">
+                          <circle
+                            cx="50%"
+                            cy="50%"
+                            r="14"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            fill="transparent"
+                            className="text-muted/30"
+                          />
+                          <motion.circle
+                            cx="50%"
+                            cy="50%"
+                            r="14"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            fill="transparent"
+                            strokeDasharray="88"
+                            initial={{ strokeDashoffset: 88 }}
+                            animate={{ strokeDashoffset: 88 - (88 * (uploadProgress || 0)) / 100 }}
+                            className="text-primary transition-all duration-300"
+                          />
+                        </svg>
+                        <span className="text-[9px] font-black relative z-10 leading-none">
+                          {Math.round(uploadProgress || 0)}%
+                        </span>
+                      </div>
                     ) : (
                       <ImageIcon className="w-5 h-5" />
                     )}

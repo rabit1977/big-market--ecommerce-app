@@ -54,41 +54,13 @@ export default function EditProfilePage() {
     
     setIsSubmitting(true);
     try {
-        let uploadedImageUrl = user.image;
-        let uploadedBannerUrl = user.banner;
-
-        // Image Upload Helper
-        const uploadImage = async (dataUrl: string) => {
-             const response = await fetch(dataUrl);
-             const blob = await response.blob();
-             const file = new File([blob], 'upload.jpg', { type: 'image/jpeg' });
-             const formData = new FormData();
-             formData.append('file', file);
-             
-             const uploadRes = await fetch('/api/upload', {
-                 method: 'POST',
-                 body: formData,
-             });
-             const result = await uploadRes.json();
-             if (result.success) return result.url;
-             throw new Error("Upload failed");
-        };
-
-        if (values.image && values.image.startsWith('data:')) {
-            uploadedImageUrl = await uploadImage(values.image);
-        }
-
-        if (values.banner && values.banner.startsWith('data:')) {
-            uploadedBannerUrl = await uploadImage(values.banner);
-        }
-
         // Call Convex Mutation
         await updateUser({
             externalId: session.user.id,
             name: values.name,
             bio: values.bio,
-            image: uploadedImageUrl,
-            banner: uploadedBannerUrl,
+            image: values.image,
+            banner: values.banner,
             accountType: values.accountType,
             companyName: values.companyName || undefined,
             phone: values.phone || undefined,
@@ -109,7 +81,7 @@ export default function EditProfilePage() {
             user: {
               ...session?.user,
               name: values.name,
-              image: uploadedImageUrl,
+              image: values.image,
             },
         });
           

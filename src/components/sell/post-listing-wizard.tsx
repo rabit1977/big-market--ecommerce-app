@@ -124,17 +124,9 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
     setIsSubmitting(true);
     
     try {
-      // Sanitize images: If stored as Base64/DataURL and too large, replace with placeholder
-      // Convex has a 1MB limit for documents. Large Base64 strings will fail.
-      // In a real generic file upload implementation, you'd upload to a storage bucket and store the URL.
-      const sanitizedImages = (formData.images || []).map(img => 
-        (img.startsWith('data:') && img.length > 800000) 
-            ? "https://placehold.co/600x400?text=Image+Too+Large" 
-            : img
-      );
-      
+      const sanitizedImages = formData.images || [];
       const thumbnail = sanitizedImages[0] || undefined;
-
+      
       // Prepare listing data
       const listingData = {
         title: formData.title,
