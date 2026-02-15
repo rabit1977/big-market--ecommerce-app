@@ -7,7 +7,8 @@ export const send = mutation({
     listingId: v.optional(v.id("listings")),
     senderId: v.string(),
     receiverId: v.string(),
-    type: v.optional(v.string()), // 'LISTING' or 'SUPPORT'
+    imageUrl: v.optional(v.string()), 
+    type: v.optional(v.string()), 
   },
   handler: async (ctx, args) => {
     const type = args.type || (args.listingId ? "LISTING" : "SUPPORT");
@@ -105,6 +106,7 @@ export const send = mutation({
       senderId: args.senderId,
       receiverId: args.receiverId,
       read: false,
+      imageUrl: args.imageUrl,
       createdAt: Date.now(),
     });
   },
@@ -199,6 +201,12 @@ export const getConversations = query({
         const otherUserId =
           conv.buyerId === args.userId ? conv.sellerId : conv.buyerId;
 
+        // Fetch other user details
+        const otherUser = await ctx.db
+          .query("users")
+          .withIndex("by_externalId", (q) => q.eq("externalId", otherUserId))
+          .first();
+
         // Calculate unread count for THIS user
         const unreadCount = (conv.buyerId === args.userId ? conv.buyerUnreadCount : conv.sellerUnreadCount) || 0;
 
@@ -206,6 +214,11 @@ export const getConversations = query({
           ...conv,
           listing,
           otherUserId,
+          otherUser: otherUser ? {
+             name: otherUser.name,
+             image: otherUser.image,
+             isVerified: otherUser.isVerified
+          } : undefined,
           unreadCount, // Inject dynamic unread count for frontend compatibility
         };
       })

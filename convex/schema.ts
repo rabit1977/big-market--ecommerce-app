@@ -144,6 +144,7 @@ export default defineSchema({
     senderId: v.string(),
     receiverId: v.string(),
     read: v.boolean(),
+    imageUrl: v.optional(v.string()), // Attachment support
     createdAt: v.number(),
   }).index("by_listing", ["listingId"])
     .index("by_receiver", ["receiverId"])
@@ -159,6 +160,7 @@ export default defineSchema({
     lastMessage: v.optional(v.string()),
     buyerUnreadCount: v.optional(v.number()),
     sellerUnreadCount: v.optional(v.number()),
+    unreadCount: v.optional(v.number()), // Legacy field compatibility
     participantIds: v.optional(v.array(v.string())), // Better for multi-type lookups
   }).index("by_buyer", ["buyerId"])
     .index("by_seller", ["sellerId"])

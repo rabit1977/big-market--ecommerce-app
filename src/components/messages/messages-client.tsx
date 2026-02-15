@@ -11,15 +11,17 @@ import { formatDistanceToNow } from 'date-fns';
 import {
   ArrowLeft,
   Image as ImageIcon,
+  Loader2,
   MessageSquare,
   Search,
   Send,
-  ShieldAlert,
+  ShieldAlert
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import { api } from '../../../convex/_generated/api';
 
 interface Message {
@@ -29,6 +31,7 @@ interface Message {
   receiverId: string;
   createdAt: number;
   read: boolean;
+  imageUrl?: string;
 }
 
 interface Conversation {
@@ -79,7 +82,9 @@ export function MessagesClient({
   const [virtualConversation, setVirtualConversation] = useState<Conversation | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const activeConversation = selectedConversation || virtualConversation;
 
@@ -166,8 +171,44 @@ export function MessagesClient({
     setSelectedConversation(conversation);
     // Mark read is now handled in useEffect
   };
-  
-  // const activeConversation = selectedConversation || virtualConversation; // Now defined at top
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !activeConversation) return;
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error('Upload failed');
+
+      const data = await res.json();
+      if (data.success && data.url) {
+        // Send message with image immediately
+        await sendMessageMutation({
+          content: 'Sent an image',
+          imageUrl: data.url,
+          listingId: (activeConversation.listingId as any) || undefined,
+          senderId: userId,
+          receiverId: activeConversation.otherUserId,
+          type: activeConversation.type,
+        });
+        toast.success('Image sent');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to upload image');
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const handleSendMessage = async () => {
     console.log("Handle sending...", { newMessage, activeConversation });
@@ -346,6 +387,7 @@ export function MessagesClient({
                         key={message._id}
                         message={message}
                         isOwn={message.senderId === userId}
+                        otherUser={activeConversation?.otherUser}
                       />
                     ))
                   ) : (
@@ -368,18 +410,32 @@ export function MessagesClient({
                   }}
                   className="flex items-center gap-2 md:gap-3"
                 >
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
+                    accept="image/*"
+                    className="hidden"
+                  />
                   <Button 
                     type="button" 
                     variant="ghost" 
                     size="icon" 
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploading}
                     className="h-9 w-9 md:h-10 md:w-10 rounded-xl shrink-0 text-muted-foreground hover:text-foreground hover:bg-muted"
                   >
-                    <ImageIcon className="w-5 h-5" />
+                    {isUploading ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                      <ImageIcon className="w-5 h-5" />
+                    )}
                   </Button>
                   <Input
                     placeholder="Type a message..."
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
+                    disabled={isUploading}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
@@ -453,8 +509,7 @@ function ConversationItem({
         </div>
       ) : (
         <UserAvatar 
-          user={conversation.otherUser || ({ id: conversation.otherUserId } as any)}
-          fallbackText={(conversation.otherUser?.name || conversation.otherUserId).substring(0, 2).toUpperCase()}
+          user={conversation.otherUser}
           className="shrink-0 w-9 h-9 md:w-10 md:h-10"
         />
       )}
@@ -492,16 +547,24 @@ function ConversationItem({
 function MessageBubble({
   message,
   isOwn,
+  otherUser,
 }: {
   message: Message;
   isOwn: boolean;
+  otherUser?: { name?: string; image?: string; isVerified?: boolean; id?: string };
 }) {
   const timeAgo = formatDistanceToNow(new Date(message.createdAt), {
     addSuffix: true,
   });
 
   return (
-    <div className={cn("flex w-full mb-3", isOwn ? "justify-end" : "justify-start")}>
+    <div className={cn("flex w-full mb-3 gap-2", isOwn ? "justify-end" : "justify-start")}>
+      {!isOwn && (
+        <UserAvatar 
+           user={otherUser} 
+           className="w-8 h-8 rounded-full shrink-0 self-end mb-1"
+        />
+      )}
       <div
         className={cn(
           "max-w-[80%] sm:max-w-[70%] rounded-2xl px-4 py-2.5 shadow-sm",
@@ -510,9 +573,21 @@ function MessageBubble({
             : 'bg-muted text-foreground rounded-bl-none'
         )}
       >
+        {message.imageUrl && (
+          <div className="relative aspect-video rounded-lg overflow-hidden mb-2">
+            <Image 
+              src={message.imageUrl} 
+              alt="Message attachment" 
+              fill 
+              className="object-cover"
+              sizes="(max-width: 768px) 80vw, 400px"
+            />
+          </div>
+        )}
         <p className={cn(
           "text-xs md:text-sm whitespace-pre-wrap break-words",
-          isOwn ? "text-white" : "text-foreground"
+          isOwn ? "text-white" : "text-foreground",
+          message.content === 'Sent an image' && "italic opacity-80"
         )}>
           {message.content}
         </p>
