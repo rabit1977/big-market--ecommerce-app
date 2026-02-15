@@ -72,9 +72,11 @@ export const send = mutation({
       if (isBuyer) {
         // Sender is buyer, so increment seller's unread count
         updates.sellerUnreadCount = (existingConversation.sellerUnreadCount || 0) + 1;
+        updates.buyerUnreadCount = 0; // Reset sender's unread count
       } else {
         // Sender is seller, so increment buyer's unread count
         updates.buyerUnreadCount = (existingConversation.buyerUnreadCount || 0) + 1;
+        updates.sellerUnreadCount = 0; // Reset sender's unread count
       }
 
       await ctx.db.patch(existingConversation._id, updates);

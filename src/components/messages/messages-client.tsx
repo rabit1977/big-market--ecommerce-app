@@ -81,24 +81,41 @@ export function MessagesClient({
   const [searchQuery, setSearchQuery] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const activeConversation = selectedConversation || virtualConversation;
+
   const messages = (useQuery(api.messages.getConversation, 
-    selectedConversation ? {
-      listingId: selectedConversation.listingId as any,
+    activeConversation && activeConversation.otherUserId ? {
+      listingId: activeConversation.listingId as any,
       userA: userId,
-      userB: selectedConversation.otherUserId
-    } : "skip"
+      userB: activeConversation.otherUserId
+    } : "skip" // Only query if we have the other user ID
   ) as Message[] | undefined) || [];
 
   const sendMessageMutation = useMutation(api.messages.send);
   const markReadMutation = useMutation(api.messages.markConversationAsRead);
 
+  // Mark as read when messages load or change
+  useEffect(() => {
+    if (activeConversation && activeConversation.unreadCount && activeConversation.unreadCount > 0) {
+        markReadMutation({
+            listingId: (activeConversation.listingId as any),
+            userId,
+            otherUserId: activeConversation.otherUserId
+        });
+    }
+  }, [messages, activeConversation, markReadMutation, userId]);
+
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    // Small timeout to allow render
+    const timer = setTimeout(scrollToBottom, 100);
+    return () => clearTimeout(timer);
+  }, [messages, activeConversation]);
 
   const searchParams = useSearchParams();
 
@@ -147,16 +164,10 @@ export function MessagesClient({
   const handleSelectConversation = async (conversation: Conversation) => {
     setVirtualConversation(null);
     setSelectedConversation(conversation);
-    if (conversation.unreadCount && conversation.unreadCount > 0) {
-      await markReadMutation({
-        listingId: (conversation.listingId as any) || undefined,
-        userId: userId,
-        otherUserId: conversation.otherUserId,
-      });
-    }
+    // Mark read is now handled in useEffect
   };
-
-  const activeConversation = selectedConversation || virtualConversation;
+  
+  // const activeConversation = selectedConversation || virtualConversation; // Now defined at top
 
   const handleSendMessage = async () => {
     console.log("Handle sending...", { newMessage, activeConversation });
@@ -215,7 +226,7 @@ export function MessagesClient({
       </div>
 
       {/* Chat Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-0 lg:gap-3 h-[calc(100vh-180px)] md:h-[calc(100vh-200px)]">
+      <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-0 lg:gap-3 h-[calc(100dvh-180px)] md:h-[calc(100vh-200px)]">
         
         {/* Conversations Sidebar */}
         <div className={cn(
@@ -327,7 +338,7 @@ export function MessagesClient({
               </div>
 
               {/* Messages */}
-              <ScrollArea className="flex-1 p-3 md:p-4">
+              <ScrollArea className="flex-1 p-3 md:p-4 min-h-0 h-full">
                 <div className="space-y-2.5 md:space-y-3">
                   {messages.length > 0 ? (
                     messages.map((message: any) => (
@@ -349,7 +360,7 @@ export function MessagesClient({
               </ScrollArea>
 
               {/* Input Area */}
-              <div className="p-2.5 md:p-3 border-t border-border/50 bg-background relative z-[100] pb-safe">
+              <div className="p-2.5 md:p-3 border-t border-border/50 bg-background  bottom-0  shrink-0">
                 <form 
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -386,7 +397,7 @@ export function MessagesClient({
                     }}
                     disabled={!newMessage.trim()}
                     size="icon"
-                    className="h-10 w-10 md:h-11 md:w-11 rounded-xl shrink-0 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all z-10 touch-manipulation active:scale-95 cursor-pointer"
+                    className="h-10 w-10 md:h-11 md:w-11 rounded-xl shrink-0 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all z-10 touch-manipulation active:scale-95 cursor-pointer z-[50]"
                   >
                     <Send className="w-5 h-5" />
                   </Button>
