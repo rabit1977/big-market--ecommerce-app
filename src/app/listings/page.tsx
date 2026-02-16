@@ -43,12 +43,20 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
 
   // Direct ID Search Redirect
   if (params.listingNumber) {
-     const listingNum = parseInt(params.listingNumber);
-     if (!isNaN(listingNum)) {
-         const directListing = await fetchQuery(api.listings.getByListingNumber, { listingNumber: listingNum });
-         if (directListing) {
-             redirect(`/listings/${directListing._id}`);
+     try {
+         const listingNum = parseInt(params.listingNumber);
+         if (!isNaN(listingNum)) {
+             const directListing = await fetchQuery(api.listings.getByListingNumber, { listingNumber: listingNum });
+             if (directListing) {
+                 redirect(`/listings/${directListing._id}`);
+             }
          }
+     } catch (error) {
+         // If error is a redirect, rethrow it so Next.js handles it
+         if ((error as any).digest?.startsWith('NEXT_REDIRECT')) {
+             throw error;
+         }
+         console.error("Error fetching listing by number:", error);
      }
      
      // If we are here, listingNumber was provided but NOT found.
@@ -57,7 +65,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
         <div className="bg-background min-h-screen pb-20">
           <div className="bg-card border-b border-border/50 py-4 md:py-6 mb-6">
             <div className="container-wide">
-              <AppBreadcrumbs />
+              <AppBreadcrumbs items={[{ label: 'Listings', href: '/listings' }, { label: 'Not Found' }]} />
               <div className='flex items-center justify-between'>
                 <h1 className="text-xl font-bold md:text-2xl">
                     Listing Not Found

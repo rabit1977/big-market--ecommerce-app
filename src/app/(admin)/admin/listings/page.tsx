@@ -1,3 +1,4 @@
+import { AdminListingSearch } from '@/components/admin/AdminListingSearch';
 import { AdminListingsTable } from '@/components/admin/AdminListingsTable';
 import { api, convex } from '@/lib/convex-server';
 
@@ -6,16 +7,26 @@ export const metadata = {
 };
 
 interface AdminListingsPageProps {
-    searchParams: Promise<{ status?: string; promoted?: string }>;
+    searchParams: Promise<{ status?: string; promoted?: string; listingNumber?: string }>;
 }
 
 export default async function AdminListingsPage({ searchParams }: AdminListingsPageProps) {
-  const { status = 'ALL', promoted } = await searchParams;
+  const { status = 'ALL', promoted, listingNumber } = await searchParams;
   const isPromoted = promoted === 'true';
   
-  const listings = isPromoted 
-    ? await convex.query(api.admin.getPromotedListings) 
-    : await convex.query(api.listings.list, { status });
+  let listings: any[] = [];
+
+  if (listingNumber) {
+    const num = parseInt(listingNumber);
+    if (!isNaN(num)) {
+       const exact = await convex.query(api.listings.getByListingNumber, { listingNumber: num });
+       if (exact) listings = [exact];
+    }
+  } else if (isPromoted) {
+    listings = await convex.query(api.admin.getPromotedListings);
+  } else {
+    listings = await convex.query(api.listings.list, { status });
+  }
   
   const serializedListings = (listings || []).map((l: any) => ({
       ...l,
@@ -58,6 +69,11 @@ export default async function AdminListingsPage({ searchParams }: AdminListingsP
                     </a>
                 ))}
             </div>
+        </div>
+        
+        {/* Search Bar */}
+        <div className="w-full sm:w-auto">
+             <AdminListingSearch />
         </div>
       </div>
 

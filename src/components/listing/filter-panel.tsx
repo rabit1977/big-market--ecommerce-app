@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import { MapPin, X } from 'lucide-react';
+import { MapPin, Search, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
 export interface FilterState {
@@ -266,31 +266,46 @@ export function FilterPanel({ onFilterChange, categories, initialFilters, idPref
 
         {/* Listing ID Search */}
         <div className="space-y-1 border-b pb-2">
-            <Label htmlFor={`${idPrefix}-listingNumber`} className="text-[10px] uppercase text-muted-foreground font-medium">Search by ID</Label>
-            <div className="relative">
-                <span className="absolute left-2 top-1.5 text-muted-foreground text-xs">#</span>
-                <Input
-                    id={`${idPrefix}-listingNumber`}
-                    type="number"
-                    placeholder="e.g. 123"
-                    className="h-8 text-xs pl-5"
-                    value={localSearchId}
-                    onChange={(e) => setLocalSearchId(e.target.value)}
-                    onBlur={() => {
+            <Label htmlFor={`${idPrefix}-listingNumber`} className="text-[10px] uppercase text-muted-foreground font-medium">Find Specific Item</Label>
+            <div className="relative flex items-center gap-1">
+                <div className="relative flex-1">
+                    <span className="absolute left-2 top-1.5 text-muted-foreground text-xs">#</span>
+                    <Input
+                        id={`${idPrefix}-listingNumber`}
+                        type="number"
+                        placeholder="Enter Item #"
+                        className="h-8 text-xs pl-5"
+                        value={localSearchId}
+                        onChange={(e) => setLocalSearchId(e.target.value)}
+                        onBlur={() => {
+                            const val = localSearchId ? parseInt(localSearchId) : undefined;
+                            if (val !== filters.listingNumber) {
+                                updateFilter('listingNumber', val);
+                            }
+                        }}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                const val = localSearchId ? parseInt(localSearchId) : undefined;
+                                if (val !== filters.listingNumber) {
+                                    updateFilter('listingNumber', val);
+                                }
+                            }
+                        }}
+                    />
+                </div>
+                <Button 
+                    size="icon" 
+                    variant="ghost" 
+                    className="h-8 w-8 text-muted-foreground hover:text-primary"
+                    onClick={() => {
                         const val = localSearchId ? parseInt(localSearchId) : undefined;
                         if (val !== filters.listingNumber) {
                             updateFilter('listingNumber', val);
                         }
                     }}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                            const val = localSearchId ? parseInt(localSearchId) : undefined;
-                            if (val !== filters.listingNumber) {
-                                updateFilter('listingNumber', val);
-                            }
-                        }
-                    }}
-                />
+                >
+                    <Search className="h-4 w-4" />
+                </Button>
             </div>
         </div>
 
