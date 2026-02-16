@@ -110,7 +110,10 @@ export default defineSchema({
     promotionExpiresAt: v.optional(v.number()),
     previousPrice: v.optional(v.number()),
     currency: v.optional(v.string()), // 'EUR' | 'MKD'
+    // Display Field
+    listingNumber: v.optional(v.number()), // Sequential ID 0, 1, 2...
   })
+    .index("by_listingNumber", ["listingNumber"])
     .index("by_category", ["category"])
     .index("by_userId", ["userId"])
     .index("by_status", ["status"])
@@ -293,4 +296,10 @@ export default defineSchema({
     status: v.string(), // "NEW", "READ", "RESOLVED"
     createdAt: v.number(),
   }).index("by_status", ["status"]),
+
+  counters: defineTable({
+    name: v.string(), // e.g., 'listings'
+    nextId: v.number(),
+    reusableIds: v.array(v.number()),
+  }).index("by_name", ["name"]),
 });

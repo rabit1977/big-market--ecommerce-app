@@ -59,6 +59,7 @@ interface ListingDetailContentProps {
     specifications?: Record<string, any>;
     status: string;
     previousPrice?: number;
+    listingNumber?: number;
   };
 }
 
@@ -161,7 +162,9 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                 <ChevronLeft className="w-6 h-6 text-foreground" />
              </button>
              <div className="flex flex-col">
-                 <span className="text-sm font-black tracking-tight leading-none text-foreground uppercase">AD ID: {listing._id.slice(-7)}</span>
+                 <span className="text-sm font-black tracking-tight leading-none text-foreground uppercase">
+                    AD ID: {listing.listingNumber !== undefined ? listing.listingNumber : listing._id.slice(-7)}
+                 </span>
                  <span className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-wider">{publishDate}</span>
              </div>
          </div>
@@ -497,7 +500,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                    )}
 
                        <div className="flex items-center justify-center pt-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest gap-4">
-                           <span>ID: {listing._id.slice(-7)}</span>
+                           <span>ID: {listing.listingNumber !== undefined ? listing.listingNumber : listing._id.slice(-7)}</span>
                            <span>•</span>
                            <span>Posted: {publishDate}</span>
                        </div>

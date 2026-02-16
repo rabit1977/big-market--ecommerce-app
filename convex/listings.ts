@@ -1,5 +1,70 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, MutationCtx, query } from "./_generated/server";
+
+// Helper to manage listing numbers
+async function getNextListingNumber(ctx: MutationCtx): Promise<number> {
+  let counter = await ctx.db
+    .query("counters")
+    .withIndex("by_name", (q) => q.eq("name", "listings"))
+    .unique();
+
+  if (!counter) {
+    const id = await ctx.db.insert("counters", {
+      name: "listings",
+      nextId: 0,
+      reusableIds: [],
+    });
+    // We can just return 0 here safely as we just created it
+    return 0;
+  }
+
+  // Check reusable
+  if (counter.reusableIds && counter.reusableIds.length > 0) {
+    // Sort to use lowest first
+    const sortedIds = [...counter.reusableIds].sort((a, b) => a - b);
+    const idToUse = sortedIds.shift(); // Remove first
+    
+    await ctx.db.patch(counter._id, {
+      reusableIds: sortedIds,
+    });
+    
+    return idToUse!;
+  }
+
+  // Use nextId
+  const idToUse = counter.nextId;
+  await ctx.db.patch(counter._id, {
+    nextId: counter.nextId + 1,
+  });
+
+  return idToUse;
+}
+
+async function releaseListingNumber(ctx: MutationCtx, number: number) {
+  const counter = await ctx.db
+    .query("counters")
+    .withIndex("by_name", (q) => q.eq("name", "listings"))
+    .unique();
+    
+  if (counter) {
+    const reusableIds = counter.reusableIds || [];
+    if (!reusableIds.includes(number)) {
+        reusableIds.push(number);
+        reusableIds.sort((a, b) => a - b);
+        await ctx.db.patch(counter._id, { reusableIds });
+    }
+  }
+}
+
+export const getByListingNumber = query({
+  args: { listingNumber: v.number() },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("listings")
+      .withIndex("by_listingNumber", (q) => q.eq("listingNumber", args.listingNumber))
+      .unique();
+  },
+});
 
 export const get = query({
   args: {},
@@ -356,12 +421,15 @@ export const create = mutation({
         throw new Error(`Limit reached: You can only post up to ${limit} listings.`);
     }
 
+    const listingNumber = await getNextListingNumber(ctx);
+
     const listingId = await ctx.db.insert("listings", {
       ...args,
       status: "PENDING_APPROVAL", 
       createdAt: Date.now(),
       viewCount: 0,
       currency: args.currency || "MKD", // Default for legacy/omitted
+      listingNumber,
     });
 
     // Increment count
@@ -581,7 +649,12 @@ export const remove = mutation({
         });
     }
 
-    // 4. Delete the listing
+    // 4. Release ID
+    if (listing.listingNumber !== undefined) {
+        await releaseListingNumber(ctx, listing.listingNumber);
+    }
+
+    // 5. Delete the listing
     await ctx.db.delete(args.id);
   },
 });

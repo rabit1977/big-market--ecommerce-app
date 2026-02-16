@@ -130,9 +130,12 @@ export const ListingCard = memo(
            
            {isGrid ? (
              <>
-                <h3 className="font-bold text-xs sm:text-sm uppercase leading-tight line-clamp-2 text-foreground pr-6">
-                   {listing.title}
-                </h3>
+                 <div className="flex justify-between items-start">
+                    <h3 className="font-bold text-xs sm:text-sm uppercase leading-tight line-clamp-2 text-foreground pr-6">
+                       {(listing as any).listingNumber !== undefined && <span className="text-muted-foreground mr-1">#{(listing as any).listingNumber}:</span>}
+                       {listing.title}
+                    </h3>
+                 </div>
                 
                 <div className="text-[10px] sm:text-xs text-muted-foreground font-medium">
                    Currently Available • Verified
@@ -169,6 +172,7 @@ export const ListingCard = memo(
                {/* List View Content */}
                <div className="flex justify-between items-start gap-2">
                     <h3 className="font-bold text-xs sm:text-sm md:text-base uppercase leading-tight line-clamp-2 group-hover:text-primary transition-colors text-foreground">
+                       {(listing as any).listingNumber !== undefined && <span className="text-muted-foreground mr-1">#{(listing as any).listingNumber}:</span>}
                        {listing.title}
                     </h3>
                     <span className="text-[9px] sm:text-[10px] md:text-xs text-muted-foreground whitespace-nowrap shrink-0">

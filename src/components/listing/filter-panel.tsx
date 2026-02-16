@@ -34,6 +34,7 @@ export interface FilterState {
   dateRange?: string;
   subCategory?: string;
   dynamicFilters?: string; // JSON string
+  listingNumber?: number; // Search by ID
 }
 
 interface FilterPanelProps {
