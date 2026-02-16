@@ -2,6 +2,7 @@ import { getWishlistAction } from '@/actions/wishlist-actions';
 import { AnalyticsProvider } from '@/components/analytics-provider';
 import { FooterWrapper } from '@/components/layout/footer-wrapper';
 import { MobileSidebarWrapper } from '@/components/layout/mobile-sidebar-wrapper';
+import { Watermark } from '@/components/shared/watermark';
 import { Toast } from '@/components/toast';
 import { CommandPalette } from '@/components/ui/command-palette';
 import type { Metadata } from 'next';
@@ -57,15 +58,18 @@ export default async function RootLayout({
         <Providers initialFavorites={wishlist}>
           <AnalyticsProvider />
           <CommandPalette />
-          <div className='min-h-screen bg-background text-foreground'>
-            <Suspense fallback={<div className="h-16 w-full bg-background" />}>
-              <MobileSidebarWrapper
-                initialWishlistCount={initialWishlistCount}
-              />
-            </Suspense>
-            <main className='min-h-auto pb-20 lg:pb-0'>{children}</main>
-            <FooterWrapper />
-            <Toast />
+          <div className='min-h-screen bg-background text-foreground relative'>
+            <Watermark />
+            <div className='relative z-10'>
+              <Suspense fallback={<div className="h-16 w-full bg-background" />}>
+                <MobileSidebarWrapper
+                  initialWishlistCount={initialWishlistCount}
+                />
+              </Suspense>
+              <main className='min-h-auto pb-20 lg:pb-0'>{children}</main>
+              <FooterWrapper />
+              <Toast />
+            </div>
           </div>
         </Providers>
       </body>
