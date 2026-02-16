@@ -7,8 +7,8 @@ import { redirect } from 'next/navigation';
 import { api } from '../../../convex/_generated/api';
 
 export const metadata: Metadata = {
-  title: 'Post a Listing | Big Market',
-  description: 'Sell your items on Big Market - Free classifieds platform',
+  title: 'Post a Listing | Biggest Market',
+  description: 'Sell your items on Biggest Market - Free classifieds platform',
 };
 
 export default async function SellPage() {

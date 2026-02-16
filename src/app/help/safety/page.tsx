@@ -40,7 +40,7 @@ export default function SafetySecurityHelpPage() {
                             Safety & <span className="text-primary">Security</span> Center
                         </h1>
                         <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                            At Big Market, your security is our fundamental priority. Learn how to protect your data, trade with integrity, and identify suspicious activity.
+                            At Biggest Market, your security is our fundamental priority. Learn how to protect your data, trade with integrity, and identify suspicious activity.
                         </p>
                     </motion.div>
                 </div>
@@ -86,7 +86,7 @@ export default function SafetySecurityHelpPage() {
                                         <CardTitle className="text-lg">Secure Communication</CardTitle>
                                     </CardHeader>
                                     <CardContent className="text-sm text-muted-foreground">
-                                        Utilize Big Market's internal messaging system for initial contact. Fraudsters often attempt to move conversations to unmonitored platforms like WhatsApp early on.
+                                        Utilize Biggest Market's internal messaging system for initial contact. Fraudsters often attempt to move conversations to unmonitored platforms like WhatsApp early on.
                                     </CardContent>
                                 </Card>
                             </div>
@@ -107,7 +107,7 @@ export default function SafetySecurityHelpPage() {
                                         <MailWarning className="w-5 h-5" /> Phishing & External Links
                                     </h4>
                                     <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-                                        Be extremely cautious of links sent via SMS or messaging apps claiming to be from Big Market for "Payment Verification" or "Shipping Labels". Big Market will **never** ask for your credit card details via a third-party link.
+                                        Be extremely cautious of links sent via SMS or messaging apps claiming to be from Biggest Market for "Payment Verification" or "Shipping Labels". Biggest Market will **never** ask for your credit card details via a third-party link.
                                     </p>
                                     
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -184,7 +184,7 @@ export default function SafetySecurityHelpPage() {
                                 <ShieldCheck className="w-10 h-10 text-primary mb-6" />
                                 <h3 className="text-2xl font-black mb-4">The Trust Standard</h3>
                                 <p className="text-sm text-slate-400 leading-relaxed mb-8">
-                                    Look for the **Verified Badge** on user profiles. This indicates the user has undergone identity verification and maintains a professional history on Big Market.
+                                    Look for the **Verified Badge** on user profiles. This indicates the user has undergone identity verification and maintains a professional history on Biggest Market.
                                 </p>
                                 <Button className="w-full bg-primary hover:bg-primary/90 text-white font-bold rounded-xl h-12" asChild>
                                     <Link href="/account/verification">Get Verified</Link>
@@ -204,7 +204,7 @@ export default function SafetySecurityHelpPage() {
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <p className="text-sm text-muted-foreground">
-                                        Big Market recommends cash-on-delivery or in-person bank transfers only after item inspection.
+                                        Biggest Market recommends cash-on-delivery or in-person bank transfers only after item inspection.
                                     </p>
                                     <Separator className="bg-emerald-500/10" />
                                     <div className="space-y-2">

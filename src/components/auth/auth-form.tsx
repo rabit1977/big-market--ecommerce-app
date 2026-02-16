@@ -275,7 +275,7 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
           <div className='inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary shadow-xl shadow-primary/25 mb-4'>
             <Zap className='h-8 w-8 text-primary-foreground' />
           </div>
-          <h1 className='text-2xl font-bold text-foreground'>Big Market</h1>
+          <h1 className='text-2xl font-bold text-foreground'>Biggest Market</h1>
           <p className='text-muted-foreground mt-1'>Premium Marketplace</p>
         </motion.div>
 

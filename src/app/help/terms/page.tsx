@@ -132,7 +132,7 @@ export default function TermsPage() {
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
                                         <div className="space-y-6">
-                                            <p>За пристап до целосниот спектар на професионални услуги на Big Market, неопходна е валидна регистрација. Нашата платформа гарантира 90% достапност на годишно ниво, поддржана од континуирано техничко одржување и системски надградби.</p>
+                                            <p>За пристап до целосниот спектар на професионални услуги на Biggest Market, неопходна е валидна регистрација. Нашата платформа гарантира 90% достапност на годишно ниво, поддржана од континуирано техничко одржување и системски надградби.</p>
                                             
                                             <div className="p-8 rounded-[2rem] bg-emerald-500/5 border border-emerald-500/10">
                                                 <h4 className="font-black text-emerald-700 dark:text-emerald-400 mb-4 flex items-center gap-2">
@@ -329,7 +329,7 @@ export default function TermsPage() {
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
                                         <div className="space-y-8">
-                                            <p>Политиката за приватност и општите услови на Big Market подлежат на периодични измени со цел унапредување на услугите. Со користење на овие услуги, корисникот потврдува дека се согласува со актуелната верзија на документот.</p>
+                                            <p>Политиката за приватност и општите услови на Biggest Market подлежат на периодични измени со цел унапредување на услугите. Со користење на овие услуги, корисникот потврдува дека се согласува со актуелната верзија на документот.</p>
                                             
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-border/50">
                                                 <div className="space-y-4">

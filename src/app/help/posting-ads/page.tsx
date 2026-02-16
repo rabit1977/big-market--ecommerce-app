@@ -40,7 +40,7 @@ export default function PostingAdsHelpPage() {
                             Posting & <span className="text-primary">Managing</span> Ads
                         </h1>
                         <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                            Everything you need to know about creating professional listings, reaching more buyers, and managing your shop on Big Market.
+                            Everything you need to know about creating professional listings, reaching more buyers, and managing your shop on Biggest Market.
                         </p>
                     </motion.div>
                 </div>
@@ -122,7 +122,7 @@ export default function PostingAdsHelpPage() {
                             <div className="bg-card border border-border/50 rounded-[2rem] p-8 md:p-12 shadow-sm">
                                 <div className="max-w-xl space-y-6">
                                     <p className="text-muted-foreground leading-relaxed">
-                                        Managing your inventory on Big Market is streamlined through your professional dashboard. Keeping your listings current ensures a better experience for buyers and higher rankings for you.
+                                        Managing your inventory on Biggest Market is streamlined through your professional dashboard. Keeping your listings current ensures a better experience for buyers and higher rankings for you.
                                     </p>
                                     
                                     <div className="space-y-4">
@@ -226,7 +226,7 @@ export default function PostingAdsHelpPage() {
                                 <div className="relative z-10 space-y-4">
                                     <h3 className="text-xl font-black italic">Get Certified.</h3>
                                     <p className="text-sm text-slate-400 leading-relaxed">
-                                        Verification is required for listing management. Establish trust within the Big Market community today.
+                                        Verification is required for listing management. Establish trust within the Biggest Market community today.
                                     </p>
                                     <Button variant="secondary" className="w-full font-bold rounded-xl" asChild>
                                         <Link href="/account/verification">Apply Now</Link>

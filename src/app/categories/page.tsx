@@ -21,7 +21,7 @@ import Link from 'next/link';
 import { cache } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Categories | Big Market',
+  title: 'Categories | Biggest Market',
   description: 'Browse listings by category',
 };
 

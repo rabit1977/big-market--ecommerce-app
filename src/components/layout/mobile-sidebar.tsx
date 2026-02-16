@@ -162,7 +162,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                 <div className='w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-sm shadow-primary/20'>
                   <Zap className='h-4 w-4 text-white' fill="currentColor" />
                 </div>
-                <span className='font-bold text-base tracking-tight text-foreground'>Big Market<span className="text-primary">.</span></span>
+                <span className='font-bold text-base tracking-tight text-foreground'>Biggest Market<span className="text-primary">.</span></span>
               </Link>
               <div className="flex items-center gap-1">
                  <Button

@@ -31,7 +31,7 @@ export default function GettingStartedPage() {
                         className="max-w-3xl"
                     >
                         <h1 className="text-3xl md:text-5xl font-black tracking-tight text-foreground mb-4">
-                            Getting Started with <span className="text-primary">Big Market</span>
+                            Getting Started with <span className="text-primary">Biggest Market</span>
                         </h1>
                         <p className="text-lg text-muted-foreground">
                             An essential guide for new users to register, manage listings, and navigate our professional marketplace securely.

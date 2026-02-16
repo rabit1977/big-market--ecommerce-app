@@ -27,7 +27,7 @@ import { useEffect, useState } from 'react';
 const helpCategories = [
     {
         title: 'Getting Started',
-        description: 'New to Big Market? Learn how to register and start your journey.',
+        description: 'New to Biggest Market? Learn how to register and start your journey.',
         icon: UserPlus,
         color: 'text-blue-500',
         bgColor: 'bg-blue-500/10',
@@ -125,7 +125,7 @@ const helpCategories = [
 ];
 
 const socialLinks = [
-    { label: 'Facebook', value: 'Big Market Official', icon: ExternalLink, href: '#' },
+    { label: 'Facebook', value: 'Biggest Market Official', icon: ExternalLink, href: '#' },
     { label: 'Partner with us', value: 'Affiliate & Marketing', icon: Flag, href: '/services' },
     { label: 'About Us', value: 'The Trusted Marketplace', icon: BadgeCheck, href: '/about' },
 ];

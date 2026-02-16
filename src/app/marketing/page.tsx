@@ -1,7 +1,7 @@
 import { PlaceholderPage } from '@/components/shared/placeholder-page';
 
 export const metadata = {
-  title: 'Marketing Services | Big Market',
+  title: 'Marketing Services | Biggest Market',
 };
 
 export default function MarketingPage() {

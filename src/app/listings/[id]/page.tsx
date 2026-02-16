@@ -24,7 +24,7 @@ export async function generateMetadata({
   // Validate ID
   if (!isValidConvexId(id)) {
     return {
-      title: 'Listing Not Found | Big Market',
+      title: 'Listing Not Found | Biggest Market',
     };
   }
 
@@ -35,12 +35,12 @@ export async function generateMetadata({
 
     if (!listing) {
       return {
-        title: 'Listing Not Found | Big Market',
+        title: 'Listing Not Found | Biggest Market',
       };
     }
 
     return {
-      title: `${listing.title} | Big Market`,
+      title: `${listing.title} | Biggest Market`,
       description: listing.description.slice(0, 160),
       openGraph: {
         images: listing.images?.[0] ? [listing.images[0]] : [],
@@ -48,7 +48,7 @@ export async function generateMetadata({
     };
   } catch {
     return {
-      title: 'Listing Not Found | Big Market',
+      title: 'Listing Not Found | Biggest Market',
     };
   }
 }

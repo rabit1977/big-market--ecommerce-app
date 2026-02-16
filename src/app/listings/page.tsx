@@ -8,8 +8,8 @@ import Loading from './loading';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Browse Listings | Big Market',
-  description: 'Find great deals in your area on Big Market Classifieds.',
+  title: 'Browse Listings | Biggest Market',
+  description: 'Find great deals in your area on Biggest Market Classifieds.',
 };
 
 interface ListingsPageProps {

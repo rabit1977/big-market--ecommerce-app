@@ -1,7 +1,7 @@
 import { PlaceholderPage } from '@/components/shared/placeholder-page';
 
 export const metadata = {
-  title: 'Mobile App | Big Market',
+  title: 'Mobile App | Biggest Market',
 };
 
 export default function MobilePage() {

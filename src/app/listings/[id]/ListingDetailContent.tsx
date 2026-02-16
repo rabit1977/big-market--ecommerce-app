@@ -151,7 +151,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
 
   return (
     <div className="min-h-screen bg-background pb-12 border-b border-border">
-      {/* Mobile Header (Big Market Style) */}
+      {/* Mobile Header (Biggest Market Style) */}
       <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-md  px-4 py-3 flex items-center justify-between shadow-sm md:hidden">
          <div className="flex items-center gap-3">
              <button 
@@ -653,7 +653,7 @@ function DeleteListingButton({ listingId, compact }: { listingId: string, compac
                     </div>
                     <AlertDialogTitle className="text-3xl font-black uppercase tracking-tight text-center">Delete Listing?</AlertDialogTitle>
                     <AlertDialogDescription className="font-bold text-muted-foreground text-center text-base">
-                        This action is permanent and cannot be undone. Are you sure you want to remove this ad from Big Market?
+                        This action is permanent and cannot be undone. Are you sure you want to remove this ad from Biggest Market?
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter className="flex-col sm:flex-row gap-3 pt-6">

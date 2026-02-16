@@ -126,7 +126,7 @@ export function MembershipSection() {
             </span>
           </h2>
           <p className="text-sm md:text-base text-muted-foreground max-w-lg mx-auto">
-            Over 2 million people browse Big Market every month. A premium membership
+            Over 2 million people browse Biggest Market every month. A premium membership
             puts your products in front of all of them.
           </p>
         </div>

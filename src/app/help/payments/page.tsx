@@ -57,14 +57,14 @@ export default function PaymentsBillingPage() {
                                 Premium Business Membership
                             </h2>
                             <p className="text-muted-foreground leading-relaxed mb-8">
-                                Transform your presence on Big Market. Move beyond standard listings and establish your brand as a market leader. Our Premium Membership provides a suite of professional tools designed to convert browsers into long-term loyal customers.
+                                Transform your presence on Biggest Market. Move beyond standard listings and establish your brand as a market leader. Our Premium Membership provides a suite of professional tools designed to convert browsers into long-term loyal customers.
                             </p>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <FeatureCard 
                                     icon={Store} 
                                     title="Custom Shop URL" 
-                                    desc="Establish your home on Big Market with a personalized URL: bigmarket.com/your_company."
+                                    desc="Establish your home on Biggest Market with a personalized URL: bigmarket.com/your_company."
                                 />
                                 <FeatureCard 
                                     icon={BadgeCheck} 
@@ -127,7 +127,7 @@ export default function PaymentsBillingPage() {
                                         <AccordionContent className="pb-6 text-muted-foreground leading-relaxed whitespace-pre-wrap">
                                             Заштитата на личните податоци и нивната системска сигурност претставуваат фундаментален столб во работењето на Биг Маркет. Нашата платформа применува строги протоколи за заштита на приватноста, обезбедувајќи интегритет на секоја информација споделена од нашите корисници.
 
-                                            Со креирање на професионален профил на Big Market, вие овластувате безбедно собирање и обработка на податоци неопходни за функционирање на вашите услуги. Процесот на верификација на профилот претставува потврда за вашата согласност со овие политики.
+                                            Со креирање на професионален профил на Biggest Market, вие овластувате безбедно собирање и обработка на податоци неопходни за функционирање на вашите услуги. Процесот на верификација на профилот претставува потврда за вашата согласност со овие политики.
 
                                             Тие податоци се:
                                             - Име и Презиме
@@ -163,7 +163,7 @@ export default function PaymentsBillingPage() {
                                             <span className="font-bold">Registration & Verification / Регистрација и Верификација</span>
                                         </AccordionTrigger>
                                         <AccordionContent className="pb-6 text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                                            Big Market овозможува пристап до напредна онлајн инфраструктура за тргување. Интеракцијата со платформата подразбира прифаќање на утврдените технички норми и ценовници. Нашата услуга гарантира висок степен на достапност од 90% на годишно ниво, со исклучок на планирани периоди за оптимизација и надворешни технички фактори.
+                                            Biggest Market овозможува пристап до напредна онлајн инфраструктура за тргување. Интеракцијата со платформата подразбира прифаќање на утврдените технички норми и ценовници. Нашата услуга гарантира висок степен на достапност од 90% на годишно ниво, со исклучок на планирани периоди за оптимизација и надворешни технички фактори.
 
                                             За оптимално искуство, препорачуваме користење на современи пребарувачки технологии (JavaScript, Cookies, Pop-up овозможување).
 
@@ -202,7 +202,7 @@ export default function PaymentsBillingPage() {
                                         <AccordionContent className="pb-6 text-muted-foreground leading-relaxed whitespace-pre-wrap">
                                             Биг Маркет спроведува директни маркетинг активности исклучиво врз основа на ваша прецизна согласност. Корисниците имаат постојана контрола и опција за итна деактивација на известувањата во секое време.
 
-                                            Потенцираме дека Big Market не толерира генерирање на спам или несоодветна масовна содржина.
+                                            Потенцираме дека Biggest Market не толерира генерирање на спам или несоодветна масовна содржина.
                                         </AccordionContent>
                                     </AccordionItem>
 
@@ -232,7 +232,7 @@ export default function PaymentsBillingPage() {
                                         <AccordionContent className="pb-6 text-muted-foreground leading-relaxed whitespace-pre-wrap">
                                             Корисниците преземаат правна и етичка одговорност за вистинитоста на внесените податоци. Сигурноста на лозинката е обврска на корисникот.
 
-                                            Минималната старосна граница за користење на Big Market е 18 години. Платформата го задржува правото на суспензија на секој профил кој ги дерогира утврдените професионални стандарди.
+                                            Минималната старосна граница за користење на Biggest Market е 18 години. Платформата го задржува правото на суспензија на секој профил кој ги дерогира утврдените професионални стандарди.
                                         </AccordionContent>
                                     </AccordionItem>
 

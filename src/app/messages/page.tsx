@@ -6,8 +6,8 @@ import { redirect } from 'next/navigation';
 import { api } from '../../../convex/_generated/api';
 
 export const metadata = {
-  title: 'Messages | Big Market',
-  description: 'Your conversations on Big Market',
+  title: 'Messages | Biggest Market',
+  description: 'Your conversations on Biggest Market',
 };
 
 interface MessagesPageProps {

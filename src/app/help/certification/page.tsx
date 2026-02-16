@@ -38,7 +38,7 @@ export default function CertificationHelpPage() {
                             Certification & <span className="text-primary">Trust</span> Badge
                         </h1>
                         <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                            The "Verified Seller" badge is the highest mark of credibility on Big Market. Learn how to verify your identity and build ultimate trust with your buyers.
+                            The "Verified Seller" badge is the highest mark of credibility on Biggest Market. Learn how to verify your identity and build ultimate trust with your buyers.
                         </p>
                     </motion.div>
                 </div>
@@ -63,7 +63,7 @@ export default function CertificationHelpPage() {
                             </div>
                             
                             <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                                On Big Market, trust is our currency. The Verified Badge indicates that a user has successfully completed our mandatory security screening and has verified their legal identity. This system safeguards our community against fraudulent activity and ensures a professional environment for all.
+                                On Biggest Market, trust is our currency. The Verified Badge indicates that a user has successfully completed our mandatory security screening and has verified their legal identity. This system safeguards our community against fraudulent activity and ensures a professional environment for all.
                             </p>
 
                             <div className="bg-blue-600/5 border border-blue-600/20 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden">
@@ -74,7 +74,7 @@ export default function CertificationHelpPage() {
                                     </div>
                                     <div className="space-y-4">
                                         <h4 className="font-black text-blue-700 dark:text-blue-400 uppercase text-xs tracking-widest">Enhanced Credibility:</h4>
-                                        <p className="text-sm text-muted-foreground">Buyers are 85% more likely to contact and purchase from a seller who carries the Big Market trust certification.</p>
+                                        <p className="text-sm text-muted-foreground">Buyers are 85% more likely to contact and purchase from a seller who carries the Biggest Market trust certification.</p>
                                     </div>
                                 </div>
                             </div>

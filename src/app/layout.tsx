@@ -1,6 +1,7 @@
 import { getWishlistAction } from '@/actions/wishlist-actions';
 import { AnalyticsProvider } from '@/components/analytics-provider';
 import { FooterWrapper } from '@/components/layout/footer-wrapper';
+import { InstallPwaPrompt } from '@/components/layout/install-pwa-prompt';
 import { MobileSidebarWrapper } from '@/components/layout/mobile-sidebar-wrapper';
 import { Watermark } from '@/components/shared/watermark';
 import { Toast } from '@/components/toast';
@@ -20,8 +21,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Big Market',
-    default: 'Big Market - Classifieds Platform',
+    template: '%s | Biggest Market',
+    default: 'Biggest Market - Classifieds Platform',
   },
   description: 'Buy and sell anything in your local community.',
 };
@@ -69,6 +70,7 @@ export default async function RootLayout({
               <main className='min-h-auto pb-20 lg:pb-0'>{children}</main>
               <FooterWrapper />
               <Toast />
+              <InstallPwaPrompt />
             </div>
           </div>
         </Providers>

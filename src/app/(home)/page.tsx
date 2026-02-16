@@ -8,7 +8,7 @@ import { api } from '../../../convex/_generated/api';
 /**
  * Home Page Component
  * 
- * Big Market-inspired classifieds homepage with:
+ * Biggest Market-inspired classifieds homepage with:
  * - Hero section with search
  * - Platform statistics
  * - Featured listings

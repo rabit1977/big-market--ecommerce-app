@@ -363,7 +363,7 @@ export function MessagesClient({
                       <ShieldAlert className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <p className="font-bold text-xs md:text-sm text-foreground">Big Market Support</p>
+                      <p className="font-bold text-xs md:text-sm text-foreground">Biggest Market Support</p>
                       <p className="text-[10px] md:text-xs text-muted-foreground font-medium">Internal Help Desk</p>
                     </div>
                   </div>
@@ -560,7 +560,7 @@ function ConversationItem({
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-1.5 mb-0.5">
           <p className="font-bold text-xs md:text-sm line-clamp-1 text-foreground">
-            {isSupport ? "Big Market Support" : (conversation.listing?.title || "Unknown Listing")}
+            {isSupport ? "Biggest Market Support" : (conversation.listing?.title || "Unknown Listing")}
           </p>
           <span className="text-[9px] md:text-[10px] text-muted-foreground shrink-0 font-medium mt-0.5">
             {timeAgo}

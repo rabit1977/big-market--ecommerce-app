@@ -67,7 +67,7 @@ export const ServicesContent = () => {
           </span>
         </h1>
         <p className='text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed'>
-          At Big Market, we are committed to providing the most secure and professional 
+          At Biggest Market, we are committed to providing the most secure and professional 
           marketplace ecosystem in Macedonia. Discover the range of services designed to scale your sales.
         </p>
       </motion.section>

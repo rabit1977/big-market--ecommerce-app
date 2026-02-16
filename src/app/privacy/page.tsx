@@ -65,7 +65,7 @@ export default function PrivacyPage() {
             Privacy Policy
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl">
-            Data Protection and Terms of Service for Big Market
+            Data Protection and Terms of Service for Biggest Market
           </p>
         </div>
       </div>
@@ -79,7 +79,7 @@ export default function PrivacyPage() {
             {/* Introduction */}
             <section className="prose dark:prose-invert max-w-none">
               <p className="text-lg leading-relaxed text-muted-foreground">
-                The protection and security of your personal data are among our top priorities at Big Market. We pay special attention to the right to privacy and the protection of our users' personal data. We appreciate your interest in our website and thank you for your visit.
+                The protection and security of your personal data are among our top priorities at Biggest Market. We pay special attention to the right to privacy and the protection of our users' personal data. We appreciate your interest in our website and thank you for your visit.
               </p>
             </section>
 
@@ -95,7 +95,7 @@ export default function PrivacyPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-sm text-muted-foreground">
-                  When creating a user profile on Big Market, we collect and store the data necessary to create your profile. By using the Big Market website and verifying your user profile, you consent to the collection, processing, and use of your personal data by our company.
+                  When creating a user profile on Biggest Market, we collect and store the data necessary to create your profile. By using the Biggest Market website and verifying your user profile, you consent to the collection, processing, and use of your personal data by our company.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {['Full Name', 'Email Address', 'Phone Number', 'Location', 'Listing Data', 'IP Address'].map((item) => (
@@ -145,7 +145,7 @@ export default function PrivacyPage() {
                     This allows you to post and edit up to 50 listings per year for free.
                   </p>
                   <div className="text-xs p-3 bg-muted rounded-lg border border-border/50">
-                    <strong>Important:</strong> All unverified profiles will be deleted. The certified logo does not provide 100% protection against misuse; the same Big Market terms and conditions apply.
+                    <strong>Important:</strong> All unverified profiles will be deleted. The certified logo does not provide 100% protection against misuse; the same Biggest Market terms and conditions apply.
                   </div>
                 </div>
 
@@ -219,7 +219,7 @@ export default function PrivacyPage() {
                 <div className="p-6 md:p-8 bg-primary/5 border-b border-primary/10">
                   <h2 className="text-2xl font-black mb-2 flex items-center gap-2">
                     <Mail className="w-6 h-6 text-primary" />
-                    Contact Big Market
+                    Contact Biggest Market
                   </h2>
                   <p className="text-muted-foreground">
                     Have any questions? Fill out the form below.
@@ -282,7 +282,7 @@ export default function PrivacyPage() {
                   Company
                 </h3>
                 <div className="space-y-3 text-sm text-muted-foreground">
-                  <p className="font-medium text-foreground">Big Market</p>
+                  <p className="font-medium text-foreground">Biggest Market</p>
                   <p>Skopje, Macedonia</p>
                   <div className="pt-2 border-t border-border/50 mt-2">
                     <p className="text-xs">Updated: 05.01.2026</p>

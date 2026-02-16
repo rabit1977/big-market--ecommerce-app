@@ -105,7 +105,7 @@ export default function FAQHelpPage() {
                             Questions & <span className="text-primary">Answers</span>
                         </h1>
                         <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                            Find answers to the most common inquiries regarding listing management, security, and account operations on Big Market.
+                            Find answers to the most common inquiries regarding listing management, security, and account operations on Biggest Market.
                         </p>
                     </motion.div>
                 </div>

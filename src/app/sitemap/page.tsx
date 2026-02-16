@@ -1,7 +1,7 @@
 import { PlaceholderPage } from '@/components/shared/placeholder-page';
 
 export const metadata = {
-  title: 'Sitemap | Big Market',
+  title: 'Sitemap | Biggest Market',
 };
 
 export default function SitemapPage() {

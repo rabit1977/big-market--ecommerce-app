@@ -84,7 +84,7 @@ const Header = ({
             <Link
               href='/'
               className='shrink-0 flex items-center group'
-              aria-label='Big Market home page'
+              aria-label='Biggest Market home page'
             >
               <div className='w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-sm shadow-primary/20 group-hover:scale-105 transition-transform'>
                 <Zap className='h-4 w-4 text-white' fill='currentColor' />
@@ -107,13 +107,13 @@ const Header = ({
           <Link
             href='/'
             className='flex shrink-0 items-center gap-2.5 group mr-1'
-            aria-label='Big Market home page'
+            aria-label='Biggest Market home page'
           >
             <div className='w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-md shadow-primary/20 group-hover:scale-105 transition-all duration-300'>
               <Zap className='h-5 w-5 text-white' fill='currentColor' />
             </div>
             <span className='text-lg font-black tracking-tight text-foreground leading-none whitespace-nowrap'>
-              Big Market<span className='text-primary'>.</span>
+              Biggest Market<span className='text-primary'>.</span>
             </span>
           </Link>
 

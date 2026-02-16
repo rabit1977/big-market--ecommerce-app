@@ -113,7 +113,7 @@ export const AboutContent = () => {
           </div>
           <div className='space-y-6 text-lg leading-relaxed text-muted-foreground'>
             <p>
-              Founded with a vision to redefine the digital classifieds landscape, Big Market was established to provide a sophisticated, high-tech infrastructure where individuals and businesses can host their listings. We are the administrators and maintainers of this professional ecosystem, committed to ensuring a secure and efficient connection between buyers and sellers.
+              Founded with a vision to redefine the digital classifieds landscape, Biggest Market was established to provide a sophisticated, high-tech infrastructure where individuals and businesses can host their listings. We are the administrators and maintainers of this professional ecosystem, committed to ensuring a secure and efficient connection between buyers and sellers.
             </p>
             <p>
               Our role is to provide the cutting-edge tools, verification systems, and moderation standards that make commerce possible. We don't sell the items—we empower our community to do so with confidence and reach.
@@ -124,7 +124,7 @@ export const AboutContent = () => {
         <div className='relative h-[400px] sm:h-[500px] lg:h-[600px] rounded-[2rem] overflow-hidden shadow-2xl rotate-1 hover:rotate-0 transition-transform duration-500 border-8 border-background'>
           <Image
             src={aboutContent.storyImage}
-            alt='Big Market office workspace with team collaboration'
+            alt='Biggest Market office workspace with team collaboration'
             fill
             sizes='(max-width: 768px) 100vw, 50vw'
             className='object-cover hover:scale-110 transition-transform duration-700'
@@ -188,7 +188,7 @@ export const AboutContent = () => {
             Meet The Minds
           </h2>
           <p className='text-lg text-muted-foreground max-w-2xl mx-auto'>
-            The passionate team driving innovation at Big Market
+            The passionate team driving innovation at Biggest Market
           </p>
         </div>
 

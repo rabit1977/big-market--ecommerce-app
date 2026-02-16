@@ -7,7 +7,7 @@ import { ContactSkeleton } from './ContactSkeleton';
 export const metadata: Metadata = {
   title: 'Contact Us',
   description:
-    'Get in touch with Big Market. We\'re here to help with your listings, business inquiries, and support needs.',
+    'Get in touch with Biggest Market. We\'re here to help with your listings, business inquiries, and support needs.',
 };
 
 const ContactPage = () => {
