@@ -29,22 +29,23 @@ interface Listing {
 
 interface FeaturedListingsProps {
   listings: Listing[];
+  variant?: 'horizontal' | 'vertical';
 }
 
 
-export function FeaturedListings({ listings }: FeaturedListingsProps) {
+export function FeaturedListings({ listings, variant = 'horizontal' }: FeaturedListingsProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [activeDot, setActiveDot] = useState(0);
   
   if (!listings || !Array.isArray(listings)) return null;
 
-  const featuredListings = listings.slice(0, 15);
+  // Limit listings based on variant
+  const featuredListings = variant === 'vertical' ? listings.slice(0, 5) : listings.slice(0, 15);
 
   const handleScroll = () => {
     if (scrollContainerRef.current) {
         const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-        const totalItems = featuredListings.length;
-        // Simplified dot calculation
+        // ... (scroll logic only relevant for horizontal)
         const scrollPercent = scrollLeft / (scrollWidth - clientWidth || 1);
         const dotIndex = Math.min(Math.round(scrollPercent * 4), 4);
         setActiveDot(isNaN(dotIndex) ? 0 : dotIndex);
@@ -67,6 +68,106 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
     return null;
   }
 
+  // Vertical (Sidebar) Layout
+  if (variant === 'vertical') {
+     return (
+        <div className="space-y-4 sticky top-24">
+             <div className="flex items-center justify-between px-1 mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="relative flex items-center justify-center">
+                        <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping scale-150" />
+                        <span className="relative flex h-2 w-2 rounded-full bg-primary" />
+                    </div>
+                    <h2 className="text-base font-black tracking-tight uppercase text-foreground/80">
+                        Top Boosted
+                    </h2>
+                  </div>
+             </div>
+
+             <div className="flex flex-col gap-4">
+                 {featuredListings.map((listing) => {
+                    const imageUrl = listing.thumbnail || (listing.images && listing.images[0]) || '/placeholder-listing.jpg';
+                    const promoConfig = (listing as any).isPromoted ? getPromotionConfig((listing as any).promotionTier) : null;
+                    const badgeColor = promoConfig?.badgeColor || "bg-primary";
+                    const borderColor = promoConfig?.borderColor || "border-primary/30";
+                    const bgColor = promoConfig?.bgColor || "bg-card";
+                    
+                    return (
+                        <div key={listing._id} className="group">
+                             <Link href={`/listings/${listing._id}`}>
+                                <Card className={cn(
+                                    "overflow-hidden border-border/40 hover:border-primary/40 transition-all duration-300 rounded-xl bg-card shadow-sm hover:shadow-xl hover:-translate-y-1",
+                                    promoConfig && `ring-1 ring-inset ${borderColor.replace('border-', 'ring-')} ${bgColor.replace('bg-', 'bg-opacity-5 bg-')}`
+                                )}>
+                                     {/* Image Area - Bigger for Sidebar */}
+                                     <div className="relative aspect-[4/3] w-full bg-muted overflow-hidden">
+                                         <Image 
+                                            src={imageUrl} 
+                                            alt={listing.title} 
+                                            fill 
+                                            className="object-cover group-hover:scale-110 transition-transform duration-700" 
+                                            sizes="(max-width: 1280px) 25vw, 20vw"
+                                         />
+                                         
+                                         {/* Floating Badge */}
+                                         {promoConfig && (
+                                            <div className="absolute top-2 left-2 z-10">
+                                                <div className={cn(
+                                                    "px-2 py-1 rounded-md flex items-center gap-1.5 shadow-lg backdrop-blur-md border border-white/20",
+                                                    badgeColor
+                                                )}>
+                                                    <PromotionIcon iconName={promoConfig.icon} className="w-3 h-3 text-white fill-current" />
+                                                    <span className="text-[10px] font-black uppercase text-white tracking-wider">
+                                                        {(promoConfig as any).title?.split(' ')[0] || 'PROMO'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                         )}
+
+                                          {/* Price Tag Overlay - Bottom Right */}
+                                          <div className="absolute bottom-2 right-2 z-10">
+                                              <div className="bg-background/90 backdrop-blur text-foreground px-2 py-1 rounded-md shadow-sm border border-border/50">
+                                                  <span className="text-xs font-black">
+                                                      {listing.price.toLocaleString()} <span className="text-[9px] font-bold text-muted-foreground">MKD</span>
+                                                  </span>
+                                              </div>
+                                          </div>
+                                     </div>
+
+                                     {/* Simple Content */}
+                                     <div className="p-3 bg-card/50">
+                                          <h3 className="text-sm font-bold line-clamp-2 leading-snug group-hover:text-primary transition-colors mb-2">
+                                              {listing.title}
+                                          </h3>
+                                          
+                                          <div className="flex items-center justify-between text-muted-foreground">
+                                              <div className="flex items-center gap-1 text-[10px]">
+                                                  <MapPin className="w-3 h-3" />
+                                                  {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
+                                              </div>
+                                              <div className="text-[10px] font-medium opacity-70">
+                                                  View Deal &rarr;
+                                              </div>
+                                          </div>
+                                     </div>
+                                </Card>
+                             </Link>
+                        </div>
+                    );
+                 })}
+             </div>
+             
+             <Link 
+                href="/listings?featured=true" 
+                className="flex items-center justify-center w-full py-3 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg border border-dashed border-border hover:border-primary/30 transition-all"
+             >
+                See All Premium
+             </Link>
+        </div>
+     );
+  }
+
+  // Horizontal (Default) Layout
   return (
     <div className="bg-gradient-to-b from-primary/5 via-transparent to-transparent">
       <div className="container-wide py-5 sm:py-8">
@@ -96,11 +197,11 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
           </div>
         </div>
 
-        <div className="relative group">
+        <div className="relative group ">
           <div 
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="flex gap-2.5 sm:gap-4 overflow-x-auto no-scrollbar pb-2 scroll-smooth snap-x snap-mandatory"
+            className="flex gap-3 sm:gap-5 overflow-x-auto no-scrollbar pb-2 scroll-smooth snap-x snap-mandatory"
           >
             {featuredListings.map((listing) => {
               const imageUrl = listing.thumbnail || (listing.images && listing.images[0]) || '/placeholder-listing.jpg';
@@ -115,7 +216,7 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
               return (
                 <div 
                   key={listing._id} 
-                  className="min-w-[120px] w-[120px] sm:min-w-[150px] sm:w-[150px] snap-start"
+                  className="min-w-[200px] w-[190px] sm:min-w-[220px] sm:w-[240px] sm:h-[300px] h-[270px] snap-start"
                 >
                   <Link href={`/listings/${listing._id}`}>
                     <Card className={cn(
@@ -150,20 +251,20 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
 
                       {/* Ultra Compact Info */}
                       <div className={cn(
-                        "p-2 pt-1.5 space-y-0.5",
+                        "p-2.5 pt-2 space-y-1",
                         (!promoConfig?.bgColor) && "bg-card"
                       )}>
-                        <h3 className="font-bold text-[9px] leading-tight line-clamp-1 text-foreground/80 group-hover:text-primary transition-colors">
+                        <h3 className="font-bold text-[10px] sm:text-[11px] leading-tight line-clamp-1 text-foreground/90 group-hover:text-primary transition-colors">
                           {listing.title}
                         </h3>
                         
                         <div className="flex items-center justify-between">
-                           <span className="text-[10px] font-black text-primary">
+                           <span className="text-[11px] sm:text-xs font-black text-primary">
                              {listing.price.toLocaleString()} MKD
                            </span>
-                           <span className="text-[8px] text-muted-foreground/60 font-bold flex items-center">
-                              <MapPin className="w-2 h-2 mr-0.5" />
-                              {listing.city.split(' ')[0]}
+                           <span className="text-[9px] text-muted-foreground/60 font-bold flex items-center">
+                              <MapPin className="w-2.5 h-2.5 mr-0.5" />
+                              {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
                            </span>
                         </div>
                       </div>

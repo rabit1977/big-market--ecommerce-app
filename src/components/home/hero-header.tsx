@@ -1,6 +1,6 @@
 'use client';
 
-import { Checkbox } from '@/components/ui/checkbox';
+import { ListingSearchInput } from '@/components/shared/listing-search-input';
 import { cn } from '@/lib/utils';
 import { LayoutGrid, SlidersHorizontal } from 'lucide-react';
 import Link from 'next/link';
@@ -54,34 +54,16 @@ export const HeroHeader = () => {
             <span className="text-[11px] font-bold tracking-tight text-foreground uppercase">Categories</span>
           </Link>
 
+  
+
           {/* Filters Section */}
           <div className="flex-1 flex items-center justify-end">
-            {/* Desktop: Inline Filter Checkboxes */}
-            <div className="hidden md:flex items-center gap-x-6">
-              {QUICK_FILTERS.map((filter) => (
-                <div key={filter.id} className="flex items-center space-x-2">
-                  <Checkbox 
-                    id={`hero-${filter.id}`} 
-                    checked={filters[filter.id]} 
-                    onCheckedChange={() => toggleFilter(filter.id)}
-                    className="rounded-sm h-4 w-4 data-[state=checked]:bg-primary data-[state=checked]:border-primary" 
-                  />
-                  <label
-                    htmlFor={`hero-${filter.id}`}
-                    className="text-xs font-semibold leading-none cursor-pointer text-muted-foreground hover:text-foreground transition-colors select-none"
-                  >
-                    {filter.label}
-                  </label>
-                </div>
-              ))}
-            </div>
-
-            {/* Mobile: Filter Toggle Button - Rounded Pill */}
+            {/* Filter Toggle Button - Visible on ALL screens */}
             <button
               type="button"
               onClick={() => setShowFilters(!showFilters)}
               className={cn(
-                "md:hidden flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-300",
+                "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-300",
                 showFilters 
                   ? "bg-primary/10 border-primary/30 text-primary shadow-sm" 
                   : "bg-background border-border text-muted-foreground hover:bg-muted"
@@ -98,9 +80,9 @@ export const HeroHeader = () => {
           </div>
         </div>
 
-        {/* Mobile: Collapsible Filter Chips */}
+        {/* Collapsible Filter Chips - Visible on ALL screens when toggled */}
         {showFilters && (
-          <div className="md:hidden flex flex-wrap gap-2 pt-3 pb-1 animate-in slide-in-from-top-2 duration-200">
+          <div className="flex flex-wrap gap-2 pt-3 pb-1 animate-in slide-in-from-top-2 duration-200">
             {QUICK_FILTERS.map((filter) => (
               <button
                 key={filter.id}

@@ -2,22 +2,23 @@
 
 import { Button } from '@/components/ui/button';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
 import { ListingWithRelations } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { useMutation } from 'convex/react';
-import { ArrowUpDown, LayoutGrid, List, Save, SlidersHorizontal } from 'lucide-react';
+import { ArrowUpDown, LayoutGrid, List, RectangleVertical, Save, SlidersHorizontal } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { api } from '../../../convex/_generated/api';
 import { ListingCard } from './listing-card';
+import { promise } from 'zod';
 
 interface ListingGridProps {
   listings: ListingWithRelations[];
@@ -46,7 +47,7 @@ export function ListingGrid({
   onSortChange,
   onQuickFilter
 }: ListingGridProps) {
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+  const [viewMode, setViewMode] = useState<'grid' | 'list' | 'card'>('list');
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -149,11 +150,12 @@ export function ListingGrid({
               </Button>
             )}
 
-          {/* View Mode Toggles (Desktop only usually, but good to have) */}
-          <div className="flex items-center border rounded-md p-1 h-9">
+          {/* View Mode Toggles */}
+          <div className="flex items-center border rounded-md p-1 h-9 bg-background">
             <Button
               variant="ghost"
               size="icon"
+              title="Grid View"
               className={cn("h-7 w-7 rounded-sm", viewMode === 'grid' && "bg-muted shadow-sm")}
               onClick={() => setViewMode('grid')}
             >
@@ -162,10 +164,20 @@ export function ListingGrid({
             <Button
               variant="ghost"
               size="icon"
+              title="List View"
               className={cn("h-7 w-7 rounded-sm", viewMode === 'list' && "bg-muted shadow-sm")}
               onClick={() => setViewMode('list')}
             >
               <List className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              title="Full Card View"
+              className={cn("h-7 w-7 rounded-sm", viewMode === 'card' && "bg-muted shadow-sm")}
+              onClick={() => setViewMode('card')}
+            >
+              <RectangleVertical className="h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -192,14 +204,13 @@ export function ListingGrid({
           "grid gap-4",
           viewMode === 'grid' 
             ? "grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
-            : "grid-cols-1"
+            : "grid-cols-1" // Both 'list' and 'card' use single column
         )}>
           {listings.map((listing) => (
             <ListingCard 
               key={listing._id} 
               listing={listing} 
               viewMode={viewMode} 
-// initialIsWished deprecated
             />
           ))}
         </div>

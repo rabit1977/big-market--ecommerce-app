@@ -53,9 +53,6 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
           <h2 className='text-xl md:text-2xl font-black tracking-tight mb-2'>
             Latest Listings
           </h2>
-          <p className="text-muted-foreground text-sm">
-            Fresh deals posted by our community
-          </p>
         </div>
 
         {/* Desktop View All Link */}

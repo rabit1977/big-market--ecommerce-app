@@ -69,17 +69,33 @@ export default async function HomePage({ searchParams }: PageProps) {
       {/* 1. Hero Section with Search (Absolute Top) */}
       <Hero />
 
-      {/* 2. Featured Listings Carousel (Hot Deals) */}
-      {featuredListings.length > 0 && (
-        <FeaturedListings listings={featuredListings as any} />
-      )}
+      {/* 2. Featured Listings Carousel (Hot Deals) - Mobile/Tablet Only */}
+      <div className="lg:hidden">
+        {featuredListings.length > 0 && (
+          <FeaturedListings listings={featuredListings as any} variant="horizontal" />
+        )}
+      </div>
 
-      {/* 3. Latest Listings */}
-      <div className="container-wide py-12 bg-muted/20">
-        <LatestListingsClient 
-          initialListings={latestListings as any} 
-          categories={categories} 
-        />
+      {/* 3. Main Content Grid */}
+      <div className="container-wide py-8 bg-muted/20">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+            
+            {/* Latest Listings - Left Column */}
+            <div className="lg:col-span-3">
+                <LatestListingsClient 
+                  initialListings={latestListings as any} 
+                  categories={categories} 
+                />
+            </div>
+
+            {/* Featured Sidebar - Desktop Only */}
+            <div className="hidden lg:block lg:col-span-1">
+                {featuredListings.length > 0 && (
+                  <FeaturedListings listings={featuredListings as any} variant="vertical" />
+                )}
+            </div>
+
+        </div>
       </div>
 
       {/* Stats Section */}
