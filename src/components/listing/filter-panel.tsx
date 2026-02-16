@@ -8,11 +8,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { MapPin, X } from 'lucide-react';
@@ -111,6 +111,16 @@ export function FilterPanel({ onFilterChange, categories, initialFilters, idPref
 
   // Dynamic Fields Logic
   const [dynamicFilters, setDynamicFilters] = useState<Record<string, any>>({});
+  const [localSearchId, setLocalSearchId] = useState<string>(filters.listingNumber ? filters.listingNumber.toString() : "");
+
+  // Sync local search ID if filters update externally (e.g. prompt clear)
+  useEffect(() => {
+     if (filters.listingNumber === undefined) {
+         setLocalSearchId("");
+     } else {
+         setLocalSearchId(filters.listingNumber.toString());
+     }
+  }, [filters.listingNumber]);
 
   // Initialize dynamic filters from initialFilters string
   useEffect(() => {
@@ -252,6 +262,36 @@ export function FilterPanel({ onFilterChange, categories, initialFilters, idPref
               Clear All
             </Button>
           )}
+        </div>
+
+        {/* Listing ID Search */}
+        <div className="space-y-1 border-b pb-2">
+            <Label htmlFor={`${idPrefix}-listingNumber`} className="text-[10px] uppercase text-muted-foreground font-medium">Search by ID</Label>
+            <div className="relative">
+                <span className="absolute left-2 top-1.5 text-muted-foreground text-xs">#</span>
+                <Input
+                    id={`${idPrefix}-listingNumber`}
+                    type="number"
+                    placeholder="e.g. 123"
+                    className="h-8 text-xs pl-5"
+                    value={localSearchId}
+                    onChange={(e) => setLocalSearchId(e.target.value)}
+                    onBlur={() => {
+                        const val = localSearchId ? parseInt(localSearchId) : undefined;
+                        if (val !== filters.listingNumber) {
+                            updateFilter('listingNumber', val);
+                        }
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            const val = localSearchId ? parseInt(localSearchId) : undefined;
+                            if (val !== filters.listingNumber) {
+                                updateFilter('listingNumber', val);
+                            }
+                        }
+                    }}
+                />
+            </div>
         </div>
 
         {/* Category Hierarchy - Compact 2-column grid on desktop */}

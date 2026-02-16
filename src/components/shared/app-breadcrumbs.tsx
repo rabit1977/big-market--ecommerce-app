@@ -45,14 +45,55 @@ const routeMap: Record<string, string> = {
   'mobile-phones-accessories': 'Mobile Phones',
 };
 
+interface BreadcrumbItemType {
+    label: string;
+    href?: string;
+}
+
 interface AppBreadcrumbsProps {
   className?: string;
   customLabel?: string;
+  items?: BreadcrumbItemType[];
 }
 
-export function AppBreadcrumbs({ className, customLabel }: AppBreadcrumbsProps) {
+export function AppBreadcrumbs({ className, customLabel, items }: AppBreadcrumbsProps) {
   const pathname = usePathname();
   
+  // Custom items override
+  if (items) {
+      return (
+        <Breadcrumb className={cn("mb-6 bg-card w-fit max-w-full overflow-hidden px-4 py-2 rounded-full border border-border mix-blend-mode-screen:normal shadow-sm", className)}>
+            <BreadcrumbList className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground flex-nowrap overflow-x-auto no-scrollbar">
+                <BreadcrumbItem className="shrink-0">
+                    <BreadcrumbLink asChild>
+                        <Link href="/" className="flex items-center gap-1 hover:text-primary transition-colors">
+                            <Home className="h-3.5 w-3.5" />
+                        </Link>
+                    </BreadcrumbLink>
+                </BreadcrumbItem>
+                {items.map((item, index) => (
+                    <React.Fragment key={index}>
+                        <BreadcrumbSeparator className="opacity-50 shrink-0" />
+                        <BreadcrumbItem className="shrink-0 whitespace-nowrap">
+                            {!item.href ? (
+                                <BreadcrumbPage className="font-black text-foreground line-clamp-1 max-w-fit sm:max-w-fit truncate">
+                                    {item.label}
+                                </BreadcrumbPage>
+                            ) : (
+                                <BreadcrumbLink asChild>
+                                    <Link href={item.href} className="hover:text-primary transition-colors hover:underline underline-offset-4 decoration-2">
+                                        {item.label}
+                                    </Link>
+                                </BreadcrumbLink>
+                            )}
+                        </BreadcrumbItem>
+                    </React.Fragment>
+                ))}
+            </BreadcrumbList>
+        </Breadcrumb>
+      );
+  }
+
   // Don't show breadcrumbs on the home page
   if (pathname === '/') return null;
 

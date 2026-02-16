@@ -28,6 +28,15 @@ export const formatCurrency = (
   currency: string = 'MKD',
   locale: string = 'mk-MK',
 ): string => {
+  // Manual handling for MKD to ensure server/client consistency (Hydration Mismatch Fix)
+  // Server Node.js often defaults to en-US formatting for MKD (MKD 11,000)
+  // Client Browser uses proper mk-MK formatting (11.000 ден.)
+  if (currency === 'MKD') {
+      // Robust regex formatting: 43000 -> "43.000"
+      const numberPart = amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      return `${numberPart} ден.`;
+  }
+
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,

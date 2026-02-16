@@ -100,6 +100,10 @@ export function ListingsClient({
     if (filters.dynamicFilters) params.set('filters', filters.dynamicFilters);
     else params.delete('filters');
 
+    // Listing ID Search
+    if (filters.listingNumber) params.set('listingNumber', filters.listingNumber.toString());
+    else params.delete('listingNumber');
+
     // Reset pagination
     params.delete('page');
 

@@ -33,6 +33,7 @@ export interface Listing {
   priority?: number;
   promotionExpiresAt?: number;
   previousPrice?: number;
+  listingNumber?: number;
 }
 
 export interface ListingImage {

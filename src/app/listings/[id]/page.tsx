@@ -16,6 +16,8 @@ function isValidConvexId(id: string): boolean {
   return Boolean(id && id !== 'undefined' && id !== 'null' && id.length > 0);
 }
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: ListingDetailPageProps): Promise<Metadata> {
@@ -77,7 +79,10 @@ const ListingDetailPage = async ({ params }: ListingDetailPageProps) => {
 
   return (
     <Suspense fallback={<ListingDetailSkeleton />}>
-      <ListingDetailContent listing={listing as any} />
+      <ListingDetailContent listing={{
+          ...listing,
+          listingNumber: (listing as any).listingNumber
+      } as any} />
     </Suspense>
   );
 };

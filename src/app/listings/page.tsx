@@ -1,6 +1,9 @@
 import { ListingsClient } from '@/components/listing/listings-client';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
+import { Button } from '@/components/ui/button';
 import { fetchQuery } from 'convex/nextjs';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { api } from '../../../convex/_generated/api';
 import Loading from './loading';
@@ -31,11 +34,50 @@ interface ListingsPageProps {
     affordable?: string;
     date?: string;
     filters?: string; // JSON dynamic filters
+    listingNumber?: string; // Search by ID
   }>;
 }
 
 export default async function ListingsPage({ searchParams }: ListingsPageProps) {
   const params = await searchParams;
+
+  // Direct ID Search Redirect
+  if (params.listingNumber) {
+     const listingNum = parseInt(params.listingNumber);
+     if (!isNaN(listingNum)) {
+         const directListing = await fetchQuery(api.listings.getByListingNumber, { listingNumber: listingNum });
+         if (directListing) {
+             redirect(`/listings/${directListing._id}`);
+         }
+     }
+     
+     // If we are here, listingNumber was provided but NOT found.
+     // We should return empty results instead of showing everything.
+     return (
+        <div className="bg-background min-h-screen pb-20">
+          <div className="bg-card border-b border-border/50 py-4 md:py-6 mb-6">
+            <div className="container-wide">
+              <AppBreadcrumbs />
+              <div className='flex items-center justify-between'>
+                <h1 className="text-xl font-bold md:text-2xl">
+                    Listing Not Found
+                </h1>
+              </div>
+            </div>
+          </div>
+          <div className="container-wide text-center py-20">
+             <div className="text-6xl mb-4">🔍</div>
+             <h3 className="text-2xl font-bold mb-2">No listing found with ID {params.listingNumber}</h3>
+             <p className="text-muted-foreground">
+               Please check the ID and try again, or browse our latest listings below.
+             </p>
+             <Button asChild className="mt-6" variant="outline">
+                <Link href="/listings">View All Listings</Link>
+             </Button>
+          </div>
+        </div>
+     );
+  }
 
   const query = params.search || '';
   const category = params.category || '';

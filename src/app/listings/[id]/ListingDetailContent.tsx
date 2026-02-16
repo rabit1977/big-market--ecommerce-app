@@ -1,5 +1,6 @@
 'use client';
 
+
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import {
@@ -163,7 +164,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
              </button>
              <div className="flex flex-col">
                  <span className="text-sm font-black tracking-tight leading-none text-foreground uppercase">
-                    AD ID: {listing.listingNumber !== undefined ? listing.listingNumber : listing._id.slice(-7)}
+                    Item #: {listing.listingNumber !== undefined ? listing.listingNumber : listing._id.slice(-7)}
                  </span>
                  <span className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-wider">{publishDate}</span>
              </div>
@@ -178,12 +179,13 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
          </div>
       </div>
 
-      <div className="container-wide max-w-6xl mx-auto md:px-4 md:py-8">
-        <AppBreadcrumbs 
-          className="mb-4 md:mb-6" 
-          customLabel={listing.title}
-        />
-        
+      <div className="container-wide px-4 pt-4 md:pt-6">
+          <AppBreadcrumbs className="mb-4 md:mb-6" items={[
+              { label: 'Listings', href: '/listings' },
+              { label: listing.title }
+          ]} />
+          
+
         {/* Desktop Actions Header */}
         <div className="hidden md:flex items-center justify-end mb-8 pb-4 border-b border-border">
           <div className="flex items-center gap-3">
@@ -500,7 +502,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                    )}
 
                        <div className="flex items-center justify-center pt-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest gap-4">
-                           <span>ID: {listing.listingNumber !== undefined ? listing.listingNumber : listing._id.slice(-7)}</span>
+                           <span>Item #: {listing.listingNumber !== undefined ? listing.listingNumber : listing._id.slice(-7)}</span>
                            <span>•</span>
                            <span>Posted: {publishDate}</span>
                        </div>
