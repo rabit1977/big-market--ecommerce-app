@@ -85,7 +85,7 @@ export function GuestContactDialog({
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true);
         try {
-            await submitInquiry({
+            const result = await submitInquiry({
                 listingId: listingId as Id<"listings">,
                 sellerId: sellerId,
                 guestName: values.name,
@@ -94,6 +94,13 @@ export function GuestContactDialog({
                 message: values.message,
             });
             
+            console.log("Inquiry submission result:", result);
+
+            if (result && 'emailStatus' in result && result.emailStatus === 'failed') {
+                 console.error("Email sending failed:", result);
+                 toast.warning(`Message saved, but email notification failed: ${result.reason}`);
+            }
+
             setIsSuccess(true);
             toast.success("Message sent successfully!");
         } catch (error) {

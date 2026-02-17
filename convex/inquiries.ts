@@ -1,3 +1,4 @@
+import console from "console";
 import { v } from "convex/values";
 import { Resend } from "resend";
 import { api, internal } from "./_generated/api";
@@ -62,16 +63,23 @@ export const submit = action({
     // 3. Get Listing Title
     const listing = await ctx.runQuery(api.listings.getById, { id: args.listingId });
 
-    if (!seller || !seller.email) {
-      console.warn("Seller not found or has no email. Skipping email notification. SellerID:", args.sellerId);
-      // We continue because we already stored the inquiry and notification in step 1
+    if (!seller) {
+        console.warn(`Seller not found for ID: ${args.sellerId}. This listing might be orphaned.`);
+        return { success: true, inquiryId, emailStatus: "skipped", reason: "seller_not_found" };
+    }
+    
+    if (!seller.email) {
+      console.warn(`Seller found (ID: ${args.sellerId}) but has no email address.`);
+      return { success: true, inquiryId, emailStatus: "skipped", reason: "seller_no_email" };
     } else if (!listing) {
        console.warn("Listing not found. Skipping email details. ListingID:", args.listingId);
+       return { success: true, inquiryId, emailStatus: "skipped", reason: "listing_not_found" };
     } else {
         // 4. Send Email via Resend
         const resendApiKey = process.env.RESEND_API_KEY;
         if (!resendApiKey) {
             console.error("CRITICAL: RESEND_API_KEY is not set in environment variables!");
+            return { success: true, inquiryId, emailStatus: "failed", reason: "missing_api_key" };
         } else {
             const resend = new Resend(resendApiKey);
             try {
@@ -174,17 +182,19 @@ export const submit = action({
 
                 if (error) {
                     console.error("Resend API returned error:", error);
-                    // Don't throw, just log. The inquiry is saved.
+                    return { success: true, inquiryId, emailStatus: "failed", reason: "resend_api_error", error };
                 } else {
                     console.log("Email sent successfully via Resend. Data:", data);
+                    return { success: true, inquiryId, emailStatus: "sent", data };
                 }
             } catch (error) {
                 console.error("Failed to send email notification", error);
-                // Don't throw.
+                return { success: true, inquiryId, emailStatus: "failed", reason: "exception", error: String(error) };
             }
         }
     }
-  }
+    
+  },
 });
 
 // Debug tool: Check if API Key is set
@@ -208,5 +218,16 @@ export const getLastInquiry = query({
     }
 });
 
-// Debug tool: Inspect a user by externalId (Removed for production safety)
-
+// Debug tool: List all users to check external IDs
+export const debugListUsers = query({
+  args: {},
+  handler: async (ctx) => {
+    const users = await ctx.db.query("users").collect();
+    return users.map(u => ({
+      _id: u._id,
+      externalId: u.externalId,
+      email: u.email,
+      name: u.name
+    }));
+  }
+});
