@@ -1,6 +1,7 @@
 'use client';
 
 
+import { GuestContactDialog } from '@/components/listing/guest-contact-dialog';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import {
@@ -311,12 +312,18 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                     </h1>
                     <div className="flex flex-col">
                         {listing.previousPrice && listing.previousPrice > listing.price && (
-                            <span className="text-xs font-bold text-muted-foreground/50 line-through mb-[-2px]">
+                            <span 
+                                className="text-xs font-bold text-muted-foreground/50 line-through mb-[-2px]"
+                                suppressHydrationWarning
+                            >
                                 {formatCurrency(listing.previousPrice, (listing as any).currency)}
                             </span>
                         )}
                         <div className="flex items-baseline gap-2">
-                            <span className="text-3xl font-black text-primary">
+                            <span 
+                                className="text-3xl font-black text-primary"
+                                suppressHydrationWarning
+                            >
                                 {listing.price > 0 ? formatCurrency(listing.price, (listing as any).currency) : 'Price on request'}
                             </span>
                             {listing.price > 0 && <span className="text-xs font-bold text-muted-foreground uppercase tracking-tighter">Fixed</span>}
@@ -347,14 +354,31 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                     <>
                         {/* Mobile Contact Shortcuts */}
                         <div className="grid grid-cols-2 gap-3 pt-4">
-                            <Link 
-                            href={`/messages?listingId=${listing._id}`}
-                            onClick={() => handleContactClick('contact')}
-                            className="flex items-center justify-center gap-2 py-3.5 bg-primary text-white rounded-xl font-black text-sm uppercase tracking-tight shadow-lg shadow-primary/20 active:scale-95 transition-all"
-                            >
-                                <MessageSquare className="w-4 h-4" />
-                                Send Message
-                            </Link>
+                            {!session?.user ? (
+                                <GuestContactDialog 
+                                    listingId={listing._id}
+                                    sellerId={listing.userId}
+                                    listingTitle={listing.title}
+                                    onOpenChange={(open) => {
+                                        if (open) handleContactClick('contact');
+                                    }}
+                                    trigger={
+                                        <Button className="w-full flex items-center justify-center gap-2 py-3.5 bg-primary text-white rounded-xl font-black text-sm uppercase tracking-tight shadow-lg shadow-primary/20 active:scale-95 transition-all h-full">
+                                            <MessageSquare className="w-4 h-4" />
+                                            Send Message
+                                        </Button>
+                                    }
+                                />
+                            ) : (
+                                <Link 
+                                    href={`/messages?listingId=${listing._id}`}
+                                    onClick={() => handleContactClick('contact')}
+                                    className="flex items-center justify-center gap-2 py-3.5 bg-primary text-white rounded-xl font-black text-sm uppercase tracking-tight shadow-lg shadow-primary/20 active:scale-95 transition-all"
+                                >
+                                    <MessageSquare className="w-4 h-4" />
+                                    Send Message
+                                </Link>
+                            )}
                             {contactPhone && (
                                 <a 
                                 href={`tel:${contactPhone}`}
@@ -452,11 +476,13 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                        {listing.previousPrice && listing.previousPrice > listing.price && (
                            <div className="absolute top-3 right-4 flex items-center gap-1.5 opacity-60">
                                <History className="w-3 h-3" />
-                               <span className="text-xs font-bold line-through">{listing.previousPrice.toLocaleString()} €</span>
+                               <span suppressHydrationWarning className="text-xs font-bold line-through">
+                                 {formatCurrency(listing.previousPrice, (listing as any).currency)}
+                               </span>
                            </div>
                        )}
-                       <div className="text-4xl font-black text-primary tracking-tighter">
-                          {listing.price > 0 ? `${listing.price.toLocaleString()} €` : 'Call for Price'}
+                       <div className="text-4xl font-black text-primary tracking-tighter" suppressHydrationWarning>
+                          {listing.price > 0 ? formatCurrency(listing.price, (listing as any).currency) : 'Call for Price'}
                        </div>
                        <div className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
                           Secured Transaction • Fixed Price
@@ -466,12 +492,29 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                    {session?.user?.id !== listing.userId && (
                      <>
                         <div className="space-y-3 pt-2">
-                            <Button asChild className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-lg uppercase tracking-tight shadow-xl shadow-primary/20 group">
-                                <Link href={`/messages?listingId=${listing._id}`} onClick={() => handleContactClick('contact')}>
-                                    <MessageSquare className="mr-2 h-6 w-6 group-hover:scale-110 transition-transform" />
-                                    Send Message
-                                </Link>
-                            </Button>
+                            {!session?.user ? (
+                                <GuestContactDialog 
+                                    listingId={listing._id}
+                                    sellerId={listing.userId}
+                                    listingTitle={listing.title}
+                                    onOpenChange={(open) => {
+                                        if (open) handleContactClick('contact');
+                                    }}
+                                    trigger={
+                                        <Button className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-lg uppercase tracking-tight shadow-xl shadow-primary/20 group">
+                                            <MessageSquare className="mr-2 h-6 w-6 group-hover:scale-110 transition-transform" />
+                                            Send Message
+                                        </Button>
+                                    }
+                                />
+                            ) : (
+                                <Button asChild className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-lg uppercase tracking-tight shadow-xl shadow-primary/20 group">
+                                    <Link href={`/messages?listingId=${listing._id}`} onClick={() => handleContactClick('contact')}>
+                                        <MessageSquare className="mr-2 h-6 w-6 group-hover:scale-110 transition-transform" />
+                                        Send Message
+                                    </Link>
+                                </Button>
+                            )}
                             
                             {/* Phone Number Display */}
                             <div className="flex w-full gap-2 overflow-hidden">

@@ -122,14 +122,14 @@ export const ListingCard = memo(
 
                 <div className="pt-0.5 sm:pt-1 flex flex-col">
                     {listing.previousPrice && listing.previousPrice > listing.price && (
-                        <span className="text-[10px] sm:text-[11px] font-bold text-muted-foreground/50 line-through leading-none mb-0.5">
+                        <span className="text-[10px] sm:text-[11px] font-bold text-muted-foreground/50 line-through leading-none mb-0.5" suppressHydrationWarning>
                             {formatPrice(listing.previousPrice)}
                         </span>
                     )}
                     <span className={cn(
                         "font-bold text-primary",
                         isCard ? "text-lg sm:text-xl" : "text-sm sm:text-base"
-                    )}>
+                    )} suppressHydrationWarning>
                         {formatCurrency(listing.price, (listing as any).currency)}
                     </span>
                 </div>
@@ -173,11 +173,11 @@ export const ListingCard = memo(
                             {listing.city || 'Skopje'}
                         </span>
                          {listing.previousPrice && listing.previousPrice > listing.price && (
-                             <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground/50 line-through leading-none mb-0.5">
+                             <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground/50 line-through leading-none mb-0.5" suppressHydrationWarning>
                                  {formatCurrency(listing.previousPrice, (listing as any).currency)}
                              </span>
                          )}
-                         <span className="text-sm sm:text-base md:text-lg font-bold text-primary">
+                         <span className="text-sm sm:text-base md:text-lg font-bold text-primary" suppressHydrationWarning>
                              {formatCurrency(listing.price, (listing as any).currency)}
                          </span>
                     </div>

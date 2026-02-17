@@ -302,4 +302,16 @@ export default defineSchema({
     nextId: v.number(),
     reusableIds: v.array(v.number()),
   }).index("by_name", ["name"]),
+
+  listingInquiries: defineTable({
+    listingId: v.id("listings"),
+    sellerId: v.string(), // User ID of the seller
+    guestName: v.string(),
+    guestEmail: v.string(),
+    guestPhone: v.optional(v.string()),
+    message: v.string(),
+    createdAt: v.number(),
+    isRead: v.boolean(),
+  }).index("by_seller", ["sellerId"])
+    .index("by_listing", ["listingId"]),
 });
