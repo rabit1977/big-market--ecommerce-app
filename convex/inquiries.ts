@@ -1,4 +1,3 @@
-import console from "console";
 import { v } from "convex/values";
 import { Resend } from "resend";
 import { api, internal } from "./_generated/api";

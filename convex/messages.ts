@@ -380,3 +380,19 @@ export const getSupportConversations = query({
     return conversationsWithDetails;
   },
 });
+
+// Get total unread support messages for admin badge
+export const getTotalSupportUnread = query({
+  args: {},
+  handler: async (ctx) => {
+    const conversations = await ctx.db
+      .query("conversations")
+      .withIndex("by_type", (q) => q.eq("type", "SUPPORT"))
+      .collect();
+
+    return conversations.reduce((sum, conv) => {
+      const adminUnread = conv.buyerId === "ADMIN" ? (conv.buyerUnreadCount || 0) : (conv.sellerUnreadCount || 0);
+      return sum + adminUnread;
+    }, 0);
+  },
+});
