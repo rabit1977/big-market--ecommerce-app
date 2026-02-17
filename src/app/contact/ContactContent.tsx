@@ -6,11 +6,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
+import { useMutation } from 'convex/react';
 import { motion } from 'framer-motion';
 import { Clock, Mail, MapPin, Phone, Send } from 'lucide-react';
 import Link from 'next/link';
 import React, { useCallback, useState, useTransition } from 'react';
 import { toast } from 'sonner';
+import { api } from '../../../convex/_generated/api';
 
 interface FormData {
   name: string;
@@ -109,26 +111,37 @@ export const ContactContent = () => {
   /**
    * Handle form submission
    */
+  const submitContact = useMutation(api.contact.submit);
+
   const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
 
       if (!validateForm()) {
         return;
       }
 
-      startTransition(() => {
-        // Simulate API call
-        setTimeout(() => {
-          console.log('Form submitted:', formData);
-          toast.success("Message sent successfully! Our team will contact you within 24 hours.");
-          setFormData(INITIAL_FORM_STATE);
-          setErrors({});
-          refreshCaptcha();
-        }, 1500);
+      startTransition(async () => {
+        try {
+            await submitContact({
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone || undefined,
+                subject: formData.subject,
+                message: formData.message,
+            });
+            
+            toast.success("Message sent successfully! Our team will contact you within 24 hours.");
+            setFormData(INITIAL_FORM_STATE);
+            setErrors({});
+            refreshCaptcha();
+        } catch (error) {
+            console.error('Failed to submit contact form:', error);
+            toast.error("Failed to send message. Please try again later.");
+        }
       });
     },
-    [formData, validateForm, refreshCaptcha]
+    [formData, validateForm, refreshCaptcha, submitContact]
   );
 
   return (

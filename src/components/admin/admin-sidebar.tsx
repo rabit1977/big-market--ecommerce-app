@@ -20,10 +20,10 @@ import {
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import React from 'react';
 import { Button } from '../ui/button';
 import { ScrollArea } from '../ui/scroll-area';
 import { AdminNotifications } from './admin-notifications';
-import React from 'react';
 
 interface NavItem {
     href: string;
@@ -41,8 +41,8 @@ const navItems: NavItem[] = [
     { href: '/admin/listings?promoted=true', label: 'Promoted Listings', icon: Sparkles },
     { href: '/admin/categories', label: 'Categories', icon: Layers },
     { href: '/admin/users', label: 'Users', icon: Users },
-    { href: '/admin/support', label: 'Support Inquiries', icon: Headset },
-    { href: '/admin/messages', label: 'Q&A', icon: MessageCircle },
+    { href: '/admin/support', label: 'Form Inquiries', icon: Headset },
+    { href: '/admin/messages', label: 'Support & Q&A', icon: MessageCircle },
 ];
 
 export const AdminSidebar = () => {

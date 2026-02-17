@@ -65,9 +65,9 @@ export function AdminSupportChatClient() {
 
   const messages = (useQuery(api.messages.getConversation, 
     selectedConversation ? {
-      listingId: undefined, // Support chats don't have listingId usually, or we ignore it
+      listingId: undefined, 
       userA: ADMIN_ID,
-      userB: selectedConversation.otherUser?.id || selectedConversation.buyerId // The user
+      userB: selectedConversation.otherUserId
     } : "skip"
   ) as Message[] | undefined) || [];
 
@@ -77,12 +77,11 @@ export function AdminSupportChatClient() {
   // Mark as read when messages load
   useEffect(() => {
     if (selectedConversation && messages.length > 0) {
-       // Using a small timeout to avoid immediate state updates during render
        const timer = setTimeout(() => {
            markReadMutation({
                 listingId: undefined,
                 userId: ADMIN_ID,
-                otherUserId: selectedConversation.otherUser?.id || selectedConversation.buyerId
+                otherUserId: selectedConversation.otherUserId
            }).catch(console.error);
        }, 500);
        return () => clearTimeout(timer);
@@ -136,7 +135,7 @@ export function AdminSupportChatClient() {
           content: 'Sent an image',
           imageUrl: data.url,
           senderId: ADMIN_ID,
-          receiverId: selectedConversation.otherUser?.id || selectedConversation.buyerId,
+          receiverId: selectedConversation.otherUserId,
           type: 'SUPPORT',
         });
         toast.success('Image sent');
@@ -158,7 +157,7 @@ export function AdminSupportChatClient() {
       await sendMessageMutation({
         content: newMessage,
         senderId: ADMIN_ID,
-        receiverId: selectedConversation.otherUser?.id || selectedConversation.buyerId,
+        receiverId: selectedConversation.otherUserId,
         type: 'SUPPORT',
       });
       setNewMessage('');

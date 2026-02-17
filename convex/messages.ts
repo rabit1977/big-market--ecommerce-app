@@ -351,16 +351,16 @@ export const getSupportConversations = query({
     // Fetch details
     const conversationsWithDetails = await Promise.all(
       conversations.map(async (conv) => {
-        // For support, buyer is the USER, seller is ADMIN
-        const userId = conv.buyerId;
+        // Find the user who is NOT "ADMIN"
+        const userId = conv.buyerId === "ADMIN" ? conv.sellerId : conv.buyerId;
 
         const user = await ctx.db
           .query("users")
           .withIndex("by_externalId", (q) => q.eq("externalId", userId))
           .first();
 
-        // Admin is 'seller', so unread count is sellerUnreadCount
-        const unreadCount = conv.sellerUnreadCount || 0;
+        // Admin's unread count depends on their position (buyer or seller)
+        const unreadCount = conv.buyerId === "ADMIN" ? conv.buyerUnreadCount : conv.sellerUnreadCount;
 
         return {
           ...conv,
@@ -371,8 +371,8 @@ export const getSupportConversations = query({
              email: user.email,
              isVerified: user.isVerified,
              id: user.externalId,
-          } : { name: "Unknown User" },
-          unreadCount,
+          } : { name: "Unknown User", id: userId },
+          unreadCount: unreadCount || 0,
         };
       })
     );

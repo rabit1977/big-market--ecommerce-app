@@ -3,6 +3,7 @@ import { AnalyticsProvider } from '@/components/analytics-provider';
 import { FooterWrapper } from '@/components/layout/footer-wrapper';
 import { InstallPwaPrompt } from '@/components/layout/install-pwa-prompt';
 import { MobileSidebarWrapper } from '@/components/layout/mobile-sidebar-wrapper';
+import { SupportChatWidget } from '@/components/shared/support-chat-widget';
 import { Watermark } from '@/components/shared/watermark';
 import { Toast } from '@/components/toast';
 import { CommandPalette } from '@/components/ui/command-palette';
@@ -69,6 +70,7 @@ export default async function RootLayout({
               </Suspense>
               <main className='min-h-auto pb-20 lg:pb-0'>{children}</main>
               <FooterWrapper />
+              <SupportChatWidget />
               <Toast />
               <InstallPwaPrompt />
             </div>
