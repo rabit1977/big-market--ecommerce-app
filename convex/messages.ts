@@ -139,12 +139,16 @@ export const getConversation = query({
       .collect();
 
     // 3. Combine and filter in memory (fast since it's only two users' messages)
-    // We must be strict about listingId (match undefined to undefined)
+    // We treat 'null' and 'undefined' listingId as identical (Support Chats)
     return [...sentByA, ...sentByB]
       .filter((m) => {
         const isMatch = (m.senderId === args.userA && m.receiverId === args.userB) ||
                         (m.senderId === args.userB && m.receiverId === args.userA);
-        const isSameListing = m.listingId === args.listingId;
+        
+        const mListing = m.listingId || undefined;
+        const argListing = args.listingId || undefined;
+        const isSameListing = mListing === argListing;
+        
         return isMatch && isSameListing;
       })
       .sort((a, b) => a.createdAt - b.createdAt);

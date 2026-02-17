@@ -188,13 +188,16 @@ export function SupportChatWidget() {
         )}
       </AnimatePresence>
 
-      {/* Toggle Button */}
+      {/* Toggle Button - Now Draggable vertically */}
       <motion.button
+        drag="y"
+        dragConstraints={{ top: -500, bottom: 0 }}
+        dragElastic={0.1}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "h-14 w-14 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300",
+          "h-14 w-14 rounded-full shadow-2xl flex items-center justify-center transition-colors duration-300 z-[110]",
           isOpen ? "bg-card border rotate-90" : "bg-primary text-primary-foreground"
         )}
       >
@@ -204,7 +207,7 @@ export function SupportChatWidget() {
           <MessageCircle className="h-7 w-7" />
         )}
         
-        {/* Pulsing indicator if unread messages (optional) */}
+        {/* Unread indicator */}
         {!isOpen && (
             <div className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full border-2 border-background animate-bounce" />
         )}
