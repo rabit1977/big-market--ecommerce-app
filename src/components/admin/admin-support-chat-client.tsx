@@ -60,6 +60,13 @@ export function AdminSupportChatClient() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Auto-select first conversation
+  useEffect(() => {
+    if (!selectedConversation && conversations && conversations.length > 0) {
+      setSelectedConversation(conversations[0]);
+    }
+  }, [conversations, selectedConversation]);
+
   // Admin ID for chat context
   const ADMIN_ID = 'ADMIN';
 

@@ -126,31 +126,27 @@ export const getConversation = query({
     userB: v.string(),
   },
   handler: async (ctx, args) => {
-    let messages;
-    if (args.listingId) {
-      messages = await ctx.db
-        .query("messages")
-        .withIndex("by_listing", (q) => q.eq("listingId", args.listingId!))
-        .collect();
-    } else {
-      messages = await ctx.db
-        .query("messages")
-        .filter((q) =>
-          q.or(
-            q.and(q.eq(q.field("senderId"), args.userA), q.eq(q.field("receiverId"), args.userB)),
-            q.and(q.eq(q.field("senderId"), args.userB), q.eq(q.field("receiverId"), args.userA))
-          )
-        )
-        .collect();
-    }
+    // 1. Fetch messages sent by A
+    const sentByA = await ctx.db
+      .query("messages")
+      .withIndex("by_sender", (q) => q.eq("senderId", args.userA))
+      .collect();
 
-    // Filter and sort
-    return messages
-      .filter(
-        (m) =>
-          (m.senderId === args.userA && m.receiverId === args.userB) ||
-          (m.senderId === args.userB && m.receiverId === args.userA)
-      )
+    // 2. Fetch messages sent by B
+    const sentByB = await ctx.db
+      .query("messages")
+      .withIndex("by_sender", (q) => q.eq("senderId", args.userB))
+      .collect();
+
+    // 3. Combine and filter in memory (fast since it's only two users' messages)
+    // We must be strict about listingId (match undefined to undefined)
+    return [...sentByA, ...sentByB]
+      .filter((m) => {
+        const isMatch = (m.senderId === args.userA && m.receiverId === args.userB) ||
+                        (m.senderId === args.userB && m.receiverId === args.userA);
+        const isSameListing = m.listingId === args.listingId;
+        return isMatch && isSameListing;
+      })
       .sort((a, b) => a.createdAt - b.createdAt);
   },
 });
