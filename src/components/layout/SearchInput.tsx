@@ -5,7 +5,7 @@ import { useSidebar } from '@/lib/context/sidebar-context';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, Loader2, MapPin, Menu, Search, X } from 'lucide-react';
-import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { forwardRef, useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 interface SearchInputProps {
@@ -82,6 +82,10 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       closePanel();
     }, [onCityChange, closePanel]);
 
+    // Portal target — null during SSR, document.body after mount
+    const [portalTarget, setPortalTarget] = useState<Element | null>(null);
+    useEffect(() => { setPortalTarget(document.body); }, []);
+
     return (
       <>
         <div className="relative group">
@@ -155,7 +159,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         </div>
 
         {/* City Panel — portaled */}
-        {createPortal(
+        {portalTarget && createPortal(
           <AnimatePresence mode="wait">
             {isCityPanelOpen && (
               <>
@@ -259,7 +263,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
               </>
             )}
           </AnimatePresence>,
-          document.body
+          portalTarget
         )}
       </>
     );
