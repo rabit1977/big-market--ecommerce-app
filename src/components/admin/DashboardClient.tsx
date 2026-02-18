@@ -1,381 +1,544 @@
 'use client';
 
-import { DashboardCard } from '@/components/admin/dashboard-card';
-import { PromotionIcon } from '@/components/listing/promotion-icon';
-import { Badge } from '@/components/ui/badge';
+import { createCategory, deleteCategory, updateCategory } from '@/actions/admin/categories-actions';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { getPromotionConfig } from '@/lib/constants/promotions';
-import { cn, formatCurrency } from '@/lib/utils';
-import { useQuery } from 'convex/react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  Activity,
-  Calendar,
-  Eye,
-  Layers,
-  Package,
-  Sparkles,
-  Star,
-  Users
-} from 'lucide-react';
-import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
-import { api } from '../../../convex/_generated/api';
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle
+} from '@/components/ui/dialog';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import { api } from '@/convex/_generated/api';
+import { Id } from '@/convex/_generated/dataModel';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useQuery } from 'convex/react';
+import { ChevronDown, ChevronRight, Edit, Folder, FolderOpen, MoreHorizontal, Plus, Trash } from 'lucide-react';
+import { memo, useCallback, useEffect, useTransition, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import * as z from 'zod';
 
-export function DashboardSkeleton() {
+// ------------------------------------------------------------------
+// Types
+// ------------------------------------------------------------------
+
+interface Category {
+  _id: Id<'categories'>;
+  name: string;
+  slug: string;
+  description?: string;
+  image?: string;
+  isActive: boolean;
+  isFeatured: boolean;
+  parentId?: string | null;
+  template?: any;
+}
+
+interface DialogState {
+  open: boolean;
+  editingCategory: Category | null;
+  parentForNew: string | null;
+}
+
+// ------------------------------------------------------------------
+// Schema
+// ------------------------------------------------------------------
+
+const categorySchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  slug: z.string().min(1, 'Slug is required'),
+  description: z.string().optional(),
+  image: z.string().optional(),
+  isActive: z.boolean(),
+  isFeatured: z.boolean(),
+  parentId: z.string().optional().nullable(),
+  template: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        if (!val) return true;
+        try {
+          JSON.parse(val);
+          return true;
+        } catch {
+          return false;
+        }
+      },
+      { message: 'Must be valid JSON' }
+    ),
+});
+
+type CategoryFormValues = z.infer<typeof categorySchema>;
+
+// ------------------------------------------------------------------
+// Root Component
+// ------------------------------------------------------------------
+
+export default function CategoriesClient() {
+  const rootCategories = useQuery(api.categories.getRoot);
+
+  const [dialogState, setDialogState] = useState<DialogState>({
+    open: false,
+    editingCategory: null,
+    parentForNew: null,
+  });
+
+  const openCreate = useCallback((parentId: string | null = null) => {
+    setDialogState({ open: true, editingCategory: null, parentForNew: parentId });
+  }, []);
+
+  const openEdit = useCallback((category: Category) => {
+    setDialogState({ open: true, editingCategory: category, parentForNew: null });
+  }, []);
+
+  const closeDialog = useCallback((open: boolean) => {
+    setDialogState((prev) => ({ ...prev, open }));
+  }, []);
+
   return (
-    <div className='space-y-8 animate-in fade-in duration-500'>
-      <div className='space-y-2'>
-        <Skeleton className='h-10 w-56 skeleton-enhanced' />
-        <Skeleton className='h-5 w-80 skeleton-enhanced' />
+    <div className="space-y-6 max-w-5xl mx-auto">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Categories</h2>
+          <p className="text-muted-foreground">Manage your product hierarchy.</p>
+        </div>
+        <Button onClick={() => openCreate(null)}>
+          <Plus className="mr-2 h-4 w-4" /> New Root Category
+        </Button>
       </div>
-      
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6'>
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i}>
-            <Skeleton className='h-32 w-full rounded-2xl skeleton-enhanced' />
-          </div>
-        ))}
-      </div>
-      
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-        <Skeleton className='h-96 rounded-2xl skeleton-enhanced' />
-        <Skeleton className='h-96 rounded-2xl skeleton-enhanced' />
-      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Category Tree</CardTitle>
+          <CardDescription>Expand folders to view subcategories.</CardDescription>
+        </CardHeader>
+        <CardContent className="p-0">
+          <ScrollArea className="h-[600px] p-4">
+            {rootCategories === undefined ? (
+              <div className="flex items-center justify-center p-8 text-muted-foreground">Loading...</div>
+            ) : rootCategories.length === 0 ? (
+              <div className="flex flex-col items-center justify-center p-8 text-muted-foreground gap-2">
+                <FolderOpen className="h-8 w-8 opacity-50" />
+                <p>No categories found.</p>
+                <Button variant="link" onClick={() => openCreate(null)}>
+                  Create the first one
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-1">
+                {rootCategories.map((cat) => (
+                  <CategoryTreeItem
+                    key={cat._id}
+                    category={cat}
+                    onEdit={openEdit}
+                    onCreateSub={openCreate}
+                  />
+                ))}
+              </div>
+            )}
+          </ScrollArea>
+        </CardContent>
+      </Card>
+
+      <CategoryDialog
+        open={dialogState.open}
+        onOpenChange={closeDialog}
+        editingCategory={dialogState.editingCategory}
+        parentForNew={dialogState.parentForNew}
+        rootCategories={rootCategories}
+      />
     </div>
   );
 }
 
-function calculateTrend(current: number, previous: number) {
-  if (previous === 0) {
-    return current > 0 ? { value: 100, isPositive: true } : { value: 0, isPositive: true };
-  }
-  const percentChange = ((current - previous) / previous) * 100;
-  return {
-    value: Math.abs(Math.round(percentChange)),
-    isPositive: percentChange >= 0,
-  };
+// ------------------------------------------------------------------
+// Recursive Tree Item — memoized to prevent cascade re-renders
+// ------------------------------------------------------------------
+
+interface TreeItemProps {
+  category: Category;
+  onEdit: (cat: Category) => void;
+  onCreateSub: (parentId: string) => void;
+  level?: number;
 }
 
-export default function DashboardClient() {
-  const [isReady, setIsReady] = useState(false);
-  const [currentTime, setCurrentTime] = useState<Date | null>(null);
+const CategoryTreeItem = memo(function CategoryTreeItem({
+  category,
+  onEdit,
+  onCreateSub,
+  level = 0,
+}: TreeItemProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const children = useQuery(
+    api.categories.getChildren,
+    isExpanded ? { parentId: category._id } : 'skip'
+  );
 
-  // Fetch real-time data
-  const listingsData = useQuery(api.listings.list, { status: "ALL" });
-  const usersData = useQuery(api.users.list, {});
-  
-  const isLoading = listingsData === undefined || usersData === undefined;
+  const handleDelete = useCallback(async () => {
+    if (confirm('Delete this category?')) {
+      await deleteCategory(category._id);
+      toast.success('Deleted');
+    }
+  }, [category._id]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setIsReady(true), 100); 
-    setCurrentTime(new Date());
-    return () => clearTimeout(timer);
-  }, []);
+  const handleEdit = useCallback(() => onEdit(category), [category, onEdit]);
+  const handleCreateSub = useCallback(() => onCreateSub(category._id), [category._id, onCreateSub]);
+  const toggleExpand = useCallback(() => setIsExpanded((prev) => !prev), []);
 
-  const stats = useMemo(() => {
-    if (!listingsData || !usersData) return null;
-
-    const listings = listingsData.map(l => ({
-        ...l,
-        id: l._id,
-        createdAt: new Date(l._creationTime)
-    }));
-
-    const users = usersData.map(u => ({
-        ...u,
-        id: u._id,
-        createdAt: new Date(u._creationTime)
-    }));
-
-    const now = new Date();
-    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
-
-    const recentListings = listings.filter(l => l.createdAt >= thirtyDaysAgo);
-    const previousListings = listings.filter(l => {
-        return l.createdAt >= sixtyDaysAgo && l.createdAt < thirtyDaysAgo;
-    });
-
-    const recentUsers = users.filter(u => u.createdAt >= thirtyDaysAgo);
-    const previousUsers = users.filter(u => {
-        return u.createdAt >= sixtyDaysAgo && u.createdAt < thirtyDaysAgo;
-    });
-
-    const activeListings = listings.filter(l => l.status === 'ACTIVE').length;
-
-    const listingTrend = calculateTrend(recentListings.length, previousListings.length);
-    const userTrend = calculateTrend(recentUsers.length, previousUsers.length);
-
-    return {
-        totalListings: listings.length,
-        activeListings,
-        totalUsers: users.length,
-        recentListingsCount: recentListings.length,
-        listingTrend,
-        userTrend,
-        recentListingsData: recentListings.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).slice(0, 5)
-    };
-  }, [listingsData, usersData]);
-
-  const greeting = currentTime 
-    ? currentTime.getHours() < 12 
-      ? 'Good morning' 
-      : currentTime.getHours() < 18 
-        ? 'Good afternoon' 
-        : 'Good evening'
-    : 'Welcome';
-
-  if (!isReady || isLoading || !stats) return <DashboardSkeleton />;
+  const paddingLeft = level > 0 ? `${level * 1.5}rem` : undefined;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-      className='space-y-8 pb-20'
-    >
-      {/* Header Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'
+    <div>
+      <div
+        className="group flex items-center gap-2 py-2 px-2 hover:bg-muted/50 rounded-md transition-colors"
+        style={{ marginLeft: paddingLeft }}
       >
-        <div className='space-y-1'>
-          <div className='flex items-center gap-3'>
-            <h1 className='text-xl sm:text-2xl md:text-3xl font-bold tracking-tight'>
-              {greeting}! <Sparkles className='inline h-5 w-5 text-amber-500' />
-            </h1>
-          </div>
-          <p className='text-muted-foreground text-xs sm:text-sm'>
-            Here&apos;s what&apos;s happening with your classifieds platform
-          </p>
-        </div>
-        <div className='flex items-center gap-2 text-xs sm:text-sm text-muted-foreground'>
-          <Calendar className='h-4 w-4' />
-          <span>{currentTime?.toLocaleDateString('en-US', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-          })}</span>
-        </div>
-      </motion.div>
+        <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={toggleExpand}>
+          {isExpanded ? (
+            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          ) : (
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          )}
+        </Button>
 
-      {/* Quick Stats Banner */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
-        className='relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10 dark:from-primary/20 dark:via-primary/10 dark:to-accent/15 p-6 border border-primary/10'
-      >
-        <div className='absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2' />
-        <div className='relative flex flex-wrap gap-6 sm:gap-12 justify-between'>
-          <div className='space-y-1'>
-            <p className='text-sm text-muted-foreground font-medium'>New Listings (30d)</p>
-            <p className='text-xl sm:text-2xl md:text-3xl font-bold'>{stats.recentListingsCount}</p>
-          </div>
-          <div className='space-y-1'>
-            <p className='text-sm text-muted-foreground font-medium'>Active Listings</p>
-            <p className='text-xl sm:text-2xl md:text-3xl font-bold'>{stats.activeListings}</p>
-          </div>
-          <div className='space-y-1'>
-            <p className='text-sm text-muted-foreground font-medium'>Users</p>
-            <p className='text-xl sm:text-2xl md:text-3xl font-bold'>{stats.totalUsers}</p>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Stats Grid */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className='grid xs:grid-cols-2 2xl:grid-cols-4 gap-4 sm:gap-6'
-      >
-        {([
-          {
-            title: 'Total Listings',
-            value: stats.totalListings,
-            icon: Package,
-            description: 'All listings posted',
-            trend: stats.listingTrend,
-            color: 'blue' as const,
-            href: '/admin/listings',
-          },
-          {
-            title: 'Users',
-            value: stats.totalUsers,
-            icon: Users,
-            description: 'Registered accounts',
-            trend: stats.userTrend,
-            color: 'violet' as const, 
-            href: '/admin/users',
-          },
-          {
-            title: 'Promoted',
-            value: listingsData?.filter(l => (l as any).isPromoted).length || 0,
-            icon: Sparkles,
-            description: 'Active promotions',
-            color: 'emerald' as const,
-            href: '/admin/listings?promoted=true',
-          },
-          {
-            title: 'Activity',
-            value: 'View',
-            icon: Activity,
-            description: 'Audit logs',
-            color: 'amber' as const,
-            href: '/admin/activity',
-          },
-        ]).map((card, index) => (
-          <motion.div
-            key={card.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 + index * 0.05 }}
-          >
-            <Link href={card.href} className='block'>
-              <DashboardCard {...card} />
-            </Link>
-          </motion.div>
-        ))}
-      </motion.div>
-
-      {/* Recent Listings Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        className='grid grid-cols-1 xl:grid-cols-2 gap-6'
-      >
-        <Card className='card-premium'>
-          <CardHeader className='pb-4'>
-            <div className='flex items-center justify-between'>
-              <CardTitle className='text-lg font-semibold'>Recent Listings</CardTitle>
-              <Link 
-                href='/admin/listings' 
-                className='text-sm text-primary hover:text-primary/80 font-medium transition-colors'
-              >
-                View all
-              </Link>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className='space-y-1'>
-              <AnimatePresence mode='popLayout'>
-                {stats.recentListingsData.map((listing, index) => {
-                  const isPromoted = (listing as any).isPromoted;
-                  const promoConfig = isPromoted ? getPromotionConfig((listing as any).promotionTier) : null;
-                  
-                  return (
-                    <motion.div
-                      key={listing.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.7 + index * 0.05 }}
-                      className='flex items-center justify-between py-3 px-4 -mx-4 rounded-xl hover:bg-muted/50 transition-colors group'
-                    >
-                      <div className='flex items-center gap-3 flex-1 min-w-0'>
-                        <div className={cn(
-                            'w-10 h-10 rounded-full flex items-center justify-center shrink-0',
-                            promoConfig ? promoConfig.badgeColor : 'bg-primary/10'
-                        )}>
-                            {promoConfig ? (
-                                <PromotionIcon iconName={promoConfig.icon} className="h-4 w-4 text-white fill-current" />
-                            ) : (
-                                <Package className='h-4 w-4 text-primary' />
-                            )}
-                        </div>
-                        <div className='flex-1 min-w-0'>
-                            <Link href={`/admin/listings/${listing.id}`} className='font-bold text-sm truncate group-hover:text-primary transition-colors block'>
-                                {listing.title}
-                            </Link>
-                            <p className='text-[10px] text-muted-foreground uppercase tracking-widest font-bold flex items-center gap-1.5'>
-                                {listing.category}
-                                {isPromoted && (
-                                    <span className="text-[9px] text-primary/80 font-black flex items-center gap-0.5">
-                                        <Sparkles className="w-2.5 h-2.5" />
-                                        PROMOTED
-                                    </span>
-                                )}
-                            </p>
-                        </div>
-                      </div>
-                      
-                      <div className='flex items-center gap-3 ml-4'>
-                          <div className='text-right hidden sm:block'>
-                              <Badge 
-                                  variant="outline"
-                                  className={cn(
-                                      "text-[10px] uppercase tracking-tighter",
-                                      listing.status === 'ACTIVE' && "bg-emerald-500/10 text-emerald-600 border-emerald-500/10",
-                                      listing.status === 'PENDING_APPROVAL' && "bg-amber-500/10 text-amber-600 border-amber-500/10"
-                                  )}
-                              >
-                                  {listing.status === 'PENDING_APPROVAL' ? 'Pending' : listing.status}
-                              </Badge>
-                              <p className='text-xs font-black mt-0.5'>{formatCurrency(listing.price, (listing as any).currency)}</p>
-                          </div>
-
-                          {/* Quick Action Mini-Menu */}
-                          <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
-                              <Button 
-                                  size="icon" 
-                                  variant="ghost" 
-                                  className="h-8 w-8 rounded-full text-muted-foreground hover:text-primary"
-                                  asChild
-                              >
-                                  <Link href={`/listings/${listing.id}`} target="_blank">
-                                      <Eye className="h-4 w-4" />
-                                  </Link>
-                              </Button>
-                          </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
-              {stats.recentListingsData.length === 0 && (
-                <div className='text-center py-12'>
-                  <p className='text-sm text-muted-foreground'>No listings yet</p>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      {/* Quick Actions */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
-        className='grid grid-cols-2 sm:grid-cols-4 gap-4'
-      >
-        {[
-          { label: 'Add Listing', href: '/admin/listings/new', icon: Package, color: 'bg-blue-100 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400' },
-          { label: 'Manage Users', href: '/admin/users', icon: Users, color: 'bg-amber-100 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400' },
-          { label: 'Categories', href: '/admin/categories', icon: Layers, color: 'bg-primary/10 text-primary' },
-          { label: 'Reviews', href: '/admin/reviews', icon: Star, color: 'bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400' },
-        ].map((action, _index) => (
-          <Link
-            key={action.label}
-            href={action.href}
-            className='group stat-card flex flex-col items-center justify-center py-6 gap-3 hover:border-primary/30'
-          >
-            <div className={`w-12 h-12 rounded-xl ${action.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
-              <action.icon className='h-5 w-5' />
-            </div>
-            <span className='text-sm font-medium group-hover:text-primary transition-colors'>
-              {action.label}
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          {isExpanded ? (
+            <FolderOpen className="h-4 w-4 text-primary shrink-0" />
+          ) : (
+            <Folder className="h-4 w-4 text-primary/80 shrink-0" />
+          )}
+          <span className="font-medium truncate text-sm">{category.name}</span>
+          {!category.isActive && (
+            <span className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded-full">
+              Inactive
             </span>
-          </Link>
-        ))}
-      </motion.div>
-    </motion.div>
+          )}
+        </div>
+
+        <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={handleCreateSub}>
+            <Plus className="h-3.5 w-3.5" />
+            <span className="sr-only">Add Subcategory</span>
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-7 w-7">
+                <MoreHorizontal className="h-3.5 w-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={handleEdit}>
+                <Edit className="mr-2 h-4 w-4" /> Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleCreateSub}>
+                <Plus className="mr-2 h-4 w-4" /> Add Subcategory
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="text-destructive focus:text-destructive"
+                onClick={handleDelete}
+              >
+                <Trash className="mr-2 h-4 w-4" /> Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+
+      {/* CSS-only expand/collapse — avoids framer-motion overhead per node */}
+      <div
+        className="overflow-hidden transition-all duration-200"
+        style={{ maxHeight: isExpanded ? '9999px' : '0px' }}
+      >
+        {isExpanded && (
+          <>
+            {children === undefined ? (
+              <div
+                className="py-2 pl-8 text-xs text-muted-foreground"
+                style={{ marginLeft: paddingLeft }}
+              >
+                Loading...
+              </div>
+            ) : children.length === 0 ? (
+              <div
+                className="py-2 pl-8 text-xs text-muted-foreground italic"
+                style={{ marginLeft: paddingLeft }}
+              >
+                No subcategories
+              </div>
+            ) : (
+              <div>
+                {children.map((child) => (
+                  <CategoryTreeItem
+                    key={child._id}
+                    category={child}
+                    onEdit={onEdit}
+                    onCreateSub={onCreateSub}
+                    level={level + 1}
+                  />
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+});
+
+// ------------------------------------------------------------------
+// Dialog Form Component
+// ------------------------------------------------------------------
+
+interface CategoryDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  editingCategory: Category | null;
+  parentForNew: string | null;
+  rootCategories: Category[] | undefined;
+}
+
+function CategoryDialog({
+  open,
+  onOpenChange,
+  editingCategory,
+  parentForNew,
+  rootCategories,
+}: CategoryDialogProps) {
+  const [isPending, startTransition] = useTransition();
+
+  const form = useForm<CategoryFormValues>({
+    resolver: zodResolver(categorySchema),
+    defaultValues: {
+      name: '',
+      slug: '',
+      description: '',
+      image: '',
+      isActive: true,
+      isFeatured: false,
+      parentId: null,
+      template: '',
+    },
+  });
+
+  // Reset form whenever the dialog opens or the target changes
+  useEffect(() => {
+    if (!open) return;
+    if (editingCategory) {
+      form.reset({
+        name: editingCategory.name,
+        slug: editingCategory.slug,
+        description: editingCategory.description ?? '',
+        image: editingCategory.image ?? '',
+        isActive: editingCategory.isActive,
+        isFeatured: editingCategory.isFeatured,
+        parentId: editingCategory.parentId ?? null,
+        template: editingCategory.template
+          ? JSON.stringify(editingCategory.template, null, 2)
+          : '',
+      });
+    } else {
+      form.reset({
+        name: '',
+        slug: '',
+        description: '',
+        image: '',
+        isActive: true,
+        isFeatured: false,
+        parentId: parentForNew,
+        template: '',
+      });
+    }
+  }, [open, editingCategory, parentForNew]); // form is stable — safe to omit
+
+  // Auto-generate slug from name only when creating
+  const name = form.watch('name');
+  useEffect(() => {
+    if (editingCategory || !name) return;
+    form.setValue(
+      'slug',
+      name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, ''),
+      { shouldValidate: false }
+    );
+  }, [name, editingCategory]); // form is stable — safe to omit
+
+  const onSubmit = (data: CategoryFormValues) => {
+    startTransition(async () => {
+      try {
+        let parsedTemplate: any = undefined;
+        if (data.template) {
+          parsedTemplate = JSON.parse(data.template); // already validated by zod
+        }
+
+        const payload = { ...data, template: parsedTemplate };
+        const result = editingCategory
+          ? await updateCategory(editingCategory._id, payload)
+          : await createCategory(payload);
+
+        if (result.success) {
+          toast.success(editingCategory ? 'Updated' : 'Created');
+          onOpenChange(false);
+        } else {
+          toast.error(result.error);
+        }
+      } catch {
+        toast.error('Error saving category');
+      }
+    });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-xl">
+        <DialogHeader>
+          <DialogTitle>{editingCategory ? 'Edit Category' : 'Create Category'}</DialogTitle>
+          <DialogDescription>
+            {editingCategory ? 'Modify category details.' : 'Add a new category to the hierarchy.'}
+          </DialogDescription>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Electronics" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="slug"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Slug</FormLabel>
+                    <FormControl>
+                      <Input placeholder="electronics" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="parentId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Parent Category</FormLabel>
+                    <Select
+                      onValueChange={(val) => field.onChange(val === 'null' ? null : val)}
+                      value={field.value ?? 'null'}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Root (None)" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="null">None (Root)</SelectItem>
+                        {rootCategories?.map((c) => (
+                          <SelectItem key={c._id} value={c._id}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea rows={3} placeholder="Optional description..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex items-center gap-6">
+              <FormField
+                control={form.control}
+                name="isActive"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                    <FormLabel className="text-sm">Active</FormLabel>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="isFeatured"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                    <FormLabel className="text-sm">Featured</FormLabel>
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending ? 'Saving...' : 'Save'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }
