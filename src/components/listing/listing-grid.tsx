@@ -9,22 +9,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { api } from '@/convex/_generated/api';
 import { ListingWithRelations } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { useMutation } from 'convex/react';
-import { 
-  ArrowUpDown, 
-  LayoutGrid, 
-  List, 
-  RectangleVertical, 
-  Save, 
-  SlidersHorizontal 
-} from 'lucide-react';
+import { ArrowUpDown, LayoutGrid, List, RectangleVertical, Save, SlidersHorizontal } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useEffect, useState, useTransition } from 'react';
+import { memo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
-import { api } from '../../../convex/_generated/api';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -49,58 +42,54 @@ interface ListingGridProps {
 }
 
 const SORT_OPTIONS = [
-  { value: 'newest', label: 'Newest First' },
-  { value: 'oldest', label: 'Oldest First' },
-  { value: 'price-low', label: 'Price: Low to High' },
+  { value: 'newest',     label: 'Newest First' },
+  { value: 'oldest',     label: 'Oldest First' },
+  { value: 'price-low',  label: 'Price: Low to High' },
   { value: 'price-high', label: 'Price: High to Low' },
-  { value: 'popular', label: 'Most Popular' },
+  { value: 'popular',    label: 'Most Popular' },
 ];
+
+const VIEW_MODES: { mode: ViewMode; icon: React.ElementType; label: string }[] = [
+  { mode: 'grid', icon: LayoutGrid,       label: 'Grid View' },
+  { mode: 'list', icon: List,             label: 'List View' },
+  { mode: 'card', icon: RectangleVertical, label: 'Detail View' },
+];
+
+const VIEW_MODE_KEY = 'listing-view-mode';
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function ListingGrid({ 
-  listings, 
-  className, 
-  onOpenFilters, 
+export function ListingGrid({
+  listings,
+  className,
+  onOpenFilters,
   showSaveSearch = true,
   sortBy = 'newest',
   onSortChange,
-  onQuickFilter
+  onQuickFilter,
 }: ListingGridProps) {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  
-  // UX State
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [isMounted, setIsMounted] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  // Mutations
-  const saveSearchMutation = useMutation(api.searches.saveSearch);
+  // Lazy initialiser reads localStorage once — no mounted state, no flash
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    if (typeof window === 'undefined') return 'list';
+    return (localStorage.getItem(VIEW_MODE_KEY) as ViewMode) || 'list';
+  });
 
-  // 1. Persist View Mode (Client-side only)
-  useEffect(() => {
-    setIsMounted(true);
-    const savedMode = localStorage.getItem('listing-view-mode') as ViewMode;
-    if (savedMode) setViewMode(savedMode);
-  }, []);
+  const saveSearchMutation = useMutation(api.searches.saveSearch);
 
   const handleViewChange = (mode: ViewMode) => {
     setViewMode(mode);
-    localStorage.setItem('listing-view-mode', mode);
+    localStorage.setItem(VIEW_MODE_KEY, mode);
   };
 
-  // 2. Wrap sort change in transition for better UX
   const handleSortChange = (value: string) => {
-    if (onSortChange) {
-      startTransition(() => {
-        onSortChange(value);
-      });
-    }
+    if (onSortChange) startTransition(() => onSortChange(value));
   };
 
-  // 3. Save Search Logic
   const handleSaveSearch = async () => {
     if (!session?.user?.id) {
       toast.error('Please login to save searches');
@@ -109,42 +98,41 @@ export function ListingGrid({
 
     const query = searchParams.get('search') || '';
     const filters = Object.fromEntries(searchParams.entries());
-    
-    // Cleanup internal params
-    ['search', 'sort', 'page', 'filters'].forEach(key => delete filters[key]);
+    ['search', 'sort', 'page', 'filters'].forEach((key) => delete filters[key]);
 
-    const promise = saveSearchMutation({
-      userId: session.user.id,
-      name: query || 'Saved Search',
-      query,
-      url: `${pathname}?${searchParams.toString()}`,
-      filters: JSON.stringify(filters),
-      isEmailAlert: true,
-      frequency: 'daily'
-    });
-
-    toast.promise(promise, {
-      loading: 'Saving search...',
-      success: 'Search saved successfully!',
-      error: 'Failed to save search'
-    });
+    toast.promise(
+      saveSearchMutation({
+        userId: session.user.id,
+        name: query || 'Saved Search',
+        query,
+        url: `${pathname}?${searchParams.toString()}`,
+        filters: JSON.stringify(filters),
+        isEmailAlert: true,
+        frequency: 'daily',
+      }),
+      {
+        loading: 'Saving search...',
+        success: 'Search saved successfully!',
+        error: 'Failed to save search',
+      }
+    );
   };
 
   return (
     <div className={className}>
-      {/* ── Toolbar ────────────────────────────────────────────────────────── */}
+      {/* Toolbar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        
+
         {/* Mobile Filter Toggle */}
         <div className="lg:hidden w-full">
-           <Button 
-             variant="outline" 
-             className="w-full flex items-center justify-center gap-2 h-10"
-             onClick={onOpenFilters}
-           >
-             <SlidersHorizontal className="h-4 w-4" />
-             Filters & Sort
-           </Button>
+          <Button
+            variant="outline"
+            className="w-full flex items-center justify-center gap-2 h-10"
+            onClick={onOpenFilters}
+          >
+            <SlidersHorizontal className="h-4 w-4" />
+            Filters & Sort
+          </Button>
         </div>
 
         {/* Results Count */}
@@ -154,81 +142,60 @@ export function ListingGrid({
 
         {/* Desktop Controls */}
         <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-           
-           {/* Sort Dropdown - Wrapped in mounted check to avoid hydration mismatch */}
-           {isMounted ? (
-             <Select value={sortBy} onValueChange={handleSortChange} disabled={isPending}>
-              <SelectTrigger className="h-9 w-full sm:w-[180px] text-xs">
-                <div className="flex items-center gap-2">
-                  <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" />
-                  <SelectValue placeholder="Sort option" />
-                </div>
-              </SelectTrigger>
-              <SelectContent>
-                {SORT_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value} className="text-xs">
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-           ) : (
-             <div className="h-9 w-[180px] bg-muted animate-pulse rounded-md hidden sm:block" />
-           )}
+          <Select value={sortBy} onValueChange={handleSortChange} disabled={isPending}>
+            <SelectTrigger className="h-9 w-full sm:w-[180px] text-xs">
+              <div className="flex items-center gap-2">
+                <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" />
+                <SelectValue placeholder="Sort option" />
+              </div>
+            </SelectTrigger>
+            <SelectContent>
+              {SORT_OPTIONS.map((o) => (
+                <SelectItem key={o.value} value={o.value} className="text-xs">
+                  {o.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-           {/* Save Search */}
-           {showSaveSearch && (
-             <Button 
-               variant="outline" 
-               size="icon" 
-               className="h-9 w-9 shrink-0"
-               title="Save this search"
-               onClick={handleSaveSearch}
-             >
-               <Save className="h-4 w-4" />
-             </Button>
-           )}
+          {showSaveSearch && (
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-9 w-9 shrink-0"
+              aria-label="Save this search"
+              onClick={handleSaveSearch}
+            >
+              <Save className="h-4 w-4" />
+            </Button>
+          )}
 
-          {/* View Mode Toggles */}
-          <div className="flex items-center border rounded-md p-1 h-9 bg-background shrink-0">
-            <ViewToggle 
-              active={viewMode === 'grid'} 
-              onClick={() => handleViewChange('grid')} 
-              icon={LayoutGrid} 
-              label="Grid View" 
-            />
-            <ViewToggle 
-              active={viewMode === 'list'} 
-              onClick={() => handleViewChange('list')} 
-              icon={List} 
-              label="List View" 
-            />
-            <ViewToggle 
-              active={viewMode === 'card'} 
-              onClick={() => handleViewChange('card')} 
-              icon={RectangleVertical} 
-              label="Detail View" 
-            />
+          <div className="flex items-center border rounded-md p-1 h-9 bg-background shrink-0" role="group" aria-label="View mode">
+            {VIEW_MODES.map(({ mode, icon, label }) => (
+              <ViewToggle
+                key={mode}
+                active={viewMode === mode}
+                onClick={() => handleViewChange(mode)}
+                icon={icon}
+                label={label}
+              />
+            ))}
           </div>
         </div>
       </div>
-      
-      {/* ── Listings Grid ──  ────────────────────────────────────────────────────── */}
+
+      {/* Listings */}
       {listings.length === 0 ? (
-         <EmptyState onClear={() => onQuickFilter?.({ category: 'all', subCategory: 'all' })} />
+        <EmptyState onClear={() => onQuickFilter?.({ category: 'all', subCategory: 'all' })} />
       ) : (
         <div className={cn(
-          "grid gap-4",
-          viewMode === 'grid' && "grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
-          viewMode === 'list' && "grid-cols-1",
-          viewMode === 'card' && "grid-cols-1 max-w-2xl mx-auto" // Center card view
+          'grid gap-4',
+          viewMode === 'grid' && 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+          viewMode === 'list' && 'grid-cols-1',
+          viewMode === 'card' && 'grid-cols-1 max-w-2xl mx-auto',
         )}>
           {listings.map((listing) => (
-            <ListingCard 
-              key={listing._id} 
-              listing={listing} 
-              viewMode={viewMode} 
-            />
+            <ListingCard key={listing._id} listing={listing} viewMode={viewMode} />
           ))}
         </div>
       )}
@@ -236,21 +203,32 @@ export function ListingGrid({
   );
 }
 
-// ─── Sub-Components ──────────────────────────────────────────────────────────
+// ─── Sub-components ───────────────────────────────────────────────────────────
 
-function ViewToggle({ active, onClick, icon: Icon, label }: { active: boolean, onClick: () => void, icon: any, label: string }) {
+const ViewToggle = memo(function ViewToggle({
+  active,
+  onClick,
+  icon: Icon,
+  label,
+}: {
+  active: boolean;
+  onClick: () => void;
+  icon: React.ElementType;
+  label: string;
+}) {
   return (
     <Button
       variant="ghost"
       size="icon"
-      title={label}
-      className={cn("h-7 w-7 rounded-sm transition-all", active && "bg-muted shadow-sm text-foreground")}
+      aria-label={label}
+      aria-pressed={active}
+      className={cn('h-7 w-7 rounded-sm transition-all', active && 'bg-muted shadow-sm text-foreground')}
       onClick={onClick}
     >
       <Icon className="h-4 w-4" />
     </Button>
   );
-}
+});
 
 function EmptyState({ onClear }: { onClear?: () => void }) {
   return (

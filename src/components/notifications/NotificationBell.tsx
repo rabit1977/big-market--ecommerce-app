@@ -9,11 +9,7 @@ import {
 } from '@/actions/notification-actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { NotificationWithMeta } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -23,48 +19,38 @@ import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { NotificationList } from './NotificationList';
 
-// ============================================
-// TYPES
-// ============================================
-
 interface NotificationBellProps {
   initialUnreadCount?: number;
   className?: string;
 }
 
-// ============================================
-// COMPONENT
-// ============================================
+const CACHE_TTL = 15_000; // ms
+const POLL_INTERVAL = 30_000; // ms
 
 export function NotificationBell({
   initialUnreadCount = 0,
   className,
 }: NotificationBellProps) {
-  // State
   const [isOpen, setIsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(initialUnreadCount);
   const [notifications, setNotifications] = useState<NotificationWithMeta[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  
-  // Refs for caching & cleanup
-  const lastFetchTimeRef = useRef<number>(0);
-  const abortControllerRef = useRef<AbortController | null>(null);
-  const isHoveredRef = useRef(false);
-
   const [isPending, startTransition] = useTransition();
 
-  // 1. Fetch Logic (Optimized with AbortController)
-  const fetchNotifications = useCallback(async (force = false) => {
-    // Cache check: Don't refetch if data is less than 15 seconds old unless forced
-    const now = Date.now();
-    if (!force && notifications.length > 0 && now - lastFetchTimeRef.current < 15000) {
-      return;
-    }
+  const lastFetchTimeRef = useRef<number>(0);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  // Track hover with a boolean ref — no state needed, no re-render
+  const hasHoverFetchedRef = useRef(false);
 
-    // Cleanup previous request
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
+  // ── Cleanup on unmount ────────────────────────────────────────────────────
+  useEffect(() => () => { abortControllerRef.current?.abort(); }, []);
+
+  // ── Fetch ─────────────────────────────────────────────────────────────────
+  const fetchNotifications = useCallback(async (force = false) => {
+    const now = Date.now();
+    if (!force && notifications.length > 0 && now - lastFetchTimeRef.current < CACHE_TTL) return;
+
+    abortControllerRef.current?.abort();
     const controller = new AbortController();
     abortControllerRef.current = controller;
 
@@ -77,125 +63,101 @@ export function NotificationBell({
         lastFetchTimeRef.current = Date.now();
       }
     } catch (error) {
-       // Ignore abort errors
-       if ((error as Error).name !== 'AbortError') {
-         console.error('Failed to fetch notifications:', error);
-       }
-    } finally {
-      if (!controller.signal.aborted) {
-        setIsLoading(false);
+      if ((error as Error).name !== 'AbortError') {
+        // Silent fail — badge still shows stale count
       }
+    } finally {
+      if (!controller.signal.aborted) setIsLoading(false);
     }
   }, [notifications.length]);
 
-  // 2. Smart Polling (Recursive Timeout > Interval)
+  // ── Polling (unread count only) ───────────────────────────────────────────
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
-    let isMounted = true;
+    let active = true;
 
     const poll = async () => {
       try {
         const count = await getUnreadCountAction();
-        if (isMounted) setUnreadCount(count);
+        if (active) setUnreadCount(count);
       } catch {
         // Silent fail
       } finally {
-        // Schedule next poll only after current one finishes
-        if (isMounted) timeoutId = setTimeout(poll, 30000);
+        if (active) timeoutId = setTimeout(poll, POLL_INTERVAL);
       }
     };
 
-    // Start polling loop
-    timeoutId = setTimeout(poll, 30000);
-
-    return () => {
-      isMounted = false;
-      clearTimeout(timeoutId);
-    };
+    timeoutId = setTimeout(poll, POLL_INTERVAL);
+    return () => { active = false; clearTimeout(timeoutId); };
   }, []);
 
-  // 3. Mark Single as Read (Optimistic)
+  // ── Mark single as read (optimistic) ─────────────────────────────────────
   const handleMarkAsRead = useCallback(async (id: string) => {
-    // Optimistic Update
-    const previousUnreadCount = unreadCount;
-    const previousNotifications = [...notifications];
+    const target = notifications.find((n) => n.id === id);
+    if (!target || target.isRead) return; // Already read — no-op
 
-    // Update UI immediately
+    const prevNotifications = notifications;
+    const prevCount = unreadCount;
+
     setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isRead: true, readAt: new Date() } : n))
+      prev.map((n) => n.id === id ? { ...n, isRead: true, readAt: new Date() } : n)
     );
-    
-    // Only decrement if it was actually unread
-    const target = notifications.find(n => n.id === id);
-    if (target && !target.isRead) {
-      setUnreadCount((prev) => Math.max(0, prev - 1));
-    }
+    setUnreadCount((prev) => Math.max(0, prev - 1));
 
-    // Server Action
     try {
       await markNotificationAsReadAction(id);
-    } catch (error) {
-      // Rollback on error
-      setNotifications(previousNotifications);
-      setUnreadCount(previousUnreadCount);
-      toast.error("Failed to update notification");
+    } catch {
+      setNotifications(prevNotifications);
+      setUnreadCount(prevCount);
+      toast.error('Failed to update notification');
     }
   }, [notifications, unreadCount]);
 
-  // 4. Mark All Read (Optimistic)
+  // ── Mark all as read (optimistic) ────────────────────────────────────────
   const handleMarkAllAsRead = useCallback(() => {
-    const previousUnreadCount = unreadCount;
-    const previousNotifications = [...notifications];
+    const prevNotifications = notifications;
+    const prevCount = unreadCount;
 
     startTransition(async () => {
-      // Optimistic
-      setNotifications((prev) =>
-        prev.map((n) => ({ ...n, isRead: true, readAt: new Date() }))
-      );
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true, readAt: new Date() })));
       setUnreadCount(0);
 
       try {
         await markAllNotificationsAsReadAction();
-      } catch (error) {
-        // Rollback
-        setNotifications(previousNotifications);
-        setUnreadCount(previousUnreadCount);
-        toast.error("Failed to mark all as read");
+      } catch {
+        setNotifications(prevNotifications);
+        setUnreadCount(prevCount);
+        toast.error('Failed to mark all as read');
       }
     });
   }, [notifications, unreadCount]);
 
-  // 5. Delete (Optimistic)
+  // ── Delete (optimistic) ───────────────────────────────────────────────────
   const handleDelete = useCallback(async (id: string) => {
-    const previousNotifications = [...notifications];
     const target = notifications.find((n) => n.id === id);
-    
-    // Optimistic Remove
+    const prevNotifications = notifications;
+
     setNotifications((prev) => prev.filter((n) => n.id !== id));
-    if (target && !target.isRead) {
-      setUnreadCount((prev) => Math.max(0, prev - 1));
-    }
+    if (target && !target.isRead) setUnreadCount((prev) => Math.max(0, prev - 1));
 
     try {
       await deleteNotificationAction(id);
-    } catch (error) {
-      setNotifications(previousNotifications);
-      if (target && !target.isRead) setUnreadCount(c => c + 1);
-      toast.error("Failed to delete");
+    } catch {
+      setNotifications(prevNotifications);
+      if (target && !target.isRead) setUnreadCount((prev) => prev + 1);
+      toast.error('Failed to delete');
     }
   }, [notifications]);
 
+  // ── Popover open handler ──────────────────────────────────────────────────
+  const handleOpenChange = useCallback((open: boolean) => {
+    setIsOpen(open);
+    if (open) fetchNotifications();
+  }, [fetchNotifications]);
+
+  // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <Popover 
-      open={isOpen} 
-      onOpenChange={(open) => {
-        setIsOpen(open);
-        if (open) {
-          // Normal fetch on click, but cache might handle it
-          fetchNotifications(); 
-        }
-      }}
-    >
+    <Popover open={isOpen} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
@@ -205,14 +167,13 @@ export function NotificationBell({
             className
           )}
           aria-label={`Notifications (${unreadCount} unread)`}
-          // ✨ UX Optimization: Prefetch on hover
           onMouseEnter={() => {
-            if (!isHoveredRef.current) {
-               fetchNotifications();
-               isHoveredRef.current = true;
+            if (!hasHoverFetchedRef.current) {
+              fetchNotifications();
+              hasHoverFetchedRef.current = true;
             }
           }}
-          onMouseLeave={() => { isHoveredRef.current = false; }}
+          onMouseLeave={() => { hasHoverFetchedRef.current = false; }}
         >
           <Bell className="h-5 w-5" />
           <AnimatePresence>
@@ -235,12 +196,8 @@ export function NotificationBell({
           </AnimatePresence>
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        className="w-[360px] p-0 rounded-2xl shadow-xl border-border/50"
-        align="end"
-        sideOffset={10}
-      >
-        {/* Header */}
+
+      <PopoverContent className="w-[360px] p-0 rounded-2xl shadow-xl border-border/50" align="end" sideOffset={10}>
         <div className="flex items-center justify-between px-4 py-3 border-b bg-muted/20">
           <h3 className="font-bold text-sm">Notifications</h3>
           {unreadCount > 0 && (
@@ -251,17 +208,14 @@ export function NotificationBell({
               disabled={isPending}
               className="h-7 text-xs text-primary hover:text-primary hover:bg-primary/10 px-2"
             >
-              {isPending ? (
-                <Loader2 className="w-3 h-3 animate-spin mr-1" />
-              ) : (
-                <CheckCheck className="w-3 h-3 mr-1" />
-              )}
+              {isPending
+                ? <Loader2 className="w-3 h-3 animate-spin mr-1" />
+                : <CheckCheck className="w-3 h-3 mr-1" />}
               Mark all read
             </Button>
           )}
         </div>
 
-        {/* List with Loading State */}
         {isLoading && notifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-muted-foreground gap-2">
             <Loader2 className="w-6 h-6 animate-spin" />
@@ -278,7 +232,6 @@ export function NotificationBell({
           />
         )}
 
-        {/* Footer */}
         <div className="border-t p-2 bg-muted/20">
           <Link
             href="/account/notifications"
