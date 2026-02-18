@@ -20,101 +20,73 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { ALL_MUNICIPALITIES, MACEDONIA_CITIES } from '@/lib/constants/locations';
+import { api } from '@/convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { api } from '../../../convex/_generated/api';
-
-import { useRouter } from 'next/navigation';
 
 export function CompleteRegistrationModal() {
   const { data: session } = useSession();
-  const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
+
+  const user = useQuery(
+    api.users.getByExternalId,
+    session?.user?.id ? { externalId: session.user.id } : 'skip'
+  );
+  const completeRegistration = useMutation(api.users.completeRegistration);
+
   const [city, setCity] = useState('');
   const [municipality, setMunicipality] = useState('');
   const [phone, setPhone] = useState('');
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // We use "skip" if no user ID, but the query hook handles "skip" by passing "skip" as the argument? 
-  // No, convex/react useQuery supports "skip" token from the second argument conditionally? 
-  // Actually the standard pattern is `useQuery(api.foo, args)` and pass "skip" if args not ready.
-  // But standard `useQuery` expects exact args. 
-  // Convex React `useQuery` signatures: `useQuery(api.func, args)` or `useQuery(api.func, "skip")`.
-  
-  const user = useQuery(api.users.getByExternalId, session?.user?.id ? { externalId: session.user.id } : "skip");
-  const completeRegistration = useMutation(api.users.completeRegistration);
+  // Pre-fill fields and open modal once user data is available
+  const needsCompletion =
+    !!user && (!user.registrationComplete || !user.phone || !user.city);
 
   useEffect(() => {
-    // Only check if we have a loaded user
-    if (user) {
-        // Condition: Not marked as complete AND (missing phone OR missing city)
-        // We check for specific fields to be sure, in case `registrationComplete` flag wasn't set for old users
-        const needsCompletion = !user.registrationComplete || (!user.phone || !user.city);
-        
-        if (needsCompletion) {
-            setIsOpen(true);
-            // Pre-fill if they have some data
-            if (user.city) setCity(user.city);
-            if (user.phone) setPhone(user.phone);
-            if (user.municipality) setMunicipality(user.municipality);
-        }
-    }
-  }, [user]);
+    if (!user || !needsCompletion) return;
+    if (user.city) setCity(user.city);
+    if (user.phone) setPhone(user.phone);
+    if (user.municipality) setMunicipality(user.municipality);
+  }, [user, needsCompletion]);
 
   const handleSubmit = async () => {
     if (!city || !municipality || !phone) {
-        toast.error('Please fill in all fields');
-        return;
+      toast.error('Please fill in all fields');
+      return;
     }
     if (!agreed) {
-        toast.error('You must agree to the Terms of Use');
-        return;
+      toast.error('You must agree to the Terms of Use');
+      return;
     }
-
     if (!session?.user?.id) {
-        toast.error('Session expired. Please refresh.');
-        return;
+      toast.error('Session expired. Please refresh.');
+      return;
     }
 
     setIsSubmitting(true);
     try {
-        console.log('Completing registration for:', session.user.id, { city, municipality, phone });
-        await completeRegistration({
-            externalId: session!.user!.id,
-            city,
-            municipality,
-            phone
-        });
-        toast.success('Profile saved!');
-        setIsOpen(false);
-        // Force a hard refresh and redirect to premium page for subscription
-        window.location.href = '/premium';
-    } catch (error: any) {
-        const errorMessage = error.message || 'An error occurred. Please try again.';
-        toast.error(errorMessage);
-        console.error('Registration failed:', error);
+      await completeRegistration({ externalId: session.user.id, city, municipality, phone });
+      toast.success('Profile saved!');
+      window.location.href = '/premium';
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : 'An error occurred. Please try again.');
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
-  if (!isOpen) return null;
+  // Don't render until we know the user needs to complete registration
+  if (!needsCompletion) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => {
-        // Prevent closing by clicking outside if it's mandatory
-        // For better UX we allow closing but it will pop up again on refresh/nav if not completed
-        // The user asked "when someone for the first time creates profile", so this acts as a gate.
-        // We'll enforce it by not allowing close essentially (or re-opening).
-        // setOpen(open)
-    }}>
-      <DialogContent 
-        className="sm:max-w-[425px]" 
-        onInteractOutside={(e) => e.preventDefault()} 
+    <Dialog open>
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onInteractOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
         showCloseButton={false}
       >
@@ -124,58 +96,77 @@ export function CompleteRegistrationModal() {
             Please enter your location and phone number to complete your registration.
           </DialogDescription>
         </DialogHeader>
+
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="location">City</Label>
-             <Select onValueChange={setCity} value={city}>
-              <SelectTrigger>
+            <Label htmlFor="city">City</Label>
+            <Select onValueChange={setCity} value={city}>
+              <SelectTrigger id="city">
                 <SelectValue placeholder="Select City" />
               </SelectTrigger>
-               <SelectContent className="max-h-[200px]">
-                {MACEDONIA_CITIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+              <SelectContent className="max-h-[200px]">
+                {MACEDONIA_CITIES.map((c) => (
+                  <SelectItem key={c} value={c}>{c}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
+
           <div className="grid gap-2">
             <Label htmlFor="municipality">Municipality</Label>
-             <Select onValueChange={setMunicipality} value={municipality}>
-              <SelectTrigger>
+            <Select onValueChange={setMunicipality} value={municipality}>
+              <SelectTrigger id="municipality">
                 <SelectValue placeholder="Select Municipality" />
               </SelectTrigger>
-               <SelectContent className="max-h-[200px]">
-                {ALL_MUNICIPALITIES.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+              <SelectContent className="max-h-[200px]">
+                {ALL_MUNICIPALITIES.map((m) => (
+                  <SelectItem key={m} value={m}>{m}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
+
           <div className="grid gap-2">
             <Label htmlFor="phone">Phone Number</Label>
-            <Input 
-                id="phone" 
-                value={phone} 
-                onChange={(e) => setPhone(e.target.value)} 
-                placeholder="07x xxx xxx" 
+            <Input
+              id="phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="07x xxx xxx"
+              type="tel"
+              inputMode="tel"
             />
           </div>
+
           <div className="flex items-start space-x-2 pt-2">
-             <Checkbox 
-                id="terms" 
-                checked={agreed} 
-                onCheckedChange={(c) => setAgreed(c as boolean)} 
-                className="mt-1"
-             />
-             <label
-                htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-muted-foreground"
+            <Checkbox
+              id="terms"
+              checked={agreed}
+              onCheckedChange={(c) => setAgreed(c as boolean)}
+              className="mt-1"
+            />
+            <label
+              htmlFor="terms"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-muted-foreground"
+            >
+              I agree to the{' '}
+              <Link
+                href="/privacy"
+                className="text-primary hover:underline underline-offset-4"
+                target="_blank"
               >
-                I agree to the{' '}
-                <Link href="/privacy" className="text-primary hover:underline underline-offset-4" target="_blank">
-                  Terms of Use & Privacy Policy
-                </Link>
-              </label>
+                Terms of Use & Privacy Policy
+              </Link>
+            </label>
           </div>
         </div>
+
         <DialogFooter>
-          <Button onClick={handleSubmit} disabled={isSubmitting} className="w-full bg-primary font-bold">
+          <Button
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className="w-full bg-primary font-bold"
+          >
             {isSubmitting ? 'Saving...' : 'Save & Continue'}
           </Button>
         </DialogFooter>

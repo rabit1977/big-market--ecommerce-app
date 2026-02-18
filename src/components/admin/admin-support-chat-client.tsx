@@ -6,13 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
+import { api } from '@/convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import { ArrowLeft, Image as ImageIcon, Search, Send, ShieldAlert } from 'lucide-react';
 import Image from 'next/image';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { api } from '../../../convex/_generated/api';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -45,7 +45,6 @@ interface Conversation {
   };
 }
 
-// Module-level constant — stable across renders, no magic string duplication
 const ADMIN_ID = 'ADMIN' as const;
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -61,12 +60,10 @@ export function AdminSupportChatClient() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  // Stable XHR ref so we can abort on unmount
   const xhrRef = useRef<XMLHttpRequest | null>(null);
-
-  // Auto-select first conversation only once on initial load
-  // Using a ref flag avoids re-running when selectedConversation changes
   const hasAutoSelected = useRef(false);
+
+  // Auto-select first conversation once on initial load
   useEffect(() => {
     if (!hasAutoSelected.current && conversations && conversations.length > 0) {
       setSelectedConversation(conversations[0]);
@@ -84,7 +81,7 @@ export function AdminSupportChatClient() {
   const sendMessageMutation = useMutation(api.messages.send);
   const markReadMutation = useMutation(api.messages.markConversationAsRead);
 
-  // Mark as read — debounced 500ms, cleanup on unmount/conversation change
+  // Mark as read — debounced 500ms
   useEffect(() => {
     if (!selectedConversation || messages.length === 0) return;
     const timer = setTimeout(() => {
@@ -95,11 +92,9 @@ export function AdminSupportChatClient() {
       }).catch(console.error);
     }, 500);
     return () => clearTimeout(timer);
-  // messages.length is intentional — only re-run when new messages arrive
   }, [selectedConversation, messages.length, markReadMutation]);
 
-  // Scroll to bottom — use scrollIntoView directly, no timeout needed with
-  // the `block: 'end'` strategy since Convex updates are batched
+  // Scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, [messages, selectedConversation]);
@@ -109,7 +104,7 @@ export function AdminSupportChatClient() {
     return () => xhrRef.current?.abort();
   }, []);
 
-  // ── Filtered conversations (memoized) ──────────────────────────────────────
+  // ── Filtered conversations ─────────────────────────────────────────────────
   const filteredConversations = useMemo(() => {
     if (!conversations) return [];
     const q = searchQuery.toLowerCase();
@@ -132,8 +127,7 @@ export function AdminSupportChatClient() {
         type: 'SUPPORT',
       });
       setNewMessage('');
-    } catch (error) {
-      console.error('Failed to send', error);
+    } catch {
       toast.error('Failed to send message');
     }
   }, [newMessage, selectedConversation, sendMessageMutation]);
@@ -141,7 +135,19 @@ export function AdminSupportChatClient() {
   // ── Image upload ───────────────────────────────────────────────────────────
   const handleImageUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    // Reset input immediately so the same file can be re-selected
+    e.target.value = '';
     if (!file || !selectedConversation) return;
+
+    // Validate file type & size (5 MB) before hitting the network
+    if (!file.type.startsWith('image/')) {
+      toast.error('Only image files are supported');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be smaller than 5 MB');
+      return;
+    }
 
     setIsUploading(true);
     setUploadProgress(0);
@@ -163,6 +169,7 @@ export function AdminSupportChatClient() {
             : reject(new Error('Upload failed'));
         });
         xhr.addEventListener('error', () => reject(new Error('Upload failed')));
+        xhr.addEventListener('abort', () => reject(new Error('abort')));
         xhr.open('POST', '/api/upload');
         xhr.send(formData);
       });
@@ -179,13 +186,11 @@ export function AdminSupportChatClient() {
       }
     } catch (error) {
       if ((error as Error).message !== 'abort') {
-        console.error(error);
         toast.error('Failed to upload image');
       }
     } finally {
       setIsUploading(false);
       setUploadProgress(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   }, [selectedConversation, sendMessageMutation]);
 
@@ -386,7 +391,7 @@ const MessageBubble = memo(function MessageBubble({
       )}>
         {msg.imageUrl && (
           <div className="relative aspect-video w-48 rounded-lg overflow-hidden mb-2">
-            <Image src={msg.imageUrl} alt="attachment" fill className="object-cover" />
+            <Image src={msg.imageUrl} alt="Image attachment" fill className="object-cover" />
           </div>
         )}
         <p className="whitespace-pre-wrap break-words">{msg.content}</p>
@@ -400,6 +405,3 @@ const MessageBubble = memo(function MessageBubble({
     </div>
   );
 });
-
-// memo import (missed at top due to inline use)
-import { memo } from 'react';
