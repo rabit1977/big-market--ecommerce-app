@@ -8,7 +8,7 @@ import { Id } from '@/convex/_generated/dataModel';
 import { cn } from '@/lib/utils';
 import { useMutation, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
-import { AnimatePresence, motion, PanInfo } from 'framer-motion';
+import { AnimatePresence, motion, PanInfo, useMotionValue } from 'framer-motion';
 import {
   ArrowLeft,
   Headset,
@@ -43,6 +43,9 @@ export function SupportChatWidget() {
   const [searchQuery, setSearchQuery] = useState('');
   // Use ref for drag detection — no re-render needed
   const isDraggingRef = useRef(false);
+  // Controlled motion values so the icon stays centered during/after drag
+  const dragX = useMotionValue(0);
+  const dragY = useMotionValue(0);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const widgetRef = useRef<HTMLDivElement>(null);
@@ -145,7 +148,6 @@ export function SupportChatWidget() {
   const handleDragEnd = useCallback((_: any, info: PanInfo) => {
     if (Math.abs(info.offset.x) > DRAG_THRESHOLD || Math.abs(info.offset.y) > DRAG_THRESHOLD) {
       isDraggingRef.current = true;
-      // Reset after the click event that fires after drag completes
       setTimeout(() => { isDraggingRef.current = false; }, 100);
     }
   }, []);
@@ -384,6 +386,7 @@ export function SupportChatWidget() {
       {/* Toggle button */}
       <motion.button
         drag
+        style={{ x: dragX, y: dragY }}
         dragConstraints={{ top: -500, left: -300, right: 0, bottom: 0 }}
         dragElastic={0.1}
         dragMomentum={false}
@@ -393,16 +396,19 @@ export function SupportChatWidget() {
         onClick={handleToggle}
         aria-label={isOpen ? 'Close support chat' : 'Open support chat'}
         className={cn(
-          'pointer-events-auto h-12 w-12 sm:h-14 sm:w-14 rounded-full shadow-2xl flex items-center justify-center transition-colors duration-300 relative',
+          'pointer-events-auto h-12 w-12 sm:h-14 sm:w-14 rounded-full shadow-2xl transition-colors duration-300 relative',
           isOpen ? 'bg-card border text-foreground' : 'bg-primary text-primary-foreground hover:bg-primary/90'
         )}
       >
-        {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-7 w-7" />}
+        {/* Inner wrapper is not subject to the drag transform — icon stays centered */}
+        <span className="absolute inset-0 flex items-center justify-center">
+          {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-7 w-7" />}
+        </span>
 
         {showUnreadBadge && (
-          <div className="absolute -top-1 -right-1 h-5 w-5 bg-red-600 rounded-full border-2 border-background flex items-center justify-center text-[10px] font-bold text-white shadow-sm animate-pulse" aria-label="Unread messages">
+          <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-600 rounded-full border-2 border-background flex items-center justify-center text-[10px] font-bold text-white shadow-sm animate-pulse" aria-label="Unread messages">
             {isAdmin ? (totalUnreadForAdmin > 9 ? '9+' : totalUnreadForAdmin) : 1}
-          </div>
+          </span>
         )}
       </motion.button>
     </div>
