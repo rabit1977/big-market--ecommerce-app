@@ -51,7 +51,7 @@ export const SearchBar = () => {
     containerRef: searchContainerRef,
   });
 
-  usePathnameClearEffect(resetSearch);
+  usePathnameClearEffect(resetSearch, "/listings");
 
   const handleProductSelection = () => {
     setIsSearchFocused(false);

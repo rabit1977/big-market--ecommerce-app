@@ -23,9 +23,9 @@ export function ListingSearchInput({
   const [value, setValue] = useState(initialValue);
 
   // Sync state if prop changes (External control)
-  useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
+ useEffect(() => {
+  if (initialValue !== value) setValue(initialValue);
+}, [initialValue]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
