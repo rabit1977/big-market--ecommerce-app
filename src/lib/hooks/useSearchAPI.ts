@@ -1,5 +1,5 @@
 import { Listing } from '@/lib/types';
-import { useDeferredValue, useEffect } from 'react';
+import { useDeferredValue, useEffect, useRef } from 'react';
 
 interface UseSearchAPIProps {
   query: string;
@@ -18,35 +18,40 @@ export const useSearchAPI = ({
 }: UseSearchAPIProps) => {
   const deferredQuery = useDeferredValue(query);
 
+  // Refs so the effect never needs setResults/setIsLoading in its dep array
+  const setResultsRef = useRef(setResults);
+  const setIsLoadingRef = useRef(setIsLoading);
+  useEffect(() => { setResultsRef.current = setResults; }, [setResults]);
+  useEffect(() => { setIsLoadingRef.current = setIsLoading; }, [setIsLoading]);
+
   useEffect(() => {
-    const fetchSearchResults = async () => {
-      if (deferredQuery.length < minQueryLength) {
-        setResults([]);
-        setIsLoading(false);
-        return;
-      }
+    if (deferredQuery.length < minQueryLength) {
+      setResultsRef.current([]);
+      setIsLoadingRef.current(false);
+      return;
+    }
 
-      setIsLoading(true);
+    const controller = new AbortController();
+    setIsLoadingRef.current(true);
 
+    const fetchResults = async () => {
       try {
         const response = await fetch(
-          `/api/listings/search?query=${encodeURIComponent(deferredQuery)}`
+          `/api/listings/search?query=${encodeURIComponent(deferredQuery)}`,
+          { signal: controller.signal }
         );
-
-        if (!response.ok) {
-          throw new Error('Search failed');
-        }
-
+        if (!response.ok) throw new Error('Search failed');
         const results = await response.json();
-        setResults(results.slice(0, maxResults));
+        setResultsRef.current(results.slice(0, maxResults));
       } catch (error) {
-        console.error('Search error:', error);
-        setResults([]);
+        if ((error as Error).name === 'AbortError') return;
+        setResultsRef.current([]);
       } finally {
-        setIsLoading(false);
+        setIsLoadingRef.current(false);
       }
     };
 
-    fetchSearchResults();
-  }, [deferredQuery, setResults, setIsLoading, minQueryLength, maxResults]);
+    fetchResults();
+    return () => controller.abort();
+  }, [deferredQuery, minQueryLength, maxResults]);
 };

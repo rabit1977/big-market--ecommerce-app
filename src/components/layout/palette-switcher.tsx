@@ -3,49 +3,53 @@
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-const palettes = [
-  { id: 'default', name: 'Original', color: '#ff0000' },
-  { id: 'twitter', name: 'Ocean', color: '#1da1f2' },
-  { id: 'instagram', name: 'Light Rose', color: '#e1306c' },
-  { id: 'tiktok', name: 'Rose', color: '#ff0050' },
-  { id: 'emerald', name: 'Emerald', color: '#10b981' },
-  { id: 'royal', name: 'Gold', color: '#f59e0b' },
+const PALETTE_KEY = 'app-palette';
+
+const PALETTES = [
+  { id: 'default',   name: 'Original',   color: '#ff0000' },
+  { id: 'twitter',   name: 'Ocean',       color: '#1da1f2' },
+  { id: 'instagram', name: 'Light Rose',  color: '#e1306c' },
+  { id: 'tiktok',    name: 'Rose',        color: '#ff0050' },
+  { id: 'emerald',   name: 'Emerald',     color: '#10b981' },
+  { id: 'royal',     name: 'Gold',        color: '#f59e0b' },
 ];
 
-export function PaletteSwitcher() {
-  const [currentPalette, setCurrentPalette] = useState('default');
+function applyPalette(id: string) {
+  document.documentElement.setAttribute('data-palette', id);
+  localStorage.setItem(PALETTE_KEY, id);
+}
 
-  useEffect(() => {
-    // Load initial palette from localStorage
-    const saved = localStorage.getItem('app-palette') || 'default';
-    setCurrentPalette(saved);
+export function PaletteSwitcher() {
+  // Lazy initialiser reads localStorage once on first render — no flash, no effect needed
+  const [currentPalette, setCurrentPalette] = useState(() => {
+    if (typeof window === 'undefined') return 'default';
+    const saved = localStorage.getItem(PALETTE_KEY) ?? 'default';
     document.documentElement.setAttribute('data-palette', saved);
-  }, []);
+    return saved;
+  });
 
   const handlePaletteChange = (id: string) => {
     setCurrentPalette(id);
-    localStorage.setItem('app-palette', id);
-    document.documentElement.setAttribute('data-palette', id);
-    
-    // Optional: Add a subtle haptic feedback or sound if desired
+    applyPalette(id);
   };
 
   return (
     <div className="space-y-3 px-1">
       <div className="flex flex-wrap gap-1.5 justify-center">
-        {palettes.map((p) => (
+        {PALETTES.map((p) => (
           <button
             key={p.id}
             onClick={() => handlePaletteChange(p.id)}
+            aria-label={`Switch to ${p.name} palette`}
+            aria-pressed={currentPalette === p.id}
             className={cn(
-              "relative flex flex-col items-center gap-1 p-1 rounded-xl transition-all hover:bg-muted group w-[48px]",
-              currentPalette === p.id ? "bg-muted shadow-sm" : "opacity-70 hover:opacity-100"
+              'relative flex flex-col items-center gap-1 p-1 rounded-xl transition-all hover:bg-muted group w-[48px]',
+              currentPalette === p.id ? 'bg-muted shadow-sm' : 'opacity-70 hover:opacity-100'
             )}
-            title={p.name}
           >
-            <div 
+            <div
               className="w-7 h-7 rounded-full border-2 border-background shadow-inner flex items-center justify-center transition-transform group-hover:scale-110"
               style={{ backgroundColor: p.color }}
             >
@@ -56,7 +60,7 @@ export function PaletteSwitcher() {
               )}
             </div>
             <span className="text-[8px] font-bold uppercase tracking-tight truncate w-full text-center leading-tight">
-                {p.name}
+              {p.name}
             </span>
           </button>
         ))}

@@ -6,10 +6,11 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useMutation, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, PanInfo } from 'framer-motion';
 import {
   ArrowLeft,
   Headset,
+  Loader2,
   MessageCircle,
   Search,
   Send,
@@ -18,40 +19,34 @@ import {
   X
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
+import { Id } from '../../../convex/_generated/dataModel';
 
 export function SupportChatWidget() {
   const { data: session } = useSession();
+  
+  // State
   const [isOpen, setIsOpen] = useState(false);
   const [activeChatUser, setActiveChatUser] = useState<string | null>(null);
   const [selectedUserObj, setSelectedUserObj] = useState<any>(null);
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isDragging, setIsDragging] = useState(false); // Track dragging state
+
+  // Refs
   const scrollRef = useRef<HTMLDivElement>(null);
   const widgetRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (widgetRef.current && !widgetRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
-
+  // Constants
   const ADMIN_ID = 'ADMIN';
   const userId = session?.user?.id;
-  const isAdmin = (session?.user as any)?.role === 'ADMIN';
+  const userRole = (session?.user as { role?: string })?.role;
+  const isAdmin = userRole === 'ADMIN';
 
-  // --- REGULAR USER QUERIES ---
+  // --- QUERIES ---
+
+  // 1. Regular User Messages
   const userMessages = useQuery(api.messages.getConversation, 
     !isAdmin && isOpen && userId ? {
       listingId: undefined,
@@ -60,11 +55,12 @@ export function SupportChatWidget() {
     } : "skip"
   ) || [];
 
-  // --- ADMIN QUERIES ---
+  // 2. Admin: List of Conversations
   const adminConversations = useQuery(api.messages.getSupportConversations, 
     isAdmin && isOpen ? {} : "skip"
   ) || [];
 
+  // 3. Admin: Active Chat Messages
   const adminActiveMessages = useQuery(api.messages.getConversation, 
     isAdmin && isOpen && activeChatUser ? {
       listingId: undefined,
@@ -77,69 +73,120 @@ export function SupportChatWidget() {
     isAdmin ? {} : "skip"
   ) || 0;
 
+  // Mutations
   const sendMessage = useMutation(api.messages.send);
   const markRead = useMutation(api.messages.markConversationAsRead);
 
-  // Mark as read logic
-  useEffect(() => {
-    // User marks admin messages as read
-    if (!isAdmin && isOpen && userId && userMessages.length > 0) {
-      markRead({ listingId: undefined, userId: userId, otherUserId: ADMIN_ID }).catch(console.error);
-    }
-    // Admin marks user messages as read
-    if (isAdmin && isOpen && activeChatUser && adminActiveMessages.length > 0) {
-      markRead({ listingId: undefined, userId: ADMIN_ID, otherUserId: activeChatUser }).catch(console.error);
-    }
-  }, [isOpen, userId, userMessages.length, adminActiveMessages.length, isAdmin, activeChatUser, markRead]);
+  // --- EFFECTS ---
 
-  // Scroll to bottom
+  // 1. Handle Click Outside
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+    const handleClickOutside = (event: MouseEvent) => {
+      if (widgetRef.current && !widgetRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    if (isOpen) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen]);
+
+  // 2. Optimized Mark as Read (Only fires if unread items exist)
+  useEffect(() => {
+    const markAsReadSafe = async (targetUserId: string, selfId: string) => {
+      try {
+        await markRead({ listingId: undefined, userId: selfId, otherUserId: targetUserId });
+      } catch (err) {
+        console.error("Failed to mark read", err);
+      }
+    };
+
+    // User Scenario
+    if (!isAdmin && isOpen && userId && userMessages.length > 0) {
+      // Check if the last message is NOT from me and is NOT read (Optimistic check could go here)
+      const lastMsg = userMessages[userMessages.length - 1];
+      if (lastMsg.senderId !== userId && !lastMsg.read) {
+        markAsReadSafe(ADMIN_ID, userId);
+      }
     }
-  }, [userMessages, adminActiveMessages, isOpen, activeChatUser]);
+
+    // Admin Scenario
+    if (isAdmin && isOpen && activeChatUser && adminActiveMessages.length > 0) {
+      const lastMsg = adminActiveMessages[adminActiveMessages.length - 1];
+      if (lastMsg.senderId !== ADMIN_ID && !lastMsg.read) {
+         markAsReadSafe(activeChatUser, ADMIN_ID);
+      }
+    }
+  }, [isOpen, userId, userMessages, adminActiveMessages, isAdmin, activeChatUser, markRead]);
+
+  // 3. Smooth Scroll to Bottom (useLayoutEffect prevents visual jitter)
+  useLayoutEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  }, [userMessages.length, adminActiveMessages.length, isOpen, activeChatUser]);
+
+  // --- HANDLERS ---
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim() || !userId) return;
 
+    const content = newMessage;
+    setNewMessage(''); // Optimistic clear
+
     try {
       await sendMessage({
-        content: newMessage,
+        content,
         senderId: isAdmin ? ADMIN_ID : userId,
         receiverId: isAdmin ? (activeChatUser!) : ADMIN_ID,
         type: 'SUPPORT'
       });
-      setNewMessage('');
     } catch (error) {
-      console.error('Failed to send support message:', error);
+      setNewMessage(content); // Restore on failure
+      console.error('Failed to send:', error);
     }
   };
 
+  // Logic to prevent click when dragging
+  const onDragEnd = (event: any, info: PanInfo) => {
+    // If moved more than 3 pixels, consider it a drag, not a click
+    if (Math.abs(info.offset.x) > 3 || Math.abs(info.offset.y) > 3) {
+      setIsDragging(true);
+      setTimeout(() => setIsDragging(false), 100); // Reset after short delay
+    }
+  };
+
+  // Filter Admin Convos
   const filteredAdminsConversations = adminConversations.filter(c => 
     c.otherUser?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     c.otherUser?.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const currentMessages = isAdmin ? adminActiveMessages : userMessages;
+
   return (
-    <div ref={widgetRef} className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[100] flex flex-col items-end">
+    <div ref={widgetRef} className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[100] flex flex-col items-end pointer-events-none">
+      {/* pointer-events-none on wrapper allows clicking through empty space, 
+         but we must re-enable pointer-events-auto on children 
+      */}
+      
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="mb-4 w-[90vw] sm:w-[400px] h-[80dvh] sm:h-[550px] bg-card border rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            className="pointer-events-auto mb-4 w-[90vw] sm:w-[400px] h-[80dvh] sm:h-[550px] bg-card border rounded-2xl shadow-2xl flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="p-4 bg-primary text-primary-foreground flex items-center justify-between">
+            <div className="p-4 bg-primary text-primary-foreground flex items-center justify-between shadow-md z-10">
               <div className="flex items-center gap-3">
                 {isAdmin && activeChatUser ? (
                     <Button 
                         variant="ghost" 
                         size="icon" 
                         onClick={() => { setActiveChatUser(null); setSelectedUserObj(null); }}
-                        className="h-8 w-8 hover:bg-primary-foreground/10 text-primary-foreground"
+                        className="h-8 w-8 hover:bg-primary-foreground/10 text-primary-foreground -ml-2"
                     >
                         <ArrowLeft className="h-5 w-5" />
                     </Button>
@@ -189,22 +236,23 @@ export function SupportChatWidget() {
                 <div className="flex-1 flex flex-col overflow-hidden">
                     <div className="p-3 border-b bg-muted/20">
                         <div className="relative">
-                            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                             <Input 
                                 placeholder="Search conversations..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-8 h-8 text-xs bg-background"
+                                className="pl-8 h-9 text-xs bg-background/50 border-transparent focus:bg-background transition-colors"
                             />
                         </div>
                     </div>
                     <div className="flex-1 overflow-y-auto overscroll-contain">
                         {filteredAdminsConversations.length === 0 ? (
-                            <div className="p-12 text-center text-muted-foreground text-sm">
-                                No active support chats.
+                            <div className="flex flex-col items-center justify-center h-full text-muted-foreground gap-2">
+                                <MessageCircle className="h-8 w-8 opacity-20" />
+                                <p className="text-sm">No active support chats.</p>
                             </div>
                         ) : (
-                            <div className="divide-y">
+                            <div className="divide-y divide-border/40">
                                 {filteredAdminsConversations.map((conv) => (
                                     <button
                                         key={conv._id}
@@ -225,43 +273,46 @@ export function SupportChatWidget() {
                                                 <span className="font-bold text-sm truncate">{conv.otherUser?.name || 'User'}</span>
                                                 <span className="text-[10px] text-muted-foreground">{formatDistanceToNow(conv.lastMessageAt, { addSuffix: true })}</span>
                                             </div>
-                                            <p className="text-xs text-muted-foreground truncate italic">"{conv.lastMessage}"</p>
+                                            <p className="text-xs text-muted-foreground truncate opacity-80 group-hover:opacity-100">
+                                                {conv.lastMessage}
+                                            </p>
                                         </div>
                                     </button>
                                 ))}
                             </div>
                         )}
                     </div>
-                    <div className="p-3 bg-muted/10 border-t text-[10px] text-center text-muted-foreground">
-                        Select a user to begin responding to their inquiry
-                    </div>
                 </div>
               ) : (
-                // --- CHAT VIEW (Admin-to-User or User-to-Admin) ---
+                // --- CHAT VIEW ---
                 <>
-                  <div className="flex-1 overflow-y-auto overscroll-contain p-4">
+                  <div className="flex-1 overflow-y-auto overscroll-contain p-4 bg-slate-50 dark:bg-slate-900/50">
                     <div className="space-y-4">
-                      {/* Initial Message (Only for regular users) */}
                       {!isAdmin && (
-                        <div className="flex justify-start">
-                           <div className="bg-muted rounded-2xl rounded-bl-none px-4 py-3 text-sm max-w-[85%]">
-                             <p className="font-medium mb-1">Big Market Support</p>
+                        <div className="flex justify-start animate-in slide-in-from-left-2 duration-300">
+                           <div className="bg-white dark:bg-card border rounded-2xl rounded-bl-none px-4 py-3 text-sm max-w-[85%] shadow-sm">
+                             <p className="font-bold text-primary mb-1 text-xs">Big Market Support</p>
                              <p>Hi! How can we help you today? We're usually online to help with technical issues.</p>
                            </div>
                         </div>
                       )}
 
-                      {(isAdmin ? adminActiveMessages : userMessages).map((msg) => {
+                      {currentMessages.map((msg) => {
                         const isMe = isAdmin ? msg.senderId === ADMIN_ID : msg.senderId === userId;
                         return (
                             <div key={msg._id} className={cn("flex", isMe ? "justify-end" : "justify-start")}>
                               <div className={cn(
                                 "max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm",
-                                isMe ? "bg-primary text-primary-foreground rounded-br-none" : "bg-muted text-foreground rounded-bl-none"
+                                isMe 
+                                    ? "bg-primary text-primary-foreground rounded-br-none" 
+                                    : "bg-white dark:bg-card border text-foreground rounded-bl-none"
                               )}>
-                                <p className="whitespace-pre-wrap">{msg.content}</p>
-                                <p className={cn("text-[9px] mt-1 opacity-70", isMe ? "text-right" : "text-left")}>
-                                  {formatDistanceToNow(msg.createdAt, { addSuffix: true })}
+                                <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+                                <p className={cn(
+                                    "text-[9px] mt-1 opacity-70", 
+                                    isMe ? "text-right text-primary-foreground/80" : "text-left text-muted-foreground"
+                                )}>
+                                  {formatDistanceToNow(msg.createdAt)}
                                 </p>
                               </div>
                             </div>
@@ -271,20 +322,26 @@ export function SupportChatWidget() {
                     </div>
                   </div>
 
-                  <div className="p-4 border-t bg-muted/30">
+                  <div className="p-3 border-t bg-background">
                     <form onSubmit={handleSend} className="flex gap-2">
                       <Input 
                         placeholder="Type a response..."
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
-                        className="bg-background shadow-inner"
+                        className="bg-muted/30 border-transparent focus:bg-background focus:border-primary/20 transition-all rounded-full px-4"
                       />
-                      <Button type="submit" size="icon" disabled={!newMessage.trim()}>
+                      <Button 
+                        type="submit" 
+                        size="icon" 
+                        disabled={!newMessage.trim()}
+                        className="rounded-full h-10 w-10 shrink-0"
+                      >
                         <Send className="h-4 w-4" />
                       </Button>
                     </form>
-                    <p className="text-[10px] text-center text-muted-foreground mt-2 flex items-center justify-center gap-1">
-                      <ShieldCheck className="h-3 w-3" /> {isAdmin ? 'Direct Admin Reply' : 'Secure support channel'}
+                    <p className="text-[10px] text-center text-muted-foreground mt-2 flex items-center justify-center gap-1.5 opacity-70">
+                      <ShieldCheck className="h-3 w-3" /> 
+                      {isAdmin ? 'Direct Admin Reply' : 'Secure Encrypted Channel'}
                     </p>
                   </div>
                 </>
@@ -294,36 +351,38 @@ export function SupportChatWidget() {
         )}
       </AnimatePresence>
 
-      {/* Toggle Button - Now Draggable vertically */}
+      {/* Toggle Button */}
       <motion.button
-        drag="y"
-        dragConstraints={{ top: -600, bottom: 0 }}
+        drag 
+        dragConstraints={{ top: -500, left: -300, right: 0, bottom: 0 }}
         dragElastic={0.1}
         dragMomentum={false}
+        onDragEnd={onDragEnd}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={(e) => {
+            // Only toggle if we aren't dragging
+            if (!isDragging) setIsOpen(!isOpen);
+        }}
         className={cn(
-          "h-12 w-12 sm:h-14 sm:w-14 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 z-[110] relative",
-          isOpen ? "bg-card border rotate-90" : "bg-primary text-primary-foreground"
+          "pointer-events-auto h-12 w-12 sm:h-14 sm:w-14 rounded-full shadow-2xl flex items-center justify-center transition-colors duration-300 relative",
+          isOpen ? "bg-card border text-foreground" : "bg-primary text-primary-foreground hover:bg-primary/90"
         )}
       >
         {isOpen ? (
-          <X className="h-5 w-5 sm:h-6 sm:w-6 text-foreground" />
+          <X className="h-6 w-6" />
         ) : (
-          <MessageCircle className="h-6 w-6 sm:h-7 sm:w-7" />
+          <MessageCircle className="h-7 w-7" />
         )}
         
-        {/* Real-time Unread Badge */}
-        {!isOpen && (isAdmin ? totalUnreadForAdmin > 0 : false) && (
-            <div className="absolute -top-1 -right-1 h-5 w-5 sm:h-6 sm:w-6 bg-red-600 rounded-full border-2 border-background flex items-center justify-center text-[10px] font-bold text-white shadow-lg animate-pulse">
-                {totalUnreadForAdmin > 9 ? '9+' : totalUnreadForAdmin}
+        {/* Unread Badge */}
+        {!isOpen && (
+             (isAdmin && totalUnreadForAdmin > 0) || 
+             (!isAdmin && userMessages.some(m => !m.read && m.senderId === ADMIN_ID))
+        ) && (
+            <div className="absolute -top-1 -right-1 h-5 w-5 bg-red-600 rounded-full border-2 border-background flex items-center justify-center text-[10px] font-bold text-white shadow-sm animate-pulse">
+              {isAdmin ? (totalUnreadForAdmin > 9 ? '9+' : totalUnreadForAdmin) : 1}
             </div>
-        )}
-        
-        {/* Simple User Notification Dot */}
-        {!isOpen && !isAdmin && (
-            <div className="absolute top-0 right-0 h-3 w-3 sm:h-4 sm:w-4 bg-emerald-500 rounded-full border-2 border-background animate-pulse" />
         )}
       </motion.button>
     </div>

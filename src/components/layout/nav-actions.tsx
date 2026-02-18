@@ -6,54 +6,31 @@ import { Button } from '@/components/ui/button';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { api } from '@/convex/_generated/api';
 import { cn } from '@/lib/utils';
 import { useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  BadgeCheck,
-  BarChart,
-  Bell,
-  ChevronRight,
-  CreditCard,
-  Crown,
-  Heart,
-  HelpCircle,
-  Home,
-  LayoutDashboard,
-  Lock,
-  LogOut,
-  MessageSquare,
-  Package,
-  Pencil,
-  Settings,
-  ShieldCheck,
-  Star,
-  Store,
-  Trash,
-  User,
-  Wallet,
-  X
+  BadgeCheck, BarChart, Bell, ChevronRight, CreditCard, Crown,
+  Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
+  MessageSquare, Package, Pencil, Settings, ShieldCheck,
+  Star, Store, Trash, User, Wallet, X,
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { api } from '../../../convex/_generated/api';
 import { PaletteSwitcher } from './palette-switcher';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface NavActionsProps {
   initialWishlistCount: number;
 }
 
-// Menu item definition for clean rendering
 interface MenuItem {
   href: string;
   icon: React.ElementType;
@@ -61,47 +38,47 @@ interface MenuItem {
   badge?: number;
   highlight?: boolean;
   iconColor?: string;
-  showOnDesktop?: boolean;
-  adminOnly?: boolean;
   danger?: boolean;
 }
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function renderSectionLabel(label: string) {
+  return (
+    <div className="px-2.5 pt-2.5 pb-1">
+      <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
 export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
-  const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [hasMounted, setHasMounted] = useState(false);
   const { data: session } = useSession();
   const user = session?.user;
-  
-  // Real-time queries
-  const unreadNotificationsCount = useQuery(api.notifications.getUnreadCount, user?.id ? { userId: user.id } : "skip") || 0;
-  const unreadMessagesCount = useQuery(api.messages.getUnreadCount, user?.id ? { userId: user.id } : "skip") || 0;
-  
-  // Fetch recent notifications for hover (only if user exists, limit 5)
-  // We use key "skip" if no user, to prevent query execution
-  const recentNotifications = useQuery(api.notifications.list, user?.id ? { userId: user.id, limit: 5, unreadOnly: false, skip: 0 } : "skip");
-  
+
+  const unreadNotificationsCount =
+    useQuery(api.notifications.getUnreadCount, user?.id ? { userId: user.id } : 'skip') ?? 0;
+  const unreadMessagesCount =
+    useQuery(api.messages.getUnreadCount, user?.id ? { userId: user.id } : 'skip') ?? 0;
+  const recentNotifications = useQuery(
+    api.notifications.list,
+    user?.id ? { userId: user.id, limit: 5, unreadOnly: false, skip: 0 } : 'skip'
+  );
+
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [lastSeenAlertCount, setLastSeenAlertCount] = useState(0);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { setHasMounted(true); }, []);
-
-  // Close panel on route change
-  useEffect(() => { setIsPanelOpen(false); }, [pathname]);
-
-  const handleLogout = useCallback(() => { signOut({ callbackUrl: '/' }); }, []);
-
-  // Total alert count for the avatar badge
   const totalAlertCount = unreadNotificationsCount + unreadMessagesCount;
 
-  const handlePanelToggle = useCallback(() => {
-    setIsPanelOpen(prev => {
-      if (!prev) setLastSeenAlertCount(totalAlertCount);
-      return !prev;
-    });
-  }, [totalAlertCount]);
+  // Close panel on route change
+  useEffect(() => {
+    setIsPanelOpen(false);
+  }, [pathname]);
 
   // Close on click outside
   useEffect(() => {
@@ -127,38 +104,30 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
 
   // Lock body scroll when panel is open
   useEffect(() => {
-    if (isPanelOpen) {
-      const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-    } else {
-      const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      if (scrollY) window.scrollTo(0, parseInt(scrollY || '0') * -1);
-    }
+    if (!isPanelOpen) return;
+    const scrollY = window.scrollY;
+    document.body.style.cssText = `position:fixed;top:-${scrollY}px;width:100%`;
     return () => {
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
+      document.body.style.cssText = '';
+      window.scrollTo(0, scrollY);
     };
   }, [isPanelOpen]);
 
-  if (!hasMounted) {
-    return (
-      <div className='flex items-center gap-1 sm:gap-2'>
-        <Skeleton className='h-9 w-9 rounded-full' />
-      </div>
-    );
-  }
+  const handlePanelToggle = useCallback(() => {
+    setIsPanelOpen((prev) => {
+      if (!prev) setLastSeenAlertCount(totalAlertCount);
+      return !prev;
+    });
+  }, [totalAlertCount]);
 
-  // ─── Menu sections ───
-  const quickActions: MenuItem[] = [
-    { href: '/sell', icon: Pencil, label: 'Post New Listing', highlight: true, iconColor: 'text-primary' },
-    { href: '/premium', icon: Star, label: 'Become Premium', iconColor: 'text-amber-500' },
-  ];
+  const handleLogout = useCallback(() => {
+    signOut({ callbackUrl: '/' });
+  }, []);
+
+  const closePanel = useCallback(() => setIsPanelOpen(false), []);
+
+  // ── Menu sections (stable — derived from user, not re-created on every render) ──
+  const isAdmin = user?.role === 'ADMIN';
 
   const mobileOnlyItems: MenuItem[] = [
     { href: '/', icon: Home, label: 'Home' },
@@ -177,48 +146,51 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   const settingsItems: MenuItem[] = [
     { href: '/account', icon: Settings, label: 'Edit Profile' },
     { href: '/account/password', icon: Lock, label: 'Change Password' },
-    // Only show Verification and Premium for non-admins
-    ...(user?.role !== 'ADMIN' ? [
-        { href: '/account/verification', icon: ShieldCheck, label: 'Verification' },
-        { href: '/premium', icon: Crown, label: 'Subscription Plans', iconColor: 'text-amber-500' },
-    ] : [])
+    ...(!isAdmin ? [
+      { href: '/account/verification', icon: ShieldCheck, label: 'Verification' },
+      { href: '/premium', icon: Crown, label: 'Subscription Plans', iconColor: 'text-amber-500' },
+    ] : []),
   ];
-  
+
   const supportItems: MenuItem[] = [
     { href: '/help', icon: HelpCircle, label: 'Help Center' },
     { href: '/messages?type=SUPPORT', icon: MessageSquare, label: 'Live Support Chat', iconColor: 'text-primary' },
   ];
 
-  const adminItems: MenuItem[] = user?.role === 'ADMIN' ? [
-    { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Admin Panel', iconColor: 'text-primary' },
-  ] : [];
+  const adminItems: MenuItem[] = isAdmin
+    ? [{ href: '/admin/dashboard', icon: LayoutDashboard, label: 'Admin Panel', iconColor: 'text-primary' }]
+    : [];
 
   const dangerItems: MenuItem[] = [
     { href: '/account/delete', icon: Trash, label: 'Delete Account', danger: true },
   ];
 
-  const renderMenuItem = (item: MenuItem, onNavigate: () => void) => {
+  const renderMenuItem = (item: MenuItem) => {
     const isActive = pathname === item.href;
     return (
       <Link
         key={item.href}
         href={item.href}
-        onClick={onNavigate}
+        onClick={closePanel}
         className={cn(
-          "flex items-center gap-2.5 py-2 px-2.5 rounded-lg text-[13px] font-medium transition-all group",
+          'flex items-center gap-2.5 py-2 px-2.5 rounded-lg text-[13px] font-medium transition-all group',
           isActive
-            ? "bg-primary/8 text-primary font-semibold"
+            ? 'bg-primary/8 text-primary font-semibold'
             : item.danger
-              ? "text-muted-foreground hover:text-destructive hover:bg-destructive/5"
+              ? 'text-muted-foreground hover:text-destructive hover:bg-destructive/5'
               : item.highlight
-                ? "text-primary bg-primary/5 hover:bg-primary/10 font-semibold"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                ? 'text-primary bg-primary/5 hover:bg-primary/10 font-semibold'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
         )}
       >
-        <item.icon className={cn("w-3.5 h-3.5 shrink-0", item.iconColor || (isActive ? "text-primary" : ""), item.danger && "group-hover:text-destructive")} />
-        <span className='flex-1'>{item.label}</span>
+        <item.icon className={cn(
+          'w-3.5 h-3.5 shrink-0',
+          item.iconColor || (isActive ? 'text-primary' : ''),
+          item.danger && 'group-hover:text-destructive'
+        )} />
+        <span className="flex-1">{item.label}</span>
         {item.badge && item.badge > 0 ? (
-          <Badge className='h-[18px] min-w-[18px] px-1 bg-primary hover:bg-primary/90 text-[9px] font-bold'>
+          <Badge className="h-[18px] min-w-[18px] px-1 bg-primary hover:bg-primary/90 text-[9px] font-bold">
             {item.badge > 99 ? '99+' : item.badge}
           </Badge>
         ) : (
@@ -228,27 +200,45 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
     );
   };
 
-  const renderSectionLabel = (label: string) => (
-    <div className='px-2.5 pt-2.5 pb-1'>
-      <span className='text-[9px] font-black uppercase tracking-widest text-muted-foreground/40'>
-        {label}
-      </span>
-    </div>
-  );
+  // ── Render ─────────────────────────────────────────────────────────────────
+
+  if (!user) {
+    // Show skeleton while session loads, login button when confirmed unauthenticated
+    if (session === undefined) {
+      return (
+        <div className="flex items-center gap-1 sm:gap-2">
+          <Skeleton className="h-9 w-9 rounded-full" />
+        </div>
+      );
+    }
+    return (
+      <Button asChild variant="ghost" size="sm" className="h-9 px-3 rounded-full font-bold hover:bg-muted ml-1">
+        <Link href="/auth">
+          <User className="h-4 w-4 mr-1.5" />
+          Login
+        </Link>
+      </Button>
+    );
+  }
+
+  const userDisplayName =
+    (user as any).accountType === 'COMPANY' && (user as any).companyName
+      ? (user as any).companyName
+      : user.name;
 
   return (
     <>
-      <div className='flex items-center gap-1 sm:gap-1.5'>
-        {/* Desktop: Admin Dashboard */}
-        {user?.role === 'ADMIN' && (
+      <div className="flex items-center gap-1 sm:gap-1.5">
+        {/* Admin Dashboard */}
+        {isAdmin && (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  asChild variant='ghost' size='icon'
-                  className='relative hidden md:flex h-9 w-9 rounded-full text-primary hover:bg-primary/10'
+                  asChild variant="ghost" size="icon"
+                  className="relative hidden md:flex h-9 w-9 rounded-full text-primary hover:bg-primary/10"
                 >
-                  <Link href="/admin/dashboard">
+                  <Link href="/admin/dashboard" aria-label="Admin Dashboard">
                     <LayoutDashboard className="h-4.5 w-4.5" />
                   </Link>
                 </Button>
@@ -258,20 +248,23 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
           </TooltipProvider>
         )}
 
-        {/* Desktop: Favorites */}
+        {/* Favorites */}
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                asChild variant='ghost' size='icon'
-                className='relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10'
+                asChild variant="ghost" size="icon"
+                className="relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10"
               >
-                <Link href="/favorites">
+                <Link href="/favorites" aria-label={`Favorites${initialWishlistCount > 0 ? ` (${initialWishlistCount})` : ''}`}>
                   <Heart className="h-4.5 w-4.5" />
                   <AnimatePresence>
                     {initialWishlistCount > 0 && (
-                      <motion.span key='wishlist-badge' initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                        className='absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
+                      <motion.span
+                        key="wishlist-badge"
+                        initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                        className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background"
+                        aria-hidden="true"
                       >
                         {initialWishlistCount > 9 ? '9+' : initialWishlistCount}
                       </motion.span>
@@ -284,20 +277,23 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
           </Tooltip>
         </TooltipProvider>
 
-        {/* Desktop: Messages */}
+        {/* Messages */}
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                asChild variant='ghost' size='icon'
-                className='relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10'
+                asChild variant="ghost" size="icon"
+                className="relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10"
               >
-                <Link href="/messages">
-                  <MessageSquare className={cn("h-4.5 w-4.5", unreadMessagesCount > 0 && "text-primary")} />
+                <Link href="/messages" aria-label={`Messages${unreadMessagesCount > 0 ? ` (${unreadMessagesCount} unread)` : ''}`}>
+                  <MessageSquare className={cn('h-4.5 w-4.5', unreadMessagesCount > 0 && 'text-primary')} />
                   <AnimatePresence>
                     {unreadMessagesCount > 0 && (
-                      <motion.span key='messages-badge' initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                        className='absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
+                      <motion.span
+                        key="messages-badge"
+                        initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                        className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background"
+                        aria-hidden="true"
                       >
                         {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
                       </motion.span>
@@ -310,15 +306,15 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
           </Tooltip>
         </TooltipProvider>
 
-        {/* Desktop & Mobile: Help Center */}
+        {/* Help */}
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                asChild variant='ghost' size='icon'
-                className='relative h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 border border-border/40'
+                asChild variant="ghost" size="icon"
+                className="relative h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 border border-border/40"
               >
-                <Link href="/help">
+                <Link href="/help" aria-label="Help Center">
                   <HelpCircle className="h-4.5 w-4.5" />
                 </Link>
               </Button>
@@ -327,237 +323,209 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
           </Tooltip>
         </TooltipProvider>
 
-        {/* User Avatar Trigger with Hover Card */}
-        {user ? (
-          <HoverCard openDelay={200}>
-            <HoverCardTrigger asChild>
-              <button
-                onClick={handlePanelToggle}
-                className='relative ml-0.5 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50'
-              >
-                <UserAvatar
-                  user={user}
-                  className='h-8 w-8 md:h-9 md:w-9 border-2 border-background shadow-sm hover:shadow-md transition-shadow'
-                />
-                <AnimatePresence>
-                  {totalAlertCount > 0 && totalAlertCount > lastSeenAlertCount && !isPanelOpen && (
-                    <motion.span key='user-badge' initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                      className='absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background'
-                    >
-                      {totalAlertCount > 9 ? '9+' : totalAlertCount}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </button>
-            </HoverCardTrigger>
-            
-            {/* Hover Content for Notifications */}
-            <HoverCardContent align="end" className="w-80 p-0 overflow-hidden shadow-xl border-border/60">
-                <div className="bg-muted/50 p-3 border-b border-border/50 flex items-center justify-between">
-                    <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">Notifications</span>
-                    {totalAlertCount > 0 && (
-                        <Badge className="h-5 px-1.5 bg-primary text-[10px] font-bold">{totalAlertCount} new</Badge>
-                    )}
-                </div>
-                
-                {/* Unread Messages Alert */}
-                {unreadMessagesCount > 0 && (
-                    <div className="p-2 border-b border-border/40">
-                         <Link href="/messages" className="flex items-center gap-3 p-2 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors group">
-                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                                <MessageSquare className="w-4 h-4 text-primary" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <p className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">
-                                    You have {unreadMessagesCount} unread message{unreadMessagesCount !== 1 ? 's' : ''}
-                                </p>
-                                <p className="text-[10px] text-muted-foreground font-medium">Click to view conversations</p>
-                            </div>
-                            <ChevronRight className="w-4 h-4 text-muted-foreground/50 group-hover:text-primary transition-colors" />
-                         </Link>
-                    </div>
+        {/* Avatar + Hover Card */}
+        <HoverCard openDelay={200}>
+          <HoverCardTrigger asChild>
+            <button
+              onClick={handlePanelToggle}
+              className="relative ml-0.5 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+              aria-label="Open account menu"
+            >
+              <UserAvatar
+                user={user}
+                className="h-8 w-8 md:h-9 md:w-9 border-2 border-background shadow-sm hover:shadow-md transition-shadow"
+              />
+              <AnimatePresence>
+                {totalAlertCount > 0 && totalAlertCount > lastSeenAlertCount && !isPanelOpen && (
+                  <motion.span
+                    key="user-badge"
+                    initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                    className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background"
+                    aria-hidden="true"
+                  >
+                    {totalAlertCount > 9 ? '9+' : totalAlertCount}
+                  </motion.span>
                 )}
-                
-                {/* Notification List */}
-                <ScrollArea className="max-h-[300px]">
-                    {!recentNotifications || (recentNotifications.notifications.length === 0 && unreadMessagesCount === 0) ? (
-                        <div className="py-8 text-center px-4">
-                            <Bell className="w-8 h-8 text-muted-foreground/20 mx-auto mb-2" />
-                            <p className="text-xs font-medium text-muted-foreground">No new notifications</p>
-                        </div>
-                    ) : (
-                        <div className="p-1">
-                            {recentNotifications?.notifications.map((n) => (
-                                <Link 
-                                    key={n._id} 
-                                    href={n.link || '/account/notifications'}
-                                    className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors group relative"
-                                >
-                                    {!n.isRead && (
-                                        <span className="absolute left-1 top-3 w-1.5 h-1.5 rounded-full bg-primary" />
-                                    )}
-                                    <div className={cn("ml-2 min-w-0 flex-1", !n.isRead ? "font-semibold" : "opacity-80")}>
-                                        <p className="text-[11px] leading-tight mb-0.5 line-clamp-2">{n.message}</p>
-                                        <p className="text-[9px] text-muted-foreground">
-                                            {formatDistanceToNow(n.createdAt, { addSuffix: true })}
-                                        </p>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
-                    )}
-                </ScrollArea>
-                
-                <div className="p-2 border-t border-border/40 bg-muted/20">
-                    <Button asChild variant="ghost" size="sm" className="w-full h-7 text-[10px] font-bold text-muted-foreground hover:text-primary">
-                        <Link href="/account/notifications">View All Notifications</Link>
-                    </Button>
+              </AnimatePresence>
+            </button>
+          </HoverCardTrigger>
+
+          <HoverCardContent align="end" className="w-80 p-0 overflow-hidden shadow-xl border-border/60">
+            <div className="bg-muted/50 p-3 border-b border-border/50 flex items-center justify-between">
+              <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">Notifications</span>
+              {totalAlertCount > 0 && (
+                <Badge className="h-5 px-1.5 bg-primary text-[10px] font-bold">{totalAlertCount} new</Badge>
+              )}
+            </div>
+
+            {unreadMessagesCount > 0 && (
+              <div className="p-2 border-b border-border/40">
+                <Link
+                  href="/messages"
+                  className="flex items-center gap-3 p-2 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors group"
+                >
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                    <MessageSquare className="w-4 h-4 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">
+                      You have {unreadMessagesCount} unread message{unreadMessagesCount !== 1 ? 's' : ''}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground font-medium">Click to view conversations</p>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-muted-foreground/50 group-hover:text-primary transition-colors" />
+                </Link>
+              </div>
+            )}
+
+            <ScrollArea className="max-h-[300px]">
+              {!recentNotifications || (recentNotifications.notifications.length === 0 && unreadMessagesCount === 0) ? (
+                <div className="py-8 text-center px-4">
+                  <Bell className="w-8 h-8 text-muted-foreground/20 mx-auto mb-2" />
+                  <p className="text-xs font-medium text-muted-foreground">No new notifications</p>
                 </div>
-            </HoverCardContent>
-          </HoverCard>
-        ) : (
-          <Button asChild variant='ghost' size='sm' className='h-9 px-3 rounded-full font-bold hover:bg-muted ml-1'>
-            <Link href='/auth'>
-              <User className='h-4 w-4 mr-1.5' />
-              Login
-            </Link>
-          </Button>
-        )}
+              ) : (
+                <div className="p-1">
+                  {recentNotifications?.notifications.map((n) => (
+                    <Link
+                      key={n._id}
+                      href={n.link || '/account/notifications'}
+                      className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors group relative"
+                    >
+                      {!n.isRead && (
+                        <span className="absolute left-1 top-3 w-1.5 h-1.5 rounded-full bg-primary" aria-hidden="true" />
+                      )}
+                      <div className={cn('ml-2 min-w-0 flex-1', !n.isRead ? 'font-semibold' : 'opacity-80')}>
+                        <p className="text-[11px] leading-tight mb-0.5 line-clamp-2">{n.message}</p>
+                        <p className="text-[9px] text-muted-foreground">
+                          {formatDistanceToNow(n.createdAt, { addSuffix: true })}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
+
+            <div className="p-2 border-t border-border/40 bg-muted/20">
+              <Button asChild variant="ghost" size="sm" className="w-full h-7 text-[10px] font-bold text-muted-foreground hover:text-primary">
+                <Link href="/account/notifications">View All Notifications</Link>
+              </Button>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
       </div>
 
-      {/* ───── User Account Panel (portaled, slides from right) ───── */}
-      {user && typeof document !== 'undefined' && createPortal(
-        <AnimatePresence mode='wait'>
+      {/* Account Panel — portaled */}
+      {createPortal(
+        <AnimatePresence mode="wait">
           {isPanelOpen && (
             <>
-              {/* Backdrop */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className='fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm'
-                onClick={() => setIsPanelOpen(false)}
+                className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm"
+                onClick={closePanel}
+                aria-hidden="true"
               />
 
-              {/* Panel */}
               <motion.div
                 ref={panelRef}
                 initial={{ x: '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                className='fixed top-0 bottom-0 right-0 z-[60] w-[80%] max-w-xs bg-background shadow-2xl flex flex-col overflow-hidden'
+                className="fixed top-0 bottom-0 right-0 z-[60] w-[80%] max-w-xs bg-background shadow-2xl flex flex-col overflow-hidden"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Account menu"
               >
-                {/* Panel Header — User Info */}
-                <div className='px-4 pt-4 pb-3 border-b shrink-0'>
-                  <div className='flex items-center justify-between mb-3'>
-                    <div className='flex items-center gap-2.5 min-w-0'>
-                      <UserAvatar user={user} className='h-9 w-9 border-2 border-border shadow-sm shrink-0' />
-                      <div className='overflow-hidden min-w-0'>
-                        <div className='flex items-center gap-1'>
-                          <span className='font-bold text-[13px] truncate'>
-                            {(user as any).accountType === 'COMPANY' && (user as any).companyName 
-                              ? (user as any).companyName 
-                              : user.name}
-                          </span>
-                          <BadgeCheck className='w-3 h-3 text-primary shrink-0' />
+                {/* Header */}
+                <div className="px-4 pt-4 pb-3 border-b shrink-0">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <UserAvatar user={user} className="h-9 w-9 border-2 border-border shadow-sm shrink-0" />
+                      <div className="overflow-hidden min-w-0">
+                        <div className="flex items-center gap-1">
+                          <span className="font-bold text-[13px] truncate">{userDisplayName}</span>
+                          <BadgeCheck className="w-3 h-3 text-primary shrink-0" />
                         </div>
-                        <p className='text-[10px] text-muted-foreground truncate leading-tight'>{user.email}</p>
+                        <p className="text-[10px] text-muted-foreground truncate leading-tight">{user.email}</p>
                       </div>
                     </div>
                     <button
-                      onClick={() => setIsPanelOpen(false)}
-                      className='h-7 w-7 rounded-full hover:bg-muted flex items-center justify-center shrink-0 text-muted-foreground hover:text-foreground transition-colors'
+                      onClick={closePanel}
+                      className="h-7 w-7 rounded-full hover:bg-muted flex items-center justify-center shrink-0 text-muted-foreground hover:text-foreground transition-colors"
+                      aria-label="Close account menu"
                     >
-                      <X className='h-3.5 w-3.5' />
+                      <X className="h-3.5 w-3.5" />
                     </button>
                   </div>
 
-                  {/* Quick Actions */}
-                  <div className='grid grid-cols-2 gap-1.5'>
+                  <div className="grid grid-cols-2 gap-1.5">
                     <Link
-                      href='/sell'
-                      onClick={() => setIsPanelOpen(false)}
-                      className='flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-white text-[11px] font-bold hover:bg-primary/90 transition-colors shadow-sm'
+                      href="/sell"
+                      onClick={closePanel}
+                      className="flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-white text-[11px] font-bold hover:bg-primary/90 transition-colors shadow-sm"
                     >
-                      <Pencil className='w-3 h-3' />
+                      <Pencil className="w-3 h-3" />
                       Post Ad
                     </Link>
                     <Link
-                      href='/premium'
-                      onClick={() => setIsPanelOpen(false)}
-                      className='flex items-center justify-center gap-1.5 py-2 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[11px] font-bold hover:bg-amber-500/20 transition-colors border border-amber-500/20'
+                      href="/premium"
+                      onClick={closePanel}
+                      className="flex items-center justify-center gap-1.5 py-2 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[11px] font-bold hover:bg-amber-500/20 transition-colors border border-amber-500/20"
                     >
-                      <Star className='w-3 h-3' />
+                      <Star className="w-3 h-3" />
                       Premium
                     </Link>
                   </div>
                 </div>
 
-                {/* Scrollable Menu */}
-                <div className='flex-1 overflow-y-auto overscroll-contain py-1'>
-                  {/* Admin Section (First) */}
+                {/* Menu */}
+                <div className="flex-1 overflow-y-auto overscroll-contain py-1">
                   {adminItems.length > 0 && (
                     <>
                       {renderSectionLabel('Administration')}
-                      <div className='px-1.5'>
-                        {adminItems.map(item => renderMenuItem(item, () => setIsPanelOpen(false)))}
-                      </div>
-                      <div className='mx-3 my-1 h-px bg-border/30' />
+                      <div className="px-1.5">{adminItems.map(renderMenuItem)}</div>
+                      <div className="mx-3 my-1 h-px bg-border/30" />
                     </>
                   )}
 
-                  {/* Palette Selection Section */}
                   {renderSectionLabel('App Style')}
-                  <div className='px-1.5 mb-2'>
-                    <PaletteSwitcher />
-                  </div>
-                  <div className='mx-3 my-1 h-px bg-border/30' />
+                  <div className="px-1.5 mb-2"><PaletteSwitcher /></div>
+                  <div className="mx-3 my-1 h-px bg-border/30" />
 
-                  {/* Mobile navigation — visible only below md */}
-                  <div className='md:hidden'>
+                  <div className="md:hidden">
                     {renderSectionLabel('Navigation')}
-                    <div className='px-1.5'>
-                      {mobileOnlyItems.map(item => renderMenuItem(item, () => setIsPanelOpen(false)))}
-                    </div>
-                    <div className='mx-3 my-1 h-px bg-border/30' />
+                    <div className="px-1.5">{mobileOnlyItems.map(renderMenuItem)}</div>
+                    <div className="mx-3 my-1 h-px bg-border/30" />
                   </div>
 
-                  {/* Listings section */}
                   {renderSectionLabel('Listings')}
-                  <div className='px-1.5'>
-                    {accountItems.map(item => renderMenuItem(item, () => setIsPanelOpen(false)))}
-                  </div>
-                  <div className='mx-3 my-1 h-px bg-border/30' />
+                  <div className="px-1.5">{accountItems.map(renderMenuItem)}</div>
+                  <div className="mx-3 my-1 h-px bg-border/30" />
 
-                    {/* Support & Help */}
                   {renderSectionLabel('Support')}
-                  <div className='px-1.5'>
-                    {supportItems.map(item => renderMenuItem(item, () => setIsPanelOpen(false)))}
-                  </div>
+                  <div className="px-1.5">{supportItems.map(renderMenuItem)}</div>
+                  <div className="mx-3 my-1 h-px bg-border/30" />
 
-                  {/* Account & Settings */}
-                  <div className='mx-3 my-1 h-px bg-border/30' />
                   {renderSectionLabel('Account')}
-                  <div className='px-1.5'>
-                    {settingsItems.map(item => renderMenuItem(item, () => setIsPanelOpen(false)))}
-                  </div>
+                  <div className="px-1.5">{settingsItems.map(renderMenuItem)}</div>
+                  <div className="mx-3 my-1 h-px bg-border/30" />
 
-                  {/* Danger zone */}
-                  <div className='mx-3 my-1 h-px bg-border/30' />
-                  <div className='px-1.5 pb-1'>
-                    {dangerItems.map(item => renderMenuItem(item, () => setIsPanelOpen(false)))}
-                  </div>
+                  <div className="px-1.5 pb-1">{dangerItems.map(renderMenuItem)}</div>
                 </div>
 
-                {/* Footer — Logout */}
-                <div className='border-t px-3 py-2 shrink-0'>
+                {/* Footer */}
+                <div className="border-t px-3 py-2 shrink-0">
                   <button
-                    onClick={() => { setIsPanelOpen(false); handleLogout(); }}
-                    className='flex items-center justify-center gap-1.5 w-full py-2 rounded-lg bg-muted/40 hover:bg-destructive/10 text-muted-foreground hover:text-destructive text-[12px] font-semibold transition-colors'
+                    onClick={() => { closePanel(); handleLogout(); }}
+                    className="flex items-center justify-center gap-1.5 w-full py-2 rounded-lg bg-muted/40 hover:bg-destructive/10 text-muted-foreground hover:text-destructive text-[12px] font-semibold transition-colors"
                   >
-                    <LogOut className='w-3.5 h-3.5' />
+                    <LogOut className="w-3.5 h-3.5" />
                     Log Out
                   </button>
                 </div>

@@ -2,9 +2,10 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Loader2, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 
 interface ListingSearchInputProps {
   idPrefix?: string;
@@ -12,48 +13,77 @@ interface ListingSearchInputProps {
   className?: string;
 }
 
-export function ListingSearchInput({ idPrefix = 'search', initialValue = '', className }: ListingSearchInputProps) {
+export function ListingSearchInput({ 
+  idPrefix = 'search', 
+  initialValue = '', 
+  className 
+}: ListingSearchInputProps) {
   const router = useRouter();
-  const [searchValue, setSearchValue] = useState(initialValue);
+  const [isPending, startTransition] = useTransition();
+  const [value, setValue] = useState(initialValue);
 
-  // Sync internal state if initialValue changes
+  // Sync state if prop changes (External control)
   useEffect(() => {
-    setSearchValue(initialValue);
+    setValue(initialValue);
   }, [initialValue]);
 
-  const handleSearch = () => {
-    const val = searchValue ? parseInt(searchValue) : undefined;
-    if (val) {
-      router.push(`/listings?listingNumber=${val}`);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Basic validation: ensure it's a number
+    const listingId = parseInt(value);
+    if (!listingId || isNaN(listingId)) return;
+
+    // React 19 / Next.js 15: Wrap navigation in transition
+    startTransition(() => {
+      router.push(`/listings?listingNumber=${listingId}`);
+    });
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Only allow numeric input
+    const val = e.target.value;
+    if (val === '' || /^\d+$/.test(val)) {
+      setValue(val);
     }
   };
 
   return (
-    <div className={`relative flex items-center gap-1 ${className}`}>
+    <form 
+      onSubmit={handleSubmit}
+      className={cn("relative flex items-center gap-1", className)}
+    >
       <div className="relative flex-1">
-        <span className="absolute left-2 top-1.5 text-muted-foreground text-xs">#</span>
+        <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground text-xs font-medium pointer-events-none">
+          #
+        </span>
         <Input
           id={`${idPrefix}-listingNumber`}
-          type="number"
-          placeholder="Enter Item #"
-          className="h-8 text-xs pl-5"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              handleSearch();
-            }
-          }}
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          placeholder="ID"
+          className="h-9 text-xs pl-6 pr-2 bg-background/50 focus:bg-background transition-colors"
+          value={value}
+          onChange={handleInputChange}
+          disabled={isPending}
         />
       </div>
+      
       <Button 
+        type="submit"
         size="icon" 
         variant="ghost" 
-        className="h-8 w-8 text-muted-foreground hover:text-primary"
-        onClick={handleSearch}
+        disabled={!value || isPending}
+        className="h-9 w-9 text-muted-foreground hover:text-primary shrink-0"
       >
-        <Search className="h-4 w-4" />
+        {isPending ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <Search className="h-4 w-4" />
+        )}
+        <span className="sr-only">Search Listing</span>
       </Button>
-    </div>
+    </form>
   );
 }

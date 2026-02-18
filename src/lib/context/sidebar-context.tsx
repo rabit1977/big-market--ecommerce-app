@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { createContext, ReactNode, useCallback, useContext, useEffect, useState, useTransition } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useRef, useState, useTransition } from 'react';
 
 interface SidebarContextType {
   isOpen: boolean;
@@ -20,56 +20,33 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
+  const isOpenRef = useRef(isOpen);
 
-  const open = useCallback(() => {
-    startTransition(() => {
-      setIsOpen(true);
-    });
-  }, []);
-
-  const close = useCallback(() => {
-    startTransition(() => {
-      setIsOpen(false);
-      // Optional: reset category on close? Maybe not, keeps state if reopened.
-      // setActiveCategory(null); 
-    });
-  }, []);
-
-  const toggle = useCallback(() => {
-    startTransition(() => {
-      setIsOpen((prev) => !prev);
-    });
-  }, []);
-
-  // Auto-close on route change
+  // Keep ref in sync so the ESC handler can read current value without re-registering
   useEffect(() => {
-    if (isOpen) {
-      close();
-    }
+    isOpenRef.current = isOpen;
+  }, [isOpen]);
+
+  const open = useCallback(() => startTransition(() => setIsOpen(true)), []);
+  const close = useCallback(() => startTransition(() => setIsOpen(false)), []);
+  const toggle = useCallback(() => startTransition(() => setIsOpen((prev) => !prev)), []);
+
+  // Close on route change
+  useEffect(() => {
+    close();
   }, [pathname, close]);
 
-  // Handle ESC key to close
+  // Close on Escape — registered once, reads isOpen from ref
   useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isOpen) {
-        close();
-      }
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpenRef.current) close();
     };
-
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, [isOpen, close]);
+  }, [close]);
 
   return (
-    <SidebarContext.Provider value={{ 
-      isOpen, 
-      isPending, 
-      activeCategory, 
-      open, 
-      close, 
-      toggle, 
-      setActiveCategory 
-    }}>
+    <SidebarContext.Provider value={{ isOpen, isPending, activeCategory, open, close, toggle, setActiveCategory }}>
       {children}
     </SidebarContext.Provider>
   );

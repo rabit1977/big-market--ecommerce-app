@@ -5,25 +5,29 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Listing, ListingWithRelations } from '@/lib/types/listing';
-import { Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Loader2, Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, useTransition } from 'react';
+import { useCallback, useEffect, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { ListingImageUpload } from './listing-image-upload';
-import { cn } from '@/lib/utils';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface Category {
   id: string;
   name: string;
   parentId: string | null;
+  slug?: string;
+  _id?: string; // Handle Convex ID variation
 }
 
 interface ListingFormProps {
@@ -32,41 +36,43 @@ interface ListingFormProps {
   onSuccess?: (listing: Listing) => void;
 }
 
+// ─── Component ────────────────────────────────────────────────────────────────
+
 export function ListingForm({ categories, initialData, onSuccess }: ListingFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  
-  // Enhanced category recognition (ID, Name, or Slug)
-  const getInitialCategoryId = () => {
-      // Prioritize subCategory for leaf selection, fall back to category
-      const target = initialData?.subCategory || initialData?.category;
-      if (!target) return '';
-      
-      const normalizedTarget = String(target).toLowerCase().trim();
-      
-      const cat = categories.find(c => {
-          const id = String(c.id || (c as any)._id).toLowerCase();
-          const name = String(c.name).toLowerCase();
-          const slug = String((c as any).slug || '').toLowerCase();
-          
-          return id === normalizedTarget || 
-                 name === normalizedTarget || 
-                 slug === normalizedTarget ||
-                 // Special case for "Home & Garden" vs "Home Garden"
-                 name.replace('&', 'and').replace(/\s+/g, '-') === normalizedTarget.replace(/\s+/g, '-');
-      });
-      return cat?.id || (cat as any)?._id || '';
-  };
 
+  // 1. Intelligent Category Initialization
+  const getInitialCategoryId = useCallback(() => {
+    const target = initialData?.subCategory || initialData?.category;
+    if (!target) return '';
+
+    const normalizedTarget = String(target).toLowerCase().trim();
+    
+    // Efficient lookup map could be built outside component, but array find is fine for < 100 cats
+    const cat = categories.find(c => {
+      const id = String(c.id || c._id).toLowerCase();
+      const name = String(c.name).toLowerCase();
+      const slug = String(c.slug || '').toLowerCase();
+      
+      return id === normalizedTarget || 
+             name === normalizedTarget || 
+             slug === normalizedTarget ||
+             name.replace('&', 'and').replace(/\s+/g, '-') === normalizedTarget.replace(/\s+/g, '-');
+    });
+    return cat?.id || cat?._id || '';
+  }, [categories, initialData]);
+
+  // 2. State Management
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>(getInitialCategoryId());
   
-  // Track Parent and Child category separately for UI
-  const initialCat = categories.find(c => (c.id || (c as any)._id) === selectedCategoryId);
+  // Track Parent/Child logic
+  const initialCat = categories.find(c => (c.id || c._id) === selectedCategoryId);
   const [mainCatId, setMainCatId] = useState<string>(
-      initialCat?.parentId ? initialCat.parentId : (initialCat ? (initialCat.id || (initialCat as any)._id) : '')
+     initialCat?.parentId ? initialCat.parentId : (initialCat ? (initialCat.id || initialCat._id) : '') || ''
   );
   const [subCatId, setSubCatId] = useState<string>(
-      initialCat?.parentId ? (initialCat.id || (initialCat as any)._id) : ''
+     initialCat?.parentId ? (initialCat.id || initialCat._id) || '' : ''
   );
 
   const [templateFields, setTemplateFields] = useState<any[]>([]);
@@ -74,239 +80,219 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
   const [specifications, setSpecifications] = useState<Record<string, any>>(initialData?.specifications ? (initialData.specifications as any) : {});
   
   const [images, setImages] = useState<string[]>(
-      initialData?.images?.map(i => i.url) || 
-      (initialData?.thumbnail ? [initialData.thumbnail] : [])
+    initialData?.images?.map(i => i.url) || 
+    (initialData?.thumbnail ? [initialData.thumbnail] : [])
   );
 
-  // Simple form state for core fields
   const [formData, setFormData] = useState({
-      title: initialData?.title || '',
-      price: initialData?.price?.toString() || '',
-      description: initialData?.description || '',
-      city: initialData?.city || '',
-      state: (initialData as any)?.region || '',
-      phone: initialData?.contactPhone || '',
-      email: (initialData as any)?.contactEmail || '',
-      currency: (initialData as any)?.currency || 'MKD',
+    title: initialData?.title || '',
+    price: initialData?.price?.toString() || '',
+    description: initialData?.description || '',
+    city: initialData?.city || '',
+    state: (initialData as any)?.region || '',
+    phone: initialData?.contactPhone || '',
+    email: (initialData as any)?.contactEmail || '',
+    currency: (initialData as any)?.currency || 'MKD',
   });
 
-  // Effect to load template if initial category is set
-  useEffect(() => {
-      if (selectedCategoryId) {
-          handleCategoryChange(selectedCategoryId, false); // Don't reset specs on initial load
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+  // 3. Category Template Logic
+  const loadTemplate = useCallback(async (categoryId: string) => {
+    if (!categoryId) {
+        setTemplateFields([]);
+        return;
+    }
+    
+    try {
+        const res = await getCategoryTemplateAction(categoryId);
+        if (res.success && res.data?.template) {
+            const template = res.data.template as any;
+            setTemplateFields(Array.isArray(template.fields) ? template.fields : []);
+            setTitlePlaceholder(template.titlePlaceholder || 'e.g. iPhone 14 Pro Max');
+        } else {
+            setTemplateFields([]);
+            setTitlePlaceholder('e.g. iPhone 14 Pro Max');
+        }
+    } catch (err) {
+        console.error("Template load failed", err);
+    }
   }, []);
 
-  const handleCategoryChange = async (categoryId: string, resetSpecs = true) => {
-      setSelectedCategoryId(categoryId);
-      // Fetch template
-      const res = await getCategoryTemplateAction(categoryId);
-      if (res.success && res.data?.template) {
-          const template = res.data.template as any;
-          if (template.fields && Array.isArray(template.fields)) {
-              setTemplateFields(template.fields);
-          } else {
-              setTemplateFields([]);
-          }
-          setTitlePlaceholder(template.titlePlaceholder || 'e.g. iPhone 14 Pro Max');
-      } else {
-          setTemplateFields([]);
-          setTitlePlaceholder('e.g. iPhone 14 Pro Max');
-      }
-      
-      if (resetSpecs && !initialData) {
-          setSpecifications({});
-      }
-  };
-  
-  const mainCategories = categories.filter(c => !c.parentId);
-  const subCategories = categories.filter(c => c.parentId === mainCatId);
+  // Initial Load
+  useEffect(() => {
+    if (selectedCategoryId) {
+        loadTemplate(selectedCategoryId);
+    }
+  }, [selectedCategoryId, loadTemplate]);
 
+
+  // 4. Handlers
   const handleMainCatChange = (val: string) => {
-      setMainCatId(val);
-      setSubCatId(''); // Reset subcat when main changes
-      handleCategoryChange(val); // Load template for main if no sub exists
+    setMainCatId(val);
+    setSubCatId(''); // Clear sub
+    setSelectedCategoryId(val);
+    setSpecifications({}); // Clear specs on major change
+    loadTemplate(val);
   };
 
   const handleSubCatChange = (val: string) => {
-      setSubCatId(val);
-      handleCategoryChange(val);
-  };
-  
-  const renderCategorySelects = () => {
-      return (
-          <div className="grid sm:grid-cols-2 gap-3">
-            <div className="space-y-1">
-                <Label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Main Category</Label>
-                <Select value={mainCatId} onValueChange={handleMainCatChange}>
-                    <SelectTrigger className="h-9 rounded-lg bg-background/40 border-border/40 text-xs shadow-none focus:ring-1 focus:ring-primary/20 transition-all">
-                        <SelectValue placeholder="Category..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {mainCategories.map(c => (
-                            <SelectItem key={c.id || (c as any)._id} value={c.id || (c as any)._id} className="text-xs">{c.name}</SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
-
-            <div className="space-y-1">
-                <Label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Sub Category</Label>
-                <Select 
-                    value={subCatId} 
-                    onValueChange={handleSubCatChange}
-                    disabled={subCategories.length === 0}
-                >
-                    <SelectTrigger className="h-9 rounded-lg bg-background/40 border-border/40 text-xs shadow-none">
-                        <SelectValue placeholder={subCategories.length === 0 ? "General" : "Subcategory..."} />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {subCategories.map(c => (
-                            <SelectItem key={c.id || (c as any)._id} value={c.id || (c as any)._id} className="text-xs">{c.name}</SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
-          </div>
-      );
+    setSubCatId(val);
+    setSelectedCategoryId(val);
+    setSpecifications({});
+    loadTemplate(val);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSpecChange = (key: string, value: any) => {
-      setSpecifications(prev => ({ ...prev, [key]: value }));
+    setSpecifications(prev => ({ ...prev, [key]: value }));
   };
 
+  // 5. Submit Logic
   const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-      
-      if (!selectedCategoryId) {
-          toast.error('Please select a category');
-          return;
-      }
-      
-      if (images.length === 0) {
-          toast.error('Please upload at least one image');
-          return;
-      }
+    e.preventDefault();
+    
+    // Validation
+    if (!selectedCategoryId) return toast.error('Please select a category');
+    if (!formData.title.trim()) return toast.error('Title is required');
+    if (!formData.price || parseFloat(formData.price) < 0) return toast.error('Valid price is required');
+    if (images.length === 0) return toast.error('Please upload at least one image');
 
-      startTransition(async () => {
-          const currentCategory = categories.find(c => (c.id || (c as any)._id) === selectedCategoryId);
-          let categorySlug = (currentCategory as any)?.slug || '';
-          let subCategorySlug = ''; 
+    startTransition(async () => {
+        // Resolve Slugs
+        const currentCategory = categories.find(c => (c.id || c._id) === selectedCategoryId);
+        let categorySlug = currentCategory?.slug || '';
+        let subCategorySlug = ''; 
 
-          if (currentCategory?.parentId) {
-              const parent = categories.find(p => (p.id || (p as any)._id) === currentCategory.parentId);
-              if (parent) {
-                  categorySlug = (parent as any).slug;
-                  subCategorySlug = (currentCategory as any).slug;
-              }
-          }
+        if (currentCategory?.parentId) {
+            const parent = categories.find(p => (p.id || p._id) === currentCategory.parentId);
+            if (parent) {
+                categorySlug = parent.slug || '';
+                subCategorySlug = currentCategory.slug || '';
+            }
+        }
 
-          const listingData: any = {
-              title: formData.title,
-              description: formData.description,
-              price: parseFloat(formData.price),
-              currency: formData.currency,
-              category: categorySlug,
-              subCategory: subCategorySlug || undefined,
-              city: formData.city,
-              region: formData.state || undefined,
-              contactPhone: formData.phone || undefined,
-              contactEmail: formData.email || undefined,
-              specifications: specifications,
-              images: images,
-              thumbnail: images[0] || '',
-              status: initialData?.status || 'PENDING_APPROVAL',
-          };
+        const listingData: any = {
+            ...formData,
+            price: parseFloat(formData.price),
+            category: categorySlug,
+            subCategory: subCategorySlug || undefined,
+            region: formData.state || undefined,
+            contactPhone: formData.phone || undefined,
+            contactEmail: formData.email || undefined,
+            specifications,
+            images,
+            thumbnail: images[0] || '',
+            status: initialData?.status || 'PENDING_APPROVAL',
+        };
 
-          let res;
-          const listingId = initialData?.id || (initialData as any)?._id;
-          
-          if (listingId) {
-              res = await updateListingAction(listingId, listingData);
-              if (res.success) {
-                  if (onSuccess && initialData) {
-                      onSuccess(initialData as any); 
-                  } else {
-                      toast.success('Updated successfully');
-                      router.push(`/listings/${listingId}`);
-                  }
-              } else {
-                  toast.error(res.error || 'Failed to update');
-              }
-          } else {
-              res = await createListingAction(listingData);
-              if (res.success && 'listing' in res && res.listing) {
-                  if (onSuccess) {
-                      onSuccess(res.listing as any); 
-                  } else {
-                      toast.success('Listing created!');
-                      router.push(`/listings/${res.listing.id}/success`);
-                  }
-              } else {
-                  toast.error('error' in res ? res.error : 'Failed to create');
-              }
-          }
-      });
+        const listingId = initialData?.id || (initialData as any)?._id;
+        let res;
+
+        try {
+            if (listingId) {
+                res = await updateListingAction(listingId, listingData);
+                if (res.success) {
+                    toast.success('Listing updated successfully');
+                    if (onSuccess && initialData) onSuccess(initialData as any);
+                    else router.push(`/listings/${listingId}`);
+                } else throw new Error(res.error);
+            } else {
+                res = await createListingAction(listingData);
+                if (res.success && 'listing' in res && res.listing) {
+                    toast.success('Listing created successfully!');
+                    if (onSuccess) onSuccess(res.listing as any);
+                    else router.push(`/listings/${res.listing.id}/success`);
+                } else throw new Error('error' in res ? res.error : 'Failed');
+            }
+        } catch (error: any) {
+            toast.error(error.message || 'Something went wrong');
+        }
+    });
   };
+
+  // Derived Data
+  const mainCategories = categories.filter(c => !c.parentId);
+  const subCategories = categories.filter(c => c.parentId === mainCatId);
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Basic Info Section */}
+    <form onSubmit={handleSubmit} className="space-y-8 animate-in fade-in duration-500">
+        
+        {/* ── Basic Information ────────────────────────────────────────────── */}
         <div className="space-y-4">
-            <div className="flex items-center gap-3">
-                <div className="h-px flex-1 bg-border/30" />
-                <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] whitespace-nowrap">Basic Information</h3>
-                <div className="h-px flex-1 bg-border/30" />
-            </div>
+            <SectionHeader title="Basic Information" />
             
-            <div className="grid gap-3.5">
-                {renderCategorySelects()}
+            <div className="grid gap-5">
+                {/* Categories */}
+                <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                        <Label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Category</Label>
+                        <Select value={mainCatId} onValueChange={handleMainCatChange}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select Category" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {mainCategories.map(c => (
+                                    <SelectItem key={c.id || c._id} value={c.id || c._id || ''}>{c.name}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
 
-                <div className="grid gap-1">
+                    <div className="space-y-1.5">
+                        <Label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Subcategory</Label>
+                        <Select 
+                            value={subCatId} 
+                            onValueChange={handleSubCatChange}
+                            disabled={!mainCatId || subCategories.length === 0}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder={!mainCatId ? "Select main category first" : (subCategories.length === 0 ? "General" : "Select Subcategory")} />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {subCategories.map(c => (
+                                    <SelectItem key={c.id || c._id} value={c.id || c._id || ''}>{c.name}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+
+                {/* Title */}
+                <div className="space-y-1.5">
                     <Label htmlFor="title" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Listing Title</Label>
                     <Input 
-                        id="title"
-                        name="title" 
+                        id="title" name="title" 
                         placeholder={titlePlaceholder} 
-                        value={formData.title} 
-                        onChange={handleInputChange} 
-                        required 
-                        className="h-9 rounded-lg bg-background/30 border-border/40 text-xs shadow-none"
+                        value={formData.title} onChange={handleInputChange} 
+                        required className="font-medium"
                     />
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-3">
-                    <div className="grid gap-1">
+                {/* Price & Currency */}
+                <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
                         <Label htmlFor="price" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Price</Label>
                         <div className="flex gap-2">
                             <div className="relative flex-1">
                                 <Input 
-                                    id="price"
-                                    name="price" 
-                                    type="number" 
-                                    placeholder="0" 
-                                    value={formData.price} 
-                                    onChange={handleInputChange} 
+                                    id="price" name="price" type="number" min="0" step="0.01"
+                                    placeholder="0.00" 
+                                    value={formData.price} onChange={handleInputChange} 
                                     required 
-                                    className={cn(
-                                        "h-9 rounded-lg bg-background/30 border-border/40 text-xs shadow-none",
-                                        formData.currency === 'EUR' ? "pl-6" : "pl-10"
-                                    )}
+                                    className={cn("font-mono", formData.currency === 'EUR' ? "pl-8" : "pl-12")}
                                 />
-                                <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-[10px]">
-                                    {formData.currency === 'EUR' ? '€' : 'den'}
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-xs pointer-events-none">
+                                    {formData.currency === 'EUR' ? '€' : 'MKD'}
                                 </span>
                             </div>
                             <Select 
                                 value={formData.currency} 
                                 onValueChange={(val) => setFormData(prev => ({ ...prev, currency: val }))}
                             >
-                                <SelectTrigger className="h-9 w-[80px] rounded-lg bg-background/30 border-border/40 text-[10px] font-bold">
+                                <SelectTrigger className="w-[80px] font-bold">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -316,83 +302,64 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
                             </Select>
                         </div>
                     </div>
-                    <div className="grid gap-1">
-                         <Label htmlFor="phone" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Contact Phone</Label>
+                    
+                    {/* Phone (Optional but recommended) */}
+                    <div className="space-y-1.5">
+                         <Label htmlFor="phone" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Phone Number</Label>
                          <Input 
-                            id="phone"
-                            name="phone" 
-                            placeholder="+1 234..." 
-                            value={formData.phone} 
-                            onChange={handleInputChange} 
-                            required 
-                            className="h-9 rounded-lg bg-background/30 border-border/40 text-xs shadow-none"
-                         />
+                            id="phone" name="phone" 
+                            placeholder="+389 70 123 456" 
+                            value={formData.phone} onChange={handleInputChange} 
+                        />
                     </div>
                 </div>
 
-                <div className="grid gap-1">
-                    <Label htmlFor="email" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Contact Email</Label>
-                    <Input 
-                       id="email"
-                       name="email" 
-                       type="email"
-                       placeholder="your@email.com" 
-                       value={formData.email} 
-                       onChange={handleInputChange} 
-                       className="h-9 rounded-lg bg-background/30 border-border/40 text-xs shadow-none"
-                    />
-                </div>
-
-                <div className="grid gap-1">
+                {/* Description */}
+                <div className="space-y-1.5">
                     <Label htmlFor="description" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Description</Label>
                     <Textarea 
-                        id="description"
-                        name="description" 
-                        placeholder="Describe your item..." 
-                        className="h-28 rounded-xl resize-none bg-background/30 border-border/40 text-xs shadow-none" 
-                        value={formData.description} 
-                        onChange={handleInputChange} 
+                        id="description" name="description" 
+                        placeholder="Describe your item in detail..." 
+                        className="h-32 resize-none leading-relaxed" 
+                        value={formData.description} onChange={handleInputChange} 
                         required 
                     />
                 </div>
             </div>
         </div>
 
-        {/* Images Section */}
-        <div className="space-y-4 pt-4 border-t border-border/20">
-            <div className="flex items-center gap-3">
-                <div className="h-px flex-1 bg-border/20" />
-                <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] whitespace-nowrap">Media & Gallery</h3>
-                <div className="h-px flex-1 bg-border/20" />
-            </div>
-            <div className="bg-muted/10 p-3 rounded-2xl border border-dashed border-border/40">
+        {/* ── Media Section ────────────────────────────────────────────────── */}
+        <div className="space-y-4">
+            <SectionHeader title="Media Gallery" />
+            <div className="bg-muted/10 p-4 rounded-xl border border-dashed border-border/60 hover:border-border transition-colors">
                 <ListingImageUpload value={images} onChange={setImages} />
+                <p className="text-[10px] text-muted-foreground mt-2 text-center">
+                    Upload up to 10 images. Drag and drop to reorder. First image will be the thumbnail.
+                </p>
             </div>
         </div>
 
-        {/* Dynamic Specifications Section */}
+        {/* ── Dynamic Specifications ───────────────────────────────────────── */}
         {templateFields.length > 0 && (
-            <div className="space-y-4 pt-4 border-t border-border/20">
-                <div className="flex items-center gap-3">
-                    <div className="h-px flex-1 bg-border/20" />
-                    <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] whitespace-nowrap">Specifications</h3>
-                    <div className="h-px flex-1 bg-border/20" />
-                </div>
-                <div className="grid sm:grid-cols-2 gap-3 p-4 bg-primary/5 rounded-2xl border border-primary/10">
+            <div className="space-y-4 animate-in slide-in-from-top-4 duration-300">
+                <SectionHeader title="Specifications" />
+                <div className="grid sm:grid-cols-2 gap-4 p-5 bg-secondary/20 rounded-xl border border-secondary/40">
                     {templateFields.map((field: any, idx) => (
-                        <div key={idx} className="grid gap-1">
-                            <Label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">{field.label || field.name}</Label>
+                        <div key={idx} className="space-y-1.5">
+                            <Label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">
+                                {field.label || field.name}
+                            </Label>
                             {field.type === 'select' ? (
                                  <Select 
                                     value={specifications[field.key || field.name] || ''}
                                     onValueChange={(val) => handleSpecChange(field.key || field.name, val)}
                                  >
-                                    <SelectTrigger className="h-9 rounded-lg bg-background/60 border-border/40 text-xs shadow-none">
-                                        <SelectValue placeholder={`Select...`} />
+                                    <SelectTrigger className="bg-background/80">
+                                        <SelectValue placeholder="Select..." />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {field.options?.map((opt: string) => (
-                                            <SelectItem key={opt} value={opt} className="text-xs">{opt}</SelectItem>
+                                            <SelectItem key={opt} value={opt}>{opt}</SelectItem>
                                         ))}
                                     </SelectContent>
                                  </Select>
@@ -402,7 +369,7 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
                                     placeholder={field.placeholder || ''}
                                     value={specifications[field.key || field.name] || ''}
                                     onChange={(e) => handleSpecChange(field.key || field.name, e.target.value)}
-                                    className="h-9 rounded-lg bg-background/60 border-border/40 text-xs shadow-none"
+                                    className="bg-background/80"
                                 />
                             )}
                         </div>
@@ -411,64 +378,67 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
             </div>
         )}
 
-        {/* Location Section */}
-        <div className="space-y-4 pt-4 border-t border-border/20">
-            <div className="flex items-center gap-3">
-                <div className="h-px flex-1 bg-border/20" />
-                <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] whitespace-nowrap">Location</h3>
-                <div className="h-px flex-1 bg-border/20" />
-            </div>
-            <div className="grid sm:grid-cols-2 gap-3">
-                 <div className="grid gap-1">
-                     <Label htmlFor="city" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">City</Label>
-                     <Input 
-                        id="city"
-                        name="city" 
-                        placeholder="e.g. Skopje" 
-                        value={formData.city} 
-                        onChange={handleInputChange} 
-                        required 
-                        className="h-9 rounded-lg bg-background/30 border-border/40 text-xs shadow-none"
+        {/* ── Location ─────────────────────────────────────────────────────── */}
+        <div className="space-y-4">
+            <SectionHeader title="Location" />
+            <div className="grid sm:grid-cols-2 gap-4">
+                 <div className="space-y-1.5">
+                      <Label htmlFor="city" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">City</Label>
+                      <Input 
+                        id="city" name="city" placeholder="e.g. Skopje" 
+                        value={formData.city} onChange={handleInputChange} required 
                     />
                  </div>
-                 <div className="grid gap-1">
-                     <Label htmlFor="state" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Region</Label>
-                     <Input 
-                        id="state"
-                        name="state" 
-                        placeholder="e.g. Karpos" 
-                        value={formData.state} 
-                        onChange={handleInputChange} 
-                        className="h-9 rounded-lg bg-background/30 border-border/40 text-xs shadow-none"
+                 <div className="space-y-1.5">
+                      <Label htmlFor="state" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Region / Municipality</Label>
+                      <Input 
+                        id="state" name="state" placeholder="e.g. Centar" 
+                        value={formData.state} onChange={handleInputChange} 
                     />
                  </div>
             </div>
         </div>
 
-        {/* Submit Section */}
-        <div className="flex items-center justify-end gap-3 pt-6">
+        {/* ── Actions ──────────────────────────────────────────────────────── */}
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-border/40">
             <Button 
-                type="button" 
-                variant="ghost" 
-                className="font-black rounded-lg h-9 px-5 text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground"
+                type="button" variant="ghost" 
                 onClick={() => router.back()}
+                className="text-muted-foreground hover:text-foreground"
             >
                 Cancel
             </Button>
             <Button 
                 type="submit" 
-                size="sm" 
                 disabled={isPending}
-                className="font-black rounded-full h-9 px-8 bg-primary text-primary-foreground text-[10px] uppercase tracking-widest shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all active:scale-95"
+                className="min-w-[140px] font-bold tracking-wide rounded-full"
             >
                 {isPending ? (
                     <>
-                        <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Saving...
                     </>
-                ) : (initialData ? 'Save Changes' : 'Publish Listing')}
+                ) : (
+                    <>
+                        <Save className="mr-2 h-4 w-4" />
+                        {initialData ? 'Update Listing' : 'Publish Listing'}
+                    </>
+                )}
             </Button>
         </div>
     </form>
   );
+}
+
+// ─── Sub-Component: Section Header ────────────────────────────────────────────
+function SectionHeader({ title }: { title: string }) {
+    return (
+        <div className="flex items-center gap-3 py-2">
+            <div className="h-px flex-1 bg-border/40" />
+            <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] whitespace-nowrap">
+                {title}
+            </h3>
+            <div className="h-px flex-1 bg-border/40" />
+        </div>
+    );
 }
