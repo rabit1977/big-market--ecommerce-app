@@ -1,16 +1,17 @@
 'use client';
 
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
+
+
 
 export function AdminListingSearch() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialSearch = searchParams.get('listingNumber') || '';
-  
   const [text, setText] = useState(initialSearch);
   const [query] = useDebounce(text, 500);
 
@@ -25,8 +26,8 @@ export function AdminListingSearch() {
     } else {
       params.delete('listingNumber');
     }
-    
     router.push(`/admin/listings?${params.toString()}`);
+
   }, [query, router, searchParams]);
 
   return (

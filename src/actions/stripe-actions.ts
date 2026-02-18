@@ -152,7 +152,7 @@ export async function verifyStripePayment(sessionId: string) {
              metadata: session.metadata
          });
 
-         return { success: true, type: 'PROMOTION', tier };
+         return { success: true as const, type: 'PROMOTION' as const, tier };
       }
 
       if (!userId || !plan || !duration) {
@@ -180,12 +180,12 @@ export async function verifyStripePayment(sessionId: string) {
           metadata: session.metadata
       });
 
-      return { success: true, plan };
+      return { success: true as const, plan };
     }
 
-    return { success: false, error: 'Payment not completed' };
+    return { success: false as const, error: 'Payment not completed' };
   } catch (error) {
     console.error('Error verifying payment:', error);
-    return { success: false, error: 'Verification failed' };
+    return { success: false as const, error: 'Verification failed' };
   }
 }

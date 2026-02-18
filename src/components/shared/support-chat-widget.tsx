@@ -1,26 +1,25 @@
 'use client';
 
+import { UserAvatar } from '@/components/shared/user-avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { UserAvatar } from '@/components/shared/user-avatar';
 import { cn } from '@/lib/utils';
 import { useMutation, useQuery } from 'convex/react';
+import { formatDistanceToNow } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
-import { 
-    Headset, 
-    MessageCircle, 
-    Send, 
-    X, 
-    User,
-    ShieldCheck,
-    ArrowLeft,
-    Search
+import {
+  ArrowLeft,
+  Headset,
+  MessageCircle,
+  Search,
+  Send,
+  ShieldCheck,
+  User,
+  X
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
-import { formatDistanceToNow } from 'date-fns';
 
 export function SupportChatWidget() {
   const { data: session } = useSession();
@@ -30,6 +29,23 @@ export function SupportChatWidget() {
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
+  const widgetRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (widgetRef.current && !widgetRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
 
   const ADMIN_ID = 'ADMIN';
   const userId = session?.user?.id;
@@ -106,14 +122,14 @@ export function SupportChatWidget() {
   );
 
   return (
-    <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end">
+    <div ref={widgetRef} className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[100] flex flex-col items-end">
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="mb-4 w-[350px] sm:w-[400px] h-[550px] bg-card border rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            className="mb-4 w-[90vw] sm:w-[400px] h-[80dvh] sm:h-[550px] bg-card border rounded-2xl shadow-2xl flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="p-4 bg-primary text-primary-foreground flex items-center justify-between">
@@ -157,7 +173,7 @@ export function SupportChatWidget() {
             </div>
 
             {/* Content Area */}
-            <div className="flex-1 overflow-hidden relative flex flex-col bg-background">
+            <div className="flex-1 overflow-hidden relative flex flex-col bg-background min-h-0">
               {!userId ? (
                 <div className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-4">
                   <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center">
@@ -182,7 +198,7 @@ export function SupportChatWidget() {
                             />
                         </div>
                     </div>
-                    <ScrollArea className="flex-1">
+                    <div className="flex-1 overflow-y-auto overscroll-contain">
                         {filteredAdminsConversations.length === 0 ? (
                             <div className="p-12 text-center text-muted-foreground text-sm">
                                 No active support chats.
@@ -215,7 +231,7 @@ export function SupportChatWidget() {
                                 ))}
                             </div>
                         )}
-                    </ScrollArea>
+                    </div>
                     <div className="p-3 bg-muted/10 border-t text-[10px] text-center text-muted-foreground">
                         Select a user to begin responding to their inquiry
                     </div>
@@ -223,7 +239,7 @@ export function SupportChatWidget() {
               ) : (
                 // --- CHAT VIEW (Admin-to-User or User-to-Admin) ---
                 <>
-                  <ScrollArea className="flex-1 p-4">
+                  <div className="flex-1 overflow-y-auto overscroll-contain p-4">
                     <div className="space-y-4">
                       {/* Initial Message (Only for regular users) */}
                       {!isAdmin && (
@@ -253,7 +269,7 @@ export function SupportChatWidget() {
                       })}
                       <div ref={scrollRef} />
                     </div>
-                  </ScrollArea>
+                  </div>
 
                   <div className="p-4 border-t bg-muted/30">
                     <form onSubmit={handleSend} className="flex gap-2">
@@ -281,32 +297,33 @@ export function SupportChatWidget() {
       {/* Toggle Button - Now Draggable vertically */}
       <motion.button
         drag="y"
-        dragConstraints={{ top: -700, bottom: 0 }}
-        dragElastic={0.05}
+        dragConstraints={{ top: -600, bottom: 0 }}
+        dragElastic={0.1}
+        dragMomentum={false}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "h-14 w-14 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 z-[110] relative",
+          "h-12 w-12 sm:h-14 sm:w-14 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 z-[110] relative",
           isOpen ? "bg-card border rotate-90" : "bg-primary text-primary-foreground"
         )}
       >
         {isOpen ? (
-          <X className="h-6 w-6 text-foreground" />
+          <X className="h-5 w-5 sm:h-6 sm:w-6 text-foreground" />
         ) : (
-          <MessageCircle className="h-7 w-7" />
+          <MessageCircle className="h-6 w-6 sm:h-7 sm:w-7" />
         )}
         
         {/* Real-time Unread Badge */}
         {!isOpen && (isAdmin ? totalUnreadForAdmin > 0 : false) && (
-            <div className="absolute -top-1 -right-1 h-6 w-6 bg-red-600 rounded-full border-2 border-background flex items-center justify-center text-[10px] font-bold text-white shadow-lg animate-pulse">
+            <div className="absolute -top-1 -right-1 h-5 w-5 sm:h-6 sm:w-6 bg-red-600 rounded-full border-2 border-background flex items-center justify-center text-[10px] font-bold text-white shadow-lg animate-pulse">
                 {totalUnreadForAdmin > 9 ? '9+' : totalUnreadForAdmin}
             </div>
         )}
         
         {/* Simple User Notification Dot */}
         {!isOpen && !isAdmin && (
-            <div className="absolute top-0 right-0 h-4 w-4 bg-emerald-500 rounded-full border-2 border-background animate-pulse" />
+            <div className="absolute top-0 right-0 h-3 w-3 sm:h-4 sm:w-4 bg-emerald-500 rounded-full border-2 border-background animate-pulse" />
         )}
       </motion.button>
     </div>

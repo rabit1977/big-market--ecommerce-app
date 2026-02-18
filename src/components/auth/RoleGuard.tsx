@@ -1,109 +1,112 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
-type UserRole = 'user' | 'admin' | 'moderator'; // Extend as needed
+// 1. Strict Typing
+type UserRole = 'user' | 'admin' | 'moderator';
 
 interface RoleGuardProps {
   children: React.ReactNode;
-  /**
-   * Required role(s) to access this route
-   */
   requiredRole: UserRole | UserRole[];
-  /**
-   * Optional redirect path for non-authenticated users
-   */
   authRedirectTo?: string;
-  /**
-   * Optional redirect path for users without required role
-   */
   unauthorizedRedirectTo?: string;
-  /**
-   * Custom error message for unauthorized access
-   */
   unauthorizedMessage?: string;
-  /**
-   * Custom loading component
-   */
   fallback?: React.ReactNode;
 }
 
-/**
- * Generic role-based guard component
- * Can protect routes based on any role(s)
- */
 const RoleGuard: React.FC<RoleGuardProps> = ({
   children,
   requiredRole,
-  authRedirectTo = '/auth',
+  authRedirectTo = '/auth/login',
   unauthorizedRedirectTo = '/',
   unauthorizedMessage = 'You do not have permission to access this page.',
   fallback,
 }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
+  
+  // React 19 / Next.js 16 Strict Mode:
+  // Effects run twice in dev. We use a ref to ensure the toast only fires once per session state change.
+  const toastShownRef = useRef(false);
 
+  // 2. State Derivation (React 19 Style - No useMemo needed)
+  // The React Compiler (standard in Next.js 15/16) automatically memoizes these calculations.
+  const allowedRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
+  const userRole = session?.user?.role as UserRole | undefined;
+  
+  const isLoading = status === 'loading';
+  const isUnauthenticated = status === 'unauthenticated';
+  const isAuthenticated = status === 'authenticated';
+  
+  // Strict boolean check
+  const hasPermission = isAuthenticated && userRole && allowedRoles.includes(userRole);
+
+  // 3. Side Effects (Navigation)
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      toast.error('You must be logged in to access this page.');
+    // If we are loading, or if we have permission, do nothing.
+    if (isLoading || hasPermission) return;
+
+    // Reset toast ref if the status changes significantly so we can show errors again if needed
+    // (Optional logic, depends on how aggressive you want the toasts to be)
+    
+    // Case A: Not Logged In
+    if (isUnauthenticated) {
+      if (!toastShownRef.current) {
+        toast.error('You must be logged in to access this page.');
+        toastShownRef.current = true;
+      }
       router.replace(authRedirectTo);
-      return;
     }
 
-    if (status === 'authenticated') {
-      const user = session.user;
-      const allowedRoles = Array.isArray(requiredRole)
-        ? requiredRole
-        : [requiredRole];
-      const hasRequiredRole = allowedRoles.includes(user.role as UserRole);
-
-      if (!hasRequiredRole) {
+    // Case B: Logged In, No Permission
+    if (isAuthenticated && !hasPermission) {
+      if (!toastShownRef.current) {
         toast.error(unauthorizedMessage);
-        router.replace(unauthorizedRedirectTo);
+        toastShownRef.current = true;
       }
+      router.replace(unauthorizedRedirectTo);
     }
   }, [
-    status,
-    session,
+    // Dependencies
+    isLoading,
+    isUnauthenticated,
+    isAuthenticated,
+    hasPermission,
     router,
-    requiredRole,
     authRedirectTo,
     unauthorizedRedirectTo,
     unauthorizedMessage,
+    // Stable dependency key for the array prop (removes need for useMemo)
+    JSON.stringify(requiredRole)
   ]);
 
-  // Show loading state
-  if (status === 'loading') {
+  // 4. Render Layout
+
+  // Loading State
+  if (isLoading) {
     return (
       fallback || (
-        <div className='flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-900'>
-          <div className='text-center space-y-4'>
-            <Loader2 className='h-16 w-16 animate-spin text-slate-400 mx-auto' />
-            <p className='text-slate-600 dark:text-slate-400 font-medium'>
-              Verifying permissions...
-            </p>
-          </div>
+        <div className="flex h-[50vh] w-full flex-col items-center justify-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <p className="text-sm font-medium text-muted-foreground animate-pulse">
+            Verifying permissions...
+          </p>
         </div>
       )
     );
   }
 
-  // User has required role - render protected content
-  if (status === 'authenticated') {
-    const user = session.user;
-    const allowedRoles = Array.isArray(requiredRole)
-      ? requiredRole
-      : [requiredRole];
-    const hasRequiredRole = allowedRoles.includes(user.role as UserRole);
-    if (hasRequiredRole) {
-      return <>{children}</>;
-    }
+  // Success State
+  if (hasPermission) {
+    return <>{children}</>;
   }
 
+  // Fallback (While redirecting)
+  // Returning null prevents "Layout Shift" or flashing restricted content
   return null;
 };
 
