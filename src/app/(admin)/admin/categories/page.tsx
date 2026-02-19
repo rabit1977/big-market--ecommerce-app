@@ -1,4 +1,4 @@
-import CategoriesClient from "@/components/admin/DashboardClient";
+import CategoriesClient from "@/components/admin/categories-client";
 
 
 export default function CategoriesPage() {

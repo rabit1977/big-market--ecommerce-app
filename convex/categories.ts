@@ -19,7 +19,7 @@ export const getRoot = query({
 });
 
 export const getChildren = query({
-  args: { parentId: v.id("categories") },
+  args: { parentId: v.string() },
   handler: async (ctx, args) => {
     return await ctx.db
       .query("categories")

@@ -7,33 +7,33 @@ import { UserAvatar } from '@/components/shared/user-avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { getPromotionConfig } from '@/lib/constants/promotions';
 import { cn } from '@/lib/utils';
 import { formatDateTime, formatPrice } from '@/lib/utils/formatters';
 import {
-    ArrowLeft,
-    BadgeCheck,
-    Calendar,
-    CheckCircle2,
-    CreditCard,
-    Edit,
-    Eye,
-    FileText,
-    ListChecks,
-    Mail,
-    MapPin,
-    Megaphone,
-    Phone,
-    Shield,
-    TrendingUp,
-    XCircle,
+  ArrowLeft,
+  BadgeCheck,
+  Calendar,
+  CheckCircle2,
+  CreditCard,
+  Edit,
+  Eye,
+  FileText,
+  ListChecks,
+  Mail,
+  MapPin,
+  Megaphone,
+  Phone,
+  Shield,
+  TrendingUp,
+  XCircle,
 } from 'lucide-react';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
@@ -383,7 +383,7 @@ export default async function UserDetailsPage({
                   <p className="text-sm text-muted-foreground py-4 text-center">No transactions yet</p>
                 ) : (
                   <div className='space-y-3'>
-                    {transactions
+                    {transactions.slice()
                       .sort((a: any, b: any) => (b.createdAt || 0) - (a.createdAt || 0))
                       .slice(0, 10)
                       .map((tx: any) => (

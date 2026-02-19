@@ -4,6 +4,10 @@ export const getStats = query({
   args: {},
   handler: async (ctx) => {
     const usersCount = (await ctx.db.query("users").collect()).length;
+    const activeListingsCount = (await ctx.db
+      .query("listings")
+      .withIndex("by_status", (q) => q.eq("status", "ACTIVE"))
+      .collect()).length;
     const listingsCount = (await ctx.db.query("listings").collect()).length;
     const promotedListings = await ctx.db
       .query("listings")
@@ -18,12 +22,22 @@ export const getStats = query({
       .withIndex("by_status", (q) => q.eq("status", "NEW"))
       .collect()).length;
 
+    // Calculate Total Revenue (Gross)
+    const allTransactions = await ctx.db
+      .query("transactions")
+      .collect();
+    
+    const totalRevenue = allTransactions
+      .filter(t => t.status === "COMPLETED")
+      .reduce((acc, t) => acc + (t.amount || 0), 0);
+
     return {
       users: usersCount,
       listings: listingsCount,
       promotedListings: promotedListings.length,
       pendingVerifications: verificationRequestsCount,
       newInquiries: contactSubmissionsCount,
+      totalRevenue,
     };
   },
 });
@@ -51,7 +65,8 @@ export const getDailyDeltas = query({
         .collect();
       
       const filteredTransactions = validTransactions.filter(t => 
-          t.type === "TOPUP" && t.status === "COMPLETED"
+          (t.type === "TOPUP" || t.type === "SUBSCRIPTION" || t.type === "PROMOTION" || t.type === "LISTING_PROMOTION") && 
+          t.status === "COMPLETED"
       );
 
       const revenueToday = filteredTransactions.reduce((acc, t) => acc + (t.amount || 0), 0);
