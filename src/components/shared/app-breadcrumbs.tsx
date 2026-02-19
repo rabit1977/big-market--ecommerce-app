@@ -58,6 +58,7 @@ interface AppBreadcrumbsProps {
 
 export function AppBreadcrumbs({ className, customLabel, items }: AppBreadcrumbsProps) {
   const pathname = usePathname();
+  const isAdmin = pathname.startsWith('/admin');
   
   // Custom items override
   if (items) {
@@ -66,7 +67,7 @@ export function AppBreadcrumbs({ className, customLabel, items }: AppBreadcrumbs
             <BreadcrumbList className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground flex-nowrap overflow-x-auto no-scrollbar">
                 <BreadcrumbItem className="shrink-0">
                     <BreadcrumbLink asChild>
-                        <Link href="/" className="flex items-center gap-1 hover:text-primary transition-colors">
+                        <Link href={isAdmin ? "/admin/dashboard" : "/"} className="flex items-center gap-1 hover:text-primary transition-colors">
                             <Home className="h-3.5 w-3.5" />
                         </Link>
                     </BreadcrumbLink>
@@ -104,14 +105,18 @@ export function AppBreadcrumbs({ className, customLabel, items }: AppBreadcrumbs
       <BreadcrumbList className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground flex-nowrap overflow-x-auto no-scrollbar">
         <BreadcrumbItem className="shrink-0">
           <BreadcrumbLink asChild>
-            <Link href="/" className="flex items-center gap-1 hover:text-primary transition-colors">
+            <Link href={isAdmin ? "/admin/dashboard" : "/"} className="flex items-center gap-1 hover:text-primary transition-colors">
               <Home className="h-3.5 w-3.5" />
             </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         
         {pathSegments.map((segment, index) => {
-          const href = `/${pathSegments.slice(0, index + 1).join('/')}`;
+          let href = `/${pathSegments.slice(0, index + 1).join('/')}`;
+          
+          // Special case for admin root to avoid 404
+          if (segment === 'admin') href = '/admin/dashboard';
+          
           const isLast = index === pathSegments.length - 1;
           
           let label = routeMap[segment] || segment.replace(/-/g, ' ');
