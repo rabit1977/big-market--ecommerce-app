@@ -51,10 +51,10 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { memo, useMemo, useState, useTransition } from 'react';
+import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
-import { api } from '../../../../convex/_generated/api';
-import type { Id } from '../../../../convex/_generated/dataModel';
+import { api } from '@/convex/_generated/api';
+import type { Id } from '@/convex/_generated/dataModel';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -89,6 +89,7 @@ interface ListingDetailContentProps {
 // Safe to call on client only (sessionStorage is browser-only).
 
 function getOrCreateAnalyticsSessionId(): string {
+  if (typeof window === 'undefined') return '';
   let id = sessionStorage.getItem('analytics_session_id');
   if (!id) {
     id = Math.random().toString(36).substring(7);
@@ -114,15 +115,15 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
   const sellerProfile = useConvexQuery(api.users.getPublicProfile, { userId: listing.userId });
   const sellerReviewStats = useConvexQuery(api.reviews.getSellerReviewStats, { sellerId: listing.userId });
 
-  // ── Analytics: fire once on mount via React 19 init effect pattern ───────
-  // React 19: effects that should only run once during mount can use a ref
-  // guard or — for analytics — simply fire directly. We use a ref to avoid
-  // strict-mode double-fire in dev without useEffect overhead in prod.
-  // Keeping useEffect here is still valid; what we remove is the DUPLICATE
-  // sessionId generation that existed in both useEffect and handleContactClick.
-  useState(() => {
-    // useState initializer runs exactly once (React 19 ensures this)
+  // ── Analytics: fire once on mount ────────────────────────────────────────
+  // Moved back to useEffect to ensure safely running only on the client.
+  // Previous useState pattern caused SSR errors because sessionStorage is missing on server.
+  useEffect(() => {
     if (!listing._id) return;
+    
+    // Safety check for browser environment
+    if (typeof window === 'undefined') return;
+
     const sessionId = getOrCreateAnalyticsSessionId();
     trackEvent({
       eventType: 'view_listing',
@@ -136,7 +137,9 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
         userId: session.user.id,
       });
     }
-  });
+    // Run once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // ── Derived values (stable, no state needed) ──────────────────────────────
   const images = listing.images ?? [];
