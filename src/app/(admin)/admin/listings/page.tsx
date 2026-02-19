@@ -1,6 +1,7 @@
 import { AdminListingSearch } from '@/components/admin/AdminListingSearch';
 import { AdminListingsTable } from '@/components/admin/AdminListingsTable';
 import { api, convex } from '@/lib/convex-server';
+import { Suspense } from 'react';
 
 export const metadata = {
   title: 'Admin - Manage Listings',
@@ -73,7 +74,9 @@ export default async function AdminListingsPage({ searchParams }: AdminListingsP
         
         {/* Search Bar */}
         <div className="w-full sm:w-auto">
-             <AdminListingSearch />
+             <Suspense fallback={<div className="h-9 w-64 bg-muted animate-pulse rounded-md" />}>
+                  <AdminListingSearch />
+             </Suspense>
         </div>
       </div>
 

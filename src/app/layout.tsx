@@ -58,7 +58,9 @@ export default async function RootLayout({
       </head>
       <body className={inter.className}>
         <Providers initialFavorites={wishlist}>
-          <AnalyticsProvider />
+          <Suspense fallback={null}>
+            <AnalyticsProvider />
+          </Suspense>
           <CommandPalette />
           <div className='min-h-screen bg-background text-foreground relative'>
             <Watermark />

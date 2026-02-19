@@ -15,6 +15,8 @@ export const metadata = {
 };
 
 import { verifyStripePayment } from '@/actions/stripe-actions';
+import { Suspense } from 'react';
+
 
 // ... other imports ...
 
@@ -57,7 +59,9 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
            <p className='text-muted-foreground text-xs md:text-sm font-bold uppercase tracking-wider'>Manage your active and sold items</p>
         </div>
         <div className="flex items-center gap-3 w-full md:w-auto">
-            <MyListingsSearch />
+            <Suspense fallback={<div className="h-10 w-[300px] bg-muted animate-pulse rounded-full" />}>
+                <MyListingsSearch />
+            </Suspense>
             <Button asChild className="gap-2 rounded-full font-black shadow-xl shadow-primary/20 bg-primary hover:bg-primary/90 shrink-0 h-10 md:h-12 text-xs md:text-sm px-6 uppercase tracking-tight transition-all hover:scale-105">
                 <Link href="/sell">
                     <Plus className="h-4 w-4 stroke-[3]" />

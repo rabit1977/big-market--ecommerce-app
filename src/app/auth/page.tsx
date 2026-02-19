@@ -1,6 +1,7 @@
 // app/auth/page.tsx
 import { AuthForm } from '@/components/auth/auth-form';
 import { ReverseAuthGuard } from '@/components/auth/ReverseAuthGuard';
+import { Suspense } from 'react';
 
 /**
  * Authentication Page
@@ -11,7 +12,9 @@ import { ReverseAuthGuard } from '@/components/auth/ReverseAuthGuard';
 export default function AuthPage() {
   return (
     <ReverseAuthGuard redirectTo='/'>
-      <AuthForm />
+      <Suspense fallback={null}>
+        <AuthForm />
+      </Suspense>
     </ReverseAuthGuard>
   );
 }
