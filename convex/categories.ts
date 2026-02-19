@@ -8,42 +8,72 @@ export const list = query({
   },
 });
 
+// Helper to get counts for a list of categories
+async function getCategoryCounts(ctx: any, categories: any[], isSubCategory: boolean) {
+    // 1. Fetch all ACTIVE listings to aggregate in memory (more efficient than N queries if N is large)
+    // However, if listings are huge, this is slow. 
+    // For now, given it's admin, let's do parallel queries which Convex handles well.
+    const counts = await Promise.all(categories.map(async (cat) => {
+        let count = 0;
+        if (isSubCategory) {
+             count = (await ctx.db
+                .query("listings")
+                .withIndex("by_status_subCategory", (q: any) => q.eq("status", "ACTIVE").eq("subCategory", cat.slug))
+                .collect()).length;
+        } else {
+             count = (await ctx.db
+                .query("listings")
+                .withIndex("by_status_category", (q: any) => q.eq("status", "ACTIVE").eq("category", cat.slug))
+                .collect()).length;
+        }
+        return { ...cat, count };
+    }));
+    return counts;
+}
+
 export const getRoot = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db
+    const categories = await ctx.db
       .query("categories")
       .withIndex("by_parentId", (q) => q.eq("parentId", undefined))
       .collect();
+    
+    return await getCategoryCounts(ctx, categories, false);
   },
 });
 
 export const getChildren = query({
   args: { parentId: v.string() },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const categories = await ctx.db
       .query("categories")
       .withIndex("by_parentId", (q) => q.eq("parentId", args.parentId))
       .collect();
+
+    return await getCategoryCounts(ctx, categories, true);
   },
 });
 
 export const getWithCounts = query({
   args: {},
   handler: async (ctx) => {
-    // 1. Fetch active categories using index
     const categories = await ctx.db
       .query("categories")
       .withIndex("by_isActive", (q) => q.eq("isActive", true))
       .collect();
+
+    // Aggregation for public view (usually specific to a parent, but this is a global "all counts")
+    // Note: This might be heavy if not optimized. 
+    // For admin usage, we prefer the getRoot/getChildren approach.
+    // Keeping this for backward compatibility if used elsewhere.
     
-    // 2. Fetch only ACTIVE listings
+    // Optimized: Fetch active listings stats only? No, need all.
     const activeListings = await ctx.db
       .query("listings")
       .withIndex("by_status", (q) => q.eq("status", "ACTIVE"))
       .collect();
-      
-    // 3. Fast Map aggregation
+
     const counts = new Map<string, number>();
     for (const l of activeListings) {
       if (l.category) {

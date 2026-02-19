@@ -4,30 +4,30 @@ import { createCategory, deleteCategory, updateCategory } from '@/actions/admin/
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
 } from '@/components/ui/dialog';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
@@ -36,7 +36,7 @@ import { Id } from '@/convex/_generated/dataModel';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery } from 'convex/react';
 import { ChevronDown, ChevronRight, Edit, Folder, FolderOpen, MoreHorizontal, Plus, Trash } from 'lucide-react';
-import { memo, useCallback, useEffect, useTransition, useState } from 'react';
+import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
@@ -55,6 +55,7 @@ interface Category {
   isFeatured: boolean;
   parentId?: string | null;
   template?: any;
+  count?: number;
 }
 
 interface DialogState {
@@ -232,8 +233,13 @@ const CategoryTreeItem = memo(function CategoryTreeItem({
             <Folder className="h-4 w-4 text-primary/80 shrink-0" />
           )}
           <span className="font-medium truncate text-sm">{category.name}</span>
+          {typeof category.count === 'number' && (
+            <span className="text-xs text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded-full">
+              {category.count}
+            </span>
+          )}
           {!category.isActive && (
-            <span className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded-full">
+            <span className="text-[10px] bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 px-1.5 py-0.5 rounded-full">
               Inactive
             </span>
           )}
