@@ -31,6 +31,7 @@ export function EditListingForm({ listing, categories }: EditListingFormProps) {
             categories={categories}
             initialData={listing}
             onSuccess={handleSuccess}
+            isAdmin={true}
         />
     </div>
   );

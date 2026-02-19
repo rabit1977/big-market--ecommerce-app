@@ -13,10 +13,10 @@ import { useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  BadgeCheck, BarChart, Bell, ChevronRight, CreditCard, Crown,
-  Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
-  MessageSquare, Package, Pencil, Settings, ShieldCheck,
-  Star, Store, Trash, User, Wallet, X,
+    BadgeCheck, BarChart, Bell, ChevronRight, CreditCard, Crown,
+    Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
+    MessageSquare, Package, Pencil, Settings, ShieldCheck,
+    Star, Store, Trash, User, Wallet, X,
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -57,7 +57,7 @@ function renderSectionLabel(label: string) {
 
 export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const user = session?.user;
 
   const unreadNotificationsCount =
@@ -202,15 +202,15 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
+  if (!user && status === 'loading') {
+    return (
+      <div className="flex items-center gap-1 sm:gap-2">
+        <Skeleton className="h-9 w-9 rounded-full" />
+      </div>
+    );
+  }
+
   if (!user) {
-    // Show skeleton while session loads, login button when confirmed unauthenticated
-    if (session === undefined) {
-      return (
-        <div className="flex items-center gap-1 sm:gap-2">
-          <Skeleton className="h-9 w-9 rounded-full" />
-        </div>
-      );
-    }
     return (
       <Button asChild variant="ghost" size="sm" className="h-9 px-3 rounded-full font-bold hover:bg-muted ml-1">
         <Link href="/auth">

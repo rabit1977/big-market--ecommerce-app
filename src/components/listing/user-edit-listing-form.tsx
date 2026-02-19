@@ -16,12 +16,12 @@ interface UserEditListingFormProps {
   categories: Category[];
 }
 
-export function UserEditListingForm({ listing, categories }: UserEditListingFormProps) {
+export function UserEditListingForm({ listing, categories, isAdmin }: UserEditListingFormProps & { isAdmin?: boolean }) {
   const router = useRouter();
 
   const handleSuccess = () => {
       toast.success('Listing updated successfully');
-      router.push('/my-listings');
+      router.push(isAdmin ? '/admin/listings' : '/my-listings');
       router.refresh();
   };
 
@@ -31,6 +31,7 @@ export function UserEditListingForm({ listing, categories }: UserEditListingForm
             categories={categories}
             initialData={listing}
             onSuccess={handleSuccess}
+            isAdmin={isAdmin}
         />
     </div>
   );

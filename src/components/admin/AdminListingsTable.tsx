@@ -30,7 +30,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn, formatCurrency } from '@/lib/utils';
-import { AlertCircle, Check, CheckCircle, Clock, Eye, MoreHorizontal, Trash2, XCircle } from 'lucide-react';
+import { AlertCircle, Check, CheckCircle, Clock, Eye, MoreHorizontal, Pencil, Trash2, XCircle } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -217,19 +217,6 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                   </TableCell>
                   <TableCell className="text-right sticky right-0 bg-card/95 backdrop-blur-sm group-hover:bg-muted/90 transition-colors z-10 border-l border-border/50">
                     <div className="flex justify-end gap-1">
-                      {/* View Button */}
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all"
-                        asChild
-                        title="View Listing"
-                      >
-                        <Link href={`/listings/${listing._id}`} target="_blank">
-                            <Eye className="h-4 w-4" />
-                        </Link>
-                      </Button>
-
                       {/* Actions Dropdown */}
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -248,6 +235,13 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                             <Link href={`/listings/${listing._id}`} target="_blank" className="flex items-center">
                               <Eye className="h-4 w-4 mr-2" />
                               View Listing
+                            </Link>
+                          </DropdownMenuItem>
+
+                          <DropdownMenuItem asChild className="cursor-pointer text-blue-600 focus:text-blue-700">
+                            <Link href={`/my-listings/${listing._id}/edit`} className="flex items-center">
+                              <Pencil className="h-4 w-4 mr-2" />
+                              Edit Listing
                             </Link>
                           </DropdownMenuItem>
                           

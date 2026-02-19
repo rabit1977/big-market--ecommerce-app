@@ -121,7 +121,9 @@ export function ListingsClient({ listings }: ListingsClientProps) {
               </div>
 
               <div className='flex-1 min-w-0'>
-                <h3 className='font-semibold text-sm sm:text-base truncate'>{listing.title}</h3>
+                <Link href={`/listings/${listing.id}`} target="_blank" className="hover:underline">
+                    <h3 className='font-semibold text-sm sm:text-base truncate'>{listing.title}</h3>
+                </Link>
                 <div className='flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground mt-1'>
                     <span className="font-medium text-foreground">${listing.price}</span>
                     <span>•</span>
@@ -177,8 +179,8 @@ export function ListingsClient({ listings }: ListingsClientProps) {
                    </>
                ) : null}
 
-               <Button variant="outline" size="sm" asChild className="h-8 w-8 p-0">
-                   <Link href={`/listings/${listing.id}/edit`}>
+               <Button variant="outline" size="sm" asChild className="h-8 w-8 p-0" title="Edit Listing">
+                   <Link href={`/admin/listings/${listing.id}/edit`}>
                        <Edit className="h-4 w-4" />
                        <span className="sr-only">Edit</span>
                    </Link>

@@ -5,11 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Listing, ListingWithRelations } from '@/lib/types/listing';
@@ -34,6 +34,7 @@ interface ListingFormProps {
   categories: Category[];
   initialData?: ListingWithRelations;
   onSuccess?: (listing: Listing) => void;
+  isAdmin?: boolean;
 }
 
 const DEFAULT_TITLE_PLACEHOLDER = 'e.g. iPhone 14 Pro Max';
@@ -46,7 +47,7 @@ function getCategoryId(c: Category) {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function ListingForm({ categories, initialData, onSuccess }: ListingFormProps) {
+export function ListingForm({ categories, initialData, onSuccess, isAdmin = false }: ListingFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -100,6 +101,7 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
     phone:       initialData?.contactPhone ?? '',
     email:       (initialData as any)?.contactEmail ?? '',
     currency:    (initialData as any)?.currency ?? 'MKD',
+    status:      initialData?.status ?? 'PENDING_APPROVAL',
   });
 
   // ── Template loading ──────────────────────────────────────────────────────
@@ -164,8 +166,8 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
 
   // ── Submit ────────────────────────────────────────────────────────────────
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent, statusOverride?: string) => {
+    if (e) e.preventDefault();
 
     if (!selectedCategoryId) return void toast.error('Please select a category');
     if (!formData.title.trim()) return void toast.error('Title is required');
@@ -185,18 +187,23 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
         }
       }
 
+      // Determine status: Override > Admin Form State > Initial > Default
+      const finalStatus = statusOverride ?? (isAdmin ? (formData as any).status : (initialData?.status ?? 'PENDING_APPROVAL'));
+
+      const { state, phone, email, ...baseFormData } = formData;
+
       const listingData: any = {
-        ...formData,
+        ...baseFormData,
         price: parseFloat(formData.price),
         category: categorySlug,
         subCategory: subCategorySlug || undefined,
-        region: formData.state || undefined,
-        contactPhone: formData.phone || undefined,
-        contactEmail: formData.email || undefined,
+        region: state || undefined,
+        contactPhone: phone || undefined,
+        contactEmail: email || undefined,
         specifications,
         images,
         thumbnail: images[0] ?? '',
-        status: initialData?.status ?? 'PENDING_APPROVAL',
+        status: finalStatus,
       };
 
       const listingId = initialData?.id ?? (initialData as any)?._id;
@@ -205,7 +212,7 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
         if (listingId) {
           const res = await updateListingAction(listingId, listingData);
           if (!res.success) throw new Error(res.error);
-          toast.success('Listing updated successfully');
+          toast.success(finalStatus === 'ACTIVE' && statusOverride ? 'Listing updated & approved!' : 'Listing updated successfully');
           if (onSuccess && initialData) onSuccess(initialData as any);
           else router.push(`/listings/${listingId}`);
         } else {
@@ -226,11 +233,32 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 animate-in fade-in duration-500">
+    <form onSubmit={(e) => handleSubmit(e)} className="space-y-8 animate-in fade-in duration-500">
 
       {/* Basic Information */}
       <div className="space-y-4">
-        <SectionHeader title="Basic Information" />
+        <div className="flex items-center justify-between">
+            <SectionHeader title="Basic Information" />
+            {isAdmin && (
+                <div className="flex items-center gap-2 bg-yellow-100 dark:bg-yellow-900/30 px-3 py-1 rounded-full border border-yellow-200 dark:border-yellow-800">
+                    <Label htmlFor="status" className="text-[10px] uppercase font-black text-yellow-800 dark:text-yellow-500">Status</Label>
+                    <Select 
+                        value={(formData as any).status} 
+                        onValueChange={(val) => setFormData(prev => ({ ...prev, status: val }))}
+                    >
+                        <SelectTrigger className="h-6 w-[110px] text-xs border-0 bg-transparent focus:ring-0 px-0 font-bold text-yellow-900 dark:text-yellow-400">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent align="end">
+                            <SelectItem value="PENDING_APPROVAL">Pending</SelectItem>
+                            <SelectItem value="ACTIVE">Active</SelectItem>
+                            <SelectItem value="REJECTED">Rejected</SelectItem>
+                            <SelectItem value="SOLD">Sold</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+            )}
+        </div>
         <div className="grid gap-5">
 
           {/* Categories */}
@@ -412,6 +440,23 @@ export function ListingForm({ categories, initialData, onSuccess }: ListingFormP
         <Button type="button" variant="ghost" onClick={() => router.back()} className="text-muted-foreground hover:text-foreground">
           Cancel
         </Button>
+
+        {isAdmin && (initialData?.status === 'PENDING_APPROVAL' || (formData as any).status === 'PENDING_APPROVAL') && (
+            <Button 
+                type="button" 
+                variant="default"
+                disabled={isPending} 
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold tracking-wide rounded-full min-w-[160px]"
+                onClick={() => handleSubmit(undefined, 'ACTIVE')}
+            >
+                {isPending ? (
+                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Processing...</>
+                ) : (
+                    <><Save className="mr-2 h-4 w-4" />Approve & Save</>
+                )}
+            </Button>
+        )}
+
         <Button type="submit" disabled={isPending} className="min-w-[140px] font-bold tracking-wide rounded-full">
           {isPending ? (
             <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</>

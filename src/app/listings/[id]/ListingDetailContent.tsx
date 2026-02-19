@@ -18,34 +18,36 @@ import { GuestContactDialog } from '@/components/listing/guest-contact-dialog';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { api } from '@/convex/_generated/api';
+import type { Id } from '@/convex/_generated/dataModel';
 import { useFavorites } from '@/lib/context/favorites-context';
 import { cn, formatCurrency } from '@/lib/utils';
 import { useQuery as useConvexQuery, useMutation } from 'convex/react';
 import {
-    BadgeCheck,
-    ChevronLeft,
-    Edit,
-    Heart,
-    History,
-    Mail,
-    MapPin,
-    MessageSquare,
-    MoreVertical,
-    Phone,
-    Share2,
-    ShieldAlert,
-    Trash2,
+  BadgeCheck,
+  ChevronLeft,
+  Edit,
+  Heart,
+  History,
+  Mail,
+  MapPin,
+  MessageSquare,
+  MoreVertical,
+  Phone,
+  Share2,
+  ShieldAlert,
+  Trash2,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -53,8 +55,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
-import { api } from '@/convex/_generated/api';
-import type { Id } from '@/convex/_generated/dataModel';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -147,7 +147,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
   const contactPhone = listing.contactPhone ?? (seller as any)?.phone;
   const contactEmail = listing.contactEmail ?? (seller as any)?.email;
   const condition = listing.specifications?.condition;
-  const isOwner = session?.user?.id === listing.userId;
+  const isOwner = session?.user?.id === listing.userId || session?.user?.role === 'ADMIN';
 
   // Date: suppressHydrationWarning on the span avoids the useEffect+state hack.
   // The string is computed once per render on the client after hydration.

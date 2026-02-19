@@ -69,7 +69,7 @@ export default async function EditListingPage({ params }: EditPageProps) {
                     {/* Decorative element */}
                     <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-10 -mt-10" />
                     
-                    <UserEditListingForm listing={listing as any} categories={categories as any} />
+                    <UserEditListingForm listing={listing as any} categories={categories as any} isAdmin={session.user.role === 'ADMIN'} />
                </div>
            </div>
       </div>

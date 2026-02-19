@@ -12,7 +12,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { formatCurrency } from '@/lib/utils';
-import { CheckCircle, Eye, XCircle } from 'lucide-react';
+import { CheckCircle, Eye, Pencil, XCircle } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -128,9 +128,20 @@ export function PendingListingsTable({ listings }: PendingListingsTableProps) {
                   </Button>
                   <Button
                     size="icon"
+                    variant="ghost"
+                    className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                    asChild
+                  >
+                    <Link href={`/admin/listings/${listing._id}/edit`}>
+                        <Pencil className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button
+                    size="icon"
                     className="h-8 w-8 bg-emerald-600 hover:bg-emerald-700 text-white"
                     disabled={isPending}
                     onClick={() => handleApprove(listing._id)}
+                    title="Approve immediately"
                   >
                     <CheckCircle className="h-4 w-4" />
                   </Button>
@@ -140,6 +151,7 @@ export function PendingListingsTable({ listings }: PendingListingsTableProps) {
                     className="h-8 w-8"
                     disabled={isPending}
                     onClick={() => handleReject(listing._id)}
+                    title="Reject"
                   >
                     <XCircle className="h-4 w-4" />
                   </Button>

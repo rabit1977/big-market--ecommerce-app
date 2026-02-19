@@ -22,7 +22,7 @@ async function getNextListingNumber(ctx: MutationCtx): Promise<number> {
   if (counter.reusableIds && counter.reusableIds.length > 0) {
     // Sort to use lowest first
     const sortedIds = [...counter.reusableIds].sort((a, b) => a - b);
-    const idToUse = sortedIds.shift(); // Remove first
+    const idToUse = sortedIds.shift(); // Reading file.
     
     await ctx.db.patch(counter._id, {
       reusableIds: sortedIds,

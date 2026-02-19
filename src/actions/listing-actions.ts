@@ -127,12 +127,26 @@ export async function createListingAction(data: any) {
     }
 }
 
+async function requireOwnershipOrAdmin(id: string) {
+    const session = await auth();
+    if (!session?.user) throw new Error("Unauthorized");
+
+    const listing = await convex.query(api.listings.getById, { id: id as any });
+    if (!listing) throw new Error("Listing not found");
+
+    const isOwner = listing.userId === session.user.id || listing.userId === session.user.externalId;
+    const isAdmin = session.user.role === 'ADMIN';
+
+    if (!isOwner && !isAdmin) {
+        throw new Error("Unauthorized: You do not own this listing.");
+    }
+    
+    return listing;
+}
+
 export async function updateListingAction(id: string, data: any) {
     try {
-        const session = await auth();
-        if (!session?.user) return { success: false, error: "Unauthorized" };
-
-        await requireApproved(id);
+        await requireOwnershipOrAdmin(id);
 
         await convex.mutation(api.listings.update, {
             id: id as any,
@@ -140,7 +154,9 @@ export async function updateListingAction(id: string, data: any) {
         });
 
         revalidatePath('/my-listings');
-        revalidatePath(`/listings/${id}`);
+        revalidatePath('/admin/listings');
+        revalidatePath(`/listings/${id}`); // listings/[id]
+        
         return { success: true };
     } catch (e: any) {
         return { success: false, error: e.message };
