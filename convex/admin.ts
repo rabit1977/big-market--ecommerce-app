@@ -33,6 +33,7 @@ export const getStats = query({
 
     return {
       users: usersCount,
+      activeListings: activeListingsCount,
       listings: listingsCount,
       promotedListings: promotedListings.length,
       pendingVerifications: verificationRequestsCount,

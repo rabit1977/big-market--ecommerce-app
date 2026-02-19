@@ -89,12 +89,12 @@ export function AdminDashboardClient() {
           description={`${dailyDeltas.newUsers} joined today`}
         />
         <DashboardCard
-          title="Total Listings"
-          value={stats.listings}
+          title="Active Listings"
+          value={stats.activeListings}
           icon={Tag}
           color="emerald"
           trend={{ value: dailyDeltas.newListings, isPositive: dailyDeltas.newListings > 0 }}
-          description={`${dailyDeltas.newListings} posted today`}
+          description={`${dailyDeltas.newListings} posted today (Total: ${stats.listings})`}
         />
         <DashboardCard
           title="Total Revenue"
