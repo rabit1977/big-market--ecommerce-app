@@ -73,7 +73,7 @@ export function AppBreadcrumbs({ className, customLabel, items }: AppBreadcrumbs
                     </BreadcrumbLink>
                 </BreadcrumbItem>
                 {items.map((item, index) => (
-                    <React.Fragment key={index}>
+                    <React.Fragment key={`${item.href || ''}-${index}`}>
                         <BreadcrumbSeparator className="opacity-50 shrink-0" />
                         <BreadcrumbItem className="shrink-0 whitespace-nowrap">
                             {!item.href ? (
@@ -114,11 +114,22 @@ export function AppBreadcrumbs({ className, customLabel, items }: AppBreadcrumbs
         {pathSegments.map((segment, index) => {
           let href = `/${pathSegments.slice(0, index + 1).join('/')}`;
           
+          // Original href before mapping, used to check if we should skip rendering
+          const originalHref = `/${pathSegments.slice(0, index + 1).join('/')}`;
+          
           // Special case for admin root to avoid 404
           if (segment === 'admin') href = '/admin/dashboard';
           
           const isLast = index === pathSegments.length - 1;
           
+          // If we are at /admin and current segment is admin, and it's last, show it.
+          // If we are at /admin/dashboard, and current segment is 'admin', it will point to /admin/dashboard.
+          // The next segment 'dashboard' will also point to /admin/dashboard.
+          // To avoid visual duplication when both point to same place:
+          if (segment === 'admin' && pathname === '/admin/dashboard' && !isLast) {
+              return null;
+          }
+
           let label = routeMap[segment] || segment.replace(/-/g, ' ');
           
           if (segment.length > 20 && !routeMap[segment]) {
@@ -131,7 +142,7 @@ export function AppBreadcrumbs({ className, customLabel, items }: AppBreadcrumbs
           }
 
           return (
-            <React.Fragment key={href}>
+            <React.Fragment key={`${originalHref}-${index}`}>
               <BreadcrumbSeparator className="opacity-50 shrink-0" />
               <BreadcrumbItem className="shrink-0 whitespace-nowrap">
                 {isLast ? (
