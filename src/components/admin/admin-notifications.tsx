@@ -19,7 +19,7 @@ export function AdminNotifications({ user }: { user: any }) {
     
     if (!stats) return <UserAvatar user={user} className="w-9 h-9" />;
 
-    const hasNotifications = stats.totalCount > 0;
+    const hasNotifications = (stats?.totalCount ?? 0) > 0;
 
     return (
         <DropdownMenu>
@@ -36,8 +36,8 @@ export function AdminNotifications({ user }: { user: any }) {
                                 }}
                                 exit={{ scale: 0 }}
                                 className="absolute -top-1 -right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white border-2 border-background shadow-[0_0_10px_rgba(220,38,38,0.5)]"
-                            >
-                                {stats.totalCount > 99 ? '99+' : stats.totalCount}
+                                >
+                                { (stats?.totalCount ?? 0) > 99 ? '99+' : (stats?.totalCount ?? 0)}
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -58,7 +58,7 @@ export function AdminNotifications({ user }: { user: any }) {
                         <span className="text-sm font-medium">Revenue</span>
                     </div>
                     <span className="text-sm font-bold text-emerald-500">
-                        €{stats.revenueToday.toLocaleString()}
+                        €{(stats?.revenueToday ?? 0).toLocaleString()}
                     </span>
                 </DropdownMenuItem>
 
@@ -70,7 +70,7 @@ export function AdminNotifications({ user }: { user: any }) {
                         <span className="text-sm font-medium">New Users</span>
                     </div>
                     <span className="text-sm font-bold text-blue-500">
-                        +{stats.newUsers}
+                        +{stats?.newUsers ?? 0}
                     </span>
                 </DropdownMenuItem>
 
@@ -82,7 +82,7 @@ export function AdminNotifications({ user }: { user: any }) {
                         <span className="text-sm font-medium">New Listings</span>
                     </div>
                     <span className="text-sm font-bold text-orange-500">
-                        +{stats.newListings}
+                        +{stats?.newListings ?? 0}
                     </span>
                 </DropdownMenuItem>
 

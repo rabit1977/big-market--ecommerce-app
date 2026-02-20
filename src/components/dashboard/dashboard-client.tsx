@@ -123,7 +123,7 @@ export function DashboardClient({
               </div>
             </div>
             <p className="text-3xl font-bold mb-1">
-              {stats.totalViews.toLocaleString()}
+              {(stats?.totalViews ?? 0).toLocaleString()}
             </p>
             <p className="text-sm text-muted-foreground">Total Views</p>
           </Card>
@@ -275,7 +275,7 @@ function ListingCard({
                 </h3>
               </Link>
               <p className="text-2xl font-bold text-primary mt-1">
-                €{listing.price.toLocaleString()}
+                €{(listing.price ?? 0).toLocaleString()}
               </p>
             </div>
 
@@ -350,7 +350,7 @@ function FavoriteCard({ listing }: { listing: Listing }) {
             {listing.title}
           </h3>
           <p className="text-xl font-bold text-primary">
-            €{listing.price.toLocaleString()}
+            €{(listing.price ?? 0).toLocaleString()}
           </p>
           <p className="text-sm text-muted-foreground mt-1 capitalize">
             {listing.city}

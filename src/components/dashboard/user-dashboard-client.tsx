@@ -134,7 +134,7 @@ export function UserDashboardClient({ userId }: UserDashboardClientProps) {
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
                     <StatCard icon={Package} label="Total Listings" value={stats.listings.total} color="blue" />
                     <StatCard icon={ListChecks} label="Active" value={stats.listings.active} color="green" />
-                    <StatCard icon={Eye} label="Total Views" value={stats.listings.totalViews.toLocaleString()} color="purple" />
+                    <StatCard icon={Eye} label="Total Views" value={(stats?.listings?.totalViews ?? 0).toLocaleString()} color="purple" />
                     <StatCard icon={Sparkles} label="Promoted" value={stats.listings.promoted} color="amber" />
                     <StatCard icon={Heart} label="Favorites" value={stats.social.favoritesCount} color="rose" />
                 </div>
@@ -635,7 +635,7 @@ export function UserDashboardClient({ userId }: UserDashboardClientProps) {
                                 <div>
                                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Member Since</p>
                                     <p className="text-sm font-bold">
-                                        {stats.profile.createdAt
+                                        {stats?.profile?.createdAt
                                             ? new Date(stats.profile.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
                                             : 'Recently joined'
                                         }

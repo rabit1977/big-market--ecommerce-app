@@ -70,9 +70,9 @@ export function MyListingsDashboardHeader() {
                      <TooltipProvider>
                          <Tooltip>
                              <TooltipTrigger asChild>
-                                 <div className="absolute -bottom-1 -right-1 bg-blue-500 text-white p-1 rounded-full border-4 border-background shadow-sm cursor-help">
-                                     <CheckCircle2 className="w-3 h-3" />
-                                 </div>
+                                  <div className="absolute -bottom-1 -right-1 bg-blue-500 text-white p-1 rounded-full border-4 border-background shadow-sm cursor-help">
+                                      <CheckCircle2 className="w-3 h-3" />
+                                  </div>
                              </TooltipTrigger>
                              <TooltipContent>Verified Account</TooltipContent>
                          </Tooltip>
@@ -181,7 +181,7 @@ export function MyListingsDashboardHeader() {
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Total Views</p>
-                    <h3 className="text-xl md:text-2xl font-black text-foreground tracking-tight group-hover:text-amber-500 transition-colors">{stats.totalViews.toLocaleString()}</h3>
+                    <h3 className="text-xl md:text-2xl font-black text-foreground tracking-tight group-hover:text-amber-500 transition-colors">{(stats?.totalViews ?? 0).toLocaleString()}</h3>
                   </div>
               </CardContent>
           </Card>

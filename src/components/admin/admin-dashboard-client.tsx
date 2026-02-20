@@ -82,34 +82,34 @@ export function AdminDashboardClient() {
       <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-4'>
         <DashboardCard
           title="Total Users"
-          value={stats.users}
+          value={stats?.users ?? 0}
           icon={Users}
           color="blue"
-          trend={{ value: dailyDeltas.newUsers, isPositive: dailyDeltas.newUsers > 0 }}
-          description={`${dailyDeltas.newUsers} joined today`}
+          trend={{ value: dailyDeltas?.newUsers ?? 0, isPositive: (dailyDeltas?.newUsers ?? 0) > 0 }}
+          description={`${dailyDeltas?.newUsers ?? 0} joined today`}
         />
         <DashboardCard
           title="Active Listings"
-          value={stats.activeListings}
+          value={stats?.activeListings ?? 0}
           icon={Tag}
           color="emerald"
-          trend={{ value: dailyDeltas.newListings, isPositive: dailyDeltas.newListings > 0 }}
-          description={`${dailyDeltas.newListings} posted today (Total: ${stats.listings})`}
+          trend={{ value: dailyDeltas?.newListings ?? 0, isPositive: (dailyDeltas?.newListings ?? 0) > 0 }}
+          description={`${dailyDeltas?.newListings ?? 0} posted today (Total: ${stats?.listings ?? 0})`}
         />
         <DashboardCard
           title="Total Revenue"
-          value={stats.totalRevenue.toLocaleString() + ' MKD'}
+          value={(stats?.totalRevenue ?? 0).toLocaleString() + ' MKD'}
           icon={CreditCard}
           color="violet"
-          trend={{ value: dailyDeltas.revenueToday, isPositive: dailyDeltas.revenueToday > 0 }}
-          description={`Today: +${dailyDeltas.revenueToday.toLocaleString()} MKD`}
+          trend={{ value: dailyDeltas?.revenueToday ?? 0, isPositive: (dailyDeltas?.revenueToday ?? 0) > 0 }}
+          description={`Today: +${(dailyDeltas?.revenueToday ?? 0).toLocaleString()} MKD`}
         />
         <DashboardCard
           title="Support Tickets"
-          value={stats.newInquiries}
+          value={stats?.newInquiries ?? 0}
           icon={MessageSquare}
           color="rose"
-          description={`${stats.newInquiries} unread inquiries`}
+          description={`${stats?.newInquiries ?? 0} unread inquiries`}
         />
       </div>
 
@@ -195,7 +195,7 @@ export function AdminDashboardClient() {
                   Action Required
                </Badge>
                <h2 className="text-2xl sm:text-4xl font-black tracking-tight">
-                  {stats.pendingVerifications} Pending ID Verifications
+                  {stats?.pendingVerifications ?? 0} Pending ID Verifications
                </h2>
                <p className="text-indigo-100 font-medium max-w-lg">
                   There are users waiting for their identity verification. Verifying users boosts platform trust and safety.
@@ -229,7 +229,7 @@ function ActivityLogs({ logs }: { logs: any[] }) {
           <div className="flex-1 min-w-0">
              <p className="text-sm font-medium line-clamp-1">{log.details || log.action}</p>
              <p className="text-[10px] text-muted-foreground mt-0.5">
-                {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                {new Date(log.createdAt ?? Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
              </p>
           </div>
         </div>
