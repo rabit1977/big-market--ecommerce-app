@@ -1,6 +1,6 @@
 'use client';
 
-import { changePasswordAction, changePasswordAction } from '@/actions/auth-actions';
+import { changePasswordAction } from '@/actions/auth-actions';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
