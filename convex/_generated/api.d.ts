@@ -26,6 +26,7 @@ import type * as migrations from "../migrations.js";
 import type * as notifications from "../notifications.js";
 import type * as promotions from "../promotions.js";
 import type * as qa from "../qa.js";
+import type * as reset from "../reset.js";
 import type * as reviews from "../reviews.js";
 import type * as searches from "../searches.js";
 import type * as seed from "../seed.js";
@@ -61,6 +62,7 @@ declare const fullApi: ApiFromModules<{
   notifications: typeof notifications;
   promotions: typeof promotions;
   qa: typeof qa;
+  reset: typeof reset;
   reviews: typeof reviews;
   searches: typeof searches;
   seed: typeof seed;

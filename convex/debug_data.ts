@@ -31,3 +31,37 @@ export const searchAllListings = query({
         ).map(l => ({ _id: l._id, title: l.title, userId: l.userId }));
     }
 });
+
+export const quickStats = query({
+  args: {},
+  handler: async (ctx) => {
+    const users = await ctx.db.query("users").collect();
+    const listings = await ctx.db.query("listings").collect();
+    const inquiries = await ctx.db.query("listingInquiries").collect();
+    const categories = await ctx.db.query("categories").collect();
+    
+    return {
+        users: users.length,
+        listings: listings.length,
+        inquiries: inquiries.length,
+        categories: categories.length,
+    };
+  }
+});
+
+export const investigateOrphans = query({
+    args: {},
+    handler: async (ctx) => {
+        const listings = await ctx.db.query("listings").collect();
+        const users = await ctx.db.query("users").collect();
+        const userIds = new Set(users.map(u => u.externalId));
+        const internalIds = new Set(users.map(u => u._id as string));
+        
+        return listings.filter(l => !userIds.has(l.userId) && !internalIds.has(l.userId)).map(l => ({
+            _id: l._id,
+            title: l.title,
+            userId: l.userId,
+            contactEmail: l.contactEmail
+        }));
+    }
+});
