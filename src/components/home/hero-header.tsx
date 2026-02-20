@@ -41,7 +41,7 @@ export const HeroHeader = () => {
       <div className='container-wide py-2'>
 
         {/* Categories Link & Quick Filters - Justified & Rounded */}
-        <div className="flex items-center justify-between gap-4">
+        <div className="hidden md:flex items-center justify-between gap-4 ">
           
           {/* Categories Button - Rounded Pill */}
           <Link 

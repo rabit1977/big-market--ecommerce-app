@@ -134,7 +134,7 @@ async function requireOwnershipOrAdmin(id: string) {
     const listing = await convex.query(api.listings.getById, { id: id as any });
     if (!listing) throw new Error("Listing not found");
 
-    const isOwner = listing.userId === session.user.id || listing.userId === session.user.externalId;
+    const isOwner = listing.userId === session.user.id;
     const isAdmin = session.user.role === 'ADMIN';
 
     if (!isOwner && !isAdmin) {

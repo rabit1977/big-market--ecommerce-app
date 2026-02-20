@@ -31,8 +31,7 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { api } from '@/convex/_generated/api';
-import { Id } from '@/convex/_generated/dataModel';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery } from 'convex/react';
 import { ChevronDown, ChevronRight, Edit, Folder, FolderOpen, MoreHorizontal, Plus, Trash } from 'lucide-react';
@@ -40,6 +39,8 @@ import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
+import { api } from '../../../convex/_generated/api';
+import { Id } from '../../../convex/_generated/dataModel';
 
 // ------------------------------------------------------------------
 // Types
@@ -380,7 +381,7 @@ function CategoryDialog({
         template: '',
       });
     }
-  }, [open, editingCategory, parentForNew]); // form is stable — safe to omit
+  }, [open, editingCategory, parentForNew, form]);
 
   // Auto-generate slug from name only when creating
   const name = form.watch('name');
@@ -394,7 +395,7 @@ function CategoryDialog({
         .replace(/^-+|-+$/g, ''),
       { shouldValidate: false }
     );
-  }, [name, editingCategory]); // form is stable — safe to omit
+  }, [name, editingCategory, form]);
 
   const onSubmit = (data: CategoryFormValues) => {
     startTransition(async () => {

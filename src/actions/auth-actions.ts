@@ -153,10 +153,31 @@ export async function resetPasswordAction(data: {
   token: string;
   password: string;
 }) {
-    // Password reset logic using Convex would go here.
-    // Need fields in schema for tokens. I added them earlier.
-    // For now, return success as a placeholder if we don't have the full flow.
-    return { success: false, error: 'Reset password not yet fully migrated to Convex' };
+    try {
+        const { token, password } = data;
+
+        if (!token || !password) {
+            return { success: false, error: 'Missing token or password' };
+        }
+
+        if (password.length < 6) {
+            return { success: false, error: 'Password must be at least 6 characters' };
+        }
+
+        // Hash new password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Call Convex mutation to reset password
+        await convex.mutation(api.users.resetPassword, {
+            resetToken: token,
+            hashedPassword: hashedPassword
+        });
+
+        return { success: true };
+    } catch (error: any) {
+        console.error('Reset Password Error:', error);
+        return { success: false, error: error.message || 'Failed to reset password' };
+    }
 }
 
 export async function completeRegistrationAction(data: {
@@ -184,5 +205,37 @@ export async function completeRegistrationAction(data: {
   } catch (error: any) {
     console.error('Complete Registration Error:', error);
     return { success: false, error: error.message || 'Failed to complete registration' };
+  }
+}
+
+/**
+ * Change Password for logged in user
+ */
+export async function changePasswordAction(data: {
+  newPassword: string;
+}) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+        return { success: false, error: 'Unauthorized' };
+    }
+
+    if (data.newPassword.length < 6) {
+        return { success: false, error: 'Password must be at least 6 characters' };
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(data.newPassword, 10);
+
+    // Call Convex mutation
+    await convex.mutation(api.users.changePassword, {
+        externalId: session.user.id,
+        hashedPassword
+    });
+
+    return { success: true };
+  } catch (error: any) {
+    console.error('Change Password Error:', error);
+    return { success: false, error: error.message || 'Failed to change password' };
   }
 }

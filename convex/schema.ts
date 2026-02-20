@@ -35,7 +35,6 @@ export default defineSchema({
     resetTokenExpiry: v.optional(v.number()),
     createdAt: v.optional(v.number()),
     // New fields for Classifieds features
-    // New fields for Classifieds features
     isVerified: v.optional(v.boolean()),
     verificationStatus: v.optional(v.string()), // "unverified", "pending_payment", "pending_approval", "verified"
     credits: v.optional(v.number()),
@@ -60,6 +59,10 @@ export default defineSchema({
     membershipExpiresAt: v.optional(v.number()),
   }).index("by_externalId", ["externalId"])
     .index("by_email", ["email"])
+    .index("by_accountStatus", ["accountStatus"])
+    .index("by_accountType", ["accountType"])
+    .index("by_isVerified", ["isVerified"])
+    .index("by_resetToken", ["resetToken"])
     .index("by_createdAt", ["createdAt"]),
 
   categories: defineTable({

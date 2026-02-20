@@ -1,11 +1,12 @@
 'use client';
 
+import { changePasswordAction, changePasswordAction } from '@/actions/auth-actions';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useMutation, useQuery } from 'convex/react';
+import { useQuery } from 'convex/react';
 import { Loader2, Lock } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
@@ -15,7 +16,6 @@ import { api } from '../../../../convex/_generated/api';
 export default function PasswordPage() {
     const { data: session } = useSession();
     const user = useQuery(api.users.getByExternalId, { externalId: session?.user?.id || '' });
-    const changePassword = useMutation(api.users.changePassword);
 
     const [newPass, setNewPass] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
@@ -35,13 +35,17 @@ export default function PasswordPage() {
         setSubmitting(true);
         try {
             if (!session?.user?.id) return;
-            await changePassword({
-                externalId: session.user.id,
+            const res = await changePasswordAction({
                 newPassword: newPass
             });
-            toast.success("Password updated successfully");
-            setNewPass('');
-            setConfirmPass('');
+            
+            if (res.success) {
+                toast.success("Password updated successfully");
+                setNewPass('');
+                setConfirmPass('');
+            } else {
+                toast.error(res.error || "Failed to update password");
+            }
         } catch (err) {
             toast.error("Failed to update password");
         } finally {
@@ -49,7 +53,8 @@ export default function PasswordPage() {
         }
     };
 
-    if (!user) return <div className="p-20 text-center text-muted-foreground">Loading...</div>;
+    if (user === undefined) return <div className="p-20 text-center text-muted-foreground">Loading...</div>;
+    if (user === null) return <div className="p-20 text-center text-muted-foreground">User not found</div>;
 
     const hasPassword = !!user.password;
 
@@ -63,7 +68,7 @@ export default function PasswordPage() {
                     <CardHeader className="p-4 md:p-6 pb-3 md:pb-4">
                         <CardTitle className="flex items-center gap-2 text-base md:text-lg">
                              <div className="p-1.5 bg-primary/10 rounded-lg">
-                                <Lock className="w-4 h-4 text-primary" />
+                                 <Lock className="w-4 h-4 text-primary" />
                              </div>
                              Change Password
                         </CardTitle>
@@ -101,7 +106,7 @@ export default function PasswordPage() {
                             <Button type="submit" className="w-full h-10 md:h-11 rounded-xl font-bold text-sm" disabled={submitting}>
                                 {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                                 {hasPassword ? "Update Password" : "Set Password"}
-                            </Button>
+                             </Button>
                         </form>
                     </CardContent>
                 </Card>

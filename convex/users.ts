@@ -21,6 +21,16 @@ export const getByEmail = query({
   },
 });
 
+export const getByResetToken = query({
+  args: { resetToken: v.string() },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("users")
+      .withIndex("by_resetToken", (q) => q.eq("resetToken", args.resetToken))
+      .first();
+  },
+});
+
 export const createWithPassword = mutation({
   args: {
     email: v.string(),
@@ -232,7 +242,7 @@ export const addCredits = mutation({
 export const changePassword = mutation({
   args: {
     externalId: v.string(),
-    newPassword: v.string(),
+    hashedPassword: v.string(),
   },
   handler: async (ctx, args) => {
     const user = await ctx.db
@@ -242,7 +252,33 @@ export const changePassword = mutation({
 
     if (!user) throw new Error("User not found");
 
-    await ctx.db.patch(user._id, { password: args.newPassword });
+    await ctx.db.patch(user._id, { password: args.hashedPassword });
+    return { success: true };
+  },
+});
+
+export const resetPassword = mutation({
+  args: {
+    resetToken: v.string(),
+    hashedPassword: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_resetToken", (q) => q.eq("resetToken", args.resetToken))
+      .unique();
+
+    if (!user) throw new Error("Invalid or expired reset token");
+    if (user.resetTokenExpiry && user.resetTokenExpiry < Date.now()) {
+      throw new Error("Invalid or expired reset token");
+    }
+
+    await ctx.db.patch(user._id, {
+      password: args.hashedPassword,
+      resetToken: undefined,
+      resetTokenExpiry: undefined,
+    });
+    return { success: true };
   },
 });
 
@@ -876,7 +912,6 @@ export const getUserDashboardStats = query({
 export const getPublicProfile = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    // Note: userId here matches externalId in our schema
     const user = await ctx.db
       .query("users")
       .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
@@ -884,31 +919,11 @@ export const getPublicProfile = query({
 
     if (!user) return null;
 
-    // Get active listings counts
     const listings = await ctx.db
       .query("listings")
       .withIndex("by_userId_status", (q) => q.eq("userId", args.userId).eq("status", "ACTIVE"))
       .collect();
 
-    // Get average rating
-    // Reviews are linked by userId (the review WRITER) or we need reviews FOR this user?
-    // Usually reviews are on listings or on the seller.
-    // Assuming reviews table has a 'targetUserId' or we aggregate from listings.
-    // Based on `reviews.ts` schema from Step 1060, reviews have `userId` (author) and `listingId`.
-    // We need to fetch reviews for all listings owned by this user.
-    // This could be expensive if they have many listings.
-    // Ideally, we'd have a `sellerRating` field on the user.
-    // For now, let's implement a simplified aggregation or just return placeholder if not available.
-    // Actually, let's fetch reviews for the listings we just found.
-    
-    // Collecting review stats
-    let totalRating = 0;
-    let reviewCount = 0;
-
-    // THIS IS EXPENSIVE - O(N) queries where N is listings count. 
-    // Optimization: Store aggregate rating on User document.
-    // For now, we will just return the user data and calculate standard profile fields.
-    
     return {
       _id: user._id,
       name: user.name,
@@ -918,8 +933,6 @@ export const getPublicProfile = query({
       city: user.city,
       isVerified: user.isVerified,
       activeListingsCount: listings.length,
-      // We will compute rating properly in a separate mutation or background job
-      // For now returning basic info
     };
   },
 });
