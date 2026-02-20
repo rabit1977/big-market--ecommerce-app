@@ -363,32 +363,46 @@ export const getByIds = query({
 export const getByUser = query({
   args: { userId: v.string(), search: v.optional(v.string()) },
   handler: async (ctx, args) => {
-    // 1. Get the user to check for both externalId and internal _id
-    const user = await ctx.db
+    // 1. Get the user robustly (by externalId or internal _id)
+    let user = await ctx.db
         .query("users")
         .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
         .unique();
 
-    // 2. Query by userId (the primary link - usually externalId)
-    let listings = await ctx.db
+    if (!user) {
+        try {
+            const potentialUser = await ctx.db.get(args.userId as any) as any;
+            if (potentialUser && 'externalId' in potentialUser) {
+                user = potentialUser;
+            }
+        } catch (e) {}
+    }
+
+    if (!user) {
+        // If still no user, just try querying by the provided ID anyway
+        return await ctx.db
+          .query("listings")
+          .withIndex("by_userId", (q) => q.eq("userId", args.userId))
+          .collect();
+    }
+
+    const externalId = user.externalId;
+    const internalId = user._id as string;
+
+    // 2. Fetch listings for both IDs
+    const listingsByExternal = await ctx.db
       .query("listings")
-      .withIndex("by_userId", (q) => q.eq("userId", args.userId))
+      .withIndex("by_userId", (q) => q.eq("userId", externalId))
       .collect();
 
-    // 3. Fallback: If user exists and externalId is NOT the _id, try querying by _id
-    if (user && user.externalId !== (user._id as string)) {
-        const legacyListings = await ctx.db
-            .query("listings")
-            .withIndex("by_userId", (q) => q.eq("userId", user._id as string))
-            .collect();
-        
-        if (legacyListings.length > 0) {
-            // Merge and deduplicate
-            const existingIds = new Set(listings.map(l => l._id));
-            const uniqueLegacy = legacyListings.filter(l => !existingIds.has(l._id));
-            listings = [...listings, ...uniqueLegacy];
-        }
-    }
+    const listingsByInternal = await ctx.db
+      .query("listings")
+      .withIndex("by_userId", (q) => q.eq("userId", internalId))
+      .collect();
+
+    // Merge and deduplicate
+    const existingIds = new Set(listingsByExternal.map(l => l._id));
+    let listings = [...listingsByExternal, ...listingsByInternal.filter(l => !existingIds.has(l._id))];
 
     // Final sort by creation time (descending)
     listings.sort((a, b) => (b.createdAt || b._creationTime) - (a.createdAt || a._creationTime));

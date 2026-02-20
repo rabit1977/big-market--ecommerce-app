@@ -16,6 +16,7 @@ import type * as contact from "../contact.js";
 import type * as crons from "../crons.js";
 import type * as debugMe from "../debugMe.js";
 import type * as debug_check_user from "../debug_check_user.js";
+import type * as debug_data from "../debug_data.js";
 import type * as favorites from "../favorites.js";
 import type * as history from "../history.js";
 import type * as inquiries from "../inquiries.js";
@@ -50,6 +51,7 @@ declare const fullApi: ApiFromModules<{
   crons: typeof crons;
   debugMe: typeof debugMe;
   debug_check_user: typeof debug_check_user;
+  debug_data: typeof debug_data;
   favorites: typeof favorites;
   history: typeof history;
   inquiries: typeof inquiries;

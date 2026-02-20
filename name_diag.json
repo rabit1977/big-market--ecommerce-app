@@ -1,0 +1,27 @@
+[
+  {
+    "listingsFound": [],
+    "user": {
+      "_creationTime": 1771362303486.903,
+      "_id": "kx78d7y9nbr0r8g0femf91sfb181ab89",
+      "accountStatus": "ACTIVE",
+      "city": "Kumanovo",
+      "createdAt": 1771362303486,
+      "email": "cdeveloper496@gmail.com",
+      "externalId": "2c4f0bf7-74b5-4453-a974-2dfc449cff18",
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocLir5MjG1nBLuGEZYXOn3NSbl92siv_PMhvVR-fuqiuh4a055A=s96-c",
+      "isVerified": false,
+      "listingsPostedCount": 0,
+      "membershipExpiresAt": 1802908677082,
+      "membershipStatus": "ACTIVE",
+      "membershipTier": "VERIFIED",
+      "municipality": "Aracinovo",
+      "name": "code developer",
+      "phone": "+389070655529",
+      "registrationComplete": true,
+      "role": "USER",
+      "termsAcceptedAt": 1771372656928,
+      "verificationStatus": "pending_approval"
+    }
+  }
+]

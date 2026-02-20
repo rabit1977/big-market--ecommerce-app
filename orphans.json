@@ -1,0 +1,37 @@
+[
+  {
+    "_id": "jx7b4czzn34y5j043w904hfxf580rcjz",
+    "contactEmail": "bogu@gmail.com",
+    "status": "ACTIVE",
+    "title": "Bmw",
+    "userId": "kx7df7c59n1nn6p1xrj7cpnpfn80s77a"
+  },
+  {
+    "_id": "jx738834znm1egs3pkqsbe8rc580whv8",
+    "contactEmail": "tfhgcs@gmail.com",
+    "status": "ACTIVE",
+    "title": "Seat Leon ",
+    "userId": "kx7df7c59n1nn6p1xrj7cpnpfn80s77a"
+  },
+  {
+    "_id": "jx72zg6445yzszw142ydp4pann810mgf",
+    "contactEmail": "rabit2245@gmail.com",
+    "status": "ACTIVE",
+    "title": "Golf",
+    "userId": "5122afd5-3f84-442a-b3a5-78d9d9e886c2"
+  },
+  {
+    "_id": "jx72raceg8mq3534ra9fy1f4t5814jst",
+    "contactEmail": "rabit2245@gmail.com",
+    "status": "ACTIVE",
+    "title": "House",
+    "userId": "e15e3066-f832-49ec-b002-85ae54f98cab"
+  },
+  {
+    "_id": "jx7e4yrnvv7vzw8gjkvne107nh815fy1",
+    "contactEmail": "rabit2245@gmail.com",
+    "status": "ACTIVE",
+    "title": "Apartament ",
+    "userId": "a804e1bd-7d67-44a1-98c0-d03aa42dd96f"
+  }
+]

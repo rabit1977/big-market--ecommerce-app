@@ -55,8 +55,24 @@ export const submit = action({
     const inquiryId = await ctx.runMutation(internal.inquiries.store, args) as any;
     console.log("Inquiry stored in DB with ID:", inquiryId);
 
-    // 2. Get Seller Email
-    const seller = await ctx.runQuery(api.users.getByExternalId, { externalId: args.sellerId });
+    // 2. Get Seller Email (Robust Lookup)
+    let seller = await ctx.runQuery(api.users.getByExternalId, { externalId: args.sellerId });
+    
+    // Fallback: If not found by external ID, try as internal ID
+    if (!seller) {
+        try {
+            // We use getPublicProfile or a similar query that handles internal IDs
+            // actually we can just check if the ID looks like a Convex ID and try to get it
+            // but inquiries.ts doesn't have a direct query for internal ID easily accessible here
+            // let's use getAdminUserDetails but that's a query and we are in an action
+            // Actually, we can just use the provided sellerId to try and find the user if they were created with internal ID
+            // Since we're in an action, we can call any query.
+            const allUsers = await ctx.runQuery(api.users.list);
+            seller = allUsers.find(u => u._id === args.sellerId || u.externalId === args.sellerId) || null;
+        } catch (e) {
+            console.error("Error during fallback seller lookup:", e);
+        }
+    }
     
     // 3. Get Listing Title
     const listing = await ctx.runQuery(api.listings.getById, { id: args.listingId });

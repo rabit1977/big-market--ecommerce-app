@@ -627,17 +627,41 @@ export const getAdminUserDetails = query({
     const user = await ctx.db.get(args.id);
     if (!user) return null;
 
-    // Get user's listings
-    const listings = await ctx.db
+    // Get user's listings (Robust Dual-ID Lookup)
+    const listingsByExt = await ctx.db
       .query("listings")
       .withIndex("by_userId", (q) => q.eq("userId", user.externalId))
       .collect();
+    
+    const listingsByInt = await ctx.db
+      .query("listings")
+      .withIndex("by_userId", (q) => q.eq("userId", user._id as string))
+      .collect();
 
-    // Get user's transactions
-    const transactions = await ctx.db
+    // Deduplicate listings
+    const existingListingIds = new Set(listingsByExt.map(l => l._id));
+    const listings = [
+        ...listingsByExt,
+        ...listingsByInt.filter(l => !existingListingIds.has(l._id))
+    ];
+
+    // Get user's transactions (Robust Dual-ID Lookup)
+    const txByExt = await ctx.db
       .query("transactions")
       .withIndex("by_user", (q) => q.eq("userId", user.externalId))
       .collect();
+
+    const txByInt = await ctx.db
+      .query("transactions")
+      .withIndex("by_user", (q) => q.eq("userId", user._id as string))
+      .collect();
+
+    // Deduplicate transactions
+    const existingTxIds = new Set(txByExt.map(t => t._id));
+    const transactions = [
+        ...txByExt,
+        ...txByInt.filter(t => !existingTxIds.has(t._id))
+    ];
 
     return {
       ...user,
