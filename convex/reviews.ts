@@ -93,11 +93,28 @@ export const adminReply = mutation({
 export const getSellerReviewStats = query({
     args: { sellerId: v.string() },
     handler: async (ctx, args) => {
-        // Find all listings by this seller
-        const listings = await ctx.db
+        // 1. Get the user document to find both IDs
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_externalId", (q) => q.eq("externalId", args.sellerId))
+            .unique();
+            
+        // 2. Fetch listings using both IDs
+        const listingsByExternal = await ctx.db
            .query("listings")
            .withIndex("by_userId", (q) => q.eq("userId", args.sellerId))
            .collect();
+           
+        const listingsByInternal = user 
+            ? await ctx.db
+                .query("listings")
+                .withIndex("by_userId", (q) => q.eq("userId", user._id as string))
+                .collect()
+            : [];
+
+        // Merge and deduplicate
+        const existingIds = new Set(listingsByExternal.map(l => l._id));
+        const listings = [...listingsByExternal, ...listingsByInternal.filter(l => !existingIds.has(l._id))];
            
         if (listings.length === 0) return { averageRating: 0, totalReviews: 0 };
         

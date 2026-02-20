@@ -363,11 +363,34 @@ export const getByIds = query({
 export const getByUser = query({
   args: { userId: v.string(), search: v.optional(v.string()) },
   handler: async (ctx, args) => {
-    const listings = await ctx.db
+    // 1. Get the user to check for both externalId and internal _id
+    const user = await ctx.db
+        .query("users")
+        .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
+        .unique();
+
+    // 2. Query by externalId (the primary link)
+    let listings = await ctx.db
       .query("listings")
       .withIndex("by_userId_createdAt", (q) => q.eq("userId", args.userId))
       .order("desc") 
       .collect();
+
+    // 3. Fallback: If user exists and externalId is NOT the _id, try querying by _id
+    if (user && user.externalId !== (user._id as string)) {
+        const legacyListings = await ctx.db
+            .query("listings")
+            .withIndex("by_userId_createdAt", (q) => q.eq("userId", user._id as string))
+            .order("desc")
+            .collect();
+        
+        if (legacyListings.length > 0) {
+            // Merge and deduplicate just in case
+            const existingIds = new Set(listings.map(l => l._id));
+            const uniqueLegacy = legacyListings.filter(l => !existingIds.has(l._id));
+            listings = [...listings, ...uniqueLegacy].sort((a, b) => (b.createdAt || b._creationTime) - (a.createdAt || a._creationTime));
+        }
+    }
 
     if (args.search) {
         const query = args.search.toLowerCase();

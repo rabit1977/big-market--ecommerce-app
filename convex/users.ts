@@ -4,10 +4,26 @@ import { mutation, query } from "./_generated/server";
 export const getByExternalId = query({
   args: { externalId: v.string() },
   handler: async (ctx, args) => {
-    return await ctx.db
+    // 1. Primary lookup by externalId
+    const userByExternalId = await ctx.db
       .query("users")
       .withIndex("by_externalId", (q) => q.eq("externalId", args.externalId))
       .unique();
+
+    if (userByExternalId) return userByExternalId;
+
+    // 2. Fallback: Check if the provided ID is actually a Convex ID
+    // This happens for users created via email/password where the session ID might be the _id
+    try {
+      // Basic check to see if it's a valid ID format before trying to fetch
+      const potentialUser = await ctx.db.get(args.externalId as any) as any;
+      if (potentialUser && 'externalId' in potentialUser) {
+          return potentialUser;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
   },
 });
 
@@ -76,10 +92,13 @@ export const syncUser = mutation({
       .withIndex("by_externalId", (q) => q.eq("externalId", args.externalId))
       .unique();
 
+    const fallbackName = args.email ? args.email.split('@')[0].charAt(0).toUpperCase() + args.email.split('@')[0].slice(1) : 'User';
+    const finalName = args.name || fallbackName;
+
     if (existing) {
       await ctx.db.patch(existing._id, {
         email: args.email || existing.email,
-        name: args.name || existing.name,
+        name: args.name || existing.name || fallbackName,
         image: args.image || existing.image,
         role: args.role || existing.role,
       });
@@ -94,12 +113,36 @@ export const syncUser = mutation({
         .first();
 
       if (existingByEmail) {
+        const oldExternalId = existingByEmail.externalId;
+        
         await ctx.db.patch(existingByEmail._id, {
           externalId: args.externalId,
-          name: args.name || existingByEmail.name,
+          name: args.name || existingByEmail.name || fallbackName,
           image: args.image || existingByEmail.image,
           role: existingByEmail.role,
         });
+
+        // Migrate listings if they were associated with old ID or internal ID
+        const listingsToMigrate = await ctx.db
+          .query("listings")
+          .collect(); // We have to filter manually if we don't have multiple indices
+        
+        const userInternalId = existingByEmail._id as string;
+        
+        for (const listing of listingsToMigrate) {
+           if (listing.userId === oldExternalId || listing.userId === userInternalId || listing.userId === "pending") {
+              await ctx.db.patch(listing._id, { userId: args.externalId });
+           }
+        }
+
+        // Migrate favorites
+        const favoritesToMigrate = await ctx.db.query("favorites").collect();
+        for (const fav of favoritesToMigrate) {
+            if (fav.userId === oldExternalId || fav.userId === userInternalId) {
+                await ctx.db.patch(fav._id, { userId: args.externalId });
+            }
+        }
+
         return existingByEmail._id;
       }
     }
@@ -107,7 +150,7 @@ export const syncUser = mutation({
     return await ctx.db.insert("users", {
       externalId: args.externalId,
       email: args.email,
-      name: args.name,
+      name: finalName,
       image: args.image,
       role: args.role || "USER",
       createdAt: Date.now(),
@@ -338,77 +381,111 @@ export const completeRegistration = mutation({
 export const getMyDashboardStats = query({
   args: { externalId: v.string() },
   handler: async (ctx, args) => {
-     const user = await ctx.db
-       .query("users")
-       .withIndex("by_externalId", (q) => q.eq("externalId", args.externalId))
-       .unique();
-       
-     if (!user) return null;
-     
-     // 1. Listings Stats
-     const listings = await ctx.db
-        .query("listings")
-        .withIndex("by_userId", (q) => q.eq("userId", args.externalId))
-        .collect();
+    // 1. Get User
+    let user = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.externalId))
+      .unique();
+    
+    // Fallback: Check if the provided ID is an internal ID
+    if (!user) {
+        try {
+            const potentialUser = await ctx.db.get(args.externalId as any) as any;
+            if (potentialUser && 'externalId' in potentialUser) {
+                user = potentialUser;
+            }
+        } catch (e) {
+            // Not a valid ID
+        }
+    }
         
-     const activeListings = listings.filter(l => l.status === 'ACTIVE').length;
-     const totalViews = listings.reduce((acc, curr) => acc + (curr.viewCount || 0), 0);
-     
-     // 2. Spend Stats
-     const now = new Date();
-     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-     
-     const transactions = await ctx.db
-        .query("transactions")
-        .withIndex("by_user", (q) => q.eq("userId", args.externalId))
-        .collect();
-        
-     const spendToday = transactions
-        .filter(t => t.createdAt >= startOfDay && (
-            t.type === 'SPEND' || 
-            t.type === 'PROMOTE' || 
-            t.type === 'PROMOTION' || 
-            t.type === 'LISTING_PROMOTION' ||
-            t.type === 'SUBSCRIPTION'
-        ))
-        .reduce((acc, curr) => acc + curr.amount, 0);
+    if (!user) return null;
 
-     const totalSpend = transactions
-        .filter(t => 
-            t.type === 'SPEND' || 
-            t.type === 'PROMOTE' || 
-            t.type === 'PROMOTION' || 
-            t.type === 'LISTING_PROMOTION' || 
-            t.type === 'SUBSCRIPTION'
-        )
-        .reduce((acc, curr) => acc + curr.amount, 0);
+    const externalId = user.externalId;
+    const internalId = user._id as string;
+      
+    // 2. Listings Stats
+    const listingsByExternal = await ctx.db
+       .query("listings")
+       .withIndex("by_userId", (q) => q.eq("userId", externalId))
+       .collect();
+    
+    const listingsByInternal = await ctx.db
+       .query("listings")
+       .withIndex("by_userId", (q) => q.eq("userId", internalId))
+       .collect();
+
+    const existingIds = new Set(listingsByExternal.map(l => l._id));
+    const listings = [...listingsByExternal, ...listingsByInternal.filter(l => !existingIds.has(l._id))];
+       
+    const activeListings = listings.filter(l => l.status === 'ACTIVE').length;
+    const totalViews = listings.reduce((acc, curr) => acc + (curr.viewCount || 0), 0);
+      
+    // 3. Spend Stats
+    const now = new Date();
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+      
+    const transactionsByExternal = await ctx.db
+       .query("transactions")
+       .withIndex("by_user", (q) => q.eq("userId", externalId))
+       .collect();
+
+    const transactionsByInternal = await ctx.db
+       .query("transactions")
+       .withIndex("by_user", (q) => q.eq("userId", internalId))
+       .collect();
+    
+    const existingTIds = new Set(transactionsByExternal.map(t => t._id));
+    const transactions = [...transactionsByExternal, ...transactionsByInternal.filter(t => !existingTIds.has(t._id))];
+       
+    const spendToday = transactions
+       .filter(t => t.createdAt >= startOfDay && (
+           t.type === 'SPEND' || 
+           t.type === 'PROMOTE' || 
+           t.type === 'PROMOTION' || 
+           t.type === 'LISTING_PROMOTION' ||
+           t.type === 'SUBSCRIPTION'
+       ))
+       .reduce((acc, curr) => acc + (curr.amount || 0), 0);
+
+    const totalSpend = transactions
+       .filter(t => 
+           t.type === 'SPEND' || 
+           t.type === 'PROMOTE' || 
+           t.type === 'PROMOTION' || 
+           t.type === 'LISTING_PROMOTION' || 
+           t.type === 'SUBSCRIPTION'
+       )
+       .reduce((acc, curr) => acc + (curr.amount || 0), 0);
           
-     return {
-         user: {
-             name: user.name,
-             image: user.image,
-             credits: user.credits || 0,
-             isVerified: user.isVerified || false,
-             membershipTier: user.membershipTier || 'FREE',
-             membershipStatus: user.membershipStatus || 'INACTIVE',
-             membershipExpiresAt: user.membershipExpiresAt,
-             companyName: user.companyName,
-             accountType: user.accountType,
-             accountStatus: user.accountStatus,
-             // Quotas
-             listingLimit: user.listingLimit || 50, // Default to 50 as per request
-             listingsPostedCount: user.listingsPostedCount || 0,
-             monthlyRenewalsUsed: user.monthlyRenewalsUsed || 0,
-             canRefreshListings: user.canRefreshListings,
-         },
-         stats: {
-             activeListings,
-             totalViews,
-             spendToday,
-             totalSpend,
-             renewedToday: user.monthlyRenewalsUsed || 0 // Using this as a proxy for "Renewals Used" generally
-         }
-     };
+    return {
+        user: {
+            name: user.name,
+            email: user.email,
+            image: user.image,
+            credits: user.credits || 0,
+            isVerified: user.isVerified || false,
+            membershipTier: user.membershipTier || 'FREE',
+            membershipStatus: user.membershipStatus || 'INACTIVE',
+            membershipExpiresAt: user.membershipExpiresAt,
+            companyName: user.companyName,
+            accountType: user.accountType,
+            accountStatus: user.accountStatus,
+            createdAt: user.createdAt || user._creationTime,
+            // Quotas
+            listingLimit: user.listingLimit || 50,
+            listingsPostedCount: user.listingsPostedCount || 0,
+            monthlyRenewalsUsed: user.monthlyRenewalsUsed || 0,
+            canRefreshListings: user.canRefreshListings,
+        },
+        stats: {
+            activeListings,
+            totalViews,
+            spendToday,
+            totalSpend,
+            renewedToday: user.monthlyRenewalsUsed || 0
+        }
+    };
   }
 });
 
@@ -610,10 +687,18 @@ export const getUserDashboardStats = query({
     const oneYearAgo = now - 365 * 24 * 60 * 60 * 1000;
 
     // 2. Listings
-    const listings = await ctx.db
+    const listingsByExternal = await ctx.db
       .query("listings")
       .withIndex("by_userId", (q) => q.eq("userId", userId))
       .collect();
+    
+    const listingsByInternal = await ctx.db
+      .query("listings")
+      .withIndex("by_userId", (q) => q.eq("userId", user._id as string))
+      .collect();
+
+    const existingIdSet = new Set(listingsByExternal.map(l => l._id));
+    const listings = [...listingsByExternal, ...listingsByInternal.filter(l => !existingIdSet.has(l._id))];
 
     const activeListings = listings.filter((l) => l.status === "ACTIVE");
     const pendingListings = listings.filter((l) => l.status === "PENDING_APPROVAL");
@@ -623,10 +708,18 @@ export const getUserDashboardStats = query({
     const totalViews = listings.reduce((sum, l) => sum + (l.viewCount || 0), 0);
 
     // 3. Transactions (with time-bucketed spending)
-    const transactions = await ctx.db
+    const transactionsByExternal = await ctx.db
       .query("transactions")
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .collect();
+    
+    const transactionsByInternal = await ctx.db
+      .query("transactions")
+      .withIndex("by_user", (q) => q.eq("userId", user._id as string))
+      .collect();
+    
+    const existingTIdSet = new Set(transactionsByExternal.map(t => t._id));
+    const transactions = [...transactionsByExternal, ...transactionsByInternal.filter(t => !existingTIdSet.has(t._id))];
 
     const completedTransactions = transactions.filter(
       (t) => t.status === "COMPLETED"
@@ -912,10 +1005,22 @@ export const getUserDashboardStats = query({
 export const getPublicProfile = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    const user = await ctx.db
+    let user = await ctx.db
       .query("users")
       .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
       .first();
+
+    if (!user) {
+        // Fallback: lookup by internal _id
+        try {
+            const potentialUser = await ctx.db.get(args.userId as any) as any;
+            if (potentialUser && 'externalId' in potentialUser) {
+                user = potentialUser;
+            }
+        } catch (e) {
+            return null;
+        }
+    }
 
     if (!user) return null;
 

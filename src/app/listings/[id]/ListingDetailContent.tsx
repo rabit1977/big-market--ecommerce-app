@@ -1,19 +1,5 @@
 'use client';
 
-/**
- * Refactored with:
- * - React 19: useTransition for delete, useOptimistic for favorite, useCallback removal
- *   (stable function refs in React 19 compiler), use() for context
- * - Next.js 15: suppressHydrationWarning on date spans instead of useEffect+useState hack
- * - Performance:
- *   - Eliminated 2x useEffect (date formatting, analytics session) → inline derivations
- *   - sessionStorage logic extracted to a stable module-level util (no re-creation)
- *   - Specs filtering computed once via useMemo instead of computed inline 4× times
- *   - DeleteListingButton uses useTransition instead of manual isDeleting state
- *   - Images array derived once, not re-evaluated per render
- *   - iframe map moved to a lazy-loaded component to avoid blocking LCP
- */
-
 import { GuestContactDialog } from '@/components/listing/guest-contact-dialog';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { UserAvatar } from '@/components/shared/user-avatar';
@@ -84,9 +70,7 @@ interface ListingDetailContentProps {
   listing: Listing;
 }
 
-// ─── Module-level analytics session util ─────────────────────────────────────
-// Extracted from component to avoid re-creation on every render.
-// Safe to call on client only (sessionStorage is browser-only).
+
 
 function getOrCreateAnalyticsSessionId(): string {
   if (typeof window === 'undefined') return '';
@@ -115,9 +99,6 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
   const sellerProfile = useConvexQuery(api.users.getPublicProfile, { userId: listing.userId });
   const sellerReviewStats = useConvexQuery(api.reviews.getSellerReviewStats, { sellerId: listing.userId });
 
-  // ── Analytics: fire once on mount ────────────────────────────────────────
-  // Moved back to useEffect to ensure safely running only on the client.
-  // Previous useState pattern caused SSR errors because sessionStorage is missing on server.
   useEffect(() => {
     if (!listing._id) return;
     
@@ -387,7 +368,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                     {seller?.isVerified && <BadgeCheck className="w-4 h-4 text-primary" />}
                   </div>
                   <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-                    Member since {seller?.createdAt ? new Date(seller.createdAt).getFullYear() : 'N/A'}
+                    Member since {seller?.createdAt || (seller as any)?._creationTime ? new Date(seller.createdAt || (seller as any)._creationTime).getFullYear() : 'Recently'}
                   </p>
                 </div>
                 <button
@@ -460,8 +441,8 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
           </div>
 
           {/* ── Right Column (Desktop) ───────────────────────────────────── */}
-          <div className="hidden md:block md:col-span-5 lg:col-span-4 space-y-6">
-            <div className="sticky top-24 space-y-6 max-h-[calc(100vh-8rem)] overflow-y-auto pr-1 no-scrollbar z-10">
+          <div className="hidden  md:block md:col-span-5 lg:col-span-4 space-y-6">
+            <div className="sticky top-24 space-y-6  overflow-y-auto pr-1 no-scrollbar z-10">
 
               {/* Price & Actions Card */}
               <div className="bg-card border-2 border-border rounded-3xl p-6 md:p-8 shadow-xl shadow-foreground/5 space-y-6">
@@ -569,7 +550,9 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                     </div>
                     <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
                       {seller?.isVerified ? 'Verified' : 'Member'} since{' '}
-                      {seller?.createdAt ? new Date(seller.createdAt).getFullYear() : 'N/A'}
+                      {seller?.createdAt || (seller as any)?._creationTime 
+                        ? new Date(seller.createdAt || (seller as any)._creationTime).getFullYear() 
+                        : 'Recently'}
                     </p>
                   </div>
                 </div>
