@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { recordTransactionInternal } from "./transactions";
 
 export const getByExternalId = query({
   args: { externalId: v.string() },
@@ -147,14 +148,19 @@ export const syncUser = mutation({
       }
     }
 
+    // Check if this is the first user ever
+    const allUsers = await ctx.db.query("users").take(1);
+    const isFirstUser = allUsers.length === 0;
+    const finalRole = args.role || (isFirstUser ? "ADMIN" : "USER");
+
     return await ctx.db.insert("users", {
       externalId: args.externalId,
       email: args.email,
       name: finalName,
       image: args.image,
-      role: args.role || "USER",
+      role: finalRole,
       createdAt: Date.now(),
-      accountStatus: "PENDING_APPROVAL",
+      accountStatus: finalRole === "ADMIN" ? "ACTIVE" : "PENDING_APPROVAL",
     });
   },
 });
@@ -495,6 +501,7 @@ export const upgradeMembership = mutation({
     plan: v.string(),
     duration: v.string(), // 'monthly' | 'yearly'
     price: v.number(),
+    stripeId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const user = await ctx.db
@@ -512,13 +519,14 @@ export const upgradeMembership = mutation({
         expiresAt.setMonth(now.getMonth() + 1);
     }
 
-    // Record Transaction
-    await ctx.db.insert("transactions", {
+    // Record Transaction using the idempotent helper function
+    await recordTransactionInternal(ctx, {
         userId: args.externalId,
         amount: args.price,
         type: "SUBSCRIPTION",
         description: `${args.plan} Membership (${args.duration})`,
         status: "COMPLETED",
+        stripeId: args.stripeId,
         createdAt: now.getTime(),
     });
 

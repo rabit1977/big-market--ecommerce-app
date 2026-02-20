@@ -20,9 +20,26 @@ import { toast } from 'sonner';
 import { api } from '../../../../../convex/_generated/api';
 
 export default function RevenuePage() {
-  const stats = useQuery(api.transactions.getRevenueStats);
-  const syncTransactions = useAction(api.stripeActions.syncTransactions);
+  const [filter, setFilter] = useState<'today' | 'week' | 'all'>('today');
   const [syncing, setSyncing] = useState(false);
+
+  // Calculate start timestamps
+  const getSince = () => {
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    
+    if (filter === 'today') return startOfToday;
+    if (filter === 'week') {
+        // Stabilize: 7 days ago, but start of THAT day
+        const sevenDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7).getTime();
+        return sevenDaysAgo;
+    }
+    return undefined; // All time
+  };
+
+  const since = getSince();
+  const stats = useQuery(api.transactions.getRevenueStats, { since });
+  const syncTransactions = useAction(api.stripeActions.syncTransactions);
 
   // Helper to format currency
   const formatCurrency = (amount: number) => {
@@ -36,8 +53,14 @@ export default function RevenuePage() {
   const handleSync = async () => {
       setSyncing(true);
       try {
-          // Fetch up to 500 past transactions to ensure we get historical data
-          const result = await syncTransactions({ limit: 500 });
+          // Convert to seconds for Stripe API
+          const syncSince = since ? Math.floor(since / 1000) : undefined;
+          
+          const result = await syncTransactions({ 
+              limit: 100, 
+              since: syncSince 
+          });
+
           if (result.success) {
               toast.success(`Synced ${result.count} transactions from Stripe`);
           }
@@ -71,30 +94,63 @@ export default function RevenuePage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
            <h1 className="text-2xl font-black tracking-tight">Revenue Dashboard</h1>
-           <p className="text-muted-foreground text-sm">Track earnings from verification and promotions (Today)</p>
+           <p className="text-muted-foreground text-sm">
+               {filter === 'today' ? "Showing earnings for today" : 
+                filter === 'week' ? "Showing earnings for the last 7 days" : 
+                "Showing all-time earnings"}
+           </p>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+            {/* Filter Group */}
+            <div className="flex items-center bg-muted/30 p-1 rounded-lg border border-border/50 mr-2">
+                <Button 
+                    variant={filter === 'today' ? 'secondary' : 'ghost'} 
+                    size="sm" 
+                    onClick={() => setFilter('today')}
+                    className="h-8 text-xs font-bold"
+                >
+                    Today
+                </Button>
+                <Button 
+                    variant={filter === 'week' ? 'secondary' : 'ghost'} 
+                    size="sm" 
+                    onClick={() => setFilter('week')}
+                    className="h-8 text-xs font-bold"
+                >
+                    Last 7 Days
+                </Button>
+                <Button 
+                    variant={filter === 'all' ? 'secondary' : 'ghost'} 
+                    size="sm" 
+                    onClick={() => setFilter('all')}
+                    className="h-8 text-xs font-bold"
+                >
+                    All Time
+                </Button>
+            </div>
+
             <Button 
                 onClick={handleReset} 
                 variant="ghost"
                 size="sm"
-                className="gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+                className="gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 hidden sm:flex"
             >
                 <Trash2 className="w-4 h-4" />
-                Reset Data
+                Reset
             </Button>
             <Button 
                 onClick={handleSync} 
                 disabled={syncing}
                 variant="outline"
-                className="gap-2 border-primary/20 hover:bg-primary/5 hover:text-primary"
+                size="sm"
+                className="gap-2 border-primary/20 hover:bg-primary/5 hover:text-primary h-9 px-4"
             >
-                {syncing ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
-                Sync from Stripe
+                {syncing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                Sync Stripe
             </Button>
         </div>
       </div>

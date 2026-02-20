@@ -159,7 +159,7 @@ export async function verifyStripePayment(sessionId: string) {
         throw new Error('Missing metadata in Stripe session');
       }
 
-      // Perform the upgrade within Convex
+      // Perform the upgrade within Convex (Transaction recording is now handled inside upgradeMembership)
       const amount = (session.amount_total || 0) / 100;
       
       await convex.mutation(api.users.upgradeMembership, {
@@ -167,17 +167,7 @@ export async function verifyStripePayment(sessionId: string) {
         plan: plan,
         duration: duration,
         price: amount,
-      });
-
-      // Record Transaction for Subscription (Duplicate check handled by mutation)
-      await convex.mutation(api.transactions.record, {
-          userId: userId,
-          amount: amount,
-          type: 'SUBSCRIPTION',
-          description: `${plan} Membership (${duration})`,
-          status: 'COMPLETED',
-          stripeId: sessionId,
-          metadata: session.metadata
+        stripeId: sessionId, // Pass sessionId to ensure idempotency
       });
 
       return { success: true as const, plan };

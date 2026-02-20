@@ -7,7 +7,10 @@ import { action } from "./_generated/server";
 
 
 export const syncTransactions = action({
-  args: { limit: v.optional(v.number()) },
+  args: { 
+      limit: v.optional(v.number()),
+      since: v.optional(v.number()) // Optional start timestamp in SECONDS
+  },
   handler: async (ctx, args) => {
     const apiKey = process.env.STRIPE_SECRET_KEY;
     if (!apiKey) {
@@ -21,6 +24,11 @@ export const syncTransactions = action({
     // Use fetch directly to bypass ESM loader issues with Stripe SDK on Windows/Convex
     const params = new URLSearchParams();
     params.append('limit', limit.toString());
+    
+    if (args.since) {
+        params.append('created[gte]', args.since.toString());
+    }
+
     // Expand line items and payment intent
     params.append('expand[]', 'data.line_items');
     params.append('expand[]', 'data.payment_intent');
@@ -104,6 +112,18 @@ export const syncTransactions = action({
                 metadata: session.metadata || {}, // save all metadata
                 createdAt: session.created * 1000 // Use actual Stripe timestamp
             });
+            
+            // NEW: If it's a subscription, ensure membership is upgraded
+            if (transactionType === 'SUBSCRIPTION') {
+                await ctx.runMutation(api.users.upgradeMembership, {
+                    externalId: userId,
+                    plan: plan || (description.includes('Basic') ? 'BASIC' : 'PRO'), // Fallback if metadata missing
+                    duration: (session.metadata?.duration as any) || (description.includes('Yearly') ? 'yearly' : 'monthly'),
+                    price: amount,
+                    stripeId: session.id
+                });
+            }
+
             syncedCount++;
         } catch (e) {
             console.error(`Failed to record transaction ${session.id}:`, e);

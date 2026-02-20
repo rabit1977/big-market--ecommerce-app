@@ -2,29 +2,24 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 // 1. Record a new transaction (Internal use or from Stripe webhook)
-export const record = mutation({
-  args: {
-    userId: v.string(),
-    amount: v.number(),
-    type: v.string(), // "SUBSCRIPTION", "PROMOTION", "REFUND"
-    description: v.string(),
-    status: v.string(),
-    stripeId: v.optional(v.string()),
-    metadata: v.optional(v.any()), // Extended data like tier, listingId etc.
-    createdAt: v.optional(v.number()), // Time of transaction
-  },
-  handler: async (ctx, args) => {
+export async function recordTransactionInternal(ctx: any, args: {
+    userId: string,
+    amount: number,
+    type: string,
+    description: string,
+    status: string,
+    stripeId?: string,
+    metadata?: any,
+    createdAt?: number,
+}) {
     // Check for duplicate if stripeId is provided
     if (args.stripeId) {
         const existing = await ctx.db
             .query("transactions")
-            .withIndex("by_stripeId", (q) => q.eq("stripeId", args.stripeId!))
+            .withIndex("by_stripeId", (q: any) => q.eq("stripeId", args.stripeId!))
             .first();
         
         if (existing) {
-            // Update the existing transaction if needed (e.g. to fix timestamp)
-            // For now, we'll just skip or we could patch it. 
-            // Let's patch it to be safe if the user re-syncs without clearing.
             if (args.createdAt && existing.createdAt !== args.createdAt) {
                 await ctx.db.patch(existing._id, { createdAt: args.createdAt });
             }
@@ -44,6 +39,21 @@ export const record = mutation({
     });
 
     return id;
+}
+
+export const record = mutation({
+  args: {
+    userId: v.string(),
+    amount: v.number(),
+    type: v.string(), // "SUBSCRIPTION", "PROMOTION", "REFUND"
+    description: v.string(),
+    status: v.string(),
+    stripeId: v.optional(v.string()),
+    metadata: v.optional(v.any()), // Extended data like tier, listingId etc.
+    createdAt: v.optional(v.number()), // Time of transaction
+  },
+  handler: async (ctx, args) => {
+    return await recordTransactionInternal(ctx, args);
   },
 });
 
@@ -60,19 +70,22 @@ export const clear = mutation({
 
 // 2. Get Revenue Stats for Admin Dashboard
 export const getRevenueStats = query({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    since: v.optional(v.number())
+  },
+  handler: async (ctx, args) => {
     // Determine start of today
     const now = new Date();
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
 
-    // Get ALL transactions
-    const allTransactions = await ctx.db
-        .query("transactions")
-        .collect();
+    // Get transactions with date filter if provided
+    let query = ctx.db.query("transactions");
+    
+    if (args.since !== undefined) {
+        query = query.withIndex("by_createdAt", (q) => q.gte("createdAt", args.since!));
+    }
 
-    // Filter for TODAY for daily stats if needed, but Total Revenue should be ALL time
-    const transactions = allTransactions; 
+    const transactions = await query.collect();
 
     // Initialize aggregators
     let totalRevenue = 0; 
