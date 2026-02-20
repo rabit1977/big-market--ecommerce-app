@@ -369,32 +369,33 @@ export const getByUser = query({
         .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
         .unique();
 
-    // 2. Query by externalId (the primary link)
+    // 2. Query by userId (the primary link - usually externalId)
     let listings = await ctx.db
       .query("listings")
-      .withIndex("by_userId_createdAt", (q) => q.eq("userId", args.userId))
-      .order("desc") 
+      .withIndex("by_userId", (q) => q.eq("userId", args.userId))
       .collect();
 
     // 3. Fallback: If user exists and externalId is NOT the _id, try querying by _id
     if (user && user.externalId !== (user._id as string)) {
         const legacyListings = await ctx.db
             .query("listings")
-            .withIndex("by_userId_createdAt", (q) => q.eq("userId", user._id as string))
-            .order("desc")
+            .withIndex("by_userId", (q) => q.eq("userId", user._id as string))
             .collect();
         
         if (legacyListings.length > 0) {
-            // Merge and deduplicate just in case
+            // Merge and deduplicate
             const existingIds = new Set(listings.map(l => l._id));
             const uniqueLegacy = legacyListings.filter(l => !existingIds.has(l._id));
-            listings = [...listings, ...uniqueLegacy].sort((a, b) => (b.createdAt || b._creationTime) - (a.createdAt || a._creationTime));
+            listings = [...listings, ...uniqueLegacy];
         }
     }
 
+    // Final sort by creation time (descending)
+    listings.sort((a, b) => (b.createdAt || b._creationTime) - (a.createdAt || a._creationTime));
+
     if (args.search) {
-        const query = args.search.toLowerCase();
-        return listings.filter(l => l.title.toLowerCase().includes(query));
+        const queryStr = args.search.toLowerCase();
+        return listings.filter(l => l.title.toLowerCase().includes(queryStr));
     }
 
     return listings;

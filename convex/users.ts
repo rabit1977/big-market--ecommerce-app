@@ -1024,20 +1024,33 @@ export const getPublicProfile = query({
 
     if (!user) return null;
 
-    const listings = await ctx.db
+    const externalId = user.externalId;
+    const internalId = user._id as string;
+
+    // Fetch listings using both IDs to pick up all items
+    const listingsByExternal = await ctx.db
       .query("listings")
-      .withIndex("by_userId_status", (q) => q.eq("userId", args.userId).eq("status", "ACTIVE"))
+      .withIndex("by_userId_status", (q) => q.eq("userId", externalId).eq("status", "ACTIVE"))
       .collect();
+
+    const listingsByInternal = await ctx.db
+      .query("listings")
+      .withIndex("by_userId_status", (q) => q.eq("userId", internalId).eq("status", "ACTIVE"))
+      .collect();
+
+    // Merge and deduplicate
+    const existingIds = new Set(listingsByExternal.map(l => l._id));
+    const activeListings = [...listingsByExternal, ...listingsByInternal.filter(l => !existingIds.has(l._id))];
 
     return {
       _id: user._id,
       name: user.name,
       image: user.image,
-      createdAt: user.createdAt,
+      createdAt: user.createdAt || user._creationTime,
       bio: user.bio,
       city: user.city,
       isVerified: user.isVerified,
-      activeListingsCount: listings.length,
+      activeListingsCount: activeListings.length,
     };
   },
 });

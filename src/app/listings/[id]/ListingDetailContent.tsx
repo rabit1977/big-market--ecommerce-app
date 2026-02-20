@@ -559,7 +559,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                 <div className="grid grid-cols-2 gap-2">
                   <div className="p-3 bg-muted rounded-xl text-center border border-border">
                     <div className="text-lg font-black text-foreground">
-                      {sellerProfile?.activeListingsCount ?? '-'}
+                      {sellerProfile?.activeListingsCount ?? '0'}
                     </div>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">Active Ads</p>
                   </div>
