@@ -65,3 +65,40 @@ export const investigateOrphans = query({
         }));
     }
 });
+
+export const fullStats = query({
+  args: {},
+  handler: async (ctx) => {
+    const stats: Record<string, number> = {};
+    const tables = [
+      "users",
+      "listings",
+      "favorites",
+      "savedSearches",
+      "messages",
+      "conversations",
+      "analytics",
+      "activityLogs",
+      "questions",
+      "answers",
+      "notifications",
+      "reviews",
+      "transactions",
+      "verificationRequests",
+      "recentlyViewed",
+      "contactSubmissions",
+      "listingInquiries",
+    ];
+    
+    for (const table of tables) {
+        try {
+            const records = await ctx.db.query(table as any).collect();
+            stats[table] = records.length;
+        } catch (e) {
+            stats[table] = -1;
+        }
+    }
+    
+    return stats;
+  }
+});

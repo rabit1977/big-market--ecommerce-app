@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { api, internal } from "./_generated/api";
-import { action, internalMutation, mutation } from "./_generated/server";
+import { action, mutation } from "./_generated/server";
 
 const ALL_TABLES = [
   "users",
@@ -70,7 +70,7 @@ export const clearAllDataAction = action({
   },
 });
 
-export const resetCounter = internalMutation({
+export const resetCounter = mutation({
     args: {},
     handler: async (ctx) => {
         const counter = await ctx.db
