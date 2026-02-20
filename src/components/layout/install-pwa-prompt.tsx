@@ -1,34 +1,23 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { usePWAInstall } from '@/hooks/use-pwa-install';
 import { Download, PlusSquare, Share, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { UAParser } from 'ua-parser-js';
-
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => void;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-}
 
 const DISMISSED_KEY = 'pwa-prompt-dismissed';
 
 export function InstallPwaPrompt() {
   const [showPrompt, setShowPrompt] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const { isInstallable, install } = usePWAInstall();
   const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
-    // Already installed — never show
-    const isStandalone =
-      window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as any).standalone === true;
-    if (isStandalone) return;
-
     // Already dismissed — never show
     if (localStorage.getItem(DISMISSED_KEY)) return;
 
-    const os = new UAParser().getOS().name?.toLowerCase() ?? '';
-    const isApple = os === 'ios' || os === 'mac os';
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const isApple = /iphone|ipad|ipod/.test(userAgent);
     setIsIOS(isApple);
 
     if (isApple) {
@@ -37,25 +26,15 @@ export function InstallPwaPrompt() {
       return;
     }
 
-    // Android / Desktop Chrome — wait for browser install prompt
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
+    // Android / Desktop Chrome — hook handleBeforeInstallPrompt will set isInstallable
+    if (isInstallable) {
       setShowPrompt(true);
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-  }, []);
+    }
+  }, [isInstallable]);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      setDeferredPrompt(null);
-      setShowPrompt(false);
-    }
+    await install();
+    setShowPrompt(false);
   };
 
   const handleDismiss = () => {
