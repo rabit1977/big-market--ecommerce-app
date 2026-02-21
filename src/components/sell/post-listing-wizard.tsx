@@ -56,8 +56,10 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<ListingFormData>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [clientNonce] = useState(() => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15));
 
   const createListing = useMutation(api.listings.create);
+  const router = useRouter();
 
   const updateFormData = (data: Partial<ListingFormData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
@@ -96,7 +98,7 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
 
         // Check required specification fields from category template
         const selectedCategory = categories.find((c) => c.slug === formData.subCategory) || 
-                               categories.find((c) => c.slug === formData.category);
+                                categories.find((c) => c.slug === formData.category);
         
         if (selectedCategory?.template?.fields) {
           const requiredFields = selectedCategory.template.fields.filter((f: any) => f.required);
@@ -144,15 +146,15 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
         specifications: formData.specifications,
         contactPhone: formData.contactPhone,
         contactEmail: formData.contactEmail,
+        clientNonce,
       };
 
-      // Submit to Convex
       // Submit to Convex
       const listingId = await createListing(listingData);
       
       // Redirect to success page
       import('sonner').then(({ toast }) => toast.success('Listing submitted for approval!'));
-      window.location.href = `/listings/${listingId}/success`;
+      router.push(`/listings/${listingId}/success`);
     } catch (error: any) {
       console.error('Error creating listing:', error);
       import('sonner').then(({ toast }) => toast.error(`Failed to create listing: ${error.message || 'Unknown error'}`));

@@ -57,6 +57,8 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
 
     setUploadProgress(0);
     const uploadedImages: string[] = [];
+    const totalSize = imageFiles.reduce((acc, file) => acc + file.size, 0);
+    let bytesUploadedSoFar = 0;
 
     for (let i = 0; i < imageFiles.length; i++) {
       const file = imageFiles[i];
@@ -65,25 +67,50 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
         const formDataUpload = new FormData();
         formDataUpload.append('file', file);
 
-        const res = await fetch('/api/upload', {
-          method: 'POST',
-          body: formDataUpload,
-        });
+        const uploadImage = (): Promise<string | null> => {
+          return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/api/upload', true);
 
-        const data = await res.json();
-        
-        if (data.success && data.url) {
-          uploadedImages.push(data.url);
-        } else {
-          console.error("Upload failed", data.error);
-          import('sonner').then(({ toast }) => toast.error(`Failed to upload ${file.name}`));
+            xhr.upload.onprogress = (event) => {
+              if (event.lengthComputable) {
+                const currentProgress = ((bytesUploadedSoFar + event.loaded) / totalSize) * 100;
+                setUploadProgress(Math.min(currentProgress, 99)); // Keep at 99 until finished
+              }
+            };
+
+            xhr.onload = () => {
+              if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                  const data = JSON.parse(xhr.responseText);
+                  resolve(data.url);
+                } catch {
+                  reject(new Error('Invalid response'));
+                }
+              } else {
+                reject(new Error('Upload failed'));
+              }
+            };
+
+            xhr.onerror = () => reject(new Error('Network error'));
+            xhr.send(formDataUpload);
+          });
+        };
+
+        const url = await uploadImage();
+        if (url) {
+          uploadedImages.push(url);
         }
+        
+        bytesUploadedSoFar += file.size;
+        setUploadProgress((bytesUploadedSoFar / totalSize) * 100);
+
       } catch (err) {
         console.error("Failed to upload image", err);
         import('sonner').then(({ toast }) => toast.error(`Error uploading ${file.name}`));
+        // Even if one fails, we count its "size" as processed to keep progress moving
+        bytesUploadedSoFar += file.size;
       }
-
-      setUploadProgress(((i + 1) / imageFiles.length) * 100);
     }
 
     // Update form data

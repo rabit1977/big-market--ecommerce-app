@@ -3,7 +3,7 @@
 import { Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
 interface AdminAuthGuardProps {
@@ -28,6 +28,7 @@ const AdminAuthGuard: React.FC<AdminAuthGuardProps> = ({
 }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const toastShownRef = useRef(false);
 
   const isLoading = status === 'loading';
   const isUnauthenticated = status === 'unauthenticated' || !session?.user;
@@ -37,13 +38,16 @@ const AdminAuthGuard: React.FC<AdminAuthGuardProps> = ({
     if (isLoading) return;
 
     if (isUnauthenticated) {
-      toast.error('You must be logged in to access this page.');
+      // Quietly redirect to sign-in on logout/expiry. No toast needed.
       router.replace(authRedirectTo);
       return;
     }
 
     if (!isAdmin) {
-      toast.error('You do not have permission to access this page.');
+      if (!toastShownRef.current) {
+        toast.error('You do not have permission to access this page.');
+        toastShownRef.current = true;
+      }
       router.replace(unauthorizedRedirectTo);
     }
   }, [isLoading, isUnauthenticated, isAdmin, router, authRedirectTo, unauthorizedRedirectTo]);

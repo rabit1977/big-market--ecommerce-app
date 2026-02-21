@@ -99,7 +99,7 @@ export const AdminSidebar = () => {
                         Store
                     </Link>
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => signOut()} className='w-full justify-start text-xs h-8 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30'>
+                <Button variant="outline" size="sm" onClick={() => signOut({ callbackUrl: '/' })} className='w-full justify-start text-xs h-8 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30'>
                     <LogOut className='w-3.5 h-3.5 mr-2' />
                     Logout
                 </Button>
@@ -194,7 +194,7 @@ export const AdminSidebar = () => {
                                  <p className="text-xs text-muted-foreground truncate">{session?.user?.email}</p>
                              </div>
                          </div>
-                         <Button variant="destructive" className='w-full' onClick={() => signOut()}>
+                         <Button variant="destructive" className='w-full' onClick={() => signOut({ callbackUrl: '/' })}>
                              <LogOut className='w-4 h-4 mr-2' />
                              Sign Out
                          </Button>

@@ -115,6 +115,7 @@ export default defineSchema({
     currency: v.optional(v.string()), // 'EUR' | 'MKD'
     // Display Field
     listingNumber: v.optional(v.number()), // Sequential ID 0, 1, 2...
+    clientNonce: v.optional(v.string()), // For idempotency
   })
     .index("by_listingNumber", ["listingNumber"])
     .index("by_category", ["category"])
@@ -127,6 +128,7 @@ export default defineSchema({
     .index("by_status_createdAt", ["status", "createdAt"])
     .index("by_userId_status", ["userId", "status"])
     .index("by_userId_createdAt", ["userId", "createdAt"])
+    .index("by_clientNonce", ["userId", "clientNonce"])
     .searchIndex("search_title", {
       searchField: "title",
       filterFields: ["status", "category"],

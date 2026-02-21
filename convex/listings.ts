@@ -442,9 +442,25 @@ export const create = mutation({
     isPromoted: v.optional(v.boolean()),
     promotionTier: v.optional(v.string()),
     currency: v.optional(v.string()),
+    clientNonce: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Check Listing Limit (50 per year/total for verified)
+    // 1. Idempotency Check
+    if (args.clientNonce) {
+      const existing = await ctx.db
+        .query("listings")
+        .withIndex("by_clientNonce", (q) => 
+          q.eq("userId", args.userId).eq("clientNonce", args.clientNonce!)
+        )
+        .unique();
+      
+      if (existing) {
+        console.log("Duplicate listing submission detected, returning existing ID:", existing._id);
+        return existing._id;
+      }
+    }
+
+    // 2. Check Listing Limit
     const user = await ctx.db
       .query("users")
       .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
