@@ -673,6 +673,17 @@ export const upgradeMembership = mutation({
         isVerified: false, 
     });
 
+    // Write to subscriptions table
+    await ctx.db.insert("subscriptions", {
+      userId: args.externalId,
+      stripeSubscriptionId: args.stripeId,
+      tier: args.plan,
+      status: "ACTIVE",
+      currentPeriodStart: now.getTime(),
+      currentPeriodEnd: expiresAt.getTime(),
+      createdAt: now.getTime(),
+    });
+
     return { success: true, expiresAt: expiresAt.getTime() };
   },
 });
@@ -726,6 +737,17 @@ export const approveUser = mutation({
     await ctx.db.patch(args.id, {
       accountStatus: "ACTIVE",
     });
+
+    const user = await ctx.db.get(args.id);
+    if (user) {
+      await ctx.db.insert("activityLogs", {
+        userId: user.externalId,
+        action: "APPROVE_USER",
+        targetId: args.id,
+        targetType: "user",
+        createdAt: Date.now(),
+      });
+    }
   },
 });
 
@@ -735,6 +757,17 @@ export const rejectUser = mutation({
     await ctx.db.patch(args.id, {
       accountStatus: "SUSPENDED",
     });
+
+    const user = await ctx.db.get(args.id);
+    if (user) {
+      await ctx.db.insert("activityLogs", {
+        userId: user.externalId,
+        action: "REJECT_USER",
+        targetId: args.id,
+        targetType: "user",
+        createdAt: Date.now(),
+      });
+    }
   },
 });
 

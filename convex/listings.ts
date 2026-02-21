@@ -614,6 +614,17 @@ export const approveListing = mutation({
   args: { id: v.id("listings") },
   handler: async (ctx, args) => {
     await ctx.db.patch(args.id, { status: "ACTIVE" });
+
+    const listing = await ctx.db.get(args.id);
+    if (listing) {
+      await ctx.db.insert("activityLogs", {
+        userId: listing.userId,
+        action: "APPROVE_LISTING",
+        targetId: args.id,
+        targetType: "listing",
+        createdAt: Date.now(),
+      });
+    }
   },
 });
 
@@ -622,6 +633,17 @@ export const rejectListing = mutation({
   args: { id: v.id("listings") },
   handler: async (ctx, args) => {
     await ctx.db.patch(args.id, { status: "REJECTED" });
+
+    const listing = await ctx.db.get(args.id);
+    if (listing) {
+      await ctx.db.insert("activityLogs", {
+        userId: listing.userId,
+        action: "REJECT_LISTING",
+        targetId: args.id,
+        targetType: "listing",
+        createdAt: Date.now(),
+      });
+    }
   },
 });
 
