@@ -186,7 +186,7 @@ export function SupportChatWidget() {
   return (
     <div
       ref={widgetRef}
-      className="fixed bottom-24 left-0 right-0 sm:left-auto sm:right-6 sm:bottom-6 z-[100] flex flex-col items-center sm:items-end pointer-events-none"
+      className="fixed bottom-32 left-0 right-0 sm:left-auto sm:right-6 sm:bottom-6 z-[100] flex flex-col items-center sm:items-end pointer-events-none"
     >
       <AnimatePresence>
         {isOpen && (
@@ -195,7 +195,7 @@ export function SupportChatWidget() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="absolute bottom-14 sm:bottom-16 left-1/2 -translate-x-1/2 sm:left-auto sm:right-0 sm:translate-x-0 w-[65%] sm:w-[360px] h-[55dvh] sm:h-[420px] bg-card border border-border/80 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col overflow-hidden pointer-events-auto"
+            className="absolute bottom-14 sm:bottom-16 left-1/2 -translate-x-1/2 sm:left-auto sm:right-0 sm:translate-x-0 w-[60%] sm:w-[360px] h-[45dvh] sm:h-[380px] bg-card border border-border/80 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col overflow-hidden pointer-events-auto"
             role="dialog"
             aria-modal="true"
             aria-label="Support chat"
@@ -271,6 +271,9 @@ export function SupportChatWidget() {
                         className="pl-8 h-9 text-xs bg-background/50 border-transparent focus:bg-background transition-colors"
                       />
                     </div>
+                  </div>
+                  <div className="px-4 py-2 bg-primary/5 border-b border-primary/10">
+                    <p className="text-[10px] text-primary font-bold uppercase tracking-widest text-center">Select a chat to view or reply</p>
                   </div>
                   <div className="flex-1 overflow-y-auto overscroll-contain">
                     {filteredConversations.length === 0 ? (
