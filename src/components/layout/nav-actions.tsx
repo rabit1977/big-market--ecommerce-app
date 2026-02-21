@@ -10,11 +10,11 @@ import { cn } from '@/lib/utils';
 import { useQuery } from 'convex/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  BadgeCheck, BarChart,
-  ChevronRight, CreditCard, Crown,
-  Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
-  MessageSquare, Package, Pencil, Settings, ShieldCheck,
-  Star, Store, Trash, User, Wallet, X
+    BadgeCheck, BarChart,
+    ChevronRight, CreditCard, Crown,
+    Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
+    MessageSquare, Package, Pencil, Settings, ShieldCheck,
+    Star, Store, Trash, User, Wallet, X
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -61,10 +61,13 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   const unreadMessagesCount =
     useQuery(api.messages.getUnreadCount, user?.id ? { userId: user.id } : 'skip') ?? 0;
 
+  const unreadNotificationsCount =
+    useQuery(api.notifications.getUnreadCount, user?.id ? { userId: user.id } : 'skip') ?? 0;
+
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const totalAlertCount = unreadMessagesCount;
+  const totalAlertCount = unreadMessagesCount + unreadNotificationsCount;
 
   // Close panel on route change
   useEffect(() => {
@@ -121,7 +124,8 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
     { href: '/', icon: Home, label: 'Home' },
     { href: '/listings', icon: Store, label: 'Browse Listings' },
     { href: '/messages', icon: MessageSquare, label: 'Messages', badge: unreadMessagesCount, iconColor: 'text-primary' },
-    { href: '/favorites', icon: Heart, label: 'Favorites', badge: initialWishlistCount, iconColor: 'text-primary' },
+    { href: '/account/notifications', icon: Star, label: 'Notifications', badge: unreadNotificationsCount, iconColor: 'text-amber-500' },
+    { href: '/favorites', icon: Heart, label: 'Favorites', badge: initialWishlistCount, iconColor: 'text-rose-500' },
   ];
 
   const accountItems: MenuItem[] = [
@@ -326,7 +330,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
               <motion.span
                 key="user-badge"
                 initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background"
+                className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background md:hidden"
                 aria-hidden="true"
               >
                 {totalAlertCount > 9 ? '9+' : totalAlertCount}

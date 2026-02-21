@@ -83,7 +83,7 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
           </div>
 
           <div className="flex items-center gap-1">
-            <NotificationBell />
+            <NotificationBell className="hidden md:flex" />
             <NavActions initialWishlistCount={initialWishlistCount} />
           </div>
         </div>
