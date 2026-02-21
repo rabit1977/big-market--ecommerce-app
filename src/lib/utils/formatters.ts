@@ -28,20 +28,31 @@ export const formatCurrency = (
   currency: string = 'MKD',
   locale: string = 'mk-MK',
 ): string => {
-  // Manual handling for MKD to ensure server/client consistency (Hydration Mismatch Fix)
-  // Server Node.js often defaults to en-US formatting for MKD (MKD 11,000)
-  // Client Browser uses proper mk-MK formatting (11.000 ден.)
+  // Manual handling for currencies to ensure server/client consistency (Hydration Mismatch Fix)
+  // We use standard delimiters and fixed symbol placement to avoid Intl variation
+  
+  const formattedNumber = amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
   if (currency === 'MKD') {
-      // Robust regex formatting: 43000 -> "43.000"
-      const numberPart = amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      return `${numberPart} ден.`;
+      return `${formattedNumber} ден.`;
   }
 
-  return new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency,
-    maximumFractionDigits: 0,
-  }).format(amount);
+  if (currency === 'EUR') {
+      // User reported mismatch: €140,000 vs 140.000 €
+      // We will stick to a standard: Symbol + Space + Number with dot separators
+      return `€${formattedNumber}`;
+  }
+
+  // Fallback for other currencies
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  } catch (e) {
+    return `${currency} ${formattedNumber}`;
+  }
 };
 
 /**

@@ -12,6 +12,7 @@ import { CategoryStep } from './steps/category-step';
 import { DetailsStep } from './steps/details-step';
 import { ImagesStep } from './steps/images-step';
 import { ReviewStep } from './steps/review-step';
+import { useRouter } from 'next/navigation';
 
 interface PostListingWizardProps {
   categories: Array<{

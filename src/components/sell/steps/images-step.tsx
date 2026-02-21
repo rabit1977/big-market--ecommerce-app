@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Image as ImageIcon, Star, Upload, X } from 'lucide-react';
 import Image from 'next/image';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ListingFormData } from '../post-listing-wizard';
 
 interface ImagesStepProps {
@@ -16,6 +16,27 @@ interface ImagesStepProps {
 export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [displayProgress, setDisplayProgress] = useState(0);
+
+  // Smooth progress animation
+  useEffect(() => {
+    if (uploadProgress === null) {
+      setDisplayProgress(0);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setDisplayProgress((prev) => {
+        if (prev < uploadProgress) {
+          const jump = Math.max(1, (uploadProgress - prev) / 5);
+          return Math.min(prev + jump, uploadProgress);
+        }
+        return prev;
+      });
+    }, 30);
+
+    return () => clearInterval(interval);
+  }, [uploadProgress]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -112,6 +133,9 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
         bytesUploadedSoFar += file.size;
       }
     }
+
+    // Give a moment for the user to see 100%
+    await new Promise(r => setTimeout(r, 500));
 
     // Update form data
     const currentImages = formData.images || [];
@@ -218,12 +242,12 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
                     fill="transparent"
                     strokeDasharray="251.2"
                     initial={{ strokeDashoffset: 251.2 }}
-                    animate={{ strokeDashoffset: 251.2 - (251.2 * uploadProgress) / 100 }}
+                    animate={{ strokeDashoffset: 251.2 - (251.2 * displayProgress) / 100 }}
                     className="text-primary"
                   />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-xl font-black">{Math.round(uploadProgress)}%</span>
+                  <span className="text-xl font-black">{Math.round(displayProgress)}%</span>
                 </div>
               </div>
               <p className="text-sm font-bold animate-pulse text-primary tracking-tight">OPTIMIZING & UPLOADING...</p>
