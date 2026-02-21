@@ -79,6 +79,26 @@ export const createWithPassword = mutation({
   },
 });
 
+/**
+ * makeAdmin — Use this from the Convex dashboard to promote a user to ADMIN.
+ * Run once to fix any user whose role was accidentally reset to USER.
+ * Example: { "email": "your@email.com" }
+ */
+export const makeAdmin = mutation({
+  args: { email: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", args.email))
+      .first();
+
+    if (!user) throw new Error(`No user found with email: ${args.email}`);
+
+    await ctx.db.patch(user._id, { role: "ADMIN" });
+    return { success: true, userId: user._id, name: user.name };
+  },
+});
+
 export const syncUser = mutation({
   args: {
     externalId: v.string(),
@@ -101,7 +121,8 @@ export const syncUser = mutation({
         email: args.email || existing.email,
         name: args.name || existing.name || fallbackName,
         image: args.image || existing.image,
-        role: args.role || existing.role,
+        // IMPORTANT: never overwrite role here — Convex DB is the source of truth.
+        // OAuth logins (Google/GitHub) don't carry a role and would reset ADMIN → USER.
       });
       return existing._id;
     }

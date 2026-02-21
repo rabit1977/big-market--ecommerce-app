@@ -16,7 +16,8 @@ export const authConfig = {
               email: user.email || undefined,
               name: user.name || undefined,
               image: user.image || undefined,
-              role: (user as any).role || 'USER',
+              // Role is intentionally omitted — the DB is the source of truth.
+              // Passing it here would reset ADMIN to USER on every OAuth login.
           });
       }
 
