@@ -87,15 +87,22 @@ export const createWithPassword = mutation({
 export const makeAdmin = mutation({
   args: { email: v.string() },
   handler: async (ctx, args) => {
-    const user = await ctx.db
+    const users = await ctx.db
       .query("users")
       .withIndex("by_email", (q) => q.eq("email", args.email))
-      .first();
+      .collect();
 
-    if (!user) throw new Error(`No user found with email: ${args.email}`);
+    if (users.length === 0) throw new Error(`No user found with email: ${args.email}`);
 
-    await ctx.db.patch(user._id, { role: "ADMIN" });
-    return { success: true, userId: user._id, name: user.name };
+    for (const user of users) {
+        await ctx.db.patch(user._id, { role: "ADMIN" });
+    }
+    
+    return { 
+        success: true, 
+        count: users.length, 
+        names: users.map(u => u.name).join(", ") 
+    };
   },
 });
 
