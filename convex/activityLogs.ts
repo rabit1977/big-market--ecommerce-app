@@ -25,9 +25,31 @@ export const list = query({
       .order("desc")
       .take(args.limit || 50);
 
-    // In a real app, we'd join with users here. 
-    // For Convex, we'll fetch them separately or return user ID for client-side resolution if needed.
-    // However, server actions can handle the mapping.
-    return logs;
+    // Join with users
+    const enrichedLogs = await Promise.all(
+      logs.map(async (log) => {
+        const user = await ctx.db
+          .query('users')
+          .withIndex('by_externalId', (q) => q.eq('externalId', log.userId as string))
+          .first();
+
+        // Fallback to internal ID if external ID is not found, just in case
+        let resolvedUser: any = user;
+        if (!resolvedUser) {
+           resolvedUser = await ctx.db.get(log.userId as any);
+        }
+
+        return {
+          ...log,
+          user: {
+            name: resolvedUser?.name || 'Unknown User',
+            email: resolvedUser?.email || '',
+            image: resolvedUser?.image || null,
+          },
+        };
+      })
+    );
+
+    return enrichedLogs;
   },
 });

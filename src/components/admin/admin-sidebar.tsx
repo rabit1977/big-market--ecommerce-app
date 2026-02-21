@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import {
     BarChart3,
     CreditCard,
-    Headset,
     Home,
     Layers,
     LayoutDashboard,
@@ -41,8 +40,7 @@ const navItems: NavItem[] = [
     { href: '/admin/listings?promoted=true', label: 'Promoted Listings', icon: Sparkles },
     { href: '/admin/categories', label: 'Categories', icon: Layers },
     { href: '/admin/users', label: 'Users', icon: Users },
-    { href: '/admin/support', label: 'Form Inquiries', icon: Headset },
-    { href: '/admin/messages', label: 'Support & Q&A', icon: MessageCircle },
+    { href: '/admin/messages', label: 'Support & Communications', icon: MessageCircle },
 ];
 
 export const AdminSidebar = () => {

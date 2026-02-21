@@ -6,6 +6,7 @@ import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { formatCurrency, formatPrice } from '@/lib/utils/formatters';
 import { Heart, MapPin, ShieldCheck } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { memo, useCallback } from 'react';
@@ -20,6 +21,8 @@ interface ListingCardProps {
 
 export const ListingCard = memo(
   ({ listing, viewMode = 'list' }: ListingCardProps) => {
+    const { data: session } = useSession();
+    const isOwner = session?.user?.id === listing.userId;
     const { isFavorite, toggleFavorite } = useFavorites();
     const isWished = isFavorite(listing.id || listing._id);
 
@@ -139,12 +142,14 @@ export const ListingCard = memo(
                        <span>{new Date(listing.createdAt).toLocaleDateString()}</span>
                     </div>
 
-                    <Button
-                      size="icon" variant="ghost" onClick={handleToggleWishlist}
-                      className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 -mr-1.5 -mb-1.5 sm:-mr-2 sm:-mb-2 pointer-events-auto hover:bg-muted/50 z-30 relative", isWished ? "text-red-500" : "text-muted-foreground")}
-                    >
-                      <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", isWished && "fill-current")} />
-                    </Button>
+                    {!isOwner && (
+                      <Button
+                        size="icon" variant="ghost" onClick={handleToggleWishlist}
+                        className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 -mr-1.5 -mb-1.5 sm:-mr-2 sm:-mb-2 pointer-events-auto hover:bg-muted/50 z-30 relative", isWished ? "text-red-500" : "text-muted-foreground")}
+                      >
+                        <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", isWished && "fill-current")} />
+                      </Button>
+                    )}
                 </div>
              </>
            ) : (
@@ -182,12 +187,14 @@ export const ListingCard = memo(
                          </span>
                     </div>
                     
-                    <Button
-                      size="icon" variant="ghost" onClick={handleToggleWishlist}
-                      className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 -mr-1.5 -mb-1.5 sm:-mr-2 sm:-mb-2 pointer-events-auto hover:bg-muted/50 z-30", isWished ? "text-red-500" : "text-muted-foreground")}
-                    >
-                      <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", isWished && "fill-current")} />
-                    </Button>
+                    {!isOwner && (
+                      <Button
+                        size="icon" variant="ghost" onClick={handleToggleWishlist}
+                        className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 -mr-1.5 -mb-1.5 sm:-mr-2 sm:-mb-2 pointer-events-auto hover:bg-muted/50 z-30", isWished ? "text-red-500" : "text-muted-foreground")}
+                      >
+                        <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", isWished && "fill-current")} />
+                      </Button>
+                    )}
                 </div>
              </>
            )}

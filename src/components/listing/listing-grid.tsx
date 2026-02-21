@@ -1,13 +1,12 @@
 'use client';
 
-import { ListingCard } from './listing-card';
 import { Button } from '@/components/ui/button';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
 import { api } from '@/convex/_generated/api';
 import { ListingWithRelations } from '@/lib/types';
@@ -18,6 +17,7 @@ import { useSession } from 'next-auth/react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { memo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
+import { ListingCard } from './listing-card';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -123,20 +123,8 @@ export function ListingGrid({
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
 
-        {/* Mobile Filter Toggle */}
-        <div className="lg:hidden w-full">
-          <Button
-            variant="outline"
-            className="w-full flex items-center justify-center gap-2 h-10"
-            onClick={onOpenFilters}
-          >
-            <SlidersHorizontal className="h-4 w-4" />
-            Filters & Sort
-          </Button>
-        </div>
-
         {/* Results Count */}
-        <div className="hidden md:block text-sm text-muted-foreground">
+        <div className="hidden md:block text-sm text-muted-foreground mr-auto">
           Showing <span className="font-medium text-foreground">{listings.length}</span> results
         </div>
 

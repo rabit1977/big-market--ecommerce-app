@@ -3,15 +3,15 @@
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { api } from '@/convex/_generated/api';
@@ -20,20 +20,20 @@ import { useFavorites } from '@/lib/context/favorites-context';
 import { cn, formatCurrency } from '@/lib/utils';
 import { useQuery as useConvexQuery, useMutation } from 'convex/react';
 import {
-  BadgeCheck,
-  ChevronLeft,
-  ChevronRight,
-  Edit,
-  Heart,
-  History,
-  Mail,
-  MapPin,
-  MessageSquare,
-  MoreVertical,
-  Phone,
-  Share2,
-  ShieldAlert,
-  Trash2,
+    BadgeCheck,
+    ChevronLeft,
+    ChevronRight,
+    Edit,
+    Heart,
+    History,
+    Mail,
+    MapPin,
+    MessageSquare,
+    MoreVertical,
+    Phone,
+    Share2,
+    ShieldAlert,
+    Trash2,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -231,17 +231,19 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
               <Share2 className="w-4 h-4" />
               Share
             </button>
-            <button
-              onClick={() => toggleFavorite(listing._id)}
-              className={`flex items-center gap-2 px-4 py-2 border rounded-full text-sm font-bold transition-all shadow-sm ${
-                isFavorite
-                  ? 'bg-primary/5 border-primary/20 text-primary'
-                  : 'bg-card border-border text-foreground hover:bg-accent'
-              }`}
-            >
-              <Heart className={`w-4 h-4 ${isFavorite ? 'fill-current' : ''}`} />
-              {isFavorite ? 'Saved' : 'Save Ad'}
-            </button>
+            {!isOwner && (
+              <button
+                onClick={() => toggleFavorite(listing._id)}
+                className={`flex items-center gap-2 px-4 py-2 border rounded-full text-sm font-bold transition-all shadow-sm ${
+                  isFavorite
+                    ? 'bg-primary/5 border-primary/20 text-primary'
+                    : 'bg-card border-border text-foreground hover:bg-accent'
+                }`}
+              >
+                <Heart className={`w-4 h-4 ${isFavorite ? 'fill-current' : ''}`} />
+                {isFavorite ? 'Saved' : 'Save Ad'}
+              </button>
+            )}
             {isOwner && (
               <>
                 <Link
@@ -371,13 +373,15 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                     Member since {seller?.createdAt || (seller as any)?._creationTime ? new Date(seller.createdAt || (seller as any)._creationTime).getFullYear() : 'Recently'}
                   </p>
                 </div>
-                <button
-                  onClick={() => toggleFavorite(listing._id)}
-                  className={`p-2.5 rounded-full transition-colors ${isFavorite ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}
-                  aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-                >
-                  <Heart className={`w-6 h-6 ${isFavorite ? 'fill-current' : ''}`} />
-                </button>
+                {!isOwner && (
+                  <button
+                    onClick={() => toggleFavorite(listing._id)}
+                    className={`p-2.5 rounded-full transition-colors ${isFavorite ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}
+                    aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                  >
+                    <Heart className={`w-6 h-6 ${isFavorite ? 'fill-current' : ''}`} />
+                  </button>
+                )}
               </div>
 
               {!isOwner && (

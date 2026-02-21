@@ -1,6 +1,5 @@
 import { AdminListingSearch } from '@/components/admin/AdminListingSearch';
-import { AdminListingsTable } from '@/components/admin/AdminListingsTable';
-import { api, convex } from '@/lib/convex-server';
+import { AdminListingsClientWrapper } from '@/components/admin/admin-listings-client-wrapper';
 import { Suspense } from 'react';
 
 export const metadata = {
@@ -22,27 +21,10 @@ export default async function AdminListingsPage({ searchParams }: AdminListingsP
   const params = await searchParams;
   const status = ensureString(params.status) || 'ALL';
   const promoted = ensureString(params.promoted);
-  const listingNumber = ensureString(params.listingNumber);
+  const listingNumberStr = ensureString(params.listingNumber);
   
   const isPromoted = promoted === 'true';
-  
-  let listings: any[] = [];
-
-  if (listingNumber) {
-    const num = parseInt(ensureString(listingNumber) || "");
-    if (!isNaN(num)) {
-       listings = await convex.query(api.admin.getListingsDetailed, { listingNumber: num });
-    }
-  } else if (isPromoted) {
-    listings = await convex.query(api.admin.getListingsDetailed, { isPromoted: true });
-  } else {
-    listings = await convex.query(api.admin.getListingsDetailed, { status });
-  }
-  
-  const serializedListings = (listings || []).map((l: any) => ({
-      ...l,
-      id: l._id,
-  }));
+  const listingNumber = listingNumberStr ? parseInt(listingNumberStr) : undefined;
 
   return (
     <div className="flex flex-col gap-6">
@@ -88,7 +70,11 @@ export default async function AdminListingsPage({ searchParams }: AdminListingsP
         </div>
       </div>
 
-      <AdminListingsTable listings={serializedListings} isPromotedView={isPromoted} />
+      <AdminListingsClientWrapper 
+        status={status} 
+        isPromoted={isPromoted} 
+        listingNumber={listingNumber} 
+      />
     </div>
   );
 }

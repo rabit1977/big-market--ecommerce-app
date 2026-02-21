@@ -1,0 +1,105 @@
+'use client';
+
+import { UsersDataTable } from '@/components/admin/users-data-table';
+import { Button } from '@/components/ui/button';
+import { api } from '@/convex/_generated/api';
+import { useQuery } from 'convex/react';
+import { Loader2, Shield, User as UserIcon, UserPlus, Users } from 'lucide-react';
+import Link from 'next/link';
+
+export function UsersClientPage() {
+  const usersRaw = useQuery(api.users.list);
+
+  if (usersRaw === undefined) {
+    return (
+      <div className="flex items-center justify-center p-20">
+        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  const users = (usersRaw || []).map(u => ({
+    ...u,
+    id: u._id,
+    _id: u._id,
+    role: (u.role as 'USER' | 'ADMIN') || 'USER',
+    createdAt: new Date(u._creationTime || (u as any).createdAt || Date.now()),
+    updatedAt: new Date(u._creationTime || (u as any).createdAt || Date.now()),
+    accountStatus: u.accountStatus,
+    membershipStatus: u.membershipStatus,
+  }));
+
+  const adminCount = users.filter((u) => u.role === 'ADMIN').length;
+  const userCount = users.filter((u) => u.role === 'USER').length;
+
+  return (
+    <div className='space-y-8 pb-20'>
+      {/* Header */}
+      <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 animate-in fade-in slide-in-from-top-4 duration-500'>
+        <div className='space-y-1'>
+          <h1 className='text-3xl sm:text-4xl font-black tracking-tight text-foreground flex items-center gap-3'>
+            Admin & Users
+            <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold ring-1 ring-inset ring-primary/20">
+               {users.length}
+            </span>
+          </h1>
+          <p className='text-xs md:text-sm text-muted-foreground font-medium'>
+            Manage your store users and their roles in real-time
+          </p>
+        </div>
+        <Button asChild className="rounded-full font-bold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all btn-premium">
+          <Link href='/admin/users/create'>
+            <UserPlus className='h-5 w-5 mr-2' />
+            Add New User
+          </Link>
+        </Button>
+      </div>
+
+      {/* Stats Cards */}
+      <div className='grid gap-3 sm:gap-5 grid-cols-2 md:grid-cols-3 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100'>
+        {[
+            { label: 'Total Users', value: users.length, icon: Users, color: 'text-blue-500', bg: 'bg-blue-500/10', border: 'border-blue-500/20' },
+            { label: 'Administrators', value: adminCount, icon: Shield, color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/20' },
+            { label: 'Regular Customers', value: userCount, icon: UserIcon, color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
+        ].map((stat) => (
+             <div key={stat.label} className={`glass-card p-2 sm:p-6 rounded-2xl sm:rounded-3xl flex items-center justify-between hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group gap-2 flex-row-reverse ${stat.border}`}>
+                <div className='flex justify-between items-start mb-2'>
+                    <div className={`p-2 sm:p-3 rounded-xl sm:rounded-2xl ${stat.bg} ${stat.color} ring-1 ring-inset ring-white/10 group-hover:scale-110 transition-transform`}>
+                       <stat.icon className='h-3 w-3 sm:h-6 sm:w-6' />
+                    </div>
+                </div>
+                <div className='flex flex-col items-start min-w-24'>
+                   <h3 className='text-base sm:text-xl md:text-2xl font-black tracking-tight text-foreground'>{stat.value}</h3>
+                   <p className='text-[8px] sm:text-xs md:text-sm font-bold text-muted-foreground uppercase tracking-wider mt-0.5 sm:mt-1'>{stat.label}</p>
+                </div>
+             </div>
+        ))}
+      </div>
+
+      {/* Users Table */}
+      <div className='glass-card rounded-[2.5rem] overflow-hidden shadow-xl shadow-black/5 border border-border/60 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200'>
+         <div className="p-8 border-b border-border/50 bg-secondary/5 backdrop-blur-sm flex items-center justify-between">
+            <h2 className='text-xl font-bold flex items-center gap-3'>
+              <Users className="h-5 w-5 text-primary" />
+              All Registered Users
+            </h2>
+         </div>
+         <div className='p-3 pt-0'>
+          {users.length > 0 ? (
+            <div className="mt-6">
+                <UsersDataTable users={users as any} />
+            </div>
+          ) : (
+            <div className='text-center py-20 text-muted-foreground'>
+              <div className='w-20 h-20 mx-auto rounded-full bg-secondary flex items-center justify-center mb-6'>
+                 <Users className='h-10 w-10 text-muted-foreground/50' />
+              </div>
+              <h3 className="text-xl font-bold text-foreground">No users found</h3>
+              <p className="mt-2">Start by adding a new user to the system.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -79,7 +79,7 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
               ))}
           </div>
       ) : (
-          <div className='text-center py-16 md:py-24 bg-card rounded-[2rem] border-2 border-dashed border-border/60 hover:border-primary/20 transition-all duration-300 group shadow-sm'>
+          <div className='text-center py-8 md:py-24 bg-card rounded-[2rem] border-2 border-dashed border-border/60 hover:border-primary/20 transition-all duration-300 group shadow-sm'>
               <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:bg-primary/10 transition-all duration-300">
                   <Package className="h-8 w-8 text-muted-foreground group-hover:text-primary transition-colors" />
               </div>

@@ -4,7 +4,7 @@ import { FilterPanel, FilterState } from '@/components/listing/filter-panel';
 import { ListingGrid } from '@/components/listing/listing-grid';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
@@ -119,16 +119,27 @@ export function ListingsClient({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 relative">
       {/* Mobile Filter Sheet */}
       <Sheet open={isMobileFiltersOpen} onOpenChange={setIsMobileFiltersOpen}>
-         <SheetContent side="left" className="w-full sm:w-[450px] overflow-y-auto p-0">
+         <SheetContent side="bottom" className="w-full h-[85vh] overflow-y-auto p-0 rounded-t-[2rem]">
             <SheetTitle className="sr-only">Filter Listings</SheetTitle>
-            <div className="p-4 pt-12">
+            <div className="p-4 pt-8">
                <FilterPanel onFilterChange={handleFilterChange} categories={categories} initialFilters={initialFilters} idPrefix="mobile-filter" template={template} />
             </div>
          </SheetContent>
       </Sheet>
+
+      {/* Floating Mobile Filter Button */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 lg:hidden">
+        <Button 
+          onClick={() => setIsMobileFiltersOpen(true)}
+          className="rounded-full shadow-2xl px-6 h-12 font-black tracking-tight uppercase border border-primary/20 backdrop-blur-md bg-primary text-white flex items-center gap-2 hover:scale-105 transition-transform"
+        >
+          <SlidersHorizontal className="h-4 w-4" />
+          Filters & Sort
+        </Button>
+      </div>
 
       {/* Sidebar Filters (Desktop Only) - Now wider! */}
       <aside className="hidden lg:block lg:sticky lg:top-24 h-fit">

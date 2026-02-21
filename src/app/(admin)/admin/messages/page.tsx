@@ -1,12 +1,13 @@
 import { getAllQuestionsAction } from '@/actions/qa-actions';
 import { AdminSupportChatClient } from '@/components/admin/admin-support-chat-client';
+import { ContactInquiriesClient } from '@/components/admin/contact-inquiries-client';
 import { QuestionsClient } from '@/components/admin/questions-client';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageCircle, MessageSquare, ShieldAlert } from 'lucide-react';
+import { Headset, MessageCircle, MessageSquare, ShieldAlert } from 'lucide-react';
 
 export const metadata = {
-  title: 'Messages & Support | Admin',
-  description: 'Manage support inquiries and product Q&A',
+  title: 'Communications | Admin',
+  description: 'Manage support inquiries, product Q&A, and contact forms',
 };
 
 interface AdminQuestionsPageProps {
@@ -30,21 +31,24 @@ export default async function AdminMessagesPage(props: AdminQuestionsPageProps) 
         <div className='space-y-1'>
           <h1 className='text-xl sm:text-2xl lg:text-4xl font-black tracking-tight text-foreground flex items-center gap-2 sm:gap-3 flex-wrap'>
             <MessageSquare className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
-            Messages & Support center
+            Communications Center
           </h1>
           <p className='text-xs sm:text-sm text-muted-foreground font-medium'>
-            Manage direct user support chats and public product Q&A.
+            Manage direct user chats, Q&A, and contact forms in one place.
           </p>
         </div>
       </div>
 
       <Tabs defaultValue="support" className="w-full space-y-6">
-        <TabsList className="grid w-full grid-cols-2 max-w-[400px]">
-          <TabsTrigger value="support" className="gap-2">
-            <ShieldAlert className="w-4 h-4" /> Support Chat
+        <TabsList className="grid w-full grid-cols-3 max-w-[600px]">
+          <TabsTrigger value="support" className="gap-2 text-xs sm:text-sm">
+            <ShieldAlert className="w-4 h-4 hidden sm:block" /> Live Chat
           </TabsTrigger>
-          <TabsTrigger value="qa" className="gap-2">
-            <MessageCircle className="w-4 h-4" /> Product Q&A
+          <TabsTrigger value="qa" className="gap-2 text-xs sm:text-sm">
+            <MessageCircle className="w-4 h-4 hidden sm:block" /> Product Q&A
+          </TabsTrigger>
+          <TabsTrigger value="contact" className="gap-2 text-xs sm:text-sm">
+            <Headset className="w-4 h-4 hidden sm:block" /> Contact Forms
           </TabsTrigger>
         </TabsList>
 
@@ -80,6 +84,21 @@ export default async function AdminMessagesPage(props: AdminQuestionsPageProps) 
                     pages={pages || 1} 
                 />
             </div>
+        </TabsContent>
+
+        <TabsContent value="contact" className="space-y-4">
+           <div className="rounded-xl border bg-card p-4 md:p-6 shadow-sm">
+                <div className="mb-4">
+                    <h2 className="text-lg font-bold flex items-center gap-2">
+                        <Headset className="w-5 h-5 text-primary" />
+                        Contact Form Inquiries
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                        Messages sent via the public contact us form. Data updates in real-time.
+                    </p>
+                </div>
+                <ContactInquiriesClient />
+           </div>
         </TabsContent>
       </Tabs>
     </div>
