@@ -511,10 +511,10 @@ export const getMyDashboardStats = query({
   args: { externalId: v.string() },
   handler: async (ctx, args) => {
     // 1. Get User
-    let user = await ctx.db
+    let user = (await ctx.db
       .query("users")
       .withIndex("by_externalId", (q) => q.eq("externalId", args.externalId))
-      .unique();
+      .unique()) as any;
     
     // Fallback: Check if the provided ID is an internal ID
     if (!user) {
@@ -594,7 +594,7 @@ export const getMyDashboardStats = query({
             image: user.image,
             credits: user.credits || 0,
             isVerified: user.isVerified || false,
-            membershipTier: user.membershipTier || 'FREE',
+            membershipTier: (user as any)["membershipTier"] || 'FREE',
             membershipStatus: user.membershipStatus || 'INACTIVE',
             membershipExpiresAt: user.membershipExpiresAt,
             companyName: user.companyName,
@@ -1054,7 +1054,7 @@ export const getUserDashboardStats = query({
         isVerified: user.isVerified ?? false,
         verificationStatus: user.verificationStatus ?? "unverified",
         accountStatus: user.accountStatus ?? "ACTIVE",
-        membershipTier: user.membershipTier ?? "FREE",
+        membershipTier: (user as any)["membershipTier"] ?? "FREE",
         membershipStatus: user.membershipStatus ?? "EXPIRED",
         membershipExpiresAt: user.membershipExpiresAt,
       },

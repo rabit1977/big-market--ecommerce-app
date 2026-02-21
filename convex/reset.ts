@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { api, internal } from "./_generated/api";
+import { api } from "./_generated/api";
 import { action, mutation } from "./_generated/server";
 
 const ALL_TABLES = [
@@ -61,7 +61,7 @@ export const clearAllDataAction = action({
 
     // Reset counters
     try {
-        await ctx.runMutation(internal.reset.resetCounter);
+        await ctx.runMutation(api.reset.resetCounter);
     } catch (e) {
         results.push({ table: 'counters', error: String(e) });
     }

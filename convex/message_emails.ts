@@ -12,7 +12,7 @@ export const sendWithEmail = action({
     imageUrl: v.optional(v.string()), 
     type: v.optional(v.string()), 
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, args): Promise<string> => {
     // 1. Store the message in the database via the existing mutation
     const messageId = await ctx.runMutation(api.messages.send, args);
 

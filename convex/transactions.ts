@@ -78,14 +78,14 @@ export const getRevenueStats = query({
     const now = new Date();
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
 
-    // Get transactions with date filter if provided
-    let query = ctx.db.query("transactions");
-    
-    if (args.since !== undefined) {
-        query = query.withIndex("by_createdAt", (q) => q.gte("createdAt", args.since!));
-    }
+    // Build the query — Convex doesn't allow reassigning across QueryInitializer/Query types
+    const transactions = args.since !== undefined
+      ? await ctx.db
+          .query("transactions")
+          .withIndex("by_createdAt", (q) => q.gte("createdAt", args.since!))
+          .collect()
+      : await ctx.db.query("transactions").collect();
 
-    const transactions = await query.collect();
 
     // Initialize aggregators
     let totalRevenue = 0; 

@@ -73,7 +73,7 @@ export const submit = action({
             // Actually, we can just use the provided sellerId to try and find the user if they were created with internal ID
             // Since we're in an action, we can call any query.
             const allUsers = await ctx.runQuery(api.users.list);
-            seller = allUsers.find(u => u._id === args.sellerId || u.externalId === args.sellerId) || null;
+            seller = allUsers.find((u: any) => u._id === args.sellerId || u.externalId === args.sellerId) || null;
         } catch (e) {
             console.error("Error during fallback seller lookup:", e);
         }
