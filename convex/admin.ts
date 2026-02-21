@@ -1,3 +1,4 @@
+/** Triggering fresh analysis for admin queries */
 import { v } from "convex/values";
 import { query } from "./_generated/server";
 

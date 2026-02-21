@@ -29,7 +29,7 @@ export default async function AdminListingsPage({ searchParams }: AdminListingsP
   let listings: any[] = [];
 
   if (listingNumber) {
-    const num = parseInt(listingNumber);
+    const num = parseInt(ensureString(listingNumber) || "");
     if (!isNaN(num)) {
        listings = await convex.query(api.admin.getListingsDetailed, { listingNumber: num });
     }
