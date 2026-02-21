@@ -11,8 +11,19 @@ interface AdminListingsPageProps {
     searchParams: Promise<{ status?: string; promoted?: string; listingNumber?: string }>;
 }
 
+// Helper to ensure we get a string from searchParams (handles potential arrays)
+const ensureString = (val: any): string | undefined => {
+  if (Array.isArray(val)) return val[0];
+  if (typeof val === 'string') return val;
+  return undefined;
+};
+
 export default async function AdminListingsPage({ searchParams }: AdminListingsPageProps) {
-  const { status = 'ALL', promoted, listingNumber } = await searchParams;
+  const params = await searchParams;
+  const status = ensureString(params.status) || 'ALL';
+  const promoted = ensureString(params.promoted);
+  const listingNumber = ensureString(params.listingNumber);
+  
   const isPromoted = promoted === 'true';
   
   let listings: any[] = [];
