@@ -106,8 +106,8 @@ export const authConfig = {
       // 2. Allow access to signout and home page for everyone
       if (nextUrl.pathname.startsWith('/auth/signout') || nextUrl.pathname === '/') return true;
 
-      // 3. Enforce Registration Completion first
-      if (isLoggedIn && !isRegistrationComplete) {
+      // 3. Enforce Registration Completion first (Admins skip this)
+      if (isLoggedIn && !isRegistrationComplete && user?.role !== 'ADMIN') {
           if (!nextUrl.pathname.startsWith('/auth/complete-registration')) {
               return Response.redirect(new URL('/auth/complete-registration', nextUrl));
           }
@@ -124,9 +124,9 @@ export const authConfig = {
           return Response.redirect(new URL('/premium', nextUrl));
       }
 
-      // 5. After Payment, if still Pending Approval, redirect to Pending page
+      // 5. After Payment, if still Pending Approval, redirect to Pending page (Admins skip this)
       // EXCEPT for the home page, allowing them to see the landing page
-      if (isLoggedIn && isSubscribed && isPending) {
+      if (isLoggedIn && isSubscribed && isPending && user?.role !== 'ADMIN') {
          if (!nextUrl.pathname.startsWith('/auth/pending') && nextUrl.pathname !== '/') {
             return Response.redirect(new URL('/auth/pending', nextUrl));
          }
