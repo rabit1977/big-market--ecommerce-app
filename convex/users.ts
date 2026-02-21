@@ -341,16 +341,118 @@ export const deleteAccount = mutation({
 
     if (!user) throw new Error("User not found");
 
-    // Delete all listings by this user
+    const externalId = args.externalId;
+
+    // 1. Delete all listings
     const listings = await ctx.db
       .query("listings")
-      .withIndex("by_userId", (q) => q.eq("userId", args.externalId))
+      .withIndex("by_userId", (q) => q.eq("userId", externalId))
       .collect();
+    for (const item of listings) await ctx.db.delete(item._id);
 
-    for (const listing of listings) {
-      await ctx.db.delete(listing._id);
-    }
+    // 2. Delete favorites
+    const favorites = await ctx.db
+      .query("favorites")
+      .withIndex("by_user", (q) => q.eq("userId", externalId))
+      .collect();
+    for (const item of favorites) await ctx.db.delete(item._id);
 
+    // 3. Delete saved searches
+    const savedSearches = await ctx.db
+      .query("savedSearches")
+      .withIndex("by_user", (q) => q.eq("userId", externalId))
+      .collect();
+    for (const item of savedSearches) await ctx.db.delete(item._id);
+
+    // 4. Delete Messages (Sender & Receiver)
+    const sentMessages = await ctx.db
+      .query("messages")
+      .withIndex("by_sender", (q) => q.eq("senderId", externalId))
+      .collect();
+    for (const item of sentMessages) await ctx.db.delete(item._id);
+
+    const receivedMessages = await ctx.db
+      .query("messages")
+      .withIndex("by_receiver", (q) => q.eq("receiverId", externalId))
+      .collect();
+    for (const item of receivedMessages) await ctx.db.delete(item._id);
+
+    // 5. Delete Conversations (Buyer & Seller)
+    const buyerConvs = await ctx.db
+      .query("conversations")
+      .withIndex("by_buyer", (q) => q.eq("buyerId", externalId))
+      .collect();
+    for (const item of buyerConvs) await ctx.db.delete(item._id);
+
+    const sellerConvs = await ctx.db
+      .query("conversations")
+      .withIndex("by_seller", (q) => q.eq("sellerId", externalId))
+      .collect();
+    for (const item of sellerConvs) await ctx.db.delete(item._id);
+
+    // 6. Delete Notifications
+    const notifications = await ctx.db
+      .query("notifications")
+      .withIndex("by_user", (q) => q.eq("userId", externalId))
+      .collect();
+    for (const item of notifications) await ctx.db.delete(item._id);
+
+    // 7. Delete Activity Logs
+    const logs = await ctx.db
+      .query("activityLogs")
+      .withIndex("by_user", (q) => q.eq("userId", externalId))
+      .collect();
+    for (const item of logs) await ctx.db.delete(item._id);
+
+    // 8. Delete Questions & Answers
+    const questions = await ctx.db
+      .query("questions")
+      .withIndex("by_user", (q) => q.eq("userId", externalId))
+      .collect();
+    for (const item of questions) await ctx.db.delete(item._id);
+
+    const answers = await ctx.db
+      .query("answers")
+      .withIndex("by_user", (q) => q.eq("userId", externalId))
+      .collect();
+    for (const item of answers) await ctx.db.delete(item._id);
+
+    // 9. Delete Reviews
+    const reviews = await ctx.db
+      .query("reviews")
+      .withIndex("by_user", (q) => q.eq("userId", externalId))
+      .collect();
+    for (const item of reviews) await ctx.db.delete(item._id);
+
+    // 10. Delete Transactions
+    const transactions = await ctx.db
+      .query("transactions")
+      .withIndex("by_user", (q) => q.eq("userId", externalId))
+      .collect();
+    for (const item of transactions) await ctx.db.delete(item._id);
+
+    // 11. Delete Verification Requests
+    const vRequests = await ctx.db
+      .query("verificationRequests")
+      .withIndex("by_user", (q) => q.eq("userId", externalId))
+      .collect();
+    for (const item of vRequests) await ctx.db.delete(item._id);
+
+    // 12. Delete Recently Viewed
+    const recentlyViewed = await ctx.db
+      .query("recentlyViewed")
+      .withIndex("by_user", (q) => q.eq("userId", externalId))
+      .collect();
+    for (const item of recentlyViewed) await ctx.db.delete(item._id);
+
+    // 13. Delete Inquiries (as Seller)
+    const inquiries = await ctx.db
+      .query("listingInquiries")
+      .withIndex("by_seller", (q) => q.eq("sellerId", externalId))
+      .collect();
+    for (const item of inquiries) await ctx.db.delete(item._id);
+
+    // Finally, delete the individual user record
     await ctx.db.delete(user._id);
   },
 });

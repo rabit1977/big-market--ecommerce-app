@@ -134,9 +134,6 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
       }
     }
 
-    // Give a moment for the user to see 100%
-    await new Promise(r => setTimeout(r, 500));
-
     // Update form data
     const currentImages = formData.images || [];
     const newImages = [...currentImages, ...uploadedImages];
