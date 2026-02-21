@@ -9,14 +9,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { api } from '@/convex/_generated/api';
 import { cn } from '@/lib/utils';
-import { useQuery } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-    BadgeCheck, BarChart, Bell, ChevronRight, CreditCard, Crown,
-    Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
-    MessageSquare, Package, Pencil, Settings, ShieldCheck,
-    Star, Store, Trash, User, Wallet, X,
+  BadgeCheck, BarChart, Bell, CheckCheck, ChevronRight, CreditCard, Crown,
+  Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
+  Mail,
+  MessageSquare, Package, Pencil, Settings, ShieldCheck,
+  Star, Store, Trash, User, Wallet, X,
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -66,8 +67,10 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
     useQuery(api.messages.getUnreadCount, user?.id ? { userId: user.id } : 'skip') ?? 0;
   const recentNotifications = useQuery(
     api.notifications.list,
-    user?.id ? { userId: user.id, limit: 5, unreadOnly: false, skip: 0 } : 'skip'
+    user?.id ? { userId: user.id, limit: 3, unreadOnly: false, skip: 0 } : 'skip'
   );
+
+  const markNotificationAsRead = useMutation(api.notifications.markAsRead);
 
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [lastSeenAlertCount, setLastSeenAlertCount] = useState(0);
@@ -228,7 +231,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
 
   return (
     <>
-      <div className="flex items-center gap-1 sm:gap-1.5">
+      <div className="flex items-center gap-1 sm:gap-2">
         {/* Admin Dashboard */}
         {isAdmin && (
           <TooltipProvider>
@@ -385,24 +388,137 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                   <p className="text-xs font-medium text-muted-foreground">No new notifications</p>
                 </div>
               ) : (
-                <div className="p-1">
-                  {recentNotifications?.notifications.map((n) => (
-                    <Link
-                      key={n._id}
-                      href={n.link || '/account/notifications'}
-                      className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors group relative"
-                    >
-                      {!n.isRead && (
-                        <span className="absolute left-1 top-3 w-1.5 h-1.5 rounded-full bg-primary" aria-hidden="true" />
-                      )}
-                      <div className={cn('ml-2 min-w-0 flex-1', !n.isRead ? 'font-semibold' : 'opacity-80')}>
-                        <p className="text-[11px] leading-tight mb-0.5 line-clamp-2">{n.message}</p>
-                        <p className="text-[9px] text-muted-foreground">
-                          {formatDistanceToNow(n.createdAt, { addSuffix: true })}
-                        </p>
+                <div className="p-1 space-y-0.5">
+                  {recentNotifications?.notifications.map((n) => {
+                    const isInquiry = n.type === 'INQUIRY' || n.message.includes('sent a message about');
+                    const guestName = n.metadata?.guestName || (isInquiry ? n.message.split(' sent')[0] : null);
+                    const guestEmail = n.metadata?.guestEmail;
+
+                    return (
+                      <div 
+                        key={n._id} 
+                        className={cn(
+                          "relative group rounded-xl transition-all duration-200 border border-transparent cursor-pointer",
+                          !n.isRead ? "bg-primary/5 hover:bg-primary/10 border-primary/10" : "hover:bg-muted/50"
+                        )}
+                        onClick={async (e) => {
+                          // Only trigger if not clicking buttons or links
+                          if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('a')) return;
+                          
+                          if (!n.isRead && user?.id) await markNotificationAsRead({ id: n._id, userId: user.id });
+                          
+                          const mailtoUri = isInquiry && guestEmail ? `mailto:${guestEmail}?subject=Re: ${n.metadata?.listingTitle || 'Your Listing'}` : null;
+                          if (isInquiry && mailtoUri) {
+                            window.location.href = mailtoUri;
+                          } else if (n.link) {
+                            window.location.href = n.link;
+                          }
+                        }}
+                      >
+                        <div className="p-2.5 flex flex-col gap-2">
+                          <div className="flex items-start gap-2.5">
+                            {/* Icon/Indicator */}
+                            <div className="relative mt-1">
+                               {isInquiry ? (
+                                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                                   <Mail className="w-4 h-4 text-primary" />
+                                 </div>
+                               ) : (
+                                 <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
+                                   <Bell className="w-4 h-4 text-muted-foreground" />
+                                 </div>
+                               )}
+                               {!n.isRead && (
+                                 <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-primary ring-2 ring-background animate-pulse" />
+                               )}
+                            </div>
+
+                            {/* Text Content */}
+                            <div className="flex-1 min-w-0">
+                               {n.title && (
+                                 <p className={cn(
+                                   "text-[10px] font-black uppercase tracking-wider mb-0.5",
+                                   !n.isRead ? "text-primary" : "text-muted-foreground/70"
+                                 )}>
+                                   {n.title}
+                                 </p>
+                               )}
+                               <p className={cn(
+                                 "text-[11px] leading-snug break-words",
+                                 !n.isRead ? "font-bold text-foreground" : "text-muted-foreground"
+                               )}>
+                                 {n.message}
+                               </p>
+                               <div className="flex items-center gap-2 mt-1">
+                                 <p className="text-[9px] text-muted-foreground/60 font-medium italic">
+                                   {formatDistanceToNow(n.createdAt, { addSuffix: true })}
+                                 </p>
+                               </div>
+                            </div>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex items-center gap-1.5 pt-1">
+                            {/* Reply Button for Inquiries (PRIORITY) */}
+                            {isInquiry && guestEmail && (
+                              <Button 
+                                asChild
+                                variant="default"
+                                size="sm"
+                                className="h-7 px-2.5 text-[10px] font-black uppercase tracking-tight rounded-lg bg-primary text-white hover:bg-primary/90 transition-all shadow-sm"
+                                onClick={async (e) => {
+                                  e.stopPropagation();
+                                  if (!n.isRead && user?.id) {
+                                    await markNotificationAsRead({ id: n._id, userId: user.id });
+                                  }
+                                }}
+                              >
+                                <a href={`mailto:${guestEmail}?subject=Re: ${n.metadata?.listingTitle || 'Your Listing'}`}>
+                                  <Mail className="w-3 h-3 mr-1" />
+                                  Reply
+                                </a>
+                              </Button>
+                            )}
+
+                            {/* Main Link/View */}
+                            <Button 
+                              asChild 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-7 px-2.5 text-[10px] font-black uppercase tracking-tight rounded-lg hover:bg-primary/10 hover:text-primary transition-all"
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                if (!n.isRead && user?.id) {
+                                  await markNotificationAsRead({ id: n._id, userId: user.id });
+                                }
+                              }}
+                            >
+                              <Link href={n.link || '/account/notifications'}>
+                                {isInquiry ? 'Listing Details' : 'View Details'}
+                              </Link>
+                            </Button>
+
+                            {/* Mark as read button (only if unread) */}
+                            {!n.isRead && (
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-7 px-2.5 text-[10px] font-black uppercase tracking-tight text-muted-foreground hover:text-primary rounded-lg transition-all ml-auto"
+                                onClick={async (e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  if (user?.id) await markNotificationAsRead({ id: n._id, userId: user.id });
+                                }}
+                              >
+                                <CheckCheck className="w-3.5 h-3.5 mr-1" />
+                                Mark Read
+                              </Button>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                    </Link>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </ScrollArea>
@@ -501,6 +617,107 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                   <div className="md:hidden">
                     {renderSectionLabel('Navigation')}
                     <div className="px-1.5">{mobileOnlyItems.map(renderMenuItem)}</div>
+                    <div className="mx-3 my-1 h-px bg-border/30" />
+                  </div>
+
+                  {/* Mobile Notifications Section */}
+                  <div className="md:hidden">
+                    {renderSectionLabel('Recent Notifications')}
+                    {recentNotifications?.notifications.length === 0 ? (
+                      <div className="px-4 py-6 text-center opacity-40">
+                        <Bell className="w-5 h-5 mx-auto mb-1" />
+                        <p className="text-[10px] font-medium">No new notifications</p>
+                      </div>
+                    ) : (
+                      <div className="px-1.5 space-y-1">
+                        {recentNotifications?.notifications.map((n) => {
+                          const isInquiry = n.type === 'INQUIRY' || n.message.includes('sent a message about');
+                          const guestName = n.metadata?.guestName || (isInquiry ? n.message.split(' sent')[0] : null);
+                          const guestEmail = n.metadata?.guestEmail;
+
+                          return (
+                            <div 
+                              key={n._id} 
+                              className={cn(
+                                "p-3 rounded-xl border border-transparent transition-all cursor-pointer",
+                                !n.isRead ? "bg-primary/5 border-primary/10" : "bg-muted/30"
+                              )}
+                              onClick={async (e) => {
+                                if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('a')) return;
+                                if (!n.isRead && user?.id) await markNotificationAsRead({ id: n._id, userId: user.id });
+                                
+                                const mailtoUri = isInquiry && guestEmail ? `mailto:${guestEmail}?subject=Re: ${n.metadata?.listingTitle || 'Your Listing'}` : null;
+                                if (isInquiry && mailtoUri) {
+                                  window.location.href = mailtoUri;
+                                } else if (n.link) {
+                                  closePanel();
+                                  window.location.href = n.link;
+                                }
+                              }}
+                            >
+                              <div className="flex gap-3">
+                                <div className="shrink-0 mt-1">
+                                  {isInquiry ? <Mail className="w-4 h-4 text-primary" /> : <Bell className="w-4 h-4 text-muted-foreground" />}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  {n.title && (
+                                    <p className={cn("text-[9px] font-black uppercase tracking-widest mb-0.5", !n.isRead ? "text-primary" : "text-muted-foreground/60")}>
+                                      {n.title}
+                                    </p>
+                                  )}
+                                  <p className={cn("text-[11px] leading-snug mb-1", !n.isRead ? "font-bold" : "text-muted-foreground")}>
+                                    {n.message}
+                                  </p>
+                                  <p className="text-[9px] text-muted-foreground/60">{formatDistanceToNow(n.createdAt, { addSuffix: true })}</p>
+                                  
+                                  <div className="flex flex-wrap items-center gap-2 mt-2.5">
+                                    {isInquiry && guestEmail && (
+                                      <Button 
+                                        asChild 
+                                        variant="default" 
+                                        size="sm" 
+                                        className="h-7 px-2.5 text-[10px] font-black uppercase tracking-tight rounded-lg bg-primary text-white"
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
+                                        <a href={`mailto:${guestEmail}?subject=Re: ${n.metadata?.listingTitle || 'Your Listing'}`}>
+                                          <Mail className="w-3 h-3 mr-1" />
+                                          Reply
+                                        </a>
+                                      </Button>
+                                    )}
+                                    <Button asChild variant="secondary" size="sm" className="h-7 px-2.5 text-[10px] font-black uppercase tracking-tight rounded-lg">
+                                      <Link href={n.link || '/account/notifications'} onClick={(e) => {
+                                        e.stopPropagation();
+                                        closePanel();
+                                      }}>
+                                        {isInquiry ? 'Listing Details' : 'View Details'}
+                                      </Link>
+                                    </Button>
+                                    {!n.isRead && (
+                                      <Button 
+                                        variant="ghost" 
+                                        size="sm" 
+                                        className="h-7 px-2 text-[10px] font-black uppercase tracking-tight text-primary rounded-lg ml-auto"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          if (user?.id) markNotificationAsRead({ id: n._id, userId: user.id });
+                                        }}
+                                      >
+                                        <CheckCheck className="w-3.5 h-3.5 mr-1" />
+                                        Mark Read
+                                      </Button>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                        <Button asChild variant="ghost" size="sm" className="w-full h-8 text-[10px] font-bold text-muted-foreground hover:text-primary mt-1">
+                          <Link href="/account/notifications" onClick={closePanel}>View All Notifications</Link>
+                        </Button>
+                      </div>
+                    )}
                     <div className="mx-3 my-1 h-px bg-border/30" />
                   </div>
 

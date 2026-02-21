@@ -101,6 +101,7 @@ export const NotificationTypes = {
   SUCCESS: 'SUCCESS',
   ERROR: 'ERROR',
   WARNING: 'WARNING',
+  INQUIRY: 'INQUIRY',
 } as const;
 
 export type NotificationType = keyof typeof NotificationTypes;

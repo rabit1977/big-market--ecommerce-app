@@ -58,6 +58,7 @@ export function NotificationList({
             link={notification.link}
             isRead={notification.isRead}
             createdAt={notification.createdAt}
+            metadata={notification.metadata}
             onMarkAsRead={onMarkAsRead}
             onDelete={onDelete}
             compact={compact}

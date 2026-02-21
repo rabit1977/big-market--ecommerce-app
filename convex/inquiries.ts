@@ -31,8 +31,13 @@ export const store = internalMutation({
             message: `${args.guestName} sent a message about "${listing.title}"`,
             isRead: false,
             createdAt: Date.now(),
-            link: `/listings/${args.listingId}` // Or purely informational
-            // We could link to a seller dashboard page if it existed, but linking to listing is okay
+            link: `/listings/${args.listingId}`,
+            metadata: {
+                guestEmail: args.guestEmail,
+                guestName: args.guestName,
+                listingId: args.listingId,
+                listingTitle: listing.title
+            }
         });
     }
 

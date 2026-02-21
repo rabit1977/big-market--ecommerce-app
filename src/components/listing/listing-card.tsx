@@ -72,7 +72,7 @@ export const ListingCard = memo(
           />
           
           {/* Status Badges Overlay */}
-          <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-20 pointer-events-none flex flex-col gap-1 sm:gap-1.5">
+          <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-20 pointer-events-none flex flex-col gap-1 sm:gap-2">
               {isPromoted && promoConfig && promoConfig.badgeColor && (
                 <div className={cn(
                     "flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full shadow-lg border border-white/20 backdrop-blur-md transition-all duration-300", 
