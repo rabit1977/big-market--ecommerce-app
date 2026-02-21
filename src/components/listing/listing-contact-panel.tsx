@@ -3,25 +3,25 @@
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger
 } from '@/components/ui/tooltip';
 import { useFavorites } from '@/lib/context/favorites-context';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { formatPrice } from '@/lib/utils/formatters';
 import {
-  AlertTriangle,
-  CheckCircle,
-  Heart,
-  Mail,
-  MapPin,
-  MessageSquare,
-  Phone,
-  Shield,
-  User
+    AlertTriangle,
+    CheckCircle,
+    Heart,
+    Mail,
+    MapPin,
+    MessageSquare,
+    Phone,
+    Shield,
+    User
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState, useTransition } from 'react';
@@ -29,11 +29,13 @@ import { useMemo, useState, useTransition } from 'react';
 interface ListingContactPanelProps {
   listing: ListingWithRelations;
   isLoggedIn?: boolean;
+  initialIsWished?: boolean;
 }
 
 export function ListingContactPanel({
   listing,
   isLoggedIn = false,
+  initialIsWished = false,
 }: ListingContactPanelProps) {
   const router = useRouter();
   const { isFavorite, toggleFavorite } = useFavorites();
