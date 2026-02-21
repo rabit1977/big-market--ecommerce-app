@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 import { useQuery } from 'convex/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-    BadgeCheck, BarChart,
+    BadgeCheck, BarChart, Bell,
     ChevronRight, CreditCard, Crown,
     Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
     MessageSquare, Package, Pencil, Settings, ShieldCheck,
@@ -131,6 +131,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   const accountItems: MenuItem[] = [
     { href: '/my-listings', icon: Package, label: 'My Listings' },
     { href: '/my-listings/stats', icon: BarChart, label: 'Ad Statistics' },
+    { href: '/my-listings/saved-searches', icon: Bell, label: 'Saved Searches & Alerts' },
     { href: '/wallet', icon: CreditCard, label: 'Account Overview' },
     { href: '/wallet/top-up', icon: Wallet, label: 'Top Up Account' },
   ];

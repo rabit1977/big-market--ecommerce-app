@@ -16,4 +16,11 @@ crons.daily(
   api.promotions.checkExpiringPromotions
 );
 
+// Daily search alerts at 08:00 UTC (10:00 MKD)
+crons.daily(
+  "daily-search-alerts",
+  { hourUTC: 8, minuteUTC: 0 },
+  api.savedSearches.processDailyAlerts
+);
+
 export default crons;

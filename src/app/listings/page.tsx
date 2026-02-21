@@ -1,4 +1,5 @@
 import { ListingsClient } from '@/components/listing/listings-client';
+import { SaveSearchButton } from '@/components/listing/save-search-button';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { fetchQuery } from 'convex/nextjs';
@@ -180,11 +181,16 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
               ? categories.find((c) => c.slug === category)?.name || 'Listings'
               : 'All Listings'}
           </h1>
-          <p className="text-muted-foreground md:text-lg text-sm">
-            {total} {total === 1 ? 'result' : 'results'} found
-            {city && city !== 'all' && ` in ${city}`}
-            {query && ` for "${query}"`}
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-muted-foreground md:text-lg text-sm hidden sm:block">
+              {total} {total === 1 ? 'result' : 'results'} found
+              {city && city !== 'all' && ` in ${city}`}
+              {query && ` for "${query}"`}
+            </p>
+            <Suspense fallback={<div className="w-24 h-9 bg-muted rounded-full animate-pulse" />}>
+               <SaveSearchButton />
+            </Suspense>
+          </div>
         </div>
         </div>
       </div>

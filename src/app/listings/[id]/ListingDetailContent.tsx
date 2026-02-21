@@ -363,12 +363,14 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
               </div>
 
               <div className="flex items-center gap-3 pt-4 border-t border-border">
-                <UserAvatar user={seller} className="w-10 h-10 border-2 border-border" />
+                <Link href={`/store/${listing.userId}`} className="shrink-0 hover:opacity-80 transition-opacity">
+                  <UserAvatar user={seller} className="w-10 h-10 border-2 border-border" />
+                </Link>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1">
-                    <span className="font-bold text-sm text-foreground">{seller?.name ?? 'Seller'}</span>
+                  <Link href={`/store/${listing.userId}`} className="group flex items-center gap-1 w-fit">
+                    <span className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">{seller?.name ?? 'Seller'}</span>
                     {seller?.isVerified && <BadgeCheck className="w-4 h-4 text-primary" />}
-                  </div>
+                  </Link>
                   <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
                     Member since {seller?.createdAt || (seller as any)?._creationTime ? new Date(seller.createdAt || (seller as any)._creationTime).getFullYear() : 'Recently'}
                   </p>
@@ -494,12 +496,14 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
               {/* Seller Card */}
               <div className="bg-card border border-border rounded-3xl p-6 shadow-sm overflow-hidden">
                 <div className="flex items-center gap-4 mb-6">
-                  <UserAvatar user={seller} className="w-16 h-16 border-4 border-muted shadow-md" />
+                  <Link href={`/store/${listing.userId}`} className="shrink-0 hover:opacity-80 transition-opacity">
+                     <UserAvatar user={seller} className="w-16 h-16 border-4 border-muted shadow-md" />
+                  </Link>
                   <div>
-                    <div className="flex items-center gap-1.5 mb-0.5">
-                      <h4 className="font-black text-foreground text-lg">{seller?.name ?? 'Loading...'}</h4>
+                    <Link href={`/store/${listing.userId}`} className="group flex items-center gap-1.5 mb-0.5 w-fit">
+                      <h4 className="font-black text-foreground text-lg group-hover:text-primary transition-colors">{seller?.name ?? 'Loading...'}</h4>
                       {seller?.isVerified && <BadgeCheck className="w-5 h-5 text-primary" />}
-                    </div>
+                    </Link>
                     <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
                       {seller?.isVerified ? 'Verified' : 'Member'} since{' '}
                       {seller?.createdAt || (seller as any)?._creationTime 
@@ -527,6 +531,12 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                         : 'Seller Rating'}
                     </p>
                   </div>
+                </div>
+                
+                <div className="mt-4">
+                   <Button asChild variant="outline" className="w-full rounded-xl border-2 hover:bg-primary/5 hover:text-primary font-bold uppercase tracking-wider text-xs">
+                     <Link href={`/store/${listing.userId}`}>Visit Storefront</Link>
+                   </Button>
                 </div>
               </div>
 
