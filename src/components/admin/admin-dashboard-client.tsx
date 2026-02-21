@@ -97,12 +97,12 @@ export function AdminDashboardClient() {
           description={`${dailyDeltas?.newListings ?? 0} posted today (Total: ${stats?.listings ?? 0})`}
         />
         <DashboardCard
-          title="Total Revenue"
+          title="Revenue Today"
           value={(stats?.totalRevenue ?? 0).toLocaleString() + ' MKD'}
           icon={CreditCard}
           color="violet"
           trend={{ value: dailyDeltas?.revenueToday ?? 0, isPositive: (dailyDeltas?.revenueToday ?? 0) > 0 }}
-          description={`Today: +${(dailyDeltas?.revenueToday ?? 0).toLocaleString()} MKD`}
+          description={`Since start of today`}
         />
         <DashboardCard
           title="Support Tickets"

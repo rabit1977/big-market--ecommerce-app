@@ -4,21 +4,19 @@ import { UserAvatar } from '@/components/shared/user-avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { api } from '@/convex/_generated/api';
-import { Id } from '@/convex/_generated/dataModel';
 import { cn } from '@/lib/utils';
 import { useMutation, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import { AnimatePresence, motion, PanInfo, useMotionValue } from 'framer-motion';
 import {
-  ArrowLeft,
-  Headset,
-  Loader2,
-  MessageCircle,
-  Search,
-  Send,
-  ShieldCheck,
-  User,
-  X,
+    ArrowLeft,
+    Headset,
+    MessageCircle,
+    Search,
+    Send,
+    ShieldCheck,
+    User,
+    X
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
@@ -196,7 +194,7 @@ export function SupportChatWidget() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="pointer-events-auto mb-4 w-[90vw] sm:w-[400px] h-[80dvh] sm:h-[550px] bg-card border rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            className="pointer-events-auto mb-4 w-[90vw] sm:w-[360px] h-[80dvh] sm:h-[500px] bg-card border rounded-2xl shadow-2xl flex flex-col overflow-hidden"
             role="dialog"
             aria-modal="true"
             aria-label="Support chat"
@@ -239,10 +237,10 @@ export function SupportChatWidget() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsOpen(false)}
-                className="hover:bg-primary-foreground/10 text-primary-foreground"
+                className="h-10 w-10 hover:bg-white/20 text-white rounded-full bg-black/5"
                 aria-label="Close support chat"
               >
-                <X className="h-5 w-5" />
+                <X className="h-6 w-6" />
               </Button>
             </div>
 
@@ -383,34 +381,38 @@ export function SupportChatWidget() {
         )}
       </AnimatePresence>
 
-      {/* Toggle button */}
-      <motion.button
-        drag
-        style={{ x: dragX, y: dragY }}
-        dragConstraints={{ top: -500, left: -300, right: 0, bottom: 0 }}
-        dragElastic={0.1}
-        dragMomentum={false}
-        onDragEnd={handleDragEnd}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={handleToggle}
-        aria-label={isOpen ? 'Close support chat' : 'Open support chat'}
-        className={cn(
-          'pointer-events-auto h-12 w-12 sm:h-14 sm:w-14 rounded-full shadow-2xl transition-colors duration-300 relative',
-          isOpen ? 'bg-card border text-foreground' : 'bg-primary text-primary-foreground hover:bg-primary/90'
-        )}
-      >
-        {/* Inner wrapper is not subject to the drag transform — icon stays centered */}
-        <span className="absolute inset-0 flex items-center justify-center">
-          {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-7 w-7" />}
-        </span>
+      {/* Toggle button - only shown when closed */}
+      <AnimatePresence>
+        {!isOpen && (
+          <motion.button
+            key="chat-toggle"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            drag
+            style={{ x: dragX, y: dragY }}
+            dragConstraints={{ top: -500, left: -300, right: 0, bottom: 0 }}
+            dragElastic={0.1}
+            dragMomentum={false}
+            onDragEnd={handleDragEnd}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleToggle}
+            aria-label="Open support chat"
+            className="pointer-events-auto h-11 w-11 sm:h-12 sm:w-12 rounded-full shadow-2xl transition-colors duration-300 relative bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            <span className="absolute inset-0 flex items-center justify-center">
+              <MessageCircle className="h-6 w-6" />
+            </span>
 
-        {showUnreadBadge && (
-          <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-600 rounded-full border-2 border-background flex items-center justify-center text-[10px] font-bold text-white shadow-sm animate-pulse" aria-label="Unread messages">
-            {isAdmin ? (totalUnreadForAdmin > 9 ? '9+' : totalUnreadForAdmin) : 1}
-          </span>
+            {showUnreadBadge && (
+              <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-600 rounded-full border-2 border-background flex items-center justify-center text-[9px] font-bold text-white shadow-sm animate-pulse" aria-label="Unread messages">
+                {isAdmin ? (totalUnreadForAdmin > 9 ? '9+' : totalUnreadForAdmin) : 1}
+              </span>
+            )}
+          </motion.button>
         )}
-      </motion.button>
+      </AnimatePresence>
     </div>
   );
 }

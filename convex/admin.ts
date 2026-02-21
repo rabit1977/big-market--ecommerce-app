@@ -1,4 +1,4 @@
-import { v, v } from "convex/values";
+import { v } from "convex/values";
 import { query } from "./_generated/server";
 
 export const getStats = query({
@@ -23,12 +23,16 @@ export const getStats = query({
       .withIndex("by_status", (q) => q.eq("status", "NEW"))
       .collect()).length;
 
-    // Calculate Total Revenue (Gross)
-    const allTransactions = await ctx.db
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+
+    // Calculate Today's Revenue (Gross)
+    const todayTransactions = await ctx.db
       .query("transactions")
+      .withIndex("by_createdAt", (q) => q.gt("createdAt", startOfToday))
       .collect();
     
-    const totalRevenue = allTransactions
+    const totalRevenue = todayTransactions
       .filter(t => t.status === "COMPLETED")
       .reduce((acc, t) => acc + (t.amount || 0), 0);
 

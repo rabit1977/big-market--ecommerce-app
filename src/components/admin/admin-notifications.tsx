@@ -58,7 +58,7 @@ export function AdminNotifications({ user }: { user: any }) {
                         <span className="text-sm font-medium">Revenue</span>
                     </div>
                     <span className="text-sm font-bold text-emerald-500">
-                        €{(stats?.revenueToday ?? 0).toLocaleString()}
+                        {(stats?.revenueToday ?? 0).toLocaleString()} MKD
                     </span>
                 </DropdownMenuItem>
 
