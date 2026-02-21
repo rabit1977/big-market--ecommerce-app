@@ -38,13 +38,21 @@ interface ListingsPageProps {
   }>;
 }
 
+// Helper to ensure we get a string from searchParams (handles potential arrays)
+const ensureString = (val: any): string | undefined => {
+  if (Array.isArray(val)) return val[0];
+  if (typeof val === 'string') return val;
+  return undefined;
+};
+
 export default async function ListingsPage({ searchParams }: ListingsPageProps) {
   const params = await searchParams;
 
   // Direct ID Search Redirect
-  if (params.listingNumber) {
+  const listingNumberVal = ensureString(params.listingNumber);
+  if (listingNumberVal) {
      try {
-         const listingNum = parseInt(params.listingNumber);
+         const listingNum = parseInt(listingNumberVal);
          if (!isNaN(listingNum)) {
              const directListing = await fetchQuery(api.listings.getByListingNumber, { listingNumber: listingNum });
              if (directListing) {
@@ -75,7 +83,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
           </div>
           <div className="container-wide text-center py-20">
              <div className="text-6xl mb-4">🔍</div>
-             <h3 className="text-2xl font-bold mb-2">No listing found with ID {params.listingNumber}</h3>
+             <h3 className="text-2xl font-bold mb-2">No listing found with ID {listingNumberVal}</h3>
              <p className="text-muted-foreground">
                Please check the ID and try again, or browse our latest listings below.
              </p>
@@ -87,13 +95,14 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
      );
   }
 
-  const query = params.search || '';
-  const category = params.category || '';
-  const city = params.city || '';
-  const page = params.page ? Number(params.page) : 1;
+  const query = ensureString(params.search) || '';
+  const category = ensureString(params.category) || '';
+  const city = ensureString(params.city) || '';
+  const pageParam = ensureString(params.page);
+  const page = pageParam ? Number(pageParam) : 1;
   
   // Sort mapping
-  let sort = params.sort || 'newest';
+  let sort = ensureString(params.sort) || 'newest';
   if (sort === 'price-low') sort = 'price-asc'; // Align with Convex
   if (sort === 'price-high') sort = 'price-desc';
 
@@ -102,22 +111,22 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
     fetchQuery(api.categories.list),
     fetchQuery(api.listings.list, {
         category: category !== 'all' ? category : undefined,
-        subCategory: params.subCategory,
+        subCategory: ensureString(params.subCategory),
         city: city !== 'all' ? city : undefined,
         minPrice: params.minPrice ? Number(params.minPrice) : undefined,
         maxPrice: params.maxPrice ? Number(params.maxPrice) : undefined,
-        condition: params.condition !== 'all' ? params.condition : undefined,
+        condition: params.condition !== 'all' ? ensureString(params.condition) : undefined,
         sort,
         status: 'ACTIVE',
-        userType: params.userType,
-        adType: params.adType,
+        userType: ensureString(params.userType),
+        adType: ensureString(params.adType),
         isTradePossible: params.trade === 'true' ? true : undefined,
 
         hasShipping: params.shipping === 'true' ? true : undefined,
         isVatIncluded: params.vat === 'true' ? true : undefined,
         isAffordable: params.affordable === 'true' ? true : undefined,
-        dateRange: params.date,
-        dynamicFilters: params.filters // Added dynamicFilters
+        dateRange: ensureString(params.date),
+        dynamicFilters: ensureString(params.filters) // Added dynamicFilters
     }),
   ]);
 

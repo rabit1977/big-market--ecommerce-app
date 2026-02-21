@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Image as ImageIcon, Star, Upload, X } from 'lucide-react';
 import Image from 'next/image';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ListingFormData } from '../post-listing-wizard';
 
 interface ImagesStepProps {
@@ -19,6 +19,12 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
   const [displayProgress, setDisplayProgress] = useState(0);
 
   // Smooth progress animation
+  const progressTargetRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    progressTargetRef.current = uploadProgress;
+  }, [uploadProgress]);
+
   useEffect(() => {
     if (uploadProgress === null) {
       setDisplayProgress(0);
@@ -27,16 +33,17 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
 
     const interval = setInterval(() => {
       setDisplayProgress((prev) => {
-        if (prev < uploadProgress) {
-          const jump = Math.max(1, (uploadProgress - prev) / 5);
-          return Math.min(prev + jump, uploadProgress);
+        const target = progressTargetRef.current ?? 0;
+        if (prev < target) {
+          const jump = Math.max(1, (target - prev) / 5);
+          return Math.min(prev + jump, target);
         }
         return prev;
       });
     }, 30);
 
     return () => clearInterval(interval);
-  }, [uploadProgress]);
+  }, [uploadProgress === null]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();

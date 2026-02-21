@@ -186,7 +186,7 @@ export function SupportChatWidget() {
   return (
     <div
       ref={widgetRef}
-      className="fixed bottom-18 left-0 right-0 sm:left-auto sm:right-6 z-[100] flex flex-col items-center sm:items-end pointer-events-none"
+      className="fixed bottom-26 left-0 right-0 sm:left-auto sm:right-6 z-[100] flex flex-col items-center sm:items-end pointer-events-none"
     >
       <AnimatePresence>
         {isOpen && (
