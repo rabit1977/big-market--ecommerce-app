@@ -139,6 +139,12 @@ export function MessagesClient({
     return conversations?.find(c => c._id === selectedId) || null;
   }, [conversations, selectedId, virtualConv]);
 
+  // Derived state for online presence
+  const otherUserIds = useMemo(() => {
+    if (!conversations) return [];
+    return Array.from(new Set(conversations.map((c) => c.otherUserId).filter(Boolean)));
+  }, [conversations]);
+
   // 5. Messages Query
   // Conditional query: Pass 'skip' if we don't have users, avoiding "never" casts
   const queryArgs = activeConversation?.otherUserId 
@@ -154,7 +160,29 @@ export function MessagesClient({
   const sendMessageMutation = useMutation(api.messages.send);
   const markReadMutation = useMutation(api.messages.markConversationAsRead);
 
+  // Focus: Typing and Presence Setup
+  const onlineStatusMap = useQuery(api.presence.getOnlineUsers, { userIds: otherUserIds }) || {};
+  const heartbeatMutation = useMutation(api.presence.heartbeat);
+  const setTypingMutation = useMutation(api.typing.setTyping);
+  const typingRecord = useRef<{ [convId: string]: number }>({});
+
+  const typingUsers = useQuery(
+    api.typing.getActiveTyping,
+    activeConversation && !activeConversation._id.startsWith("virtual")
+      ? { conversationId: activeConversation._id, currentUserId: userId }
+      : "skip"
+  ) || [];
+
   // 6. Effects
+
+  // Heartbeat for online presence
+  useEffect(() => {
+    if (!userId) return;
+    const ping = () => heartbeatMutation({ userId }).catch(() => {});
+    ping();
+    const interval = setInterval(ping, 30000); // Send heartbeat every 30s
+    return () => clearInterval(interval);
+  }, [userId, heartbeatMutation]);
 
   // Handle URL Params (Deep linking)
   useEffect(() => {
@@ -229,6 +257,10 @@ export function MessagesClient({
     setNewMessage(''); 
 
     try {
+      if (activeConversation && !activeConversation._id.startsWith("virtual")) {
+          setTypingMutation({ conversationId: activeConversation._id, userId, isTyping: false }).catch(() => {});
+      }
+
       await sendMessageMutation({
         content: msgContent,
         listingId: activeConversation.listingId as Id<"listings"> | undefined,
@@ -240,7 +272,27 @@ export function MessagesClient({
       toast.error("Failed to send message");
       setNewMessage(msgContent); // Rollback on error
     }
-  }, [newMessage, activeConversation, sendMessageMutation, userId]);
+  }, [newMessage, activeConversation, sendMessageMutation, setTypingMutation, userId]);
+
+  const handleTyping = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewMessage(e.target.value);
+    
+    if (!activeConversation || activeConversation._id.startsWith("virtual")) return;
+
+    if (e.target.value.trim() === '') {
+        setTypingMutation({ conversationId: activeConversation._id, userId, isTyping: false });
+        return;
+    }
+
+    const now = Date.now();
+    const lastTyped = typingRecord.current[activeConversation._id] || 0;
+    
+    // Throttle typing indicators to DB to avoid hitting limits
+    if (now - lastTyped > 2500) {
+      typingRecord.current[activeConversation._id] = now;
+      setTypingMutation({ conversationId: activeConversation._id, userId, isTyping: true });
+    }
+  }, [activeConversation, setTypingMutation, userId]);
 
   const handleUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -337,6 +389,7 @@ export function MessagesClient({
                   key={conv._id}
                   conversation={conv}
                   isSelected={selectedId === conv._id}
+                  isOnline={!!onlineStatusMap[conv.otherUserId]}
                   onClick={() => {
                     setSelectedId(conv._id);
                     setVirtualConv(null);
@@ -377,11 +430,18 @@ export function MessagesClient({
                 {activeConversation.type === 'SUPPORT' ? (
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                      <ShieldAlert className="w-5 h-5 text-primary" />
+                       <ShieldAlert className="w-5 h-5 text-primary" />
                     </div>
                     <div>
                       <p className="font-bold text-sm">Support Team</p>
-                      <p className="text-xs text-muted-foreground">Internal Help Desk</p>
+                      {typingUsers.length > 0 ? (
+                         <p className="text-xs text-primary animate-pulse font-medium">Support is typing...</p>
+                      ) : (
+                         <div className="flex items-center gap-1.5">
+                            <span className="w-2 h-2 rounded-full bg-green-500" />
+                            <p className="text-xs text-muted-foreground">Online Help Desk</p>
+                         </div>
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -397,12 +457,26 @@ export function MessagesClient({
                       )}
                     </div>
                     <div>
-                      <p className="font-bold text-sm line-clamp-1 group-hover:text-primary transition-colors">
-                        {activeConversation.listing?.title || "Unknown Item"}
-                      </p>
-                      <p className="text-xs font-semibold text-primary">
-                        €{activeConversation.listing?.price?.toLocaleString() ?? 0}
-                      </p>
+                      <div className="flex items-center gap-2 mb-0.5">
+                          <p className="font-bold text-sm line-clamp-1 group-hover:text-primary transition-colors">
+                            {activeConversation.listing?.title || "Unknown Item"}
+                          </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                          <p className="text-xs font-semibold text-primary">
+                            €{activeConversation.listing?.price?.toLocaleString() ?? 0}
+                          </p>
+                          {typingUsers.length > 0 ? (
+                             <span className="text-[10px] text-green-600 dark:text-green-500 animate-pulse font-medium bg-green-500/10 px-1.5 rounded-full lowercase">
+                                {activeConversation.otherUser?.name || "User"} is typing...
+                             </span>
+                          ) : onlineStatusMap[activeConversation.otherUserId] ? (
+                             <div className="flex items-center gap-1 bg-green-500/10 px-1.5 rounded-full">
+                                <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                                <span className="text-[10px] text-green-600 dark:text-green-400 font-medium tracking-wide">Online</span>
+                             </div>
+                          ) : null}
+                      </div>
                     </div>
                   </Link>
                 )}
@@ -467,7 +541,7 @@ export function MessagesClient({
                   
                   <Input
                     value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
+                    onChange={handleTyping}
                     placeholder="Type a message..."
                     className="flex-1 rounded-full px-4 border-muted-foreground/20 focus-visible:ring-primary/20"
                     disabled={isUploading}
@@ -501,10 +575,12 @@ export function MessagesClient({
 const ConversationItem = memo(function ConversationItem({
   conversation,
   isSelected,
+  isOnline,
   onClick,
 }: {
   conversation: Conversation;
   isSelected: boolean;
+  isOnline?: boolean;
   onClick: () => void;
 }) {
   return (
@@ -523,7 +599,12 @@ const ConversationItem = memo(function ConversationItem({
             <ShieldAlert className="w-5 h-5 text-primary" />
           </div>
         ) : (
-          <UserAvatar user={conversation.otherUser} className="w-10 h-10 border" />
+          <div className="relative">
+             <UserAvatar user={conversation.otherUser} className="w-10 h-10 border" />
+             {isOnline && (
+                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-slate-900 rounded-full" />
+             )}
+          </div>
         )}
       </div>
 

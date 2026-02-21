@@ -77,13 +77,35 @@ const ListingDetailPage = async ({ params }: ListingDetailPageProps) => {
     notFound();
   }
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: listing.title,
+    image: listing.images?.[0] || '',
+    description: listing.description.substring(0, 160),
+    offers: {
+      '@type': 'Offer',
+      url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://biggestmarket.com'}/listings/${id}`,
+      priceCurrency: listing.currency || 'EUR',
+      price: listing.price,
+      itemCondition: listing.condition === 'NEW' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition',
+      availability: 'https://schema.org/InStock',
+    }
+  };
+
   return (
-    <Suspense fallback={<ListingDetailSkeleton />}>
-      <ListingDetailContent listing={{
-          ...listing,
-          listingNumber: (listing as any).listingNumber
-      } as any} />
-    </Suspense>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <Suspense fallback={<ListingDetailSkeleton />}>
+        <ListingDetailContent listing={{
+            ...listing,
+            listingNumber: (listing as any).listingNumber
+        } as any} />
+      </Suspense>
+    </>
   );
 };
 

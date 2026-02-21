@@ -79,7 +79,42 @@ export function SupportChatWidget() {
 
   const currentMessages = isAdmin ? adminActiveMessages : userMessages;
 
+  // ── Typing & Presence Setup ───────────────────────────────────────────────
+
+  const otherUserIds = useMemo(() => {
+    if (!isAdmin) return [ADMIN_ID];
+    return Array.from(new Set(adminConversations.map(c => c.otherUserId).filter(Boolean)));
+  }, [isAdmin, adminConversations]);
+
+  const onlineStatusMap = useQuery(api.presence.getOnlineUsers, { userIds: otherUserIds }) || {};
+  const heartbeatMutation = useMutation(api.presence.heartbeat);
+  
+  const setTypingMutation = useMutation(api.typing.setTyping);
+  const typingRecord = useRef<{ [convId: string]: number }>({});
+
+  const activeConvId = isAdmin && activeChatUser 
+    ? `SUPPORT-${activeChatUser}` 
+    : !isAdmin 
+      ? `SUPPORT-${userId}` 
+      : null;
+
+  const typingUsers = useQuery(
+    api.typing.getActiveTyping,
+    isOpen && activeConvId && userId
+      ? { conversationId: activeConvId, currentUserId: userId }
+      : "skip"
+  ) || [];
+
   // ── Effects ───────────────────────────────────────────────────────────────
+
+  // Heartbeat
+  useEffect(() => {
+    if (!userId || !isOpen) return;
+    const ping = () => heartbeatMutation({ userId }).catch(() => {});
+    ping();
+    const interval = setInterval(ping, 30000);
+    return () => clearInterval(interval);
+  }, [userId, isOpen, heartbeatMutation]);
 
   // Close on click outside
   useEffect(() => {
@@ -131,6 +166,10 @@ export function SupportChatWidget() {
     setNewMessage('');
 
     try {
+      if (activeConvId) {
+          setTypingMutation({ conversationId: activeConvId, userId, isTyping: false }).catch(() => {});
+      }
+
       await sendMessage({
         content,
         senderId: isAdmin ? ADMIN_ID : userId,
@@ -141,7 +180,26 @@ export function SupportChatWidget() {
       toast.error('Failed to send message');
       setNewMessage(content);
     }
-  }, [newMessage, userId, isAdmin, activeChatUser, sendMessage]);
+  }, [newMessage, userId, isAdmin, activeChatUser, sendMessage, activeConvId, setTypingMutation]);
+
+  const handleTyping = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewMessage(e.target.value);
+    
+    if (!activeConvId || !userId) return;
+
+    if (e.target.value.trim() === '') {
+        setTypingMutation({ conversationId: activeConvId, userId, isTyping: false });
+        return;
+    }
+
+    const now = Date.now();
+    const lastTyped = typingRecord.current[activeConvId] || 0;
+    
+    if (now - lastTyped > 2500) {
+      typingRecord.current[activeConvId] = now;
+      setTypingMutation({ conversationId: activeConvId, userId, isTyping: true });
+    }
+  }, [activeConvId, setTypingMutation, userId]);
 
   const handleDragEnd = useCallback((_: any, info: PanInfo) => {
     if (Math.abs(info.offset.x) > DRAG_THRESHOLD || Math.abs(info.offset.y) > DRAG_THRESHOLD) {
@@ -224,14 +282,27 @@ export function SupportChatWidget() {
                       ? (activeChatUser ? selectedUserObj?.name : 'Support Inbox')
                       : 'Customer Support'}
                   </h3>
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-[10px] opacity-80 uppercase font-bold tracking-wider">
-                      {isAdmin && !activeChatUser
-                        ? `${adminConversations.length} Active Chats`
-                        : 'Online'}
-                    </span>
-                  </div>
+                  {typingUsers.length > 0 ? (
+                     <p className="text-[10px] text-emerald-400 animate-pulse font-bold tracking-wider uppercase">
+                        {isAdmin ? 'User is typing...' : 'Support is typing...'}
+                     </p>
+                  ) : (
+                    <div className="flex items-center gap-1.5">
+                      <div className={cn(
+                        "h-2 w-2 rounded-full",
+                        (!isAdmin && onlineStatusMap[ADMIN_ID]) || (isAdmin && activeChatUser && onlineStatusMap[activeChatUser]) 
+                         ? "bg-emerald-400 animate-pulse" 
+                         : isAdmin && !activeChatUser ? "bg-emerald-400" : "bg-slate-400"
+                      )} />
+                      <span className="text-[10px] opacity-80 uppercase font-bold tracking-wider">
+                        {isAdmin && !activeChatUser
+                          ? `${adminConversations.length} Active Chats`
+                          : (!isAdmin && onlineStatusMap[ADMIN_ID]) || (isAdmin && activeChatUser && onlineStatusMap[activeChatUser])
+                            ? 'Online'
+                            : 'Offline'}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
               <Button
@@ -294,6 +365,9 @@ export function SupportChatWidget() {
                           >
                             <div className="relative">
                               <UserAvatar user={conv.otherUser} className="h-10 w-10 border" />
+                              {onlineStatusMap[conv.otherUserId] && (
+                                <span className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 border-2 border-background rounded-full" />
+                              )}
                               {conv.unreadCount > 0 && (
                                 <div className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full border-2 border-background" aria-hidden="true" />
                               )}
@@ -362,7 +436,7 @@ export function SupportChatWidget() {
                       <Input
                         placeholder="Type a response..."
                         value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
+                        onChange={handleTyping}
                         className="bg-muted/30 border-transparent focus:bg-background focus:border-primary/20 transition-all rounded-full px-4"
                         aria-label="Message input"
                       />

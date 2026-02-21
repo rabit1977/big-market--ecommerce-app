@@ -183,6 +183,18 @@ export default defineSchema({
     .index("by_sender", ["senderId"])
     .index("by_conversation", ["senderId", "receiverId", "listingId"]),
 
+  // ─── REAL-TIME PRESENCE & TYPING ──────────────────────────────────────────────
+  presence: defineTable({
+    userId: v.string(),
+    updatedAt: v.number(),
+  }).index("by_user", ["userId"]),
+
+  typingIndicators: defineTable({
+    conversationId: v.string(), // We use string because virtual conversations might not have an ID yet, or we can use listingId/support
+    userId: v.string(),
+    updatedAt: v.number(),
+  }).index("by_conversation", ["conversationId"]),
+
   // ─── CONVERSATIONS ──────────────────────────────────────────────────────────
   conversations: defineTable({
     type: v.optional(v.string()),           // 'LISTING' | 'SUPPORT'
