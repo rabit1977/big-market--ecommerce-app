@@ -95,7 +95,12 @@ export const makeAdmin = mutation({
     if (users.length === 0) throw new Error(`No user found with email: ${args.email}`);
 
     for (const user of users) {
-        await ctx.db.patch(user._id, { role: "ADMIN" });
+        await ctx.db.patch(user._id, { 
+            role: "ADMIN",
+            accountStatus: "ACTIVE",
+            isVerified: true,
+            registrationComplete: true,
+        });
     }
     
     return { 
