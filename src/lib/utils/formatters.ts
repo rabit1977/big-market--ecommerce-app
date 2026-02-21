@@ -32,14 +32,14 @@ export const formatCurrency = (
   // We use standard delimiters and fixed symbol placement to avoid Intl variation
   
   const formattedNumber = amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  const currencyUpper = currency?.toUpperCase() || 'MKD';
 
-  if (currency === 'MKD') {
+  if (currencyUpper === 'MKD') {
       return `${formattedNumber} ден.`;
   }
 
-  if (currency === 'EUR') {
-      // User reported mismatch: €140,000 vs 140.000 €
-      // We will stick to a standard: Symbol + Space + Number with dot separators
+  if (currencyUpper === 'EUR') {
+      // Standard: Symbol + Number with dot separators (e.g., €140.000)
       return `€${formattedNumber}`;
   }
 
@@ -47,11 +47,11 @@ export const formatCurrency = (
   try {
     return new Intl.NumberFormat(locale, {
       style: 'currency',
-      currency,
+      currency: currencyUpper,
       maximumFractionDigits: 0,
     }).format(amount);
   } catch (e) {
-    return `${currency} ${formattedNumber}`;
+    return `${currencyUpper} ${formattedNumber}`;
   }
 };
 

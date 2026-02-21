@@ -6,10 +6,5 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 
-export const formatCurrency = (amount: number, currency: string = 'MKD') => {
-  return new Intl.NumberFormat('mk-MK', {
-    style: 'currency',
-    currency: currency,
-    maximumFractionDigits: 0,
-  }).format(amount);
-};
+export { formatCurrency } from "./utils/formatters";
+
