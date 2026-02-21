@@ -22,6 +22,7 @@ import type * as favorites from "../favorites.js";
 import type * as history from "../history.js";
 import type * as inquiries from "../inquiries.js";
 import type * as listings from "../listings.js";
+import type * as message_emails from "../message_emails.js";
 import type * as messages from "../messages.js";
 import type * as migrations from "../migrations.js";
 import type * as notifications from "../notifications.js";
@@ -59,6 +60,7 @@ declare const fullApi: ApiFromModules<{
   history: typeof history;
   inquiries: typeof inquiries;
   listings: typeof listings;
+  message_emails: typeof message_emails;
   messages: typeof messages;
   migrations: typeof migrations;
   notifications: typeof notifications;

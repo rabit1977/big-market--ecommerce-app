@@ -15,7 +15,7 @@ export async function sendMessageAction(data: {
       return { success: false, error: 'Unauthorized' };
     }
 
-    await convex.mutation(api.messages.send, {
+    await convex.action(api.message_emails.sendWithEmail, {
       content: data.content,
       listingId: data.listingId as any,
       senderId: session.user.id,

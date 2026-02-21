@@ -1,7 +1,8 @@
 'use client';
 
+import { PRICING } from "@/lib/constants/pricing";
 import { cn } from "@/lib/utils";
-import { BadgeCheck, Check, Crown, Eye, Megaphone, Rocket, Sparkles, Star, TrendingUp, Zap } from "lucide-react";
+import { BadgeCheck, Check, Crown, Eye, Rocket, Sparkles, Star, TrendingUp, Zap } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 
@@ -25,7 +26,7 @@ const plans = [
   },
   {
     name: "Pro",
-    price: "250",
+    price: PRICING.MEMBERSHIP.PRO.toString(),
     period: " MKD/year",
     description: "For regular sellers",
     icon: BadgeCheck,
@@ -45,7 +46,7 @@ const plans = [
   },
   {
     name: "Business",
-    price: "450",
+    price: PRICING.MEMBERSHIP.BUSINESS.toString(),
     period: " MKD/year",
     description: "For shops & agencies",
     icon: Crown,
@@ -70,8 +71,8 @@ const addOns = [
   {
     icon: TrendingUp,
     name: "Featured Listing",
-    description: "Pin your ad to the top of search results for 7 days",
-    price: "49 MKD",
+    description: "Pin your ad to the top of search results for 14 days",
+    price: `${PRICING.PROMOTIONS.TOP_POSITION} MKD`,
     color: "text-green-500",
     bg: "bg-green-500/10",
   },
@@ -79,7 +80,7 @@ const addOns = [
     icon: Star,
     name: "Highlight Ad",
     description: "Make your listing stand out with a highlighted border",
-    price: "29 MKD",
+    price: `${PRICING.PROMOTIONS.DAILY_BUMP} MKD`,
     color: "text-amber-500",
     bg: "bg-amber-500/10",
   },
@@ -92,10 +93,10 @@ const addOns = [
     bg: "bg-blue-500/10",
   },
   {
-    icon: Megaphone,
+    icon: Rocket,
     name: "Homepage Spotlight",
-    description: "Feature your listing on the homepage carousel for 3 days",
-    price: "99 MKD",
+    description: "Feature your listing on the homepage carousel for 14 days",
+    price: `${PRICING.PROMOTIONS.HOMEPAGE} MKD`,
     color: "text-primary",
     bg: "bg-primary/10",
   },

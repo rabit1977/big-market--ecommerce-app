@@ -100,7 +100,7 @@ export const send = mutation({
     }
 
     // 3. Insert Message
-    return await ctx.db.insert("messages", {
+    const messageId = await ctx.db.insert("messages", {
       content: args.content,
       listingId: args.listingId,
       senderId: args.senderId,
@@ -109,6 +109,36 @@ export const send = mutation({
       imageUrl: args.imageUrl,
       createdAt: Date.now(),
     });
+
+    // 4. Create Notification for Receiver
+    const sender = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.senderId))
+      .first();
+    
+    let listingTitle = "General Message";
+    if (args.listingId) {
+        const listing = await ctx.db.get(args.listingId);
+        if (listing) listingTitle = listing.title;
+    }
+
+    await ctx.db.insert("notifications", {
+        userId: args.receiverId,
+        type: "INQUIRY", // Use INQUIRY type so it gets the "Reply" button logic in UI
+        title: "New Message",
+        message: `${sender?.name || "A user"} sent you a message about "${listingTitle}"`,
+        isRead: false,
+        createdAt: Date.now(),
+        link: `/messages?listingId=${args.listingId || ""}`,
+        metadata: {
+            senderId: args.senderId,
+            senderName: sender?.name,
+            listingId: args.listingId,
+            listingTitle: listingTitle
+        }
+    });
+
+    return messageId;
   },
 });
 

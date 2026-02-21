@@ -1,4 +1,4 @@
-import { Crown, Eye, Megaphone, Star, Zap } from 'lucide-react';
+import { Crown, Eye, Megaphone, Rocket, Star, Zap } from 'lucide-react';
 
 interface PromotionIconProps {
   iconName?: string;
@@ -12,6 +12,7 @@ export function PromotionIcon({ iconName, className }: PromotionIconProps) {
     case 'Eye': return <Eye className={className} />;
     case 'Megaphone': return <Megaphone className={className} />;
     case 'Crown': return <Crown className={className} />;
+    case 'Rocket': return <Rocket className={className} />;
     default: return <Star className={className} />;
   }
 }

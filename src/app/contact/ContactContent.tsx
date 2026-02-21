@@ -131,7 +131,7 @@ export const ContactContent = () => {
                 message: formData.message,
             });
             
-            toast.success("Message sent successfully! Our team will contact you within 24 hours.");
+            toast.success("Email sent successfully! Our team will contact you within 24 hours.");
             setFormData(INITIAL_FORM_STATE);
             setErrors({});
             refreshCaptcha();
@@ -299,7 +299,7 @@ export const ContactContent = () => {
                     'Sending...'
                   ) : (
                     <>
-                      Send Message <Send className='ml-2 h-5 w-5' />
+                      Send Email <Send className='ml-2 h-5 w-5' />
                     </>
                   )}
                 </Button>

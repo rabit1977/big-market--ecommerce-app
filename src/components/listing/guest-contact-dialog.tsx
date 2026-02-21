@@ -98,14 +98,14 @@ export function GuestContactDialog({
 
             if (result && 'emailStatus' in result && result.emailStatus === 'failed') {
                  console.error("Email sending failed:", result);
-                 toast.warning(`Message saved, but email notification failed: ${result.reason}`);
+                 toast.warning(`Email saved, but notification failed: ${result.reason}`);
             }
 
             setIsSuccess(true);
-            toast.success("Message sent successfully!");
+            toast.success("Email sent successfully!");
         } catch (error) {
             console.error("Failed to send message", error);
-            toast.error("Failed to send message. Please try again.");
+            toast.error("Failed to send email. Please try again.");
         } finally {
             setIsSubmitting(false);
         }
@@ -144,10 +144,8 @@ export function GuestContactDialog({
                             )}
                         </DialogTitle>
                         <DialogDescription className="text-white/80 font-medium text-sm sm:text-base">
-                            {!isSuccess 
                                 ? <span>Inquiry about <strong className="text-white border-b border-white/30">{listingTitle}</strong></span> 
-                                : <span>Your message has been sent to the seller. check your email for updates.</span>
-                            }
+                                : <span>Your email has been sent to the seller. Check your inbox for updates.</span>
                         </DialogDescription>
                     </DialogHeader>
 
@@ -165,7 +163,7 @@ export function GuestContactDialog({
                             <CheckCircle2 className="w-10 h-10 text-green-500" />
                         </div>
                         <div className="space-y-2">
-                            <h3 className="text-xl font-bold text-foreground">Message Sent Successfully!</h3>
+                            <h3 className="text-xl font-bold text-foreground">Email Sent Successfully!</h3>
                             <p className="text-muted-foreground text-sm max-w-[280px] mx-auto">
                                 The seller has been notified via email. They will reply directly to your email address.
                             </p>
@@ -276,7 +274,7 @@ export function GuestContactDialog({
                                         </span>
                                     ) : (
                                         <span className="flex items-center gap-2">
-                                            Send Message
+                                            Send Email
                                             <Send className="w-5 h-5" />
                                         </span>
                                     )}

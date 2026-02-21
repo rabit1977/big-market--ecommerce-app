@@ -5,10 +5,6 @@ import { cn } from '@/lib/utils';
 import { Inbox } from 'lucide-react';
 import { NotificationItem } from './NotificationItem';
 
-// ============================================
-// TYPES
-// ============================================
-
 export interface NotificationListProps {
   notifications: NotificationWithMeta[];
   onMarkAsRead?: (id: string) => Promise<void>;
@@ -18,10 +14,6 @@ export interface NotificationListProps {
   emptyMessage?: string;
   showEmptyIcon?: boolean;
 }
-
-// ============================================
-// COMPONENT
-// ============================================
 
 export function NotificationList({
   notifications,
@@ -34,37 +26,36 @@ export function NotificationList({
 }: NotificationListProps) {
   if (notifications.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
+      <div className="flex flex-col items-center justify-center py-10 px-4 text-center gap-3">
         {showEmptyIcon && (
-          <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mb-3">
-            <Inbox className="w-7 h-7 text-muted-foreground" />
+          <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+            <Inbox className="w-5 h-5 text-muted-foreground/50" />
           </div>
         )}
-        <p className="text-sm text-muted-foreground">{emptyMessage}</p>
+        <p className="text-[13px] text-muted-foreground">{emptyMessage}</p>
       </div>
     );
   }
 
   return (
-    <div className={cn('overflow-y-auto', maxHeight)}>
-      <div className="space-y-1 p-1">
-        {notifications.map((notification) => (
-          <NotificationItem
-            key={notification.id}
-            id={notification.id}
-            type={notification.type}
-            title={notification.title}
-            message={notification.message}
-            link={notification.link}
-            isRead={notification.isRead}
-            createdAt={notification.createdAt}
-            metadata={notification.metadata}
-            onMarkAsRead={onMarkAsRead}
-            onDelete={onDelete}
-            compact={compact}
-          />
-        ))}
-      </div>
+    <div className={cn('divide-y divide-border/30', !compact && 'px-1')}>
+      {notifications.map((n) => (
+        <NotificationItem
+          key={n.id}
+          id={n.id}
+          type={n.type}
+          title={n.title}
+          message={n.message}
+          link={n.link}
+          isRead={n.isRead}
+          createdAt={n.createdAt}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          metadata={n.metadata as any}
+          onMarkAsRead={onMarkAsRead}
+          onDelete={onDelete}
+          compact={compact}
+        />
+      ))}
     </div>
   );
 }

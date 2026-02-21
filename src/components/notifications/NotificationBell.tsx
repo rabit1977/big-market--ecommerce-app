@@ -9,7 +9,12 @@ import {
 } from '@/actions/notification-actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { NotificationWithMeta } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -56,7 +61,7 @@ export function NotificationBell({
 
     setIsLoading(true);
     try {
-      const result = await getNotificationsAction({ limit: 5 });
+      const result = await getNotificationsAction({ limit: 10 });
       if (!controller.signal.aborted) {
         setNotifications(result.notifications);
         setUnreadCount(result.unreadCount);
@@ -197,48 +202,61 @@ export function NotificationBell({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-[360px] p-0 rounded-2xl shadow-xl border-border/50" align="end" sideOffset={10}>
-        <div className="flex items-center justify-between px-4 py-3 border-b bg-muted/20">
-          <h3 className="font-bold text-sm">Notifications</h3>
+      <PopoverContent className="w-[380px] p-0 rounded-2xl shadow-2xl border-border/50 overflow-hidden flex flex-col h-auto max-h-[calc(100vh-120px)]" align="end" sideOffset={10}>
+        <div className="flex items-center justify-between px-4 py-3.5 border-b bg-muted/30 shrink-0">
+          <div className="flex items-center gap-2">
+            <h3 className="font-black text-[13px] uppercase tracking-tight text-foreground">Notifications</h3>
+            {unreadCount > 0 && <span className="bg-primary text-white text-[10px] font-black px-1.5 py-0.5 rounded-full">{unreadCount} New</span>}
+          </div>
           {unreadCount > 0 && (
             <Button
               variant="ghost"
               size="sm"
               onClick={handleMarkAllAsRead}
               disabled={isPending}
-              className="h-7 text-xs text-primary hover:text-primary hover:bg-primary/10 px-2"
+              className="h-7 text-[11px] font-bold text-primary hover:text-primary hover:bg-primary/10 px-2 rounded-lg"
             >
               {isPending
                 ? <Loader2 className="w-3 h-3 animate-spin mr-1" />
-                : <CheckCheck className="w-3 h-3 mr-1" />}
+                : <CheckCheck className="w-3.5 h-3.5 mr-1" />}
               Mark all read
             </Button>
           )}
         </div>
 
-        {isLoading && notifications.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-muted-foreground gap-2">
-            <Loader2 className="w-6 h-6 animate-spin" />
-            <span className="text-xs">Loading updates...</span>
-          </div>
-        ) : (
-          <NotificationList
-            notifications={notifications}
-            onMarkAsRead={handleMarkAsRead}
-            onDelete={handleDelete}
-            compact
-            maxHeight="max-h-[320px]"
-            emptyMessage="You're all caught up!"
-          />
-        )}
+        <ScrollArea className="flex-1 overflow-y-auto">
+          {isLoading && notifications.length === 0 ? (
+            <div className="flex flex-col items-center justify-center p-10 text-muted-foreground gap-3">
+              <div className="relative">
+                <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full" />
+                <Loader2 className="w-6 h-6 animate-spin text-primary relative" />
+              </div>
+              <span className="text-[11px] font-bold uppercase tracking-wider opacity-60">Checking for updates...</span>
+            </div>
+          ) : (
+            <NotificationList
+              notifications={notifications}
+              onMarkAsRead={handleMarkAsRead}
+              onDelete={handleDelete}
+              compact
+              emptyMessage="You're all caught up!"
+            />
+          )}
+        </ScrollArea>
 
-        <div className="border-t p-2 bg-muted/20">
+        <div className="border-t p-3 bg-muted/30 shrink-0">
           <Link
             href="/account/notifications"
             onClick={() => setIsOpen(false)}
-            className="block w-full text-center py-2 text-xs font-semibold text-primary hover:bg-primary/5 rounded-lg transition-colors uppercase tracking-wider"
+            className="group flex items-center justify-center gap-2 w-full text-center py-2.5 text-[11px] font-black text-primary bg-primary/5 hover:bg-primary/10 border border-primary/20 rounded-xl transition-all uppercase tracking-widest"
           >
             View all notifications
+            <motion.div
+               animate={{ x: [0, 3, 0] }}
+               transition={{ repeat: Infinity, duration: 1.5 }}
+            >
+                <div className="w-1 h-1 bg-primary rounded-full" />
+            </motion.div>
           </Link>
         </div>
       </PopoverContent>

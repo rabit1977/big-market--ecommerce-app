@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PRICING } from '@/lib/constants/pricing';
+import { useMutation } from 'convex/react';
 import { motion } from 'framer-motion';
 import {
     BadgeCheck,
@@ -22,8 +24,47 @@ import {
     Store
 } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { api } from '../../../../convex/_generated/api';
 
 export default function PaymentsBillingPage() {
+    const submitContact = useMutation(api.contact.submit);
+    const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        subject: 'Other',
+        message: ''
+    });
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            await submitContact({
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone || undefined,
+                subject: formData.subject,
+                message: formData.message,
+            });
+            toast.success("Email sent successfully! We will get back to you soon.");
+            setFormData({ name: '', email: '', phone: '', subject: 'Other', message: '' });
+        } catch (err) {
+            toast.error("Failed to send email. Please try again.");
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
     return (
         <div className="min-h-screen bg-background pb-20">
             {/* Header */}
@@ -256,39 +297,39 @@ export default function PaymentsBillingPage() {
                         {/* Contact Form Section */}
                         <section id="contact-form" className="p-8 md:p-10 rounded-[2.5rem] bg-background border border-border/50 shadow-sm">
                             <h2 className="text-2xl font-black mb-8">Direct Contact / Директен Контакт</h2>
-                            <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit}>
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold px-1">Вашето Име / Your Name</label>
-                                    <input type="text" className="w-full rounded-2xl border border-border bg-muted/30 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" />
+                                    <input type="text" name="name" value={formData.name} onChange={handleChange} required className="w-full rounded-2xl border border-border bg-muted/30 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold px-1">Вашиот Е-Маил / Your Email</label>
-                                    <input type="email" className="w-full rounded-2xl border border-border bg-muted/30 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" />
+                                    <input type="email" name="email" value={formData.email} onChange={handleChange} required className="w-full rounded-2xl border border-border bg-muted/30 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold px-1">Предмет / Subject</label>
-                                    <select className="w-full rounded-2xl border border-border bg-muted/30 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all">
-                                        <option>Општо прашање</option>
-                                        <option>Техничка поддршка</option>
-                                        <option>Плаќање и фактури</option>
-                                        <option>Пријава на злоупотреба</option>
+                                    <select name="subject" value={formData.subject} onChange={handleChange} required className="w-full rounded-2xl border border-border bg-muted/30 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all">
+                                        <option value="General">Општо прашање</option>
+                                        <option value="Support">Техничка поддршка</option>
+                                        <option value="Billing">Плаќање и фактури</option>
+                                        <option value="Abuse">Пријава на злоупотреба</option>
                                     </select>
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-bold px-1">Вашиот Телефон / Your Phone</label>
-                                    <input type="tel" className="w-full rounded-2xl border border-border bg-muted/30 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" />
+                                    <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full rounded-2xl border border-border bg-muted/30 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" />
                                 </div>
                                 <div className="md:col-span-2 space-y-2">
                                     <label className="text-sm font-bold px-1">Текст на пораката / Message</label>
-                                    <textarea rows={5} className="w-full rounded-2xl border border-border bg-muted/30 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none"></textarea>
+                                    <textarea name="message" value={formData.message} onChange={handleChange} required rows={5} className="w-full rounded-2xl border border-border bg-muted/30 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none"></textarea>
                                 </div>
                                 <div className="md:col-span-2 space-y-4">
                                     <div className="flex items-center gap-4 p-4 rounded-2xl bg-muted/50 border border-border/50 w-fit">
                                         <span className="font-bold text-sm">Внесете го точниот резултат / Security Check: <span className="text-primary">15 + 7 = ?</span></span>
                                         <input type="text" className="w-16 rounded-xl border border-border bg-background px-3 py-2 text-center font-bold focus:outline-none focus:ring-2 focus:ring-primary/20" />
                                     </div>
-                                    <Button className="w-full md:w-auto px-12 py-6 rounded-2xl font-black text-lg shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
-                                        Испрати Порака / Send Message
+                                    <Button type="submit" disabled={loading} className="w-full md:w-auto px-12 py-6 rounded-2xl font-black text-lg shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+                                        {loading ? 'Sending...' : 'Испрати Порака / Send Email'}
                                     </Button>
                                 </div>
                             </form>
@@ -310,7 +351,7 @@ export default function PaymentsBillingPage() {
                             </CardHeader>
                             <CardContent className="pt-6">
                                 <div className="flex items-baseline gap-1 mb-6">
-                                    <span className="text-5xl font-black">490</span>
+                                    <span className="text-5xl font-black">{PRICING.MEMBERSHIP.PRO}</span>
                                     <span className="text-lg font-bold text-muted-foreground">MKD/year</span>
                                     <span className="text-xs text-muted-foreground ml-1 font-semibold underline underline-offset-4 decoration-primary/30">+ VAT</span>
                                 </div>

@@ -40,6 +40,7 @@ export async function getNotificationsAction(
         skip: (page - 1) * limit
     });
 
+
     const unreadCount = await convex.query(api.notifications.getUnreadCount, { userId: user.id });
 
     const totalPages = Math.ceil(totalCount / limit);

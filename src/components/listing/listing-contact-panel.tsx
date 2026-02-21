@@ -4,24 +4,24 @@ import { sendMessageAction } from '@/actions/message-actions';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
 } from '@/components/ui/tooltip';
 import { useFavorites } from '@/lib/context/favorites-context';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { formatPrice } from '@/lib/utils/formatters';
 import {
-    AlertTriangle,
-    CheckCircle,
-    Heart,
-    Mail,
-    MapPin,
-    Phone,
-    Shield,
-    User
+  AlertTriangle,
+  CheckCircle,
+  Heart,
+  Mail,
+  MapPin,
+  Phone,
+  Shield,
+  User
 } from 'lucide-react';
 import { useMemo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
@@ -80,11 +80,11 @@ export function ListingContactPanel({
         });
         
         if (result.success) {
-            toast.success("Message sent!");
+            toast.success("Email sent!");
             // Redirect to messages page to see the new conversation
             window.location.href = `/messages?listingId=${listing._id}&newItem=true`;
         } else {
-            toast.error(String(result.error || "Failed to send message"));
+            toast.error(String(result.error || "Failed to send email"));
         }
     });
   };
@@ -197,7 +197,7 @@ export function ListingContactPanel({
               className='w-full h-12 md:h-14 text-base font-bold rounded-2xl border-2'
             >
               <Mail className='mr-3 h-4 w-4' />
-              Send Message
+              Send Email
             </Button>
           </>
         )}

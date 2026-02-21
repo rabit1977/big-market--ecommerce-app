@@ -40,7 +40,7 @@ export default function PrivacyPage() {
 
       try {
           await submitContact(formData);
-          toast.success("Message sent successfully! We will get back to you soon.");
+          toast.success("Email sent successfully! We will get back to you soon.");
           setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
       } catch (err) {
           toast.error("Failed to send message. Please try again.");
@@ -262,7 +262,7 @@ export default function PrivacyPage() {
 
                     <div className="pt-2">
                       <Button type="submit" disabled={loading} className="w-full md:w-auto font-bold px-8">
-                        {loading ? 'Sending...' : 'Send Message'}
+                        {loading ? 'Sending...' : 'Send Email'}
                       </Button>
                     </div>
                   </form>

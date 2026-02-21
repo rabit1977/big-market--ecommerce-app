@@ -114,7 +114,13 @@ export interface NotificationWithMeta {
   link: string | null;
   isRead: boolean;
   readAt: Date | null;
-  metadata?: unknown;
+  metadata?: {
+    guestName?: string;
+    guestEmail?: string;
+    listingTitle?: string;
+    listingId?: string;
+    [key: string]: unknown;
+  };
   createdAt: Date;
 }
 

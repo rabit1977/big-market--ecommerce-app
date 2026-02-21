@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { PRICING } from '@/lib/constants/pricing';
 import { getPromotionConfig } from '@/lib/constants/promotions';
 import { useFavorites } from '@/lib/context/favorites-context';
 import { ListingWithRelations } from '@/lib/types/listing';
@@ -245,7 +246,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                                                 Dear user, you have <span className="font-black text-primary text-base">{renewalStats?.remainingMonthly}</span> times left this month to renew your ads.
                                             </div>
                                             <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider px-1">
-                                                Renewing will bump this ad to the top of the search results.
+                                                Renew this listing for another 30 days for {PRICING.RENEWAL} MKD.
                                             </p>
                                         </>
                                     )}

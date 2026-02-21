@@ -27,8 +27,8 @@ export const store = internalMutation({
         await ctx.db.insert("notifications", {
             userId: args.sellerId,
             type: "INQUIRY",
-            title: "New Guest Inquiry",
-            message: `${args.guestName} sent a message about "${listing.title}"`,
+            title: "New Email Inquiry",
+            message: `${args.guestName} sent an email about "${listing.title}"`,
             isRead: false,
             createdAt: Date.now(),
             link: `/listings/${args.listingId}`,
@@ -109,13 +109,13 @@ export const submit = action({
         const { data, error } = await resend.emails.send({
             from: 'Marketplace <onboarding@resend.dev>',
             to: seller.email,
-            subject: `New Inquiry: ${listing.title}`,
+            subject: `New Email Inquiry: ${listing.title}`,
             html: `
                 <!DOCTYPE html>
                 <html>
                 <body style="margin: 0; padding: 0; background-color: #f4f4f5; font-family: sans-serif;">
                     <div style="padding: 20px; background-color: #ffffff; border-radius: 8px; margin: 20px;">
-                        <h2>New Inquiry for "${listing.title}"</h2>
+                        <h2>New Email Inquiry for "${listing.title}"</h2>
                         <p><strong>From:</strong> ${args.guestName} (${args.guestEmail})</p>
                         <p><strong>Message:</strong></p>
                         <div style="padding: 15px; background-color: #f8fafc; border-left: 4px solid #18181b;">

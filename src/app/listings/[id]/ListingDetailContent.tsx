@@ -687,7 +687,7 @@ const ContactButton = memo(function ContactButton({
         trigger={
           <Button className={cls}>
             <MessageSquare className={large ? 'mr-2 h-6 w-6 group-hover:scale-110 transition-transform' : 'w-4 h-4'} />
-            Send Message
+            Send Email
           </Button>
         }
       />
@@ -699,7 +699,7 @@ const ContactButton = memo(function ContactButton({
       <Button asChild className={cls}>
         <Link href={`/messages?listingId=${listingId}`} onClick={onContact}>
           <MessageSquare className="mr-2 h-6 w-6 group-hover:scale-110 transition-transform" />
-          Send Message
+          Send Email 
         </Link>
       </Button>
     );
@@ -708,7 +708,7 @@ const ContactButton = memo(function ContactButton({
   return (
     <Link href={`/messages?listingId=${listingId}`} onClick={onContact} className={cls}>
       <MessageSquare className="w-4 h-4" />
-      Send Message
+      Send Email
     </Link>
   );
 });
