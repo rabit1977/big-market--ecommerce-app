@@ -3,7 +3,6 @@
 import { UserAvatar } from '@/components/shared/user-avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { api } from '@/convex/_generated/api';
@@ -11,11 +10,11 @@ import { cn } from '@/lib/utils';
 import { useQuery } from 'convex/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-    BadgeCheck, BarChart,
-    ChevronRight, CreditCard, Crown,
-    Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
-    MessageSquare, Package, Pencil, Settings, ShieldCheck,
-    Star, Store, Trash, User, Wallet, X
+  BadgeCheck, BarChart,
+  ChevronRight, CreditCard, Crown,
+  Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
+  MessageSquare, Package, Pencil, Settings, ShieldCheck,
+  Star, Store, Trash, User, Wallet, X
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -312,57 +311,29 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
           </Tooltip>
         </TooltipProvider>
 
-        {/* Avatar + Hover Card */}
-        <HoverCard openDelay={200}>
-          <HoverCardTrigger asChild>
-            <button
-              onClick={handlePanelToggle}
-              className="relative ml-0.5 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-              aria-label="Open account menu"
-            >
-              <UserAvatar
-                user={user}
-                className="h-8 w-8 md:h-9 md:w-9 border-2 border-background shadow-sm hover:shadow-md transition-shadow"
-              />
-              <AnimatePresence>
-                {totalAlertCount > 0 && totalAlertCount > lastSeenAlertCount && !isPanelOpen && (
-                  <motion.span
-                    key="user-badge"
-                    initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                    className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background"
-                    aria-hidden="true"
-                  >
-                    {totalAlertCount > 9 ? '9+' : totalAlertCount}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </button>
-          </HoverCardTrigger>
-
-          <HoverCardContent align="end" className="w-80 p-0 overflow-hidden shadow-xl border-border/60">
-            <div className="bg-muted/50 p-3 border-b border-border/50 flex items-center justify-between">
-              <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">My Account</span>
-              {isAdmin && (
-                <Badge className="h-5 px-1.5 bg-primary/10 text-primary border-primary/20 text-[9px] font-black uppercase">Admin</Badge>
-              )}
-            </div>
-
-            <div className="p-1.5 space-y-0.5">
-               {accountItems.map(renderMenuItem)}
-               <div className="mx-2 my-1.5 h-px bg-border/40" />
-               {settingsItems.map(renderMenuItem)}
-               <div className="mx-2 my-1.5 h-px bg-border/40" />
-               {supportItems.map(renderMenuItem)}
-            </div>
-
-            <div className="p-2 border-t border-border/40 bg-muted/20">
-              <Button onClick={() => { handleLogout(); }} variant="ghost" size="sm" className="w-full h-8 text-[10px] font-bold text-destructive hover:text-destructive hover:bg-destructive/10">
-                <LogOut className="w-3.5 h-3.5 mr-2" />
-                Sign Out
-              </Button>
-            </div>
-          </HoverCardContent>
-        </HoverCard>
+        {/* Avatar — opens account panel on click */}
+        <button
+          onClick={handlePanelToggle}
+          className="relative ml-0.5 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          aria-label="Open account menu"
+        >
+          <UserAvatar
+            user={user}
+            className="h-8 w-8 md:h-9 md:w-9 border-2 border-background shadow-sm hover:shadow-md transition-shadow"
+          />
+          <AnimatePresence>
+            {totalAlertCount > 0 && !isPanelOpen && (
+              <motion.span
+                key="user-badge"
+                initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background"
+                aria-hidden="true"
+              >
+                {totalAlertCount > 9 ? '9+' : totalAlertCount}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </button>
       </div>
 
       {/* Account Panel — portaled */}

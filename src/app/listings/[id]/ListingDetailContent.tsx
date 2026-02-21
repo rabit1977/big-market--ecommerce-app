@@ -1,6 +1,5 @@
 'use client';
 
-import { GuestContactDialog } from '@/components/listing/guest-contact-dialog';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import {
@@ -23,6 +22,7 @@ import { useQuery as useConvexQuery, useMutation } from 'convex/react';
 import {
   BadgeCheck,
   ChevronLeft,
+  ChevronRight,
   Edit,
   Heart,
   History,
@@ -381,33 +381,15 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
               </div>
 
               {!isOwner && (
-                <>
-                  <div className="grid grid-cols-2 gap-3 pt-4">
-                    <ContactButton
-                      session={session}
-                      listingId={listing._id}
-                      userId={listing.userId}
-                      title={listing.title}
-                      onContact={() => handleContactClick('contact')}
-                    />
-                    {contactPhone && (
-                      <a
-                        href={`tel:${contactPhone}`}
-                        onClick={() => handleContactClick('call')}
-                        className="flex items-center justify-center gap-2 py-3.5 bg-green-500 text-white rounded-xl font-black text-sm uppercase tracking-tight shadow-lg shadow-green-200 active:scale-95 transition-all"
-                      >
-                        <Phone className="w-4 h-4" />
-                        Call Now
-                      </a>
-                    )}
-                  </div>
-                  {contactEmail && (
-                    <div className="mt-3 flex items-center justify-center p-3 bg-accent rounded-xl text-xs font-bold text-muted-foreground border border-border gap-2">
-                      <Mail className="w-4 h-4" />
-                      <span>Email: {contactEmail}</span>
-                    </div>
-                  )}
-                </>
+                <div className="pt-4 space-y-3">
+                  <ContactOptionsDialog
+                    session={session}
+                    listing={listing}
+                    contactPhone={contactPhone}
+                    contactEmail={contactEmail}
+                    onContact={() => handleContactClick('contact')}
+                  />
+                </div>
               )}
             </div>
 
@@ -487,48 +469,14 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
 
                 {!isOwner && (
                   <div className="space-y-3 pt-2">
-                    <ContactButton
+                    <ContactOptionsDialog
                       session={session}
-                      listingId={listing._id}
-                      userId={listing.userId}
-                      title={listing.title}
+                      listing={listing}
+                      contactPhone={contactPhone}
+                      contactEmail={contactEmail}
                       onContact={() => handleContactClick('contact')}
                       large
                     />
-
-                    <div className="flex w-full gap-2 overflow-hidden">
-                      {contactPhone && (
-                        <Button
-                          asChild
-                          variant="outline"
-                          className="flex-1 min-w-0 h-14 rounded-2xl border-2 border-border font-black text-sm lg:text-base text-foreground hover:bg-accent group"
-                        >
-                          <a
-                            href={`tel:${contactPhone}`}
-                            onClick={() => handleContactClick('call')}
-                            className="flex items-center justify-center truncate px-3"
-                          >
-                            <Phone className="shrink-0 mr-2 h-5 w-5 text-green-500" />
-                            <span className="truncate">{contactPhone}</span>
-                          </a>
-                        </Button>
-                      )}
-                      <Button
-                        asChild
-                        variant="outline"
-                        className="w-14 h-14 px-0 rounded-2xl border-2 border-border text-muted-foreground hover:bg-accent"
-                      >
-                        <a href={`sms:${contactPhone ?? ''}`} aria-label="Send SMS">
-                          <MessageSquare className="h-6 w-6" />
-                        </a>
-                      </Button>
-                    </div>
-
-                    {contactEmail && (
-                      <div className="flex items-center justify-center p-3 bg-muted rounded-xl text-xs font-bold text-muted-foreground border border-border gap-2">
-                        <span>Email: {contactEmail}</span>
-                      </div>
-                    )}
                   </div>
                 )}
 
@@ -655,61 +603,144 @@ const SpecsColumn = memo(function SpecsColumn({
 });
 
 /**
- * ContactButton — extracted to avoid inline ternary duplication.
- * Used on both mobile and desktop with different sizes.
+ * ContactOptionsDialog — opens a popup with direct contact options:
+ *   • Call (tel:) and SMS (sms:) — if phone available
+ *   • Email (mailto:) — if email available
+ *   • Chat with Seller — only for signed-in users
  */
-const ContactButton = memo(function ContactButton({
+const ContactOptionsDialog = memo(function ContactOptionsDialog({
   session,
-  listingId,
-  userId,
-  title,
+  listing,
+  contactPhone,
+  contactEmail,
   onContact,
   large = false,
 }: {
   session: any;
-  listingId: string;
-  userId: string;
-  title: string;
+  listing: any;
+  contactPhone?: string | null;
+  contactEmail?: string | null;
   onContact: () => void;
   large?: boolean;
 }) {
-  const cls = large
-    ? 'w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-lg uppercase tracking-tight shadow-xl shadow-primary/20 group'
-    : 'flex items-center justify-center gap-2 py-3.5 bg-primary text-white rounded-xl font-black text-sm uppercase tracking-tight shadow-lg shadow-primary/20 active:scale-95 transition-all w-full';
+  const [open, setOpen] = useState(false);
 
-  if (!session?.user) {
-    return (
-      <GuestContactDialog
-        listingId={listingId}
-        sellerId={userId}
-        listingTitle={title}
-        onOpenChange={(open) => { if (open) onContact(); }}
-        trigger={
-          <Button className={cls}>
-            <MessageSquare className={large ? 'mr-2 h-6 w-6 group-hover:scale-110 transition-transform' : 'w-4 h-4'} />
-            Send Email
-          </Button>
-        }
-      />
-    );
-  }
+  const triggerCls = large
+    ? 'w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-lg uppercase tracking-tight shadow-xl shadow-primary/20 inline-flex items-center justify-center gap-2 cursor-pointer transition-all'
+    : 'flex items-center justify-center gap-2 py-3.5 bg-primary text-white rounded-xl font-black text-sm uppercase tracking-tight shadow-lg shadow-primary/20 active:scale-95 transition-all w-full cursor-pointer';
 
-  if (large) {
-    return (
-      <Button asChild className={cls}>
-        <Link href={`/messages?listingId=${listingId}`} onClick={onContact}>
-          <MessageSquare className="mr-2 h-6 w-6 group-hover:scale-110 transition-transform" />
-          Send Email 
-        </Link>
-      </Button>
-    );
-  }
+  const hasPhone = Boolean(contactPhone);
+  const hasEmail = Boolean(contactEmail);
+  const isLoggedIn = Boolean(session?.user);
 
   return (
-    <Link href={`/messages?listingId=${listingId}`} onClick={onContact} className={cls}>
-      <MessageSquare className="w-4 h-4" />
-      Send Email
-    </Link>
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <button
+          className={triggerCls}
+          onClick={() => { onContact(); setOpen(true); }}
+        >
+          <Phone className={large ? 'mr-2 h-6 w-6' : 'w-4 h-4'} />
+          Contact Seller
+        </button>
+      </AlertDialogTrigger>
+      <AlertDialogContent className="max-w-sm rounded-3xl p-0 overflow-hidden">
+        {/* Header */}
+        <div className="bg-primary/5 border-b border-border px-6 py-5">
+          <AlertDialogTitle className="text-lg font-black tracking-tight">
+            Contact Seller
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-xs text-muted-foreground mt-0.5">
+            Choose how you'd like to get in touch
+          </AlertDialogDescription>
+        </div>
+
+        {/* Options */}
+        <div className="px-5 py-4 space-y-2.5">
+          {/* Call */}
+          {hasPhone && (
+            <a
+              href={`tel:${contactPhone}`}
+              onClick={() => { setOpen(false); onContact(); }}
+              className="flex items-center gap-4 p-4 rounded-2xl border-2 border-border hover:border-green-500/50 hover:bg-green-500/5 transition-all group"
+            >
+              <div className="w-11 h-11 rounded-xl bg-green-500/10 flex items-center justify-center shrink-0 group-hover:bg-green-500/20 transition-colors">
+                <Phone className="w-5 h-5 text-green-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-black text-sm">Call</p>
+                <p className="text-xs text-muted-foreground font-mono truncate">{contactPhone}</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-green-500 transition-colors" />
+            </a>
+          )}
+
+          {/* SMS */}
+          {hasPhone && (
+            <a
+              href={`sms:${contactPhone}`}
+              onClick={() => { setOpen(false); onContact(); }}
+              className="flex items-center gap-4 p-4 rounded-2xl border-2 border-border hover:border-blue-500/50 hover:bg-blue-500/5 transition-all group"
+            >
+              <div className="w-11 h-11 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0 group-hover:bg-blue-500/20 transition-colors">
+                <MessageSquare className="w-5 h-5 text-blue-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-black text-sm">SMS</p>
+                <p className="text-xs text-muted-foreground font-mono truncate">{contactPhone}</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-blue-500 transition-colors" />
+            </a>
+          )}
+
+          {/* Email */}
+          {hasEmail && (
+            <a
+              href={`mailto:${contactEmail}?subject=${encodeURIComponent(`Inquiry about: ${listing.title}`)}`}
+              onClick={() => { setOpen(false); onContact(); }}
+              className="flex items-center gap-4 p-4 rounded-2xl border-2 border-border hover:border-orange-500/50 hover:bg-orange-500/5 transition-all group"
+            >
+              <div className="w-11 h-11 rounded-xl bg-orange-500/10 flex items-center justify-center shrink-0 group-hover:bg-orange-500/20 transition-colors">
+                <Mail className="w-5 h-5 text-orange-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-black text-sm">Email</p>
+                <p className="text-xs text-muted-foreground truncate">{contactEmail}</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-orange-500 transition-colors" />
+            </a>
+          )}
+
+          {/* Chat — signed-in users only */}
+          {isLoggedIn && (
+            <Link
+              href={`/messages?listingId=${listing._id}`}
+              onClick={() => { setOpen(false); onContact(); }}
+              className="flex items-center gap-4 p-4 rounded-2xl border-2 border-primary/30 hover:border-primary bg-primary/5 hover:bg-primary/10 transition-all group"
+            >
+              <div className="w-11 h-11 rounded-xl bg-primary/15 flex items-center justify-center shrink-0 group-hover:bg-primary/25 transition-colors">
+                <MessageSquare className="w-5 h-5 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-black text-sm text-primary">Chat with Seller</p>
+                <p className="text-xs text-muted-foreground">Internal message</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-primary/40 group-hover:text-primary transition-colors" />
+            </Link>
+          )}
+
+          {!hasPhone && !hasEmail && !isLoggedIn && (
+            <p className="text-sm text-muted-foreground text-center py-4">No contact details available</p>
+          )}
+        </div>
+
+        <div className="px-5 pb-5">
+          <AlertDialogCancel className="w-full rounded-2xl font-bold">
+            Cancel
+          </AlertDialogCancel>
+        </div>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 });
 

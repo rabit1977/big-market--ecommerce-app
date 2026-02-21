@@ -3,19 +3,19 @@
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import {
-    AlertCircle,
-    Bell,
-    CheckCheck,
-    ExternalLink,
-    Heart,
-    Mail,
-    MessageSquare,
-    Package,
-    RefreshCw,
-    Tag,
-    TrendingDown,
-    Truck,
-    X,
+  AlertCircle,
+  Bell,
+  CheckCheck,
+  ExternalLink,
+  Heart,
+  Mail,
+  MessageSquare,
+  Package,
+  RefreshCw,
+  Tag,
+  TrendingDown,
+  Truck,
+  X,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -101,7 +101,7 @@ export function NotificationItem({
   const config = typeConfigs[type] ?? typeConfigs.SYSTEM;
   const Icon = config.icon;
 
-  const isInquiry = type === 'INQUIRY' || message.includes('sent a message about');
+  const isInquiry = type === 'INQUIRY' || message.includes('sent a message about') || message.includes('sent an email about');
   const meta = metadata as Record<string, any> | null | undefined;
   
   // Robust metadata extraction
@@ -110,6 +110,15 @@ export function NotificationItem({
   const senderId = meta?.senderId || null;
   const listingTitle = meta?.listingTitle || 'Your Listing';
   const listingId = meta?.listingId || null;
+
+  // Debug: log what we have (remove after fix confirmed)
+  if (isInquiry) {
+    console.log('[NotificationItem] INQUIRY debug:', {
+      type, metadata, guestEmail, senderId, mailtoHref: isInquiry && guestEmail
+        ? `mailto:${guestEmail}`
+        : null
+    });
+  }
 
   // Use mailto link for external guest emails
   const mailtoHref = isInquiry && guestEmail
@@ -224,16 +233,14 @@ export function NotificationItem({
                Reply
              </Link>
           ) : isInquiry && mailtoHref ? (
-            /* External Reply — guests */
+            /* External Reply — guests: use a plain <a> so the browser handles
+               mailto: natively without going through the Next.js router */
             <a
               href={mailtoHref}
-              onClick={(e) => { 
-                e.stopPropagation(); 
-                markRead(); 
-              }}
+              onClick={(e) => { e.stopPropagation(); markRead(); }}
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-lg font-black uppercase tracking-widest transition-all',
-                'bg-primary text-white hover:bg-primary/90 shadow-md shadow-primary/20',
+                'bg-primary text-white hover:bg-primary/90 shadow-md shadow-primary/20 cursor-pointer',
                 compact ? 'h-5.5 px-2.5 text-[8.5px]' : 'h-8 px-4 text-[10px]',
               )}
             >

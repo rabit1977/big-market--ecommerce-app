@@ -1161,16 +1161,17 @@ export const getPublicProfile = query({
     const externalId = user.externalId;
     const internalId = user._id as string;
 
-    // Fetch listings using both IDs to pick up all items
+    // Use take() instead of collect() to avoid full table scans that can
+    // exceed Convex's 1s query time limit on larger datasets.
     const listingsByExternal = await ctx.db
       .query("listings")
       .withIndex("by_userId_status", (q) => q.eq("userId", externalId).eq("status", "ACTIVE"))
-      .collect();
+      .take(500);
 
     const listingsByInternal = await ctx.db
       .query("listings")
       .withIndex("by_userId_status", (q) => q.eq("userId", internalId).eq("status", "ACTIVE"))
-      .collect();
+      .take(500);
 
     // Merge and deduplicate
     const existingIds = new Set(listingsByExternal.map(l => l._id));

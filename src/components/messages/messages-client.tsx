@@ -10,25 +10,25 @@ import { useMutation, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
 import {
-  ArrowLeft,
-  Image as ImageIcon,
-  Loader2,
-  MessageSquare,
-  Search,
-  Send,
-  ShieldAlert
+    ArrowLeft,
+    Image as ImageIcon,
+    Loader2,
+    MessageSquare,
+    Search,
+    Send,
+    ShieldAlert
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import {
-  memo,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState
+    memo,
+    useCallback,
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+    useState
 } from 'react';
 import { toast } from 'sonner';
 import { api } from '../../../convex/_generated/api';
@@ -130,7 +130,7 @@ export function MessagesClient({
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   
   // 3. Refs
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const messagesAreaRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 4. Derived State (Optimization: Memoize active conversation)
@@ -213,11 +213,10 @@ export function MessagesClient({
     }
   }, [activeConversation, markReadMutation, userId]);
 
-  // Scroll Handling (Optimization: useLayoutEffect for immediate positioning)
+  // Scroll to bottom whenever messages update or conversation changes
   useLayoutEffect(() => {
-    if (messages.length > 0) {
-      scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
+    const el = messagesAreaRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [messages.length, activeConversation?._id]);
 
   // 7. Handlers (Optimization: useCallback)
@@ -410,7 +409,10 @@ export function MessagesClient({
               </div>
 
               {/* Messages Area */}
-              <ScrollArea className="flex-1 p-4 bg-slate-50/50 dark:bg-slate-900/20">
+              <div
+                ref={messagesAreaRef}
+                className="flex-1 overflow-y-auto p-4 bg-slate-50/50 dark:bg-slate-900/20"
+              >
                 <div className="flex flex-col justify-end min-h-full gap-4">
                   {messages.length === 0 && (
                     <div className="flex-1 flex items-center justify-center opacity-30">
@@ -428,9 +430,8 @@ export function MessagesClient({
                       otherUser={activeConversation.otherUser}
                     />
                   ))}
-                  <div ref={scrollRef} />
                 </div>
-              </ScrollArea>
+              </div>
 
               {/* Input Area */}
               <div className="p-3 border-t bg-background shrink-0">

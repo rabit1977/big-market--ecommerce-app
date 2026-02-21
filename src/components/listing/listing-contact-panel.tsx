@@ -1,6 +1,5 @@
 'use client';
 
-import { sendMessageAction } from '@/actions/message-actions';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -19,21 +18,24 @@ import {
   Heart,
   Mail,
   MapPin,
+  MessageSquare,
   Phone,
   Shield,
   User
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useMemo, useState, useTransition } from 'react';
-import { toast } from 'sonner';
 
 interface ListingContactPanelProps {
   listing: ListingWithRelations;
-  initialIsWished?: boolean;
+  isLoggedIn?: boolean;
 }
 
 export function ListingContactPanel({
   listing,
+  isLoggedIn = false,
 }: ListingContactPanelProps) {
+  const router = useRouter();
   const { isFavorite, toggleFavorite } = useFavorites();
   const isWished = isFavorite(listing._id);
   const [isPending, startTransition] = useTransition();
@@ -68,24 +70,16 @@ export function ListingContactPanel({
     toggleFavorite(listing._id);
   };
   
-  const handleSendMessage = () => {
-    const content = window.prompt("Enter your message to the seller:");
-    if (!content) return;
-    
-    startTransition(async () => {
-        const result = await sendMessageAction({
-            content,
-            listingId: listing._id,
-            receiverId: listing.userId
-        });
-        
-        if (result.success) {
-            toast.success("Email sent!");
-            // Redirect to messages page to see the new conversation
-            window.location.href = `/messages?listingId=${listing._id}&newItem=true`;
-        } else {
-            toast.error(String(result.error || "Failed to send email"));
-        }
+  const handleContact = () => {
+    startTransition(() => {
+      if (isLoggedIn) {
+        // Signed-in users → internal chat
+        router.push(`/messages?listingId=${listing._id}`);
+      } else {
+        // Guests → scroll to or trigger the inquiry dialog
+        // (GuestContactDialog is already present in ListingDetailContent)
+        router.push(`/contact?listingId=${listing._id}&sellerId=${listing.userId}`);
+      }
     });
   };
 
@@ -192,12 +186,15 @@ export function ListingContactPanel({
             <Button
               size='lg'
               variant='outline'
-              onClick={handleSendMessage}
+              onClick={handleContact}
               disabled={isPending}
               className='w-full h-12 md:h-14 text-base font-bold rounded-2xl border-2'
             >
-              <Mail className='mr-3 h-4 w-4' />
-              Send Email
+              {isLoggedIn ? (
+                <><MessageSquare className='mr-3 h-4 w-4' />Chat with Seller</>
+              ) : (
+                <><Mail className='mr-3 h-4 w-4' />Send Inquiry</>
+              )}
             </Button>
           </>
         )}
