@@ -23,17 +23,26 @@ export const getOnlineUsers = query({
   args: { userIds: v.array(v.string()) },
   handler: async (ctx, args) => {
      const cutoff = Date.now() - PRESENCE_TIMEOUT_MS;
-     
      const onlineMap: Record<string, boolean> = {};
-     
-     for (const userId of args.userIds) {
-        const presence = await ctx.db
-           .query("presence")
-           .withIndex("by_user", q => q.eq("userId", userId))
-           .first();
-           
-        onlineMap[userId] = !!presence && presence.updatedAt > cutoff;
-     }
+
+     // De-duplicate userIds
+     const uniqueUserIds = Array.from(new Set(args.userIds));
+
+     // Fetch all presence documents in parallel
+     const presenceDocs = await Promise.all(
+         uniqueUserIds.map(userId => 
+             ctx.db
+                 .query("presence")
+                 .withIndex("by_user", q => q.eq("userId", userId))
+                 .first()
+         )
+     );
+
+     // Map results
+     uniqueUserIds.forEach((userId, index) => {
+         const presence = presenceDocs[index];
+         onlineMap[userId] = !!presence && presence.updatedAt > cutoff;
+     });
 
      return onlineMap;
   }

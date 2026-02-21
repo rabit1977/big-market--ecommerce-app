@@ -98,19 +98,31 @@ export const getUserStats = query({
 
     if (listings.length === 0) return { dailyStats: [], totalFavorites: 0 };
 
-    const listingIds = listings.map((l) => l._id);
+    const listingIds = new Set(listings.map((l) => l._id));
 
-    const allEvents = await Promise.all(
-      listingIds.map((id) =>
-        ctx.db
-          .query("analytics")
-          .withIndex("by_listing", (q) => q.eq("listingId", id))
-          .filter((q) => q.gte(q.field("createdAt"), startTime))
-          .collect()
-      )
-    );
-
-    const events = allEvents.flat();
+    // To prevent timeout on users with many listings, we should not Promise.all hundreds of queries.
+    // Instead, since it's admin, query analytics by time and filter.
+    // Assuming we have an index on createdAt or we just use full table if small.
+    // Actually, Convex is fast at Promise.all if the index exists, but with 100+ items it hits timeouts.
+    // Let's chunk the requests if there are too many listings.
+    const listingIdArray = Array.from(listingIds);
+    let allEvents: any[] = [];
+    
+    // Process in batches of 20 to avoid exceeding 1s computation limit
+    const BATCH_SIZE = 20;
+    for (let i = 0; i < listingIdArray.length; i += BATCH_SIZE) {
+        const batch = listingIdArray.slice(i, i + BATCH_SIZE);
+        const batchEvents = await Promise.all(
+          batch.map((id) =>
+            ctx.db
+              .query("analytics")
+              .withIndex("by_listing", (q) => q.eq("listingId", id))
+              .filter((q) => q.gte(q.field("createdAt"), startTime))
+              .collect()
+          )
+        );
+        allEvents = allEvents.concat(batchEvents.flat());
+    }
 
     const dailyStats: Record<string, { date: string; views: number; clicks: number }> = {};
     for (let i = 0; i < days; i++) {
@@ -119,14 +131,18 @@ export const getUserStats = query({
       dailyStats[dateKey] = { date: dateKey, views: 0, clicks: 0 };
     }
 
-    const favorites = await Promise.all(
-      listingIds.map((id) =>
-        ctx.db.query("favorites").withIndex("by_listing", (q) => q.eq("listingId", id)).collect()
-      )
-    );
-    const totalFavorites = favorites.reduce((acc, favs) => acc + favs.length, 0);
+    let totalFavorites = 0;
+    for (let i = 0; i < listingIdArray.length; i += BATCH_SIZE) {
+        const batch = listingIdArray.slice(i, i + BATCH_SIZE);
+        const batchFavs = await Promise.all(
+          batch.map((id) =>
+            ctx.db.query("favorites").withIndex("by_listing", (q) => q.eq("listingId", id)).collect()
+          )
+        );
+        totalFavorites += batchFavs.reduce((acc, favs) => acc + favs.length, 0);
+    }
 
-    events.forEach((ev) => {
+    allEvents.forEach((ev) => {
       const dateKey = new Date(ev.createdAt).toISOString().split("T")[0];
       if (dailyStats[dateKey]) {
         if (ev.eventType === "view_listing") dailyStats[dateKey].views++;

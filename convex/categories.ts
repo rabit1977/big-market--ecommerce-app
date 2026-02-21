@@ -63,30 +63,36 @@ export const getWithCounts = query({
       .withIndex("by_isActive", (q) => q.eq("isActive", true))
       .collect();
 
-    // Aggregation for public view (usually specific to a parent, but this is a global "all counts")
-    // Note: This might be heavy if not optimized. 
-    // For admin usage, we prefer the getRoot/getChildren approach.
-    // Keeping this for backward compatibility if used elsewhere.
-    
-    // Optimized: Fetch active listings stats only? No, need all.
-    const activeListings = await ctx.db
-      .query("listings")
-      .withIndex("by_status", (q) => q.eq("status", "ACTIVE"))
-      .collect();
+    // Replaced full-table scan Memory mapping with targeted index counts.
+    // Fetch counts in parallel without loading actual documents.
+    const countsArray = await Promise.all(categories.map(async (cat) => {
+        let count = 0;
+        
+        // If parent ID is empty, this is a Parent Category
+        if (!cat.parentId) {
+             const items = await ctx.db
+                .query("listings")
+                .withIndex("by_status_category", (q: any) => q.eq("status", "ACTIVE").eq("category", cat.slug))
+                .collect();
+             count = items.length;
+        } else {
+             // Otherwise it is a Sub Category
+             const items = await ctx.db
+                .query("listings")
+                .withIndex("by_status_subCategory", (q: any) => q.eq("status", "ACTIVE").eq("subCategory", cat.slug))
+                .collect();
+             count = items.length;
+        }
 
-    const counts = new Map<string, number>();
-    for (const l of activeListings) {
-      if (l.category) {
-        counts.set(l.category, (counts.get(l.category) || 0) + 1);
-      }
-      if (l.subCategory && l.subCategory !== l.category) {
-        counts.set(l.subCategory, (counts.get(l.subCategory) || 0) + 1);
-      }
-    }
+        return { slug: cat.slug, count };
+    }));
+
+    const countMap = new Map<string, number>();
+    countsArray.forEach(c => countMap.set(c.slug, c.count));
 
     return categories.map(cat => ({
       ...cat,
-      count: counts.get(cat.slug) || 0
+      count: countMap.get(cat.slug) || 0
     }));
   }
 });
