@@ -20,20 +20,17 @@ export default async function AdminListingsPage({ searchParams }: AdminListingsP
   if (listingNumber) {
     const num = parseInt(listingNumber);
     if (!isNaN(num)) {
-       const exact = await convex.query(api.listings.getByListingNumber, { listingNumber: num });
-       if (exact) listings = [exact];
+       listings = await convex.query(api.admin.getListingsDetailed, { listingNumber: num });
     }
   } else if (isPromoted) {
-    listings = await convex.query(api.admin.getPromotedListings);
+    listings = await convex.query(api.admin.getListingsDetailed, { isPromoted: true });
   } else {
-    listings = await convex.query(api.listings.list, { status });
+    listings = await convex.query(api.admin.getListingsDetailed, { status });
   }
   
   const serializedListings = (listings || []).map((l: any) => ({
       ...l,
-      _id: l._id,
       id: l._id,
-      _creationTime: l._creationTime,
   }));
 
   return (

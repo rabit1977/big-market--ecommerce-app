@@ -2,32 +2,32 @@
 
 import { approveListingAction, deleteListingAction, rejectListingAction } from '@/actions/listing-actions';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from '@/components/ui/table';
 import { cn, formatCurrency } from '@/lib/utils';
 import { AlertCircle, Check, CheckCircle, Clock, Eye, MoreHorizontal, Pencil, Trash2, XCircle } from 'lucide-react';
@@ -125,6 +125,7 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                 <TableHead className="w-[80px] bg-card font-bold text-xs uppercase tracking-wider text-primary">Image</TableHead>
                 <TableHead className="min-w-[200px] bg-card font-bold text-xs uppercase tracking-wider text-primary">Listing Info</TableHead>
                 <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Status</TableHead>
+                <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Creator</TableHead>
                 <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Category</TableHead>
                 <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Price</TableHead>
                 {isPromotedView && (
@@ -166,7 +167,7 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                   </TableCell>
                   <TableCell className="font-medium">
                     <div className="flex flex-col gap-0.5">
-                        <Link href={`/listings/${listing._id}`} className="font-bold hover:text-primary transition-colors line-clamp-1" target="_blank">
+                        <Link href={`/listings/${listing._id}`} className="font-bold hover:text-primary transition-colors line-clamp-1">
                             {listing.title}
                         </Link>
                         <span className="text-[10px] text-muted-foreground font-mono uppercase tracking-tighter opacity-70">ID: {listing._id.slice(-8)}</span>
@@ -174,6 +175,12 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                   </TableCell>
                   <TableCell>
                     {getStatusBadge(listing.status)}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-col gap-0.5 min-w-[120px]">
+                        <span className="text-sm font-bold truncate">{listing.creatorName}</span>
+                        <span className="text-[10px] text-muted-foreground font-medium">{listing.creatorPhone}</span>
+                    </div>
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary" className="font-bold text-[10px] uppercase tracking-wider bg-muted text-muted-foreground border-border/50">{listing.category}</Badge>
@@ -231,8 +238,8 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48 rounded-xl shadow-xl border-border/50">
-                          <DropdownMenuItem asChild className="cursor-pointer">
-                            <Link href={`/listings/${listing._id}`} target="_blank" className="flex items-center">
+                           <DropdownMenuItem asChild className="cursor-pointer">
+                            <Link href={`/listings/${listing._id}`} className="flex items-center">
                               <Eye className="h-4 w-4 mr-2" />
                               View Listing
                             </Link>

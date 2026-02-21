@@ -90,12 +90,57 @@ export const getDailyDeltas = query({
   },
 });
 
-export const getPromotedListings = query({
-  args: {},
-  handler: async (ctx) => {
-    return await ctx.db
-      .query("listings")
-      .withIndex("by_promoted", (q) => q.eq("isPromoted", true))
-      .collect();
+export const getListingsDetailed = query({
+  args: {
+    status: v.optional(v.string()),
+    isPromoted: v.optional(v.boolean()),
+    listingNumber: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    let listings;
+    if (args.listingNumber) {
+        const exact = await ctx.db
+            .query("listings")
+            .withIndex("by_listingNumber", (q) => q.eq("listingNumber", args.listingNumber))
+            .first();
+        listings = exact ? [exact] : [];
+    } else if (args.isPromoted) {
+        listings = await ctx.db
+            .query("listings")
+            .withIndex("by_promoted", (q) => q.eq("isPromoted", true))
+            .collect();
+    } else {
+        const statusFilter = args.status || "ACTIVE";
+        if (statusFilter === "ALL") {
+            listings = await ctx.db
+                .query("listings")
+                .withIndex("by_createdAt")
+                .order("desc")
+                .collect();
+        } else {
+            listings = await ctx.db
+                .query("listings")
+                .withIndex("by_status", (q) => q.eq("status", statusFilter))
+                .order("desc")
+                .collect();
+        }
+    }
+
+    const detailedListings = await Promise.all(
+      listings.map(async (listing) => {
+        const user = await ctx.db
+          .query("users")
+          .withIndex("by_externalId", (q) => q.eq("externalId", listing.userId))
+          .unique();
+        
+        return {
+          ...listing,
+          creatorName: user?.name || user?.email || "Unknown",
+          creatorPhone: user?.phone || "No Phone",
+        };
+      })
+    );
+
+    return detailedListings;
   },
 });
