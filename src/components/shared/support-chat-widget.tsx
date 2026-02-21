@@ -186,7 +186,7 @@ export function SupportChatWidget() {
   return (
     <div
       ref={widgetRef}
-      className="fixed bottom-32 left-0 right-0 sm:left-auto sm:right-6 sm:bottom-6 z-[100] flex flex-col items-center sm:items-end pointer-events-none"
+      className="fixed bottom-18 left-0 right-0 sm:left-auto sm:right-6 z-[100] flex flex-col items-center sm:items-end pointer-events-none"
     >
       <AnimatePresence>
         {isOpen && (
@@ -405,7 +405,7 @@ export function SupportChatWidget() {
               onDragEnd={handleDragEnd}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={handleToggle}
+              onTap={handleToggle}
               aria-label="Open support chat"
               className="pointer-events-auto h-10 w-10 sm:h-11 sm:w-11 rounded-full shadow-2xl transition-colors duration-300 relative bg-primary text-white hover:bg-primary/90 flex items-center justify-center border border-primary/20"
             >
