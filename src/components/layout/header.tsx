@@ -1,5 +1,6 @@
 'use client';
 
+import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Plus, Store, Zap } from 'lucide-react';
@@ -81,7 +82,10 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
             <SearchBar />
           </div>
 
-          <NavActions initialWishlistCount={initialWishlistCount} />
+          <div className="flex items-center gap-1">
+            <NotificationBell />
+            <NavActions initialWishlistCount={initialWishlistCount} />
+          </div>
         </div>
 
         {/* ── DESKTOP NAV (≥ md) ── */}
@@ -127,6 +131,7 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
               </Link>
             </Button>
 
+            <NotificationBell />
             <NavActions initialWishlistCount={initialWishlistCount} />
           </div>
         </div>
@@ -136,3 +141,4 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
 };
 
 export { Header };
+

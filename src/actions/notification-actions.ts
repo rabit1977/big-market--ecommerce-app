@@ -46,14 +46,33 @@ export async function getNotificationsAction(
     const totalPages = Math.ceil(totalCount / limit);
 
     return {
-      notifications: (notifications || []).map(n => ({
+      notifications: (notifications || []).map(n => {
+        // Explicitly extract and normalize metadata to avoid Convex Id serialization issues.
+        // Convex-internal IDs (like listingId stored as Id<"listings">) can become opaque
+        // objects when passed through Next.js Server Action boundaries. Stringifying ensures
+        // the metadata values are plain serializable types.
+        const rawMeta = n.metadata as Record<string, unknown> | null | undefined;
+        const normalizedMetadata = rawMeta
+          ? {
+              guestEmail:   rawMeta.guestEmail   ? String(rawMeta.guestEmail)   : undefined,
+              guestName:    rawMeta.guestName     ? String(rawMeta.guestName)    : undefined,
+              listingTitle: rawMeta.listingTitle  ? String(rawMeta.listingTitle) : undefined,
+              listingId:    rawMeta.listingId     ? String(rawMeta.listingId)    : undefined,
+              senderId:     rawMeta.senderId      ? String(rawMeta.senderId)     : undefined,
+              senderName:   rawMeta.senderName    ? String(rawMeta.senderName)   : undefined,
+            }
+          : undefined;
+
+        return {
           ...n,
           id: n._id,
           link: n.link || null,
           readAt: n.readAt ? new Date(n.readAt) : null,
           createdAt: new Date(n.createdAt),
           type: n.type as any,
-      })),
+          metadata: normalizedMetadata,
+        };
+      }),
       totalCount,
       unreadCount,
       page,
