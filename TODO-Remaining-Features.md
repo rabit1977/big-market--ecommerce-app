@@ -21,14 +21,14 @@ This document tracks the final "Premium" features needed to make the classifieds
 - [x] Admin Actions: Buttons in the admin panel to "Dismiss Report" or "Resolve" based on the report.
 
 ## 3. Saved Searches & Auto-Email Alerts 🔔
-**Status:** Not Started
+**Status:** ✅ Complete
 **Description:** A user searches for specific criteria (e.g., "Honda Civic 2018 in Skopje"). They click a "Save Search" button. An automated Cron service checks for new matching listings and emails the user.
 **Components to Build:**
-- [ ] Frontend UI: "Save this Search" button on the search results page.
-- [ ] User Dashboard UI: A "Saved Searches" tab in the user dashboard to view, edit, or delete their saved searches.
-- [ ] Convex Mutations/Queries: Save search parameters (`query`, `filters`).
-- [ ] Convex Cron Job: A scheduled function (e.g., daily) that runs all saved searches against recent listings and triggers email alerts.
-- [ ] Email Integration: React Email / Resend template for "New listings matching your search".
+- [x] Frontend UI: "Save this Search" button on the search results page.
+- [x] User Dashboard UI: A "Saved Searches" tab in the user dashboard to view, edit, or delete their saved searches.
+- [x] Convex Mutations/Queries: Save search parameters (`query`, `filters`).
+- [x] Convex Cron Job: A scheduled function (e.g., daily) that runs all saved searches against recent listings and triggers email alerts.
+- [x] Email Integration: React Email / Resend template for "New listings matching your search".
 
 ## 4. Seller Reviews & Ratings (5-Star System) ⭐
 **Status:** Not Started

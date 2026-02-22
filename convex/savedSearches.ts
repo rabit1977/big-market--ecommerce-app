@@ -140,6 +140,7 @@ export const getActiveAlerts = query({
 });
 
 
+import { Resend } from "resend";
 import { api } from "./_generated/api";
 
 export const processDailyAlerts = action({
@@ -197,15 +198,76 @@ export const processDailyAlerts = action({
        }
 
        if (userMatches.length > 0) {
-           // Queue an email to the user (implemented via Resend action)
-           // For now, just generate a notification record so the user sees it in their dashboard
+           // Queue a notification to the user dashboard
            await ctx.runMutation(api.notifications.create, {
                userId,
                type: 'SYSTEM',
                title: 'New Matches for Your Saved Searches',
                message: `We found new listings matching your saved searches: ${userMatches.map(m => m.searchName).join(', ')}.`,
-               link: '/my-listings' // Or a dedicated alerts page
+               link: '/my-listings'
            });
+
+           // Fetch User Email to send an actual Resend action
+           try {
+             const user = await ctx.runQuery(api.users.getByExternalId, { externalId: userId });
+             
+             const resendApiKey = process.env.RESEND_API_KEY;
+             if (user && user.email && resendApiKey) {
+                const resend = new Resend(resendApiKey);
+
+                const htmlContent = `
+                  <!DOCTYPE html>
+                  <html>
+                  <body style="margin: 0; padding: 0; background-color: #f4f4f5; font-family: sans-serif;">
+                      <div style="max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #e4e4e7;">
+                          <div style="background-color: #18181b; padding: 20px; text-align: center;">
+                              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Daily Search Alerts 🚗</h1>
+                          </div>
+                          <div style="padding: 30px;">
+                              <p style="font-size: 16px; color: #3f3f46; margin-bottom: 20px;">Hi ${user.name || 'there'},</p>
+                              <p style="font-size: 16px; color: #3f3f46; margin-bottom: 30px;">Great news! We found new listings in the last 24 hours that match your saved searches.</p>
+                              
+                              <div style="background-color: #f8fafc; border-radius: 8px; padding: 20px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                                  <ul style="list-style-type: none; padding: 0; margin: 0;">
+                                      ${userMatches.map(match => `
+                                          <li style="margin-bottom: 15px; border-bottom: 1px solid #cbd5e1; padding-bottom: 15px;">
+                                              <strong style="color: #0f172a; font-size: 16px; display: block; margin-bottom: 5px;">${match.searchName}</strong>
+                                              <span style="color: #0ea5e9; font-weight: bold;">${match.count} new listings</span> found!
+                                              <br />
+                                              <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}${match.url}" style="display: inline-block; margin-top: 10px; color: #18181b; text-decoration: underline; font-weight: 500;">
+                                                  View Listings →
+                                              </a>
+                                          </li>
+                                      `).join('')}
+                                  </ul>
+                              </div>
+                              
+                              <center>
+                                  <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/my-listings" 
+                                     style="display: inline-block; padding: 14px 28px; background-color: #18181b; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                                      Manage My Alerts
+                                  </a>
+                              </center>
+                          </div>
+                          <div style="background-color: #f1f5f9; padding: 20px; text-align: center; border-top: 1px solid #e2e8f0;">
+                              <p style="font-size: 12px; color: #64748b; margin: 0;">You are receiving this because you enabled Daily Alerts for your saved searches.</p>
+                          </div>
+                      </div>
+                  </body>
+                  </html>
+                `;
+
+                await resend.emails.send({
+                    from: 'Marketplace Alerts <onboarding@resend.dev>',
+                    to: user.email,
+                    subject: `We found ${userMatches.reduce((acc, curr) => acc + curr.count, 0)} new listings for you!`,
+                    html: htmlContent,
+                });
+                console.log(`Sent daily alert email to ${user.email}`);
+             }
+           } catch (error) {
+              console.error("Failed to send alert email:", error);
+           }
        }
     }
   }

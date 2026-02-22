@@ -475,6 +475,19 @@ export const create = mutation({
         throw new Error(`Limit reached: You can only post up to ${limit} listings.`);
     }
 
+    if (user.role !== 'ADMIN') {
+        const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+        const recentListings = await ctx.db
+          .query("listings")
+          .withIndex("by_userId", (q) => q.eq("userId", args.userId))
+          .filter((q) => q.gt(q.field("createdAt"), oneDayAgo))
+          .collect();
+
+        if (recentListings.length >= 15) {
+            throw new Error("Daily limit reached: Due to anti-spam measures, you can only post up to 15 new listings per day.");
+        }
+    }
+
     const listingNumber = await getNextListingNumber(ctx);
 
     const listingId = await ctx.db.insert("listings", {

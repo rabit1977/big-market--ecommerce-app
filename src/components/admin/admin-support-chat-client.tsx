@@ -4,10 +4,9 @@ import { UserAvatar } from '@/components/shared/user-avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { cn } from '@/lib/utils';
 import { api } from '@/convex/_generated/api';
-import { useMutation, useQuery } from 'convex/react';
+import { cn } from '@/lib/utils';
+import { useMutation, usePaginatedQuery, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import { ArrowLeft, Image as ImageIcon, Search, Send, ShieldAlert } from 'lucide-react';
 import Image from 'next/image';
@@ -50,7 +49,11 @@ const ADMIN_ID = 'ADMIN' as const;
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function AdminSupportChatClient() {
-  const conversations = useQuery(api.messages.getSupportConversations) as Conversation[] | undefined;
+  const { results: conversations, status, loadMore } = usePaginatedQuery(
+    api.messages.getSupportConversations,
+    {},
+    { initialNumItems: 15 }
+  ) as { results: Conversation[], status: string, loadMore: (n: number) => void };
 
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [newMessage, setNewMessage] = useState('');
@@ -216,7 +219,7 @@ export function AdminSupportChatClient() {
           </div>
         </div>
 
-        <ScrollArea className="flex-1">
+        <div className="flex-1 overflow-y-auto overscroll-contain min-h-0">
           {filteredConversations.length === 0 ? (
             <p className="p-6 text-center text-muted-foreground text-sm">
               No support conversations found.
@@ -231,14 +234,21 @@ export function AdminSupportChatClient() {
                   onSelect={setSelectedConversation}
                 />
               ))}
+              {status === "CanLoadMore" && (
+                <div className="p-3 bg-card mt-1">
+                   <Button variant="outline" size="sm" className="w-full text-xs" onClick={() => loadMore(10)}>
+                      Load More
+                   </Button>
+                </div>
+              )}
             </div>
           )}
-        </ScrollArea>
+        </div>
       </div>
 
       {/* ── Chat Area ─────────────────────────────────────────────────────── */}
       <div className={cn(
-        'flex flex-col bg-background',
+        'flex flex-col bg-background min-h-0 overflow-hidden',
         !selectedConversation ? 'hidden lg:flex' : 'flex',
       )}>
         {selectedConversation ? (
@@ -262,7 +272,7 @@ export function AdminSupportChatClient() {
             </div>
 
             {/* Messages */}
-            <ScrollArea className="flex-1 p-4">
+            <div className="flex-1 overflow-y-auto p-4 bg-slate-50 dark:bg-slate-900/50 min-h-0">
               <div className="space-y-4">
                 {messages.map((msg) => (
                   <MessageBubble
@@ -273,7 +283,7 @@ export function AdminSupportChatClient() {
                 ))}
                 <div ref={messagesEndRef} />
               </div>
-            </ScrollArea>
+            </div>
 
             {/* Upload progress */}
             {uploadProgress !== null && (
@@ -384,20 +394,23 @@ const MessageBubble = memo(function MessageBubble({
         <UserAvatar user={otherUser} className="w-6 h-6 self-end mb-1 shrink-0" />
       )}
       <div className={cn(
-        'max-w-[80%] rounded-2xl px-4 py-2 text-sm shadow-sm',
+        'max-w-[80%] rounded-2xl px-4 py-2 text-sm shadow-sm border',
         isAdmin
-          ? 'bg-primary text-primary-foreground rounded-br-none'
-          : 'bg-muted text-foreground rounded-bl-none',
+          ? 'bg-primary text-primary-foreground border-primary/20 rounded-br-none'
+          : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-bl-none',
       )}>
         {msg.imageUrl && (
           <div className="relative aspect-video w-48 rounded-lg overflow-hidden mb-2">
             <Image src={msg.imageUrl} alt="Image attachment" fill className="object-cover" />
           </div>
         )}
-        <p className="whitespace-pre-wrap break-words">{msg.content}</p>
         <p className={cn(
-          'text-[9px] mt-1 text-right opacity-70',
-          isAdmin ? 'text-primary-foreground' : 'text-muted-foreground',
+          "whitespace-pre-wrap break-words leading-relaxed !m-0",
+          isAdmin ? "text-white font-medium" : "text-slate-900 dark:text-slate-100"
+        )}>{msg.content}</p>
+        <p className={cn(
+          'text-[9px] mt-1 !m-0',
+          isAdmin ? 'text-right text-white/80' : 'text-left text-slate-500 dark:text-slate-400',
         )}>
           {formatDistanceToNow(msg.createdAt, { addSuffix: true })}
         </p>

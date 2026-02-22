@@ -5,18 +5,18 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { api } from '@/convex/_generated/api';
 import { cn } from '@/lib/utils';
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation, usePaginatedQuery, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import { AnimatePresence, motion, PanInfo, useMotionValue } from 'framer-motion';
 import {
-  ArrowLeft,
-  Headset,
-  MessageCircle,
-  Search,
-  Send,
-  ShieldCheck,
-  User,
-  X
+    ArrowLeft,
+    Headset,
+    MessageCircle,
+    Search,
+    Send,
+    ShieldCheck,
+    User,
+    X
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
@@ -57,10 +57,13 @@ export function SupportChatWidget() {
       : 'skip'
   ) ?? [];
 
-  const adminConversations = useQuery(
+  const { results: adminConversationsResult } = usePaginatedQuery(
     api.messages.getSupportConversations,
-    isAdmin && isOpen ? {} : 'skip'
-  ) ?? [];
+    isAdmin && isOpen ? {} : 'skip',
+    { initialNumItems: 20 }
+  );
+  
+  const adminConversations = adminConversationsResult || [];
 
   const adminActiveMessages = useQuery(
     api.messages.getConversation,
@@ -81,9 +84,9 @@ export function SupportChatWidget() {
 
   // ── Typing & Presence Setup ───────────────────────────────────────────────
 
-  const otherUserIds = useMemo(() => {
+  const otherUserIds = useMemo<string[]>(() => {
     if (!isAdmin) return [ADMIN_ID];
-    return Array.from(new Set(adminConversations.map(c => c.otherUserId).filter(Boolean)));
+    return Array.from(new Set(adminConversations.map(c => c.otherUserId).filter((id): id is string => typeof id === 'string')));
   }, [isAdmin, adminConversations]);
 
   const onlineStatusMap = useQuery(

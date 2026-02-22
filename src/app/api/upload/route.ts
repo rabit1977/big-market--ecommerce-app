@@ -1,3 +1,4 @@
+import { auth } from '@/auth';
 import { v2 as cloudinary } from 'cloudinary';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -8,8 +9,33 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// Simple in-memory rate limiter to prevent bot abuse
+// Format: userId -> { count, resetAt }
+const uploadRates = new Map<string, { count: number; resetAt: number }>();
+
 export async function POST(req: NextRequest) {
   try {
+    const session = await auth();
+    if (!session || !session.user) {
+      return NextResponse.json({ success: false, error: 'Unauthorized: You must be logged in to upload images.' }, { status: 401 });
+    }
+
+    const userId = session.user.id;
+    if (userId) {
+      const now = Date.now();
+      const userRate = uploadRates.get(userId);
+      
+      if (userRate && now < userRate.resetAt) {
+        if (userRate.count >= 100) {
+          return NextResponse.json({ success: false, error: 'Upload rate limit exceeded. Please wait before uploading more images.' }, { status: 429 });
+        }
+        userRate.count++;
+      } else {
+        // Reset or initialize count: 100 uploads per 60 seconds
+        uploadRates.set(userId, { count: 1, resetAt: now + 60000 });
+      }
+    }
+
     const data = await req.formData();
     const file: File | null = data.get('file') as unknown as File;
 

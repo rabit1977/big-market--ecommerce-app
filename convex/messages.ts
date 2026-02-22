@@ -14,6 +14,20 @@ export const send = mutation({
     const type = args.type || (args.listingId ? "LISTING" : "SUPPORT");
     const participantIds = [args.senderId, args.receiverId].sort();
 
+    // 0. Anti-Spam / Rate Limiting (Skip for ADMIN)
+    if (args.senderId !== "ADMIN") {
+      const oneMinuteAgo = Date.now() - 60 * 1000;
+      const recentMessages = await ctx.db
+        .query("messages")
+        .withIndex("by_sender", (q) => q.eq("senderId", args.senderId))
+        .filter((q) => q.gt(q.field("createdAt"), oneMinuteAgo))
+        .collect();
+
+      if (recentMessages.length >= 30) {
+        throw new Error("You are sending messages too fast. Please wait a moment.");
+      }
+    }
+
     // 1. Check if conversation exists
     let existingConversation;
 
@@ -156,17 +170,19 @@ export const getConversation = query({
     userB: v.string(),
   },
   handler: async (ctx, args) => {
-    // 1. Fetch messages sent by A
+    // 1. Fetch messages sent by A (limit 100)
     const sentByA = await ctx.db
       .query("messages")
       .withIndex("by_sender", (q) => q.eq("senderId", args.userA))
-      .collect();
+      .order("desc")
+      .take(100);
 
-    // 2. Fetch messages sent by B
+    // 2. Fetch messages sent by B (limit 100)
     const sentByB = await ctx.db
       .query("messages")
       .withIndex("by_sender", (q) => q.eq("senderId", args.userB))
-      .collect();
+      .order("desc")
+      .take(100);
 
     // 3. Combine and filter in memory (fast since it's only two users' messages)
     // We treat 'null' and 'undefined' listingId as identical (Support Chats)
@@ -181,7 +197,8 @@ export const getConversation = query({
         
         return isMatch && isSameListing;
       })
-      .sort((a, b) => a.createdAt - b.createdAt);
+      .sort((a, b) => a.createdAt - b.createdAt)
+      .slice(-100); // Keep only the latest 100
   },
 });
 
@@ -368,19 +385,21 @@ export const getListingStats = query({
   },
 });
 
+import { paginationOptsValidator } from "convex/server";
+
 // Get all support conversations (ADMIN ONLY)
 export const getSupportConversations = query({
-  args: {},
-  handler: async (ctx) => {
-    const conversations = await ctx.db
+  args: { paginationOpts: paginationOptsValidator },
+  handler: async (ctx, args) => {
+    const paginated = await ctx.db
       .query("conversations")
       .withIndex("by_type", (q) => q.eq("type", "SUPPORT"))
       .order("desc")
-      .collect();
+      .paginate(args.paginationOpts);
 
     // Fetch details
     const conversationsWithDetails = await Promise.all(
-      conversations.map(async (conv) => {
+      paginated.page.map(async (conv) => {
         // Find the user who is NOT "ADMIN"
         const userId = conv.buyerId === "ADMIN" ? conv.sellerId : conv.buyerId;
 
@@ -407,7 +426,7 @@ export const getSupportConversations = query({
       })
     );
 
-    return conversationsWithDetails;
+    return { ...paginated, page: conversationsWithDetails };
   },
 });
 
