@@ -130,16 +130,7 @@ export function ListingsClient({
          </SheetContent>
       </Sheet>
 
-      {/* Floating Mobile Filter Button */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 lg:hidden">
-        <Button 
-          onClick={() => setIsMobileFiltersOpen(true)}
-          className="rounded-full shadow-2xl px-6 h-12 font-black tracking-tight uppercase border border-primary/20 backdrop-blur-md bg-primary text-white flex items-center gap-2 hover:scale-105 transition-transform"
-        >
-          <SlidersHorizontal className="h-4 w-4" />
-          Filters & Sort
-        </Button>
-      </div>
+      {/* Mobile Filter Button — inline at top of content, only on mobile */}
 
       {/* Sidebar Filters (Desktop Only) - Now wider! */}
       <aside className="hidden lg:block lg:sticky lg:top-24 h-fit">
@@ -148,6 +139,18 @@ export function ListingsClient({
 
       {/* Main Content */}
       <div className="space-y-6">
+        {/* Mobile inline Filters & Sort button */}
+        <div className="lg:hidden">
+          <Button
+            onClick={() => setIsMobileFiltersOpen(true)}
+            variant="outline"
+            className="w-full h-11 font-bold tracking-tight border-2 border-primary/30 text-primary hover:bg-primary/5 flex items-center justify-center gap-2 rounded-xl"
+          >
+            <SlidersHorizontal className="h-4 w-4" />
+            Filters & Sort
+          </Button>
+        </div>
+
         {/* Listings Grid - passes handler to open mobile filters */}
         {initialListings.length > 0 ? (
           <ListingGrid 

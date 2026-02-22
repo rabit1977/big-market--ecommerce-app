@@ -3,6 +3,8 @@ import { AnalyticsProvider } from '@/components/analytics-provider';
 import { FooterWrapper } from '@/components/layout/footer-wrapper';
 import { InstallPwaPrompt } from '@/components/layout/install-pwa-prompt';
 import { MobileSidebarWrapper } from '@/components/layout/mobile-sidebar-wrapper';
+import { ScrollToTop } from '@/components/layout/scroll-to-top';
+import { ThemeApplier } from '@/components/layout/theme-applier';
 import { CompareWidget } from '@/components/listing/compare-widget';
 import { SupportChatWidget } from '@/components/shared/support-chat-widget';
 import { Watermark } from '@/components/shared/watermark';
@@ -59,6 +61,8 @@ export default async function RootLayout({
       </head>
       <body className={inter.className}>
         <Providers initialFavorites={wishlist}>
+          <ThemeApplier />
+          <ScrollToTop />
           <Suspense fallback={null}>
             <AnalyticsProvider />
           </Suspense>

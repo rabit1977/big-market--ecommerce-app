@@ -150,7 +150,8 @@ export function Footer() {
                 {section.links.map((link) => (
                   <li key={link.href}>
                     <Link 
-                      href={link.href} 
+                      href={link.href}
+                      onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}
                       className="text-xs font-medium text-muted-foreground hover:text-primary transition-all duration-200 hover:pl-1 block w-fit"
                     >
                       {link.label}
