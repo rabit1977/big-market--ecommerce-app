@@ -45,14 +45,15 @@ export default function VerificationPage() {
         // Simulate sending SMS
         setTimeout(() => {
             toast.success(`Verification code sent to ${phoneNumber}`);
+            toast.info("Testing Mode: Use code 123456"); // Temporary for testing
             setStep('verify');
             setSubmitting(false);
         }, 800);
     };
 
     const handleVerifyCode = async () => {
-        if (verificationCode.length < 4) {
-            toast.error("Please enter the 4-6 digit code");
+        if (verificationCode !== '123456') {
+            toast.error("Please enter the correct testing code: 123456");
             return;
         }
         setSubmitting(true);
