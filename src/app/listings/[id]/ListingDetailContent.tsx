@@ -1,18 +1,20 @@
 'use client';
 
+import { ListingQA } from '@/components/listing/listing-qa';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { ReportModal } from '@/components/shared/report-modal';
 import { UserAvatar } from '@/components/shared/user-avatar';
+import { LeaveReviewModal } from '@/components/store/leave-review-modal';
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { api } from '@/convex/_generated/api';
@@ -21,20 +23,20 @@ import { useFavorites } from '@/lib/context/favorites-context';
 import { cn, formatCurrency } from '@/lib/utils';
 import { useQuery as useConvexQuery, useMutation } from 'convex/react';
 import {
-    BadgeCheck,
-    ChevronLeft,
-    ChevronRight,
-    Edit,
-    Heart,
-    History,
-    Mail,
-    MapPin,
-    MessageSquare,
-    MoreVertical,
-    Phone,
-    Share2,
-    ShieldAlert,
-    Trash2,
+  BadgeCheck,
+  ChevronLeft,
+  ChevronRight,
+  Edit,
+  Heart,
+  History,
+  Mail,
+  MapPin,
+  MessageSquare,
+  MoreVertical,
+  Phone,
+  Share2,
+  ShieldAlert,
+  Trash2,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -69,6 +71,7 @@ interface Listing {
 
 interface ListingDetailContentProps {
   listing: Listing;
+  initialQuestions?: any[];
 }
 
 
@@ -85,7 +88,7 @@ function getOrCreateAnalyticsSessionId(): string {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export function ListingDetailContent({ listing }: ListingDetailContentProps) {
+export function ListingDetailContent({ listing, initialQuestions = [] }: ListingDetailContentProps) {
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
   const { isFavorite: isFavCheck, toggleFavorite } = useFavorites();
@@ -427,6 +430,13 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                 {listing.description}
               </p>
             </div>
+
+            {/* Q&A Section */}
+            <ListingQA 
+               listingId={listing._id} 
+               sellerId={listing.userId} 
+               initialQuestions={initialQuestions} 
+            />
           </div>
 
           {/* ── Right Column (Desktop) ───────────────────────────────────── */}
@@ -534,10 +544,11 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                   </div>
                 </div>
                 
-                <div className="mt-4">
+                <div className="mt-4 flex flex-col gap-2">
                    <Button asChild variant="outline" className="w-full rounded-xl border-2 hover:bg-primary/5 hover:text-primary font-bold uppercase tracking-wider text-xs">
                      <Link href={`/store/${listing.userId}`}>Visit Storefront</Link>
                    </Button>
+                   <LeaveReviewModal listingId={listing._id} sellerId={listing.userId} />
                 </div>
               </div>
 

@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils';
 import { useMutation } from 'convex/react';
 import { ArrowUpDown, LayoutGrid, List, RectangleVertical, Save, SlidersHorizontal } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { memo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
@@ -41,18 +42,18 @@ interface ListingGridProps {
   onQuickFilter?: (filters: FilterState) => void;
 }
 
-const SORT_OPTIONS = [
-  { value: 'newest',     label: 'Newest First' },
-  { value: 'oldest',     label: 'Oldest First' },
-  { value: 'price-low',  label: 'Price: Low to High' },
-  { value: 'price-high', label: 'Price: High to Low' },
-  { value: 'popular',    label: 'Most Popular' },
+const getSortOptions = (t: any) => [
+  { value: 'newest',     label: t('newest_first') },
+  { value: 'oldest',     label: t('oldest_first') },
+  { value: 'price-low',  label: t('price_low_high') },
+  { value: 'price-high', label: t('price_high_low') },
+  { value: 'popular',    label: t('most_popular') },
 ];
 
-const VIEW_MODES: { mode: ViewMode; icon: React.ElementType; label: string }[] = [
-  { mode: 'grid', icon: LayoutGrid,       label: 'Grid View' },
-  { mode: 'list', icon: List,             label: 'List View' },
-  { mode: 'card', icon: RectangleVertical, label: 'Detail View' },
+const getViewModes = (t: any): { mode: ViewMode; icon: React.ElementType; label: string }[] => [
+  { mode: 'grid', icon: LayoutGrid,       label: t('grid_view') },
+  { mode: 'list', icon: List,             label: t('list_view') },
+  { mode: 'card', icon: RectangleVertical, label: t('detail_view') },
 ];
 
 const VIEW_MODE_KEY = 'listing-view-mode';
@@ -72,6 +73,9 @@ export function ListingGrid({
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
+  const tListings = useTranslations('ListingGrid');
+  const sortOptions = getSortOptions(tListings);
+  const viewModes = getViewModes(tListings);
 
   // Lazy initialiser reads localStorage once — no mounted state, no flash
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
@@ -92,7 +96,7 @@ export function ListingGrid({
 
   const handleSaveSearch = async () => {
     if (!session?.user?.id) {
-      toast.error('Please login to save searches');
+      toast.error(tListings('login_to_save'));
       return;
     }
 
@@ -103,7 +107,7 @@ export function ListingGrid({
     toast.promise(
       saveSearchMutation({
         userId: session.user.id,
-        name: query || 'Saved Search',
+        name: query || tListings('saved_search'),
         query,
         url: `${pathname}?${searchParams.toString()}`,
         filters: JSON.stringify(filters),
@@ -111,9 +115,9 @@ export function ListingGrid({
         frequency: 'daily',
       }),
       {
-        loading: 'Saving search...',
-        success: 'Search saved successfully!',
-        error: 'Failed to save search',
+        loading: tListings('saving_search'),
+        success: tListings('search_saved_success'),
+        error: tListings('failed_to_save'),
       }
     );
   };
@@ -125,7 +129,7 @@ export function ListingGrid({
 
         {/* Results Count */}
         <div className="hidden md:block text-sm text-muted-foreground mr-auto">
-          Showing <span className="font-medium text-foreground">{listings.length}</span> results
+          {tListings('showing')} <span className="font-medium text-foreground">{listings.length}</span> {tListings('results')}
         </div>
 
         {/* Desktop Controls */}
@@ -134,11 +138,11 @@ export function ListingGrid({
             <SelectTrigger className="h-9 w-full sm:w-[180px] text-xs">
               <div className="flex items-center gap-2">
                 <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" />
-                <SelectValue placeholder="Sort option" />
+                <SelectValue placeholder={tListings('sort_option')} />
               </div>
             </SelectTrigger>
             <SelectContent>
-              {SORT_OPTIONS.map((o) => (
+              {sortOptions.map((o) => (
                 <SelectItem key={o.value} value={o.value} className="text-xs">
                   {o.label}
                 </SelectItem>
@@ -151,7 +155,7 @@ export function ListingGrid({
               variant="outline"
               size="icon"
               className="h-9 w-9 shrink-0"
-              aria-label="Save this search"
+              aria-label={tListings('save_this_search')}
               onClick={handleSaveSearch}
             >
               <Save className="h-4 w-4" />
@@ -159,7 +163,7 @@ export function ListingGrid({
           )}
 
           <div className="flex items-center border rounded-md p-1 h-9 bg-background shrink-0" role="group" aria-label="View mode">
-            {VIEW_MODES.map(({ mode, icon, label }) => (
+            {viewModes.map(({ mode, icon, label }) => (
               <ViewToggle
                 key={mode}
                 active={viewMode === mode}
@@ -174,7 +178,10 @@ export function ListingGrid({
 
       {/* Listings */}
       {listings.length === 0 ? (
-        <EmptyState onClear={() => onQuickFilter?.({ category: 'all', subCategory: 'all' })} />
+        <EmptyState 
+           onClear={() => onQuickFilter?.({ category: 'all', subCategory: 'all' })} 
+           tListings={tListings}
+        />
       ) : (
         <div className={cn(
           'grid gap-4',
@@ -218,19 +225,19 @@ const ViewToggle = memo(function ViewToggle({
   );
 });
 
-function EmptyState({ onClear }: { onClear?: () => void }) {
+function EmptyState({ onClear, tListings }: { onClear?: () => void, tListings: any }) {
   return (
     <div className="text-center py-20 border-2 border-dashed rounded-xl bg-muted/5">
       <div className="bg-background border rounded-full h-16 w-16 flex items-center justify-center mx-auto mb-4 shadow-sm">
         <SlidersHorizontal className="h-8 w-8 text-muted-foreground" />
       </div>
-      <h3 className="text-lg font-semibold mb-1">No listings found</h3>
+      <h3 className="text-lg font-semibold mb-1">{tListings('no_listings_found')}</h3>
       <p className="text-muted-foreground text-sm max-w-sm mx-auto mb-6">
-        We couldn't find any results matching your filters. Try adjusting your search criteria.
+        {tListings('no_results_desc')}
       </p>
       {onClear && (
         <Button variant="outline" onClick={onClear}>
-          Clear All Filters
+          {tListings('clear_all_filters')}
         </Button>
       )}
     </div>

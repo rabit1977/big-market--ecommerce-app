@@ -1,7 +1,12 @@
+'use client';
+
 import { ListingCard } from '@/components/listing/listing-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Building2, CalendarDays, MapPin, MessageSquare, Package, ShieldCheck, Star } from 'lucide-react';
+import { Building2, CalendarDays, Lock, MapPin, MessageSquare, Package, ShieldCheck, Star } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { StoreReviews } from './store-reviews';
 
 export function StorefrontClient({ 
   profile, 
@@ -10,6 +15,8 @@ export function StorefrontClient({
   profile: any;
   listings: any[];
 }) {
+  const { data: session } = useSession();
+  const isOwner = session?.user?.id === profile.externalId || session?.user?.role === 'ADMIN';
 
   const activeListings = listings.filter(l => l.status === 'ACTIVE');
   
@@ -22,6 +29,69 @@ export function StorefrontClient({
       }
   }));
 
+  // ----------------------------------------------------------------------
+  // BASIC FALLBACK FOR NON-PREMIUM USERS (FREE TIER)
+  // ----------------------------------------------------------------------
+  if (!profile.hasPremiumStorefront) {
+    return (
+      <div className="min-h-screen bg-background pb-20">
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6 pt-8">
+          
+          {/* Upgrade Prompt for the Owner */}
+          {isOwner && (
+            <div className="mb-8 p-6 bg-primary/5 border border-primary/20 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+               <div>
+                  <h3 className="text-xl font-bold flex items-center gap-2 mb-1">
+                    <Lock className="w-5 h-5 text-primary" /> Unlock Your Premium Storefront
+                  </h3>
+                  <p className="text-muted-foreground text-sm">
+                    Want an exclusive storefront with a custom banner, company logo, review ratings, and a VIP profile? Upgrade to the Business Package (450 den).
+                  </p>
+               </div>
+               <Link href="/premium" className="shrink-0">
+                  <Button className="font-bold uppercase tracking-wide">Upgrade for 450 den</Button>
+               </Link>
+            </div>
+          )}
+
+          {/* Basic User Info */}
+          <div className="flex items-center gap-4 mb-8 pb-8 border-b">
+            <Avatar className="h-16 w-16">
+              <AvatarImage src={profile.image || ''} alt={profile.name || 'User'} className="object-cover" />
+              <AvatarFallback className="text-xl bg-muted text-muted-foreground font-bold">
+                {profile.name?.charAt(0).toUpperCase() || 'U'}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight text-foreground">
+                {profile.name}
+              </h1>
+              <div className="text-sm text-muted-foreground mt-1">
+                 Member since {new Date(profile.createdAt).getFullYear()}
+              </div>
+            </div>
+          </div>
+
+          {/* Simple Listings Grid */}
+          <h2 className="text-lg font-bold uppercase tracking-tight mb-4">Seller's Items ({activeListings.length})</h2>
+          {activeListings.length > 0 ? (
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+              {injectedListings.map(listing => (
+                <ListingCard key={listing._id} listing={listing as any} viewMode="grid" />
+              ))}
+            </div>
+          ) : (
+            <p className="text-muted-foreground py-12 text-center">This seller currently has no items for sale.</p>
+          )}
+
+        </div>
+      </div>
+    );
+  }
+
+  // ----------------------------------------------------------------------
+  // PREMIUM STOREFRONT (BUSINESS 450 DEN SECURED)
+  // ----------------------------------------------------------------------
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Cover / Banner area */}
@@ -100,6 +170,8 @@ export function StorefrontClient({
              </div>
            )}
         </div>
+
+        <StoreReviews sellerId={profile.externalId} />
       </div>
     </div>
   );

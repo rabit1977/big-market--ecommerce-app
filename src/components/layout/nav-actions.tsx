@@ -17,6 +17,7 @@ import {
     Star, Store, Trash, User, Wallet, X
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -58,6 +59,8 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const user = session?.user;
+  const t = useTranslations('NavActions');
+  const tNav = useTranslations('Navigation');
 
   const unreadMessagesCount =
     useQuery(api.messages.getUnreadCount, user?.id ? { userId: user.id } : 'skip') ?? 0;
@@ -127,41 +130,41 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   const isAdmin = user?.role === 'ADMIN';
 
   const mobileOnlyItems: MenuItem[] = [
-    { href: '/', icon: Home, label: 'Home' },
-    { href: '/listings', icon: Store, label: 'Browse Listings' },
-    { href: '/messages', icon: MessageSquare, label: 'Messages', badge: unreadMessagesCount, iconColor: 'text-primary' },
-    { href: '/account/notifications', icon: Star, label: 'Notifications', badge: unreadNotificationsCount, iconColor: 'text-amber-500' },
-    { href: '/favorites', icon: Heart, label: 'Favorites', badge: initialWishlistCount, iconColor: 'text-rose-500' },
+    { href: '/', icon: Home, label: t('home') },
+    { href: '/listings', icon: Store, label: t('browse_listings') },
+    { href: '/messages', icon: MessageSquare, label: t('messages'), badge: unreadMessagesCount, iconColor: 'text-primary' },
+    { href: '/account/notifications', icon: Star, label: t('notifications'), badge: unreadNotificationsCount, iconColor: 'text-amber-500' },
+    { href: '/favorites', icon: Heart, label: t('favorites'), badge: initialWishlistCount, iconColor: 'text-rose-500' },
   ];
 
   const accountItems: MenuItem[] = [
-    { href: '/my-listings', icon: Package, label: 'My Listings' },
-    { href: '/my-listings/stats', icon: BarChart, label: 'Ad Statistics' },
-    { href: '/my-listings/saved-searches', icon: Bell, label: 'Saved Searches & Alerts' },
-    { href: '/wallet', icon: CreditCard, label: 'Account Overview' },
-    { href: '/wallet/top-up', icon: Wallet, label: 'Top Up Account' },
+    { href: '/my-listings', icon: Package, label: t('my_listings') },
+    { href: '/my-listings/stats', icon: BarChart, label: t('ad_statistics') },
+    { href: '/my-listings/saved-searches', icon: Bell, label: t('saved_searches_alerts') },
+    { href: '/wallet', icon: CreditCard, label: t('account_overview') },
+    { href: '/wallet/top-up', icon: Wallet, label: t('top_up_account') },
   ];
 
   const settingsItems: MenuItem[] = [
-    { href: '/account', icon: Settings, label: 'Edit Profile' },
-    { href: '/account/password', icon: Lock, label: 'Change Password' },
+    { href: '/account', icon: Settings, label: t('edit_profile') },
+    { href: '/account/password', icon: Lock, label: t('change_password') },
     ...(!isAdmin ? [
-      { href: '/account/verification', icon: ShieldCheck, label: 'Verification' },
-      { href: '/premium', icon: Crown, label: 'Subscription Plans', iconColor: 'text-amber-500' },
+      { href: '/account/verification', icon: ShieldCheck, label: t('verification') },
+      { href: '/premium', icon: Crown, label: t('subscription_plans'), iconColor: 'text-amber-500' },
     ] : []),
   ];
 
   const supportItems: MenuItem[] = [
-    { href: '/help', icon: HelpCircle, label: 'Help Center' },
-    { href: '/messages?type=SUPPORT', icon: MessageSquare, label: 'Live Support Chat', iconColor: 'text-primary' },
+    { href: '/help', icon: HelpCircle, label: t('help_center') },
+    { href: '/messages?type=SUPPORT', icon: MessageSquare, label: t('live_support_chat'), iconColor: 'text-primary' },
   ];
 
   const adminItems: MenuItem[] = isAdmin
-    ? [{ href: '/admin/dashboard', icon: LayoutDashboard, label: 'Admin Panel', iconColor: 'text-primary' }]
+    ? [{ href: '/admin/dashboard', icon: LayoutDashboard, label: t('admin_panel'), iconColor: 'text-primary' }]
     : [];
 
   const dangerItems: MenuItem[] = [
-    { href: '/account/delete', icon: Trash, label: 'Delete Account', danger: true },
+    { href: '/account/delete', icon: Trash, label: t('delete_account'), danger: true },
   ];
 
   const renderMenuItem = (item: MenuItem) => {
@@ -214,7 +217,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
       <Button asChild variant="ghost" size="sm" className="h-9 px-3 rounded-full font-bold hover:bg-muted ml-1">
         <Link href="/auth">
           <User className="h-4 w-4 mr-1.5" />
-          Login
+          {tNav('login')}
         </Link>
       </Button>
     );
@@ -242,7 +245,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                   </Link>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Admin Dashboard</TooltipContent>
+              <TooltipContent>{t('admin_panel')}</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         )}
@@ -272,7 +275,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                 </Link>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Favorites</TooltipContent>
+            <TooltipContent>{t('favorites')}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
@@ -301,7 +304,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                 </Link>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Messages</TooltipContent>
+            <TooltipContent>{t('messages')}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
@@ -321,7 +324,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                 </Link>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Help Center</TooltipContent>
+            <TooltipContent>{t('help_center')}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
@@ -405,7 +408,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                       className="flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-white text-[11px] font-bold hover:bg-primary/90 transition-colors shadow-sm"
                     >
                       <Pencil className="w-3 h-3" />
-                      Post Ad
+                      {t('post_ad')}
                     </Link>
                     <Link
                       href="/premium"
@@ -413,7 +416,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                       className="flex items-center justify-center gap-1.5 py-2 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[11px] font-bold hover:bg-amber-500/20 transition-colors border border-amber-500/20"
                     >
                       <Star className="w-3 h-3" />
-                      Premium
+                      {t('premium')}
                     </Link>
                   </div>
                 </div>
@@ -422,31 +425,31 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                 <div className="flex-1 overflow-y-auto overscroll-contain py-1">
                   {adminItems.length > 0 && (
                     <>
-                      {renderSectionLabel('Administration')}
+                      {renderSectionLabel(t('administration'))}
                       <div className="px-1.5">{adminItems.map(renderMenuItem)}</div>
                       <div className="mx-3 my-1 h-px bg-border/30" />
                     </>
                   )}
 
-                  {renderSectionLabel('App Style')}
+                  {renderSectionLabel(t('app_style'))}
                   <div className="px-1.5 mb-2"><PaletteSwitcher /></div>
                   <div className="mx-3 my-1 h-px bg-border/30" />
 
                   <div className="md:hidden">
-                    {renderSectionLabel('Navigation')}
+                    {renderSectionLabel(t('navigation_section'))}
                     <div className="px-1.5">{mobileOnlyItems.map(renderMenuItem)}</div>
                     <div className="mx-3 my-1 h-px bg-border/30" />
                   </div>
 
-                  {renderSectionLabel('Listings')}
+                  {renderSectionLabel(t('listings_section'))}
                   <div className="px-1.5">{accountItems.map(renderMenuItem)}</div>
                   <div className="mx-3 my-1 h-px bg-border/30" />
 
-                  {renderSectionLabel('Support')}
+                  {renderSectionLabel(t('support_section'))}
                   <div className="px-1.5">{supportItems.map(renderMenuItem)}</div>
                   <div className="mx-3 my-1 h-px bg-border/30" />
 
-                  {renderSectionLabel('Account')}
+                  {renderSectionLabel(t('account_section'))}
                   <div className="px-1.5">{settingsItems.map(renderMenuItem)}</div>
                   <div className="mx-3 my-1 h-px bg-border/30" />
 
@@ -460,7 +463,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                     className="flex items-center justify-center gap-1.5 w-full py-2 rounded-lg bg-muted/40 hover:bg-destructive/10 text-muted-foreground hover:text-destructive text-[12px] font-semibold transition-colors"
                   >
                     <LogOut className="w-3.5 h-3.5" />
-                    Log Out
+                    {t('log_out')}
                   </button>
                 </div>
               </motion.div>

@@ -1,7 +1,6 @@
 import { FeaturedListings } from '@/components/home/featured-listings';
 import { Hero } from '@/components/home/hero';
 import { LatestListingsClient } from '@/components/home/latest-listings-client';
-import { StatsSection } from '@/components/home/stats-section';
 import { fetchQuery } from 'convex/nextjs';
 import { api } from '../../../convex/_generated/api';
 
@@ -97,9 +96,6 @@ export default async function HomePage({ searchParams }: PageProps) {
 
         </div>
       </div>
-
-      {/* Stats Section */}
-      <StatsSection listingCount={allListings.length} />
     </>
   );
 }

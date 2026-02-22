@@ -10,47 +10,48 @@ import {
     Users,
     Zap
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 // ─── Data Configuration ───────────────────────────────────────────────────────
 
-const FOOTER_LINKS = [
+const getFooterLinks = (t: any) => [
   {
-    title: 'Company',
+    title: t('company'),
     links: [
-      { label: 'About Us', href: '/about' },
-      { label: 'Careers', href: '/careers' },
-      { label: 'Contact Us', href: '/contact' },
-      { label: 'Advertise with Us', href: '/advertise' },
+      { label: t('about_us'), href: '/about' },
+      { label: t('careers'), href: '/careers' },
+      { label: t('contact_us'), href: '/contact' },
+      { label: t('advertise'), href: '/advertise' },
     ],
   },
   {
-    title: 'Discover',
+    title: t('discover'),
     links: [
-      { label: 'All Listings', href: '/listings' },
-      { label: 'Browse Categories', href: '/categories' },
-      { label: 'Premium Features', href: '/premium' },
-      { label: 'Help Center', href: '/help' },
+      { label: t('all_listings'), href: '/listings' },
+      { label: t('browse_categories'), href: '/categories' },
+      { label: t('premium_features'), href: '/premium' },
+      { label: t('help_center'), href: '/help' },
     ],
   },
   {
-    title: 'Sellers',
+    title: t('sellers'),
     links: [
-      { label: 'Post a Listing', href: '/sell' },
-      { label: 'My Listings', href: '/my-listings' },
-      { label: 'Get Verified', href: '/help/certification' },
-      { label: 'Pricing Plans', href: '/pricing' },
+      { label: t('post_listing'), href: '/sell' },
+      { label: t('my_listings'), href: '/my-listings' },
+      { label: t('get_verified'), href: '/help/certification' },
+      { label: t('pricing_plans'), href: '/pricing' },
     ],
   },
   {
-    title: 'Legal',
+    title: t('legal'),
     links: [
-      { label: 'Safety Guidelines', href: '/help/safety' },
-      { label: 'Terms of Service', href: '/help/terms' },
-      { label: 'Privacy Policy', href: '/help/terms#privacy' },
-      { label: 'Cookie Policy', href: '/help/terms#cookies' },
+      { label: t('safety_guidelines'), href: '/help/safety' },
+      { label: t('terms_service'), href: '/help/terms' },
+      { label: t('privacy_policy'), href: '/help/terms#privacy' },
+      { label: t('cookie_policy'), href: '/help/terms#cookies' },
     ],
   },
 ];
@@ -68,6 +69,8 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
   const { isInstallable, isInstalled, install } = usePWAInstall();
   const [isIOS, setIsIOS] = useState(false);
+  const tFooter = useTranslations('Footer');
+  const footerLinks = getFooterLinks(tFooter);
 
   useEffect(() => {
     const userAgent = window.navigator.userAgent.toLowerCase();
@@ -116,18 +119,18 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-muted-foreground text-xs leading-relaxed max-w-xs">
-              Macedonia&apos;s leading classifieds hosting platform. Connecting buyers and sellers in a secure and professional ecosystem.
+              {tFooter('brand_description')}
             </p>
             
             {/* Trust Badges */}
             <div className="flex items-center gap-4 pt-2">
               <div className="flex items-center gap-1.5 group cursor-default">
                 <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                <span className="text-[10px] font-bold text-foreground uppercase tracking-wide">Verified Users</span>
+                <span className="text-[10px] font-bold text-foreground uppercase tracking-wide">{tFooter('verified_users')}</span>
               </div>
               <div className="flex items-center gap-1.5 group cursor-default">
                 <Users className="w-4 h-4 text-blue-500" />
-                <span className="text-[10px] font-bold text-foreground uppercase tracking-wide">Community</span>
+                <span className="text-[10px] font-bold text-foreground uppercase tracking-wide">{tFooter('community')}</span>
               </div>
             </div>
           </div>
@@ -141,7 +144,7 @@ export function Footer() {
 
         {/* Links Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-t border-border/40">
-          {FOOTER_LINKS.map((section) => (
+          {footerLinks.map((section) => (
             <div key={section.title} className="flex flex-col gap-4">
               <h3 className="font-black text-[10px] uppercase tracking-widest text-foreground/70">
                 {section.title}
@@ -167,12 +170,12 @@ export function Footer() {
         <div className="border-t border-border/40 pt-6 flex flex-col-reverse md:flex-row justify-between items-center gap-4">
           <div className="flex flex-col md:flex-row items-center gap-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
             {/* suppressHydrationWarning is safe here for dates */}
-            <p suppressHydrationWarning>&copy; {currentYear} Biggest Market. All rights reserved.</p>
+            <p suppressHydrationWarning>&copy; {currentYear} Biggest Market. {tFooter('all_rights_reserved')}</p>
             <div className="hidden md:block w-0.5 h-0.5 rounded-full bg-border" />
             <div className="flex gap-4">
-              <Link href="/help/terms#privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-              <Link href="/help/terms" className="hover:text-foreground transition-colors">Terms</Link>
-              <Link href="/sitemap" className="hover:text-foreground transition-colors">Sitemap</Link>
+              <Link href="/help/terms#privacy" className="hover:text-foreground transition-colors">{tFooter('privacy')}</Link>
+              <Link href="/help/terms" className="hover:text-foreground transition-colors">{tFooter('terms')}</Link>
+              <Link href="/sitemap" className="hover:text-foreground transition-colors">{tFooter('sitemap')}</Link>
             </div>
           </div>
 

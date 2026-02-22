@@ -42,6 +42,20 @@ export const createQuestion = mutation({
     question: v.string(),
   },
   handler: async (ctx, args) => {
+    // Basic Rate Limiting
+    const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+    const recentQuestions = await ctx.db
+      .query("questions")
+      .filter(q => q.and(
+         q.eq(q.field("userId"), args.userId),
+         q.gt(q.field("createdAt"), oneDayAgo)
+      ))
+      .collect();
+
+    if (recentQuestions.length >= 10) {
+      throw new Error("You have reached the daily limit of 10 questions to prevent spam.");
+    }
+
     return await ctx.db.insert("questions", {
       ...args,
       isPublic: true,
@@ -59,6 +73,20 @@ export const createAnswer = mutation({
     isOfficial: v.boolean(),
   },
   handler: async (ctx, args) => {
+    // Basic Rate Limiting
+    const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+    const recentAnswers = await ctx.db
+      .query("answers")
+      .filter(q => q.and(
+         q.eq(q.field("userId"), args.userId),
+         q.gt(q.field("createdAt"), oneDayAgo)
+      ))
+      .collect();
+
+    if (recentAnswers.length >= 20) {
+      throw new Error("You have reached the daily limit for anwering questions.");
+    }
+
     return await ctx.db.insert("answers", {
       ...args,
       createdAt: Date.now(),

@@ -1,3 +1,4 @@
+import { getProductQuestionsAction } from '@/actions/qa-actions';
 import { fetchQuery } from 'convex/nextjs';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -93,6 +94,16 @@ const ListingDetailPage = async ({ params }: ListingDetailPageProps) => {
     }
   };
 
+  let questions: any[] = [];
+  try {
+    const questionsRes = await getProductQuestionsAction(id);
+    if (questionsRes.success) {
+      questions = questionsRes.questions || [];
+    }
+  } catch (error) {
+    console.error('Error fetching questions:', error);
+  }
+
   return (
     <>
       <script
@@ -100,10 +111,13 @@ const ListingDetailPage = async ({ params }: ListingDetailPageProps) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Suspense fallback={<ListingDetailSkeleton />}>
-        <ListingDetailContent listing={{
+        <ListingDetailContent 
+          listing={{
             ...listing,
             listingNumber: (listing as any).listingNumber
-        } as any} />
+          } as any}
+          initialQuestions={questions}
+        />
       </Suspense>
     </>
   );

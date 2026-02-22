@@ -11,10 +11,12 @@ import { useCompareStore } from '@/lib/store/compare-store';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { ArrowLeftRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 export function CompareButton({ listing, className }: { listing: ListingWithRelations; className?: string }) {
   const { items, addItem, removeItem } = useCompareStore();
+  const tCompare = useTranslations('ListingGrid');
   const isCompared = items.some((item: ListingWithRelations) => item._id === listing._id);
 
   const toggleCompare = (e: React.MouseEvent) => {
@@ -23,14 +25,27 @@ export function CompareButton({ listing, className }: { listing: ListingWithRela
 
     if (isCompared) {
       removeItem(listing._id);
-      toast.success('Removed from comparison');
+      toast.success(tCompare('removed_from_compare'));
     } else {
       if (items.length >= 3) {
-        toast.error('You can only compare up to 3 listings at a time.');
+        toast.error(tCompare('compare_limit'));
         return;
       }
+
+      // Enforce same category/subcategory rule
+      if (items.length > 0) {
+        const firstItem = items[0];
+        const isSameCategory = firstItem.category === listing.category;
+        const isSameSubCategory = firstItem.subCategory === listing.subCategory;
+
+        if (!isSameCategory || !isSameSubCategory) {
+          toast.error(tCompare('compare_category_error'));
+          return;
+        }
+      }
+
       addItem(listing);
-      toast.success('Added to comparison');
+      toast.success(tCompare('added_to_compare'));
     }
   };
 
@@ -53,7 +68,7 @@ export function CompareButton({ listing, className }: { listing: ListingWithRela
             <ArrowLeftRight className={cn('h-4 w-4 transition-all duration-300', isCompared && 'scale-110')} />
           </Button>
         </TooltipTrigger>
-        <TooltipContent>{isCompared ? 'Remove from Compare' : 'Compare'}</TooltipContent>
+        <TooltipContent>{isCompared ? tCompare('remove_from_compare') : tCompare('compare')}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );

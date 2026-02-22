@@ -5,6 +5,7 @@ import { ListingGrid } from '@/components/listing/listing-grid';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { ListingWithRelations } from '@/lib/types';
 import { ArrowRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 
@@ -16,6 +17,7 @@ interface LatestListingsClientProps {
 export function LatestListingsClient({ initialListings, categories }: LatestListingsClientProps) {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [sortBy, setSortBy] = useState<string>('newest');
+  const tHome = useTranslations('Home');
   
   // Apply sorting client-side for "Latest Listings"
   // Apply sorting client-side for "Latest Listings"
@@ -51,7 +53,7 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className='text-xl md:text-2xl font-black tracking-tight mb-2'>
-            Latest Listings
+            {tHome('latest_listings')}
           </h2>
         </div>
 
@@ -60,7 +62,7 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
           href="/listings" 
           className="hidden md:inline-flex items-center text-primary hover:text-primary/80 font-semibold transition-colors group"
         >
-          View All
+          {tHome('view_all')}
           <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
@@ -76,7 +78,7 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
       <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
         <SheetContent side="left" className="w-[85vw] sm:w-[400px] overflow-y-auto p-0">
           <SheetHeader className="sr-only">
-            <SheetTitle>Filter Listings</SheetTitle>
+            <SheetTitle>{tHome('filter_listings')}</SheetTitle>
           </SheetHeader>
           <div className="p-4 pt-10">
             <FilterPanel 
@@ -93,7 +95,7 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
           href="/listings" 
           className="inline-flex items-center text-primary font-bold transition-colors group px-6 py-2 border-2 border-primary/20 rounded-full hover:bg-primary/5"
         >
-          Browse All Listings
+          {tHome('browse_all_listings')}
           <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>

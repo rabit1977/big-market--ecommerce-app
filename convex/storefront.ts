@@ -46,6 +46,21 @@ export const getPublicProfile = query({
     const totalRatings = reviews.reduce((acc, curr) => acc + curr.rating, 0);
     const averageRating = reviews.length > 0 ? (totalRatings / reviews.length) : 0;
 
+    // Check for premium storefront subscription
+    let hasPremiumStorefront = user.role === 'ADMIN';
+    if (!hasPremiumStorefront) {
+      const activeSubscription = await ctx.db
+        .query("subscriptions")
+        .withIndex("by_user_status", (q) =>
+          q.eq("userId", user.externalId).eq("status", "ACTIVE")
+        )
+        .first();
+
+      if (activeSubscription && (activeSubscription.tier === 'pro' || activeSubscription.tier === 'business' || activeSubscription.tier === 'premium')) {
+        hasPremiumStorefront = true;
+      }
+    }
+
     return {
         _id: user._id,
         externalId: user.externalId,
@@ -62,6 +77,7 @@ export const getPublicProfile = query({
         reviewCount: reviews.length,
         averageRating,
         phone: user.phone,
+        hasPremiumStorefront,
     };
   }
 });

@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { getPromotionConfig } from '@/lib/constants/promotions';
 import { cn } from '@/lib/utils';
 import { MapPin } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
@@ -36,6 +37,8 @@ interface FeaturedListingsProps {
 export function FeaturedListings({ listings, variant = 'horizontal' }: FeaturedListingsProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [activeDot, setActiveDot] = useState(0);
+  const tHome = useTranslations('Home');
+  const tCommon = useTranslations('Common');
   
   if (!listings || !Array.isArray(listings)) return null;
 
@@ -79,7 +82,7 @@ export function FeaturedListings({ listings, variant = 'horizontal' }: FeaturedL
                         <span className="relative flex h-2 w-2 rounded-full bg-primary" />
                     </div>
                     <h2 className="text-base font-black tracking-tight uppercase text-foreground/80">
-                        Top Boosted
+                        {tHome('top_boosted')}
                     </h2>
                   </div>
              </div>
@@ -128,7 +131,7 @@ export function FeaturedListings({ listings, variant = 'horizontal' }: FeaturedL
                                           <div className="absolute bottom-2 right-2 z-10">
                                               <div className="bg-background/90 backdrop-blur text-foreground px-2 py-1 rounded-md shadow-sm border border-border/50">
                                                   <span className="text-xs font-black">
-                                                      {listing.price.toLocaleString()} <span className="text-[9px] font-bold text-muted-foreground">MKD</span>
+                                                      {listing.price.toLocaleString()} <span className="text-[9px] font-bold text-muted-foreground">{tCommon('mkd')}</span>
                                                   </span>
                                               </div>
                                           </div>
@@ -146,7 +149,7 @@ export function FeaturedListings({ listings, variant = 'horizontal' }: FeaturedL
                                                   {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
                                               </div>
                                               <div className="text-[10px] font-medium opacity-70">
-                                                  View Deal &rarr;
+                                                  {tHome('view_deal')} &rarr;
                                               </div>
                                           </div>
                                      </div>
@@ -161,7 +164,7 @@ export function FeaturedListings({ listings, variant = 'horizontal' }: FeaturedL
                 href="/listings?featured=true" 
                 className="flex items-center justify-center w-full py-3 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg border border-dashed border-border hover:border-primary/30 transition-all"
              >
-                See All Premium
+                {tHome('see_all_premium')}
              </Link>
         </div>
      );
@@ -180,11 +183,11 @@ export function FeaturedListings({ listings, variant = 'horizontal' }: FeaturedL
                     <span className="relative flex h-2 w-2 rounded-full bg-primary" />
                  </div>
                  <h2 className="text-lg md:text-xl font-black tracking-tighter uppercase text-foreground">
-                    Top Deals & Boosted
+                    {tHome('top_deals_boosted')}
                  </h2>
               </div>
               <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.2em] opacity-80">
-                Premium Community Spotlight
+                {tHome('premium_community_spotlight')}
               </p>
             </div>
 
@@ -192,7 +195,7 @@ export function FeaturedListings({ listings, variant = 'horizontal' }: FeaturedL
                href="/listings?featured=true" 
                className="inline-flex items-center text-[9px] font-black uppercase tracking-widest text-primary border-b-2 border-primary/20 hover:border-primary transition-all pb-0.5"
              >
-               Explore All
+               {tHome('explore_all')}
              </Link>
           </div>
         </div>
@@ -260,7 +263,7 @@ export function FeaturedListings({ listings, variant = 'horizontal' }: FeaturedL
                         
                         <div className="flex items-center justify-between">
                            <span className="text-[11px] sm:text-xs font-black text-primary">
-                             {listing.price.toLocaleString()} MKD
+                             {listing.price.toLocaleString()} {tCommon('mkd')}
                            </span>
                            <span className="text-[9px] text-muted-foreground/60 font-bold flex items-center">
                               <MapPin className="w-2.5 h-2.5 mr-0.5" />

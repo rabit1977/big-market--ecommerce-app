@@ -5,7 +5,8 @@ import { useSidebar } from '@/lib/context/sidebar-context';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, Loader2, MapPin, Menu, Search, X } from 'lucide-react';
-import { forwardRef, useCallback, useMemo, useRef, useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 interface SearchInputProps {
@@ -41,6 +42,8 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     const [isCityPanelOpen, setIsCityPanelOpen] = useState(false);
     const [citySearch, setCitySearch] = useState('');
     const panelRef = useRef<HTMLDivElement>(null);
+    const tNav = useTranslations('Navigation');
+    const tCommon = useTranslations('Common');
 
     const closePanel = useCallback(() => {
       setIsCityPanelOpen(false);
@@ -112,7 +115,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           <Input
             ref={ref}
             type="search"
-            placeholder="Search listings..."
+            placeholder={tNav('search_placeholder')}
             className="h-10 md:h-11 rounded-full pl-10 sm:pl-16 pr-24 sm:pr-32 bg-secondary/80 border-border/60 shadow-sm
                        focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary/30
                        text-sm placeholder:text-muted-foreground/60
@@ -140,7 +143,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             >
               <MapPin className="h-3.5 w-3.5" />
               <span className="text-xs font-medium truncate max-w-[60px] sm:max-w-[80px] hidden sm:inline">
-                {selectedCity === 'all' ? 'All Cities' : selectedCity}
+                {selectedCity === 'all' ? (tCommon('all_cities') || 'All Cities') : selectedCity}
               </span>
               <ChevronDown className="h-3 w-3 opacity-50" />
             </Button>
@@ -187,7 +190,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                   <div className="flex items-center justify-between px-5 py-4 border-b shrink-0">
                     <div className="flex items-center gap-2">
                       <MapPin className="h-5 w-5 text-primary" />
-                      <h2 className="font-bold text-base">Select City</h2>
+                      <h2 className="font-bold text-base">{tCommon('select_city') || 'Select City'}</h2>
                     </div>
                     <Button
                       variant="ghost"
@@ -204,7 +207,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
-                        placeholder="Search cities..."
+                        placeholder={tCommon('search_cities') || 'Search cities...'}
                         value={citySearch}
                         onChange={(e) => setCitySearch(e.target.value)}
                         className="h-9 pl-9 rounded-lg text-sm bg-muted/50 border-border/50"
@@ -228,7 +231,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                           'w-2 h-2 rounded-full transition-colors',
                           selectedCity === 'all' ? 'bg-primary' : 'bg-primary/20'
                         )} />
-                        All Cities
+                        {tCommon('all_cities') || 'All Cities'}
                       </button>
 
                       <div className="h-px bg-border/50 my-2" />

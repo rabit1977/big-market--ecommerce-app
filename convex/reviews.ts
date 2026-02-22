@@ -43,6 +43,31 @@ export const upsert = mutation({
     comment: v.string(),
   },
   handler: async (ctx, args) => {
+    // 1. Fetch the listing to verify ownership
+    const listing = await ctx.db.get(args.listingId);
+    if (!listing) throw new Error("Listing not found.");
+
+    // Prevent self-review
+    if (listing.userId === args.userId) {
+      throw new Error("You cannot leave a review for your own listing.");
+    }
+
+    // 2. Anti-Spam Limit: Max 5 reviews per 24 hours per user
+    const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+    const recentReviews = await ctx.db
+      .query("reviews")
+      .filter((q) => 
+        q.and(
+          q.eq(q.field("userId"), args.userId),
+          q.gt(q.field("createdAt"), oneDayAgo)
+        )
+      )
+      .collect();
+
+    if (recentReviews.length >= 5) {
+      throw new Error("You have reached the daily limit of 5 reviews to prevent spam. Try again tomorrow.");
+    }
+
     const existing = await ctx.db
       .query("reviews")
       .withIndex("by_listing", (q) => q.eq("listingId", args.listingId))
@@ -140,4 +165,62 @@ export const getSellerReviewStats = query({
             totalReviews
         };
     }
+});
+
+export const getSellerReviews = query({
+  args: { sellerId: v.string() },
+  handler: async (ctx, args) => {
+    // 1. Get the user document to find both IDs
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.sellerId))
+      .unique();
+        
+    // 2. Fetch listings using both IDs
+    const listingsByExternal = await ctx.db
+      .query("listings")
+      .withIndex("by_userId", (q) => q.eq("userId", args.sellerId))
+      .collect();
+       
+    const listingsByInternal = user 
+      ? await ctx.db
+          .query("listings")
+          .withIndex("by_userId", (q) => q.eq("userId", user._id as string))
+          .collect()
+      : [];
+
+    // Merge and deduplicate
+    const existingIds = new Set(listingsByExternal.map(l => l._id));
+    const listings = [...listingsByExternal, ...listingsByInternal.filter(l => !existingIds.has(l._id))];
+       
+    if (listings.length === 0) return [];
+    
+    let allReviews = [];
+    
+    for (const listing of listings) {
+      const reviews = await ctx.db
+        .query("reviews")
+        .withIndex("by_listing", (q) => q.eq("listingId", listing._id))
+        .filter((q) => q.eq(q.field("isApproved"), true))
+        .collect();
+        
+      for (const review of reviews) {
+        // Fetch reviewer details
+        const reviewer = await ctx.db
+          .query("users")
+          .withIndex("by_externalId", (q) => q.eq("externalId", review.userId))
+          .unique();
+          
+        allReviews.push({
+          ...review,
+          listingTitle: listing.title,
+          reviewerName: reviewer?.name || "Unknown User",
+          reviewerImage: reviewer?.image,
+        });
+      }
+    }
+    
+    // Sort by newest first
+    return allReviews.sort((a, b) => b.createdAt - a.createdAt);
+  }
 });

@@ -31,21 +31,22 @@ This document tracks the final "Premium" features needed to make the classifieds
 - [x] Email Integration: React Email / Resend template for "New listings matching your search".
 
 ## 4. Seller Reviews & Ratings (5-Star System) ⭐
-**Status:** Not Started
+**Status:** ✅ Complete
 **Description:** After a user interacts with a seller, they can leave a 1-to-5 star rating and comment. The average rating is displayed on the seller's profile.
 **Components to Build:**
-- [ ] Public Profile UI: A dedicated page or section showing a seller's past reviews and average star rating.
-- [ ] Review Submission Form: A modal for buyers to leave a star rating and text review.
-- [ ] Convex Mutations/Queries: Insert review (`rating`, `comment`), calculate average rating.
-- [ ] Admin Panel UI: `/admin/reviews` (optional, for moderation of abusive reviews).
+- [x] Public Profile UI: A dedicated page or section showing a seller's past reviews and average star rating.
+- [x] Review Submission Form: A modal for buyers to leave a star rating and text review.
+- [x] Convex Mutations/Queries: Insert review (`rating`, `comment`), calculate average rating.
+- [x] Admin Panel UI: `/admin/reviews` (optional, for moderation of abusive reviews).
 
 ## 5. Public Q&A on Listings 💬
-**Status:** Not Started
-**Description:** At the bottom of a listing, a buyer can ask a public question. The seller replies publicly. Every other buyer can read it, saving the seller time.
+**Status:** ✅ Complete
+**Description:** Buyers can ask questions publicly on a listing, and the seller (or an admin) can reply for everyone to see.
 **Components to Build:**
-- [ ] Listing Page UI: A "Questions & Answers" section below the description.
-- [ ] Submission UI: form for buyers to post a question, and a form for the listing owner to reply.
-- [ ] Convex Mutations/Queries: Submit question, submit answer, fetch Q&A thread for a listing.
+- [x] Listing Page Section: Next to/under the description, show "Questions & Answers".
+- [x] Ask Question Form: Small text area for users to ask.
+- [x] Reply Form (for Seller/Admin): Ability for the owner to post an official answer.
+- [x] Convex Schemas & Queries: `questions` table linked to `listingId`.
 
 ## 6. i18n Multi-Language Support 🌍
 **Status:** Not Started

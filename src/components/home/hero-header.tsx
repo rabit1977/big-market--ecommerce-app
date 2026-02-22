@@ -2,24 +2,27 @@
 
 import { cn } from '@/lib/utils';
 import { LayoutGrid, SlidersHorizontal } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useState } from 'react';
 
 // Filter definitions with Macedonian labels
 const QUICK_FILTERS = [
-  { id: 'forSale', label: 'Се продава', defaultChecked: true },
-  { id: 'wanted', label: 'Се купува', defaultChecked: true },
-  { id: 'forRent', label: 'Се изнајмува', defaultChecked: false },
-  { id: 'rentWanted', label: 'Се бара изнајмување', defaultChecked: false },
-  { id: 'trade', label: 'Може замена', defaultChecked: true },
-  { id: 'used', label: 'Половен', defaultChecked: true },
-  { id: 'new', label: 'Нов', defaultChecked: true },
-  { id: 'shipping', label: 'Со достава', defaultChecked: false },
-  { id: 'vat', label: 'Со ДДВ', defaultChecked: false },
+  { id: 'forSale', defaultChecked: true },
+  { id: 'wanted', defaultChecked: true },
+  { id: 'forRent', defaultChecked: false },
+  { id: 'rentWanted', defaultChecked: false },
+  { id: 'trade', defaultChecked: true },
+  { id: 'used', defaultChecked: true },
+  { id: 'new', defaultChecked: true },
+  { id: 'shipping', defaultChecked: false },
+  { id: 'vat', defaultChecked: false },
 ];
 
 export const HeroHeader = () => {
   const [showFilters, setShowFilters] = useState(false);
+  const tHome = useTranslations('Home');
+  const tFilters = useTranslations('QuickFilters');
   
   const [filters, setFilters] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
@@ -50,7 +53,7 @@ export const HeroHeader = () => {
             <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
               <LayoutGrid className="w-3 h-3 text-primary" />
             </div>
-            <span className="text-[11px] md:text-xs font-bold tracking-tight text-foreground uppercase whitespace-nowrap">Explore Categories</span>
+            <span className="text-[11px] md:text-xs font-bold tracking-tight text-foreground uppercase whitespace-nowrap">{tHome('explore_categories')}</span>
           </Link>
 
           {/* Filters Section */}
@@ -67,7 +70,7 @@ export const HeroHeader = () => {
               )}
             >
               <SlidersHorizontal className="w-3.5 h-3.5" />
-              <span className="text-[11px] font-bold uppercase tracking-tight">Quick Filters</span>
+              <span className="text-[11px] font-bold uppercase tracking-tight">{tHome('quick_filters')}</span>
               {activeFilterCount > 0 && (
                 <span className="bg-primary text-white text-[9px] font-black rounded-full w-4 h-4 flex items-center justify-center">
                   {activeFilterCount}
@@ -102,7 +105,7 @@ export const HeroHeader = () => {
                     </svg>
                   )}
                 </div>
-                {filter.label}
+                {tFilters(filter.id)}
               </button>
             ))}
           </div>
