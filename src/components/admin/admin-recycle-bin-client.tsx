@@ -36,11 +36,13 @@ export function AdminRecycleBinClient() {
         if (!deletedRaw) return [];
         let list: any[] = deletedRaw;
         if (search.trim()) {
-            const q = search.toLowerCase();
+            const q = search.toLowerCase().replace(/^#/, '');
             list = list.filter((l: any) =>
                 l.title?.toLowerCase().includes(q) ||
                 l.category?.toLowerCase().includes(q) ||
-                l.deletedByName?.toLowerCase().includes(q)
+                l.deletedByName?.toLowerCase().includes(q) ||
+                String(l.listingNumber || '').includes(q) || // listing #ID
+                (l._id || '').toLowerCase().includes(q)      // Convex ID
             );
         }
         return [...list].sort((a, b) => (b.deletedAt ?? 0) - (a.deletedAt ?? 0));
@@ -167,7 +169,7 @@ export function AdminRecycleBinClient() {
                 <AdminFilterToolbar
                     searchValue={search}
                     onSearchChange={(q) => { setSearch(q); setPage(1); }}
-                    searchPlaceholder="Search deleted listings..."
+                    searchPlaceholder="Search by title, #ID, or Convex ID..."
                     showTimeRange={false}
                 />
 

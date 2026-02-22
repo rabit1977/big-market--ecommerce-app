@@ -117,7 +117,7 @@ export default function RevenuePage() {
                 onTimeRangeChange={(r) => setFilter(r)}
                 searchValue={search}
                 onSearchChange={setSearch}
-                searchPlaceholder="Search transactions..."
+                searchPlaceholder="Search name, email, description, Stripe ID..."
                 showExport
                 onExport={() => {
                     const rows = recentTransactions.map((t: any) =>
@@ -230,10 +230,12 @@ export default function RevenuePage() {
                                     </tr>
                                 ) : (
                                     recentTransactions
-                                    .filter((t: any) => !search || 
+                                    .filter((t: any) => !search ||
                                         t.userName?.toLowerCase().includes(search.toLowerCase()) ||
                                         t.userEmail?.toLowerCase().includes(search.toLowerCase()) ||
-                                        t.description?.toLowerCase().includes(search.toLowerCase())
+                                        t.description?.toLowerCase().includes(search.toLowerCase()) ||
+                                        (t.stripeId || '').toLowerCase().includes(search.toLowerCase()) || // Stripe session ID
+                                        (t._id || '').toLowerCase().includes(search.toLowerCase())         // Convex ID
                                     )
                                     .map((t: any) => {
                                         const isUnknown = !t.userName || t.userName === 'Unknown Customer';
