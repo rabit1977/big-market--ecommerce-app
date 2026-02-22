@@ -1,9 +1,10 @@
 'use client';
 
+import { AdminFilterToolbar, getSinceFromRange, TimeRange } from '@/components/admin/admin-filter-toolbar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { useAction, useMutation, useQuery } from 'convex/react';
+import { useAction, useMutation, usePaginatedQuery, useQuery } from 'convex/react';
 import {
     Crown,
     DollarSign,
@@ -20,24 +21,18 @@ import { toast } from 'sonner';
 import { api } from '../../../../../convex/_generated/api';
 
 export default function RevenuePage() {
-  const [filter, setFilter] = useState<'today' | 'week' | 'all'>('today');
+  const [filter, setFilter] = useState<TimeRange>('today');
+  const [search, setSearch] = useState('');
   const [syncing, setSyncing] = useState(false);
   const [prevStats, setPrevStats] = useState<any>(null);
 
-  const getSince = () => {
-    const now = new Date();
-    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-    
-    if (filter === 'today') return startOfToday;
-    if (filter === 'week') {
-        const sevenDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7).getTime();
-        return sevenDaysAgo;
-    }
-    return undefined;
-  };
-
-  const since = getSince();
+  const since = getSinceFromRange(filter);
   const statsQuery = useQuery(api.transactions.getRevenueStats, { since });
+  const { results: recentTransactions, status: paginationStatus, loadMore } = usePaginatedQuery(
+      api.transactions.getPaginatedTransactions,
+      { since },
+      { initialNumItems: 10 }
+  );
   const syncTransactions = useAction(api.stripeActions.syncTransactions);
 
   if (statsQuery !== undefined && statsQuery !== prevStats) {
@@ -97,10 +92,10 @@ export default function RevenuePage() {
   }
 
   return (
-    <div className='space-y-6 pb-20 max-w-7xl mx-auto'>
-      <div className='flex flex-col gap-4 sm:flex-row sm:items-end justify-between animate-in fade-in slide-in-from-top-4 duration-500'>
+    <div className='space-y-6 pb-20 max-w-7xl'>
+        <div className='flex flex-col gap-4 sm:flex-col justify-between animate-in fade-in slide-in-from-top-4 duration-500'>
         <div className='space-y-1'>
-           <h1 className='text-3xl font-black tracking-tight flex items-center gap-3'>
+           <h1 className='text-xl md:text-3xl width-full font-black tracking-tight flex items-center gap-3 justify-start'>
              Revenue Intelligence
              <span className='inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold ring-1 ring-inset ring-emerald-500/20 uppercase tracking-widest'>
                 Live
@@ -110,78 +105,79 @@ export default function RevenuePage() {
            <p className='text-sm text-muted-foreground font-medium'>
                {filter === 'today' ? "Analyzing financial performance for today." : 
                 filter === 'week' ? "Financial breakdown for the last 7 days." : 
+                filter === 'month' ? "Financial breakdown for the last 30 days." :
+                filter === 'year' ? "Full-year financial overview." :
                 "Comprehensive all-time financial overview."}
            </p>
         </div>
-        
-        <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto'>
-            <div className='flex items-center p-1 bg-muted/40 rounded-lg border border-border/50'>
-                {[
-                    { id: 'today', label: 'Today' },
-                    { id: 'week', label: '7 Days' },
-                    { id: 'all', label: 'All Time' }
-                ].map((f) => (
-                    <button
-                        key={f.id}
-                        onClick={() => setFilter(f.id as any)}
-                        className={cn(
-                            'flex-1 sm:flex-none px-3 py-1.5 text-[11px] uppercase tracking-wider font-bold rounded-md transition-all duration-300',
-                            filter === f.id 
-                                ? 'bg-background text-foreground shadow-sm ring-1 ring-border shadow-black/5' 
-                                : 'text-muted-foreground hover:text-foreground hover:bg-muted/80'
-                        )}
-                    >
-                        {f.label}
-                    </button>
-                ))}
-            </div>
 
-            <div className="flex items-center gap-2">
-                <Button 
-                    onClick={handleReset} 
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 px-3 rounded-lg text-[11px] uppercase tracking-wider font-bold text-destructive hover:bg-destructive/10 hidden lg:flex"
-                >
-                    <Trash2 className="w-3.5 h-3.5 mr-1.5" />
-                    Reset Data
-                </Button>
-                <Button 
-                    onClick={handleSync} 
-                    disabled={syncing}
-                    className="h-8 px-4 rounded-lg text-[11px] uppercase tracking-wider font-bold shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all flex-1 sm:flex-none"
-                    variant="default"
-                >
-                    {syncing ? <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5 mr-1.5" />}
-                    Sync Stripe
-                </Button>
-            </div>
+        <div className='flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 w-full'>
+            <AdminFilterToolbar
+                timeRange={filter}
+                onTimeRangeChange={(r) => setFilter(r)}
+                searchValue={search}
+                onSearchChange={setSearch}
+                searchPlaceholder="Search transactions..."
+                showExport
+                onExport={() => {
+                    const rows = recentTransactions.map((t: any) =>
+                        `"${t.userName}","${t.userEmail}","${t.description}","${t.type}",${t.amount},"${new Date(t.createdAt).toLocaleDateString()}"`
+                    );
+                    const csv = 'Name,Email,Description,Type,Amount,Date\n' + rows.join('\n');
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+                    a.download = `revenue-${filter}-${Date.now()}.csv`;
+                    a.click();
+                }}
+                actions={
+                    <div className="flex items-center gap-2">
+                        <Button
+                            onClick={handleReset}
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 px-3 rounded-lg text-[11px] uppercase tracking-wider font-bold text-destructive hover:bg-destructive/10"
+                        >
+                            <Trash2 className="w-3.5 h-3.5 mr-1.5" />
+                            Reset
+                        </Button>
+                        <Button
+                            onClick={handleSync}
+                            disabled={syncing}
+                            className="h-8 px-4 rounded-lg text-[11px] uppercase tracking-wider font-bold"
+                            variant="default"
+                        >
+                            {syncing ? <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5 mr-1.5" />}
+                            Sync Stripe
+                        </Button>
+                    </div>
+                }
+            />
         </div>
       </div>
 
       <div className={cn("transition-opacity duration-300", isTransitioning ? "opacity-60" : "opacity-100")}>
-          <div className='grid grid-cols-1 lg:grid-cols-12 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100'>
             
-            <div className="lg:col-span-4 flex flex-col gap-6">
+            <div className="md:col-span-1 lg:col-span-4 flex flex-col gap-6">
                 <div className="grid grid-cols-2 gap-3">
                     <CompactStat 
                         title="Gross Revenue" 
                         value={formatCurrency(stats.totalRevenue)} 
                         icon={DollarSign}
-                        className="col-span-2 bg-gradient-to-br from-primary/10 via-primary/5 to-card border-primary/20 shadow-primary/5"
+                        className="col-span-1 bg-gradient-to-br from-primary/10 via-primary/5 to-card border-primary/20 shadow-primary/5"
                         valueClassName="text-3xl text-primary"
                     />
                     <CompactStat 
                         title="Net Revenue" 
                         value={formatCurrency(stats.netRevenue)} 
                         icon={TrendingUp}
-                        className="bg-blue-500/5 border-blue-500/20"
+                        className="bg-blue-500/5 col-span-1 border-blue-500/20"
                     />
                     <CompactStat 
                         title="VAT (18%)" 
                         value={formatCurrency(stats.vatRevenue)} 
                         icon={TrendingUp}
-                        className="bg-emerald-500/5 border-emerald-500/20"
+                        className="bg-emerald-500/5 col-span-2 border-emerald-500/20"
                     />
                 </div>
 
@@ -201,7 +197,7 @@ export default function RevenuePage() {
                 </Card>
             </div>
 
-            <div className="lg:col-span-8 flex flex-col">
+            <div className="lg:col-span-4 flex flex-col">
                 <Card className="rounded-2xl border-border/50 shadow-md bg-card flex flex-col h-full overflow-hidden">
                     <div className="p-4 border-b border-border/40 bg-muted/10 flex items-center justify-between">
                         <h2 className="text-[13px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
@@ -213,15 +209,14 @@ export default function RevenuePage() {
                         <table className="w-full text-sm text-left whitespace-nowrap">
                             <thead className="bg-muted/30 text-muted-foreground font-semibold text-xs uppercase tracking-wider">
                                 <tr>
-                                    <th className="px-6 py-4">Customer</th>
-                                    <th className="px-6 py-4">Purchase Details</th>
-                                    <th className="px-6 py-4">Category</th>
-                                    <th className="px-6 py-4 text-right">Amount</th>
-                                    <th className="px-6 py-4 text-right">Date</th>
+                                    <th className="px-4 py-3">Customer</th>
+                                    <th className="px-4 py-3">Purchase Details</th>
+                                    <th className="px-4 py-3 text-right">Amount</th>
+                                    <th className="px-4 py-3 text-right">Date</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-border/40">
-                                {stats.recentTransactions.length === 0 ? (
+                                {recentTransactions.length === 0 && paginationStatus !== "LoadingFirstPage" ? (
                                     <tr>
                                         <td colSpan={5} className="px-6 py-16 text-center">
                                             <div className="flex flex-col items-center justify-center">
@@ -234,34 +229,51 @@ export default function RevenuePage() {
                                         </td>
                                     </tr>
                                 ) : (
-                                    stats.recentTransactions.map((t: any) => (
+                                    recentTransactions
+                                    .filter((t: any) => !search || 
+                                        t.userName?.toLowerCase().includes(search.toLowerCase()) ||
+                                        t.userEmail?.toLowerCase().includes(search.toLowerCase()) ||
+                                        t.description?.toLowerCase().includes(search.toLowerCase())
+                                    )
+                                    .map((t: any) => {
+                                        const isUnknown = !t.userName || t.userName === 'Unknown Customer';
+                                        const initials = t.userName ? t.userName.charAt(0).toUpperCase() : '?';
+                                        const { label: detailLabel, sub: detailSub } = getPurchaseDetails(t);
+                                        return (
                                         <tr key={t._id} className="hover:bg-muted/40 transition-colors group">
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold shrink-0">
-                                                        {t.userName?.charAt(0) || 'U'}
+                                            {/* Customer */}
+                                            <td className="px-4 py-3">
+                                                <div className="flex items-center gap-2.5">
+                                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${isUnknown ? 'bg-muted text-muted-foreground' : 'bg-primary/10 text-primary'}`}>
+                                                        {initials}
                                                     </div>
-                                                    <div className="flex flex-col min-w-[120px]">
-                                                        <span className="font-bold text-foreground truncate">{t.userName}</span>
-                                                        <span className="text-[10px] text-muted-foreground font-medium truncate">{t.userEmail}</span>
+                                                    <div className="flex flex-col min-w-0">
+                                                        <span className={`text-xs font-bold truncate ${isUnknown ? 'text-muted-foreground italic' : 'text-foreground'}`}>
+                                                            {t.userName || 'Unknown'}
+                                                        </span>
+                                                        {t.userEmail && (
+                                                            <span className="text-[10px] text-muted-foreground truncate max-w-[120px]">{t.userEmail}</span>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4">
-                                                <p className="text-muted-foreground text-sm max-w-[250px] truncate" title={t.description}>
-                                                    {t.description}
-                                                </p>
+                                            {/* Purchase Details */}
+                                            <td className="px-4 py-3">
+                                                <div className="flex flex-col gap-0.5">
+                                                    <span className="text-xs font-bold text-foreground leading-tight">{detailLabel}</span>
+                                                    {detailSub && <span className="text-[10px] text-muted-foreground leading-tight">{detailSub}</span>}
+                                                    <BadgeType type={t.type} />
+                                                </div>
                                             </td>
-                                            <td className="px-6 py-4">
-                                                <BadgeType type={t.type} />
-                                            </td>
-                                            <td className="px-6 py-4 text-right">
-                                                <span className="font-black tabular-nums text-foreground bg-muted/50 px-2 py-1 rounded-md">
+                                            {/* Amount */}
+                                            <td className="px-4 py-3 text-right">
+                                                <span className="font-black tabular-nums text-sm text-foreground">
                                                     {formatCurrency(t.amount)}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 text-right">
-                                                <div className="flex flex-col items-end">
+                                            {/* Date */}
+                                            <td className="px-4 py-3 text-right">
+                                                <div className="flex flex-col items-end gap-0.5">
                                                     <span className="text-xs font-semibold text-foreground">
                                                         {new Date(t.createdAt).toLocaleDateString()}
                                                     </span>
@@ -271,11 +283,29 @@ export default function RevenuePage() {
                                                 </div>
                                             </td>
                                         </tr>
-                                    ))
+                                        );
+                                    })
                                 )}
                             </tbody>
                         </table>
                     </div>
+                    {paginationStatus === "CanLoadMore" && (
+                        <div className="p-4 border-t border-border/40 bg-muted/5 flex justify-center">
+                            <Button 
+                                variant="outline" 
+                                size="sm" 
+                                onClick={() => loadMore(10)}
+                                className="text-xs uppercase tracking-wider font-bold"
+                            >
+                                Load More Transactions
+                            </Button>
+                        </div>
+                    )}
+                    {paginationStatus === "LoadingMore" && (
+                        <div className="p-4 border-t border-border/40 bg-muted/5 flex justify-center">
+                            <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+                        </div>
+                    )}
                 </Card>
             </div>
           </div>
@@ -325,12 +355,38 @@ function CategoryRow({ title, amount, color, icon: Icon }: any) {
     );
 }
 
+function getPurchaseDetails(t: any): { label: string; sub?: string } {
+    const desc = t.description || '';
+    if (t.type === 'SUBSCRIPTION') {
+        // e.g. "BASIC Subscription (monthly)" or "PRO Membership"
+        const parts = desc.split('(');
+        const label = parts[0].trim() || 'Subscription Plan';
+        const sub = parts[1] ? parts[1].replace(')', '').trim() : undefined;
+        return { label, sub };
+    }
+    if (t.type === 'PROMOTION' || t.type === 'LISTING_PROMOTION') {
+        // e.g. "Listing Promotion: TOP_POSITIONING (Listing #abc123)"
+        const match = desc.match(/^(.+?)(?:\s*\((.+)\))?$/);
+        return { label: match?.[1]?.trim() || 'Listing Promotion', sub: match?.[2]?.trim() };
+    }
+    if (t.type === 'TOPUP') {
+        return { label: 'Wallet Top-Up', sub: `+${t.amount} MKD credits` };
+    }
+    // Fallback: use description as-is, split at ":"
+    const [before, after] = desc.split(':');
+    return { label: before?.trim() || desc, sub: after?.trim() };
+}
+
 function BadgeType({ type }: { type: string }) {
     if (type === 'SUBSCRIPTION') {
-        return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800">Subscription</span>;
+        return <span className="inline-flex items-center px-1.5 py-0.5 mt-0.5 rounded-full text-[9px] font-bold bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800 w-fit">Subscription</span>;
     }
     if (type === 'PROMOTION' || type === 'LISTING_PROMOTION') {
-        return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 border border-purple-200 dark:border-purple-800">Promotion</span>;
+        return <span className="inline-flex items-center px-1.5 py-0.5 mt-0.5 rounded-full text-[9px] font-bold bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 border border-purple-200 dark:border-purple-800 w-fit">Promotion</span>;
     }
-    return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400 border border-gray-200 dark:border-gray-700">{type}</span>;
+    if (type === 'TOPUP') {
+        return <span className="inline-flex items-center px-1.5 py-0.5 mt-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 w-fit">Top-Up</span>;
+    }
+    return <span className="inline-flex items-center px-1.5 py-0.5 mt-0.5 rounded-full text-[9px] font-bold bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400 border border-gray-200 dark:border-gray-700 w-fit">{type}</span>;
 }
+

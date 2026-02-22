@@ -239,6 +239,21 @@ export const remove = mutation({
   },
 });
 
+export const removeByEmail = mutation({
+  args: { email: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", args.email))
+      .first();
+    if (user) {
+        await ctx.db.delete(user._id);
+        return { success: true, id: user._id };
+    }
+    return { success: false };
+  },
+});
+
 export const updateByExternalId = mutation({
   args: {
     externalId: v.string(),

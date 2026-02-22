@@ -1,5 +1,6 @@
 'use client';
 
+import { AdminFilterToolbar, getSinceFromRange, TimeRange } from '@/components/admin/admin-filter-toolbar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,15 +20,20 @@ import {
     Users
 } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 // I will create this one to handle Convex data
 import { DashboardCard } from './dashboard-card';
 
 export function AdminDashboardClient() {
+  const [timeRange, setTimeRange] = useState<TimeRange>('today');
+  const since = getSinceFromRange(timeRange);
+
   const stats = useQuery(api.admin.getStats);
   const dailyDeltas = useQuery(api.admin.getDailyDeltas);
   const recentLogs = useQuery(api.activityLogs.list, { limit: 8 });
   const pendingListings = useQuery(api.listings.getPendingListings);
+  const revenue = useQuery(api.transactions.getRevenueStats, { since });
 
   const isLoading = !stats || !dailyDeltas;
 
@@ -59,10 +65,15 @@ export function AdminDashboardClient() {
             </span>
           </h1>
           <p className='text-lg text-muted-foreground font-medium'>
-            Welcome back! Here's what's happening on your platform today.
+            Welcome back! Here's what's happening on your platform.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+           <AdminFilterToolbar
+               timeRange={timeRange}
+               onTimeRangeChange={setTimeRange}
+               showSearch={false}
+           />
            <Button variant="outline" size="sm" asChild className="hidden sm:flex rounded-full">
               <Link href="/admin/analytics">
                 <BarChart3 className="w-4 h-4 mr-2" />
@@ -97,11 +108,12 @@ export function AdminDashboardClient() {
           description={`${dailyDeltas?.newListings ?? 0} posted today (Total: ${stats?.listings ?? 0})`}
         />
         <DashboardCard
-          title="Revenue Today"
-          value={(stats?.totalRevenue ?? 0).toLocaleString() + ' MKD'}
+          title={`Revenue (${timeRange === 'today' ? 'Today' : timeRange === 'week' ? '7 Days' : timeRange === 'month' ? '30 Days' : timeRange === 'year' ? 'Year' : 'All Time'})`}
+          value={revenue ? `${revenue.totalRevenue?.toFixed(0) ?? '0'} MKD` : `${(stats?.totalRevenue ?? 0).toLocaleString()} MKD`}
           icon={CreditCard}
           color="violet"
           trend={{ value: dailyDeltas?.revenueToday ?? 0, isPositive: (dailyDeltas?.revenueToday ?? 0) > 0 }}
+
           description={`Since start of today`}
         />
         <DashboardCard

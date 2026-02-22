@@ -1,12 +1,19 @@
 'use client';
 
+import { AdminFilterToolbar, getSinceFromRange, TimeRange } from '@/components/admin/admin-filter-toolbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
-import { BarChart3, Clock, CreditCard, Loader2, MessageSquare, ShieldCheck, Users } from 'lucide-react';
+import { BarChart3, Clock, CreditCard, Loader2, MessageSquare, ShieldCheck, TrendingDown, TrendingUp, Users } from 'lucide-react';
+import { useState } from 'react';
 
 export function AdminSystemAnalyticsClient() {
-  const stats = useQuery(api.admin.getStats, {});
+  const [timeRange, setTimeRange] = useState<TimeRange>('all');
+  const since = getSinceFromRange(timeRange);
+
+  const stats    = useQuery(api.admin.getStats, {});
+  const deltas   = useQuery(api.admin.getDailyDeltas);
+  const revenue  = useQuery(api.transactions.getRevenueStats, { since });
 
   if (stats === undefined) {
     return (
@@ -17,73 +24,140 @@ export function AdminSystemAnalyticsClient() {
   }
 
   const statItems = [
-    { label: 'Total Users', value: stats.users, icon: Users, color: 'text-blue-500', description: 'Registered platform users' },
-    { label: 'Total Listings', value: stats.listings, icon: BarChart3, color: 'text-emerald-500', description: 'Active and inactive listings' },
-    { label: 'Promoted Listings', value: stats.promotedListings, icon: CreditCard, color: 'text-amber-500', description: 'Listings with active promotions' },
-    { label: 'Pending Verifications', value: stats.pendingVerifications, icon: ShieldCheck, color: 'text-purple-500', description: 'Users awaiting ID verification' },
-    { label: 'Support Inquiries', value: stats.newInquiries, icon: MessageSquare, color: 'text-rose-500', description: 'New contact form submissions' },
+    {
+      label: 'Total Users', value: stats.users, icon: Users, color: 'text-blue-500',
+      bg: 'bg-blue-500/10', border: 'border-blue-500/20',
+      delta: deltas?.newUsersToday,
+      description: 'Registered platform users',
+    },
+    {
+      label: 'Total Listings', value: stats.listings, icon: BarChart3, color: 'text-emerald-500',
+      bg: 'bg-emerald-500/10', border: 'border-emerald-500/20',
+      delta: deltas?.newListingsToday,
+      description: 'All active and inactive listings',
+    },
+    {
+      label: 'Promoted Listings', value: stats.promotedListings, icon: CreditCard, color: 'text-amber-500',
+      bg: 'bg-amber-500/10', border: 'border-amber-500/20',
+      delta: undefined,
+      description: 'Listings with active promotions',
+    },
+    {
+      label: 'Pending Verifications', value: stats.pendingVerifications, icon: ShieldCheck, color: 'text-purple-500',
+      bg: 'bg-purple-500/10', border: 'border-purple-500/20',
+      delta: undefined,
+      description: 'Users awaiting ID verification',
+    },
+    {
+      label: 'Support Inquiries', value: stats.newInquiries, icon: MessageSquare, color: 'text-rose-500',
+      bg: 'bg-rose-500/10', border: 'border-rose-500/20',
+      delta: undefined,
+      description: 'New contact form submissions',
+    },
   ];
+
+  const revenueItems = revenue ? [
+    { label: 'Gross Revenue',       value: `${revenue.totalRevenue?.toFixed(0) ?? '0'} MKD`, trend: null },
+    { label: 'Subscription Revenue', value: `${revenue.subscriptionRevenue?.toFixed(0) ?? '0'} MKD`, trend: null },
+    { label: 'Promotion Revenue',   value: `${revenue.promotionRevenue?.toFixed(0) ?? '0'} MKD`, trend: null },
+    { label: 'Transactions',         value: revenue.transactionCount ?? 0, trend: null },
+  ] : [];
 
   return (
     <div className='space-y-8 pb-20'>
-      {/* Header Area */}
-      <div className='flex flex-col gap-6 sm:flex-row sm:items-end justify-between animate-in fade-in slide-in-from-top-4 duration-500'>
+      {/* Header */}
+      <div className='flex flex-col gap-4 sm:flex-row sm:items-center justify-between animate-in fade-in slide-in-from-top-4 duration-500'>
         <div className='space-y-2'>
            <h1 className='text-3xl sm:text-4xl font-black tracking-tight flex items-center gap-3'>
              System Analytics
              <span className='inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-bold ring-1 ring-inset ring-blue-500/20 uppercase tracking-widest'>
-                Active
+                Live
              </span>
            </h1>
-           <p className='text-muted-foreground font-medium'>
+           <p className='text-muted-foreground font-medium text-sm'>
                Real-time platform statistics and activity metrics.
            </p>
         </div>
+        {/* Time filter for revenue section */}
+        <AdminFilterToolbar
+            timeRange={timeRange}
+            onTimeRangeChange={setTimeRange}
+            showSearch={false}
+            className="sm:w-auto"
+        />
       </div>
 
-      {/* Bento Grid Stats */}
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 lg:gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100'>
-        {statItems.map((stat, idx) => (
-          <Card 
-            key={stat.label} 
-            className={`overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
-                idx === 0 || idx === 1 ? "col-span-1 sm:col-span-2 lg:col-span-1 xl:col-span-2" : "col-span-1"
-            }`}
-          >
-            <CardContent className="p-6 h-full flex flex-col justify-between">
+      {/* Revenue Overview (time-filtered) */}
+      {revenue && (
+        <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+            <CreditCard className="w-4 h-4" />
+            Revenue — <span className="text-primary capitalize">{timeRange === 'all' ? 'All Time' : timeRange}</span>
+          </h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {revenueItems.map(r => (
+              <div key={r.label} className="glass-card rounded-2xl p-5 border border-border/60 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{r.label}</p>
+                <p className="text-xl font-black text-foreground mt-1">{r.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Platform Stats (all-time) */}
+      <div className='space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100'>
+        <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+          <Users className="w-4 h-4" /> Platform Stats — All Time
+        </h2>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4'>
+          {statItems.map((stat, idx) => (
+            <div
+              key={stat.label}
+              className={`glass-card rounded-3xl p-6 border ${stat.border} hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between ${
+                idx < 2 ? 'xl:col-span-1' : ''
+              }`}
+            >
               <div className="flex items-start justify-between mb-4">
-                 <div className={`p-3 rounded-xl ${stat.color.replace('text-', 'bg-').replace('-500', '-500/10')} ring-1 ring-inset ${stat.color.replace('text-', 'ring-').replace('-500', '-500/20')} shadow-sm`}>
-                    <stat.icon className={`h-5 w-5 ${stat.color}`} />
-                 </div>
+                <div className={`p-3 rounded-2xl ${stat.bg} ring-1 ring-inset ring-white/10 group-hover:scale-110 transition-transform`}>
+                  <stat.icon className={`h-5 w-5 ${stat.color}`} />
+                </div>
+                {stat.delta !== undefined && (
+                  <div className={`flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full ${
+                    stat.delta > 0 ? 'bg-emerald-500/10 text-emerald-600' : 'bg-muted text-muted-foreground'
+                  }`}>
+                    {stat.delta > 0 ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
+                    +{stat.delta} today
+                  </div>
+                )}
               </div>
               <div>
-                 <div className="text-3xl font-black tracking-tight mb-1">{stat.value}</div>
-                 <h3 className="text-sm font-bold text-foreground/90">{stat.label}</h3>
-                 <p className="text-[10px] text-muted-foreground mt-1 font-medium italic">
-                   {stat.description}
-                 </p>
+                <div className="text-3xl font-black tracking-tight mb-1 text-foreground">{stat.value}</div>
+                <h3 className="text-sm font-bold text-foreground/90">{stat.label}</h3>
+                <p className="text-[10px] text-muted-foreground mt-1 font-medium italic">{stat.description}</p>
               </div>
-            </CardContent>
-          </Card>
-        ))}
+            </div>
+          ))}
+        </div>
       </div>
 
+      {/* Placeholder for future charts */}
       <Card className="rounded-[2rem] border-border/50 shadow-xl overflow-hidden bg-card/60 backdrop-blur-md animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
         <CardHeader className="p-6 md:p-8 border-b border-border/40 bg-muted/20">
           <CardTitle className="text-xl font-bold flex items-center gap-3 tracking-tight">
             <Clock className="h-5 w-5 text-primary" />
-            Insights Engine
+            Historical Trends
           </CardTitle>
-          <p className="text-sm text-muted-foreground mt-1">Historical trajectory and predictive modeling.</p>
+          <p className="text-sm text-muted-foreground mt-1">Activity charts and trajectory analysis over time.</p>
         </CardHeader>
         <CardContent className="p-6 md:p-8">
           <div className="flex flex-col items-center justify-center py-12 text-center bg-muted/30 rounded-xl border border-dashed border-border/60">
              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                 <BarChart3 className="w-8 h-8 text-primary/60" />
              </div>
-             <h3 className="font-bold text-lg text-foreground mb-2">Advanced Charts Coming Soon</h3>
+             <h3 className="font-bold text-lg text-foreground mb-2">Charts Coming Soon</h3>
              <p className="text-sm text-muted-foreground max-w-md mx-auto">
-               Visual charts and historical trends for {new Date().getFullYear()} are currently compiling. They will be available in the next system update as more data points are collected.
+               Visual charts for users, listings, revenue, and traffic over time are being compiled. More data points collect every day.
              </p>
           </div>
         </CardContent>

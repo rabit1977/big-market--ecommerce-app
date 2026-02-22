@@ -1,3 +1,4 @@
+import { paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
@@ -178,25 +179,6 @@ export const getRevenueStats = query({
     const netRevenue = totalRevenue / 1.18;
     const vatRevenue = totalRevenue - netRevenue;
 
-    // Get Recent Transactions (Today only)
-    // We can just sort the filtered list since we already fetched it
-    const recentTransactions = transactions.sort((a, b) => b.createdAt - a.createdAt);
-        
-    // Enhance recent transactions with user details
-    const recentWithUser = await Promise.all(
-        recentTransactions.map(async (t) => {
-            const user = await ctx.db
-                .query("users")
-                .withIndex("by_externalId", q => q.eq("externalId", t.userId))
-                .first();
-            return {
-                ...t,
-                userName: user?.name || "Unknown User",
-                userEmail: user?.email || t.metadata?.userEmail || ""
-            };
-        })
-    );
-
     return {
         totalRevenue, // Gross Total (Inclusive of VAT) - Now ALL TIME
         netRevenue,   // Net Total (Exclusive of VAT)
@@ -205,7 +187,96 @@ export const getRevenueStats = query({
         verificationRevenue,
         promotionRevenue,
         revenueByTier: tierStats,
-        recentTransactions: recentWithUser
+        // Removed recentTransactions to reduce payload footprint now that it's paginated
     };
   },
 });
+
+export const getPaginatedTransactions = query({
+  args: {
+    paginationOpts: paginationOptsValidator,
+    since: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    let q;
+    
+    if (args.since !== undefined) {
+      q = ctx.db.query("transactions").withIndex("by_createdAt", q => q.gte("createdAt", args.since!)).order("desc");
+    } else {
+      q = ctx.db.query("transactions").withIndex("by_createdAt").order("desc");
+    }
+
+    const results = await q.paginate(args.paginationOpts);
+
+    const pageWithUser = await Promise.all(
+        results.page.map(async (t) => {
+            const meta = (t.metadata as any) || {};
+
+            // Shortcut: Stripe sync now always stores customer_name + customer_email in metadata
+            // If both exist, we can resolve immediately without any DB lookups
+            if (meta.customer_name && meta.customer_email) {
+                return {
+                    ...t,
+                    userName: meta.customer_name,
+                    userEmail: meta.customer_email,
+                };
+            }
+
+            // Tier 1: Look up by externalId (Clerk/UUID) — normal case
+            let user = await ctx.db
+                .query("users")
+                .withIndex("by_externalId", q => q.eq("externalId", t.userId))
+                .first();
+
+            // Tier 2: Fallback — userId might be a Convex internal document ID
+            if (!user && t.userId) {
+                try {
+                    const byId = await ctx.db.get(t.userId as any);
+                    if (byId && (byId as any).email) {
+                        user = byId as any;
+                    }
+                } catch (_) {
+                    // not a valid Convex ID, skip
+                }
+            }
+
+            // Tier 3: Fallback by customer_email from Stripe metadata (new format)
+            if (!user && meta.customer_email) {
+                user = await ctx.db
+                    .query("users")
+                    .withIndex("by_email", q => q.eq("email", meta.customer_email))
+                    .first();
+            }
+
+            // Tier 4: Fallback by userEmail from old metadata format
+            if (!user && meta.userEmail) {
+                user = await ctx.db
+                    .query("users")
+                    .withIndex("by_email", q => q.eq("email", meta.userEmail))
+                    .first();
+            }
+
+            // Priority: DB user name > Stripe customer_name > email prefix > generic label
+            const customerEmail = user?.email || meta.customer_email || meta.userEmail || "";
+            const customerName = 
+                user?.name ||
+                meta.customer_name ||
+                (customerEmail ? customerEmail.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()) : "Unknown Customer");
+
+            return {
+                ...t,
+                userName: customerName,
+                userEmail: customerEmail,
+            };
+        })
+    );
+
+
+    return {
+        ...results,
+        page: pageWithUser
+    };
+  }
+});
+
+

@@ -1,28 +1,28 @@
 'use client';
 
-import { approveUserAction, deleteUserFromAdminAction, rejectUserAction } from '@/actions/user-actions';
+import { approveUserAction, deleteUserFromAdminAction, rejectUserAction, updateUserRoleAction } from '@/actions/user-actions';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { User } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { Ban, CheckCircle, Clock, Edit, Eye, MoreHorizontal, Shield, Trash2, UserCog, User as UserIcon, XCircle } from 'lucide-react';
+import { Ban, CheckCircle, Clock, Edit, Eye, MoreHorizontal, Shield, ShieldOff, Trash2, UserCog, User as UserIcon, XCircle } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -322,6 +322,42 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                             </DropdownMenuItem>
                         )}
                         
+                        <DropdownMenuSeparator />
+
+                        {(user.role !== 'ADMIN') ? (
+                            <DropdownMenuItem
+                                className='cursor-pointer text-indigo-500 focus:text-indigo-500'
+                                onSelect={() => startTransition(async () => {
+                                    const result = await updateUserRoleAction(user.id, 'ADMIN');
+                                    if (result.success) {
+                                        toast.success('User promoted to Administrator');
+                                        router.refresh();
+                                    } else {
+                                        toast.error(result.error);
+                                    }
+                                })}
+                            >
+                                <Shield className='h-4 w-4 mr-2' />
+                                Make Administrator
+                            </DropdownMenuItem>
+                        ) : (
+                            <DropdownMenuItem
+                                className='cursor-pointer text-orange-500 focus:text-orange-500'
+                                onSelect={() => startTransition(async () => {
+                                    const result = await updateUserRoleAction(user.id, 'USER');
+                                    if (result.success) {
+                                        toast.success('Administrator access revoked');
+                                        router.refresh();
+                                    } else {
+                                        toast.error(result.error);
+                                    }
+                                })}
+                            >
+                                <ShieldOff className='h-4 w-4 mr-2' />
+                                Revoke Administrator
+                            </DropdownMenuItem>
+                        )}
+
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           className='text-destructive focus:text-destructive cursor-pointer'

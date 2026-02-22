@@ -102,6 +102,13 @@ export const syncTransactions = action({
 
         // Call internal mutation to record
         try {
+            // Always include Stripe customer email in metadata for name resolution
+            const enrichedMetadata = {
+                ...(session.metadata || {}),
+                customer_email: session.customer_details?.email || session.metadata?.customer_email || "",
+                customer_name: session.customer_details?.name || session.metadata?.customer_name || "",
+            };
+
             await ctx.runMutation(api.transactions.record, {
                 userId: userId,
                 amount: amount,
@@ -109,7 +116,7 @@ export const syncTransactions = action({
                 description: description,
                 status: 'COMPLETED',
                 stripeId: session.id,
-                metadata: session.metadata || {}, // save all metadata
+                metadata: enrichedMetadata,
                 createdAt: session.created * 1000 // Use actual Stripe timestamp
             });
             
@@ -128,6 +135,7 @@ export const syncTransactions = action({
         } catch (e) {
             console.error(`Failed to record transaction ${session.id}:`, e);
         }
+
     }
 
     return { success: true, count: syncedCount };
