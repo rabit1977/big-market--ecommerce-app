@@ -27,13 +27,13 @@ export function AdminSystemAnalyticsClient() {
     {
       label: 'Total Users', value: stats.users, icon: Users, color: 'text-blue-500',
       bg: 'bg-blue-500/10', border: 'border-blue-500/20',
-      delta: deltas?.newUsersToday,
+      delta: deltas?.newUsers,
       description: 'Registered platform users',
     },
     {
       label: 'Total Listings', value: stats.listings, icon: BarChart3, color: 'text-emerald-500',
       bg: 'bg-emerald-500/10', border: 'border-emerald-500/20',
-      delta: deltas?.newListingsToday,
+      delta: deltas?.newListings,
       description: 'All active and inactive listings',
     },
     {
@@ -57,11 +57,12 @@ export function AdminSystemAnalyticsClient() {
   ];
 
   const revenueItems = revenue ? [
-    { label: 'Gross Revenue',       value: `${revenue.totalRevenue?.toFixed(0) ?? '0'} MKD`, trend: null },
-    { label: 'Subscription Revenue', value: `${revenue.subscriptionRevenue?.toFixed(0) ?? '0'} MKD`, trend: null },
-    { label: 'Promotion Revenue',   value: `${revenue.promotionRevenue?.toFixed(0) ?? '0'} MKD`, trend: null },
-    { label: 'Transactions',         value: revenue.transactionCount ?? 0, trend: null },
+    { label: 'Gross Revenue',       value: `${revenue.totalRevenue?.toFixed(0) ?? '0'} MKD` },
+    { label: 'Net Revenue (ex VAT)', value: `${revenue.netRevenue?.toFixed(0) ?? '0'} MKD` },
+    { label: 'Promotion Revenue',   value: `${revenue.promotionRevenue?.toFixed(0) ?? '0'} MKD` },
+    { label: 'Subscription Revenue', value: `${revenue.verificationRevenue?.toFixed(0) ?? '0'} MKD` },
   ] : [];
+
 
   return (
     <div className='space-y-8 pb-20'>

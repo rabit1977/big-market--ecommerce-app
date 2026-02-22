@@ -14,7 +14,6 @@ import {
     Loader2,
     Package,
     Sparkles,
-    Star,
     Trash2,
     X
 } from 'lucide-react';
@@ -215,32 +214,38 @@ export function AdminListingsHub() {
 
                 {/* Row 2 */}
                 <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-border/30">
-                    <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">Filter by:</span>
-                    {['ALL', 'ACTIVE', 'PENDING_APPROVAL', 'REJECTED', 'INACTIVE'].map(s => (
-                        <button
-                            key={s}
-                            onClick={() => { setStatus(s); setPage(1); }}
-                            className={cn(
-                                'px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all',
-                                statusFilter === s
-                                    ? 'bg-primary text-primary-foreground border-primary shadow-sm'
-                                    : 'border-border/50 text-muted-foreground hover:text-foreground hover:border-border'
-                            )}
+                    {/* Status dropdown */}
+                    <div className="relative flex items-center shrink-0">
+                        <select
+                            value={statusFilter}
+                            onChange={e => { setStatus(e.target.value); setPage(1); }}
+                            className="h-8 pl-3 pr-7 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 font-bold appearance-none cursor-pointer text-foreground"
                         >
-                            {s === 'ALL' ? 'All Statuses' : s === 'PENDING_APPROVAL' ? 'Pending' : s.charAt(0) + s.slice(1).toLowerCase()}
-                        </button>
-                    ))}
-                    <button
-                        onClick={() => { setPromoted(p => !p); setPage(1); }}
-                        className={cn(
-                            'ml-2 px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all flex items-center gap-1',
-                            promotedOnly
-                                ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
-                                : 'border-border/50 text-muted-foreground hover:text-foreground hover:border-amber-500/50'
-                        )}
-                    >
-                        <Star className="w-2.5 h-2.5" /> Promoted Only
-                    </button>
+                            <option value="ALL">All Statuses</option>
+                            <option value="ACTIVE">Active</option>
+                            <option value="PENDING_APPROVAL">Pending</option>
+                            <option value="REJECTED">Rejected</option>
+                            <option value="INACTIVE">Inactive</option>
+                        </select>
+                        <svg className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+
+                    {/* Promoted dropdown */}
+                    <div className="relative flex items-center shrink-0">
+                        <select
+                            value={promotedOnly ? 'promoted' : 'all'}
+                            onChange={e => { setPromoted(e.target.value === 'promoted'); setPage(1); }}
+                            className="h-8 pl-3 pr-7 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 font-bold appearance-none cursor-pointer text-foreground"
+                        >
+                            <option value="all">All Listings</option>
+                            <option value="promoted">⭐ Promoted Only</option>
+                        </select>
+                        <svg className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
 
                     <span className="ml-auto text-xs text-muted-foreground shrink-0">
                         <span className="font-bold text-foreground">{filtered.length}</span> of <span className="font-bold text-foreground">{total}</span> listings
