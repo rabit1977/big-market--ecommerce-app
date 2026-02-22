@@ -15,12 +15,12 @@ export function DeleteListingButton({ listingId, listingTitle }: DeleteListingBu
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = () => {
-      if (!confirm(`Are you sure you want to delete "${listingTitle}"?`)) return;
+      if (!confirm(`Move "${listingTitle}" to the recycle bin? You can restore it later.`)) return;
 
       startTransition(async () => {
           const result = await deleteListingAction(listingId);
           if (result.success) {
-              toast.success('Listing deleted');
+              toast.success('Listing moved to recycle bin');
           } else {
               toast.error(result.error || 'Failed to delete');
           }

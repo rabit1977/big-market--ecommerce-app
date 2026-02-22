@@ -65,8 +65,16 @@ export async function deleteListingAction(id: string) {
         
         await requireApproved(id);
 
-        await convex.mutation(api.listings.remove, { id: id as any });
+        // Soft-delete: moves the listing to the recycle bin instead of permanently removing it.
+        // Use api.listings.remove only for permanent purges (admin only).
+        await convex.mutation(api.recycleBin.softDelete, {
+            listingId: id as any,
+            deletedBy: session.user.id,
+            deletedByName: session.user.name ?? undefined,
+        });
+
         revalidatePath('/my-listings');
+        revalidatePath('/admin/recycle-bin');
         return { success: true };
     } catch (e: any) {
         return { success: false, error: e.message };

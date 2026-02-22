@@ -9,11 +9,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { MapPin, X } from 'lucide-react';
@@ -179,7 +179,9 @@ export function FilterPanel({
   const updateFilter = useCallback((key: keyof FilterState, value: any) => {
     setFilters((prev) => {
       const next = { ...prev, [key]: value };
-      onFilterChange(next);
+      // Schedule onFilterChange outside the updater to avoid calling router.push
+      // during a render (which would trigger the "Cannot update Router while rendering" error).
+      setTimeout(() => onFilterChange(next), 0);
       return next;
     });
   }, [onFilterChange]);
@@ -203,7 +205,7 @@ export function FilterPanel({
     setPriceRange([min, max]);
     setFilters((prev) => {
       const next = { ...prev, priceMin: min, priceMax: max };
-      onFilterChange(next);
+      setTimeout(() => onFilterChange(next), 0);
       return next;
     });
   }, [onFilterChange]);
@@ -261,10 +263,11 @@ export function FilterPanel({
         next[key] = value;
       }
       const jsonString = Object.keys(next).length > 0 ? JSON.stringify(next) : undefined;
-      // Propagate to parent
+      // Update filters state and notify parent outside the updater to avoid
+      // calling router.push during render.
       setFilters((prevFilters) => {
         const nextFilters = { ...prevFilters, dynamicFilters: jsonString };
-        onFilterChange(nextFilters);
+        setTimeout(() => onFilterChange(nextFilters), 0);
         return nextFilters;
       });
       return next;
@@ -286,7 +289,7 @@ export function FilterPanel({
       const jsonString = Object.keys(next).length > 0 ? JSON.stringify(next) : undefined;
       setFilters((prevFilters) => {
         const nextFilters = { ...prevFilters, dynamicFilters: jsonString };
-        onFilterChange(nextFilters);
+        setTimeout(() => onFilterChange(nextFilters), 0);
         return nextFilters;
       });
       return next;
@@ -585,7 +588,7 @@ export function FilterPanel({
                     setPriceRange([PRICE_MIN_DEFAULT, PRICE_MAX_DEFAULT]);
                     setFilters((prev) => {
                       const next = { ...prev, priceMin: undefined, priceMax: undefined };
-                      onFilterChange(next);
+                      setTimeout(() => onFilterChange(next), 0);
                       return next;
                     });
                   }}

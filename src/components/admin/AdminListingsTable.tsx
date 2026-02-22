@@ -30,7 +30,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { cn, formatCurrency } from '@/lib/utils';
-import { AlertCircle, Check, CheckCircle, Clock, Eye, MoreHorizontal, Pencil, Trash2, XCircle } from 'lucide-react';
+import { Check, CheckCircle, Clock, Eye, MoreHorizontal, Pencil, Trash2, XCircle } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -83,7 +83,7 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
         try {
             const res = await deleteListingAction(id);
             if (res.success) {
-                toast.success('Listing deleted');
+                toast.success('Listing moved to recycle bin');
                 router.refresh();
             } else {
                 toast.error(res.error || 'Failed to delete');
@@ -287,12 +287,12 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                             <AlertDialogContent className="rounded-2xl border-destructive/20 shadow-2xl">
                               <AlertDialogHeader>
                                 <AlertDialogTitle className="flex items-center gap-2 text-destructive font-black uppercase tracking-tight">
-                                  <AlertCircle className="w-5 h-5" /> 
-                                  Delete permanently?
+                                  <Trash2 className="w-5 h-5" /> 
+                                  Move to Recycle Bin?
                                 </AlertDialogTitle>
                                 <AlertDialogDescription className="font-medium text-foreground/80">
-                                  This will permanently remove <span className="font-bold text-foreground">"{listing.title}"</span> from the platform. 
-                                  <br/><span className="text-xs text-muted-foreground mt-2 block">This action cannot be undone.</span>
+                                  <span className="font-bold text-foreground">"{listing.title}"</span> will be moved to the recycle bin. 
+                                  <br/><span className="text-xs text-muted-foreground mt-2 block">You can restore it anytime within 30 days.</span>
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter className="gap-2 sm:gap-0">
@@ -301,7 +301,7 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                                   onClick={() => handleDelete(listing._id)} 
                                   className="bg-destructive hover:bg-destructive/90 text-white rounded-xl font-bold shadow-lg shadow-destructive/20"
                                 >
-                                  Yes, Delete Listing
+                                  Move to Bin
                                 </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>

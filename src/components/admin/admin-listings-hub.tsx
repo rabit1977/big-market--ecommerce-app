@@ -2,6 +2,17 @@
 
 import { approveListingAction, deleteListingAction, rejectListingAction } from '@/actions/listing-actions';
 import { AdminFilterToolbar, AdminPagination, getSinceFromRange, TimeRange } from '@/components/admin/admin-filter-toolbar';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from '@/components/ui/button';
 import { api } from '@/convex/_generated/api';
 import { cn } from '@/lib/utils';
@@ -123,16 +134,16 @@ export function AdminListingsHub() {
 
     const handleDelete = (id: string) => startTransition(async () => {
         const r = await deleteListingAction(id);
-        r.success ? toast.success('Listing deleted') : toast.error(r.error || 'Failed');
+        r.success ? toast.success('Listing moved to recycle bin') : toast.error(r.error || 'Failed');
         setSelected(prev => prev.filter(x => x !== id));
         router.refresh();
     });
 
     const handleBulkDelete = () => {
-        if (!confirm(`Delete ${selected.length} listings? This cannot be undone.`)) return;
+        if (!confirm(`Move ${selected.length} listings to the recycle bin? You can restore them later.`)) return;
         startTransition(async () => {
             for (const id of selected) await deleteListingAction(id);
-            toast.success(`${selected.length} listings deleted`);
+            toast.success(`${selected.length} listings moved to recycle bin`);
             setSelected([]);
             router.refresh();
         });
@@ -396,11 +407,36 @@ export function AdminListingsHub() {
                                                     title="View">
                                                     <Eye className="h-3.5 w-3.5" />
                                                 </Link>
-                                                <button onClick={() => handleDelete(listing.id)} disabled={isPending}
-                                                    className="h-7 w-7 rounded-lg flex items-center justify-center bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-colors"
-                                                    title="Delete">
-                                                    <Trash2 className="h-3.5 w-3.5" />
-                                                </button>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <button disabled={isPending}
+                                                            className="h-7 w-7 rounded-lg flex items-center justify-center bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-colors"
+                                                            title="Delete">
+                                                            <Trash2 className="h-3.5 w-3.5" />
+                                                        </button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent className="rounded-2xl">
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle className="flex items-center gap-2 font-black uppercase tracking-tight text-destructive">
+                                                                <Trash2 className="w-5 h-5" />
+                                                                Move to Recycle Bin?
+                                                            </AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                <span className="block mb-2 font-medium text-foreground">"{listing.title}"</span>
+                                                                This listing will be moved to the recycle bin. You can restore it later if needed.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel className="rounded-xl font-bold uppercase text-xs h-10">Cancel</AlertDialogCancel>
+                                                            <AlertDialogAction 
+                                                                onClick={() => handleDelete(listing.id)} 
+                                                                className="bg-destructive hover:bg-destructive/90 text-white rounded-xl font-bold tracking-wider uppercase text-xs h-10 shadow-lg shadow-destructive/20"
+                                                            >
+                                                                Move to Bin
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
                                             </div>
                                         </td>
                                     </tr>

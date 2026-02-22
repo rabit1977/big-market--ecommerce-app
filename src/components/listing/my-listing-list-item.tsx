@@ -43,7 +43,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
         startTransition(async () => {
              const res = await deleteListingAction(listing.id!);
              if(res.success) {
-                 toast.success('Listing deleted');
+                 toast.success('Listing moved to recycle bin');
              } else {
                  toast.error(res.error || 'Failed to delete');
              }
@@ -269,16 +269,24 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                                 <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider hidden sm:inline">Delete</span>
                             </button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="rounded-2xl">
+                        <AlertDialogContent className="rounded-2xl max-w-sm">
                             <AlertDialogHeader>
-                                <AlertDialogTitle className="font-black uppercase tracking-tight">Delete Listing?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    This will permanently remove &quot;{listing.title}&quot; from your listings.
+                                <AlertDialogTitle className="flex items-center gap-2 font-black uppercase tracking-tight">
+                                    <Trash2 className="w-5 h-5 text-destructive" />
+                                    Move to Recycle Bin?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription className="space-y-2 pt-1">
+                                    <span className="block">
+                                        &quot;{listing.title}&quot; will be moved to the recycle bin.
+                                    </span>
+                                    <span className="block text-xs text-muted-foreground">
+                                        You can restore it from the admin recycle bin within 30 days before it is permanently deleted.
+                                    </span>
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90 rounded-full font-bold">Delete</AlertDialogAction>
+                                <AlertDialogCancel className="rounded-xl font-bold uppercase text-xs h-10">Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90 rounded-xl font-black uppercase text-xs h-10 shadow-lg shadow-destructive/20">Move to Bin</AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>

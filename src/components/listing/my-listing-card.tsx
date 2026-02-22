@@ -41,7 +41,7 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
         startTransition(async () => {
              const res = await deleteListingAction(listing.id!);
              if(res.success) {
-                 toast.success('Listing deleted');
+                 toast.success('Listing moved to recycle bin');
              } else {
                  toast.error(res.error || 'Failed to delete');
              }
@@ -118,15 +118,15 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                               <AlertDialogHeader>
-                                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                  <AlertDialogTitle>Move to Recycle Bin?</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                      This action cannot be undone. This will permanently delete your listing.
+                                      &quot;{listing.title}&quot; will be moved to the recycle bin. You can restore it from the admin panel within 30 days.
                                   </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                                   <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                      Delete
+                                      Move to Bin
                                   </AlertDialogAction>
                               </AlertDialogFooter>
                           </AlertDialogContent>
