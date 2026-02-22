@@ -69,12 +69,14 @@ export function AdminListingsHub() {
         if (since) result = result.filter((l: any) => (l.createdAt || l._creationTime || 0) >= since);
         if (promotedOnly) result = result.filter((l: any) => l.isPromoted || l.promotionTier);
         if (search.trim()) {
-            const q = search.toLowerCase();
+            const q = search.toLowerCase().replace(/^#/, ''); // strip leading # for listing number
             result = result.filter((l: any) =>
                 l.title?.toLowerCase().includes(q) ||
                 l.category?.toLowerCase().includes(q) ||
                 l.city?.toLowerCase().includes(q) ||
-                l.sellerName?.toLowerCase().includes(q)
+                l.sellerName?.toLowerCase().includes(q) ||
+                String(l.listingNumber || '').includes(q) || // e.g. #1234
+                (l._id || '').toLowerCase().includes(q)     // Convex internal ID
             );
         }
 
@@ -203,7 +205,7 @@ export function AdminListingsHub() {
                     onTimeRangeChange={(r) => { setTimeRange(r); setPage(1); }}
                     searchValue={search}
                     onSearchChange={(q) => { setSearch(q); setPage(1); }}
-                    searchPlaceholder="Search title, category, city, seller..."
+                    searchPlaceholder="Search title, category, #ID, seller..."
                     showSort
                     sortValue={sort}
                     onSortChange={(s) => { setSort(s); setPage(1); }}

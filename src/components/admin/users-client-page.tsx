@@ -64,9 +64,11 @@ export function UsersClientPage() {
 
   // Search
   const searchFiltered = search.trim() === '' ? roleFiltered :
-    roleFiltered.filter(u =>
+    roleFiltered.filter((u: any) =>
       u.name?.toLowerCase().includes(search.toLowerCase()) ||
-      u.email?.toLowerCase().includes(search.toLowerCase())
+      u.email?.toLowerCase().includes(search.toLowerCase()) ||
+      u.externalId?.toLowerCase().includes(search.toLowerCase()) || // Clerk ID
+      (u._id || '').toLowerCase().includes(search.toLowerCase())    // Convex ID
     );
 
   // Sort
@@ -153,7 +155,7 @@ export function UsersClientPage() {
             onTimeRangeChange={(r) => { setTimeRange(r); setPage(1); }}
             searchValue={search}
             onSearchChange={(q) => { setSearch(q); setPage(1); }}
-            searchPlaceholder="Search by name or email..."
+            searchPlaceholder="Search name, email, or user ID..."
             showSort
             sortValue={sort}
             onSortChange={(s) => { setSort(s); setPage(1); }}
