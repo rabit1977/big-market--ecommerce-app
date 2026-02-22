@@ -188,7 +188,7 @@ export const ContactContent = () => {
                     <Input
                       id='name'
                       name='name'
-                      placeholder='e.g. Marko Petrovski'
+                      placeholder='e.g. John Doe'
                       value={formData.name}
                       onChange={handleChange}
                       disabled={isPending}
@@ -202,7 +202,7 @@ export const ContactContent = () => {
                       id='email'
                       name='email'
                       type='email'
-                      placeholder='name@company.com'
+                      placeholder='your@company.com'
                       value={formData.email}
                       onChange={handleChange}
                       disabled={isPending}

@@ -1,14 +1,6 @@
-import { PlaceholderPage } from '@/components/shared/placeholder-page';
+import { redirect } from 'next/navigation';
 
-export const metadata = {
-  title: 'Download Stickers | Biggest Market',
-};
-
+// /stickers has no purpose for a classifieds platform — redirect to about
 export default function StickersPage() {
-  return (
-    <PlaceholderPage 
-      title="Biggest Market stickers" 
-      description="Download our official sticker pack for your car or shop. Digital assets and print-ready files will be available here shortly."
-    />
-  );
+  redirect('/about');
 }

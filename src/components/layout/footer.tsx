@@ -22,26 +22,26 @@ const FOOTER_LINKS = [
     links: [
       { label: 'About Us', href: '/about' },
       { label: 'Careers', href: '/careers' },
-      { label: 'Contact Support', href: '/contact' },
-      { label: 'Press & Media', href: '/press' },
+      { label: 'Contact Us', href: '/contact' },
+      { label: 'Advertise with Us', href: '/advertise' },
     ],
   },
   {
     title: 'Discover',
     links: [
       { label: 'All Listings', href: '/listings' },
-      { label: 'Stores', href: '/stores' },
-      { label: 'Premium Lite', href: '/premium' },
-      { label: 'Search Tags', href: '/tags' },
+      { label: 'Browse Categories', href: '/categories' },
+      { label: 'Premium Features', href: '/premium' },
+      { label: 'Help Center', href: '/help' },
     ],
   },
   {
-    title: 'Business',
+    title: 'Sellers',
     links: [
-      { label: 'Advertise with us', href: '/advertise' },
-      { label: 'Business Solutions', href: '/business' },
-      { label: 'Verification', href: '/verification' },
-      { label: 'API Access', href: '/api' },
+      { label: 'Post a Listing', href: '/sell' },
+      { label: 'My Listings', href: '/my-listings' },
+      { label: 'Get Verified', href: '/help/certification' },
+      { label: 'Pricing Plans', href: '/pricing' },
     ],
   },
   {

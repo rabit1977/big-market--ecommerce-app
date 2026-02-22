@@ -1,14 +1,6 @@
-import { PlaceholderPage } from '@/components/shared/placeholder-page';
+import { redirect } from 'next/navigation';
 
-export const metadata = {
-  title: 'Marketing Services | Biggest Market',
-};
-
+// /marketing is superseded by /advertise
 export default function MarketingPage() {
-  return (
-    <PlaceholderPage 
-      title="Marketing Solutions" 
-      description="Boost your listings with our premium marketing tools. We are currently finalizing our dynamic promotion packages."
-    />
-  );
+  redirect('/advertise');
 }
