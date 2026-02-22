@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 
 // ─── Queries ───────────────────────────────────────────────────────────────
@@ -6,11 +7,54 @@ import { mutation, query } from "./_generated/server";
 /** Get all pending reports (admin moderation queue) */
 export const getPendingReports = query({
   handler: async (ctx) => {
-    return await ctx.db
+    const reports = await ctx.db
       .query("reports")
       .withIndex("by_status", (q) => q.eq("status", "PENDING"))
       .order("desc")
       .collect();
+
+    return await Promise.all(
+      reports.map(async (report) => {
+        // Fetch Reporter Details
+        const reporter = await ctx.db
+          .query("users")
+          .withIndex("by_externalId", (q) => q.eq("externalId", report.reporterId))
+          .unique();
+
+        // Fetch Target Details
+        let targetDetail: any = null;
+        try {
+          if (report.targetType === "listing") {
+            const listing = await ctx.db.get(report.targetId as Id<"listings">);
+            if (listing) {
+              targetDetail = { id: listing._id, title: listing.title, image: listing.thumbnail || (listing.images && listing.images[0]) };
+            }
+          } else if (report.targetType === "user") {
+            const user = await ctx.db.get(report.targetId as Id<"users">);
+            if (user) {
+              targetDetail = { id: user._id, name: user.name, email: user.email, image: user.image };
+            }
+          } else if (report.targetType === "review") {
+             const review = await ctx.db.get(report.targetId as Id<"reviews">);
+             if (review) {
+                targetDetail = { id: review._id, content: review.comment, rating: review.rating };
+             }
+          }
+        } catch (error) {
+           console.error(`Failed to fetch target detail for report ${report._id}`);
+        }
+
+        return {
+          ...report,
+          reporter: {
+            name: reporter?.name || "Unknown User",
+            email: reporter?.email || "No email",
+            image: reporter?.image,
+          },
+          target: targetDetail,
+        };
+      })
+    );
   },
 });
 

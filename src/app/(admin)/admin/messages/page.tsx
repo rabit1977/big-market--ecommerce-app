@@ -1,9 +1,10 @@
 import { getAllQuestionsAction } from '@/actions/qa-actions';
+import { AdminReportsClient } from '@/components/admin/admin-reports-client';
 import { AdminSupportChatClient } from '@/components/admin/admin-support-chat-client';
 import { ContactInquiriesClient } from '@/components/admin/contact-inquiries-client';
 import { QuestionsClient } from '@/components/admin/questions-client';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Headset, MessageCircle, MessageSquare, ShieldAlert } from 'lucide-react';
+import { Flag, Headset, MessageCircle, MessageSquare, ShieldAlert } from 'lucide-react';
 
 export const metadata = {
   title: 'Communications | Admin',
@@ -40,7 +41,7 @@ export default async function AdminMessagesPage(props: AdminQuestionsPageProps) 
       </div>
 
       <Tabs defaultValue="support" className="w-full space-y-6">
-        <TabsList className="grid w-full grid-cols-3 max-w-[600px]">
+        <TabsList className="grid w-full grid-cols-4 max-w-[800px]">
           <TabsTrigger value="support" className="gap-2 text-xs sm:text-sm">
             <ShieldAlert className="w-4 h-4 hidden sm:block" /> Live Chat
           </TabsTrigger>
@@ -49,6 +50,9 @@ export default async function AdminMessagesPage(props: AdminQuestionsPageProps) 
           </TabsTrigger>
           <TabsTrigger value="contact" className="gap-2 text-xs sm:text-sm">
             <Headset className="w-4 h-4 hidden sm:block" /> Contact Forms
+          </TabsTrigger>
+          <TabsTrigger value="reports" className="gap-2 text-xs sm:text-sm">
+            <Flag className="w-4 h-4 hidden sm:block" /> User Reports
           </TabsTrigger>
         </TabsList>
 
@@ -98,6 +102,21 @@ export default async function AdminMessagesPage(props: AdminQuestionsPageProps) 
                     </p>
                 </div>
                 <ContactInquiriesClient />
+           </div>
+        </TabsContent>
+
+        <TabsContent value="reports" className="space-y-4">
+           <div className="rounded-xl border bg-card p-4 md:p-6 shadow-sm">
+                <div className="mb-4">
+                    <h2 className="text-lg font-bold flex items-center gap-2">
+                        <Flag className="w-5 h-5 text-primary" />
+                        Moderation Queue (User Reports)
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                        Review suspicious listings, scams, and policy violations flagged by users.
+                    </p>
+                </div>
+                <AdminReportsClient />
            </div>
         </TabsContent>
       </Tabs>

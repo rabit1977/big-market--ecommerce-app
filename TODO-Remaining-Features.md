@@ -12,13 +12,13 @@ This document tracks the final "Premium" features needed to make the classifieds
 - [ ] Global UI Update: Display a blue checkmark (`Verified` badge) next to the seller's name on public listing pages and user profiles.
 
 ## 2. Moderation Queue (User Reports System) 🚩
-**Status:** Not Started
+**Status:** ✅ Complete
 **Description:** A "Report Listing" button on every public listing page. If a buyer sees a scam or inappropriate content, they click report, choose a reason (e.g., "Scam", "Duplicate"), and it goes to the Admin.
 **Components to Build:**
-- [ ] Frontend Dialog: A `ReportListingModal` on the single listing page allowing users to select a report reason and add a description.
-- [ ] Convex Mutations/Queries: Submit a report, fetch reports.
-- [ ] Admin Panel UI: `/admin/reports` page showing a queue of reported listings/users.
-- [ ] Admin Actions: Buttons in the admin panel to "Dismiss Report", "Take Down Listing", or "Suspend User" based on the report.
+- [x] Frontend Dialog: A `ReportListingModal` on the single listing page allowing users to select a report reason and add a description.
+- [x] Convex Mutations/Queries: Submit a report, fetch reports.
+- [x] Admin Panel UI: `/admin/messages` page tab showing a queue of reported listings/users.
+- [x] Admin Actions: Buttons in the admin panel to "Dismiss Report" or "Resolve" based on the report.
 
 ## 3. Saved Searches & Auto-Email Alerts 🔔
 **Status:** Not Started

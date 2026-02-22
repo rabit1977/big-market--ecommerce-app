@@ -1,6 +1,7 @@
 'use client';
 
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
+import { ReportModal } from '@/components/shared/report-modal';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import {
     AlertDialog,
@@ -548,15 +549,17 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                 <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-3">
                   Safety & Trust
                 </p>
-                <button className="w-full flex items-center justify-between p-4 bg-card border border-border rounded-2xl group hover:border-primary/20 transition-all">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
-                      <ShieldAlert className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
+                <ReportModal targetId={listing._id} targetType="listing">
+                  <button className="w-full flex items-center justify-between p-4 bg-card border border-border rounded-2xl group hover:border-primary/20 transition-all">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
+                        <ShieldAlert className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
+                      </div>
+                      <span className="text-xs font-bold text-foreground">Report suspicious activity</span>
                     </div>
-                    <span className="text-xs font-bold text-foreground">Report suspicious activity</span>
-                  </div>
-                  <ChevronLeft className="w-4 h-4 text-muted-foreground rotate-180" />
-                </button>
+                    <ChevronLeft className="w-4 h-4 text-muted-foreground rotate-180" />
+                  </button>
+                </ReportModal>
               </div>
             </div>
           </div>
@@ -584,9 +587,15 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
               <ShieldAlert className="w-4 h-4" />
               <span className="font-black text-xs uppercase tracking-tighter">Safety First</span>
             </div>
-            <p className="text-xs text-amber-800 leading-relaxed font-medium">
+            <p className="text-xs text-amber-800 leading-relaxed font-medium mb-3">
               Do not pay in advance. Meet the seller in a public place. Always inspect the item before buying.
             </p>
+            <ReportModal targetId={listing._id} targetType="listing">
+              <button className="w-full flex items-center justify-between p-3 bg-white border border-amber-200 rounded-xl group hover:border-amber-400 transition-all text-left mt-2">
+                <span className="text-xs font-bold text-amber-900">Report suspicious activity</span>
+                <ChevronLeft className="w-4 h-4 text-amber-700 rotate-180" />
+              </button>
+            </ReportModal>
           </div>
         </div>
       </div>
