@@ -28,6 +28,7 @@ import type * as presence from "../presence.js";
 import type * as promotionPackages from "../promotionPackages.js";
 import type * as promotions from "../promotions.js";
 import type * as qa from "../qa.js";
+import type * as recycleBin from "../recycleBin.js";
 import type * as reports from "../reports.js";
 import type * as reset from "../reset.js";
 import type * as reviews from "../reviews.js";
@@ -71,6 +72,7 @@ declare const fullApi: ApiFromModules<{
   promotionPackages: typeof promotionPackages;
   promotions: typeof promotions;
   qa: typeof qa;
+  recycleBin: typeof recycleBin;
   reports: typeof reports;
   reset: typeof reset;
   reviews: typeof reviews;

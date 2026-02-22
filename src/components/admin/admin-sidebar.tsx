@@ -14,6 +14,7 @@ import {
     MessageCircle,
     Sparkles,
     Tag,
+    Trash2,
     Users
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
@@ -33,14 +34,15 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-    { href: '/admin/dashboard', label: 'Overview', icon: LayoutDashboard },
-    { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
-    { href: '/admin/revenue', label: 'Revenue', icon: CreditCard },
-    { href: '/admin/listings', label: 'All Listings', icon: Tag },
-    { href: '/admin/listings/promoted', label: 'Promoted Listings', icon: Sparkles },
-    { href: '/admin/categories', label: 'Categories', icon: Layers },
-    { href: '/admin/users', label: 'Users', icon: Users },
-    { href: '/admin/messages', label: 'Support & Communications', icon: MessageCircle },
+    { href: '/admin/dashboard',          label: 'Overview',               icon: LayoutDashboard },
+    { href: '/admin/analytics',          label: 'Analytics',              icon: BarChart3 },
+    { href: '/admin/revenue',            label: 'Revenue',                icon: CreditCard },
+    { href: '/admin/listings',           label: 'All Listings',           icon: Tag },
+    { href: '/admin/listings/promoted',  label: 'Promoted Listings',      icon: Sparkles },
+    { href: '/admin/categories',         label: 'Categories',             icon: Layers },
+    { href: '/admin/users',              label: 'Users',                  icon: Users },
+    { href: '/admin/messages',           label: 'Support & Communications', icon: MessageCircle },
+    { href: '/admin/recycle-bin',        label: 'Recycle Bin',            icon: Trash2 },
 ];
 
 export const AdminSidebar = () => {
@@ -50,10 +52,10 @@ export const AdminSidebar = () => {
 
   // Filter items for bottom nav (limit to 4) + Menu
   const bottomNavItems = [
-    { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Home' },
-    { href: '/admin/listings', icon: Tag, label: 'Listings' },
-    { href: '/admin/categories', icon: Layers, label: 'Cats' },
-    { href: '/admin/users', icon: Users, label: 'Users' },
+    { href: '/admin/dashboard',  icon: LayoutDashboard, label: 'Home' },
+    { href: '/admin/listings',   icon: Tag,            label: 'Listings' },
+    { href: '/admin/users',      icon: Users,          label: 'Users' },
+    { href: '/admin/recycle-bin', icon: Trash2,        label: 'Bin' },
   ];
 
   return (

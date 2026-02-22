@@ -130,6 +130,11 @@ export default defineSchema({
     // Metadata
     listingNumber: v.optional(v.number()),  // Sequential display ID
     clientNonce: v.optional(v.string()),    // Idempotency key
+
+    // Soft Delete (Recycle Bin)
+    deletedAt: v.optional(v.number()),      // Timestamp of soft delete
+    deletedBy: v.optional(v.string()),      // externalId of admin who deleted
+    deletedByName: v.optional(v.string()), // Display name of deleter
   }).index("by_listingNumber", ["listingNumber"])
     .index("by_category", ["category"])
     .index("by_userId", ["userId"])
@@ -145,6 +150,7 @@ export default defineSchema({
     .index("by_userId_status", ["userId", "status"])
     .index("by_userId_createdAt", ["userId", "createdAt"])
     .index("by_clientNonce", ["userId", "clientNonce"])
+    .index("by_deletedAt", ["deletedAt"])              // ← Recycle Bin
     .searchIndex("search_title", {
       searchField: "title",
       filterFields: ["status", "category"],

@@ -1,6 +1,7 @@
 'use client';
 
 import { createCategory, deleteCategory, updateCategory } from '@/actions/admin/categories-actions';
+import { AdminFilterToolbar } from '@/components/admin/admin-filter-toolbar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -104,6 +105,9 @@ type CategoryFormValues = z.infer<typeof categorySchema>;
 export default function CategoriesClient() {
   const rootCategories = useQuery(api.categories.getRoot);
 
+  const [search, setSearch]     = useState('');
+  const [activeFilter, setActive] = useState<'all' | 'active' | 'inactive' | 'featured'>('all');
+
   const [dialogState, setDialogState] = useState<DialogState>({
     open: false,
     editingCategory: null,
@@ -122,20 +126,74 @@ export default function CategoriesClient() {
     setDialogState((prev) => ({ ...prev, open }));
   }, []);
 
+  // Flatten categories for search
+  const allCats = rootCategories || [];
+  const totalCount = allCats.length;
+  const activeCount = allCats.filter((c: any) => c.isActive).length;
+  const featuredCount = allCats.filter((c: any) => c.isFeatured).length;
+
+  // Filter the root list
+  const filteredRoots = allCats.filter((cat: any) => {
+    const matchSearch = !search.trim() || cat.name.toLowerCase().includes(search.toLowerCase());
+    const matchFilter =
+      activeFilter === 'all' ? true :
+      activeFilter === 'active' ? cat.isActive :
+      activeFilter === 'inactive' ? !cat.isActive :
+      activeFilter === 'featured' ? cat.isFeatured : true;
+    return matchSearch && matchFilter;
+  });
+
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Categories</h2>
-          <p className="text-muted-foreground">Manage your product hierarchy.</p>
+        <div className="space-y-1">
+          <h2 className="text-3xl font-black tracking-tight flex items-center gap-3">
+            Categories
+            <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold ring-1 ring-inset ring-primary/20">
+              {totalCount}
+            </span>
+          </h2>
+          <p className="text-sm text-muted-foreground font-medium">
+            {activeCount} active · {featuredCount} featured
+          </p>
         </div>
-        <Button onClick={() => openCreate(null)}>
+        <Button onClick={() => openCreate(null)} className="rounded-full font-bold shadow-lg shadow-primary/20 shrink-0">
           <Plus className="mr-2 h-4 w-4" /> New Root Category
         </Button>
       </div>
 
-      <Card>
-        <CardHeader>
+      {/* Filter toolbar */}
+      <div className="glass-card rounded-2xl p-4 border border-border/60 space-y-3">
+        <AdminFilterToolbar
+          searchValue={search}
+          onSearchChange={setSearch}
+          searchPlaceholder="Search categories by name..."
+          showTimeRange={false}
+        />
+        <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-border/30">
+          <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Filter:</span>
+          {(['all', 'active', 'inactive', 'featured'] as const).map(f => (
+            <button
+              key={f}
+              onClick={() => setActive(f)}
+              className={`px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all ${
+                activeFilter === f
+                  ? 'bg-primary text-primary-foreground border-primary'
+                  : 'border-border/50 text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {f.charAt(0).toUpperCase() + f.slice(1)}
+            </button>
+          ))}
+          <span className="ml-auto text-xs text-muted-foreground">
+            <span className="font-bold text-foreground">{filteredRoots.length}</span> of <span className="font-bold text-foreground">{totalCount}</span> root categories
+          </span>
+        </div>
+      </div>
+
+      <Card className="rounded-[2rem] overflow-hidden border border-border/60 shadow-xl shadow-black/5 glass-card">
+        <CardHeader className="border-b border-border/40 bg-muted/20">
           <CardTitle>Category Tree</CardTitle>
           <CardDescription>Expand folders to view subcategories.</CardDescription>
         </CardHeader>
@@ -143,17 +201,19 @@ export default function CategoriesClient() {
           <ScrollArea className="h-[600px] p-4">
             {rootCategories === undefined ? (
               <div className="flex items-center justify-center p-8 text-muted-foreground">Loading...</div>
-            ) : rootCategories.length === 0 ? (
+            ) : filteredRoots.length === 0 ? (
               <div className="flex flex-col items-center justify-center p-8 text-muted-foreground gap-2">
                 <FolderOpen className="h-8 w-8 opacity-50" />
-                <p>No categories found.</p>
-                <Button variant="link" onClick={() => openCreate(null)}>
-                  Create the first one
-                </Button>
+                <p>{search ? `No categories matching "${search}"` : 'No categories found.'}</p>
+                {!search && (
+                  <Button variant="link" onClick={() => openCreate(null)}>
+                    Create the first one
+                  </Button>
+                )}
               </div>
             ) : (
               <div className="space-y-1">
-                {rootCategories.map((cat) => (
+                {filteredRoots.map((cat: any) => (
                   <CategoryTreeItem
                     key={cat._id}
                     category={cat}
