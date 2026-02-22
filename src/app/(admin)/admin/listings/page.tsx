@@ -39,27 +39,34 @@ export default async function AdminListingsPage({ searchParams }: AdminListingsP
                     {isPromoted ? 'View and monitor all currently promoted/featured listings.' : 'Monitor and manage all listings on the platform.'}
                 </p>
             </div>
-            {/* Simple Status Filter Links */}
-            <div className="flex items-center gap-2 bg-muted p-1 rounded-lg">
-                {[
-                    { label: 'All', value: 'ALL' },
-                    { label: 'Pending', value: 'PENDING_APPROVAL' },
-                    { label: 'Active', value: 'ACTIVE' },
-                    { label: 'Rejected', value: 'REJECTED' },
-                ].map((s) => (
-                    <a 
-                        key={s.value} 
-                        href={`/admin/listings?status=${s.value}`}
-                        className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${
-                            status === s.value 
-                            ? 'bg-background text-foreground shadow-sm' 
-                            : 'text-muted-foreground hover:text-foreground'
-                        }`}
-                    >
-                        {s.label}
-                    </a>
-                ))}
-            </div>
+            {/* Status Filter Links — only shown on the All Listings view, not Promoted */}
+            {!isPromoted && (
+              <div className="flex items-center gap-2 bg-muted p-1 rounded-lg">
+                  {[
+                      { label: 'All', value: 'ALL' },
+                      { label: 'Pending', value: 'PENDING_APPROVAL' },
+                      { label: 'Active', value: 'ACTIVE' },
+                      { label: 'Rejected', value: 'REJECTED' },
+                  ].map((s) => (
+                      <a 
+                          key={s.value} 
+                          href={`/admin/listings?status=${s.value}`}
+                          className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${
+                              status === s.value 
+                              ? 'bg-background text-foreground shadow-sm' 
+                              : 'text-muted-foreground hover:text-foreground'
+                          }`}
+                      >
+                          {s.label}
+                      </a>
+                  ))}
+              </div>
+            )}
+            {isPromoted && (
+              <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 rounded-lg">
+                <span className="text-xs font-bold text-amber-600 dark:text-amber-400">✦ Promoted Only</span>
+              </div>
+            )}
         </div>
         
         {/* Search Bar */}

@@ -37,7 +37,7 @@ const navItems: NavItem[] = [
     { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
     { href: '/admin/revenue', label: 'Revenue', icon: CreditCard },
     { href: '/admin/listings', label: 'All Listings', icon: Tag },
-    { href: '/admin/listings?promoted=true', label: 'Promoted Listings', icon: Sparkles },
+    { href: '/admin/listings/promoted', label: 'Promoted Listings', icon: Sparkles },
     { href: '/admin/categories', label: 'Categories', icon: Layers },
     { href: '/admin/users', label: 'Users', icon: Users },
     { href: '/admin/messages', label: 'Support & Communications', icon: MessageCircle },
@@ -76,9 +76,14 @@ export const AdminSidebar = () => {
 
         <ScrollArea className='flex-1 py-4'>
             <div className='px-4 space-y-1'>
-                {navItems.map((item) => (
-                    <NavItem key={item.href} item={item} isActive={pathname === item.href || pathname.startsWith(item.href + '/')} />
-                ))}
+                {navItems.map((item) => {
+                    // For /admin/listings specifically, use exact match so /admin/listings/promoted
+                    // doesn't also highlight "All Listings"
+                    const isActive = item.href === '/admin/listings'
+                        ? pathname === '/admin/listings'
+                        : pathname === item.href || pathname.startsWith(item.href + '/');
+                    return <NavItem key={item.href} item={item} isActive={isActive} />;
+                })}
             </div>
         </ScrollArea>
 
