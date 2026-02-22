@@ -15,10 +15,7 @@ export const getStats = query({
       .query("listings")
       .withIndex("by_promoted", (q) => q.eq("isPromoted", true))
       .collect();
-    const verificationRequestsCount = (await ctx.db
-      .query("verificationRequests")
-      .withIndex("by_status", (q) => q.eq("status", "PENDING"))
-      .collect()).length;
+    const verificationRequestsCount = 0; // Removed verificationRequests table
     const contactSubmissionsCount = (await ctx.db
       .query("contactSubmissions")
       .withIndex("by_status", (q) => q.eq("status", "NEW"))

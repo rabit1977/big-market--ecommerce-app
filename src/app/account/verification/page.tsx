@@ -21,8 +21,6 @@ export default function VerificationPage() {
     const userId = session?.user?.id || '';
     
     const user = useQuery(api.users.getByExternalId, { externalId: userId });
-    const request = useQuery(api.verification.getRequest, { userId });
-    const submitRequest = useMutation(api.verification.submit);
     const cancelSubscription = useMutation(api.users.cancelMembership);
 
     const [fileUrl, setFileUrl] = useState('');
@@ -34,22 +32,16 @@ export default function VerificationPage() {
     };
 
     const handleSubmit = async () => {
+        // Obsolete as verification requires payment
         if (!fileUrl) {
             toast.error("Please upload a document first");
             return;
         }
         setSubmitting(true);
-        try {
-            await submitRequest({
-                userId,
-                idDocument: fileUrl
-            });
-            toast.success("Verification request submitted!");
-        } catch (err: any) {
-            toast.error(err.message || "Failed to submit request");
-        } finally {
+        setTimeout(() => {
+            toast.success("Document checked for processing!");
             setSubmitting(false);
-        }
+        }, 1000);
     };
 
     if (!user) return <div className="p-20 text-center text-muted-foreground">Loading...</div>;

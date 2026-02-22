@@ -327,17 +327,6 @@ export default defineSchema({
     .index("by_stripeId", ["stripeId"])
     .index("by_createdAt", ["createdAt"]),
 
-  // ─── VERIFICATION REQUESTS ──────────────────────────────────────────────────
-  verificationRequests: defineTable({
-    userId: v.string(),
-    idDocument: v.string(),
-    status: v.string(),                     // 'PENDING' | 'APPROVED' | 'REJECTED'
-    notes: v.optional(v.string()),
-    createdAt: v.number(),
-    processedAt: v.optional(v.number()),
-  }).index("by_user", ["userId"])
-    .index("by_status", ["status"]),
-
   // ─── RECENTLY VIEWED ────────────────────────────────────────────────────────
   recentlyViewed: defineTable({
     userId: v.string(),

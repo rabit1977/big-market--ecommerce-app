@@ -133,10 +133,10 @@ export function UsersClientPage() {
             { label: 'Administrators', value: adminCount, icon: Shield, color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/20' },
             { label: 'Regular Customers', value: userCount, icon: UserIcon, color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
         ].map(stat => (
-             <div key={stat.label} className={`glass-card p-2 sm:p-6 rounded-2xl sm:rounded-3xl flex items-center justify-between hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group gap-2 flex-row-reverse ${stat.border}`}>
+             <div key={stat.label} className={`glass-card p-3 sm:p-6 rounded-2xl sm:rounded-3xl flex items-center justify-between hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group gap-2 flex-row-reverse ${stat.border}`}>
                 <div className='flex justify-between items-start mb-2'>
-                    <div className={`p-2 sm:p-3 rounded-xl sm:rounded-2xl ${stat.bg} ${stat.color} ring-1 ring-inset ring-white/10 group-hover:scale-110 transition-transform`}>
-                       <stat.icon className='h-3 w-3 sm:h-6 sm:w-6' />
+                    <div className={`p-2 sm:p-3 rounded-full sm:rounded-full ${stat.bg} ${stat.color} ring-1 ring-inset ring-white/10 group-hover:scale-110 transition-transform`}>
+                       <stat.icon className='h-4 w-4 sm:h-5 sm:w-5 ' />
                     </div>
                 </div>
                 <div className='flex flex-col items-start min-w-24'>

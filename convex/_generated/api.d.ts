@@ -42,7 +42,6 @@ import type * as subscriptions from "../subscriptions.js";
 import type * as transactions from "../transactions.js";
 import type * as typing from "../typing.js";
 import type * as users from "../users.js";
-import type * as verification from "../verification.js";
 import type * as wallet from "../wallet.js";
 
 import type {
@@ -86,7 +85,6 @@ declare const fullApi: ApiFromModules<{
   transactions: typeof transactions;
   typing: typeof typing;
   users: typeof users;
-  verification: typeof verification;
   wallet: typeof wallet;
 }>;
 

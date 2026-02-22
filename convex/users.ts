@@ -479,12 +479,6 @@ export const deleteAccount = mutation({
       .collect();
     for (const item of transactions) await ctx.db.delete(item._id);
 
-    // 11. Delete Verification Requests
-    const vRequests = await ctx.db
-      .query("verificationRequests")
-      .withIndex("by_user", (q) => q.eq("userId", externalId))
-      .collect();
-    for (const item of vRequests) await ctx.db.delete(item._id);
 
     // 12. Delete Recently Viewed
     const recentlyViewed = await ctx.db
