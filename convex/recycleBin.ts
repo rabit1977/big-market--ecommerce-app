@@ -11,8 +11,7 @@ export const listDeleted = query({
   handler: async (ctx, args) => {
     const items = await ctx.db
       .query("listings")
-      .withIndex("by_deletedAt")
-      .filter(q => q.neq(q.field("deletedAt"), undefined))
+      .withIndex("by_deletedAt", (q) => q.gt("deletedAt", 0))
       .order("desc")
       .take(args.limit ?? 100);
     return items;
@@ -91,13 +90,7 @@ export const purgeOld = mutation({
 
     const old = await ctx.db
       .query("listings")
-      .withIndex("by_deletedAt")
-      .filter(q =>
-        q.and(
-          q.neq(q.field("deletedAt"), undefined),
-          q.lt(q.field("deletedAt"), cutoff)
-        )
-      )
+      .withIndex("by_deletedAt", (q) => q.gt("deletedAt", 0).lt("deletedAt", cutoff))
       .collect();
 
     for (const item of old) {
