@@ -1,28 +1,15 @@
-'use client';
-
 import { ListingCard } from '@/components/listing/listing-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { api } from '@/convex/_generated/api';
-import { useQuery } from 'convex/react';
-import { Building2, CalendarDays, Loader2, MapPin, MessageSquare, Package, ShieldCheck, Star } from 'lucide-react';
-import { notFound } from 'next/navigation';
+import { Building2, CalendarDays, MapPin, MessageSquare, Package, ShieldCheck, Star } from 'lucide-react';
 
-export function StorefrontClient({ userId }: { userId: string }) {
-  const profile = useQuery(api.storefront.getPublicProfile, { userId });
-  const listings = useQuery(api.listings.getByUser, { userId });
-
-  if (profile === undefined || listings === undefined) {
-    return (
-      <div className="flex h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (profile === null) {
-    return notFound();
-  }
+export function StorefrontClient({ 
+  profile, 
+  listings 
+}: { 
+  profile: any;
+  listings: any[];
+}) {
 
   const activeListings = listings.filter(l => l.status === 'ACTIVE');
   

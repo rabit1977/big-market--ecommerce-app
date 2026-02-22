@@ -1,6 +1,0 @@
-src/app/compare/page.tsx(105,34): error TS2322: Type 'string | { url: string; }' is not assignable to type 'string | StaticImport'.
-  Type '{ url: string; }' is not assignable to type 'string | StaticImport'.
-src/app/compare/page.tsx(120,78): error TS2339: Property 'currency' does not exist on type 'ListingWithRelations'.
-src/app/compare/page.tsx(123,62): error TS2339: Property 'currency' does not exist on type 'ListingWithRelations'.
-src/app/compare/page.tsx(154,41): error TS2339: Property 'region' does not exist on type 'ListingWithRelations'.
-src/app/compare/page.tsx(154,60): error TS2339: Property 'region' does not exist on type 'ListingWithRelations'.

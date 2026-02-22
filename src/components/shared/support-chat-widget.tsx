@@ -247,7 +247,7 @@ export function SupportChatWidget() {
   return (
     <div
       ref={widgetRef}
-      className="fixed bottom-26 left-0 right-0 sm:left-auto sm:right-6 z-[100] flex flex-col items-center sm:items-end pointer-events-none"
+      className="fixed bottom-18 left-0 right-0 sm:left-auto sm:right-6 z-[100] flex flex-col items-center sm:items-end pointer-events-none"
     >
       <AnimatePresence>
         {isOpen && (
@@ -256,7 +256,7 @@ export function SupportChatWidget() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="absolute bottom-14 sm:bottom-16 left-1/2 -translate-x-1/2 sm:left-auto sm:right-0 sm:translate-x-0 w-[60%] sm:w-[360px] h-[45dvh] sm:h-[380px] bg-card border border-border/80 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col overflow-hidden pointer-events-auto"
+            className="absolute bottom-14 sm:bottom-16 left-1/2 -translate-x-1/2 sm:left-auto sm:right-0 sm:translate-x-0 w-[70%] sm:w-[360px] h-[55dvh] sm:h-[540px] bg-card border border-border/80 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col overflow-hidden pointer-events-auto"
             role="dialog"
             aria-modal="true"
             aria-label="Support chat"

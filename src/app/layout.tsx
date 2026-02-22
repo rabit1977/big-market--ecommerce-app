@@ -11,6 +11,8 @@ import { Watermark } from '@/components/shared/watermark';
 import { Toast } from '@/components/toast';
 import { CommandPalette } from '@/components/ui/command-palette';
 import type { Metadata } from 'next';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
 import { Inter } from 'next/font/google';
 import { Suspense } from 'react';
 import './globals.css';
@@ -39,8 +41,11 @@ export default async function RootLayout({
   const { wishlist = [] } = await getWishlistAction();
   const initialWishlistCount = wishlist.length;
 
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang='en' suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
@@ -60,30 +65,32 @@ export default async function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <Providers initialFavorites={wishlist}>
-          <ThemeApplier />
-          <ScrollToTop />
-          <Suspense fallback={null}>
-            <AnalyticsProvider />
-          </Suspense>
-          <CommandPalette />
-          <div className='min-h-screen bg-background text-foreground relative'>
-            <Watermark />
-            <div className='relative z-10'>
-              <Suspense fallback={<div className="h-16 w-full bg-background" />}>
-                <MobileSidebarWrapper
-                  initialWishlistCount={initialWishlistCount}
-                />
-              </Suspense>
-              <main className='min-h-auto pb-20 lg:pb-0'>{children}</main>
-              <FooterWrapper />
-              <SupportChatWidget />
-              <CompareWidget />
-              <Toast />
-              <InstallPwaPrompt />
+        <NextIntlClientProvider messages={messages} locale={locale}>
+          <Providers initialFavorites={wishlist}>
+            <ThemeApplier />
+            <ScrollToTop />
+            <Suspense fallback={null}>
+              <AnalyticsProvider />
+            </Suspense>
+            <CommandPalette />
+            <div className='min-h-screen bg-background text-foreground relative'>
+              <Watermark />
+              <div className='relative z-10'>
+                <Suspense fallback={<div className="h-16 w-full bg-background" />}>
+                  <MobileSidebarWrapper
+                    initialWishlistCount={initialWishlistCount}
+                  />
+                </Suspense>
+                <main className='min-h-auto pb-20 lg:pb-0'>{children}</main>
+                <FooterWrapper />
+                <SupportChatWidget />
+                <CompareWidget />
+                <Toast />
+                <InstallPwaPrompt />
+              </div>
             </div>
-          </div>
-        </Providers>
+          </Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

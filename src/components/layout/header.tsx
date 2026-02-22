@@ -4,6 +4,7 @@ import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Plus, Store, Zap } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -18,6 +19,7 @@ interface HeaderProps {
 
 const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderProps) => {
   const pathname = usePathname();
+  const t = useTranslations('Navigation');
   const [isScrolled, setIsScrolled] = useState(false);
   const [isScrollingUp, setIsScrollingUp] = useState(false);
   const lastScrollYRef = useRef(0);
@@ -113,7 +115,7 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
             )}
           >
             <Store className="h-4 w-4" />
-            Browse
+            {t('listings')}
           </Link>
 
           <div className="flex-1 max-w-xl mx-auto">
@@ -127,7 +129,7 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
             >
               <Link href="/sell">
                 <Plus className="h-4 w-4 mr-1.5 stroke-[3]" />
-                Post Ad
+                {t('post_ad')}
               </Link>
             </Button>
 

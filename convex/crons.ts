@@ -23,4 +23,11 @@ crons.daily(
   api.savedSearches.processDailyAlerts
 );
 
+// Daily listing auto-expiry check at 00:00 UTC
+crons.daily(
+  "daily-listing-expiry-check",
+  { hourUTC: 0, minuteUTC: 0 },
+  api.listings.checkExpiringListings
+);
+
 export default crons;

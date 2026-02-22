@@ -734,3 +734,59 @@ export const remove = mutation({
     await ctx.db.delete(args.id);
   },
 });
+
+// CRON JOB: Mark listings as EXPIRED after 30 days
+export const checkExpiringListings = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+    const now = Date.now();
+    const expiryThreshold = now - THIRTY_DAYS_MS;
+
+    // Find active listings older than 30 days
+    const expiringListings = await ctx.db
+      .query("listings")
+      .withIndex("by_status", (q) => q.eq("status", "ACTIVE"))
+      .filter((q) => q.lt(q.field("createdAt"), expiryThreshold))
+      .collect();
+
+    let expiredCount = 0;
+    
+    for (const listing of expiringListings) {
+      await ctx.db.patch(listing._id, { status: "EXPIRED" });
+      
+      // Notify the user via the notifications table
+      await ctx.db.insert("notifications", {
+        userId: listing.userId,
+        type: "SYSTEM",
+        title: "Listing Expired",
+        message: `Your listing "${listing.title}" has been active for 30 days and has automatically expired. You can renew it from your dashboard.`,
+        isRead: false,
+        createdAt: now,
+        link: `/my-listings`,
+      });
+      
+      expiredCount++;
+    }
+
+    console.log(`Cron: Expired ${expiredCount} listings older than 30 days.`);
+    return { success: true, count: expiredCount };
+  }
+});
+
+// SEO: Fetch minimal listing data for sitemap generation
+export const getSeoSitemapListings = query({
+  args: {},
+  handler: async (ctx) => {
+    const listings = await ctx.db
+      .query("listings")
+      .withIndex("by_status", (q) => q.eq("status", "ACTIVE"))
+      .order("desc")
+      .take(10000); // chunking to 10k max for Vercel functions memory limits
+      
+    return listings.map(l => ({
+      _id: l._id,
+      createdAt: l.createdAt,
+    }));
+  }
+});

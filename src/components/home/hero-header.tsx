@@ -1,6 +1,5 @@
 'use client';
 
-import { ListingSearchInput } from '@/components/shared/listing-search-input';
 import { cn } from '@/lib/utils';
 import { LayoutGrid, SlidersHorizontal } from 'lucide-react';
 import Link from 'next/link';
@@ -41,23 +40,21 @@ export const HeroHeader = () => {
       <div className='container-wide py-2'>
 
         {/* Categories Link & Quick Filters - Justified & Rounded */}
-        <div className="hidden md:flex items-center justify-between gap-4 ">
+        <div className="flex items-center justify-between gap-3 md:gap-4 overflow-x-auto no-scrollbar pb-1">
           
           {/* Categories Button - Rounded Pill */}
           <Link 
             href="/categories"
-            className="group flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-background hover:border-primary/30 hover:bg-muted transition-all duration-300"
+            className="group flex items-center justify-center gap-2 px-3 py-1.5 md:py-2 rounded-full border border-border bg-background shadow-sm hover:border-primary/30 hover:bg-muted transition-all duration-300 shrink-0"
           >
             <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
               <LayoutGrid className="w-3 h-3 text-primary" />
             </div>
-            <span className="text-[11px] font-bold tracking-tight text-foreground uppercase">Categories</span>
+            <span className="text-[11px] md:text-xs font-bold tracking-tight text-foreground uppercase whitespace-nowrap">Explore Categories</span>
           </Link>
 
-  
-
           {/* Filters Section */}
-          <div className="flex-1 flex items-center justify-end">
+          <div className="flex items-center justify-end shrink-0">
             {/* Filter Toggle Button - Visible on ALL screens */}
             <button
               type="button"

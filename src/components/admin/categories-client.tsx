@@ -41,6 +41,7 @@ import { toast } from 'sonner';
 import * as z from 'zod';
 import { api } from '../../../convex/_generated/api';
 import { Id } from '../../../convex/_generated/dataModel';
+import { CategoryTemplateBuilder } from './category-template-builder';
 
 // ------------------------------------------------------------------
 // Types
@@ -540,14 +541,9 @@ function CategoryDialog({
               name="template"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Dynamic Template (JSON)</FormLabel>
+                  <FormLabel>Dynamic Template Fields</FormLabel>
                   <FormControl>
-                    <Textarea 
-                      rows={4} 
-                      placeholder={'{\n  "fields": [\n    { "key": "brand", "label": "Brand", "type": "select", "options": ["Apple", "Samsung"] }\n  ]\n}'} 
-                      className="font-mono text-xs"
-                      {...field} 
-                    />
+                    <CategoryTemplateBuilder value={field.value || ''} onChange={field.onChange} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

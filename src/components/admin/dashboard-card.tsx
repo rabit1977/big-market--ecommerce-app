@@ -94,43 +94,39 @@ export const DashboardCard = memo(({
         </div>
 
         {/* Value */}
-        <div className='mt-2 sm:mt-4 space-y-1 flex justify-between'>
+        <div className='mt-2 sm:mt-4 flex items-end justify-between'>
           <div className='flex flex-col'>
-
-          <p className='text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight'>
-            {typeof value === 'number' ? value.toLocaleString() : value}
-          </p>
-          
-          {/* Description */}
-          {description && (
-            <p className='text-[10px] sm:text-xs text-muted-foreground line-clamp-1'>
-              {description}
+            <p className='text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight'>
+              {typeof value === 'number' ? value.toLocaleString() : value}
             </p>
-          )}
+            
+            {/* Description */}
+            {description && (
+              <p className='text-[10px] sm:text-xs text-muted-foreground line-clamp-1 mt-1 font-medium'>
+                {description}
+              </p>
+            )}
           </div>
 
           {/* Trend Indicator */}
           {trend && trend.value > 0 && (
-            <div className='flex items-end sm:items-center sm:flex-row-reverse sm:items-end sm:mb-1  sm:gap-2 -mr-2 sm:-mr-0'>
+            <div className='flex flex-col items-end gap-1'>
               <span
                 className={cn(
-                  'inline-flex items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold',
+                  'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold',
                   trend.isPositive
                     ? 'text-emerald-700 bg-emerald-100 dark:text-emerald-400 dark:bg-emerald-950/50'
                     : 'text-red-700 bg-red-100 dark:text-red-400 dark:bg-red-950/50'
                 )}
               >
                 {trend.isPositive ? (
-                  <TrendingUp className='h-2.5 w-2.5 sm:h-3 sm:w-3 ' />
+                  <TrendingUp className='h-3 w-3 sm:h-3.5 sm:w-3.5' />
                 ) : (
-                  <TrendingDown className='h-2.5 w-2.5 sm:h-3 sm:w-3' />
+                  <TrendingDown className='h-3 w-3 sm:h-3.5 sm:w-3.5' />
                 )}
-                <span>
-
-                {Math.abs(trend.value)}%
-                </span>
+                <span>{Math.abs(trend.value)}%</span>
               </span>
-              <span className='text-[9px] sm:text-xs text-muted-foreground hidden lg:inline'>
+              <span className='text-[9px] text-muted-foreground hidden sm:inline-block font-medium'>
                 vs last month
               </span>
             </div>

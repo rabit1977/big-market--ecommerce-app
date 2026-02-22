@@ -2,10 +2,10 @@
 
 import { getPublicCategoriesAction } from '@/actions/category-actions';
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -226,26 +226,26 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                         <AccordionItem key={cat.id} value={cat.id} className="border-none mb-0.5">
                           {hasSubs ? (
                             <>
-                              <AccordionTrigger className="py-2.5 px-3 rounded-xl hover:bg-muted/50 text-sm font-semibold hover:no-underline text-foreground transition-all group data-[state=open]:bg-muted/30">
+                              <AccordionTrigger className="py-2.5 px-3 rounded-xl hover:bg-muted/50 text-[13px] font-bold hover:no-underline text-foreground transition-all group data-[state=open]:bg-muted/30">
                                 <div className="flex items-center gap-2.5">
                                   <div className={cn(
                                     'w-1.5 h-1.5 rounded-full transition-colors',
                                     activeCategory === cat.id ? 'bg-primary' : 'bg-primary/25 group-hover:bg-primary/50'
                                   )} />
                                   <span>{cat.name}</span>
-                                  <span className="text-[10px] text-muted-foreground/50 font-normal">
+                                  <span className="text-[10px] text-muted-foreground font-normal">
                                     {subs.length}
                                   </span>
                                 </div>
                               </AccordionTrigger>
                               <AccordionContent className="pb-1 pt-0">
-                                <div className="ml-3 pl-3 border-l border-border/40 flex flex-col gap-0.5 mt-0.5">
+                                <div className="ml-3 pl-3 border-l-2 border-border/40 flex flex-col gap-0.5 mt-0.5">
                                   {subs.map((sub) => (
                                     <Link
                                       key={sub.id}
                                       href={`/listings?category=${encodeURIComponent(cat.name)}&subCategory=${encodeURIComponent(sub.name)}`}
                                       onClick={onClose}
-                                      className="py-2 px-3 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-all font-medium flex items-center justify-between group"
+                                      className="py-2 px-3 rounded-lg text-[13px] text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-all font-semibold flex items-center justify-between group"
                                     >
                                       <span>{sub.name}</span>
                                       <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-50 group-hover:translate-x-0 transition-all" />
@@ -254,7 +254,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                                   <Link
                                     href={`/listings?category=${encodeURIComponent(cat.name)}`}
                                     onClick={onClose}
-                                    className="py-1.5 px-3 rounded-lg text-xs font-bold text-primary hover:bg-primary/5 transition-colors mt-0.5"
+                                    className="py-1.5 px-3 rounded-lg text-xs font-bold text-primary hover:bg-primary/10 transition-colors mt-0.5"
                                   >
                                     View all in {cat.name} →
                                   </Link>
@@ -265,7 +265,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                             <Link
                               href={`/listings?category=${encodeURIComponent(cat.name)}`}
                               onClick={onClose}
-                              className="flex items-center gap-2.5 py-2.5 px-3 rounded-xl text-sm font-semibold text-foreground hover:bg-muted/50 transition-all group"
+                              className="flex items-center gap-2.5 py-2.5 px-3 rounded-xl text-[13px] font-bold text-foreground hover:bg-muted/50 transition-all group"
                             >
                               <div className="w-1.5 h-1.5 rounded-full bg-primary/25 group-hover:bg-primary/50 transition-colors" />
                               <span>{cat.name}</span>
@@ -278,8 +278,8 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                 ) : (
                   <div className="text-center py-8">
                     <Search className="h-8 w-8 text-muted-foreground/30 mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground">No categories found</p>
-                    <p className="text-xs text-muted-foreground/60 mt-1">Try a different search term</p>
+                    <p className="text-[13px] text-muted-foreground font-medium">No categories found</p>
+                    <p className="text-[11px] text-muted-foreground/60 mt-1">Try a different search term</p>
                   </div>
                 )}
               </div>

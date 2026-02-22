@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { LanguageSwitcher } from './language-switcher';
 import { PaletteSwitcher } from './palette-switcher';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -65,9 +66,14 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
     useQuery(api.notifications.getUnreadCount, user?.id ? { userId: user.id } : 'skip') ?? 0;
 
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
   const totalAlertCount = unreadMessagesCount + unreadNotificationsCount;
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Close panel on route change
   useEffect(() => {
@@ -195,7 +201,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
-  if (!user && status === 'loading') {
+  if (!isMounted || (!user && status === 'loading')) {
     return (
       <div className="flex items-center gap-1 sm:gap-2">
         <Skeleton className="h-9 w-9 rounded-full" />
@@ -298,6 +304,9 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
             <TooltipContent>Messages</TooltipContent>
           </Tooltip>
         </TooltipProvider>
+
+        {/* Language Switcher */}
+        <LanguageSwitcher />
 
         {/* Help */}
         <TooltipProvider>
@@ -425,12 +434,6 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
 
                   <div className="md:hidden">
                     {renderSectionLabel('Navigation')}
-                    <div className="px-1.5">{mobileOnlyItems.map(renderMenuItem)}</div>
-                    <div className="mx-3 my-1 h-px bg-border/30" />
-                  </div>
-
-                  <div className="md:hidden">
-                    {renderSectionLabel('Lists & Favorites')}
                     <div className="px-1.5">{mobileOnlyItems.map(renderMenuItem)}</div>
                     <div className="mx-3 my-1 h-px bg-border/30" />
                   </div>

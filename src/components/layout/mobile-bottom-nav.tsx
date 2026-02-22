@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Heart, Home, LayoutGrid, PlusCircle, User } from 'lucide-react';
+import { Heart, Home, LayoutGrid, Package, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -23,7 +23,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Categories', icon: LayoutGrid,  href: '/categories' },
   { label: 'Sell',       icon: PlusCircle,  href: '/sell',        primary: true },
   { label: 'Favorites',  icon: Heart,       href: '/favorites',   showBadge: true },
-  { label: 'Profile',    icon: User,        href: '/my-listings' },
+  { label: 'My Ads',     icon: Package,     href: '/my-listings' },
 ];
 
 export function MobileBottomNav({ wishlistCount = 0 }: MobileBottomNavProps) {

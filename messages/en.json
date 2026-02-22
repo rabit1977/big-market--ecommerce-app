@@ -1,0 +1,25 @@
+{
+  "Navigation": {
+    "home": "Home",
+    "listings": "Listings",
+    "stores": "Stores",
+    "premium": "Premium",
+    "about": "About",
+    "contact": "Contact",
+    "post_ad": "Post an Ad",
+    "login": "Sign In",
+    "search_placeholder": "Search vehicles, real estate, electronics..."
+  },
+  "Home": {
+    "hero_title": "Buy and Sell Completely Free",
+    "hero_subtitle": "The fastest growing marketplace. Sell your items to thousands of daily buyers.",
+    "featured": "Featured",
+    "latest": "Latest Ads",
+    "view_all": "View All"
+  },
+  "Common": {
+    "mkd": "MKD",
+    "search": "Search",
+    "filters": "Filters"
+  }
+}

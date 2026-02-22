@@ -24,12 +24,29 @@ export async function POST(req: NextRequest) {
     const base64Data = buffer.toString('base64');
     const fileUri = `data:${file.type};base64,${base64Data}`;
 
-    // Upload to Cloudinary with optimizations
+    // Upload to Cloudinary with optimizations and watermark
     const uploadResponse = await cloudinary.uploader.upload(fileUri, {
       folder: 'classifieds-platform/uploads', // Organize in a folder
       resource_type: 'auto',
       quality: 'auto', // Smart compression
       fetch_format: 'auto', // Automatic format selection (WebP, AVIF)
+      transformation: [
+        // Optimize maximum dimensions for performance
+        { width: 1600, height: 1600, crop: 'limit' },
+        // Apply "Biggest Market" Anti-Scraping Watermark
+        {
+          color: '#FFFFFF',
+          overlay: {
+            font_family: 'Arial',
+            font_size: 40,
+            font_weight: 'bold',
+            text: 'BIGGEST MARKET'
+          }
+        },
+        { flags: 'layer_apply', gravity: 'bottom_right', x: 20, y: 20, opacity: 60 },
+        // Add a subtle drop shadow to make it readable on light backgrounds
+        { effect: 'shadow:50', color: '#000000' }
+      ]
     });
 
     console.log(`File uploaded to Cloudinary: ${uploadResponse.secure_url}`);

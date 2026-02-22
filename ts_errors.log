@@ -1,8 +1,0 @@
-convex/savedSearches.ts(147,39): error TS2304: Cannot find name 'api'.
-convex/savedSearches.ts(153,41): error TS7006: Parameter 'acc' implicitly has an 'any' type.
-convex/savedSearches.ts(153,46): error TS7006: Parameter 'alert' implicitly has an 'any' type.
-convex/savedSearches.ts(162,28): error TS18046: 'userAlerts' is of type 'unknown'.
-convex/savedSearches.ts(167,52): error TS2304: Cannot find name 'api'.
-convex/savedSearches.ts(179,51): error TS7006: Parameter 'l' implicitly has an 'any' type.
-convex/savedSearches.ts(183,39): error TS7006: Parameter 'l' implicitly has an 'any' type.
-convex/savedSearches.ts(201,43): error TS2339: Property 'notifications' does not exist on type '{ inquiries: { store: FunctionReference<"mutation", "internal", { guestPhone?: string | undefined; listingId: Id<"listings">; sellerId: string; message: string; guestName: string; guestEmail: string; }, string & { ...; }, string | undefined>; }; migrations: { ...; }; }'.

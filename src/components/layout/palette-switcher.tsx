@@ -37,7 +37,7 @@ export function PaletteSwitcher() {
 
   return (
     <div className="space-y-3 px-1">
-      <div className="flex flex-wrap gap-1.5 justify-center">
+      <div className="flex flex-nowrap gap-1.5 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide no-scrollbar md:justify-center">
         {PALETTES.map((p) => (
           <button
             key={p.id}
@@ -45,12 +45,12 @@ export function PaletteSwitcher() {
             aria-label={`Switch to ${p.name} palette`}
             aria-pressed={currentPalette === p.id}
             className={cn(
-              'relative flex flex-col items-center gap-1 p-1 rounded-xl transition-all hover:bg-muted group w-[48px]',
+              'relative flex flex-col items-center gap-1 p-1 rounded-xl transition-all hover:bg-muted group shrink-0 min-w-[44px]',
               currentPalette === p.id ? 'bg-muted shadow-sm' : 'opacity-70 hover:opacity-100'
             )}
           >
             <div
-              className="w-7 h-7 rounded-full border-2 border-background shadow-inner flex items-center justify-center transition-transform group-hover:scale-110"
+              className="w-7 h-7 rounded-full border-2 border-background shadow-inner flex items-center justify-center transition-transform group-hover:scale-110 shrink-0"
               style={{ backgroundColor: p.color }}
             >
               {currentPalette === p.id && (
