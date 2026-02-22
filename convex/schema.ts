@@ -150,13 +150,15 @@ export default defineSchema({
       filterFields: ["status", "category"],
     }),
 
-  // ─── FAVORITES ──────────────────────────────────────────────────────────────
+  // ─── FAVORITES (WISHLISTS) ──────────────────────────────────────────────────
   favorites: defineTable({
     userId: v.string(),
     listingId: v.id("listings"),
+    listName: v.optional(v.string()), // e.g. "Cars", "Apartments" (Optional for backwards compatibility)
   }).index("by_user", ["userId"])
     .index("by_listing", ["listingId"])
-    .index("by_user_listing", ["userId", "listingId"]),
+    .index("by_user_listing", ["userId", "listingId"])
+    .index("by_user_listName", ["userId", "listName"]),
 
   // ─── SAVED SEARCHES ─────────────────────────────────────────────────────────
   savedSearches: defineTable({

@@ -14,11 +14,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useMutation, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import {
-  Heart,
-  History as HistoryIcon,
-  Loader2,
-  Search,
-  Trash2,
+    Heart,
+    History as HistoryIcon,
+    Loader2,
+    Search,
+    Trash2,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -140,6 +140,20 @@ function FavoritesTabs({
     });
   };
 
+  const groupedFavorites = (listingFavorites || []).reduce((acc: Record<string, any[]>, item: any) => {
+     if (!item) return acc;
+     const listName = item.listName || 'Default';
+     if (!acc[listName]) acc[listName] = [];
+     acc[listName].push(item);
+     return acc;
+  }, {});
+
+  const listNames = Object.keys(groupedFavorites).sort((a, b) => {
+     if (a === 'Default') return -1;
+     if (b === 'Default') return 1;
+     return a.localeCompare(b);
+  });
+
   return (
     <Tabs defaultValue={defaultTab} className="w-full">
       <TabsList className="w-full grid grid-cols-3 mb-4 md:mb-6 h-9 md:h-10 bg-muted p-0.5 rounded-lg md:rounded-xl">
@@ -175,13 +189,24 @@ function FavoritesTabs({
             action={{ label: 'Browse Listings', href: '/listings' }}
           />
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-4">
-            {listingFavorites.map(
-              (listing) =>
-                listing && (
-                  <ListingCard key={listing._id} listing={listing as any} />
-                ),
-            )}
+          <div className="space-y-8">
+            {listNames.map((folder) => (
+               <div key={folder} className="space-y-3">
+                 <div className="flex items-center justify-between border-b border-border/50 pb-2">
+                    <h3 className="font-bold text-lg md:text-xl text-foreground">
+                       {folder} <span className="text-muted-foreground text-sm font-normal">({groupedFavorites[folder].length})</span>
+                    </h3>
+                 </div>
+                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-4">
+                   {groupedFavorites[folder].map(
+                     (listing: any) =>
+                       listing && (
+                         <ListingCard key={listing._id} listing={listing} />
+                       ),
+                   )}
+                 </div>
+               </div>
+            ))}
           </div>
         )}
       </TabsContent>

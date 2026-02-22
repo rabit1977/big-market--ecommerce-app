@@ -2,20 +2,12 @@
 
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger
-} from '@/components/ui/tooltip';
-import { useFavorites } from '@/lib/context/favorites-context';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { formatPrice } from '@/lib/utils/formatters';
 import {
     AlertTriangle,
     CheckCircle,
-    Heart,
     Mail,
     MapPin,
     MessageSquare,
@@ -25,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState, useTransition } from 'react';
+import { WishlistDropdown } from './wishlist-dropdown';
 
 interface ListingContactPanelProps {
   listing: ListingWithRelations;
@@ -38,8 +31,6 @@ export function ListingContactPanel({
   initialIsWished = false,
 }: ListingContactPanelProps) {
   const router = useRouter();
-  const { isFavorite, toggleFavorite } = useFavorites();
-  const isWished = isFavorite(listing._id);
   const [isPending, startTransition] = useTransition();
   const [showPhone, setShowPhone] = useState(false);
 
@@ -67,10 +58,6 @@ export function ListingContactPanel({
       icon: CheckCircle,
     };
   }, [isActive, listing.status]);
-
-  const handleToggleWishlist = () => {
-    toggleFavorite(listing._id);
-  };
   
   const handleContact = () => {
     startTransition(() => {
@@ -145,32 +132,7 @@ export function ListingContactPanel({
       {/* Contact Actions */}
       <div className='space-y-4'>
         <div className='flex gap-3 justify-end'>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size='icon'
-                  variant='outline'
-                  onClick={handleToggleWishlist}
-                  disabled={isPending}
-                  className={cn(
-                    'h-12 w-12 rounded-full border transition-all shrink-0',
-                    isWished 
-                      ? 'bg-red-50 border-red-200 hover:bg-red-100 dark:bg-red-950/50 dark:border-red-800 dark:hover:bg-red-900/50' 
-                      : 'border-border/60 hover:bg-secondary/50 hover:border-primary/30'
-                  )}
-                >
-                  <Heart
-                    className={cn('h-5 w-5 transition-all duration-300', {
-                      'fill-red-500 text-red-500 scale-110': isWished,
-                      'text-muted-foreground': !isWished
-                    })}
-                  />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>{isWished ? 'Remove from Favorites' : 'Add to Favorites'}</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+           <WishlistDropdown listingId={listing._id} />
         </div>
 
         {/* Contact Seller Buttons */}

@@ -14,14 +14,17 @@ type FavoriteActionResult = {
 /**
  * Get the listing IDs of all items in the current user's favorites.
  */
-export async function getWishlistAction(): Promise<FavoriteActionResult> {
+export async function getWishlistAction(listName?: string): Promise<FavoriteActionResult> {
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: 'Unauthorized', wishlist: [] };
   }
 
   try {
-    const favorites = await convex.query(api.favorites.get, { userId: session.user.id });
+    const favorites = await convex.query(api.favorites.get, { 
+       userId: session.user.id,
+       ...(listName ? { listName } : {}) 
+    });
     return {
       success: true,
       wishlist: favorites.map((item) => item.listingId),
@@ -37,6 +40,7 @@ export async function getWishlistAction(): Promise<FavoriteActionResult> {
  */
 export async function toggleWishlistAction(
   listingId: string,
+  listName?: string
 ): Promise<FavoriteActionResult> {
   const session = await auth();
   if (!session?.user?.id) {
@@ -48,6 +52,7 @@ export async function toggleWishlistAction(
     const isWished = await convex.mutation(api.favorites.toggle, {
       userId,
       listingId: listingId as any,
+      ...(listName ? { listName } : {})
     });
 
     revalidatePath('/favorites');
@@ -67,14 +72,17 @@ export async function toggleWishlistAction(
 /**
  * Clear all favorites
  */
-export async function clearWishlistAction() {
+export async function clearWishlistAction(listName?: string) {
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: 'Unauthorized' };
   }
 
   try {
-    await convex.mutation(api.favorites.clear, { userId: session.user.id });
+    await convex.mutation(api.favorites.clear, { 
+       userId: session.user.id,
+       ...(listName ? { listName } : {}) 
+    });
 
     revalidatePath('/favorites');
     revalidatePath('/listings');

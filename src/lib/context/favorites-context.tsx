@@ -5,12 +5,11 @@ import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
 import { useSession } from 'next-auth/react';
 import {
-  createContext,
-  useCallback,
-  useContext,
-  useOptimistic,
-  useState,
-  useTransition,
+    createContext,
+    useCallback,
+    useContext,
+    useOptimistic,
+    useTransition
 } from 'react';
 import { toast } from 'sonner';
 
@@ -19,7 +18,7 @@ import { toast } from 'sonner';
 interface FavoritesContextType {
   favorites: Set<string>;
   isFavorite: (listingId: string) => boolean;
-  toggleFavorite: (listingId: string) => Promise<void>;
+  toggleFavorite: (listingId: string, listName?: string) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -63,7 +62,7 @@ export function FavoritesProvider({
   );
 
   const toggleFavorite = useCallback(
-    async (listingId: string) => {
+    async (listingId: string, listName?: string) => {
       if (!session?.user) {
         toast.error('Please sign in to save favorites');
         return;
@@ -74,7 +73,7 @@ export function FavoritesProvider({
       startTransition(async () => {
         setOptimisticFavorites({ id: listingId, add });
         try {
-          const result = await toggleWishlistAction(listingId);
+          const result = await toggleWishlistAction(listingId, listName);
           if (!result.success) {
             toast.error(result.error ?? 'Failed to update favorites');
             // Optimistic state auto-reverts when transition ends since

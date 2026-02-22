@@ -11,6 +11,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { memo, useCallback } from 'react';
 import { Button } from '../ui/button';
+import { CompareButton } from './compare-button';
 import { PromotionIcon } from './promotion-icon';
 
 interface ListingCardProps {
@@ -143,12 +144,15 @@ export const ListingCard = memo(
                     </div>
 
                     {!isOwner && (
-                      <Button
-                        size="icon" variant="ghost" onClick={handleToggleWishlist}
-                        className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 -mr-1.5 -mb-1.5 sm:-mr-2 sm:-mb-2 pointer-events-auto hover:bg-muted/50 z-30 relative", isWished ? "text-red-500" : "text-muted-foreground")}
-                      >
-                        <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", isWished && "fill-current")} />
-                      </Button>
+                      <div className="flex items-center gap-1 sm:gap-2 z-30 relative pointer-events-auto">
+                        <CompareButton listing={listing as any} className="h-7 w-7 sm:h-8 sm:w-8" />
+                        <Button
+                          size="icon" variant="ghost" onClick={handleToggleWishlist}
+                          className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 hover:bg-muted/50", isWished ? "text-red-500" : "text-muted-foreground")}
+                        >
+                          <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", isWished && "fill-current")} />
+                        </Button>
+                      </div>
                     )}
                 </div>
              </>
@@ -188,12 +192,15 @@ export const ListingCard = memo(
                     </div>
                     
                     {!isOwner && (
-                      <Button
-                        size="icon" variant="ghost" onClick={handleToggleWishlist}
-                        className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 -mr-1.5 -mb-1.5 sm:-mr-2 sm:-mb-2 pointer-events-auto hover:bg-muted/50 z-30", isWished ? "text-red-500" : "text-muted-foreground")}
-                      >
-                        <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", isWished && "fill-current")} />
-                      </Button>
+                      <div className="flex items-center gap-1 sm:gap-2 z-30 pointer-events-auto">
+                        <CompareButton listing={listing as any} className="h-7 w-7 sm:h-8 sm:w-8" />
+                        <Button
+                          size="icon" variant="ghost" onClick={handleToggleWishlist}
+                          className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 hover:bg-muted/50", isWished ? "text-red-500" : "text-muted-foreground")}
+                        >
+                          <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", isWished && "fill-current")} />
+                        </Button>
+                      </div>
                     )}
                 </div>
              </>

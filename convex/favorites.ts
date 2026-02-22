@@ -2,22 +2,30 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 export const get = query({
-  args: { userId: v.string() },
+  args: { userId: v.string(), listName: v.optional(v.string()) },
   handler: async (ctx, args) => {
-    return await ctx.db
-      .query("favorites")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
-      .collect();
+    let q = ctx.db.query("favorites").withIndex("by_user", (q) => q.eq("userId", args.userId));
+    const allFavs = await q.collect();
+    if (args.listName) {
+      return allFavs.filter(f => f.listName === args.listName || (!f.listName && args.listName === 'Default'));
+    }
+    return allFavs;
   },
 });
 
 export const getPopulated = query({
-  args: { userId: v.string() },
+  args: { userId: v.string(), listName: v.optional(v.string()) },
   handler: async (ctx, args) => {
-    const favorites = await ctx.db
+    let allFavs = await ctx.db
       .query("favorites")
       .withIndex("by_user", (q) => q.eq("userId", args.userId))
       .collect();
+
+    if (args.listName) {
+      allFavs = allFavs.filter(f => f.listName === args.listName || (!f.listName && args.listName === 'Default'));
+    }
+
+    const favorites = allFavs;
 
     const listings = await Promise.all(
       favorites.map(async (fav) => {
@@ -40,7 +48,7 @@ export const getPopulated = query({
                 .unique();
         }
 
-        return { ...listing, user, favoritedAt: fav._creationTime };
+        return { ...listing, user, favoritedAt: fav._creationTime, listName: fav.listName || 'Default' };
       })
     );
 
@@ -49,7 +57,7 @@ export const getPopulated = query({
 });
 
 export const toggle = mutation({
-  args: { userId: v.string(), listingId: v.id("listings") },
+  args: { userId: v.string(), listingId: v.id("listings"), listName: v.optional(v.string()) },
   handler: async (ctx, args) => {
     const existing = await ctx.db
       .query("favorites")
@@ -65,6 +73,7 @@ export const toggle = mutation({
       await ctx.db.insert("favorites", {
         userId: args.userId,
         listingId: args.listingId,
+        listName: args.listName,
       });
 
       // Notify the listing owner
@@ -100,7 +109,7 @@ export const toggle = mutation({
 });
 
 export const clear = mutation({
-  args: { userId: v.string() },
+  args: { userId: v.string(), listName: v.optional(v.string()) },
   handler: async (ctx, args) => {
     const favorites = await ctx.db
       .query("favorites")
@@ -108,7 +117,48 @@ export const clear = mutation({
       .collect();
 
     for (const fav of favorites) {
-      await ctx.db.delete(fav._id);
+      if (!args.listName || fav.listName === args.listName || (!fav.listName && args.listName === 'Default')) {
+         await ctx.db.delete(fav._id);
+      }
     }
   },
+});
+
+export const getUserLists = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    const favorites = await ctx.db
+      .query("favorites")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .collect();
+
+    const lists = new Set<string>();
+    favorites.forEach(f => {
+       lists.add(f.listName || "Default");
+    });
+
+    return Array.from(lists);
+  }
+});
+
+export const moveToList = mutation({
+  args: { userId: v.string(), listingId: v.id("listings"), newListName: v.string() },
+  handler: async (ctx, args) => {
+     const existing = await ctx.db
+      .query("favorites")
+      .withIndex("by_user_listing", (q) =>
+        q.eq("userId", args.userId).eq("listingId", args.listingId)
+      )
+      .unique();
+     
+     if (existing) {
+        await ctx.db.patch(existing._id, { listName: args.newListName });
+     } else {
+        await ctx.db.insert("favorites", {
+           userId: args.userId,
+           listingId: args.listingId,
+           listName: args.newListName
+        });
+     }
+  }
 });
