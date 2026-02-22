@@ -161,7 +161,10 @@ export function MessagesClient({
   const markReadMutation = useMutation(api.messages.markConversationAsRead);
 
   // Focus: Typing and Presence Setup
-  const onlineStatusMap = useQuery(api.presence.getOnlineUsers, { userIds: otherUserIds }) || {};
+  const onlineStatusMap = useQuery(
+    api.presence.getOnlineUsers,
+    otherUserIds.length > 0 ? { userIds: otherUserIds } : 'skip'
+  ) || {};
   const heartbeatMutation = useMutation(api.presence.heartbeat);
   const setTypingMutation = useMutation(api.typing.setTyping);
   const typingRecord = useRef<{ [convId: string]: number }>({});

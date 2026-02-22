@@ -437,4 +437,5 @@ export default defineSchema({
   }).index("by_user", ["userId"])
     .index("by_listing", ["listingId"])
     .index("by_user_listing", ["userId", "listingId"]),
+
 });

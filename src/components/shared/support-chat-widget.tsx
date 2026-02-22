@@ -86,7 +86,10 @@ export function SupportChatWidget() {
     return Array.from(new Set(adminConversations.map(c => c.otherUserId).filter(Boolean)));
   }, [isAdmin, adminConversations]);
 
-  const onlineStatusMap = useQuery(api.presence.getOnlineUsers, { userIds: otherUserIds }) || {};
+  const onlineStatusMap = useQuery(
+    api.presence.getOnlineUsers,
+    otherUserIds.length > 0 ? { userIds: otherUserIds } : 'skip'
+  ) || {};
   const heartbeatMutation = useMutation(api.presence.heartbeat);
   
   const setTypingMutation = useMutation(api.typing.setTyping);
