@@ -17,12 +17,19 @@ export default function PasswordPage() {
     const { data: session } = useSession();
     const user = useQuery(api.users.getByExternalId, { externalId: session?.user?.id || '' });
 
+    const [oldPass, setOldPass] = useState('');
     const [newPass, setNewPass] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
+    const hasPassword = !!user?.password;
+
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (hasPassword && !oldPass) {
+            toast.error("Current password is required");
+            return;
+        }
         if (newPass !== confirmPass) {
             toast.error("Passwords do not match");
             return;
@@ -36,11 +43,13 @@ export default function PasswordPage() {
         try {
             if (!session?.user?.id) return;
             const res = await changePasswordAction({
+                oldPassword: oldPass,
                 newPassword: newPass
             });
             
             if (res.success) {
                 toast.success("Password updated successfully");
+                setOldPass('');
                 setNewPass('');
                 setConfirmPass('');
             } else {
@@ -55,8 +64,6 @@ export default function PasswordPage() {
 
     if (user === undefined) return <div className="p-20 text-center text-muted-foreground">Loading...</div>;
     if (user === null) return <div className="p-20 text-center text-muted-foreground">User not found</div>;
-
-    const hasPassword = !!user.password;
 
     return (
         <div className="min-h-screen pt-4 md:pt-6 pb-8 bg-muted/20">
@@ -80,6 +87,20 @@ export default function PasswordPage() {
                     </CardHeader>
                     <CardContent className="p-4 md:p-6 pt-0 md:pt-0">
                         <form onSubmit={handleSave} className="space-y-3 md:space-y-4">
+                            {hasPassword && (
+                                <div className="space-y-1.5 mb-6">
+                                    <Label className="text-xs md:text-sm font-semibold">Current Password</Label>
+                                    <Input 
+                                        type="password" 
+                                        value={oldPass} 
+                                        onChange={e => setOldPass(e.target.value)}
+                                        placeholder="Enter current password"
+                                        required
+                                        className="h-9 md:h-10 text-sm border-primary/20 bg-primary/5 focus-visible:ring-primary/20"
+                                    />
+                                </div>
+                            )}
+
                             <div className="space-y-1.5">
                                 <Label className="text-xs md:text-sm font-semibold">New Password</Label>
                                 <Input 

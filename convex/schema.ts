@@ -41,6 +41,7 @@ export default defineSchema({
 
     // Verification
     isVerified: v.optional(v.boolean()),
+    isPhoneVerified: v.optional(v.boolean()),
     verificationStatus: v.optional(v.string()), // "unverified" | "pending_payment" | "pending_approval" | "verified"
     idDocument: v.optional(v.string()),
 

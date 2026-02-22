@@ -212,6 +212,7 @@ export async function completeRegistrationAction(data: {
  * Change Password for logged in user
  */
 export async function changePasswordAction(data: {
+  oldPassword?: string;
   newPassword: string;
 }) {
   try {
@@ -222,6 +223,23 @@ export async function changePasswordAction(data: {
 
     if (data.newPassword.length < 6) {
         return { success: false, error: 'Password must be at least 6 characters' };
+    }
+
+    const user = await convex.query(api.users.getByExternalId, { externalId: session.user.id });
+    if (!user) {
+        return { success: false, error: 'User not found' };
+    }
+
+    // If user already has a password set, require the old password
+    if (user.password) {
+        if (!data.oldPassword) {
+            return { success: false, error: 'Current password is required.' };
+        }
+        
+        const isMatch = await bcrypt.compare(data.oldPassword, user.password);
+        if (!isMatch) {
+            return { success: false, error: 'Current password is incorrect.' };
+        }
     }
 
     // Hash new password

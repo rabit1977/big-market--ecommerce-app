@@ -315,6 +315,27 @@ export const requestVerification = mutation({
   },
 });
 
+export const verifyPhone = mutation({
+  args: {
+    externalId: v.string(),
+    phone: v.optional(v.string())
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.externalId))
+      .unique();
+    
+    if (!user) throw new Error("User not found");
+    
+    await ctx.db.patch(user._id, {
+        isPhoneVerified: true,
+        ...(args.phone ? { phone: args.phone } : {})
+    });
+    return { success: true };
+  },
+});
+
 export const addCredits = mutation({
   args: {
     externalId: v.string(),
