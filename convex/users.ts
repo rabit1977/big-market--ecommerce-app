@@ -1251,56 +1251,5 @@ export const getUserDashboardStats = query({
   },
 });
 
-export const getPublicProfile = query({
-  args: { userId: v.string() },
-  handler: async (ctx, args) => {
-    let user = await ctx.db
-      .query("users")
-      .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
-      .first();
 
-    if (!user) {
-        // Fallback: lookup by internal _id
-        try {
-            const potentialUser = await ctx.db.get(args.userId as any) as any;
-            if (potentialUser && 'externalId' in potentialUser) {
-                user = potentialUser;
-            }
-        } catch (e) {
-            return null;
-        }
-    }
-
-    if (!user) return null;
-
-    const externalId = user.externalId;
-    const internalId = user._id as string;
-
-    // Use take() instead of collect() to avoid full table scans that can
-    // exceed Convex's 1s query time limit on larger datasets.
-    const listingsByExternal = await ctx.db
-      .query("listings")
-      .withIndex("by_userId_status", (q) => q.eq("userId", externalId).eq("status", "ACTIVE"))
-      .take(500);
-
-    const listingsByInternal = await ctx.db
-      .query("listings")
-      .withIndex("by_userId_status", (q) => q.eq("userId", internalId).eq("status", "ACTIVE"))
-      .take(500);
-
-    // Merge and deduplicate
-    const existingIds = new Set(listingsByExternal.map(l => l._id));
-    const activeListings = [...listingsByExternal, ...listingsByInternal.filter(l => !existingIds.has(l._id))];
-
-    return {
-      _id: user._id,
-      name: user.name,
-      image: user.image,
-      createdAt: user.createdAt || user._creationTime,
-      bio: user.bio,
-      city: user.city,
-      isVerified: user.isVerified,
-      activeListingsCount: activeListings.length,
-    };
-  },
-});
+// Removed redundant getPublicProfile. Use api.storefront.getPublicProfile instead.

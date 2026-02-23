@@ -10,11 +10,12 @@ import { cn } from '@/lib/utils';
 import { useQuery } from 'convex/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-    BadgeCheck, BarChart, Bell,
-    ChevronRight, CreditCard, Crown,
-    Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
-    MessageSquare, Package, Pencil, Settings, ShieldCheck,
-    Star, Store, Trash, User, Wallet, X
+  BadgeCheck, BarChart, Bell,
+  ChevronRight, CreditCard, Crown,
+  Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
+  MessageSquare, Package, Pencil, Settings, ShieldCheck,
+  Star, Store, Trash,
+  Wallet, X
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -126,48 +127,6 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
 
   const closePanel = useCallback(() => setIsPanelOpen(false), []);
 
-  // ── Menu sections (stable — derived from user, not re-created on every render) ──
-  const isAdmin = user?.role === 'ADMIN';
-
-  const mobileOnlyItems: MenuItem[] = [
-    { href: '/', icon: Home, label: t('home') },
-    { href: '/listings', icon: Store, label: t('browse_listings') },
-    { href: '/messages', icon: MessageSquare, label: t('messages'), badge: unreadMessagesCount, iconColor: 'text-primary' },
-    { href: '/account/notifications', icon: Star, label: t('notifications'), badge: unreadNotificationsCount, iconColor: 'text-amber-500' },
-    { href: '/favorites', icon: Heart, label: t('favorites'), badge: initialWishlistCount, iconColor: 'text-rose-500' },
-  ];
-
-  const accountItems: MenuItem[] = [
-    { href: '/my-listings', icon: Package, label: t('my_listings') },
-    { href: `/store/${user.id}`, icon: Store, label: tNav('stores'), highlight: true, iconColor: 'text-primary' },
-    { href: '/my-listings/stats', icon: BarChart, label: t('ad_statistics') },
-    { href: '/my-listings/saved-searches', icon: Bell, label: t('saved_searches_alerts') },
-    { href: '/wallet', icon: CreditCard, label: t('account_overview') },
-    { href: '/wallet/top-up', icon: Wallet, label: t('top_up_account') },
-  ];
-
-  const settingsItems: MenuItem[] = [
-    { href: '/account', icon: Settings, label: t('edit_profile') },
-    { href: '/account/password', icon: Lock, label: t('change_password') },
-    ...(!isAdmin ? [
-      { href: '/account/verification', icon: ShieldCheck, label: t('verification') },
-      { href: '/premium', icon: Crown, label: t('subscription_plans'), iconColor: 'text-amber-500' },
-    ] : []),
-  ];
-
-  const supportItems: MenuItem[] = [
-    { href: '/help', icon: HelpCircle, label: t('help_center') },
-    { href: '/messages?type=SUPPORT', icon: MessageSquare, label: t('live_support_chat'), iconColor: 'text-primary' },
-  ];
-
-  const adminItems: MenuItem[] = isAdmin
-    ? [{ href: '/admin/dashboard', icon: LayoutDashboard, label: t('admin_panel'), iconColor: 'text-primary' }]
-    : [];
-
-  const dangerItems: MenuItem[] = [
-    { href: '/account/delete', icon: Trash, label: t('delete_account'), danger: true },
-  ];
-
   const renderMenuItem = (item: MenuItem) => {
     const isActive = pathname === item.href;
     return (
@@ -228,6 +187,48 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
     (user as any).accountType === 'COMPANY' && (user as any).companyName
       ? (user as any).companyName
       : user.name;
+
+  // ── Menu sections (stable — derived from user, after existence check) ──
+  const isAdmin = user.role === 'ADMIN';
+
+  const mobileOnlyItems: MenuItem[] = [
+    { href: '/', icon: Home, label: t('home') },
+    { href: '/listings', icon: Store, label: t('browse_listings') },
+    { href: '/messages', icon: MessageSquare, label: t('messages'), badge: unreadMessagesCount, iconColor: 'text-primary' },
+    { href: '/account/notifications', icon: Star, label: t('notifications'), badge: unreadNotificationsCount, iconColor: 'text-amber-500' },
+    { href: '/favorites', icon: Heart, label: t('favorites'), badge: initialWishlistCount, iconColor: 'text-rose-500' },
+  ];
+
+  const accountItems: MenuItem[] = [
+    { href: '/my-listings', icon: Package, label: t('my_listings') },
+    { href: `/store/${user.id}`, icon: Store, label: tNav('stores'), highlight: true, iconColor: 'text-primary' },
+    { href: '/my-listings/stats', icon: BarChart, label: t('ad_statistics') },
+    { href: '/my-listings/saved-searches', icon: Bell, label: t('saved_searches_alerts') },
+    { href: '/wallet', icon: CreditCard, label: t('account_overview') },
+    { href: '/wallet/top-up', icon: Wallet, label: t('top_up_account') },
+  ];
+
+  const settingsItems: MenuItem[] = [
+    { href: '/account', icon: Settings, label: t('edit_profile') },
+    { href: '/account/password', icon: Lock, label: t('change_password') },
+    ...(!isAdmin ? [
+      { href: '/account/verification', icon: ShieldCheck, label: t('verification') },
+      { href: '/premium', icon: Crown, label: t('subscription_plans'), iconColor: 'text-amber-500' },
+    ] : []),
+  ];
+
+  const supportItems: MenuItem[] = [
+    { href: '/help', icon: HelpCircle, label: t('help_center') },
+    { href: '/messages?type=SUPPORT', icon: MessageSquare, label: t('live_support_chat'), iconColor: 'text-primary' },
+  ];
+
+  const adminItems: MenuItem[] = isAdmin
+    ? [{ href: '/admin/dashboard', icon: LayoutDashboard, label: t('admin_panel'), iconColor: 'text-primary' }]
+    : [];
+
+  const dangerItems: MenuItem[] = [
+    { href: '/account/delete', icon: Trash, label: t('delete_account'), danger: true },
+  ];
 
   return (
     <>

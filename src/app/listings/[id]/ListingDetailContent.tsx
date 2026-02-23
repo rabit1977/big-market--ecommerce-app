@@ -6,15 +6,15 @@ import { ReportModal } from '@/components/shared/report-modal';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import { LeaveReviewModal } from '@/components/store/leave-review-modal';
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { api } from '@/convex/_generated/api';
@@ -23,20 +23,20 @@ import { useFavorites } from '@/lib/context/favorites-context';
 import { cn, formatCurrency } from '@/lib/utils';
 import { useQuery as useConvexQuery, useMutation } from 'convex/react';
 import {
-    BadgeCheck,
-    ChevronLeft,
-    ChevronRight,
-    Edit,
-    Heart,
-    History,
-    Mail,
-    MapPin,
-    MessageSquare,
-    MoreVertical,
-    Phone,
-    Share2,
-    ShieldAlert,
-    Trash2,
+  BadgeCheck,
+  ChevronLeft,
+  ChevronRight,
+  Edit,
+  Heart,
+  History,
+  Mail,
+  MapPin,
+  MessageSquare,
+  MoreVertical,
+  Phone,
+  Share2,
+  ShieldAlert,
+  Trash2,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
