@@ -453,22 +453,29 @@ export const getListingStats = query({
 
 import { paginationOptsValidator } from "convex/server";
 
-// Get all support conversations (ADMIN ONLY)
+// Get all support conversations (ADMIN ONLY) - Uses built-in pagination when no search/date filters
 export const getSupportConversations = query({
-  args: { paginationOpts: paginationOptsValidator },
+  args: { 
+    paginationOpts: paginationOptsValidator,
+    search: v.optional(v.string()),
+    startDate: v.optional(v.number()),
+    endDate: v.optional(v.number()),
+  },
   handler: async (ctx, args) => {
-    const paginated = await ctx.db
+    // 1. Fetch conversations with basic type filter
+    const conversations = await ctx.db
       .query("conversations")
       .withIndex("by_type", (q) => q.eq("type", "SUPPORT"))
       .order("desc")
-      .paginate(args.paginationOpts);
+      .collect();
 
-    // Fetch details
+    // 2. Resolve details and Apply filters in memory
+    // Note: For large datasets, we would use a Search Index, but for curated support chats this is performant.
     const conversationsWithDetails = await Promise.all(
-      paginated.page.map(async (conv) => {
-        // Find the user who is NOT "ADMIN"
+      conversations.map(async (conv) => {
         const userId = conv.buyerId === "ADMIN" ? conv.sellerId : conv.buyerId;
-
+        
+        // Resolve other user details
         let user = await ctx.db
           .query("users")
           .withIndex("by_externalId", (q) => q.eq("externalId", userId))
@@ -477,31 +484,95 @@ export const getSupportConversations = query({
         if (!user) {
           const normalizedId = ctx.db.normalizeId("users", userId);
           if (normalizedId) {
-            const byId = await ctx.db.get(normalizedId);
-            if (byId && (byId as any).externalId) user = byId as any;
+             user = await ctx.db.get(normalizedId);
           }
         }
 
-        // Admin's unread count depends on their position (buyer or seller)
-        const unreadCount = conv.buyerId === "ADMIN" ? conv.buyerUnreadCount : conv.sellerUnreadCount;
+        const unreadCount = conv.buyerId === "ADMIN" ? (conv.buyerUnreadCount || 0) : (conv.sellerUnreadCount || 0);
 
         return {
           ...conv,
           otherUserId: userId,
-          otherUser: user ? {
-             name: user.name,
-             image: user.image,
-             email: user.email,
-             isVerified: user.isVerified,
-             id: user.externalId,
-          } : { name: "Unknown User", id: userId },
-          unreadCount: unreadCount || 0,
+          otherUser: {
+             name: user?.name ?? "Unknown User",
+             image: user?.image,
+             email: user?.email,
+             isVerified: user?.isVerified,
+             id: user?.externalId ?? userId,
+          },
+          unreadCount,
         };
       })
     );
 
-    return { ...paginated, page: conversationsWithDetails };
+    let filtered = conversationsWithDetails;
+
+    // 3. Apply Search Filter
+    if (args.search) {
+        const search = args.search.toLowerCase();
+        filtered = filtered.filter(c => 
+            c.otherUser.name?.toLowerCase().includes(search) || 
+            c.otherUser.email?.toLowerCase().includes(search) ||
+            c.lastMessage?.toLowerCase().includes(search)
+        );
+    }
+
+    // 4. Apply Date Filter
+    if (args.startDate) {
+        filtered = filtered.filter(c => (c.lastMessageAt || 0) >= args.startDate!);
+    }
+    if (args.endDate) {
+        filtered = filtered.filter(c => (c.lastMessageAt || 0) <= args.endDate!);
+    }
+
+    // 5. Manual Pagination (since we filtered in memory)
+    // We use the cursor in paginationOpts to simulate real pagination
+    const numToReturn = args.paginationOpts.numItems;
+    const startIndex = parseInt(args.paginationOpts.cursor || "0", 10);
+    const page = filtered.slice(startIndex, startIndex + numToReturn);
+    const nextIndex = startIndex + numToReturn;
+    const isDone = nextIndex >= filtered.length;
+
+    return {
+        page,
+        isDone,
+        continueCursor: isDone ? "" : nextIndex.toString()
+    };
   },
+});
+
+export const exportSupport = query({
+    args: {},
+    handler: async (ctx) => {
+        const conversations = await ctx.db
+            .query("conversations")
+            .withIndex("by_type", (q) => q.eq("type", "SUPPORT"))
+            .order("desc")
+            .collect();
+            
+        return await Promise.all(
+          conversations.map(async (conv) => {
+            const userId = conv.buyerId === "ADMIN" ? conv.sellerId : conv.buyerId;
+            let user = await ctx.db
+              .query("users")
+              .withIndex("by_externalId", (q) => q.eq("externalId", userId))
+              .first();
+
+            if (!user) {
+              const normalizedId = ctx.db.normalizeId("users", userId);
+              if (normalizedId) user = await ctx.db.get(normalizedId);
+            }
+
+            return {
+              ...conv,
+              otherUser: {
+                name: user?.name,
+                email: user?.email,
+              }
+            };
+          })
+        );
+    }
 });
 
 // Get total unread support messages for admin badge

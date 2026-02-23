@@ -10,7 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import {
   Tooltip,
   TooltipContent,
@@ -24,7 +23,6 @@ import {
   Eye,
   EyeOff,
   MessageCircle,
-  Search,
   Trash2
 } from 'lucide-react';
 import Image from 'next/image';
@@ -39,6 +37,8 @@ interface QuestionsClientProps {
   pages: number;
 }
 
+import { CommunicationFilters } from './communication-filters';
+
 export function QuestionsClient({
   questions,
   total,
@@ -47,17 +47,27 @@ export function QuestionsClient({
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
-  const [search, setSearch] = useState(searchParams.get('search') || '');
   const [answeringId, setAnsweringId] = useState<string | null>(null);
   const [answerText, setAnswerText] = useState('');
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleFilterChange = (search?: string, range?: { from?: number; to?: number } | undefined) => {
     const params = new URLSearchParams(searchParams);
-    if (search) params.set('search', search);
-    else params.delete('search');
+    
+    if (search !== undefined) {
+        if (search) params.set('search', search);
+        else params.delete('search');
+    }
+
+    if (range !== undefined) {
+        if (range?.from) params.set('startDate', range.from.toString());
+        else params.delete('startDate');
+        
+        if (range?.to) params.set('endDate', range.to.toString());
+        else params.delete('endDate');
+    }
+
     params.set('page', '1');
-    router.push(`/admin/questions?${params.toString()}`);
+    router.push(`/admin/messages?${params.toString()}`);
   };
 
   const handleToggleVisibility = async (id: string) => {
@@ -91,26 +101,54 @@ export function QuestionsClient({
     });
   };
 
+  const handleExport = () => {
+    if (questions.length === 0) {
+        toast.error("No questions to export");
+        return;
+    }
+    
+    const headers = ["Date", "User", "Product", "Question", "Answers Count", "Public"];
+    const csvContent = [
+        headers.join(","),
+        ...questions.map((q: any) => [
+            new Date(q.createdAt).toLocaleDateString(),
+            `"${q.user.name || 'User'}"`,
+            `"${q.product?.title || 'Unknown'}"`,
+            `"${q.question.replace(/"/g, '""')}"`,
+            q.answers.length,
+            q.isPublic ? "Yes" : "No"
+        ].join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `product_questions_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Export started");
+  };
+
   return (
-    <div className='bg-background rounded-xl border border-border/50 shadow-sm overflow-hidden'>
-      {/* Toolbar */}
-      <div className='p-3 md:p-4 border-b border-border/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-muted/20'>
-        <form onSubmit={handleSearch} className='relative w-full sm:w-80'>
-          <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
-          <Input
-            placeholder='Search questions or products...'
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className='pl-9 bg-background h-9 md:h-10 text-xs'
-          />
-        </form>
-        <div className='flex items-center gap-2 self-end sm:self-auto'>
-            <Badge variant="outline" className="px-3 py-1 h-8 md:h-9 flex items-center gap-1 bg-background text-xs md:text-sm">
+    <div className='bg-background rounded-xl space-y-6'>
+      <CommunicationFilters 
+        onSearch={(val) => handleFilterChange(val, undefined)}
+        onDateChange={(range) => handleFilterChange(undefined, range ? { from: range.from?.getTime(), to: range.to?.getTime() } : {})}
+        onExport={handleExport}
+      />
+
+      <div className="border border-border/50 rounded-xl overflow-hidden shadow-sm">
+        {/* List Header */}
+        <div className='p-3 md:p-4 border-b border-border/50 flex items-center justify-between bg-muted/20'>
+            <h3 className="font-bold text-sm">Question Threads</h3>
+            <Badge variant="outline" className="px-3 py-1 h-8 flex items-center gap-1 bg-background text-xs">
                 <MessageCircle className="w-3 h-3" />
                 {total} Questions
             </Badge>
         </div>
-      </div>
 
       {/* List */}
       <div className='divide-y divide-border/50'>
@@ -262,5 +300,6 @@ export function QuestionsClient({
         >Next</Button>
       </div>
     </div>
+  </div>
   );
 }

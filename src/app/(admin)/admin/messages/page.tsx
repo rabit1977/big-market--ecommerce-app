@@ -11,19 +11,23 @@ export const metadata = {
   description: 'Manage support inquiries, product Q&A, and contact forms',
 };
 
-interface AdminQuestionsPageProps {
+interface AdminMessagesPageProps {
   searchParams: Promise<{
     page?: string;
     search?: string;
+    startDate?: string;
+    endDate?: string;
   }>;
 }
 
-export default async function AdminMessagesPage(props: AdminQuestionsPageProps) {
+export default async function AdminMessagesPage(props: AdminMessagesPageProps) {
   const searchParams = await props.searchParams;
   const page = Number(searchParams.page) || 1;
   const search = searchParams.search || '';
+  const startDate = searchParams.startDate ? Number(searchParams.startDate) : undefined;
+  const endDate = searchParams.endDate ? Number(searchParams.endDate) : undefined;
 
-  const { questions, total, pages } = await getAllQuestionsAction(page, 10, search);
+  const { questions, total, pages } = await getAllQuestionsAction(page, 10, search, startDate, endDate);
 
   return (
     <div className='space-y-6 sm:space-y-8 pb-20'>

@@ -3,26 +3,28 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
 import { useMutation, usePaginatedQuery } from 'convex/react';
 import { CheckCircle2, Headset, Loader2, Mail, Phone, Trash2, User } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { CommunicationFilters } from './communication-filters';
 
 export function ContactInquiriesClient() {
-  const [activeTab, setActiveTab] = useState<'new' | 'resolved'>('new');
+  const [activeTab, setActiveTab] = useState<'NEW' | 'RESOLVED'>('NEW');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [dateRange, setDateRange] = useState<{ from?: number; to?: number } | undefined>();
   
-  const { results: newInquiries, status: newStatus, loadMore: loadMoreNew } = usePaginatedQuery(
+  const { results: inquiries, status, loadMore } = usePaginatedQuery(
     api.contact.list,
-    {},
-    { initialNumItems: 10 }
-  );
-
-  const { results: resolvedInquiries, status: resolvedStatus, loadMore: loadMoreResolved } = usePaginatedQuery(
-    api.contact.getResolved,
-    {},
+    { 
+        status: activeTab,
+        search: searchTerm || undefined,
+        startDate: dateRange?.from,
+        endDate: dateRange?.to,
+    },
     { initialNumItems: 10 }
   );
 
@@ -55,23 +57,61 @@ export function ContactInquiriesClient() {
     }
   };
 
-  const currentResults = activeTab === 'new' ? newInquiries : resolvedInquiries;
-  const currentStatus = activeTab === 'new' ? newStatus : resolvedStatus;
-  const currentLoadMore = activeTab === 'new' ? loadMoreNew : loadMoreResolved;
+  const handleExport = () => {
+    if (inquiries.length === 0) {
+        toast.error("No inquiries to export");
+        return;
+    }
+    
+    const headers = ["Date", "Name", "Email", "Phone", "Subject", "Message", "Status"];
+    const csvContent = [
+        headers.join(","),
+        ...inquiries.map((iq: any) => [
+            new Date(iq.createdAt).toLocaleDateString(),
+            `"${iq.name}"`,
+            iq.email,
+            `"${iq.phone || ''}"`,
+            `"${iq.subject}"`,
+            `"${iq.message.replace(/"/g, '""')}"`,
+            iq.status
+        ].join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `contact_inquiries_${activeTab.toLowerCase()}_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Export started");
+  };
 
   return (
-    <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="space-y-4">
-      <TabsList className="grid w-full max-w-[400px] grid-cols-2">
-        <TabsTrigger value="new">New Inquiries</TabsTrigger>
-        <TabsTrigger value="resolved">Resolved</TabsTrigger>
-      </TabsList>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full sm:w-auto">
+            <TabsList className="grid w-64 grid-cols-2">
+                <TabsTrigger value="NEW">New Inquiries</TabsTrigger>
+                <TabsTrigger value="RESOLVED">Resolved</TabsTrigger>
+            </TabsList>
+        </Tabs>
+      </div>
+
+      <CommunicationFilters 
+        onSearch={setSearchTerm}
+        onDateChange={(range) => setDateRange(range ? { from: range.from?.getTime(), to: range.to?.getTime() } : undefined)}
+        onExport={handleExport}
+      />
       
-      <TabsContent value={activeTab} className="space-y-4">
-        {currentStatus === "LoadingFirstPage" ? (
+      <div className="space-y-4">
+        {status === "LoadingFirstPage" ? (
           <div className="flex h-40 items-center justify-center">
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
-        ) : currentResults.length === 0 ? (
+        ) : inquiries.length === 0 ? (
           <Card className="p-12 flex flex-col items-center justify-center text-center space-y-4">
             <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
               <Headset className="h-6 w-6 text-muted-foreground" />
@@ -79,13 +119,13 @@ export function ContactInquiriesClient() {
             <div className="space-y-1">
               <h3 className="font-bold">No Inquiries Found</h3>
               <p className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                {activeTab === 'new' ? "You're all caught up! No new messages." : "No resolved messages yet."}
+                {searchTerm || dateRange ? "No messages match your filters." : activeTab === 'NEW' ? "You're all caught up! No new messages." : "No resolved messages yet."}
               </p>
             </div>
           </Card>
         ) : (
           <div className="grid gap-4">
-            {currentResults.map((inquiry: any) => (
+            {inquiries.map((inquiry: any) => (
               <Card key={inquiry._id} className="border-border/50 hover:border-primary/20 transition-colors">
                 <CardHeader className="flex flex-row items-start justify-between">
                   <div className="space-y-1">
@@ -147,23 +187,18 @@ export function ContactInquiriesClient() {
               </Card>
             ))}
 
-            {currentStatus === "CanLoadMore" && (
+            {status === "CanLoadMore" && (
                <Button 
                   variant="outline" 
-                  onClick={() => currentLoadMore(10)}
+                  onClick={() => loadMore(10)}
                   className="w-full mt-2"
                >
                  Load More
                </Button>
             )}
-            {currentStatus === "LoadingMore" && (
-               <div className="flex justify-center p-4">
-                 <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-               </div>
-            )}
           </div>
         )}
-      </TabsContent>
-    </Tabs>
+      </div>
+    </div>
   );
 }

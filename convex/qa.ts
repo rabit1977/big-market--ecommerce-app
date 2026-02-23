@@ -26,13 +26,39 @@ export const getListingQuestions = query({
 });
 
 export const listAll = query({
-  args: { limit: v.optional(v.number()) },
-  handler: async (ctx, args) => {
-    return await ctx.db
-      .query("questions")
-      .order("desc")
-      .take(args.limit || 50);
+  args: { 
+    limit: v.optional(v.number()),
+    search: v.optional(v.string()),
+    startDate: v.optional(v.number()),
+    endDate: v.optional(v.number()),
   },
+  handler: async (ctx, args) => {
+    let q = ctx.db.query("questions").order("desc");
+    
+    const results = await q.collect();
+    let filtered = results;
+
+    if (args.search) {
+        const search = args.search.toLowerCase();
+        filtered = filtered.filter(item => item.question.toLowerCase().includes(search));
+    }
+
+    if (args.startDate) {
+        filtered = filtered.filter(item => item.createdAt >= args.startDate!);
+    }
+    if (args.endDate) {
+        filtered = filtered.filter(item => item.createdAt <= args.endDate!);
+    }
+
+    return filtered.slice(0, args.limit || 50);
+  },
+});
+
+export const exportQA = query({
+    args: {},
+    handler: async (ctx) => {
+        return await ctx.db.query("questions").order("desc").collect();
+    }
 });
 
 export const createQuestion = mutation({

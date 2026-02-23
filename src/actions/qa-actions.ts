@@ -110,9 +110,14 @@ export async function answerQuestionAction(questionId: string, answer: string) {
 /**
  * Get all questions (admin only)
  */
-export async function getAllQuestionsAction(page = 1, limit = 10, search = '') {
+export async function getAllQuestionsAction(page = 1, limit = 50, search = '', startDate?: number, endDate?: number) {
     try {
-        const questions = await convex.query(api.qa.listAll, { limit: 50 });
+        const questions = await convex.query(api.qa.listAll, { 
+            limit: 100, // Fetch more for filtering or just use a larger pool
+            search,
+            startDate,
+            endDate
+        });
         
         const enriched = await Promise.all(questions.map(async (q) => {
             const [user, listing] = await Promise.all([
@@ -120,19 +125,36 @@ export async function getAllQuestionsAction(page = 1, limit = 10, search = '') {
                 convex.query(api.listings.getById, { id: q.listingId as any })
             ]);
 
+            const enrichedAnswers = await Promise.all((q.answers || []).map(async (a) => {
+                const aUser = await convex.query(api.users.getByExternalId, { externalId: a.userId });
+                return {
+                    ...a,
+                    id: a._id,
+                    user: {
+                        name: aUser?.name || 'User',
+                        image: aUser?.image || null,
+                        role: aUser?.role || 'USER'
+                    }
+                };
+            }));
+
             return {
                 ...q,
                 id: q._id,
                 user: { name: user?.name, image: user?.image, email: user?.email },
-                product: listing ? { id: listing._id, title: listing.title, thumbnail: listing.thumbnail } : null
+                product: listing ? { id: listing._id, title: listing.title, thumbnail: listing.thumbnail, slug: (listing as any).slug } : null,
+                answers: enrichedAnswers
             };
         }));
 
+        const startIndex = (page - 1) * limit;
+        const paginated = enriched.slice(startIndex, startIndex + limit);
+
         return { 
             success: true, 
-            questions: enriched, 
+            questions: paginated, 
             total: enriched.length, 
-            pages: 1 
+            pages: Math.ceil(enriched.length / limit) 
         };
     } catch (error) {
         console.error('Admin Fetch Questions Error:', error);

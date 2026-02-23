@@ -6,12 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { api } from '@/convex/_generated/api';
 import { cn } from '@/lib/utils';
-import { useMutation, usePaginatedQuery, useQuery } from 'convex/react';
+import { useConvex, useMutation, usePaginatedQuery, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import { ArrowLeft, Image as ImageIcon, Search, Send, ShieldAlert } from 'lucide-react';
 import Image from 'next/image';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { CommunicationFilters } from './communication-filters';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -48,18 +49,70 @@ const ADMIN_ID = 'ADMIN' as const;
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
+
 export function AdminSupportChatClient() {
+  const convex = useConvex();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [dateRange, setDateRange] = useState<{ from?: number; to?: number } | undefined>();
+
   const { results: conversations, status, loadMore } = usePaginatedQuery(
     api.messages.getSupportConversations,
-    {},
+    {
+      search: searchQuery || undefined,
+      startDate: dateRange?.from,
+      endDate: dateRange?.to,
+    },
     { initialNumItems: 15 }
   ) as { results: Conversation[], status: string, loadMore: (n: number) => void };
 
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [newMessage, setNewMessage] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+
+  const [isExporting, setIsExporting] = useState(false);
+  const handleExport = async () => {
+    if (conversations.length === 0) {
+        toast.error("No conversations to export");
+        return;
+    }
+    
+    setIsExporting(true);
+    toast.info("Preparing export...");
+
+    try {
+        // We fetch the full list for export to ensure we don't just export the currently loaded page
+        const allConversations = await convex.query(api.messages.exportSupport);
+        
+        const headers = ["Date", "User", "Email", "Last Message", "Unread"];
+        const csvContent = [
+            headers.join(","),
+            ...allConversations.map((c: any) => [
+                new Date(c.lastMessageAt || 0).toLocaleDateString(),
+                `"${c.otherUser?.name || 'User'}"`,
+                `"${c.otherUser?.email || ''}"`,
+                `"${(c.lastMessage || '').replace(/"/g, '""')}"`,
+                (c.buyerId === ADMIN_ID ? c.buyerUnreadCount : c.sellerUnreadCount) || 0
+            ].join(","))
+        ].join("\n");
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", `support_chats_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast.success("Export complete");
+    } catch (error) {
+        toast.error("Failed to export conversations");
+        console.error(error);
+    } finally {
+        setIsExporting(false);
+    }
+  };
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -107,17 +160,7 @@ export function AdminSupportChatClient() {
     return () => xhrRef.current?.abort();
   }, []);
 
-  // ── Filtered conversations ─────────────────────────────────────────────────
-  const filteredConversations = useMemo(() => {
-    if (!conversations) return [];
-    const q = searchQuery.toLowerCase();
-    if (!q) return conversations;
-    return conversations.filter(
-      (conv) =>
-        conv.otherUser?.name?.toLowerCase().includes(q) ||
-        conv.otherUser?.email?.toLowerCase().includes(q),
-    );
-  }, [conversations, searchQuery]);
+
 
   // ── Send message ───────────────────────────────────────────────────────────
   const handleSendMessage = useCallback(async () => {
@@ -200,51 +243,67 @@ export function AdminSupportChatClient() {
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-0 lg:gap-4 h-[600px] border rounded-xl overflow-hidden bg-card shadow-sm">
+    <div className="space-y-6">
+      <CommunicationFilters 
+        onSearch={setSearchQuery}
+        onDateChange={(range) => setDateRange(range ? { from: range.from?.getTime(), to: range.to?.getTime() } : undefined)}
+        onExport={handleExport}
+      />
 
-      {/* ── Sidebar ───────────────────────────────────────────────────────── */}
-      <div className={cn(
-        'flex flex-col border-r border-border bg-muted/10',
-        selectedConversation ? 'hidden lg:flex' : 'flex',
-      )}>
-        <div className="p-3 border-b border-border/50">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search users..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 h-9 text-sm bg-background"
-            />
+      <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-0 lg:gap-4 h-[600px] border rounded-xl overflow-hidden bg-card shadow-sm">
+
+        {/* ── Sidebar ───────────────────────────────────────────────────────── */}
+        <div className={cn(
+          'flex flex-col border-r border-border bg-muted/10',
+          selectedConversation ? 'hidden lg:flex' : 'flex',
+        )}>
+          <div className="flex-1 overflow-y-auto overscroll-contain min-h-0 scrollbar-hide">
+            {status === "LoadingFirstPage" ? (
+              <div className="flex flex-col items-center justify-center h-40 gap-2 opacity-50">
+                 <div className="h-6 w-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                 <span className="text-xs font-bold uppercase tracking-widest">Loading...</span>
+              </div>
+            ) : conversations.length === 0 ? (
+              <div className="p-8 text-center space-y-4 opacity-60">
+                <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mx-auto">
+                    <Search className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <div>
+                    <p className="text-sm font-bold">No results found</p>
+                    <p className="text-xs text-muted-foreground mt-1">Try adjusting your filters or search term.</p>
+                </div>
+              </div>
+            ) : (
+              <div className="divide-y divide-border/50">
+                {conversations.map((conv) => (
+                  <ConversationRow
+                    key={conv._id}
+                    conv={conv}
+                    isSelected={selectedConversation?._id === conv._id}
+                    onSelect={setSelectedConversation}
+                  />
+                ))}
+                {status === "CanLoadMore" && (
+                  <div className="p-4 bg-muted/5 mt-1 border-t border-border/10">
+                     <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="w-full text-[10px] font-bold uppercase tracking-widest h-8 rounded-lg hover:bg-primary hover:text-white transition-all shadow-sm" 
+                        onClick={() => loadMore(15)}
+                    >
+                        Load More Conversations
+                     </Button>
+                  </div>
+                )}
+                {status === "LoadingMore" && (
+                  <div className="p-4 text-center">
+                     <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
-
-        <div className="flex-1 overflow-y-auto overscroll-contain min-h-0">
-          {filteredConversations.length === 0 ? (
-            <p className="p-6 text-center text-muted-foreground text-sm">
-              No support conversations found.
-            </p>
-          ) : (
-            <div className="divide-y divide-border/50">
-              {filteredConversations.map((conv) => (
-                <ConversationRow
-                  key={conv._id}
-                  conv={conv}
-                  isSelected={selectedConversation?._id === conv._id}
-                  onSelect={setSelectedConversation}
-                />
-              ))}
-              {status === "CanLoadMore" && (
-                <div className="p-3 bg-card mt-1">
-                   <Button variant="outline" size="sm" className="w-full text-xs" onClick={() => loadMore(10)}>
-                      Load More
-                   </Button>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
 
       {/* ── Chat Area ─────────────────────────────────────────────────────── */}
       <div className={cn(
@@ -341,6 +400,7 @@ export function AdminSupportChatClient() {
         )}
       </div>
     </div>
+  </div>
   );
 }
 
@@ -412,7 +472,7 @@ const MessageBubble = memo(function MessageBubble({
           'text-[9px] mt-1 !m-0',
           isAdmin ? 'text-right text-white/80' : 'text-left text-slate-500 dark:text-slate-400',
         )}>
-          {formatDistanceToNow(msg.createdAt, { addSuffix: true })}
+          {formatDistanceToNow(new Date(msg.createdAt), { addSuffix: true })}
         </p>
       </div>
     </div>
