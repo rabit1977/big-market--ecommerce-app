@@ -15,6 +15,7 @@ import {
   Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
   MessageSquare, Package, Pencil, Settings, ShieldCheck,
   Star, Store, Trash,
+  User,
   Wallet, X
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
