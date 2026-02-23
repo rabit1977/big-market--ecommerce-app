@@ -353,7 +353,7 @@ export function MessagesClient({
   }, [conversations, searchQuery]);
 
   return (
-    <div className="space-y-3 md:space-y-4 h-full flex flex-col min-h-0">
+    <div className="space-y-3 md:space-y-4 h-[calc(100svh-14rem)] md:h-[calc(100vh-12rem)] flex flex-col">
       {/* Header */}
       <div className="flex items-center gap-3 px-1 shrink-0">
         <div className="p-2 bg-primary/10 rounded-xl">

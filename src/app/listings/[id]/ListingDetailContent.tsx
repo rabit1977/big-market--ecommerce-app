@@ -6,15 +6,15 @@ import { ReportModal } from '@/components/shared/report-modal';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import { LeaveReviewModal } from '@/components/store/leave-review-modal';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { api } from '@/convex/_generated/api';
@@ -23,20 +23,20 @@ import { useFavorites } from '@/lib/context/favorites-context';
 import { cn, formatCurrency } from '@/lib/utils';
 import { useQuery as useConvexQuery, useMutation } from 'convex/react';
 import {
-  BadgeCheck,
-  ChevronLeft,
-  ChevronRight,
-  Edit,
-  Heart,
-  History,
-  Mail,
-  MapPin,
-  MessageSquare,
-  MoreVertical,
-  Phone,
-  Share2,
-  ShieldAlert,
-  Trash2,
+    BadgeCheck,
+    ChevronLeft,
+    ChevronRight,
+    Edit,
+    Heart,
+    History,
+    Mail,
+    MapPin,
+    MessageSquare,
+    MoreVertical,
+    Phone,
+    Share2,
+    ShieldAlert,
+    Trash2,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -198,7 +198,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
           </button>
           <div className="flex flex-col">
             <span className="text-sm font-black tracking-tight leading-none text-foreground uppercase">
-              Item #: {listingRef}
+              Item: {listingRef}
             </span>
             {/* suppressHydrationWarning replaces the useEffect+publishDate state */}
             <span
@@ -376,8 +376,15 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     {seller?.isVerified && <BadgeCheck className="w-4 h-4 text-primary" />}
                   </Link>
                   <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-                    Member since {seller?.createdAt || (seller as any)?._creationTime ? new Date(seller.createdAt || (seller as any)._creationTime).getFullYear() : 'Recently'}
+                    Member since {seller?.createdAt || (seller as any)?._creationTime 
+                      ? new Date(seller.createdAt || (seller as any)._creationTime).toLocaleDateString('mk-MK', {day: '2-digit', month: '2-digit', year: 'numeric'}) 
+                      : 'Recently'}
                   </p>
+                  {contactEmail && (
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mt-0.5">
+                      {contactEmail}
+                    </p>
+                  )}
                 </div>
                 {!isOwner && (
                   <button
@@ -498,7 +505,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 )}
 
                 <div className="flex items-center justify-center pt-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest gap-4">
-                  <span>Item #: {listingRef}</span>
+                  <span>Item: {listingRef}</span>
                   <span>•</span>
                   <span suppressHydrationWarning>Posted: {publishDate}</span>
                 </div>
@@ -518,9 +525,14 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
                       {seller?.isVerified ? 'Verified' : 'Member'} since{' '}
                       {seller?.createdAt || (seller as any)?._creationTime 
-                        ? new Date(seller.createdAt || (seller as any)._creationTime).getFullYear() 
+                        ? new Date(seller.createdAt || (seller as any)._creationTime).toLocaleDateString('mk-MK', {day: '2-digit', month: '2-digit', year: 'numeric'}) 
                         : 'Recently'}
                     </p>
+                    {contactEmail && (
+                      <p className="text-xs font-bold text-muted-foreground mt-0.5">
+                        {contactEmail}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
