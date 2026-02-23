@@ -50,9 +50,47 @@ const getStatusColor = (status?: string) => {
 export function UsersDataTable({ users }: UsersDataTableProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+
+  // ── Delete dialog state ───────────────────────────────────────────
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
+
+  // ── Promote/Revoke dialog state ───────────────────────────────────
+  const [showRoleDialog, setShowRoleDialog] = useState(false);
+  const [userForRole, setUserForRole] = useState<User | null>(null);
+  const [roleAction, setRoleAction] = useState<'promote' | 'revoke'>('promote');
+  const [roleConfirmation, setRoleConfirmation] = useState('');
+
+  const handleRoleClick = useCallback((user: User, action: 'promote' | 'revoke') => {
+    setUserForRole(user);
+    setRoleAction(action);
+    setRoleConfirmation('');
+    setShowRoleDialog(true);
+  }, []);
+
+  const handleConfirmRole = useCallback(async () => {
+    if (!userForRole) return;
+    const expectedText = `${roleAction === 'promote' ? 'Promote' : 'Revoke'} ${userForRole.name || 'User'}`;
+    if (roleConfirmation !== expectedText) return;
+
+    startTransition(async () => {
+      try {
+        const newRole = roleAction === 'promote' ? 'ADMIN' : 'USER';
+        const result = await updateUserRoleAction(userForRole.id, newRole);
+        if (result.success) {
+          toast.success(roleAction === 'promote' ? 'User promoted to Moderator' : 'Administrator access revoked');
+          setShowRoleDialog(false);
+          setUserForRole(null);
+          router.refresh();
+        } else {
+          toast.error(result.error);
+        }
+      } catch (error) {
+        toast.error('An unexpected error occurred');
+      }
+    });
+  }, [userForRole, roleAction, roleConfirmation, router]);
 
   const handleDeleteClick = useCallback((user: User) => {
     setUserToDelete(user);
@@ -327,34 +365,18 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                         {(user.role !== 'ADMIN') ? (
                             <DropdownMenuItem
                                 className='cursor-pointer text-indigo-500 focus:text-indigo-500'
-                                onSelect={() => startTransition(async () => {
-                                    const result = await updateUserRoleAction(user.id, 'ADMIN');
-                                    if (result.success) {
-                                        toast.success('User promoted to Administrator');
-                                        router.refresh();
-                                    } else {
-                                        toast.error(result.error);
-                                    }
-                                })}
+                                onSelect={() => handleRoleClick(user, 'promote')}
                             >
                                 <Shield className='h-4 w-4 mr-2' />
-                                Make Administrator
+                                Make Moderator
                             </DropdownMenuItem>
                         ) : (
                             <DropdownMenuItem
                                 className='cursor-pointer text-orange-500 focus:text-orange-500'
-                                onSelect={() => startTransition(async () => {
-                                    const result = await updateUserRoleAction(user.id, 'USER');
-                                    if (result.success) {
-                                        toast.success('Administrator access revoked');
-                                        router.refresh();
-                                    } else {
-                                        toast.error(result.error);
-                                    }
-                                })}
+                                onSelect={() => handleRoleClick(user, 'revoke')}
                             >
                                 <ShieldOff className='h-4 w-4 mr-2' />
-                                Revoke Administrator
+                                Revoke Moderator
                             </DropdownMenuItem>
                         )}
 
@@ -435,6 +457,82 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                   <Trash2 className='h-4 w-4 mr-2' />
                   Delete User
                 </>
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Promote / Revoke Confirmation Dialog */}
+      <AlertDialog open={showRoleDialog} onOpenChange={setShowRoleDialog}>
+        <AlertDialogContent className='max-w-[90vw] sm:max-w-lg rounded-2xl'>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              {roleAction === 'promote' ? (
+                <Shield className="h-5 w-5 text-indigo-500" />
+              ) : (
+                <ShieldOff className="h-5 w-5 text-orange-500" />
+              )}
+              {roleAction === 'promote' ? 'Make Moderator?' : 'Revoke Moderator?'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {roleAction === 'promote' ? (
+                <>
+                  You are about to grant <span className='font-semibold text-foreground'>{userForRole?.name || 'this user'}</span> full administrator (Moderator) access. They will be able to manage listings, users, and site settings.
+                </>
+              ) : (
+                <>
+                  You are about to revoke administrator access from <span className='font-semibold text-foreground'>{userForRole?.name || 'this user'}</span>. They will be demoted to a regular user.
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <div className="space-y-2">
+            <label htmlFor="confirm-role" className="block text-sm font-medium text-foreground">
+              To confirm, type{' '}
+              <span className="font-bold select-all">
+                {roleAction === 'promote' ? 'Promote' : 'Revoke'} {userForRole?.name || 'User'}
+              </span>{' '}below:
+            </label>
+            <input
+              id="confirm-role"
+              type="text"
+              className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              placeholder={`${roleAction === 'promote' ? 'Promote' : 'Revoke'} ${userForRole?.name || 'User'}`}
+              value={roleConfirmation}
+              onChange={(e) => setRoleConfirmation(e.target.value)}
+              autoComplete="off"
+            />
+          </div>
+
+          <AlertDialogFooter className='flex-col sm:flex-row gap-2'>
+            <AlertDialogCancel
+              onClick={() => { setShowRoleDialog(false); setUserForRole(null); setRoleConfirmation(''); }}
+              disabled={isPending}
+              className='w-full sm:w-auto'
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                const expected = `${roleAction === 'promote' ? 'Promote' : 'Revoke'} ${userForRole?.name || 'User'}`;
+                if (roleConfirmation !== expected) { e.preventDefault(); return; }
+                handleConfirmRole();
+              }}
+              disabled={isPending || roleConfirmation !== `${roleAction === 'promote' ? 'Promote' : 'Revoke'} ${userForRole?.name || 'User'}`}
+              className={`w-full sm:w-auto ${
+                roleAction === 'promote'
+                  ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                  : 'bg-orange-600 hover:bg-orange-700 text-white'
+              }`}
+            >
+              {isPending ? (
+                <><span className='animate-spin mr-2'>⏳</span>Processing...</>
+              ) : roleAction === 'promote' ? (
+                <><Shield className='h-4 w-4 mr-2' />Yes, Make Moderator</>
+              ) : (
+                <><ShieldOff className='h-4 w-4 mr-2' />Yes, Revoke Access</>
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
