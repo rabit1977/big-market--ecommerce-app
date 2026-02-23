@@ -33,10 +33,17 @@ export const list = query({
           .withIndex('by_externalId', (q) => q.eq('externalId', log.userId as string))
           .first();
 
-        // Fallback to internal ID if external ID is not found, just in case
+        // Fallback: try to look up by Convex internal ID if the externalId lookup failed.
+        // Wrapped in try/catch because ctx.db.get() throws if the string is not a valid
+        // Convex ID (e.g. a Clerk user ID like "user_xxx"), which would crash the query
+        // on the deployed (production) backend.
         let resolvedUser: any = user;
         if (!resolvedUser) {
-           resolvedUser = await ctx.db.get(log.userId as any);
+          try {
+            resolvedUser = await ctx.db.get(log.userId as any);
+          } catch {
+            // Not a valid Convex ID — leave resolvedUser as null/undefined
+          }
         }
 
         return {
