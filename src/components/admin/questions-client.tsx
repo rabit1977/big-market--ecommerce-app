@@ -67,7 +67,7 @@ export function QuestionsClient({
     }
 
     params.set('page', '1');
-    router.push(`/admin/messages?${params.toString()}`);
+    router.push(`/admin/questions?${params.toString()}`);
   };
 
   const handleToggleVisibility = async (id: string) => {

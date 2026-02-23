@@ -101,7 +101,7 @@ export function PendingListingsTable({ listings }: PendingListingsTableProps) {
               </TableCell>
               <TableCell className="font-medium">
                 <div className="flex flex-col">
-                    <Link href={`/listings/${listing._id}`} className="hover:text-primary transition-colors line-clamp-1" target="_blank">
+                    <Link href={`/listings/${listing._id}`} className="hover:text-primary transition-colors line-clamp-1">
                         {listing.title}
                     </Link>
                     <span className="text-xs text-muted-foreground line-clamp-1">{listing.description}</span>
@@ -122,7 +122,7 @@ export function PendingListingsTable({ listings }: PendingListingsTableProps) {
                     className="h-8 w-8"
                     asChild
                   >
-                    <Link href={`/listings/${listing._id}`} target="_blank">
+                    <Link href={`/listings/${listing._id}`}>
                         <Eye className="h-4 w-4" />
                     </Link>
                   </Button>

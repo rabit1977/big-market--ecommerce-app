@@ -122,7 +122,7 @@ export function AdminReportsClient() {
                                                 {report.targetType}
                                             </Badge>
                                             {report.targetType === 'listing' && report.target ? (
-                                                <Link href={`/listings/${report.target.id}`} target="_blank" className="flex items-center gap-2 hover:bg-muted p-1 rounded-md transition-colors min-w-0">
+                                                <Link href={`/listings/${report.target.id}`} className="flex items-center gap-2 hover:bg-muted p-1 rounded-md transition-colors min-w-0">
                                                     {report.target.image && (
                                                         <div className="w-8 h-8 relative rounded overflow-hidden shrink-0">
                                                             <Image src={report.target.image} alt="Target" fill className="object-cover" />
@@ -133,7 +133,7 @@ export function AdminReportsClient() {
                                                     </span>
                                                 </Link>
                                             ) : report.targetType === 'user' && report.target ? (
-                                                <Link href={`/store/${report.target.id}`} target="_blank" className="flex items-center gap-2 hover:bg-muted p-1 rounded-md transition-colors min-w-0">
+                                                <Link href={`/store/${report.target.id}`} className="flex items-center gap-2 hover:bg-muted p-1 rounded-md transition-colors min-w-0">
                                                     <span className="text-sm font-medium hover:underline truncate group-hover:text-primary transition-colors flex items-center gap-1">
                                                         {report.target.name || report.target.email} <ArrowUpRight className="w-3 h-3 flex-shrink-0" />
                                                     </span>

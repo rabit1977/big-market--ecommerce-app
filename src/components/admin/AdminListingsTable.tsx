@@ -252,7 +252,7 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                             </Link>
                           </DropdownMenuItem>
                           
-                          {listing.status === 'PENDING_APPROVAL' && (
+                          {listing.status !== 'ACTIVE' && (
                             <>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem 
@@ -260,15 +260,18 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                                 onClick={() => handleApprove(listing._id)}
                               >
                                 <CheckCircle className="h-4 w-4 mr-2" />
-                                Approve Listing
+                                {listing.status === 'REJECTED' ? 'Approve (Unsuspend)' : 'Approve Listing'}
                               </DropdownMenuItem>
-                              <DropdownMenuItem 
-                                className="text-amber-600 focus:text-amber-700 cursor-pointer"
-                                onClick={() => handleReject(listing._id)}
-                              >
-                                <XCircle className="h-4 w-4 mr-2" />
-                                Reject Listing
-                              </DropdownMenuItem>
+                              
+                              {listing.status !== 'REJECTED' && (
+                                <DropdownMenuItem 
+                                  className="text-amber-600 focus:text-amber-700 cursor-pointer"
+                                  onClick={() => handleReject(listing._id)}
+                                >
+                                  <XCircle className="h-4 w-4 mr-2" />
+                                  Reject Listing
+                                </DropdownMenuItem>
+                              )}
                             </>
                           )}
                           

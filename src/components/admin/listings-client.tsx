@@ -121,7 +121,7 @@ export function ListingsClient({ listings }: ListingsClientProps) {
               </div>
 
               <div className='flex-1 min-w-0'>
-                <Link href={`/listings/${listing.id}`} target="_blank" className="hover:underline">
+                <Link href={`/listings/${listing.id}`} className="hover:underline">
                     <h3 className='font-semibold text-sm sm:text-base truncate'>{listing.title}</h3>
                 </Link>
                 <div className='flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground mt-1'>

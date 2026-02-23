@@ -343,7 +343,7 @@ export function AdminListingsHub() {
                                                     )}
                                                 </div>
                                                 <div className="min-w-0">
-                                                    <Link href={`/listings/${listing.id}`} target="_blank"
+                                                    <Link href={`/listings/${listing.id}`}
                                                         className="font-semibold text-xs text-foreground hover:text-primary transition-colors line-clamp-1">
                                                         {listing.title}
                                                     </Link>
@@ -376,18 +376,20 @@ export function AdminListingsHub() {
                                         </td>
                                         <td className="px-4 py-3">
                                             <div className="flex items-center justify-end gap-1">
-                                                {listing.status === 'PENDING_APPROVAL' && (
+                                                {(listing.status === 'PENDING_APPROVAL' || listing.status === 'REJECTED') && (
                                                     <>
                                                         <button onClick={() => handleApprove(listing.id)} disabled={isPending}
                                                             className="h-7 w-7 rounded-lg flex items-center justify-center bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-colors"
-                                                            title="Approve">
+                                                            title={listing.status === 'REJECTED' ? "Restore/Approve" : "Approve"}>
                                                             <Check className="h-3.5 w-3.5" />
                                                         </button>
-                                                        <button onClick={() => handleReject(listing.id)} disabled={isPending}
-                                                            className="h-7 w-7 rounded-lg flex items-center justify-center bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-colors"
-                                                            title="Reject">
-                                                            <X className="h-3.5 w-3.5" />
-                                                        </button>
+                                                        {listing.status === 'PENDING_APPROVAL' && (
+                                                            <button onClick={() => handleReject(listing.id)} disabled={isPending}
+                                                                className="h-7 w-7 rounded-lg flex items-center justify-center bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-colors"
+                                                                title="Reject">
+                                                                <X className="h-3.5 w-3.5" />
+                                                            </button>
+                                                        )}
                                                     </>
                                                 )}
                                                 {listing.status === 'ACTIVE' && (
@@ -402,7 +404,7 @@ export function AdminListingsHub() {
                                                     title="Edit">
                                                     <Edit className="h-3.5 w-3.5" />
                                                 </Link>
-                                                <Link href={`/listings/${listing.id}`} target="_blank"
+                                                <Link href={`/listings/${listing.id}`}
                                                     className="h-7 w-7 rounded-lg flex items-center justify-center bg-muted/60 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                                                     title="View">
                                                     <Eye className="h-3.5 w-3.5" />

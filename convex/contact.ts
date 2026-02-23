@@ -46,13 +46,11 @@ export const list = query({
     endDate: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    let q = ctx.db.query("contactSubmissions");
-    
-    if (args.status) {
-        q = q.withIndex("by_status", (idx) => idx.eq("status", args.status as any));
-    } else {
-        q = q.withIndex("by_createdAt");
-    }
+    const q = args.status
+      ? ctx.db
+          .query("contactSubmissions")
+          .withIndex("by_status", (idx) => idx.eq("status", args.status!))
+      : ctx.db.query("contactSubmissions").withIndex("by_createdAt");
 
     const results = await q.order("desc").collect();
     

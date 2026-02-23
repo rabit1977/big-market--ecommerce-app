@@ -50,7 +50,17 @@ export const listAll = query({
         filtered = filtered.filter(item => item.createdAt <= args.endDate!);
     }
 
-    return filtered.slice(0, args.limit || 50);
+    const enriched = await Promise.all(
+        filtered.map(async (item) => {
+            const answers = await ctx.db
+                .query("answers")
+                .withIndex("by_question", (aq) => aq.eq("questionId", item._id))
+                .collect();
+            return { ...item, answers };
+        })
+    );
+
+    return enriched.slice(0, args.limit || 50);
   },
 });
 
