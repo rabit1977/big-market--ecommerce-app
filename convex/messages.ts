@@ -230,12 +230,29 @@ export const markRead = mutation({
 export const getConversations = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    const [buyerConversations, sellerConversations] = await Promise.all([
+    // 1. Get the current user to find their Convex internal ID in case conversations were created with it
+    const currentUser = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
+      .first();
+
+    const queries = [
       ctx.db.query("conversations").withIndex("by_buyer", (q) => q.eq("buyerId", args.userId)).collect(),
       ctx.db.query("conversations").withIndex("by_seller", (q) => q.eq("sellerId", args.userId)).collect(),
-    ]);
+    ];
 
-    const conversations = [...buyerConversations, ...sellerConversations].sort(
+    if (currentUser && currentUser._id !== args.userId) {
+      queries.push(ctx.db.query("conversations").withIndex("by_buyer", (q) => q.eq("buyerId", currentUser._id)).collect());
+      queries.push(ctx.db.query("conversations").withIndex("by_seller", (q) => q.eq("sellerId", currentUser._id)).collect());
+    }
+
+    const results = await Promise.all(queries);
+    
+    // Deduplicate by conversation _id
+    const conversationsMap = new Map();
+    results.flat().forEach(conv => conversationsMap.set(conv._id, conv));
+
+    const conversations = Array.from(conversationsMap.values()).sort(
       (a, b) => (b.lastMessageAt || 0) - (a.lastMessageAt || 0)
     );
 
@@ -243,17 +260,28 @@ export const getConversations = query({
     const conversationsWithDetails = await Promise.all(
       conversations.map(async (conv) => {
         const listing = conv.listingId ? await ctx.db.get(conv.listingId) : null;
-        const otherUserId =
-          conv.buyerId === args.userId ? conv.sellerId : conv.buyerId;
+        
+        // Check if current user is the buyer (using either externalId or internal _id)
+        const isBuyer = conv.buyerId === args.userId || (currentUser && conv.buyerId === currentUser._id);
+        const otherUserId = isBuyer ? conv.sellerId : conv.buyerId;
 
-        // Fetch other user details
-        const otherUser = await ctx.db
+        // Fetch other user details — try externalId first, then fall back to Convex internal ID
+        let otherUser = await ctx.db
           .query("users")
           .withIndex("by_externalId", (q) => q.eq("externalId", otherUserId))
           .first();
 
+        if (!otherUser) {
+          try {
+            const byId = await ctx.db.get(otherUserId as any);
+            if (byId && (byId as any).externalId) otherUser = byId as any;
+          } catch {
+            // otherUserId is not a valid Convex Id — leave otherUser as null
+          }
+        }
+
         // Calculate unread count for THIS user
-        const unreadCount = (conv.buyerId === args.userId ? conv.buyerUnreadCount : conv.sellerUnreadCount) || 0;
+        const unreadCount = (isBuyer ? conv.buyerUnreadCount : conv.sellerUnreadCount) || 0;
 
         return {
           ...conv,
@@ -277,16 +305,30 @@ export const getConversations = query({
 export const getUnreadCount = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    const [buyerConversations, sellerConversations] = await Promise.all([
+    const currentUser = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
+      .first();
+
+    const queries = [
       ctx.db.query("conversations").withIndex("by_buyer", (q) => q.eq("buyerId", args.userId)).collect(),
       ctx.db.query("conversations").withIndex("by_seller", (q) => q.eq("sellerId", args.userId)).collect(),
-    ]);
+    ];
 
-    const conversations = [...buyerConversations, ...sellerConversations];
+    if (currentUser && currentUser._id !== args.userId) {
+      queries.push(ctx.db.query("conversations").withIndex("by_buyer", (q) => q.eq("buyerId", currentUser._id)).collect());
+      queries.push(ctx.db.query("conversations").withIndex("by_seller", (q) => q.eq("sellerId", currentUser._id)).collect());
+    }
+
+    const results = await Promise.all(queries);
+    const conversationsMap = new Map();
+    results.flat().forEach(conv => conversationsMap.set(conv._id, conv));
+    const conversations = Array.from(conversationsMap.values());
 
     const totalUnread = conversations.reduce(
       (sum, conv) => {
-          const count = conv.buyerId === args.userId ? conv.buyerUnreadCount : conv.sellerUnreadCount;
+          const isBuyer = conv.buyerId === args.userId || (currentUser && conv.buyerId === currentUser._id);
+          const count = isBuyer ? conv.buyerUnreadCount : conv.sellerUnreadCount;
           return sum + (count || 0);
       },
       0
@@ -403,10 +445,19 @@ export const getSupportConversations = query({
         // Find the user who is NOT "ADMIN"
         const userId = conv.buyerId === "ADMIN" ? conv.sellerId : conv.buyerId;
 
-        const user = await ctx.db
+        let user = await ctx.db
           .query("users")
           .withIndex("by_externalId", (q) => q.eq("externalId", userId))
           .first();
+
+        if (!user) {
+          try {
+            const byId = await ctx.db.get(userId as any);
+            if (byId && (byId as any).externalId) user = byId as any;
+          } catch {
+            // not a valid Convex Id
+          }
+        }
 
         // Admin's unread count depends on their position (buyer or seller)
         const unreadCount = conv.buyerId === "ADMIN" ? conv.buyerUnreadCount : conv.sellerUnreadCount;
