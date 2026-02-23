@@ -31,20 +31,31 @@ export default async function MessagesPage({ searchParams }: MessagesPageProps) 
 
   // If we have a listingId and no existing conversation, fetch the listing (and seller) to start a virtual one
   let listingDetails = null;
-  if (listingId) {
+  if (listingId && typeof listingId === 'string' && listingId.length > 5) {
       const exists = conversations.find(c => c.listingId === listingId);
       if (!exists) {
-          const listing = await fetchQuery(api.listings.getById, { id: listingId as any });
-          if (listing && listing.userId !== session.user.id) {
-              const seller = await fetchQuery(api.users.getByExternalId, { externalId: listing.userId });
-              listingDetails = { 
-                  ...listing, 
-                  seller: seller ? {
-                      name: seller.name,
-                      image: seller.image,
-                      isVerified: seller.isVerified
-                  } : null 
-              };
+          try {
+              const listing = await fetchQuery(api.listings.getById, { id: listingId as any });
+              if (listing && listing.userId !== session.user.id) {
+                  // Robust seller lookup
+                  const seller = await fetchQuery(api.users.getByExternalId, { externalId: listing.userId });
+                  
+                  // Premium name fallback: Name > Company Name > City Seller > User [ID]
+                  const sellerDisplayName = seller?.name || 
+                                          seller?.companyName || 
+                                          (listing.city ? `${listing.city} Seller` : `User ${listing.userId.substring(0, 4)}`);
+
+                  listingDetails = { 
+                      ...listing, 
+                      seller: {
+                          name: sellerDisplayName,
+                          image: seller?.image,
+                          isVerified: seller?.isVerified
+                      }
+                  };
+              }
+          } catch (e) {
+              console.error("Error preparing virtual conversation:", e);
           }
       }
   }

@@ -3,6 +3,8 @@ import { mutation, MutationCtx, query, QueryCtx } from "./_generated/server";
 
 async function resolveUserIds(ctx: QueryCtx | MutationCtx, userId: string): Promise<string[]> {
   const ids = [userId];
+  
+  // 1. Try to find by externalId
   const user = await ctx.db
     .query("users")
     .withIndex("by_externalId", (q) => q.eq("externalId", userId))
@@ -10,13 +12,15 @@ async function resolveUserIds(ctx: QueryCtx | MutationCtx, userId: string): Prom
 
   if (user) {
     if (user._id !== userId) ids.push(user._id);
+    if (user.externalId !== userId) ids.push(user.externalId);
   } else {
-    // Try as internal ID - safely
+    // 2. Try to find by internal ID
     const normalizedId = ctx.db.normalizeId("users", userId);
     if (normalizedId) {
       const byId = await ctx.db.get(normalizedId);
-      if (byId && (byId as any).externalId && (byId as any).externalId !== userId) {
-        ids.push((byId as any).externalId);
+      if (byId) {
+        if (byId.externalId && byId.externalId !== userId) ids.push(byId.externalId);
+        if (byId._id !== userId) ids.push(byId._id);
       }
     }
   }
@@ -96,7 +100,8 @@ export const send = mutation({
 
     // 2. Create or Update Conversation
     if (existingConversation) {
-      const isBuyer = existingConversation.buyerId === args.senderId;
+      // Check if sender is the buyer of this conversation
+      const isBuyer = senderIds.includes(existingConversation.buyerId);
       const updates: any = {
         lastMessage: args.content,
         lastMessageAt: Date.now(),
@@ -116,17 +121,18 @@ export const send = mutation({
     } else {
       // Create new
       // Determine initial unread count: receiver gets 1 unread
-      const isSenderBuyer = (args.listingId ? args.senderId : participantIds[0]) === args.senderId;
+      // For LISTING chat, the initiator (sender) is always the buyer
+      const isSenderBuyer = type === "LISTING";
       
       await ctx.db.insert("conversations", {
         type,
         listingId: args.listingId,
-        buyerId: args.listingId ? args.senderId : participantIds[0],
-        sellerId: args.listingId ? args.receiverId : participantIds[1],
+        buyerId: isSenderBuyer ? args.senderId : participantIds[0],
+        sellerId: isSenderBuyer ? args.receiverId : participantIds[1],
         lastMessage: args.content,
         lastMessageAt: Date.now(),
-        buyerUnreadCount: isSenderBuyer ? 0 : 1, // If sender is buyer, buyer has read it (0). If sender is seller, buyer has 1 unread.
-        sellerUnreadCount: isSenderBuyer ? 1 : 0, // If sender is buyer, seller has 1 unread.
+        buyerUnreadCount: isSenderBuyer ? 0 : 1, 
+        sellerUnreadCount: isSenderBuyer ? 1 : 0, 
         participantIds,
       });
     }
@@ -143,10 +149,15 @@ export const send = mutation({
     });
 
     // 4. Create Notification for Receiver
-    const sender = await ctx.db
+    let senderRecord = await ctx.db
       .query("users")
       .withIndex("by_externalId", (q) => q.eq("externalId", args.senderId))
       .first();
+
+    if (!senderRecord) {
+        const normId = ctx.db.normalizeId("users", args.senderId);
+        if (normId) senderRecord = await ctx.db.get(normId);
+    }
     
     let listingTitle = "General Message";
     if (args.listingId) {
@@ -156,15 +167,15 @@ export const send = mutation({
 
     await ctx.db.insert("notifications", {
         userId: args.receiverId,
-        type: "INQUIRY", // Use INQUIRY type so it gets the "Reply" button logic in UI
+        type: "MESSAGE",
         title: "New Message",
-        message: `${sender?.name || "A user"} sent you a message about "${listingTitle}"`,
+        message: `${senderRecord?.name || "A user"} sent you a message about "${listingTitle}"`,
         isRead: false,
         createdAt: Date.now(),
         link: `/messages?listingId=${args.listingId || ""}`,
         metadata: {
             senderId: args.senderId,
-            senderName: sender?.name,
+            senderName: senderRecord?.name,
             listingId: args.listingId,
             listingTitle: listingTitle
         }
@@ -276,21 +287,20 @@ export const getConversations = query({
       conversations.map(async (conv) => {
         const listing = conv.listingId ? await ctx.db.get(conv.listingId) : null;
         
-        // Check if current user is the buyer (using either externalId or internal _id)
+        // Check if current user is the buyer (using any resolved ID)
         const isBuyer = userIds.includes(conv.buyerId);
         const otherUserId = isBuyer ? conv.sellerId : conv.buyerId;
 
         // Fetch other user details — try externalId first, then fall back to Convex internal ID
-        let otherUser = await ctx.db
+        let otherUserRecord = await ctx.db
           .query("users")
           .withIndex("by_externalId", (q) => q.eq("externalId", otherUserId))
           .first();
 
-        if (!otherUser) {
+        if (!otherUserRecord) {
           const normalizedId = ctx.db.normalizeId("users", otherUserId);
           if (normalizedId) {
-            const byId = await ctx.db.get(normalizedId);
-            if (byId && (byId as any).externalId) otherUser = byId as any;
+            otherUserRecord = await ctx.db.get(normalizedId);
           }
         }
 
@@ -299,14 +309,14 @@ export const getConversations = query({
 
         return {
           ...conv,
+          otherUser: otherUserRecord ? {
+            name: otherUserRecord.name || `User ${otherUserId.substring(0, 4)}`, // Fallback to "User [ID]"
+            image: otherUserRecord.image,
+            isVerified: otherUserRecord.isVerified
+          } : { name: `User ${otherUserId.substring(0, 4)}` }, // Fallback to "User [ID]"
           listing,
+          unreadCount,
           otherUserId,
-          otherUser: otherUser ? {
-             name: otherUser.name,
-             image: otherUser.image,
-             isVerified: otherUser.isVerified
-          } : undefined,
-          unreadCount, // Inject dynamic unread count for frontend compatibility
         };
       })
     );
