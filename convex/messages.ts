@@ -170,26 +170,45 @@ export const getConversation = query({
     userB: v.string(),
   },
   handler: async (ctx, args) => {
-    // 1. Fetch messages sent by A (limit 100)
-    const sentByA = await ctx.db
-      .query("messages")
-      .withIndex("by_sender", (q) => q.eq("senderId", args.userA))
-      .order("desc")
-      .take(100);
+    // 1. Resolve all possible IDs for User A
+    const userADoc = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.userA))
+      .first();
+    const userAIds = [args.userA];
+    if (userADoc && userADoc._id !== args.userA) userAIds.push(userADoc._id);
 
-    // 2. Fetch messages sent by B (limit 100)
-    const sentByB = await ctx.db
-      .query("messages")
-      .withIndex("by_sender", (q) => q.eq("senderId", args.userB))
-      .order("desc")
-      .take(100);
+    // 2. Resolve all possible IDs for User B
+    const userBDoc = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.userB))
+      .first();
+    const userBIds = [args.userB];
+    if (userBDoc && userBDoc._id !== args.userB) userBIds.push(userBDoc._id);
 
-    // 3. Combine and filter in memory (fast since it's only two users' messages)
-    // We treat 'null' and 'undefined' listingId as identical (Support Chats)
-    return [...sentByA, ...sentByB]
+    // 3. Fetch messages sent by any of User A's IDs
+    const sentByAQueries = userAIds.map(id => 
+        ctx.db.query("messages").withIndex("by_sender", (q) => q.eq("senderId", id)).order("desc").take(100)
+    );
+    
+    // 4. Fetch messages sent by any of User B's IDs
+    const sentByBQueries = userBIds.map(id => 
+        ctx.db.query("messages").withIndex("by_sender", (q) => q.eq("senderId", id)).order("desc").take(100)
+    );
+
+    const allQueries = [...sentByAQueries, ...sentByBQueries];
+    const allResults = await Promise.all(allQueries);
+    const messages = allResults.flat();
+
+    // Deduplicate by message _id (in case of overlap, though unlikely)
+    const messagesMap = new Map();
+    messages.forEach(m => messagesMap.set(m._id, m));
+    const uniqueMessages = Array.from(messagesMap.values());
+
+    return uniqueMessages
       .filter((m) => {
-        const isMatch = (m.senderId === args.userA && m.receiverId === args.userB) ||
-                        (m.senderId === args.userB && m.receiverId === args.userA);
+        const isMatch = (userAIds.includes(m.senderId) && userBIds.includes(m.receiverId)) ||
+                        (userBIds.includes(m.senderId) && userAIds.includes(m.receiverId));
         
         const mListing = m.listingId || undefined;
         const argListing = args.listingId || undefined;
@@ -198,7 +217,7 @@ export const getConversation = query({
         return isMatch && isSameListing;
       })
       .sort((a, b) => a.createdAt - b.createdAt)
-      .slice(-100); // Keep only the latest 100
+      .slice(-100);
   },
 });
 
@@ -346,6 +365,20 @@ export const markConversationAsRead = mutation({
     otherUserId: v.string(),
   },
   handler: async (ctx, args) => {
+    const userDoc = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
+      .first();
+    const userIds = [args.userId];
+    if (userDoc && userDoc._id !== args.userId) userIds.push(userDoc._id);
+
+    const otherUserDoc = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.otherUserId))
+      .first();
+    const otherUserIds = [args.otherUserId];
+    if (otherUserDoc && otherUserDoc._id !== args.otherUserId) otherUserIds.push(otherUserDoc._id);
+
     const messages = await ctx.db
       .query("messages")
       .filter((q) =>
@@ -353,8 +386,8 @@ export const markConversationAsRead = mutation({
           args.listingId 
             ? q.eq(q.field("listingId"), args.listingId)
             : q.eq(q.field("listingId"), undefined),
-          q.eq(q.field("senderId"), args.otherUserId),
-          q.eq(q.field("receiverId"), args.userId),
+          q.or(...otherUserIds.map(id => q.eq(q.field("senderId"), id))),
+          q.or(...userIds.map(id => q.eq(q.field("receiverId"), id))),
           q.eq(q.field("read"), false)
         )
       )
@@ -373,31 +406,36 @@ export const markConversationAsRead = mutation({
         .filter((q) =>
           q.or(
             q.and(
-              q.eq(q.field("buyerId"), args.userId),
-              q.eq(q.field("sellerId"), args.otherUserId)
+              q.or(...userIds.map(id => q.eq(q.field("buyerId"), id))),
+              q.or(...otherUserIds.map(id => q.eq(q.field("sellerId"), id)))
             ),
             q.and(
-              q.eq(q.field("buyerId"), args.otherUserId),
-              q.eq(q.field("sellerId"), args.userId)
+              q.or(...otherUserIds.map(id => q.eq(q.field("buyerId"), id))),
+              q.or(...userIds.map(id => q.eq(q.field("sellerId"), id)))
             )
           )
         )
         .first();
     } else {
-        const participantIds = [args.userId, args.otherUserId].sort();
         conversation = await ctx.db
             .query("conversations")
             .filter((q) => 
-                q.and(
-                    q.eq(q.field("buyerId"), participantIds[0]),
-                    q.eq(q.field("sellerId"), participantIds[1])
+                q.or(
+                    q.and(
+                        q.or(...userIds.map(id => q.eq(q.field("buyerId"), id))),
+                        q.or(...otherUserIds.map(id => q.eq(q.field("sellerId"), id)))
+                    ),
+                    q.and(
+                        q.or(...otherUserIds.map(id => q.eq(q.field("buyerId"), id))),
+                        q.or(...userIds.map(id => q.eq(q.field("sellerId"), id)))
+                    )
                 )
             )
             .first();
     }
 
     if (conversation) {
-      if (conversation.buyerId === args.userId) {
+      if (userIds.includes(conversation.buyerId)) {
           await ctx.db.patch(conversation._id, { buyerUnreadCount: 0 });
       } else {
           await ctx.db.patch(conversation._id, { sellerUnreadCount: 0 });

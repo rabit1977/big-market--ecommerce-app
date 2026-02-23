@@ -108,7 +108,7 @@ export const ListingCard = memo(
                         "font-bold text-xs sm:text-sm uppercase leading-tight line-clamp-2 text-foreground pr-6",
                         isCard && "text-base sm:text-lg" // Larger title for card
                     )}>
-                       {(listing as any).listingNumber !== undefined && <span className="text-muted-foreground mr-1">#{(listing as any).listingNumber}:</span>}
+
                        {listing.title}
                     </h3>
                  </div>
@@ -161,7 +161,7 @@ export const ListingCard = memo(
              <>
                <div className="flex justify-between items-start gap-2">
                     <h3 className="font-bold text-xs sm:text-sm md:text-base uppercase leading-tight line-clamp-2 group-hover:text-primary transition-colors text-foreground">
-                       {(listing as any).listingNumber !== undefined && <span className="text-muted-foreground mr-1">#{(listing as any).listingNumber}:</span>}
+
                        {listing.title}
                     </h3>
                     <span className="text-[9px] sm:text-[10px] md:text-xs text-muted-foreground whitespace-nowrap shrink-0">

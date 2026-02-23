@@ -10,17 +10,36 @@ export const list = query({
     skip: v.number(),
   },
   handler: async (ctx, args) => {
-    let q = ctx.db
-      .query("notifications")
-      .withIndex("by_user", (query) => query.eq("userId", args.userId));
+    // Determine the user's possible IDs (externalId and internal _id)
+    const currentUser = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
+      .first();
 
-    if (args.unreadOnly) {
-      q = ctx.db
-        .query("notifications")
-        .withIndex("by_user_read", (query) => query.eq("userId", args.userId).eq("isRead", false));
+    let userIds = [args.userId];
+    if (currentUser && currentUser._id !== args.userId) {
+        userIds.push(currentUser._id);
     }
 
-    let notifications = await q.order("desc").collect();
+    let notifications = [];
+
+    for (const uId of userIds) {
+      let q = ctx.db
+        .query("notifications")
+        .withIndex("by_user", (query) => query.eq("userId", uId));
+
+      if (args.unreadOnly) {
+        q = ctx.db
+          .query("notifications")
+          .withIndex("by_user_read", (query) => query.eq("userId", uId).eq("isRead", false));
+      }
+
+      const results = await q.collect();
+      notifications.push(...results);
+    }
+
+    // Sort combined results
+    notifications.sort((a, b) => b.createdAt - a.createdAt);
     
     if (args.type) {
         notifications = notifications.filter(n => n.type === args.type);
@@ -41,11 +60,26 @@ export const list = query({
 export const getUnreadCount = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    const unread = await ctx.db
-      .query("notifications")
-      .withIndex("by_user_read", (q) => q.eq("userId", args.userId).eq("isRead", false))
-      .collect();
-    return unread.length;
+    const currentUser = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
+      .first();
+
+    let userIds = [args.userId];
+    if (currentUser && currentUser._id !== args.userId) {
+        userIds.push(currentUser._id);
+    }
+
+    let total = 0;
+    for (const uId of userIds) {
+        const unread = await ctx.db
+          .query("notifications")
+          .withIndex("by_user_read", (q) => q.eq("userId", uId).eq("isRead", false))
+          .collect();
+        total += unread.length;
+    }
+    
+    return total;
   },
 });
 

@@ -66,7 +66,7 @@ export const createWithPassword = mutation({
       throw new Error("User with this email already exists");
     }
 
-    return await ctx.db.insert("users", {
+    const id = await ctx.db.insert("users", {
         externalId: "pending", 
         email: args.email,
         password: args.password,
@@ -76,6 +76,10 @@ export const createWithPassword = mutation({
         createdAt: Date.now(),
         accountStatus: "PENDING_APPROVAL",
     });
+
+    // Fix: Immediately set externalId to the Convex _id so we never have mismatched IDs!
+    await ctx.db.patch(id, { externalId: id as string });
+    return id;
   },
 });
 
@@ -109,6 +113,21 @@ export const makeAdmin = mutation({
         names: users.map(u => u.name).join(", ") 
     };
   },
+});
+
+export const fixLegacyUsers = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const users = await ctx.db.query("users").collect();
+    let fixed = 0;
+    for (const u of users) {
+       if (u.externalId === "pending" || !u.externalId) {
+           await ctx.db.patch(u._id, { externalId: u._id as string });
+           fixed++;
+       }
+    }
+    return `Fixed ${fixed} legacy user accounts!`;
+  }
 });
 
 export const syncUser = mutation({
