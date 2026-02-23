@@ -251,16 +251,6 @@ export function MessagesClient({
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages.length, activeConversation?._id]);
 
-  // Auto-focus input when a conversation is opened or changed
-  useEffect(() => {
-    if (activeConversation && inputRef.current) {
-      // Small timeout to ensure it happens after layout shifts
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 50);
-    }
-  }, [activeConversation?._id]);
-
   // 7. Handlers (Optimization: useCallback)
   
   const handleSendMessage = useCallback(async () => {
@@ -353,7 +343,7 @@ export function MessagesClient({
   }, [conversations, searchQuery]);
 
   return (
-    <div className="space-y-3 md:space-y-4 h-[calc(100svh-14rem)] md:h-[calc(100vh-12rem)] flex flex-col">
+    <div className="space-y-3 md:space-y-4 flex-1 flex flex-col min-h-0">
       {/* Header */}
       <div className="flex items-center gap-3 px-1 shrink-0">
         <div className="p-2 bg-primary/10 rounded-xl">
@@ -554,13 +544,11 @@ export function MessagesClient({
                   </Button>
                   
                   <Input
-                    ref={inputRef}
                     value={newMessage}
                     onChange={handleTyping}
                     placeholder="Type a message..."
                     className="flex-1 rounded-full px-4 border-muted-foreground/20 focus-visible:ring-primary/20"
                     disabled={isUploading}
-                    autoFocus
                   />
                   
                   <Button 

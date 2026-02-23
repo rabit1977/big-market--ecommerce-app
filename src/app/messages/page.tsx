@@ -50,8 +50,8 @@ export default async function MessagesPage({ searchParams }: MessagesPageProps) 
   }
 
   return (
-    <div className="min-h-[100svh] pt-4 md:pt-6 pb-20 md:pb-8 bg-background flex flex-col">
-      <div className="container-wide px-3 md:px-4 flex-1 flex flex-col">
+    <div className="h-[calc(100svh-64px)] md:h-[calc(100vh-80px)] pt-4 md:pt-6 pb-[72px] md:pb-8 bg-background flex flex-col">
+      <div className="container-wide px-3 md:px-4 flex-1 flex flex-col min-h-0">
         <AppBreadcrumbs />
         <MessagesClient
           conversations={conversations as any}

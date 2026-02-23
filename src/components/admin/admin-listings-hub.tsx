@@ -64,7 +64,7 @@ export function AdminListingsHub() {
     const [selected, setSelected]       = useState<string[]>([]);
 
     // Fetch all listings (admin view)
-    const listingsRaw = useQuery(api.admin.getListingsDetailed, { status: statusFilter === 'ALL' ? undefined : statusFilter } as any);
+    const listingsRaw = useQuery(api.admin.getListingsDetailed, { status: statusFilter } as any);
 
     const since = getSinceFromRange(timeRange);
 
