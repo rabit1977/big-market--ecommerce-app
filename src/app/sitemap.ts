@@ -2,6 +2,9 @@ import { api } from '@/convex/_generated/api';
 import { fetchQuery } from 'convex/nextjs';
 import { MetadataRoute } from 'next';
 
+// Force Next.js to render this dynamically on every request
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
   
