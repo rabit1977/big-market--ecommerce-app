@@ -10,6 +10,7 @@ import {
     CheckCircle,
     Mail,
     MapPin,
+    MessageCircle,
     MessageSquare,
     Phone,
     Shield,
@@ -146,6 +147,37 @@ export function ListingContactPanel({
               <Phone className='mr-3 h-4 w-4' />
               {showPhone ? listing.contactPhone || 'No phone provided' : 'Show Phone Number'}
             </Button>
+
+            {showPhone && listing.contactPhone && (
+              <div className="grid grid-cols-2 gap-3 animate-in fade-in zoom-in duration-300">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="h-12 rounded-xl border-green-500/30 bg-green-500/5 hover:bg-green-500/10 text-green-700 font-bold"
+                  asChild
+                >
+                  <a 
+                    href={`https://wa.me/${listing.contactPhone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hello, I'm interested in your listing: ${listing.title}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <MessageCircle className="mr-2 h-4 w-4" />
+                    WhatsApp
+                  </a>
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="h-12 rounded-xl border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-700 font-bold"
+                  asChild
+                >
+                  <a href={`viber://chat?number=%2B${listing.contactPhone.replace(/\D/g, '')}`}>
+                    <Phone className="mr-2 h-4 w-4" />
+                    Viber
+                  </a>
+                </Button>
+              </div>
+            )}
 
             <Button
               size='lg'

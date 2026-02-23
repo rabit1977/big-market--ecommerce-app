@@ -31,6 +31,7 @@ import {
   History,
   Mail,
   MapPin,
+  MessageCircle,
   MessageSquare,
   MoreVertical,
   Phone,
@@ -132,7 +133,9 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
   const contactPhone = listing.contactPhone ?? (seller as any)?.phone;
   const contactEmail = listing.contactEmail ?? (seller as any)?.email;
   const condition = listing.specifications?.condition;
-  const isOwner = session?.user?.id === listing.userId || session?.user?.role === 'ADMIN';
+  const isListingOwner = session?.user?.id === listing.userId;
+  const isAdmin = session?.user?.role === 'ADMIN';
+  const canManage = isListingOwner || isAdmin;
 
   // Date: suppressHydrationWarning on the span avoids the useEffect+state hack.
   // The string is computed once per render on the client after hydration.
@@ -235,7 +238,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
               <Share2 className="w-4 h-4" />
               Share
             </button>
-            {!isOwner && (
+            {!isListingOwner && (
               <button
                 onClick={() => toggleFavorite(listing._id)}
                 className={`flex items-center gap-2 px-4 py-2 border rounded-full text-sm font-bold transition-all shadow-sm ${
@@ -248,7 +251,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 {isFavorite ? 'Saved' : 'Save Ad'}
               </button>
             )}
-            {isOwner && (
+            {canManage && (
               <>
                 <Link
                   href={`/my-listings/${listing._id}/edit`}
@@ -386,7 +389,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     </p>
                   )}
                 </div>
-                {!isOwner && (
+                {!isListingOwner && (
                   <button
                     onClick={() => toggleFavorite(listing._id)}
                     className={`p-2.5 rounded-full transition-colors ${isFavorite ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}
@@ -402,7 +405,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   <Link href={`/store/${listing.userId}`}>Visit Storefront</Link>
                 </Button>
 
-                {!isOwner && (
+                {!isListingOwner && (
                   <ContactOptionsDialog
                     session={session}
                     listing={listing}
@@ -495,7 +498,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   </div>
                 </div>
 
-                {!isOwner && (
+                {!isListingOwner && (
                   <div className="space-y-3 pt-2">
                     <ContactOptionsDialog
                       session={session}
@@ -740,6 +743,44 @@ const ContactOptionsDialog = memo(function ContactOptionsDialog({
                 <p className="text-xs text-muted-foreground font-mono truncate">{contactPhone}</p>
               </div>
               <ChevronRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-blue-500 transition-colors" />
+            </a>
+          )}
+
+          {/* WhatsApp */}
+          {hasPhone && (
+            <a
+              href={`https://wa.me/${contactPhone?.replace(/\D/g, '')}?text=${encodeURIComponent(`Hello, I'm interested in your listing: ${listing.title} on Biggest Market.`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => { setOpen(false); onContact(); }}
+              className="flex items-center gap-4 p-4 rounded-2xl border-2 border-border hover:border-green-600/50 hover:bg-green-600/5 transition-all group"
+            >
+              <div className="w-11 h-11 rounded-xl bg-green-600/10 flex items-center justify-center shrink-0 group-hover:bg-green-600/20 transition-colors">
+                <MessageCircle className="w-5 h-5 text-green-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-black text-sm text-green-700">WhatsApp</p>
+                <p className="text-xs text-muted-foreground truncate">Send WhatsApp message</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-green-600/40 group-hover:text-green-600 transition-colors" />
+            </a>
+          )}
+
+          {/* Viber */}
+          {hasPhone && (
+            <a
+              href={`viber://chat?number=%2B${contactPhone?.replace(/\D/g, '')}`}
+              onClick={() => { setOpen(false); onContact(); }}
+              className="flex items-center gap-4 p-4 rounded-2xl border-2 border-border hover:border-violet-600/50 hover:bg-violet-600/5 transition-all group"
+            >
+              <div className="w-11 h-11 rounded-xl bg-violet-600/10 flex items-center justify-center shrink-0 group-hover:bg-violet-600/20 transition-colors">
+                <Phone className="w-5 h-5 text-violet-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-black text-sm text-violet-700">Viber</p>
+                <p className="text-xs text-muted-foreground truncate">Chat on Viber</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-violet-600/40 group-hover:text-violet-600 transition-colors" />
             </a>
           )}
 
