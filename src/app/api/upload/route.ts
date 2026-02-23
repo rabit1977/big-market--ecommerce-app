@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
             text: 'BIGGEST MARKET'
           }
         },
-        { flags: 'layer_apply', gravity: 'bottom_right', x: 20, y: 20, opacity: 60 },
+        { flags: 'layer_apply', gravity: 'south_east', x: 20, y: 20, opacity: 60 },
         // Add a subtle drop shadow to make it readable on light backgrounds
         { effect: 'shadow:50', color: '#000000' }
       ]

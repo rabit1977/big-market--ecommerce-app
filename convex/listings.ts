@@ -11,11 +11,11 @@ async function getNextListingNumber(ctx: MutationCtx): Promise<number> {
   if (!counter) {
     const id = await ctx.db.insert("counters", {
       name: "listings",
-      nextId: 0,
+      nextId: 2,
       reusableIds: [],
     });
-    // We can just return 0 here safely as we just created it
-    return 0;
+    // We can just return 1 here safely as we just created it
+    return 1;
   }
 
   // Check reusable

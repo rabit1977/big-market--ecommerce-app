@@ -129,10 +129,10 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
         if (url) {
           uploadedImages.push(url);
         }
-        
         bytesUploadedSoFar += file.size;
         setUploadProgress((bytesUploadedSoFar / totalSize) * 100);
-
+        
+        console.log("Uploaded images:", uploadedImages);
       } catch (err) {
         console.error("Failed to upload image", err);
         import('sonner').then(({ toast }) => toast.error(`Error uploading ${file.name}`));
