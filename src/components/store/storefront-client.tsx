@@ -25,6 +25,7 @@ export function StorefrontClient({
       ...listing,
       user: {
           isVerified: profile.isVerified,
+          membershipTier: profile.membershipTier || (profile.hasPremiumStorefront ? 'BUSINESS' : 'FREE'),
           // Extract specific properties to avoid type mismatches
       }
   }));

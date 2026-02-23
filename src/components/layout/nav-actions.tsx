@@ -139,6 +139,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
 
   const accountItems: MenuItem[] = [
     { href: '/my-listings', icon: Package, label: t('my_listings') },
+    { href: `/store/${user.id}`, icon: Store, label: tNav('stores'), highlight: true, iconColor: 'text-primary' },
     { href: '/my-listings/stats', icon: BarChart, label: t('ad_statistics') },
     { href: '/my-listings/saved-searches', icon: Bell, label: t('saved_searches_alerts') },
     { href: '/wallet', icon: CreditCard, label: t('account_overview') },

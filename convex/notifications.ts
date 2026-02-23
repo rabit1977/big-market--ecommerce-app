@@ -1,5 +1,26 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, MutationCtx, query, QueryCtx } from "./_generated/server";
+
+async function resolveUserIds(ctx: QueryCtx | MutationCtx, userId: string): Promise<string[]> {
+    const ids = [userId];
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_externalId", (q) => q.eq("externalId", userId))
+      .first();
+  
+    if (user) {
+      if (user._id !== userId) ids.push(user._id);
+    } else {
+      // Try as internal ID
+      try {
+        const byId = await ctx.db.get(userId as any);
+        if (byId && (byId as any).externalId && (byId as any).externalId !== userId) {
+          ids.push((byId as any).externalId);
+        }
+      } catch (e) {}
+    }
+    return Array.from(new Set(ids));
+}
 
 export const list = query({
   args: {
@@ -11,15 +32,7 @@ export const list = query({
   },
   handler: async (ctx, args) => {
     // Determine the user's possible IDs (externalId and internal _id)
-    const currentUser = await ctx.db
-      .query("users")
-      .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
-      .first();
-
-    let userIds = [args.userId];
-    if (currentUser && currentUser._id !== args.userId) {
-        userIds.push(currentUser._id);
-    }
+    const userIds = await resolveUserIds(ctx, args.userId);
 
     let notifications = [];
 
@@ -60,15 +73,7 @@ export const list = query({
 export const getUnreadCount = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    const currentUser = await ctx.db
-      .query("users")
-      .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
-      .first();
-
-    let userIds = [args.userId];
-    if (currentUser && currentUser._id !== args.userId) {
-        userIds.push(currentUser._id);
-    }
+    const userIds = await resolveUserIds(ctx, args.userId);
 
     let total = 0;
     for (const uId of userIds) {
@@ -86,8 +91,9 @@ export const getUnreadCount = query({
 export const markAsRead = mutation({
   args: { id: v.id("notifications"), userId: v.string() },
   handler: async (ctx, args) => {
+    const userIds = await resolveUserIds(ctx, args.userId);
     const notification = await ctx.db.get(args.id);
-    if (!notification || notification.userId !== args.userId) return;
+    if (!notification || !userIds.includes(notification.userId)) return;
     await ctx.db.patch(args.id, { isRead: true, readAt: Date.now() });
   },
 });
@@ -95,13 +101,17 @@ export const markAsRead = mutation({
 export const markAllAsRead = mutation({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    const unread = await ctx.db
-      .query("notifications")
-      .withIndex("by_user_read", (q) => q.eq("userId", args.userId).eq("isRead", false))
-      .collect();
+    const userIds = await resolveUserIds(ctx, args.userId);
+    
+    for (const uId of userIds) {
+        const unread = await ctx.db
+            .query("notifications")
+            .withIndex("by_user_read", (q) => q.eq("userId", uId).eq("isRead", false))
+            .collect();
 
-    for (const n of unread) {
-      await ctx.db.patch(n._id, { isRead: true, readAt: Date.now() });
+        for (const n of unread) {
+            await ctx.db.patch(n._id, { isRead: true, readAt: Date.now() });
+        }
     }
   },
 });

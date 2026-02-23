@@ -100,8 +100,8 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
 
   // ── Seller data ──────────────────────────────────────────────────────────
   const seller = useConvexQuery(api.users.getByExternalId, { externalId: listing.userId });
-  const sellerProfile = useConvexQuery(api.users.getPublicProfile, { userId: listing.userId });
   const sellerReviewStats = useConvexQuery(api.reviews.getSellerReviewStats, { sellerId: listing.userId });
+  const sellerProfile = useConvexQuery(api.storefront.getPublicProfile, { userId: listing.userId });
 
   useEffect(() => {
     if (!listing._id) return;
@@ -397,8 +397,12 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 )}
               </div>
 
-              {!isOwner && (
-                <div className="pt-4 space-y-3">
+              <div className="pt-4 space-y-3">
+                <Button asChild variant="outline" className="w-full h-12 rounded-xl border-2 hover:bg-primary/5 hover:text-primary font-black uppercase tracking-wider text-[10px] shadow-sm">
+                  <Link href={`/store/${listing.userId}`}>Visit Storefront</Link>
+                </Button>
+
+                {!isOwner && (
                   <ContactOptionsDialog
                     session={session}
                     listing={listing}
@@ -406,8 +410,8 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     contactEmail={contactEmail}
                     onContact={() => handleContactClick('contact')}
                   />
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
             {/* Specifications */}

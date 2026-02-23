@@ -468,11 +468,21 @@ export const create = mutation({
 
     if (!user) throw new Error("User not found");
 
-    const limit = user.listingLimit ?? 50;
+    // 2. Check Listing Limit based on Membership Tier
+    const tier = (user.membershipTier || '').toLowerCase();
+    let limit = user.listingLimit;
+    
+    if (limit === undefined) {
+        if (tier === 'business' || tier === 'pro') limit = 999999;
+        else if (tier === 'verified') limit = 50;
+        else limit = 0; // FREE users must verify to post
+    }
+
     const currentCount = user.listingsPostedCount ?? 0;
 
     if (currentCount >= limit && user.role !== 'ADMIN') {
-        throw new Error(`Limit reached: You can only post up to ${limit} listings.`);
+        if (limit === 0) throw new Error("Verification required: You must be a Verified User to post listings. Please upgrade in the Premium section.");
+        throw new Error(`Limit reached: Your tier allows up to ${limit === 999999 ? 'unlimited' : limit} active listings. Upgrade for more.`);
     }
 
     if (user.role !== 'ADMIN') {
@@ -543,7 +553,13 @@ export const renewListing = mutation({
         }
     }
 
-    // 3. Check Monthly Limit (15)
+    // 3. Block for 'Verified' tier (Only Business/Pro can renew)
+    const tier = (user.membershipTier || '').toLowerCase();
+    if (user.role !== 'ADMIN' && tier === 'verified') {
+        throw new Error("Renewal is not included in the Verified plan. Upgrade to Business Premium to refresh your listings.");
+    }
+
+    // 4. Check Monthly Limit (15)
     if (monthlyUsed >= 15 && user.role !== 'ADMIN') {
         throw new Error("Monthly renewal limit (15) reached.");
     }

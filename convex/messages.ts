@@ -1,5 +1,27 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, MutationCtx, query, QueryCtx } from "./_generated/server";
+
+async function resolveUserIds(ctx: QueryCtx | MutationCtx, userId: string): Promise<string[]> {
+  const ids = [userId];
+  const user = await ctx.db
+    .query("users")
+    .withIndex("by_externalId", (q) => q.eq("externalId", userId))
+    .first();
+
+  if (user) {
+    if (user._id !== userId) ids.push(user._id);
+  } else {
+    // Try as internal ID - safely
+    const normalizedId = ctx.db.normalizeId("users", userId);
+    if (normalizedId) {
+      const byId = await ctx.db.get(normalizedId);
+      if (byId && (byId as any).externalId && (byId as any).externalId !== userId) {
+        ids.push((byId as any).externalId);
+      }
+    }
+  }
+  return Array.from(new Set(ids));
+}
 
 export const send = mutation({
   args: {
@@ -28,49 +50,45 @@ export const send = mutation({
       }
     }
 
-    // 1. Check if conversation exists
+    // 1. Resolve all possible IDs for Sender and Receiver
+    const senderIds = await resolveUserIds(ctx, args.senderId);
+    const receiverIds = await resolveUserIds(ctx, args.receiverId);
+
+    // 3. Check if conversation exists using ANY combination of the resolved IDs
     let existingConversation;
 
-    
     if (args.listingId) {
       existingConversation = await ctx.db
         .query("conversations")
         .withIndex("by_listing", (q) => q.eq("listingId", args.listingId!))
-        .filter((q) => 
-            // Check if participants match precisely (ignoring role)
-            // matching participantIds is safer than checking buyer/seller role permutations
-            q.eq(q.field("participantIds"), participantIds)
+        .filter((q) =>
+          q.or(
+            q.and(
+              q.or(...senderIds.map(id => q.eq(q.field("buyerId"), id))),
+              q.or(...receiverIds.map(id => q.eq(q.field("sellerId"), id)))
+            ),
+            q.and(
+              q.or(...receiverIds.map(id => q.eq(q.field("buyerId"), id))),
+              q.or(...senderIds.map(id => q.eq(q.field("sellerId"), id)))
+            )
+          )
         )
         .first();
-        
-      // Fallback: If no participantIds field (legacy), check roles
-      if (!existingConversation) {
-          existingConversation = await ctx.db
-            .query("conversations")
-            .withIndex("by_listing", (q) => q.eq("listingId", args.listingId!))
-            .filter((q) =>
-              q.or(
-                q.and(
-                  q.eq(q.field("buyerId"), args.senderId),
-                  q.eq(q.field("sellerId"), args.receiverId)
-                ),
-                q.and(
-                  q.eq(q.field("buyerId"), args.receiverId),
-                  q.eq(q.field("sellerId"), args.senderId)
-                )
-              )
-            )
-            .first();
-      }
     } else {
       // Support or generic chat
       existingConversation = await ctx.db
         .query("conversations")
         .withIndex("by_type", (q) => q.eq("type", type))
         .filter((q) => 
-          q.and(
-            q.eq(q.field("buyerId"), participantIds[0]),
-            q.eq(q.field("sellerId"), participantIds[1])
+          q.or(
+            q.and(
+              q.or(...senderIds.map(id => q.eq(q.field("buyerId"), id))),
+              q.or(...receiverIds.map(id => q.eq(q.field("sellerId"), id)))
+            ),
+            q.and(
+              q.or(...receiverIds.map(id => q.eq(q.field("buyerId"), id))),
+              q.or(...senderIds.map(id => q.eq(q.field("sellerId"), id)))
+            )
           )
         )
         .first();
@@ -159,7 +177,6 @@ export const send = mutation({
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("messages").order("desc").collect();
   },
 });
 
@@ -170,21 +187,9 @@ export const getConversation = query({
     userB: v.string(),
   },
   handler: async (ctx, args) => {
-    // 1. Resolve all possible IDs for User A
-    const userADoc = await ctx.db
-      .query("users")
-      .withIndex("by_externalId", (q) => q.eq("externalId", args.userA))
-      .first();
-    const userAIds = [args.userA];
-    if (userADoc && userADoc._id !== args.userA) userAIds.push(userADoc._id);
-
-    // 2. Resolve all possible IDs for User B
-    const userBDoc = await ctx.db
-      .query("users")
-      .withIndex("by_externalId", (q) => q.eq("externalId", args.userB))
-      .first();
-    const userBIds = [args.userB];
-    if (userBDoc && userBDoc._id !== args.userB) userBIds.push(userBDoc._id);
+    // 1. Resolve all possible IDs for User A and User B
+    const userAIds = await resolveUserIds(ctx, args.userA);
+    const userBIds = await resolveUserIds(ctx, args.userB);
 
     // 3. Fetch messages sent by any of User A's IDs
     const sentByAQueries = userAIds.map(id => 
@@ -202,11 +207,11 @@ export const getConversation = query({
 
     // Deduplicate by message _id (in case of overlap, though unlikely)
     const messagesMap = new Map();
-    messages.forEach(m => messagesMap.set(m._id, m));
+    messages.forEach((m: any) => messagesMap.set(m._id, m));
     const uniqueMessages = Array.from(messagesMap.values());
 
     return uniqueMessages
-      .filter((m) => {
+      .filter((m: any) => {
         const isMatch = (userAIds.includes(m.senderId) && userBIds.includes(m.receiverId)) ||
                         (userBIds.includes(m.senderId) && userAIds.includes(m.receiverId));
         
@@ -249,27 +254,18 @@ export const markRead = mutation({
 export const getConversations = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    // 1. Get the current user to find their Convex internal ID in case conversations were created with it
-    const currentUser = await ctx.db
-      .query("users")
-      .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
-      .first();
+    const userIds = await resolveUserIds(ctx, args.userId);
 
-    const queries = [
-      ctx.db.query("conversations").withIndex("by_buyer", (q) => q.eq("buyerId", args.userId)).collect(),
-      ctx.db.query("conversations").withIndex("by_seller", (q) => q.eq("sellerId", args.userId)).collect(),
-    ];
-
-    if (currentUser && currentUser._id !== args.userId) {
-      queries.push(ctx.db.query("conversations").withIndex("by_buyer", (q) => q.eq("buyerId", currentUser._id)).collect());
-      queries.push(ctx.db.query("conversations").withIndex("by_seller", (q) => q.eq("sellerId", currentUser._id)).collect());
-    }
+    const queries = userIds.flatMap(id => [
+      ctx.db.query("conversations").withIndex("by_buyer", (q) => q.eq("buyerId", id)).collect(),
+      ctx.db.query("conversations").withIndex("by_seller", (q) => q.eq("sellerId", id)).collect(),
+    ]);
 
     const results = await Promise.all(queries);
     
     // Deduplicate by conversation _id
     const conversationsMap = new Map();
-    results.flat().forEach(conv => conversationsMap.set(conv._id, conv));
+    results.flat().forEach((conv: any) => conversationsMap.set(conv._id, conv));
 
     const conversations = Array.from(conversationsMap.values()).sort(
       (a, b) => (b.lastMessageAt || 0) - (a.lastMessageAt || 0)
@@ -281,7 +277,7 @@ export const getConversations = query({
         const listing = conv.listingId ? await ctx.db.get(conv.listingId) : null;
         
         // Check if current user is the buyer (using either externalId or internal _id)
-        const isBuyer = conv.buyerId === args.userId || (currentUser && conv.buyerId === currentUser._id);
+        const isBuyer = userIds.includes(conv.buyerId);
         const otherUserId = isBuyer ? conv.sellerId : conv.buyerId;
 
         // Fetch other user details — try externalId first, then fall back to Convex internal ID
@@ -291,11 +287,10 @@ export const getConversations = query({
           .first();
 
         if (!otherUser) {
-          try {
-            const byId = await ctx.db.get(otherUserId as any);
+          const normalizedId = ctx.db.normalizeId("users", otherUserId);
+          if (normalizedId) {
+            const byId = await ctx.db.get(normalizedId);
             if (byId && (byId as any).externalId) otherUser = byId as any;
-          } catch {
-            // otherUserId is not a valid Convex Id — leave otherUser as null
           }
         }
 
@@ -324,29 +319,21 @@ export const getConversations = query({
 export const getUnreadCount = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    const currentUser = await ctx.db
-      .query("users")
-      .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
-      .first();
+    const userIds = await resolveUserIds(ctx, args.userId);
 
-    const queries = [
-      ctx.db.query("conversations").withIndex("by_buyer", (q) => q.eq("buyerId", args.userId)).collect(),
-      ctx.db.query("conversations").withIndex("by_seller", (q) => q.eq("sellerId", args.userId)).collect(),
-    ];
-
-    if (currentUser && currentUser._id !== args.userId) {
-      queries.push(ctx.db.query("conversations").withIndex("by_buyer", (q) => q.eq("buyerId", currentUser._id)).collect());
-      queries.push(ctx.db.query("conversations").withIndex("by_seller", (q) => q.eq("sellerId", currentUser._id)).collect());
-    }
+    const queries = userIds.flatMap(id => [
+      ctx.db.query("conversations").withIndex("by_buyer", (q) => q.eq("buyerId", id)).collect(),
+      ctx.db.query("conversations").withIndex("by_seller", (q) => q.eq("sellerId", id)).collect(),
+    ]);
 
     const results = await Promise.all(queries);
     const conversationsMap = new Map();
-    results.flat().forEach(conv => conversationsMap.set(conv._id, conv));
+    results.flat().forEach((conv: any) => conversationsMap.set(conv._id, conv));
     const conversations = Array.from(conversationsMap.values());
 
     const totalUnread = conversations.reduce(
-      (sum, conv) => {
-          const isBuyer = conv.buyerId === args.userId || (currentUser && conv.buyerId === currentUser._id);
+      (sum: number, conv: any) => {
+          const isBuyer = userIds.includes(conv.buyerId);
           const count = isBuyer ? conv.buyerUnreadCount : conv.sellerUnreadCount;
           return sum + (count || 0);
       },
@@ -365,19 +352,8 @@ export const markConversationAsRead = mutation({
     otherUserId: v.string(),
   },
   handler: async (ctx, args) => {
-    const userDoc = await ctx.db
-      .query("users")
-      .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
-      .first();
-    const userIds = [args.userId];
-    if (userDoc && userDoc._id !== args.userId) userIds.push(userDoc._id);
-
-    const otherUserDoc = await ctx.db
-      .query("users")
-      .withIndex("by_externalId", (q) => q.eq("externalId", args.otherUserId))
-      .first();
-    const otherUserIds = [args.otherUserId];
-    if (otherUserDoc && otherUserDoc._id !== args.otherUserId) otherUserIds.push(otherUserDoc._id);
+    const userIds = await resolveUserIds(ctx, args.userId);
+    const otherUserIds = await resolveUserIds(ctx, args.otherUserId);
 
     const messages = await ctx.db
       .query("messages")
@@ -489,11 +465,10 @@ export const getSupportConversations = query({
           .first();
 
         if (!user) {
-          try {
-            const byId = await ctx.db.get(userId as any);
+          const normalizedId = ctx.db.normalizeId("users", userId);
+          if (normalizedId) {
+            const byId = await ctx.db.get(normalizedId);
             if (byId && (byId as any).externalId) user = byId as any;
-          } catch {
-            // not a valid Convex Id
           }
         }
 

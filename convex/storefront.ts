@@ -11,12 +11,13 @@ export const getPublicProfile = query({
       .unique();
 
     if (!user) {
-        try {
-            const potentialUser = await ctx.db.get(args.userId as any) as any;
-            if (potentialUser && 'externalId' in potentialUser) {
+        const normalizedId = ctx.db.normalizeId("users", args.userId);
+        if (normalizedId) {
+            const potentialUser = await ctx.db.get(normalizedId);
+            if (potentialUser) {
                 user = potentialUser;
             }
-        } catch (e) {}
+        }
     }
 
     if (!user) return null;
@@ -49,15 +50,27 @@ export const getPublicProfile = query({
     // Check for premium storefront subscription
     let hasPremiumStorefront = user.role === 'ADMIN';
     if (!hasPremiumStorefront) {
-      const activeSubscription = await ctx.db
-        .query("subscriptions")
-        .withIndex("by_user_status", (q) =>
-          q.eq("userId", user.externalId).eq("status", "ACTIVE")
-        )
-        .first();
+      // Check directly on user doc (synced by activateMembership)
+      const userTier = (user.membershipTier || "").toLowerCase();
+      if (userTier === 'business' || userTier === 'pro' || userTier === 'premium') {
+         hasPremiumStorefront = true;
+      }
+      
+      if (!hasPremiumStorefront) {
+          // Check subscriptions table for both potential IDs
+          const userIds = [user.externalId, user._id as string];
+          const subQueries = userIds.map(id => 
+            ctx.db.query("subscriptions")
+               .withIndex("by_user_status", (q) => q.eq("userId", id).eq("status", "ACTIVE"))
+               .first()
+          );
+          
+          const results = await Promise.all(subQueries);
+          const activeSubscription = results.find(s => s !== null);
 
-      if (activeSubscription && (activeSubscription.tier === 'pro' || activeSubscription.tier === 'business' || activeSubscription.tier === 'premium')) {
-        hasPremiumStorefront = true;
+          if (activeSubscription && (activeSubscription.tier === 'pro' || activeSubscription.tier === 'business' || activeSubscription.tier === 'premium')) {
+            hasPremiumStorefront = true;
+          }
       }
     }
 
