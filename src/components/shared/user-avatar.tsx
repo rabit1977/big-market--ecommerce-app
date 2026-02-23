@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
 import * as React from "react"
 
@@ -39,6 +39,7 @@ export function UserAvatar({
 
   return (
     <Avatar className={className} {...props}>
+      {imageUrl && <AvatarImage src={imageUrl} alt={user?.name || ''} className="object-cover" />}
       <AvatarFallback 
         className={cn(
           "bg-gradient-to-tr from-emerald-400 to-emerald-600 text-white font-bold",

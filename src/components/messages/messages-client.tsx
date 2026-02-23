@@ -11,6 +11,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
 import {
     ArrowLeft,
+    BadgeCheck,
     Image as ImageIcon,
     Loader2,
     MessageSquare,
@@ -211,7 +212,7 @@ export function MessagesClient({
           lastMessageAt: Date.now(),
           otherUserId: newConversationListing.userId,
           listing: newConversationListing,
-          otherUser: { name: "Seller" }, // Placeholder
+          otherUser: newConversationListing.seller || { name: "Seller" }, 
         });
         setSelectedId(null);
       }
@@ -449,40 +450,43 @@ export function MessagesClient({
                     </div>
                   </div>
                 ) : (
-                  <Link href={`/listings/${activeConversation.listingId}`} className="flex items-center gap-3 group">
-                    <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-muted border">
-                      {activeConversation.listing?.thumbnail && (
-                        <Image
-                          src={activeConversation.listing.thumbnail}
-                          alt="Thumbnail"
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform"
-                        />
-                      )}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-0.5">
-                          <p className="font-bold text-sm line-clamp-1 group-hover:text-primary transition-colors">
-                            {activeConversation.listing?.title || "Unknown Item"}
-                          </p>
-                      </div>
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <UserAvatar user={activeConversation.otherUser} className="w-10 h-10 border shadow-sm" />
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                          <p className="text-xs font-semibold text-primary">
-                            €{activeConversation.listing?.price?.toLocaleString() ?? 0}
-                          </p>
-                          {typingUsers.length > 0 ? (
-                             <span className="text-[10px] text-green-600 dark:text-green-500 animate-pulse font-medium bg-green-500/10 px-1.5 rounded-full lowercase">
-                                {activeConversation.otherUser?.name || "User"} is typing...
-                             </span>
-                          ) : onlineStatusMap[activeConversation.otherUserId] ? (
-                             <div className="flex items-center gap-1 bg-green-500/10 px-1.5 rounded-full">
-                                <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                                <span className="text-[10px] text-green-600 dark:text-green-400 font-medium tracking-wide">Online</span>
-                             </div>
-                          ) : null}
+                        <p className="font-bold text-sm truncate">
+                          {activeConversation.otherUser?.name || "User"}
+                        </p>
+                        {activeConversation.otherUser?.isVerified && <BadgeCheck className="w-3.5 h-3.5 text-primary fill-current" />}
                       </div>
+                      
+                      <Link 
+                        href={`/listings/${activeConversation.listingId}`} 
+                        className="flex items-center gap-1.5 group/listing"
+                      >
+                         <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight line-clamp-1 group-hover/listing:text-primary transition-colors">
+                           {activeConversation.listing?.title || "Listing"}
+                         </p>
+                         <span className="text-[10px] text-primary font-bold">
+                           €{activeConversation.listing?.price?.toLocaleString() ?? 0}
+                         </span>
+                      </Link>
                     </div>
-                  </Link>
+
+                    {/* Presence indicators move to the right or under status */}
+                    <div className="hidden sm:block">
+                      {typingUsers.length > 0 ? (
+                        <span className="text-[10px] text-green-600 dark:text-green-500 animate-pulse font-medium bg-green-500/10 px-2 py-0.5 rounded-full">
+                          Typing...
+                        </span>
+                      ) : onlineStatusMap[activeConversation.otherUserId] ? (
+                         <div className="flex items-center gap-1 bg-green-500/10 px-2 py-0.5 rounded-full">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.5)]" />
+                            <span className="text-[10px] text-green-600 dark:text-green-400 font-bold uppercase tracking-wider">Online</span>
+                         </div>
+                      ) : null}
+                    </div>
+                  </div>
                 )}
               </div>
 

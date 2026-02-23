@@ -143,10 +143,13 @@ export function GuestContactDialog({
                                 </>
                             )}
                         </DialogTitle>
-                        <DialogDescription className="text-white/80 font-medium text-sm sm:text-base">
-                                ? <span>Inquiry about <strong className="text-white border-b border-white/30">{listingTitle}</strong></span> 
-                                : <span>Your email has been sent to the seller. Check your inbox for updates.</span>
-                        </DialogDescription>
+                    <DialogDescription className="text-white/80 font-medium text-sm sm:text-base">
+                        {!isSuccess ? (
+                            <span>Inquiry about <strong className="text-white border-b border-white/30">{listingTitle}</strong></span> 
+                        ) : (
+                            <span>Your email has been sent to the seller. Check your inbox for updates.</span>
+                        )}
+                    </DialogDescription>
                     </DialogHeader>
 
                      <button 
