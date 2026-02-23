@@ -375,7 +375,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     <span className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">{seller?.name ?? 'Seller'}</span>
                     {seller?.isVerified && <BadgeCheck className="w-4 h-4 text-primary" />}
                   </Link>
-                  <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                  <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider" suppressHydrationWarning>
                     Member since {seller?.createdAt || (seller as any)?._creationTime 
                       ? new Date(seller.createdAt || (seller as any)._creationTime).toLocaleDateString('mk-MK', {day: '2-digit', month: '2-digit', year: 'numeric'}) 
                       : 'Recently'}
@@ -526,7 +526,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                       <h4 className="font-black text-foreground text-lg group-hover:text-primary transition-colors">{seller?.name ?? 'Loading...'}</h4>
                       {seller?.isVerified && <BadgeCheck className="w-5 h-5 text-primary" />}
                     </Link>
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest" suppressHydrationWarning>
                       {seller?.isVerified ? 'Verified' : 'Member'} since{' '}
                       {seller?.createdAt || (seller as any)?._creationTime 
                         ? new Date(seller.createdAt || (seller as any)._creationTime).toLocaleDateString('mk-MK', {day: '2-digit', month: '2-digit', year: 'numeric'}) 

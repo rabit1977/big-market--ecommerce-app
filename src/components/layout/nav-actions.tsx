@@ -177,7 +177,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
     return (
       <Button asChild variant="ghost" size="sm" className="h-9 px-3 rounded-full font-bold hover:bg-muted ml-1">
         <Link href="/auth">
-          <User className="h-4 w-4 mr-1.5" />
+          <User  className="h-4 w-4 mr-1.5" />
           {tNav('login')}
         </Link>
       </Button>
@@ -259,7 +259,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
             <TooltipTrigger asChild>
               <Button
                 asChild variant="ghost" size="icon"
-                className="relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10"
+                className="relative hidden lg:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10"
               >
                 <Link href="/favorites" aria-label={`Favorites${initialWishlistCount > 0 ? ` (${initialWishlistCount})` : ''}`}>
                   <Heart className="h-4.5 w-4.5" />
@@ -288,7 +288,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
             <TooltipTrigger asChild>
               <Button
                 asChild variant="ghost" size="icon"
-                className="relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10"
+                className="relative hidden lg:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10"
               >
                 <Link href="/messages" aria-label={`Messages${unreadMessagesCount > 0 ? ` (${unreadMessagesCount} unread)` : ''}`}>
                   <MessageSquare className={cn('h-4.5 w-4.5', unreadMessagesCount > 0 && 'text-primary')} />
@@ -320,7 +320,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
             <TooltipTrigger asChild>
               <Button
                 asChild variant="ghost" size="icon"
-                className="relative h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 border border-border/40"
+                className="relative h-9 w-9 hidden sm:flex rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 border border-border/40"
               >
                 <Link href="/help" aria-label="Help Center">
                   <HelpCircle className="h-4.5 w-4.5" />

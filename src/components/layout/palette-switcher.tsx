@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const PALETTE_KEY = 'app-palette';
 
@@ -22,13 +22,15 @@ function applyPalette(id: string) {
 }
 
 export function PaletteSwitcher() {
-  // Lazy initialiser reads localStorage once on first render — no flash, no effect needed
-  const [currentPalette, setCurrentPalette] = useState(() => {
-    if (typeof window === 'undefined') return 'default';
+  // Initialize with stable default to match server
+  const [currentPalette, setCurrentPalette] = useState('default');
+
+  // Load palette and apply effects on mount only
+  useEffect(() => {
     const saved = localStorage.getItem(PALETTE_KEY) ?? 'default';
+    setCurrentPalette(saved);
     document.documentElement.setAttribute('data-palette', saved);
-    return saved;
-  });
+  }, []);
 
   const handlePaletteChange = (id: string) => {
     setCurrentPalette(id);

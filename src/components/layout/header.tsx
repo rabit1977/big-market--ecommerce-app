@@ -104,20 +104,6 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
               Biggest Market<span className="text-primary">.</span>
             </span>
           </Link>
-
-          <Link
-            href="/listings"
-            className={cn(
-              'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200 whitespace-nowrap',
-              isActiveLink('/listings')
-                ? 'text-primary bg-primary/8'
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-            )}
-          >
-            <Store className="h-4 w-4" />
-            {t('listings')}
-          </Link>
-
           <div className="flex-1 max-w-xl mx-auto">
             <SearchBar />
           </div>
@@ -128,7 +114,7 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
               className="bg-primary hover:bg-primary/90 text-white font-bold rounded-full shadow-md shadow-primary/15 px-5 h-9 transition-all hover:shadow-lg hover:shadow-primary/20 hover:scale-[1.02] active:scale-[0.98]"
             >
               <Link href="/sell">
-                <Plus className="h-4 w-4 mr-1.5 stroke-[3]" />
+                <Plus className="h-4 w-4 stroke-[3]" />
                 {t('post_ad')}
               </Link>
             </Button>

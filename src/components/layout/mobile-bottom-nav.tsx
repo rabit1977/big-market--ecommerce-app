@@ -23,7 +23,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Categories', icon: LayoutGrid,  href: '/categories' },
   { label: 'Sell',       icon: PlusCircle,  href: '/sell',        primary: true },
   { label: 'Favorites',  icon: Heart,       href: '/favorites',   showBadge: true },
-  { label: 'My Ads',     icon: Package,     href: '/my-listings' },
+  { label: 'My Listings',     icon: Package,     href: '/my-listings' },
 ];
 
 export function MobileBottomNav({ wishlistCount = 0 }: MobileBottomNavProps) {

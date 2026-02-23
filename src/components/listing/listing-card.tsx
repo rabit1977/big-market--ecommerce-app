@@ -40,7 +40,7 @@ export const ListingCard = memo(
     
     // Real logic from listing and user metadata
     const tier = listing.user?.membershipTier;
-    const isPromoted = listing.isPromoted && (!listing.promotionExpiresAt || listing.promotionExpiresAt > Date.now());
+    const isPromoted = listing.isPromoted && (!listing.promotionExpiresAt || listing.promotionExpiresAt > (typeof window === 'undefined' ? 0 : Date.now()));
     const promotionTier = isPromoted ? listing.promotionTier : null;
     const promoConfig = isPromoted ? getPromotionConfig(promotionTier) : null;
     const isVerified = listing.user?.isVerified;
@@ -140,7 +140,7 @@ export const ListingCard = memo(
 
                 <div className="flex items-end justify-between mt-auto pt-1.5 sm:pt-2">
                     <div className="text-[9px] sm:text-[10px] text-muted-foreground/80 flex items-center gap-1">
-                       <span>{new Date(listing.createdAt).toLocaleDateString()}</span>
+                       <span suppressHydrationWarning>{new Date(listing.createdAt).toLocaleDateString()}</span>
                     </div>
 
                     {!isOwner && (
@@ -164,7 +164,7 @@ export const ListingCard = memo(
 
                        {listing.title}
                     </h3>
-                    <span className="text-[9px] sm:text-[10px] md:text-xs text-muted-foreground whitespace-nowrap shrink-0">
+                    <span className="text-[9px] sm:text-[10px] md:text-xs text-muted-foreground whitespace-nowrap shrink-0" suppressHydrationWarning>
                         {listing.createdAt ? new Date(listing.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Now'}
                     </span>
                 </div>

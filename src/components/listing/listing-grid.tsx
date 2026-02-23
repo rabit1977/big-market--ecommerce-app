@@ -16,7 +16,7 @@ import { ArrowUpDown, LayoutGrid, List, RectangleVertical, Save, SlidersHorizont
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { memo, useState, useTransition } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { ListingCard } from './listing-card';
 
@@ -77,11 +77,16 @@ export function ListingGrid({
   const sortOptions = getSortOptions(tListings);
   const viewModes = getViewModes(tListings);
 
-  // Lazy initialiser reads localStorage once — no mounted state, no flash
-  const [viewMode, setViewMode] = useState<ViewMode>(() => {
-    if (typeof window === 'undefined') return 'list';
-    return (localStorage.getItem(VIEW_MODE_KEY) as ViewMode) || 'list';
-  });
+  // Initialize with a fixed default to match server-side rendering
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+
+  // Sync with localStorage on mount to avoid hydration mismatch
+  useEffect(() => {
+    const savedMode = localStorage.getItem(VIEW_MODE_KEY) as ViewMode;
+    if (savedMode && (savedMode === 'grid' || savedMode === 'list' || savedMode === 'card')) {
+      setViewMode(savedMode);
+    }
+  }, []);
 
   const saveSearchMutation = useMutation(api.searches.saveSearch);
 
