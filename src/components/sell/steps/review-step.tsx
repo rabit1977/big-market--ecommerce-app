@@ -115,12 +115,18 @@ export function ReviewStep({ formData, categories }: ReviewStepProps) {
             <span className="text-3xl font-bold text-primary">
               {formatCurrency(formData.price || 0, formData.currency)}
             </span>
+            {formData.isPriceNegotiable && (
+              <Badge variant="outline" className="capitalize">
+                Po dogovor
+              </Badge>
+            )}
             {formData.condition && (
               <Badge variant="outline" className="capitalize">
                 {formData.condition.replace('-', ' ')}
               </Badge>
             )}
           </div>
+
 
           <Separator />
 

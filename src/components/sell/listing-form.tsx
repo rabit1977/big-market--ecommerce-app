@@ -101,6 +101,7 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
     phone:       initialData?.contactPhone ?? '',
     email:       (initialData as any)?.contactEmail ?? '',
     currency:    (initialData as any)?.currency ?? 'MKD',
+    isPriceNegotiable: (initialData as any)?.isPriceNegotiable ?? false,
     status:      initialData?.status ?? 'PENDING_APPROVAL',
   });
 
@@ -195,6 +196,8 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
       const listingData: any = {
         ...baseFormData,
         price: parseFloat(formData.price),
+        currency: formData.currency,
+        isPriceNegotiable: formData.isPriceNegotiable,
         category: categorySlug,
         subCategory: subCategorySlug || undefined,
         region: state || undefined,
@@ -338,6 +341,20 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
                   <SelectContent>
                     <SelectItem value="MKD">MKD</SelectItem>
                     <SelectItem value="EUR">EUR</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex gap-2 mt-2">
+                <Select
+                  value={formData.isPriceNegotiable ? 'negotiable' : 'fixed'}
+                  onValueChange={(val) => setFormData((prev) => ({ ...prev, isPriceNegotiable: val === 'negotiable' }))}
+                >
+                  <SelectTrigger className="w-full font-bold">
+                    <SelectValue placeholder="Price Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="fixed">Fixed Price</SelectItem>
+                    <SelectItem value="negotiable">Po dogovor</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

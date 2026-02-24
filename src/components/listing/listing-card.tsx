@@ -130,12 +130,19 @@ export const ListingCard = memo(
                             {formatPrice(listing.previousPrice)}
                         </span>
                     )}
-                    <span className={cn(
-                        "font-bold text-primary",
-                        isCard ? "text-lg sm:text-xl" : "text-sm sm:text-base"
-                    )} suppressHydrationWarning>
-                        {formatCurrency(listing.price, (listing as any).currency)}
-                    </span>
+                    <div className="flex items-baseline gap-2">
+                      <span className={cn(
+                          "font-bold text-primary",
+                          isCard ? "text-lg sm:text-xl" : "text-sm sm:text-base"
+                      )} suppressHydrationWarning>
+                          {listing.price > 0 ? formatCurrency(listing.price, (listing as any).currency) : 'Price on req'}
+                      </span>
+                      {listing.price > 0 && (
+                        <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-tight">
+                          {(listing as any).isPriceNegotiable ? 'Po dogovor' : 'Fixed'}
+                        </span>
+                      )}
+                    </div>
                 </div>
 
                 <div className="flex items-end justify-between mt-auto pt-1.5 sm:pt-2">
@@ -186,9 +193,16 @@ export const ListingCard = memo(
                                  {formatCurrency(listing.previousPrice, (listing as any).currency)}
                              </span>
                          )}
-                         <span className="text-sm sm:text-base md:text-lg font-bold text-primary" suppressHydrationWarning>
-                             {formatCurrency(listing.price, (listing as any).currency)}
-                         </span>
+                         <div className="flex items-baseline gap-2">
+                           <span className="text-sm sm:text-base md:text-lg font-bold text-primary" suppressHydrationWarning>
+                               {listing.price > 0 ? formatCurrency(listing.price, (listing as any).currency) : 'Price on request'}
+                           </span>
+                           {listing.price > 0 && (
+                             <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-tight">
+                               {(listing as any).isPriceNegotiable ? 'Po dogovor' : 'Fixed'}
+                             </span>
+                           )}
+                         </div>
                     </div>
                     
                     {!isOwner && (

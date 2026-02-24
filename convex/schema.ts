@@ -117,6 +117,7 @@ export default defineSchema({
     hasShipping: v.optional(v.boolean()),
     isVatIncluded: v.optional(v.boolean()),
     isAffordable: v.optional(v.boolean()),
+    isPriceNegotiable: v.optional(v.boolean()), // Price Fixed or Negotiable (Po dogovor)
 
     // Promotion
     isPromoted: v.optional(v.boolean()),

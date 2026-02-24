@@ -156,41 +156,58 @@ export function DetailsStep({
 
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
+          <div className="space-y-4">
             <Label htmlFor="price" className="text-sm font-semibold">
               Price <span className="text-destructive">*</span>
             </Label>
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">
-                  {formData.currency === 'EUR' ? '€' : 'den'}
-                </span>
-                <Input
-                  id="price"
-                  type="number"
-                  placeholder="0"
-                  value={formData.price || ''}
-                  onChange={(e) => updateFormData({ price: parseFloat(e.target.value) || 0 })}
-                  className={cn(
-                    "h-11 bg-background border-2 focus:border-primary",
-                    formData.currency === 'EUR' ? "pl-8" : "pl-12"
-                  )}
-                />
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">
+                    {formData.currency === 'EUR' ? '€' : 'den'}
+                  </span>
+                  <Input
+                    id="price"
+                    type="number"
+                    placeholder="0"
+                    value={formData.price || ''}
+                    onChange={(e) => updateFormData({ price: parseFloat(e.target.value) || 0 })}
+                    className={cn(
+                      "h-11 bg-background border-2 focus:border-primary",
+                      formData.currency === 'EUR' ? "pl-8" : "pl-12"
+                    )}
+                  />
+                </div>
+                <Select
+                  value={formData.currency || 'MKD'}
+                  onValueChange={(val) => updateFormData({ currency: val })}
+                >
+                  <SelectTrigger className="h-11 w-[90px] border-2">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="MKD">MKD</SelectItem>
+                    <SelectItem value="EUR">EUR (€)</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <Select
-                value={formData.currency || 'MKD'}
-                onValueChange={(val) => updateFormData({ currency: val })}
-              >
-                <SelectTrigger className="h-11 w-[90px] border-2">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="MKD">MKD</SelectItem>
-                  <SelectItem value="EUR">EUR (€)</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex items-center gap-2">
+                <Select
+                  value={formData.isPriceNegotiable ? 'negotiable' : 'fixed'}
+                  onValueChange={(val) => updateFormData({ isPriceNegotiable: val === 'negotiable' })}
+                >
+                  <SelectTrigger className="h-11 bg-background border-2 focus:border-primary flex-1">
+                    <SelectValue placeholder="Price Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="fixed">Fixed Price</SelectItem>
+                    <SelectItem value="negotiable">Po dogovor (Negotiable)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
+
 
           <div className="space-y-2">
             <Label htmlFor="city" className="text-sm font-semibold">

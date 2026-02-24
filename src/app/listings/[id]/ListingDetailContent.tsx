@@ -17,6 +17,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { api } from '@/convex/_generated/api';
 import type { Id } from '@/convex/_generated/dataModel';
 import { useFavorites } from '@/lib/context/favorites-context';
@@ -68,6 +69,7 @@ interface Listing {
   status: string;
   previousPrice?: number;
   listingNumber?: number;
+  isPriceNegotiable?: boolean;
 }
 
 interface ListingDetailContentProps {
@@ -275,10 +277,11 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
             <div className="relative group bg-slate-900 overflow-hidden md:rounded-2xl shadow-xl">
               <div className="relative aspect-[4/3] md:aspect-video w-full">
                 <Image src={mainImage} alt={listing.title} fill className="object-cover" priority />
-              </div>
-
-              {images.length > 1 && (
-                <div className="absolute inset-0 hidden md:flex items-center justify-between p-4 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <span className="absolute top-2 right-2 p-1 rounded-full bg-black/50 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest backdrop-blur-md hover:bg-black/70 transition-all pointer-events-auto"
+                    aria-label="Previous image">Item: {listingRef}</span>
+                
+               { images.length > 1 ? (
+                <div className="absolute inset-0 flex items-center opacity-0 px-2 group-hover:opacity-100 transition-opacity pointer-events-none justify-between">
                   <button
                     onClick={() => setSelectedImage((p) => (p > 0 ? p - 1 : images.length - 1))}
                     className="p-3 rounded-full bg-black/50 text-white backdrop-blur-md hover:bg-black/70 transition-all pointer-events-auto"
@@ -291,37 +294,51 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     className="p-3 rounded-full bg-black/50 text-white backdrop-blur-md hover:bg-black/70 transition-all pointer-events-auto"
                     aria-label="Next image"
                   >
-                    <ChevronLeft className="w-6 h-6 rotate-180" />
+                    <ChevronRight className="w-6 h-6" />
                   </button>
                 </div>
-              )}
-
+            ) : 
+                <div className="absolute inset-0 hidden md:flex items-center justify-between p-4 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                </div>   
+          }
+              </div>
               <div className="absolute bottom-4 left-4">
-                <div className="bg-black/40 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full border border-white/10 uppercase tracking-widest">
-                  {selectedImage + 1} / {Math.max(images.length, 1)} PHOTOS
+                <div className="bg-black/50 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full border border-white/10 uppercase tracking-widest">
+                  {selectedImage + 1} / {Math.max(images.length, 1)}
                 </div>
               </div>
             </div>
 
             {/* Thumbnails */}
             {images.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto px-4 md:px-0 py-2 no-scrollbar snap-x">
-                {images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setSelectedImage(idx)}
-                    className={cn(
-                      'relative flex-shrink-0 aspect-square w-16 md:w-24 rounded-lg overflow-hidden snap-start transition-all duration-300',
-                      selectedImage === idx
-                        ? 'ring-2 ring-primary scale-105 shadow-lg opacity-100'
-                        : 'opacity-70 hover:opacity-100 grayscale hover:grayscale-0',
-                    )}
-                    aria-label={`View image ${idx + 1}`}
-                  >
-                    <Image src={img} alt="" fill className="object-cover" />
-                  </button>
-                ))}
-              </div>
+              <Carousel
+                opts={{ dragFree: true, align: 'start' }}
+                className="w-full"
+              >
+                <CarouselContent className="-ml-2 py-2 gap-1">
+                  {images.map((img, idx) => (
+                    <CarouselItem
+                      key={idx}
+                      onClick={() => setSelectedImage(idx)}
+                      className={cn(
+                        'pl-2 basis-[5rem] md:basis-[6rem] cursor-pointer'
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          'relative aspect-square rounded overflow-hidden transition-all duration-300',
+                          selectedImage === idx
+                            ? 'ring-1 ring-offset-3 ring-offset-background scale-105 shadow-lg opacity-100'
+                            : 'opacity-60 hover:opacity-100 grayscale hover:grayscale-0'
+                        )}
+                        aria-label={`View image ${idx + 1}`}
+                      >
+                        <Image src={img} alt="" fill className="object-cover" />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
             )}
 
             {/* Mobile Info Block */}
@@ -363,7 +380,9 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                       {listing.price > 0 ? formatCurrency(listing.price, listing.currency) : 'Price on request'}
                     </span>
                     {listing.price > 0 && (
-                      <span className="text-xs font-bold text-muted-foreground uppercase tracking-tighter">Fixed</span>
+                      <span className="text-xs font-bold text-muted-foreground uppercase tracking-tighter">
+                        {listing.isPriceNegotiable ? 'Po dogovor' : 'Fixed'}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -384,7 +403,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                       : 'Recently'}
                   </p>
                   {contactEmail && (
-                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mt-0.5">
+                    <p className="text-[10px] text-primary font-semibold uppercase tracking-wider mt-0.5 hover:underline cursor-pointer">
                       {contactEmail}
                     </p>
                   )}
@@ -400,20 +419,21 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 )}
               </div>
 
-              <div className="pt-4 space-y-3">
-                <Button asChild variant="outline" className="w-full h-12 rounded-xl border-2 hover:bg-primary/5 hover:text-primary font-black uppercase tracking-wider text-[10px] shadow-sm">
+              <div className="flex pt-4 space-y-3 gap-3 w-full">
+                <Button asChild variant="outline" className="w-full flex-1 h-12 rounded-xl border-1 hover:bg-primary/5 hover:text-primary font-black uppercase tracking-wider text-sm">
                   <Link href={`/store/${listing.userId}`}>Visit Storefront</Link>
                 </Button>
-
+                  <div className="w-full flex-1">
                 {!isListingOwner && (
                   <ContactOptionsDialog
-                    session={session}
-                    listing={listing}
-                    contactPhone={contactPhone}
-                    contactEmail={contactEmail}
-                    onContact={() => handleContactClick('contact')}
+                  session={session}
+                  listing={listing}
+                  contactPhone={contactPhone}
+                  contactEmail={contactEmail}
+                  onContact={() => handleContactClick('contact')}
                   />
                 )}
+                </div>
               </div>
             </div>
 
@@ -433,12 +453,11 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
             )}
 
             {/* Description */}
-            <div className="bg-card md:rounded-2xl border border-border shadow-sm px-6 py-8 space-y-6">
-              <div className="space-y-1">
-                <h3 className="font-black text-foreground uppercase tracking-tight text-sm">
-                  Product Description
+            <div className="bg-card md:rounded-2xl border border-border shadow-sm px-6 py-8 space-y-2">
+              <div className="space-y-1 w-fit">
+                <h3 className="font-black text-foreground uppercase tracking-tight text-sm underline underline-offset-4">
+                  About this Item
                 </h3>
-                <div className="h-1 w-8 bg-primary rounded-full" />
               </div>
               <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed text-base">
                 {listing.description}
@@ -494,7 +513,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     {listing.price > 0 ? formatCurrency(listing.price, listing.currency) : 'Call for Price'}
                   </div>
                   <div className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
-                    Secured Transaction • Fixed Price
+                   {listing.isPriceNegotiable ? 'Po dogovor' : 'Fixed Price'}
                   </div>
                 </div>
 
@@ -511,9 +530,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   </div>
                 )}
 
-                <div className="flex items-center justify-center pt-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest gap-4">
-                  <span>Item: {listingRef}</span>
-                  <span>•</span>
+                <div className="flex flex-col items-center justify-center pt-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest gap-4">
                   <span suppressHydrationWarning>Posted: {publishDate}</span>
                 </div>
               </div>

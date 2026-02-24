@@ -6,13 +6,13 @@ import { Progress } from '@/components/ui/progress';
 import { useMutation } from 'convex/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 import { CategoryStep } from './steps/category-step';
 import { DetailsStep } from './steps/details-step';
 import { ImagesStep } from './steps/images-step';
 import { ReviewStep } from './steps/review-step';
-import { useRouter } from 'next/navigation';
 
 interface PostListingWizardProps {
   categories: Array<{
@@ -34,6 +34,7 @@ export interface ListingFormData {
   description?: string;
   price?: number;
   currency?: string;
+  isPriceNegotiable?: boolean;
   condition?: string;
   city?: string;
   region?: string;
@@ -137,6 +138,7 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
         description: formData.description || '',
         price: formData.price,
         currency: formData.currency || 'MKD',
+        isPriceNegotiable: formData.isPriceNegotiable,
         category: formData.category,
         subCategory: formData.subCategory,
         city: formData.city,
