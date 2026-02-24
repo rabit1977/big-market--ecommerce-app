@@ -31,7 +31,6 @@ export interface FilterState {
   userType?: string;
   adType?: string;
   isTradePossible?: boolean;
-  hasShipping?: boolean;
   isVatIncluded?: boolean;
   isAffordable?: boolean;
   dateRange?: string;
@@ -597,7 +596,6 @@ export function FilterPanel({
               {filters.userType     && <FilterBadge label={filters.userType.toLowerCase()}  onRemove={() => updateFilter('userType', undefined)} />}
               {filters.adType       && <FilterBadge label={filters.adType.toLowerCase()}    onRemove={() => updateFilter('adType', undefined)} />}
               {filters.isTradePossible && <FilterBadge label="Exchange Possible" onRemove={() => updateFilter('isTradePossible', false)} />}
-              {filters.hasShipping     && <FilterBadge label="Shipping"          onRemove={() => updateFilter('hasShipping', false)} />}
               {filters.isVatIncluded   && <FilterBadge label="VAT Incl."         onRemove={() => updateFilter('isVatIncluded', false)} />}
               {filters.isAffordable    && <FilterBadge label="Best Deals"        onRemove={() => updateFilter('isAffordable', false)} />}
             </div>

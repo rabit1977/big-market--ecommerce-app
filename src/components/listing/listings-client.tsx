@@ -43,7 +43,6 @@ export function ListingsClient({
     userType: searchParams.get('userType') || undefined,
     adType: searchParams.get('adType') || undefined,
     isTradePossible: searchParams.get('trade') === 'true',
-    hasShipping: searchParams.get('shipping') === 'true',
     isVatIncluded: searchParams.get('vat') === 'true',
     isAffordable: searchParams.get('affordable') === 'true',
     dateRange: searchParams.get('date') || undefined,
@@ -83,9 +82,6 @@ export function ListingsClient({
 
     if (filters.isTradePossible) params.set('trade', 'true');
     else params.delete('trade');
-
-    if (filters.hasShipping) params.set('shipping', 'true');
-    else params.delete('shipping');
 
     if (filters.isVatIncluded) params.set('vat', 'true');
     else params.delete('vat');

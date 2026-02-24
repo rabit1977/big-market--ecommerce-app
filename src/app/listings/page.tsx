@@ -30,7 +30,6 @@ interface ListingsPageProps {
     userType?: string;
     adType?: string;
     trade?: string;
-    shipping?: string;
     vat?: string;
     affordable?: string;
     date?: string;
@@ -122,8 +121,6 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
         userType: ensureString(params.userType),
         adType: ensureString(params.adType),
         isTradePossible: ensureString(params.trade) === 'true' ? true : undefined,
-
-        hasShipping: ensureString(params.shipping) === 'true' ? true : undefined,
         isVatIncluded: ensureString(params.vat) === 'true' ? true : undefined,
         isAffordable: ensureString(params.affordable) === 'true' ? true : undefined,
         dateRange: ensureString(params.date),
