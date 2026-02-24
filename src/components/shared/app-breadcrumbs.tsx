@@ -63,8 +63,8 @@ export function AppBreadcrumbs({ className, customLabel, items }: AppBreadcrumbs
   // Custom items override
   if (items) {
       return (
-        <Breadcrumb className={cn("mb-6 bg-card w-fit max-w-full overflow-hidden px-4 py-2 rounded-full border border-border mix-blend-mode-screen:normal shadow-sm", className)}>
-            <BreadcrumbList className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground flex-nowrap overflow-x-auto no-scrollbar">
+        <Breadcrumb className={cn("-mt-1 mb-6 bg-card w-fit max-w-full overflow-hidden  mix-blend-mode-screen:normal shadow-sm", className)}>
+            <BreadcrumbList className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-muted-foreground flex-nowrap overflow-x-auto no-scrollbar">
                 <BreadcrumbItem className="shrink-0">
                     <BreadcrumbLink asChild>
                         <Link href={isAdmin ? "/admin/dashboard" : "/"} className="flex items-center gap-1 hover:text-primary transition-colors">

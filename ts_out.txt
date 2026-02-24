@@ -1,0 +1,4 @@
+src/app/listings/[id]/ListingDetailContent.tsx(244,29): error TS2322: Type 'string' is not assignable to type 'Id<"listings">'.
+  Type 'string' is not assignable to type '{ __tableName: "listings"; }'.
+src/app/listings/[id]/ListingDetailContent.tsx(403,21): error TS2322: Type 'string' is not assignable to type 'Id<"listings">'.
+  Type 'string' is not assignable to type '{ __tableName: "listings"; }'.

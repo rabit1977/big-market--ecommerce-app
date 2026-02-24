@@ -1,10 +1,11 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { LayoutGrid, SlidersHorizontal } from 'lucide-react';
+import { Heart, LayoutGrid, List, SlidersHorizontal } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useState } from 'react';
+
 
 // Filter definitions with Macedonian labels
 const QUICK_FILTERS = [
@@ -23,6 +24,7 @@ export const HeroHeader = () => {
   const [showFilters, setShowFilters] = useState(false);
   const tHome = useTranslations('Home');
   const tFilters = useTranslations('QuickFilters');
+  const tNav = useTranslations('NavActions');
   
   const [filters, setFilters] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
@@ -42,19 +44,44 @@ export const HeroHeader = () => {
     <div className='bg-muted/20 border-b border-border/30'>
       <div className='container-wide py-2'>
 
-        {/* Categories Link & Quick Filters - Justified & Rounded */}
+        {/* Scrollable Navigation Container */}
         <div className="flex items-center justify-between gap-3 md:gap-4 overflow-x-auto no-scrollbar pb-1">
           
-          {/* Categories Button - Rounded Pill */}
-          <Link 
-            href="/categories"
-            className="group flex items-center justify-center gap-2 px-3 py-1.5 md:py-2 rounded-full border border-border bg-background shadow-sm hover:border-primary/30 hover:bg-muted transition-all duration-300 shrink-0"
-          >
-            <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-              <LayoutGrid className="w-3 h-3 text-primary" />
-            </div>
-            <span className="text-[11px] md:text-xs font-bold tracking-tight text-foreground uppercase whitespace-nowrap">{tHome('explore_categories')}</span>
-          </Link>
+          {/* Left Side: Navigation Links */}
+          <div className="flex items-center gap-2 md:gap-3 shrink-0">
+            {/* Categories Button */}
+            <Link 
+              href="/categories"
+              className="group flex items-center justify-center gap-2 px-3 py-1.5 md:py-2 rounded-full border border-border bg-background shadow-sm hover:border-primary/30 hover:bg-muted transition-all duration-300 shrink-0"
+            >
+              <div className="w-5 h-5 rounded-full border border-border bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors shadow-none">
+                <LayoutGrid className="w-3 h-3 text-primary" />
+              </div>
+              <span className="text-[11px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">{'categories'}</span>
+            </Link>
+
+            {/* Favorites Button */}
+            <Link 
+              href="/favorites"
+              className="group flex items-center justify-center gap-2 px-3 py-1.5 md:py-2 rounded-full border border-border bg-background shadow-sm hover:border-primary/30 hover:bg-muted transition-all duration-300 shrink-0"
+            >
+              <div className="w-5 h-5 rounded-full border border-border bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors shadow-none">
+                <Heart className="w-3 h-3 text-primary" />
+              </div>
+              <span className="text-[11px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">{tNav('favorites')}</span>
+            </Link>
+
+            {/* My Listings Button */}
+            <Link 
+              href="/my-listings"
+              className="group flex items-center justify-center gap-2 px-3 py-1.5 md:py-2 rounded-full border border-border bg-background shadow-sm hover:border-primary/30 hover:bg-muted transition-all duration-300 shrink-0"
+            >
+              <div className="w-5 h-5 rounded-full border border-border bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors shadow-none">
+                <List className="w-3 h-3 text-primary" />
+              </div>
+              <span className="text-[11px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">{tNav('my_listings')}</span>
+            </Link>
+          </div>
 
           {/* Filters Section */}
           <div className="flex items-center justify-end shrink-0">

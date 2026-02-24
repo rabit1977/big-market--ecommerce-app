@@ -1,6 +1,7 @@
 'use client';
 
 import { ListingQA } from '@/components/listing/listing-qa';
+import { SaveAdButton } from '@/components/listing/save-ad-button';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { ReportModal } from '@/components/shared/report-modal';
 import { UserAvatar } from '@/components/shared/user-avatar';
@@ -28,7 +29,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Edit,
-  Heart,
   History,
   Mail,
   MapPin,
@@ -38,7 +38,7 @@ import {
   Phone,
   Share2,
   ShieldAlert,
-  Trash2,
+  Trash2
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -241,17 +241,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
               Share
             </button>
             {!isListingOwner && (
-              <button
-                onClick={() => toggleFavorite(listing._id)}
-                className={`flex items-center gap-2 px-4 py-2 border rounded-full text-sm font-bold transition-all shadow-sm ${
-                  isFavorite
-                    ? 'bg-primary/5 border-primary/20 text-primary'
-                    : 'bg-card border-border text-foreground hover:bg-accent'
-                }`}
-              >
-                <Heart className={`w-4 h-4 ${isFavorite ? 'fill-current' : ''}`} />
-                {isFavorite ? 'Saved' : 'Save Ad'}
-              </button>
+              <SaveAdButton listingId={listing._id} />
             )}
             {canManage && (
               <>
@@ -409,13 +399,12 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   )}
                 </div>
                 {!isListingOwner && (
-                  <button
-                    onClick={() => toggleFavorite(listing._id)}
-                    className={`p-2.5 rounded-full transition-colors ${isFavorite ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}
-                    aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-                  >
-                    <Heart className={`w-6 h-6 ${isFavorite ? 'fill-current' : ''}`} />
-                  </button>
+                  <SaveAdButton 
+                    listingId={listing._id} 
+                    showText={false}
+                    className="p-2.5" 
+                    iconClassName="w-6 h-6" 
+                  />
                 )}
               </div>
 
