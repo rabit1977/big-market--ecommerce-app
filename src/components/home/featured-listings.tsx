@@ -33,7 +33,6 @@ interface FeaturedListingsProps {
   variant?: 'horizontal' | 'vertical';
 }
 
-
 export function FeaturedListings({ listings, variant = 'horizontal' }: FeaturedListingsProps) {
   const tHome = useTranslations('Home');
   const tCommon = useTranslations('Common');
@@ -75,16 +74,16 @@ export function FeaturedListings({ listings, variant = 'horizontal' }: FeaturedL
                         <div key={listing._id} className="group">
                              <Link href={`/listings/${listing._id}`}>
                                 <Card className={cn(
-                                    "overflow-hidden border-border/40 hover:border-primary/40 transition-all duration-300 rounded-xl bg-card shadow-sm hover:shadow-xl hover:-translate-y-1",
+                                    "p-0 overflow-hidden border-border/40 hover:border-primary/40 transition-all duration-300 rounded-xl bg-card shadow-sm hover:shadow-xl hover:-translate-y-1",
                                     promoConfig && `ring-1 ring-inset ${borderColor.replace('border-', 'ring-')} ${bgColor.replace('bg-', 'bg-opacity-5 bg-')}`
                                 )}>
-                                     {/* Image Area - Bigger for Sidebar */}
-                                     <div className="relative aspect-[4/3] w-full bg-muted overflow-hidden">
+                                     {/* Image Area - Added flex-none, block, m-0, p-0 to kill all gaps */}
+                                     <div className="relative aspect-[4/3] w-full flex-none block m-0 p-0 overflow-hidden bg-white">
                                          <Image 
                                             src={imageUrl} 
                                             alt={listing.title} 
                                             fill 
-                                            className="object-cover group-hover:scale-110 transition-transform duration-700" 
+                                            className="object-cover group-hover:scale-105 transition-transform duration-700" 
                                             sizes="(max-width: 1280px) 25vw, 20vw"
                                          />
                                          
@@ -168,7 +167,6 @@ export function FeaturedListings({ listings, variant = 'horizontal' }: FeaturedL
                href="/listings?featured=true" 
                className="inline-flex items-center text-[9px] font-black uppercase tracking-widest text-muted-foreground border px-3 py-1.5 rounded-full border-muted-foreground/20 hover:border-primary transition-all"
              >
-
                {tHome('explore_all')}
              </Link>
           </div>
@@ -198,16 +196,16 @@ export function FeaturedListings({ listings, variant = 'horizontal' }: FeaturedL
                   >
                     <Link href={`/listings/${listing._id}`} className="block h-full">
                       <Card className={cn(
-                          "group h-full flex flex-col overflow-hidden border-border/30 hover:border-primary/20 transition-all duration-500 rounded-2xl bg-card shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.12)] hover:-translate-y-1",
+                          "group p-0 m-0 h-full flex flex-col overflow-hidden border-border/30 hover:border-primary/20 transition-all duration-500 rounded-2xl bg-card shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.12)] hover:-translate-y-1",
                           promoConfig && `ring-[0.5px] ring-inset ${borderColor.replace('border-', 'ring-')} ${bgColor.replace('bg-', 'bg-opacity-5 bg-')}`
                       )}>
-                        {/* Image - Smooth eBay style */}
-                        <div className="relative aspect-square sm:aspect-[4/5] overflow-hidden bg-[#f8f8f8]">
+                        {/* Image - Forced flush to top */}
+                        <div className="relative aspect-square w-full flex-none block m-0 p-0 overflow-hidden bg-white">
                           <Image
                             src={imageUrl}
                             alt={listing.title}
                             fill
-                            className="object-cover mix-blend-multiply transition-all duration-700 ease-out group-hover:scale-110"
+                            className="object-cover transition-all duration-700 ease-out group-hover:scale-105"
                             sizes="(max-width: 768px) 40vw, 20vw"
                           />
                           
@@ -225,7 +223,7 @@ export function FeaturedListings({ listings, variant = 'horizontal' }: FeaturedL
                         </div>
 
                         {/* Content */}
-                        <div className="px-3 pb-1 sm:p-4 flex-1 flex flex-col justify-between space-y-2">
+                        <div className="px-3 pb-2 sm:p-4 flex-1 flex flex-col justify-between space-y-2 mt-1">
                           <div>
                             <h3 className="font-bold text-[10px] sm:text-[12px] leading-tight line-clamp-2 text-foreground/90 group-hover:text-primary transition-colors">
                               {listing.title}
