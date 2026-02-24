@@ -70,6 +70,18 @@ export const HeroHeader = () => {
                     <span className="text-[11px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">{'categories'}</span>
                   </Link>
                 </CarouselItem>
+   {/* My Listings Button */}
+                <CarouselItem className="basis-auto pl-2">
+                  <Link 
+                    href="/my-listings"
+                    className="group flex items-center justify-center gap-2 px-3 py-1.5 md:py-2 rounded-full border border-border bg-background shadow-sm hover:border-primary/30 hover:bg-muted transition-all duration-300 shrink-0"
+                  >
+                    <div className="w-5 h-5 rounded-full border border-border bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors shadow-none">
+                      <List className="w-3 h-3 text-primary" />
+                    </div>
+                    <span className="text-[11px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">{tNav('my_listings')}</span>
+                  </Link>
+                </CarouselItem>
 
                 {/* Favorites Button */}
                 <CarouselItem className="basis-auto pl-2">
@@ -88,6 +100,20 @@ export const HeroHeader = () => {
                     )}
                   </Link>
                 </CarouselItem>
+                    {/* Storefronts Array */}
+                {stores.map(store => (
+                  <CarouselItem key={store._id} className="basis-auto pl-2">
+                    <Link 
+                      href={`/store/${store.externalId}`}
+                      className="group flex items-center justify-center gap-2 pr-3 pl-1.5 py-1 md:py-1.5 rounded-full border border-border bg-background shadow-sm hover:border-primary/30 hover:bg-muted transition-all duration-300 shrink-0"
+                    >
+                      <UserAvatar user={store as any} className="w-6 h-6 md:w-7 md:h-7 border border-border shadow-sm text-[10px]" />
+                      <span className="text-[11px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">
+                        {store.companyName || store.name || 'Store'}
+                      </span>
+                    </Link>
+                  </CarouselItem>
+                ))}
 
                 {/* Quick Filters Array */}
                 {QUICK_FILTERS.map((filter) => (
@@ -117,18 +143,7 @@ export const HeroHeader = () => {
                   </CarouselItem>
                 ))}
 
-                {/* My Listings Button */}
-                <CarouselItem className="basis-auto pl-2">
-                  <Link 
-                    href="/my-listings"
-                    className="group flex items-center justify-center gap-2 px-3 py-1.5 md:py-2 rounded-full border border-border bg-background shadow-sm hover:border-primary/30 hover:bg-muted transition-all duration-300 shrink-0"
-                  >
-                    <div className="w-5 h-5 rounded-full border border-border bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors shadow-none">
-                      <List className="w-3 h-3 text-primary" />
-                    </div>
-                    <span className="text-[11px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">{tNav('my_listings')}</span>
-                  </Link>
-                </CarouselItem>
+             
 
                 {/* Storefronts Array */}
                 {stores.map(store => (
