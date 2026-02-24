@@ -1,7 +1,12 @@
 'use client';
 
+import { UserAvatar } from '@/components/shared/user-avatar';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { api } from '@/convex/_generated/api';
+import { useFavorites } from '@/lib/context/favorites-context';
 import { cn } from '@/lib/utils';
-import { Heart, LayoutGrid, List, SlidersHorizontal } from 'lucide-react';
+import { useQuery as useConvexQuery } from 'convex/react';
+import { Heart, LayoutGrid, List } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -9,22 +14,25 @@ import { useState } from 'react';
 
 // Filter definitions with Macedonian labels
 const QUICK_FILTERS = [
+  { id: 'new', defaultChecked: true },
+  { id: 'used', defaultChecked: true },
+  { id: 'trade', defaultChecked: true },
   { id: 'forSale', defaultChecked: true },
   { id: 'wanted', defaultChecked: true },
   { id: 'forRent', defaultChecked: false },
   { id: 'rentWanted', defaultChecked: false },
-  { id: 'trade', defaultChecked: true },
-  { id: 'used', defaultChecked: true },
-  { id: 'new', defaultChecked: true },
-  { id: 'shipping', defaultChecked: false },
-  { id: 'vat', defaultChecked: false },
 ];
 
 export const HeroHeader = () => {
-  const [showFilters, setShowFilters] = useState(false);
   const tHome = useTranslations('Home');
   const tFilters = useTranslations('QuickFilters');
   const tNav = useTranslations('NavActions');
+  
+  const { favorites } = useFavorites();
+  const favCount = favorites.size;
+  
+  const users = useConvexQuery(api.users.list) || [];
+  const stores = users.filter((u: any) => u.accountType === 'BUSINESS' || u.isVerified || u.role === 'ADMIN').slice(0, 15);
   
   const [filters, setFilters] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
@@ -38,106 +46,112 @@ export const HeroHeader = () => {
     setFilters(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const activeFilterCount = Object.values(filters).filter(Boolean).length;
-
   return (
     <div className='bg-muted/20 border-b border-border/30'>
       <div className='container-wide py-2'>
 
-        {/* Scrollable Navigation Container */}
-        <div className="flex items-center justify-between gap-3 md:gap-4 overflow-x-auto no-scrollbar pb-1">
+        {/* Navigation & Filters Container */}
+        <div className="flex items-center justify-between gap-3 md:gap-4 pb-1 w-full relative">
           
-          {/* Left Side: Navigation Links */}
-          <div className="flex items-center gap-2 md:gap-3 shrink-0">
-            {/* Categories Button */}
-            <Link 
-              href="/categories"
-              className="group flex items-center justify-center gap-2 px-3 py-1.5 md:py-2 rounded-full border border-border bg-background shadow-sm hover:border-primary/30 hover:bg-muted transition-all duration-300 shrink-0"
-            >
-              <div className="w-5 h-5 rounded-full border border-border bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors shadow-none">
-                <LayoutGrid className="w-3 h-3 text-primary" />
-              </div>
-              <span className="text-[11px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">{'categories'}</span>
-            </Link>
+          {/* Left Side: Navigation Links & Stores Carousel */}
+          <div className="flex-1 min-w-0">
+            <Carousel opts={{ dragFree: true, align: 'start' }} className="w-full">
+              <CarouselContent className="ml-0 p-1 items-center">
+                
+                {/* Categories Button */}
+                <CarouselItem className="basis-auto pl-2 first:pl-0">
+                  <Link 
+                    href="/categories"
+                    className="group flex items-center justify-center gap-2 px-3 py-1.5 md:py-2 rounded-full border border-border bg-background shadow-sm hover:border-primary/30 hover:bg-muted transition-all duration-300 shrink-0"
+                  >
+                    <div className="w-5 h-5 rounded-full border border-border bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors shadow-none">
+                      <LayoutGrid className="w-3 h-3 text-primary" />
+                    </div>
+                    <span className="text-[11px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">{'categories'}</span>
+                  </Link>
+                </CarouselItem>
 
-            {/* Favorites Button */}
-            <Link 
-              href="/favorites"
-              className="group flex items-center justify-center gap-2 px-3 py-1.5 md:py-2 rounded-full border border-border bg-background shadow-sm hover:border-primary/30 hover:bg-muted transition-all duration-300 shrink-0"
-            >
-              <div className="w-5 h-5 rounded-full border border-border bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors shadow-none">
-                <Heart className="w-3 h-3 text-primary" />
-              </div>
-              <span className="text-[11px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">{tNav('favorites')}</span>
-            </Link>
+                {/* Favorites Button */}
+                <CarouselItem className="basis-auto pl-2">
+                  <Link 
+                    href="/favorites"
+                    className="group flex items-center justify-center gap-2 px-3 py-1.5 md:py-2 rounded-full border border-border bg-background shadow-sm hover:border-primary/30 hover:bg-muted transition-all duration-300 shrink-0"
+                  >
+                    <div className="relative w-5 h-5 rounded-full border border-border bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors shadow-none">
+                      <Heart className="w-3 h-3 text-primary" />
+                    </div>
+                    <span className="text-[11px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">{tNav('favorites')}</span>
+                    {favCount > 0 && (
+                      <span className="bg-primary text-white text-[9px] ml-[-4px] font-black rounded-full w-4 h-4 flex items-center justify-center">
+                        {favCount}
+                      </span>
+                    )}
+                  </Link>
+                </CarouselItem>
 
-            {/* My Listings Button */}
-            <Link 
-              href="/my-listings"
-              className="group flex items-center justify-center gap-2 px-3 py-1.5 md:py-2 rounded-full border border-border bg-background shadow-sm hover:border-primary/30 hover:bg-muted transition-all duration-300 shrink-0"
-            >
-              <div className="w-5 h-5 rounded-full border border-border bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors shadow-none">
-                <List className="w-3 h-3 text-primary" />
-              </div>
-              <span className="text-[11px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">{tNav('my_listings')}</span>
-            </Link>
+                {/* Quick Filters Array */}
+                {QUICK_FILTERS.map((filter) => (
+                  <CarouselItem key={filter.id} className="basis-auto pl-2">
+                    <button
+                      type="button"
+                      onClick={() => toggleFilter(filter.id)}
+                      className={cn(
+                        "inline-flex items-center gap-1.5 px-3 py-1.5 md:py-2 rounded-full text-[11px] md:text-xs font-semibold tracking-wider uppercase border transition-all duration-300 active:scale-95 whitespace-nowrap shrink-0 border-border bg-background shadow-sm hover:border-primary/30",
+                        filters[filter.id]
+                          ? "bg-primary/10 border-primary/30 text-primary bg-primary/10"
+                          : "text-foreground hover:bg-muted/50"
+                      )}
+                    >
+                      <div className={cn(
+                        "w-4 h-4 rounded-[3px] border-[1.5px] flex items-center justify-center transition-colors shrink-0",
+                        filters[filter.id] ? "bg-primary border-primary" : "border-border bg-background"
+                      )}>
+                        {filters[filter.id] && (
+                          <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 12 12" fill="none">
+                            <path d="M2 6L5 9L10 3" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        )}
+                      </div>
+                      {tFilters(filter.id)}
+                    </button>
+                  </CarouselItem>
+                ))}
+
+                {/* My Listings Button */}
+                <CarouselItem className="basis-auto pl-2">
+                  <Link 
+                    href="/my-listings"
+                    className="group flex items-center justify-center gap-2 px-3 py-1.5 md:py-2 rounded-full border border-border bg-background shadow-sm hover:border-primary/30 hover:bg-muted transition-all duration-300 shrink-0"
+                  >
+                    <div className="w-5 h-5 rounded-full border border-border bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors shadow-none">
+                      <List className="w-3 h-3 text-primary" />
+                    </div>
+                    <span className="text-[11px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">{tNav('my_listings')}</span>
+                  </Link>
+                </CarouselItem>
+
+                {/* Storefronts Array */}
+                {stores.map(store => (
+                  <CarouselItem key={store._id} className="basis-auto pl-2">
+                    <Link 
+                      href={`/store/${store.externalId}`}
+                      className="group flex items-center justify-center gap-2 pr-3 pl-1.5 py-1 md:py-1.5 rounded-full border border-border bg-background shadow-sm hover:border-primary/30 hover:bg-muted transition-all duration-300 shrink-0"
+                    >
+                      <UserAvatar user={store as any} className="w-6 h-6 md:w-7 md:h-7 border border-border shadow-sm text-[10px]" />
+                      <span className="text-[11px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">
+                        {store.companyName || store.name || 'Store'}
+                      </span>
+                    </Link>
+                  </CarouselItem>
+                ))}
+                
+              </CarouselContent>
+            </Carousel>
           </div>
 
-          {/* Filters Section */}
-          <div className="flex items-center justify-end shrink-0">
-            {/* Filter Toggle Button - Visible on ALL screens */}
-            <button
-              type="button"
-              onClick={() => setShowFilters(!showFilters)}
-              className={cn(
-                "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-300",
-                showFilters 
-                  ? "bg-primary/10 border-primary/30 text-primary shadow-sm" 
-                  : "bg-background border-border text-muted-foreground hover:bg-muted"
-              )}
-            >
-              <SlidersHorizontal className="w-3.5 h-3.5" />
-              <span className="text-[11px] font-bold uppercase tracking-tight">{tHome('quick_filters')}</span>
-              {activeFilterCount > 0 && (
-                <span className="bg-primary text-white text-[9px] font-black rounded-full w-4 h-4 flex items-center justify-center">
-                  {activeFilterCount}
-                </span>
-              )}
-            </button>
-          </div>
+          {/* Gradient Fade for right edge (desktop) */}
+          <div className="w-12 h-full absolute right-0 pointer-events-none bg-gradient-to-l from-background to-transparent z-10 hidden md:block" />
         </div>
-
-        {/* Collapsible Filter Chips - Visible on ALL screens when toggled */}
-        {showFilters && (
-          <div className="flex flex-wrap gap-2 pt-3 pb-1 animate-in slide-in-from-top-2 duration-200">
-            {QUICK_FILTERS.map((filter) => (
-              <button
-                key={filter.id}
-                type="button"
-                onClick={() => toggleFilter(filter.id)}
-                className={cn(
-                  "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold border transition-all duration-300 active:scale-95",
-                  filters[filter.id]
-                    ? "bg-primary/10 border-primary/30 text-primary"
-                    : "bg-background border-border text-muted-foreground hover:bg-muted"
-                )}
-              >
-                <div className={cn(
-                  "w-3 h-3 rounded-[3px] border-[1.5px] flex items-center justify-center transition-colors",
-                  filters[filter.id] ? "bg-primary border-primary" : "border-muted-foreground/30"
-                )}>
-                  {filters[filter.id] && (
-                    <svg className="w-2 h-2 text-white" viewBox="0 0 12 12" fill="none">
-                      <path d="M2 6L5 9L10 3" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  )}
-                </div>
-                {tFilters(filter.id)}
-              </button>
-            ))}
-          </div>
-        )}
-
       </div>
     </div>
   );

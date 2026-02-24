@@ -408,11 +408,10 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 )}
               </div>
 
-              <div className="flex pt-4 space-y-3 gap-3 w-full">
-                <Button asChild variant="outline" className="w-full flex-1 h-12 rounded-xl border-1 hover:bg-primary/5 hover:text-primary font-black uppercase tracking-wider text-sm">
+              <div className="md:flex flex-col pt-4 space-y-3 gap-3 w-full">
+                <Button asChild variant="secondary" className="w-full flex-1 h-12 rounded-xl border-1 font-black bg-background uppercase tracking-wider text-sm">
                   <Link href={`/store/${listing.userId}`}>Visit Storefront</Link>
                 </Button>
-                  <div className="w-full flex-1">
                 {!isListingOwner && (
                   <ContactOptionsDialog
                   session={session}
@@ -422,7 +421,6 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   onContact={() => handleContactClick('contact')}
                   />
                 )}
-                </div>
               </div>
             </div>
 
@@ -700,7 +698,7 @@ const ContactOptionsDialog = memo(function ContactOptionsDialog({
           onClick={() => { onContact(); setOpen(true); }}
         >
           <Phone className={large ? 'mr-2 h-6 w-6' : 'w-4 h-4'} />
-          Contact Seller
+          Contact SelleR
         </button>
       </AlertDialogTrigger>
       <AlertDialogContent className="max-w-sm rounded-3xl p-0 overflow-hidden">
