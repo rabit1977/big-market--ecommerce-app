@@ -1,6 +1,6 @@
 'use client';
 
-import { ListingCard } from '@/components/listing/listing-card';
+import { ListingCard } from '@/components/shared/listing/listing-card';
 import { Button } from '@/components/ui/button';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { ChevronRight } from 'lucide-react';

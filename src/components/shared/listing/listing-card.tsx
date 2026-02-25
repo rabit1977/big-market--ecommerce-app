@@ -1,5 +1,6 @@
 'use client';
 
+import { PromotionIcon } from '@/components/shared/listing/promotion-icon';
 import { getPromotionConfig } from '@/lib/constants/promotions';
 import { useFavorites } from '@/lib/context/favorites-context';
 import { ListingWithRelations } from '@/lib/types/listing';
@@ -10,7 +11,6 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { memo, useCallback } from 'react';
-import { PromotionIcon } from './promotion-icon';
 
 interface ListingCardProps {
   listing: ListingWithRelations;

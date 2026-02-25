@@ -1,9 +1,10 @@
 'use client';
 
-import { ListingCard } from '@/components/listing/listing-card';
+import { ContactSellerButton } from '@/components/shared/listing/contact-button';
+import { ListingCard } from '@/components/shared/listing/listing-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Building2, CalendarDays, Lock, MapPin, MessageSquare, Package, ShieldCheck, Star } from 'lucide-react';
+import { Building2, CalendarDays, Lock, MapPin, Package, ShieldCheck, Star } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { StoreReviews } from './store-reviews';
@@ -143,10 +144,11 @@ export function StorefrontClient({
           </div>
 
           <div className="flex w-full md:w-auto shrink-0 mt-4 md:mt-0">
-             <Button size="lg" className="w-full rounded-full shadow-xl shadow-primary/20 font-black tracking-wider uppercase bg-primary hover:bg-primary/90 text-primary-foreground">
-               <MessageSquare className="w-4 h-4 mr-2" />
-               Message Seller
-             </Button>
+             <ContactSellerButton 
+                sellerId={profile.externalId} 
+                sellerName={profile.accountType === 'COMPANY' && profile.companyName ? profile.companyName : profile.name} 
+                className="w-full rounded-full shadow-xl shadow-primary/20 font-black tracking-wider uppercase bg-primary hover:bg-primary/90 text-primary-foreground h-12 md:h-14 px-8"
+             />
           </div>
         </div>
 

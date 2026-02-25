@@ -1,5 +1,6 @@
 'use client';
 
+import { ListingCard } from '@/components/shared/listing/listing-card';
 import { Button } from '@/components/ui/button';
 import {
     Select,
@@ -18,7 +19,6 @@ import { useTranslations } from 'next-intl';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { toast } from 'sonner';
-import { ListingCard } from './listing-card';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

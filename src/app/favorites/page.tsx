@@ -7,8 +7,8 @@
  * - Performance: removed useEffect for tab sync, optimistic deletes, no redundant state
  */
 
-import { ListingCard } from '@/components/listing/listing-card';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
+import { ListingCard } from '@/components/shared/listing/listing-card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useMutation, useQuery } from 'convex/react';

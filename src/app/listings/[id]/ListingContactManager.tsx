@@ -1,6 +1,6 @@
 'use client';
 
-import { ListingContactPanel } from '@/components/listing/listing-contact-panel';
+import { ListingContactPanel } from '@/components/shared/listing/contact-panel';
 import { ListingWithRelations } from '@/lib/types/listing';
 
 export interface ListingContactManagerProps {

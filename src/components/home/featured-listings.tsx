@@ -1,5 +1,6 @@
 'use client';
 
+import { PromotionIcon } from '@/components/shared/listing/promotion-icon';
 import { Card } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { getPromotionConfig } from '@/lib/constants/promotions';
@@ -10,7 +11,6 @@ import { Heart, MapPin, ShieldCheck } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
-import { PromotionIcon } from '../listing/promotion-icon';
 
 interface Listing {
   _id: string;

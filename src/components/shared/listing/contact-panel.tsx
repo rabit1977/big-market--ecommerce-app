@@ -1,5 +1,6 @@
 'use client';
 
+import { WishlistDropdown } from '@/components/listing/wishlist-dropdown';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ListingWithRelations } from '@/lib/types/listing';
@@ -8,17 +9,15 @@ import { formatPrice } from '@/lib/utils/formatters';
 import {
     AlertTriangle,
     CheckCircle,
-    Mail,
     MapPin,
     MessageCircle,
-    MessageSquare,
     Phone,
     Shield,
     User
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState, useTransition } from 'react';
-import { WishlistDropdown } from './wishlist-dropdown';
+import { useMemo, useState } from 'react';
+import { ContactSellerButton } from './contact-button';
 
 interface ListingContactPanelProps {
   listing: ListingWithRelations;
@@ -32,7 +31,6 @@ export function ListingContactPanel({
   initialIsWished = false,
 }: ListingContactPanelProps) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
   const [showPhone, setShowPhone] = useState(false);
 
   // Status config
@@ -59,19 +57,6 @@ export function ListingContactPanel({
       icon: CheckCircle,
     };
   }, [isActive, listing.status]);
-  
-  const handleContact = () => {
-    startTransition(() => {
-      if (isLoggedIn) {
-        // Signed-in users → internal chat
-        router.push(`/messages?listingId=${listing._id}`);
-      } else {
-        // Guests → scroll to or trigger the inquiry dialog
-        // (GuestContactDialog is already present in ListingDetailContent)
-        router.push(`/contact?listingId=${listing._id}&sellerId=${listing.userId}`);
-      }
-    });
-  };
 
   const StatusIcon = statusConfig.icon;
 
@@ -179,19 +164,14 @@ export function ListingContactPanel({
               </div>
             )}
 
-            <Button
-              size='lg'
-              variant='outline'
-              onClick={handleContact}
-              disabled={isPending}
-              className='w-full h-12 md:h-14 text-base font-bold rounded-2xl border-2'
-            >
-              {isLoggedIn ? (
-                <><MessageSquare className='mr-3 h-4 w-4' />Chat with Seller</>
-              ) : (
-                <><Mail className='mr-3 h-4 w-4' />Send Inquiry</>
-              )}
-            </Button>
+            <ContactSellerButton
+              sellerId={listing.userId}
+              listingId={listing._id}
+              sellerName={listing.user?.name || undefined}
+              size="lg"
+              variant="outline"
+              className="w-full h-12 md:h-14 text-base font-bold rounded-2xl border-2"
+            />
           </>
         )}
       </div>

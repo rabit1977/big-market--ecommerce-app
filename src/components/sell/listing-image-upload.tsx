@@ -1,6 +1,7 @@
 'use client';
 
-import { Loader2, UploadCloud, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Loader2, Star, UploadCloud, X } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -60,20 +61,55 @@ export function ListingImageUpload({ value, onChange }: ListingImageUploadProps)
         onChange(value.filter(url => url !== urlToRemove));
     };
 
+    const handleMakeCover = (index: number) => {
+        const newImages = [...value];
+        const [targetImage] = newImages.splice(index, 1);
+        newImages.unshift(targetImage);
+        onChange(newImages);
+        toast.success('Cover image updated');
+    };
+
     return (
         <div className="space-y-4">
             <h3 className="font-medium text-sm">Product Images</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
                 {value.map((url, index) => (
-                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden border bg-background group">
+                    <div 
+                        key={url} 
+                        className={cn(
+                            "relative aspect-square rounded-xl overflow-hidden border bg-background group transition-all duration-300",
+                            index === 0 ? "ring-2 ring-primary ring-offset-2 scale-[1.02] shadow-lg shadow-primary/10" : "hover:border-primary/40 hover:shadow-md"
+                        )}
+                    >
                         <Image src={url} alt="Listing image" fill className="object-cover" />
-                        <button
-                            type="button"
-                            onClick={() => handleRemove(url)}
-                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                            <X className="w-4 h-4" />
-                        </button>
+                        
+                        {/* Cover Badge */}
+                        {index === 0 && (
+                            <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-sm shadow-sm z-10">
+                                Main Cover
+                            </div>
+                        )}
+
+                        {/* Actions Overlay */}
+                        <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-between gap-1">
+                            {index !== 0 && (
+                                <button
+                                    type="button"
+                                    onClick={() => handleMakeCover(index)}
+                                    className="bg-white/90 hover:bg-white text-black text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1 transition-colors"
+                                >
+                                    <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                                    Set Cover
+                                </button>
+                            )}
+                            <button
+                                type="button"
+                                onClick={() => handleRemove(url)}
+                                className="ml-auto bg-red-500/90 hover:bg-red-500 text-white p-1 rounded-md transition-colors"
+                            >
+                                <X className="w-3.5 h-3.5" />
+                            </button>
+                        </div>
                     </div>
                 ))}
                 
