@@ -86,7 +86,7 @@ export function UserDashboardClient({ userId }: UserDashboardClientProps) {
                                         {stats.profile.name || 'User'}
                                     </h1>
                                     {stats.verification.isVerified && (
-                                        <BadgeCheck className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />
+                                        <BadgeCheck className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                                     )}
                                 </div>
                                 <div className="flex items-center gap-2 mt-1 flex-wrap">
@@ -131,23 +131,23 @@ export function UserDashboardClient({ userId }: UserDashboardClientProps) {
             <div className="container-wide max-w-7xl py-6 sm:py-10 space-y-6 sm:space-y-8">
                 {/* ═══════════════════════ TOP STATS GRID ═══════════════════════ */}
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-                    <StatCard icon={Package} label="Total Listings" value={stats.listings.total} color="blue" />
+                    <StatCard icon={Package} label="Total Listings" value={stats.listings.total} color="primary" />
                     <StatCard icon={ListChecks} label="Active" value={stats.listings.active} color="green" />
-                    <StatCard icon={Eye} label="Total Views" value={(stats?.listings?.totalViews ?? 0).toLocaleString()} color="purple" />
-                    <StatCard icon={Sparkles} label="Promoted" value={stats.listings.promoted} color="amber" />
-                    <StatCard icon={Heart} label="Favorites" value={stats.social.favoritesCount} color="rose" />
+                    <StatCard icon={Eye} label="Total Views" value={(stats?.listings?.totalViews ?? 0).toLocaleString()} color="primary" />
+                    <StatCard icon={Sparkles} label="Promoted" value={stats.listings.promoted} color="primary" />
+                    <StatCard icon={Heart} label="Favorites" value={stats.social.favoritesCount} color="primary" />
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-                    <StatCard icon={Bookmark} label="Saved Searches" value={stats.savedSearches.count} color="blue" />
-                    <StatCard icon={History} label="Recently Viewed" value={stats.recentlyViewed.totalViewed} color="purple" />
+                    <StatCard icon={Bookmark} label="Saved Searches" value={stats.savedSearches.count} color="primary" />
+                    <StatCard icon={History} label="Recently Viewed" value={stats.recentlyViewed.totalViewed} color="primary" />
                     <StatCard
                         icon={Bell}
                         label="Notifications"
                         value={stats.notifications.total}
-                        color="amber"
+                        color="primary"
                         badge={stats.notifications.unread > 0 ? stats.notifications.unread : undefined}
                     />
-                    <StatCard icon={Star} label="Reviews Written" value={stats.activity.reviewsWritten} color="green" />
+                    <StatCard icon={Star} label="Reviews Written" value={stats.activity.reviewsWritten} color="primary" />
                 </div>
 
                 {/* ═══════════════════════ MAIN CONTENT ═══════════════════════ */}
@@ -158,8 +158,8 @@ export function UserDashboardClient({ userId }: UserDashboardClientProps) {
                         <Card className="p-5 sm:p-6 rounded-2xl border-border/50">
                             <div className="flex items-center justify-between mb-5">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-                                        <Wallet className="w-5 h-5 text-emerald-600" />
+                                    <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                                        <Wallet className="w-5 h-5 text-primary" />
                                     </div>
                                     <h2 className="font-black text-lg tracking-tight">Money Spent</h2>
                                 </div>
@@ -202,8 +202,8 @@ export function UserDashboardClient({ userId }: UserDashboardClientProps) {
                             {/* Renewal Stats */}
                             <Card className="p-5 rounded-2xl border-border/50">
                                 <div className="flex items-center gap-2 mb-4">
-                                    <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                                        <RefreshCw className="w-4 h-4 text-blue-600" />
+                                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                        <RefreshCw className="w-4 h-4 text-primary" />
                                     </div>
                                     <h3 className="font-bold text-sm">Renewals</h3>
                                 </div>
@@ -236,8 +236,8 @@ export function UserDashboardClient({ userId }: UserDashboardClientProps) {
                             {/* Listing Quota */}
                             <Card className="p-5 rounded-2xl border-border/50">
                                 <div className="flex items-center gap-2 mb-4">
-                                    <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                                        <BarChart3 className="w-4 h-4 text-purple-600" />
+                                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                        <BarChart3 className="w-4 h-4 text-primary" />
                                     </div>
                                     <h3 className="font-bold text-sm">Listing Quota</h3>
                                 </div>
@@ -267,8 +267,8 @@ export function UserDashboardClient({ userId }: UserDashboardClientProps) {
                         {stats.listings.promotedDetails.length > 0 && (
                             <Card className="p-5 sm:p-6 rounded-2xl border-border/50">
                                 <div className="flex items-center gap-2 mb-4">
-                                    <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center">
-                                        <Sparkles className="w-5 h-5 text-amber-600" />
+                                    <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                                        <Sparkles className="w-5 h-5 text-primary" />
                                     </div>
                                     <h2 className="font-black text-lg tracking-tight">Active Promotions</h2>
                                     <Badge variant="outline" className="ml-auto text-[10px] font-bold">{stats.listings.promotedDetails.length} active</Badge>
@@ -625,6 +625,7 @@ function StatCard({ icon: Icon, label, value, color, badge }: {
     badge?: number;
 }) {
     const colors: Record<string, string> = {
+        primary: 'bg-primary/10 text-primary',
         blue: 'bg-blue-500/10 text-blue-600',
         green: 'bg-emerald-500/10 text-emerald-600',
         purple: 'bg-purple-500/10 text-purple-600',

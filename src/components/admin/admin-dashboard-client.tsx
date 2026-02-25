@@ -243,8 +243,8 @@ function ActivityLogs({ logs }: { logs: any[] }) {
 }
 
 function ActivityIcon({ action }: { action: string }) {
-  if (action.includes('USER')) return <Users className="w-4 h-4 text-blue-500" />;
-  if (action.includes('LISTING')) return <Tag className="w-4 h-4 text-emerald-500" />;
-  if (action.includes('REVENUE')) return <CreditCard className="w-4 h-4 text-violet-500" />;
-  return <Clock className="w-4 h-4 text-slate-500" />;
+  if (action.includes('USER')) return <Users className="w-4 h-4 text-primary" />;
+  if (action.includes('LISTING')) return <Tag className="w-4 h-4 text-primary" />;
+  if (action.includes('REVENUE')) return <CreditCard className="w-4 h-4 text-primary" />;
+  return <Clock className="w-4 h-4 text-primary" />;
 }

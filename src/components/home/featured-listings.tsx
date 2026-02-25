@@ -227,7 +227,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                         </div>
                                     )}
                                     {listing.isVerified && (
-                                        <div className="bg-[#0053a0] text-white rounded-full p-1 sm:p-1.5 shadow-md">
+                                        <div className="bg-primary text-white rounded-full p-1 sm:p-1.5 shadow-md">
                                             <ShieldCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                                         </div>
                                     )}

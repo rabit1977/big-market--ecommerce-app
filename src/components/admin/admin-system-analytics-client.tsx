@@ -25,26 +25,26 @@ export function AdminSystemAnalyticsClient() {
 
   const statItems = [
     {
-      label: 'Total Users', value: stats.users, icon: Users, color: 'text-blue-500',
-      bg: 'bg-blue-500/10', border: 'border-blue-500/20',
+      label: 'Total Users', value: stats.users, icon: Users, color: 'text-primary',
+      bg: 'bg-primary/10', border: 'border-primary/20',
       delta: deltas?.newUsers,
       description: 'Registered platform users',
     },
     {
-      label: 'Total Listings', value: stats.listings, icon: BarChart3, color: 'text-emerald-500',
-      bg: 'bg-emerald-500/10', border: 'border-emerald-500/20',
+      label: 'Total Listings', value: stats.listings, icon: BarChart3, color: 'text-primary',
+      bg: 'bg-primary/10', border: 'border-primary/20',
       delta: deltas?.newListings,
       description: 'All active and inactive listings',
     },
     {
-      label: 'Promoted Listings', value: stats.promotedListings, icon: CreditCard, color: 'text-amber-500',
-      bg: 'bg-amber-500/10', border: 'border-amber-500/20',
+      label: 'Promoted Listings', value: stats.promotedListings, icon: CreditCard, color: 'text-primary',
+      bg: 'bg-primary/10', border: 'border-primary/20',
       delta: undefined,
       description: 'Listings with active promotions',
     },
     {
-      label: 'Pending Verifications', value: stats.pendingVerifications, icon: ShieldCheck, color: 'text-purple-500',
-      bg: 'bg-purple-500/10', border: 'border-purple-500/20',
+      label: 'Pending Verifications', value: stats.pendingVerifications, icon: ShieldCheck, color: 'text-primary',
+      bg: 'bg-primary/10', border: 'border-primary/20',
       delta: undefined,
       description: 'Users awaiting ID verification',
     },
@@ -65,7 +65,7 @@ export function AdminSystemAnalyticsClient() {
         <div className='space-y-2'>
            <h1 className='text-3xl sm:text-4xl font-black tracking-tight flex items-center gap-3'>
              System Analytics
-             <span className='inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-bold ring-1 ring-inset ring-blue-500/20 uppercase tracking-widest'>
+             <span className='inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold ring-1 ring-inset ring-primary/20 uppercase tracking-widest'>
                 Live
              </span>
            </h1>

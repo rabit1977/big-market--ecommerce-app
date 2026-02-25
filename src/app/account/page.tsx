@@ -170,7 +170,7 @@ const AccountPage = async () => {
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                  <Link href="/account/password" className="group">
                     <div className="bg-card border border-border p-4 sm:p-5 rounded-2xl group-hover:border-primary/50 transition-all flex items-center gap-3 hover:shadow-sm">
-                       <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-orange-500/10 text-orange-600 dark:text-orange-400 flex items-center justify-center shrink-0">
+                       <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
                           <ShieldCheck className="h-4 w-4 sm:h-5 sm:w-5" />
                        </div>
                        <div className='min-w-0'>
@@ -181,7 +181,7 @@ const AccountPage = async () => {
                  </Link>
                  <Link href="/account/verification" className="group">
                     <div className="bg-card border border-border p-4 sm:p-5 rounded-2xl group-hover:border-primary/50 transition-all flex items-center gap-3 hover:shadow-sm">
-                       <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                       <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
                           <BadgeCheck className="h-4 w-4 sm:h-5 sm:w-5" />
                        </div>
                        <div className='min-w-0'>

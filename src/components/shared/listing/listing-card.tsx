@@ -82,7 +82,7 @@ export const ListingCard = memo(
                 </div>
               )}
               {isVerified && (
-                 <div className="bg-[#0053a0] text-white rounded-full p-0.5 sm:p-1 shadow-md">
+                 <div className="bg-primary text-white rounded-full p-0.5 sm:p-1 shadow-md">
                     <ShieldCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                  </div>
               )}

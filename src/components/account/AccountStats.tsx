@@ -27,8 +27,8 @@ export function AccountStats({
         label: 'Total Listings',
         value: totalListings,
         icon: Package,
-        color: 'text-blue-500',
-        bg: 'bg-blue-500/10',
+        color: 'text-primary',
+        bg: 'bg-primary/10',
         path: '/my-listings'
     },
     {
@@ -43,8 +43,8 @@ export function AccountStats({
         label: 'Favorites',
         value: wishlistItems,
         icon: Heart,
-        color: 'text-rose-500',
-        bg: 'bg-rose-500/10',
+        color: 'text-primary',
+        bg: 'bg-primary/10',
         path: '/favorites'
     }
   ];

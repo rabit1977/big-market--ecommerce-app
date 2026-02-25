@@ -194,10 +194,10 @@ export function AdminListingsHub() {
             {/* Stats row */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
                 {[
-                    { label: 'Total',    value: total,   color: 'border-blue-500/20 bg-blue-500/5',   text: 'text-blue-600' },
+                    { label: 'Total',    value: total,   color: 'border-primary/20 bg-primary/5',   text: 'text-primary' },
                     { label: 'Active',   value: active,  color: 'border-emerald-500/20 bg-emerald-500/5', text: 'text-emerald-600' },
                     { label: 'Pending',  value: pending, color: 'border-amber-500/20 bg-amber-500/5',  text: 'text-amber-600' },
-                    { label: 'Promoted', value: promo,   color: 'border-purple-500/20 bg-purple-500/5', text: 'text-purple-600' },
+                    { label: 'Promoted', value: promo,   color: 'border-primary/20 bg-primary/5', text: 'text-primary' },
                 ].map(s => (
                     <div key={s.label} className={`glass-card rounded-2xl p-4 border ${s.color} flex items-center justify-between`}>
                         <div>

@@ -64,9 +64,6 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   const t = useTranslations('NavActions');
   const tNav = useTranslations('Navigation');
 
-  const unreadMessagesCount =
-    useQuery(api.messages.getUnreadCount, user?.id ? { userId: user.id } : 'skip') ?? 0;
-
   const unreadNotificationsCount =
     useQuery(api.notifications.getUnreadCount, user?.id ? { userId: user.id } : 'skip') ?? 0;
 
@@ -195,13 +192,13 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   const mobileOnlyItems: MenuItem[] = [
     { href: '/', icon: Home, label: t('home') },
     { href: '/listings', icon: Store, label: t('browse_listings') },
-    { href: '/account/notifications', icon: Star, label: t('notifications'), badge: unreadNotificationsCount, iconColor: 'text-amber-500' },
-    { href: '/favorites', icon: Heart, label: t('favorites'), badge: initialWishlistCount, iconColor: 'text-rose-500' },
+    { href: '/account/notifications', icon: Star, label: t('notifications'), badge: unreadNotificationsCount, iconColor: 'text-primary' },
+    { href: '/favorites', icon: Heart, label: t('favorites'), badge: initialWishlistCount, iconColor: 'text-primary' },
   ];
 
   const accountItems: MenuItem[] = [
     { href: '/my-listings', icon: Package, label: t('my_listings') },
-    { href: `/store/${user.id}`, icon: Store, label: tNav('stores'), highlight: true, iconColor: 'text-primary' },
+    { href: `/store/${user.id}`, icon: Store, label: tNav('stores'), highlight: true },
     { href: '/my-listings/stats', icon: BarChart, label: t('ad_statistics') },
     { href: '/my-listings/saved-searches', icon: Bell, label: t('saved_searches_alerts') },
     { href: '/wallet', icon: CreditCard, label: t('account_overview') },
@@ -213,7 +210,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
     { href: '/account/password', icon: Lock, label: t('change_password') },
     ...(!isAdmin ? [
       { href: '/account/verification', icon: ShieldCheck, label: t('verification') },
-      { href: '/premium', icon: Crown, label: t('subscription_plans'), iconColor: 'text-amber-500' },
+      { href: '/premium', icon: Crown, label: t('subscription_plans'), iconColor: 'text-primary' },
     ] : []),
   ];
 

@@ -21,7 +21,7 @@ export const CategoryMenuItem = ({ category, selectedCategory, onSelect }: Categ
         return (
             <DropdownMenuSub>
                 <DropdownMenuSubTrigger 
-                    className={isSelected ? 'bg-muted font-medium' : ''}
+                    className={isSelected ? 'bg-primary/5 text-primary font-bold' : ''}
                 >
                    {category.name}
                 </DropdownMenuSubTrigger>
@@ -46,7 +46,7 @@ export const CategoryMenuItem = ({ category, selectedCategory, onSelect }: Categ
     return (
         <DropdownMenuItem 
             onClick={() => onSelect(category.slug)}
-            className={isSelected ? 'bg-muted' : ''}
+            className={isSelected ? 'bg-primary/5 text-primary font-bold' : ''}
         >
             {category.name}
         </DropdownMenuItem>
