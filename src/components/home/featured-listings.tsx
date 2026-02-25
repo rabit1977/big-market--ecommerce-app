@@ -6,7 +6,7 @@ import { getPromotionConfig } from '@/lib/constants/promotions';
 import { useFavorites } from '@/lib/context/favorites-context';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils/formatters';
-import { Heart, MapPin } from 'lucide-react';
+import { Heart, MapPin, ShieldCheck } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -29,6 +29,7 @@ interface Listing {
   viewCount?: number;
   _creationTime: number;
   isPromoted?: boolean;
+  isVerified?: boolean;
   promotionTier?: string;
   promotionExpiresAt?: number;
 }
@@ -94,20 +95,22 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                             sizes="(max-width: 1280px) 25vw, 20vw"
                                          />
                                          
-                                         {/* Floating Badge */}
-                                         {promoConfig && (
-                                            <div className="absolute top-2 left-2 z-10">
+                                         {/* Floating Badges */}
+                                         <div className="absolute top-2 left-2 z-10 flex flex-col gap-2">
+                                            {promoConfig && (
                                                 <div className={cn(
-                                                    "px-2 py-1 rounded-md flex items-center gap-1.5 shadow-lg backdrop-blur-md border border-white/20",
-                                                    badgeColor
+                                                    "w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shadow-lg backdrop-blur-md border border-white/20",
+                                                    promoConfig.badgeColor
                                                 )}>
-                                                    <PromotionIcon iconName={promoConfig.icon} className="w-3 h-3 text-white fill-current" />
-                                                    <span className="text-[10px] font-black uppercase text-white tracking-wider">
-                                                        {(promoConfig as any).title?.split(' ')[0] || 'PROMO'}
-                                                    </span>
+                                                    <PromotionIcon iconName={promoConfig.icon} className="w-4 h-4 text-white fill-current" />
                                                 </div>
-                                            </div>
-                                         )}
+                                            )}
+                                            {listing.isVerified && (
+                                                <div className="bg-[#0053a0] text-white rounded-full p-1.5 shadow-md">
+                                                    <ShieldCheck className="h-4 w-4" />
+                                                </div>
+                                            )}
+                                         </div>
 
                                           {/* Price Tag Overlay - Bottom Right */}
                                           <div className="absolute bottom-2 right-2 z-10">
@@ -209,6 +212,26 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                                     sizes="(max-width: 768px) 45vw, 20vw"
                                 />
+                                
+                                {/* Status Badges Overlays */}
+                                <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-20 pointer-events-none flex flex-col gap-1 sm:gap-2">
+                                    {(listing as any).isPromoted && (
+                                        <div className={cn(
+                                            "flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full shadow-lg border border-white/20 backdrop-blur-md transition-all duration-300", 
+                                            getPromotionConfig((listing as any).promotionTier)?.badgeColor || "bg-foreground"
+                                        )}>
+                                            <PromotionIcon 
+                                                iconName={getPromotionConfig((listing as any).promotionTier)?.icon || 'sparkles'} 
+                                                className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white fill-current" 
+                                            />
+                                        </div>
+                                    )}
+                                    {listing.isVerified && (
+                                        <div className="bg-[#0053a0] text-white rounded-full p-1 sm:p-1.5 shadow-md">
+                                            <ShieldCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                        </div>
+                                    )}
+                                </div>
                                 
                                 {/* Heart Button - eBay style */}
                                 <button 

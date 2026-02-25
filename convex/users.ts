@@ -231,6 +231,18 @@ export const getById = query({
   },
 });
 
+export const getByExternalIds = query({
+  args: { ids: v.array(v.string()) },
+  handler: async (ctx, args) => {
+    const results = await Promise.all(
+      args.ids.map(id => 
+        ctx.db.query("users").withIndex("by_externalId", (q) => q.eq("externalId", id)).unique()
+      )
+    );
+    return results.filter(r => r !== null);
+  },
+});
+
 export const update = mutation({
   args: {
     id: v.id("users"),

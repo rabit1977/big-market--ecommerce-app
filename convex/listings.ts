@@ -136,6 +136,8 @@ export const list = query({
     isAffordable: v.optional(v.boolean()),
     dateRange: v.optional(v.string()),
     dynamicFilters: v.optional(v.string()), // JSON string of filters
+    limit: v.optional(v.number()),
+    userId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     console.log("API list called with args:", args);
@@ -310,9 +312,14 @@ export const list = query({
 
     console.log(`Returning ${results.length} listings`);
 
-    // Final sorting: Promoted (Top Positioning) first, then by user choice
+    // 3. User Filter
+    if (args.userId) {
+      results = results.filter(r => r.userId === args.userId);
+    }
+
+    // 4. Final sorting: Promoted (Top Positioning) first, then by user choice
     const now = Date.now();
-    return results.sort((a, b) => {
+    const sortedResults = results.sort((a, b) => {
         // Helper to check if a listing has an active TOP_POSITIONING promotion
         const isTopA = a.isPromoted && a.promotionTier === 'TOP_POSITIONING' && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
         const isTopB = b.isPromoted && b.promotionTier === 'TOP_POSITIONING' && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
@@ -342,6 +349,13 @@ export const list = query({
                 return (b.createdAt || b._creationTime) - (a.createdAt || a._creationTime);
         }
     });
+
+    // 5. Apply limit
+    if (args.limit) {
+      return sortedResults.slice(0, args.limit);
+    }
+
+    return sortedResults;
   },
 });
 

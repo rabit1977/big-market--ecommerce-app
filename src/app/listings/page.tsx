@@ -164,7 +164,26 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   const total = filteredListings.length;
   const totalPages = Math.ceil(total / limit);
   const start = (page - 1) * limit;
-  const paginatedListings = filteredListings.slice(start, start + limit);
+  const rawPaginatedListings = filteredListings.slice(start, start + limit);
+
+  // Batch fetch users for all displayed listings (Main list + all Hub rows)
+  const allIdsForUsers = Array.from(new Set([
+    ...rawPaginatedListings.map(l => l.userId),
+    ...carsListings.map(l => (l as any).userId),
+    ...realEstateListings.map(l => (l as any).userId),
+    ...electronicsListings.map(l => (l as any).userId),
+  ]));
+
+  const users = await fetchQuery(api.users.getByExternalIds, { ids: allIdsForUsers });
+  const userMap = new Map(users.map((u: any) => [u.externalId, u]));
+
+  // Attach users helper
+  const attachUser = (l: any) => ({ ...l, user: userMap.get(l.userId) });
+
+  const paginatedListings = rawPaginatedListings.map(attachUser);
+  const carsWithUsers = carsListings.map(attachUser);
+  const realEstateWithUsers = realEstateListings.map(attachUser);
+  const electronicsWithUsers = electronicsListings.map(attachUser);
 
   const pagination = {
     page,
@@ -209,9 +228,9 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
             template={activeTemplate}
             hubData={isHubView ? {
                all: paginatedListings,
-               cars: carsListings,
-               realEstate: realEstateListings,
-               electronics: electronicsListings,
+               cars: carsWithUsers,
+               realEstate: realEstateWithUsers,
+               electronics: electronicsWithUsers,
             } : undefined}
           />
         </Suspense>

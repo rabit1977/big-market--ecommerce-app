@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ListingRowCarousel } from './listing-row-carousel';
 
 interface ListingsClientProps {
@@ -49,7 +49,7 @@ export function ListingsClient({
   }, [searchParams]);
 
   // Sync hub visibility with filters
-  useMemo(() => {
+  useEffect(() => {
     if (hasActiveFilters) setShowHub(false);
     else if (hubData) setShowHub(true);
   }, [hasActiveFilters, hubData]);
@@ -163,7 +163,7 @@ export function ListingsClient({
           <Button
             onClick={() => setIsMobileFiltersOpen(true)}
             variant="outline"
-            className="w-full h-11 font-bold tracking-tight border-2 border-primary/30 text-primary hover:bg-primary/5 flex items-center justify-center gap-2 rounded-xl"
+            className="w-full h-10 font-bold tracking-tight border border-border bg-background text-foreground hover:bg-muted/50 flex items-center justify-center gap-2 rounded-xl shadow-xs active:scale-95 transition-all"
           >
             <SlidersHorizontal className="h-4 w-4" />
             Filters & Sort

@@ -47,21 +47,38 @@ export default async function HomePage({ searchParams }: PageProps) {
     console.error("Error fetching homepage data:", e);
     error = e;
   }
-
-  // Limit listings for display
-  const now = Date.now();
   
-  // 1. Get promoted listings for the featured carousel (only Na Pocetna Strana & Top Positioning)
+  const now = Date.now();
+
+  // 1. Get raw listings
   const featuredTiers = ['HOMEPAGE', 'TOP_POSITIONING'];
-  const featuredListings = allListings
+  const rawFeatured = allListings
     .filter((l: any) => l.status === 'ACTIVE' && l.isPromoted && featuredTiers.includes(l.promotionTier || '') && (!l.promotionExpiresAt || l.promotionExpiresAt > now))
     .slice(0, 15);
 
-  // 2. Latest listings includes EVERYTHING, ordered by newest first (but our backend query 'get' already handles promotion sorting)
-  // Double-check status just in case backend query leaks
-  const latestListings = allListings
+  const rawLatest = allListings
     .filter((l: any) => l.status === 'ACTIVE')
     .slice(0, 12);
+
+  // 2. Batch fetch users for all listings to be displayed
+  const userIds = Array.from(new Set([
+    ...rawFeatured.map((l: any) => l.userId),
+    ...rawLatest.map((l: any) => l.userId)
+  ]));
+
+  const users = await fetchQuery(api.users.getByExternalIds, { ids: userIds });
+  const userMap = new Map(users.map((u: any) => [u.externalId, u]));
+
+  // 3. Attach users to listings
+  const featuredListings = rawFeatured.map((l: any) => ({
+    ...l,
+    user: userMap.get(l.userId)
+  }));
+
+  const latestListings = rawLatest.map((l: any) => ({
+    ...l,
+    user: userMap.get(l.userId)
+  }));
 
   return (
     <>
