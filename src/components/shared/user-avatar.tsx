@@ -42,7 +42,7 @@ export function UserAvatar({
       {imageUrl && <AvatarImage src={imageUrl} alt={user?.name || ''} className="object-cover" />}
       <AvatarFallback 
         className={cn(
-          "bg-gradient-to-tr from-emerald-400 to-emerald-600 text-white font-bold",
+          "bg-muted text-muted-foreground font-bold",
           fallbackClassName
         )}
       >

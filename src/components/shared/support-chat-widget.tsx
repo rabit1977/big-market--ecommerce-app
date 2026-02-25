@@ -9,14 +9,14 @@ import { useMutation, usePaginatedQuery, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import { AnimatePresence, motion, PanInfo, useMotionValue } from 'framer-motion';
 import {
-    ArrowLeft,
-    Headset,
-    MessageCircle,
-    Search,
-    Send,
-    ShieldCheck,
-    User,
-    X
+  ArrowLeft,
+  Headset,
+  MessageCircle,
+  Search,
+  Send,
+  ShieldCheck,
+  User,
+  X
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
@@ -265,20 +265,20 @@ export function SupportChatWidget() {
             aria-label="Support chat"
           >
             {/* Header */}
-            <div className="p-4 bg-primary text-primary-foreground flex items-center justify-between shadow-md z-10">
+            <div className="p-4 bg-slate-900 text-white flex items-center justify-between shadow-md z-10">
               <div className="flex items-center gap-3">
                 {isAdmin && activeChatUser ? (
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={handleBackToList}
-                    className="h-8 w-8 hover:bg-primary-foreground/10 text-primary-foreground -ml-2"
+                    className="h-8 w-8 hover:bg-white/10 text-white -ml-2"
                     aria-label="Back to conversations"
                   >
                     <ArrowLeft className="h-5 w-5" />
                   </Button>
                 ) : (
-                  <div className="h-10 w-10 rounded-full bg-primary-foreground/20 flex items-center justify-center">
+                  <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center">
                     <Headset className="h-6 w-6" />
                   </div>
                 )}
@@ -349,8 +349,8 @@ export function SupportChatWidget() {
                       />
                     </div>
                   </div>
-                  <div className="px-4 py-2 bg-primary/5 border-b border-primary/10">
-                    <p className="text-[10px] text-primary font-bold uppercase tracking-widest text-center">Select a chat to view or reply</p>
+                  <div className="px-4 py-2 bg-slate-100 dark:bg-slate-800/50 border-b border-border">
+                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest text-center">Select a chat to view or reply</p>
                   </div>
                   <div className="flex-1 overflow-y-auto overscroll-contain">
                     {filteredConversations.length === 0 ? (
@@ -403,7 +403,7 @@ export function SupportChatWidget() {
                     <div className="space-y-4">
                       {!isAdmin && (
                         <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-bl-none px-4 py-3 text-sm max-w-[85%] shadow-sm">
-                            <p className="font-bold text-primary mb-1 text-xs !text-primary">Big Market Support</p>
+                            <p className="font-bold text-slate-900 dark:text-slate-100 mb-1 text-xs">Big Market Support</p>
                             <p className="!text-slate-900 dark:!text-slate-100">Hi! How can we help you today? We're usually online to help with technical issues.</p>
                           </div>
                       )}
@@ -414,7 +414,7 @@ export function SupportChatWidget() {
                             <div className={cn(
                               'max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm border',
                               isMe
-                                ? 'bg-primary border-primary/20 rounded-br-none'
+                                ? 'bg-slate-900 border-slate-800 rounded-br-none'
                                 : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-bl-none'
                             )}>
                               <p className={cn(
@@ -443,14 +443,14 @@ export function SupportChatWidget() {
                         placeholder="Type a response..."
                         value={newMessage}
                         onChange={handleTyping}
-                        className="bg-muted/30 border-transparent focus:bg-background focus:border-primary/20 transition-all rounded-full px-4"
+                        className="bg-muted/30 border-transparent focus:bg-background focus:border-border transition-all rounded-full px-4"
                         aria-label="Message input"
                       />
                       <Button
                         type="submit"
                         size="icon"
                         disabled={!newMessage.trim()}
-                        className="rounded-full h-10 w-10 shrink-0"
+                        className="rounded-full h-10 w-10 shrink-0 bg-slate-900 text-white hover:bg-slate-800 transition-colors"
                         aria-label="Send message"
                       >
                         <Send className="h-4 w-4" />
@@ -487,7 +487,7 @@ export function SupportChatWidget() {
               whileTap={{ scale: 0.95 }}
               onTap={handleToggle}
               aria-label="Open support chat"
-              className="pointer-events-auto h-10 w-10 sm:h-11 sm:w-11 rounded-full shadow-2xl transition-colors duration-300 relative bg-primary text-white hover:bg-primary/90 flex items-center justify-center border border-primary/20"
+              className="pointer-events-auto h-10 w-10 sm:h-11 sm:w-11 rounded-full shadow-2xl transition-colors duration-300 relative bg-slate-900 text-white hover:bg-slate-800 flex items-center justify-center border border-white/10"
             >
               <MessageCircle className="h-6 w-6" />
 

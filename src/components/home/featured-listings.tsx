@@ -60,8 +60,8 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
              <div className="flex items-center justify-between px-1 mb-2">
                   <div className="flex items-center gap-2">
                     <div className="relative flex items-center justify-center">
-                        <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping scale-150" />
-                        <span className="relative flex h-2 w-2 rounded-full bg-primary" />
+                        <div className="absolute inset-0 bg-foreground/10 rounded-full animate-ping scale-150" />
+                        <span className="relative flex h-2 w-2 rounded-full bg-foreground" />
                     </div>
                     <h2 className="text-base font-black tracking-tight uppercase text-foreground/80">
                         {title || tHome('top_boosted')}
@@ -73,16 +73,16 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                  {featuredListings.map((listing) => {
                     const imageUrl = listing.thumbnail || (listing.images && listing.images[0]) || '/placeholder-listing.jpg';
                     const promoConfig = (listing as any).isPromoted ? getPromotionConfig((listing as any).promotionTier) : null;
-                    const badgeColor = promoConfig?.badgeColor || "bg-primary";
-                    const borderColor = promoConfig?.borderColor || "border-primary/30";
+                    const badgeColor = promoConfig?.badgeColor || "bg-muted-foreground";
+                    const borderColor = promoConfig?.borderColor || "border-border";
                     const bgColor = promoConfig?.bgColor || "bg-card";
                     
                     return (
                         <div key={listing._id} className="group">
                              <Link href={`/listings/${listing._id}`}>
                                 <Card className={cn(
-                                    "p-0 overflow-hidden border-border/40 hover:border-primary/40 transition-all duration-300 rounded-xl bg-card shadow-sm hover:shadow-xl hover:-translate-y-1",
-                                    promoConfig && `ring-1 ring-inset ${borderColor.replace('border-', 'ring-')} ${bgColor.replace('bg-', 'bg-opacity-5 bg-')}`
+                                    "p-0 overflow-hidden border-border/40 hover:border-foreground/20 transition-all duration-300 rounded-xl bg-card shadow-sm hover:shadow-xl hover:-translate-y-1",
+                                    promoConfig && `ring-1 ring-inset ring-border ${bgColor.replace('bg-', 'bg-opacity-5 bg-')}`
                                 )}>
                                      {/* Image Area - Added flex-none, block, m-0, p-0 to kill all gaps */}
                                      <div className="relative aspect-[4/3] w-full flex-none block m-0 p-0 overflow-hidden bg-white">
@@ -121,7 +121,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
 
                                      {/* Simple Content */}
                                      <div className="p-3 bg-card/50">
-                                          <h3 className="text-sm font-bold line-clamp-2 leading-snug group-hover:text-primary transition-colors mb-2">
+                                          <h3 className="text-sm font-bold line-clamp-2 leading-snug group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground mb-2">
                                               {listing.title}
                                           </h3>
                                           
@@ -130,7 +130,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                                   <MapPin className="w-3 h-3" />
                                                   {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
                                               </div>
-                                              <div className="text-[10px] font-medium opacity-70">
+                                              <div className="text-[10px] font-medium opacity-70 italic">
                                                   {tHome('view_deal')} &rarr;
                                               </div>
                                           </div>
@@ -144,7 +144,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
              
              <Link 
                 href="/listings?featured=true" 
-                className="flex items-center justify-center w-full py-3 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg border border-dashed border-border hover:border-primary/30 transition-all"
+                className="flex items-center justify-center w-full py-3 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground hover:bg-muted/30 rounded-lg border border-dashed border-border hover:border-muted-foreground/30 transition-all"
              >
                 {tHome('see_all_premium')}
              </Link>
