@@ -90,6 +90,9 @@ export const getPublicProfile = query({
         reviewCount: reviews.length,
         averageRating,
         phone: user.phone,
+        email: user.email,
+        hasWhatsapp: user.hasWhatsapp,
+        hasViber: user.hasViber,
         hasPremiumStorefront,
     };
   }

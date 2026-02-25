@@ -1,6 +1,7 @@
 'use client';
 
 import { deleteListingAction, getRenewalStatsAction, renewListingAction } from '@/actions/listing-actions';
+import { PromotionIcon } from '@/components/shared/listing/promotion-icon';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -25,7 +26,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
-import { PromotionIcon } from './promotion-icon';
 
 interface MyListingListItemProps {
   listing: ListingWithRelations;

@@ -1,8 +1,8 @@
 'use client';
 
 import { createStripeCheckoutSession } from '@/actions/stripe-actions';
-import { PromotionIcon } from '@/components/listing/promotion-icon';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
+import { PromotionIcon } from '@/components/shared/listing/promotion-icon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { PROMOTIONS } from '@/lib/constants/promotions';

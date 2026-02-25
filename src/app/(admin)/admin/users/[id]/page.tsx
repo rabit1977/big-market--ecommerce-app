@@ -1,8 +1,10 @@
+'use client';
+
 // app/admin/users/[id]/page.tsx
 
 import { getUserByIdAction } from '@/actions/user-actions';
 import { auth } from '@/auth';
-import { PromotionIcon } from '@/components/listing/promotion-icon';
+import { PromotionIcon } from '@/components/shared/listing/promotion-icon';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

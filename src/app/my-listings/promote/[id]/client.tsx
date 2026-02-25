@@ -1,7 +1,7 @@
 'use client';
 
 import { createPromotionCheckoutSession } from '@/actions/stripe-actions';
-import { PromotionIcon } from '@/components/listing/promotion-icon';
+import { PromotionIcon } from '@/components/shared/listing/promotion-icon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';

@@ -1,7 +1,7 @@
 import { getListingByIdAction } from '@/actions/listing-actions';
 import { auth } from '@/auth';
 import { PromotionButton } from '@/components/listing/promotion-button';
-import { PromotionIcon } from '@/components/listing/promotion-icon';
+import { PromotionIcon } from '@/components/shared/listing/promotion-icon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
