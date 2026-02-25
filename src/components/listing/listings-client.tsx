@@ -7,6 +7,7 @@ import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
+import { ListingRowCarousel } from './listing-row-carousel';
 
 interface ListingsClientProps {
   initialListings: any[];
@@ -17,19 +18,41 @@ interface ListingsClientProps {
     total: number;
   };
   template?: any;
+  hubData?: {
+    all: any[];
+    cars: any[];
+    realEstate: any[];
+    electronics: any[];
+  };
 }
 
 export function ListingsClient({
   initialListings,
   categories,
   pagination,
-  template
+  template,
+  hubData
 }: ListingsClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  // Removed stale state: filteredListings
   
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [showHub, setShowHub] = useState(!!hubData);
+
+  // If search params change, and we have filters, we should probably hide hub
+  const hasActiveFilters = useMemo(() => {
+    return searchParams.has('search') || 
+           searchParams.has('category') || 
+           searchParams.has('city') || 
+           searchParams.has('minPrice') || 
+           searchParams.has('maxPrice');
+  }, [searchParams]);
+
+  // Sync hub visibility with filters
+  useMemo(() => {
+    if (hasActiveFilters) setShowHub(false);
+    else if (hubData) setShowHub(true);
+  }, [hasActiveFilters, hubData]);
 
   // Derive initial filters from URL params
   const initialFilters = useMemo<FilterState>(() => ({
@@ -147,8 +170,41 @@ export function ListingsClient({
           </Button>
         </div>
 
-        {/* Listings Grid - passes handler to open mobile filters */}
-        {initialListings.length > 0 ? (
+        {/* Listings Grid or Hub */}
+        {showHub && hubData ? (
+          <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+             <ListingRowCarousel 
+                title="Latest Discoveries" 
+                listings={hubData.all} 
+                viewAllHref="/listings?sort=newest" 
+             />
+             <ListingRowCarousel 
+                title="Premium Cars" 
+                listings={hubData.cars} 
+                viewAllHref="/listings?category=avtomobili" 
+             />
+             <ListingRowCarousel 
+                title="Top Real Estate" 
+                listings={hubData.realEstate} 
+                viewAllHref="/listings?category=nedviznosti" 
+             />
+             <ListingRowCarousel 
+                title="Tech & Electronics" 
+                listings={hubData.electronics} 
+                viewAllHref="/listings?category=elektronika" 
+             />
+             
+             <div className="pt-8 pb-12 text-center">
+                <Button 
+                  onClick={() => setShowHub(false)}
+                  variant="outline" 
+                  className="rounded-full px-8 h-12 font-bold border-2 hover:bg-muted"
+                >
+                    View All Listings in Grid
+                </Button>
+             </div>
+          </div>
+        ) : initialListings.length > 0 ? (
           <ListingGrid 
              listings={initialListings as any} 
              onOpenFilters={() => setIsMobileFiltersOpen(true)}

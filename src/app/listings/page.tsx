@@ -106,8 +106,11 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   if (sort === 'price-low') sort = 'price-asc'; // Align with Convex
   if (sort === 'price-high') sort = 'price-desc';
 
+  // Check if we are in "Hub" mode (no major filters)
+  const isHubView = !query && !category && !city && !params.subCategory && !params.minPrice && !params.maxPrice && !params.listingNumber;
+
   // Fetch data directly with filters
-  const [categories, listings] = await Promise.all([
+  const [categories, listingsResult, carsListings, realEstateListings, electronicsListings] = await Promise.all([
     fetchQuery(api.categories.list),
     fetchQuery(api.listings.list, {
         category: category !== 'all' ? category : undefined,
@@ -124,9 +127,14 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
         isVatIncluded: ensureString(params.vat) === 'true' ? true : undefined,
         isAffordable: ensureString(params.affordable) === 'true' ? true : undefined,
         dateRange: ensureString(params.date),
-        dynamicFilters: ensureString(params.filters) // Added dynamicFilters
+        dynamicFilters: ensureString(params.filters)
     }),
+    isHubView ? fetchQuery(api.listings.list, { category: 'avtomobili', limit: 8, status: 'ACTIVE' }) : Promise.resolve([]),
+    isHubView ? fetchQuery(api.listings.list, { category: 'nedviznosti', limit: 8, status: 'ACTIVE' }) : Promise.resolve([]),
+    isHubView ? fetchQuery(api.listings.list, { category: 'elektronika', limit: 8, status: 'ACTIVE' }) : Promise.resolve([]),
   ]);
+
+  const listings = listingsResult;
 
   // Determine active category template
   let activeTemplate = null;
@@ -199,6 +207,12 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
             categories={categories}
             pagination={pagination}
             template={activeTemplate}
+            hubData={isHubView ? {
+               all: paginatedListings,
+               cars: carsListings,
+               realEstate: realEstateListings,
+               electronics: electronicsListings,
+            } : undefined}
           />
         </Suspense>
       </div>

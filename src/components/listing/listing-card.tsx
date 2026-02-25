@@ -4,14 +4,12 @@ import { getPromotionConfig } from '@/lib/constants/promotions';
 import { useFavorites } from '@/lib/context/favorites-context';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
-import { formatCurrency, formatPrice } from '@/lib/utils/formatters';
+import { formatCurrency } from '@/lib/utils/formatters';
 import { Heart, MapPin, ShieldCheck } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { memo, useCallback } from 'react';
-import { Button } from '../ui/button';
-import { CompareButton } from './compare-button';
 import { PromotionIcon } from './promotion-icon';
 
 interface ListingCardProps {
@@ -48,10 +46,9 @@ export const ListingCard = memo(
     return (
       <div
         className={cn(
-          "group relative flex bg-card border border-border/50 shadow-sm hover:shadow-lg overflow-hidden",
-          (isGrid || isCard) ? "flex-col h-full rounded-xl" : "flex-row h-24 sm:h-28 md:h-40 rounded-lg", 
-          isCard && "mb-4 border-border shadow-md", // Extra spacing/shadow for full card
-          (promotionTier === 'LISTING_HIGHLIGHT' || promotionTier === 'VISUAL_HIGHLIGHT') && "bg-emerald-100/30 dark:bg-emerald-500/10 border-emerald-400/30 dark:border-emerald-500/30 shadow-md ring-1 ring-emerald-500/20"
+          "group relative flex transition-all duration-300",
+          (isGrid || isCard) ? "flex-col h-full" : "flex-row h-24 sm:h-28 md:h-40", 
+          isCard && "mb-4",
         )}
       >
         {/* Main Card Link - Higher Z-Index but below heart button */}
@@ -61,18 +58,17 @@ export const ListingCard = memo(
           aria-label={`View ${listing.title}`} 
         />
 
-        {/* Image Section */}
+        {/* Image Section - The container for the 'card' look */}
         <div className={cn(
-          "relative shrink-0 overflow-hidden z-10",
-          !(promotionTier === 'LISTING_HIGHLIGHT' || promotionTier === 'VISUAL_HIGHLIGHT') && "bg-white",
-          isGrid ? "aspect-[4/3] w-full" : isCard ? "aspect-video w-full" : "w-24 sm:w-32 md:w-48 h-full"
+          "relative shrink-0 overflow-hidden z-10 rounded-2xl sm:rounded-3xl bg-muted transition-all duration-300 shadow-xs group-hover:shadow-md group-hover:-translate-y-0.5",
+          isGrid ? "aspect-square w-full" : isCard ? "aspect-video w-full" : "w-24 sm:w-32 md:w-48 h-full"
         )}>
           <Image
             src={activeImage}
             alt={listing.title}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes={isCard ? "(max-width: 768px) 100vw, 80vw" : isGrid ? "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" : "(max-width: 768px) 33vw, 20vw"}
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            sizes={isCard ? "(max-width: 768px) 100vw, 80vw" : isGrid ? "(max-width: 768px) 50vw, 25vw" : "(max-width: 768px) 33vw, 20vw"}
           />
           
           {/* Status Badges Overlay */}
@@ -91,131 +87,108 @@ export const ListingCard = memo(
                  </div>
               )}
           </div>
+
+          {!isOwner && (
+            <button
+                onClick={handleToggleWishlist}
+                className="absolute top-2 right-2 z-30 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/90 dark:bg-black/70 backdrop-blur shadow-sm flex items-center justify-center text-foreground/80 transition-all hover:scale-110 active:scale-95 pointer-events-auto"
+            >
+                <Heart className={cn("w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors", isWished && "fill-red-500 text-red-500")} />
+            </button>
+          )}
+
+          {listing.previousPrice && listing.previousPrice > listing.price && (
+            <div className="absolute bottom-2 left-2 z-20 pointer-events-none">
+                <div className="bg-[#E53238] text-white text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-sm">
+                    {Math.round(((listing.previousPrice - listing.price) / listing.previousPrice) * 100)}% OFF
+                </div>
+            </div>
+          )}
         </div>
 
         {/* Content Section */}
         <div className={cn(
-          "flex flex-1 flex-col justify-between relative z-30 pointer-events-none min-w-0",
-          !(promotionTier === 'LISTING_HIGHLIGHT' || promotionTier === 'VISUAL_HIGHLIGHT') && "bg-card",
-          (isGrid || isCard) ? "p-2 sm:p-3 space-y-1 sm:space-y-1.5" : "p-2 sm:p-3 md:p-3.5",
-          isCard && "p-4 sm:p-5" // More padding for card view
+          "flex flex-1 flex-col justify-between relative z-10 pointer-events-none min-w-0 pt-2 pb-1",
+          (isGrid || isCard) ? "space-y-1" : "px-3 py-1",
         )}>
            
            {(isGrid || isCard) ? (
              <>
-                 <div className="flex justify-between items-start">
+                <div className="flex flex-col">
                     <h3 className={cn(
-                        "font-bold text-xs sm:text-sm uppercase leading-tight line-clamp-2 text-foreground pr-6",
-                        isCard && "text-base sm:text-lg" // Larger title for card
+                        "font-medium text-[13px] sm:text-[14px] leading-snug line-clamp-2 text-foreground group-hover:underline decoration-foreground/30 underline-offset-2 transition-all",
+                        isCard && "text-base sm:text-lg"
                     )}>
-
                        {listing.title}
                     </h3>
-                 </div>
-                
-                <div className="text-[10px] sm:text-xs text-muted-foreground font-medium">
-                   {listing.city || 'Skopje'} • Verified
                 </div>
                 
-                {/* Description for Card View */}
-                {isCard && (
-                    <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mt-1 hidden sm:block">
-                        {listing.description}
-                    </p>
-                )}
-
-                <div className="pt-0.5 sm:pt-1 flex flex-col">
-                    {listing.previousPrice && listing.previousPrice > listing.price && (
-                        <span className="text-[10px] sm:text-[11px] font-bold text-muted-foreground/50 line-through leading-none mb-0.5" suppressHydrationWarning>
-                            {formatPrice(listing.previousPrice)}
+                <div className="mt-auto space-y-0.5">
+                    <div className="flex items-baseline gap-1.5 flex-wrap">
+                        <span className={cn(
+                            "font-bold text-foreground",
+                            isCard ? "text-lg sm:text-xl" : "text-sm sm:text-base"
+                        )} suppressHydrationWarning>
+                            {listing.price > 0 ? formatCurrency(listing.price, (listing as any).currency) : 'Price on req'}
                         </span>
-                    )}
-                    <div className="flex items-baseline gap-2">
-                      <span className={cn(
-                          "font-bold text-foreground",
-                          isCard ? "text-lg sm:text-xl" : "text-sm sm:text-base"
-                      )} suppressHydrationWarning>
-                          {listing.price > 0 ? formatCurrency(listing.price, (listing as any).currency) : 'Price on req'}
-                      </span>
-                      {listing.price > 0 && (
-                        <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-tight">
-                          {(listing as any).isPriceNegotiable ? 'Po dogovor' : 'Fixed'}
-                        </span>
-                      )}
+                        {listing.previousPrice && listing.previousPrice > listing.price && (
+                            <span className="text-[10px] sm:text-xs text-muted-foreground line-through opacity-70" suppressHydrationWarning>
+                                {formatCurrency(listing.previousPrice, (listing as any).currency)}
+                            </span>
+                        )}
                     </div>
-                </div>
-
-                <div className="flex items-end justify-between mt-auto pt-1.5 sm:pt-2">
-                    <div className="text-[9px] sm:text-[10px] text-muted-foreground/80 flex items-center gap-1">
-                       <span suppressHydrationWarning>{new Date(listing.createdAt).toLocaleDateString()}</span>
+                    
+                    <div className="flex items-center gap-1 text-[10px] text-muted-foreground/80 font-medium">
+                        <MapPin className="w-3 h-3" />
+                        {listing.city || 'Skopje'}
                     </div>
 
-                    {!isOwner && (
-                      <div className="flex items-center gap-1 sm:gap-2 z-30 relative pointer-events-auto">
-                        <CompareButton listing={listing as any} className="h-7 w-7 sm:h-8 sm:w-8" />
-                        <Button
-                          size="icon" variant="ghost" onClick={handleToggleWishlist}
-                          className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 hover:bg-muted/50", isWished ? "text-red-500" : "text-muted-foreground")}
-                        >
-                          <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", isWished && "fill-current")} />
-                        </Button>
-                      </div>
+                    {isCard && listing.description && (
+                        <p className="text-xs text-muted-foreground line-clamp-2 mt-2 font-normal">
+                            {listing.description}
+                        </p>
                     )}
+
+                    <div className="flex items-center justify-between pt-1">
+                        <div className="text-[9px] text-muted-foreground/60 font-medium uppercase tracking-tight">
+                            {listing.condition === 'NEW' ? 'Brand New' : 'Pre-owned'}
+                        </div>
+                        <div className="text-[9px] text-muted-foreground/40" suppressHydrationWarning>
+                           {new Date(listing.createdAt).toLocaleDateString()}
+                        </div>
+                    </div>
                 </div>
              </>
            ) : (
-             // List View Content (kept mostly same)
+             // List View Content
              <>
                <div className="flex justify-between items-start gap-2">
-                    <h3 className="font-bold text-xs sm:text-sm md:text-base uppercase leading-tight line-clamp-2 group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground">
-
+                    <h3 className="font-bold text-xs sm:text-sm md:text-base leading-tight line-clamp-2 group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground">
                        {listing.title}
                     </h3>
-                    <span className="text-[9px] sm:text-[10px] md:text-xs text-muted-foreground whitespace-nowrap shrink-0" suppressHydrationWarning>
+                    <span className="text-[9px] sm:text-[10px] text-muted-foreground whitespace-nowrap shrink-0" suppressHydrationWarning>
                         {listing.createdAt ? new Date(listing.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Now'}
                     </span>
                 </div>
 
-                 <div className="hidden sm:block text-[10px] sm:text-[11px] text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">
-                     {listing.description.length > 150 
-                         ? `${listing.description.substring(0, 150)}...` 
-                         : listing.description}
+                 <div className="hidden sm:block text-[10px] sm:text-[11px] text-muted-foreground mt-1 line-clamp-1 opacity-70">
+                     {listing.description}
                  </div>
 
-                <div className="flex items-end justify-between mt-auto">
-                    <div className="flex flex-col">
-                        <span className="text-[9px] sm:text-[10px] md:text-xs text-muted-foreground flex items-center gap-0.5 sm:gap-1 mb-0.5 capitalize">
-                            <MapPin className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
-                            {listing.city || 'Skopje'}
+                <div className="flex items-baseline gap-2 mt-auto">
+                    <span className="text-sm sm:text-base md:text-lg font-bold text-foreground" suppressHydrationWarning>
+                        {listing.price > 0 ? formatCurrency(listing.price, (listing as any).currency) : 'Price on request'}
+                    </span>
+                    {listing.previousPrice && listing.previousPrice > listing.price && (
+                        <span className="text-[10px] sm:text-xs text-muted-foreground line-through opacity-70" suppressHydrationWarning>
+                            {formatCurrency(listing.previousPrice, (listing as any).currency)}
                         </span>
-                         {listing.previousPrice && listing.previousPrice > listing.price && (
-                             <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground/50 line-through leading-none mb-0.5" suppressHydrationWarning>
-                                 {formatCurrency(listing.previousPrice, (listing as any).currency)}
-                             </span>
-                         )}
-                         <div className="flex items-baseline gap-2">
-                           <span className="text-sm sm:text-base md:text-lg font-bold text-foreground" suppressHydrationWarning>
-                               {listing.price > 0 ? formatCurrency(listing.price, (listing as any).currency) : 'Price on request'}
-                           </span>
-                           {listing.price > 0 && (
-                             <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-tight">
-                               {(listing as any).isPriceNegotiable ? 'Po dogovor' : 'Fixed'}
-                             </span>
-                           )}
-                         </div>
-                    </div>
-                    
-                    {!isOwner && (
-                      <div className="flex items-center gap-1 sm:gap-2 z-30 pointer-events-auto">
-                        <CompareButton listing={listing as any} className="h-7 w-7 sm:h-8 sm:w-8" />
-                        <Button
-                          size="icon" variant="ghost" onClick={handleToggleWishlist}
-                          className={cn("rounded-full h-7 w-7 sm:h-8 sm:w-8 hover:bg-muted/50", isWished ? "text-red-500" : "text-muted-foreground")}
-                        >
-                          <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", isWished && "fill-current")} />
-                        </Button>
-                      </div>
                     )}
+                </div>
+
+                <div className="flex items-center gap-1 text-[10px] text-muted-foreground/80 font-medium mb-1">
+                    <MapPin className="w-2.5 h-2.5" />
+                    {listing.city || 'Skopje'}
                 </div>
              </>
            )}
