@@ -13,7 +13,6 @@ import {
     Calendar,
     ChevronRight,
     Heart,
-    MessageSquare,
     Package,
     Plus,
     Settings,
@@ -205,7 +204,6 @@ const AccountPage = async () => {
                     {[
                       { href: '/my-listings', icon: Package, label: 'Manage Listings' },
                       { href: '/favorites', icon: Heart, label: 'Saved Favorites' },
-                      { href: '/messages', icon: MessageSquare, label: 'Messages' },
                       { href: '/sell', icon: Plus, label: 'Create New Ad' },
                     ].map((item, idx) => (
                       <Link href={item.href} key={idx} className='block group'>

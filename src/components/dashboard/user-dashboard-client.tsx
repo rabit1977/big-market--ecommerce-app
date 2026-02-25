@@ -27,7 +27,6 @@ import {
     History,
     ListChecks,
     MessageCircleQuestion,
-    MessageSquare,
     Package,
     Plus,
     RefreshCw,
@@ -37,7 +36,7 @@ import {
     Star,
     TrendingUp,
     User,
-    Wallet,
+    Wallet
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -139,13 +138,6 @@ export function UserDashboardClient({ userId }: UserDashboardClientProps) {
                     <StatCard icon={Heart} label="Favorites" value={stats.social.favoritesCount} color="rose" />
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-                    <StatCard
-                        icon={MessageSquare}
-                        label="Messages"
-                        value={stats.social.conversationsCount}
-                        color="orange"
-                        badge={stats.social.unreadMessages > 0 ? stats.social.unreadMessages : undefined}
-                    />
                     <StatCard icon={Bookmark} label="Saved Searches" value={stats.savedSearches.count} color="blue" />
                     <StatCard icon={History} label="Recently Viewed" value={stats.recentlyViewed.totalViewed} color="purple" />
                     <StatCard
@@ -494,34 +486,6 @@ export function UserDashboardClient({ userId }: UserDashboardClientProps) {
                             )}
                         </Card>
 
-                        {/* ─── Messages Overview ─── */}
-                        <Card className="p-5 rounded-2xl border-border/50">
-                            <div className="flex items-center gap-2 mb-4">
-                                <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center">
-                                    <MessageSquare className="w-4 h-4 text-orange-600" />
-                                </div>
-                                <h3 className="font-bold text-sm">Messages</h3>
-                                {stats.social.unreadMessages > 0 && (
-                                    <Badge className="bg-destructive text-white text-[10px] ml-auto">{stats.social.unreadMessages}</Badge>
-                                )}
-                            </div>
-                            <div className="space-y-3">
-                                <InfoRow label="Conversations" value={<span className="text-xs font-black">{stats.social.conversationsCount}</span>} />
-                                <InfoRow label="Sent" value={<span className="text-xs font-bold">{stats.social.totalMessagesSent}</span>} />
-                                <InfoRow label="Received" value={<span className="text-xs font-bold">{stats.social.totalMessagesReceived}</span>} />
-                                <InfoRow label="Unread" value={
-                                    <span className={cn("text-xs font-black", stats.social.unreadMessages > 0 ? 'text-destructive' : '')}>
-                                        {stats.social.unreadMessages}
-                                    </span>
-                                } />
-                            </div>
-                            <Link href="/messages" className="block mt-4">
-                                <Button variant="outline" size="sm" className="w-full rounded-xl text-xs font-bold gap-2">
-                                    <MessageSquare className="w-3.5 h-3.5" />
-                                    Open Messages
-                                </Button>
-                            </Link>
-                        </Card>
 
                         {/* ─── Saved Searches ─── */}
                         <Card className="p-5 rounded-2xl border-border/50">
@@ -621,7 +585,6 @@ export function UserDashboardClient({ userId }: UserDashboardClientProps) {
                                 <QuickAction href="/my-listings" icon={Package} label="My Listings" />
                                 <QuickAction href="/favorites" icon={Heart} label="My Favorites" />
                                 <QuickAction href="/wallet" icon={Wallet} label="Wallet" />
-                                <QuickAction href="/messages" icon={MessageSquare} label="Messages" badge={stats.social.unreadMessages} />
                                 <QuickAction href="/premium" icon={Crown} label="Promotions" />
                                 <QuickAction href="/my-listings/stats" icon={TrendingUp} label="Listing Stats" />
                                 <QuickAction href="/account/edit" icon={User} label="Edit Profile" />

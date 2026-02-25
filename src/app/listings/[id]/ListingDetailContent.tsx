@@ -363,7 +363,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     </span>
                   )}
                   <div className="flex items-baseline gap-2">
-                    <span suppressHydrationWarning className="text-3xl font-black text-primary">
+                    <span suppressHydrationWarning className="text-3xl font-black text-foreground">
                       {listing.price > 0 ? formatCurrency(listing.price, listing.currency) : 'Price on request'}
                     </span>
                     {listing.price > 0 && (
@@ -470,7 +470,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     {listing.title}
                   </h1>
                   <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground">
-                    <MapPin className="w-3 h-3" />
+                    <MapPin className="w-3 h-3 text-primary" />
                     {listing.city}, {listing.region ?? 'Skopje'}
                   </div>
                 </div>
@@ -490,13 +490,13 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   )}
                   {listing.previousPrice && listing.previousPrice > listing.price && (
                     <div className="absolute top-3 right-4 flex items-center gap-1.5 opacity-60">
-                      <History className="w-3 h-3" />
+                      <History className="w-3 h-3 text-primary" />
                       <span suppressHydrationWarning className="text-xs font-bold line-through">
                         {formatCurrency(listing.previousPrice, listing.currency)}
                       </span>
                     </div>
                   )}
-                  <div suppressHydrationWarning className="text-4xl font-black text-primary tracking-tighter">
+                  <div suppressHydrationWarning className="text-4xl font-black text-foreground tracking-tighter">
                     {listing.price > 0 ? formatCurrency(listing.price, listing.currency) : 'Call for Price'}
                   </div>
                   <div className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">

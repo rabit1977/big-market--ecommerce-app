@@ -11,7 +11,6 @@ import {
     LayoutDashboard,
     LogOut,
     Menu,
-    MessageCircle,
     Sparkles,
     Tag,
     Trash2,
@@ -41,7 +40,6 @@ const navItems: NavItem[] = [
     { href: '/admin/listings/promoted',  label: 'Promoted Listings',      icon: Sparkles },
     { href: '/admin/categories',         label: 'Categories',             icon: Layers },
     { href: '/admin/users',              label: 'Users',                  icon: Users },
-    { href: '/admin/messages',           label: 'Support & Communications', icon: MessageCircle },
     { href: '/admin/recycle-bin',        label: 'Recycle Bin',            icon: Trash2 },
 ];
 

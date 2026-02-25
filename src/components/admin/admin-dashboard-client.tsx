@@ -8,16 +8,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
 import {
-    ArrowRight,
-    ArrowUpRight,
-    BarChart3,
-    Clock,
-    CreditCard,
-    MessageSquare,
-    Plus,
-    ShieldCheck,
-    Tag,
-    Users
+  ArrowRight,
+  ArrowUpRight,
+  BarChart3,
+  Clock,
+  CreditCard,
+  Plus,
+  ShieldCheck,
+  Tag,
+  Users
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -115,13 +114,6 @@ export function AdminDashboardClient() {
           trend={{ value: dailyDeltas?.revenueToday ?? 0, isPositive: (dailyDeltas?.revenueToday ?? 0) > 0 }}
 
           description={`Since start of today`}
-        />
-        <DashboardCard
-          title="Support Tickets"
-          value={stats?.newInquiries ?? 0}
-          icon={MessageSquare}
-          color="rose"
-          description={`${stats?.newInquiries ?? 0} unread inquiries`}
         />
       </div>
 

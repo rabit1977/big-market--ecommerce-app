@@ -75,7 +75,7 @@ export function ListingContactPanel({
 
         {/* Price Section */}
         <div className='flex items-baseline gap-3 sm:gap-4 flex-wrap'>
-          <p className='text-2xl sm:text-4xl lg:text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-primary via-red-500 to-primary'>
+          <p className='text-2xl sm:text-4xl lg:text-5xl font-black text-foreground'>
             {formatPrice(listing.price)}
           </p>
         </div>
@@ -153,7 +153,7 @@ export function ListingContactPanel({
              </div>
           {listing.city && (
             <div className='flex items-center gap-2 text-muted-foreground'>
-              <MapPin className='h-4 w-4' />
+              <MapPin className='h-4 w-4 text-primary' />
               <span>{listing.city}</span>
             </div>
           )}

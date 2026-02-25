@@ -130,7 +130,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                           
                                           <div className="flex items-center justify-between text-muted-foreground">
                                               <div className="flex items-center gap-1 text-[10px]">
-                                                  <MapPin className="w-3 h-3" />
+                                                  <MapPin className="w-3 h-3 text-primary" />
                                                   {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
                                               </div>
                                               <div className="text-[10px] font-medium opacity-70 italic">
@@ -270,7 +270,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                     </div>
                                     
                                     <div className="flex items-center gap-1 text-[10px] text-muted-foreground/80 font-medium">
-                                        <MapPin className="w-3 h-3" />
+                                        <MapPin className="w-3 h-3 text-primary" />
                                         {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
                                     </div>
 

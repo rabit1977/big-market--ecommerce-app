@@ -10,13 +10,13 @@ import { cn } from '@/lib/utils';
 import { useQuery } from 'convex/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  BadgeCheck, BarChart, Bell,
-  ChevronRight, CreditCard, Crown,
-  Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
-  MessageSquare, Package, Pencil, Settings, ShieldCheck,
-  Star, Store, Trash,
-  User,
-  Wallet, X
+    BadgeCheck, BarChart, Bell,
+    ChevronRight, CreditCard, Crown,
+    Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
+    Package, Pencil, Settings, ShieldCheck,
+    Star, Store, Trash,
+    User,
+    Wallet, X
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -74,7 +74,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   const [isMounted, setIsMounted] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const totalAlertCount = unreadMessagesCount + unreadNotificationsCount;
+  const totalAlertCount = unreadNotificationsCount;
 
   useEffect(() => {
     setIsMounted(true);
@@ -195,7 +195,6 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   const mobileOnlyItems: MenuItem[] = [
     { href: '/', icon: Home, label: t('home') },
     { href: '/listings', icon: Store, label: t('browse_listings') },
-    { href: '/messages', icon: MessageSquare, label: t('messages'), badge: unreadMessagesCount, iconColor: 'text-primary' },
     { href: '/account/notifications', icon: Star, label: t('notifications'), badge: unreadNotificationsCount, iconColor: 'text-amber-500' },
     { href: '/favorites', icon: Heart, label: t('favorites'), badge: initialWishlistCount, iconColor: 'text-rose-500' },
   ];
@@ -220,7 +219,6 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
 
   const supportItems: MenuItem[] = [
     { href: '/help', icon: HelpCircle, label: t('help_center') },
-    { href: '/messages?type=SUPPORT', icon: MessageSquare, label: t('live_support_chat'), iconColor: 'text-primary' },
   ];
 
   const adminItems: MenuItem[] = isAdmin
@@ -282,34 +280,6 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
           </Tooltip>
         </TooltipProvider>
 
-        {/* Messages */}
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                asChild variant="ghost" size="icon"
-                className="relative hidden lg:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10"
-              >
-                <Link href="/messages" aria-label={`Messages${unreadMessagesCount > 0 ? ` (${unreadMessagesCount} unread)` : ''}`}>
-                  <MessageSquare className={cn('h-4.5 w-4.5', unreadMessagesCount > 0 && 'text-primary')} />
-                  <AnimatePresence>
-                    {unreadMessagesCount > 0 && (
-                      <motion.span
-                        key="messages-badge"
-                        initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                        className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background"
-                        aria-hidden="true"
-                      >
-                        {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </Link>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>{t('messages')}</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
 
         {/* Language Switcher */}
         <LanguageSwitcher />

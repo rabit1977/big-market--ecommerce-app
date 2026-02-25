@@ -1,6 +1,6 @@
 'use client';
 
-import { Heart, MessageSquare, Package, Zap } from 'lucide-react';
+import { Heart, Package, Zap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface AccountStatsProps {
@@ -38,14 +38,6 @@ export function AccountStats({
         color: 'text-primary',
         bg: 'bg-primary/10',
         path: '/my-listings'
-    },
-    {
-        label: 'Messages',
-        value: messagesCount,
-        icon: MessageSquare,
-        color: 'text-emerald-500',
-        bg: 'bg-emerald-500/10',
-        path: '/messages'
     },
     {
         label: 'Favorites',

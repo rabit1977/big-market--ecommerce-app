@@ -21,7 +21,7 @@ import { ListingWithRelations } from '@/lib/types/listing';
 import { cn, formatCurrency } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
-import { AlertTriangle, BarChart2, CheckCircle, Clock, Edit, ExternalLink, Mail, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
+import { AlertTriangle, BarChart2, CheckCircle, Clock, Edit, ExternalLink, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
@@ -307,10 +307,6 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                         <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider hidden sm:inline">Edit</span>
                     </Link>
 
-                    <Link href={`/messages?listingId=${listing.id}`} className="flex items-center gap-1.5 group/btn hover:text-primary transition-colors text-muted-foreground">
-                        <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/btn:scale-110 transition-transform" />
-                        <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider hidden sm:inline">Messages</span>
-                    </Link>
 
                 </div>
             </div>

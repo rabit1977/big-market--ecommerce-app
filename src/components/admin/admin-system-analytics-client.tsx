@@ -4,7 +4,7 @@ import { AdminFilterToolbar, getSinceFromRange, TimeRange } from '@/components/a
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
-import { BarChart3, Clock, CreditCard, Loader2, MessageSquare, ShieldCheck, TrendingDown, TrendingUp, Users } from 'lucide-react';
+import { BarChart3, Clock, CreditCard, Loader2, ShieldCheck, TrendingDown, TrendingUp, Users } from 'lucide-react';
 import { useState } from 'react';
 
 export function AdminSystemAnalyticsClient() {
@@ -47,12 +47,6 @@ export function AdminSystemAnalyticsClient() {
       bg: 'bg-purple-500/10', border: 'border-purple-500/20',
       delta: undefined,
       description: 'Users awaiting ID verification',
-    },
-    {
-      label: 'Support Inquiries', value: stats.newInquiries, icon: MessageSquare, color: 'text-rose-500',
-      bg: 'bg-rose-500/10', border: 'border-rose-500/20',
-      delta: undefined,
-      description: 'New contact form submissions',
     },
   ];
 

@@ -3,19 +3,19 @@
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import {
-  AlertCircle,
-  Bell,
-  CheckCheck,
-  ExternalLink,
-  Heart,
-  Mail,
-  MessageSquare,
-  Package,
-  RefreshCw,
-  Tag,
-  TrendingDown,
-  Truck,
-  X,
+    AlertCircle,
+    Bell,
+    CheckCheck,
+    ExternalLink,
+    Heart,
+    Mail,
+    MessageSquare,
+    Package,
+    RefreshCw,
+    Tag,
+    TrendingDown,
+    Truck,
+    X,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -125,10 +125,7 @@ export function NotificationItem({
     ? `mailto:${guestEmail}?subject=Re: ${encodeURIComponent(listingTitle)}&body=${encodeURIComponent('\n\n---\nRegarding: ' + listingTitle)}`
     : null;
 
-  // Use internal chat link for registered users
-  const internalChatHref = isInquiry && senderId
-    ? `/messages?listingId=${listingId || ''}`
-    : null;
+  const internalChatHref = null;
 
   const markRead = () => {
     if (!isRead && onMarkAsRead) {
@@ -219,24 +216,9 @@ export function NotificationItem({
         {/* Action buttons */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Internal Reply — registered users */}
-          {isInquiry && internalChatHref ? (
-             <Link
-               href={internalChatHref}
-               onClick={(e) => { e.stopPropagation(); markRead(); }}
-               className={cn(
-                 'inline-flex items-center gap-1.5 rounded-lg font-black uppercase tracking-widest transition-all',
-                 'bg-primary text-white hover:bg-primary/90 shadow-md shadow-primary/20',
-                 compact ? 'h-5.5 px-2.5 text-[8.5px]' : 'h-8 px-4 text-[10px]',
-               )}
-             >
-               <Mail className={compact ? 'w-2.5 h-2.5' : 'w-3.5 h-3.5'} />
-               Reply
-             </Link>
-          ) : isInquiry && mailtoHref ? (
-            /* External Reply — guests: use a plain <a> so the browser handles
-               mailto: natively without going through the Next.js router */
+          {isInquiry && mailtoHref ? (
             <a
-              href={mailtoHref}
+              href={mailtoHref || undefined}
               onClick={(e) => { e.stopPropagation(); markRead(); }}
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-lg font-black uppercase tracking-widest transition-all',

@@ -12,7 +12,6 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { VariantProps } from 'class-variance-authority';
 import { ChevronRight, Mail, MessageCircle, MessageSquare, Phone } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
 import { useState } from 'react';
 
 interface ContactSellerButtonProps extends React.ComponentProps<"button">, VariantProps<typeof buttonVariants> {
@@ -64,8 +63,6 @@ export function ContactSellerButton({
         >
           {label ? (
             label
-          ) : isLoggedIn ? (
-            <><MessageSquare className="w-4 h-4 mr-2" /> Message {sellerName || 'Seller'}</>
           ) : (
             <><Mail className="w-4 h-4 mr-2" /> Contact {sellerName || 'Seller'}</>
           )}
@@ -175,44 +172,8 @@ export function ContactSellerButton({
             </a>
           )}
 
-          {/* Internal Chat */}
-          {isLoggedIn && (
-            <Link
-              href={listingId ? `/messages?listingId=${listingId}` : `/messages?recipientId=${sellerId}`}
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-4 p-4 rounded-2xl border-2 border-primary/30 hover:border-primary bg-primary/5 hover:bg-primary/10 transition-all group"
-            >
-              <div className="w-11 h-11 rounded-xl bg-primary/15 flex items-center justify-center shrink-0 group-hover:bg-primary/25 transition-colors">
-                <MessageSquare className="w-5 h-5 text-primary" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-black text-sm text-primary uppercase">Chat on Platform</p>
-                <p className="text-xs text-muted-foreground font-bold">Fastest Response</p>
-              </div>
-              <ChevronRight className="w-4 h-4 text-primary/40 group-hover:text-primary transition-colors" />
-            </Link>
-          )}
-
-          {/* Guest Inquiry - if not logged in */}
-          {!isLoggedIn && (
-             <Link
-                href={listingId ? `/contact?listingId=${listingId}&sellerId=${sellerId}` : `/contact?sellerId=${sellerId}`}
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-4 p-4 rounded-2xl border-2 border-primary/30 hover:border-primary bg-primary/5 hover:bg-primary/10 transition-all group"
-             >
-                <div className="w-11 h-11 rounded-xl bg-primary/15 flex items-center justify-center shrink-0 group-hover:bg-primary/25 transition-colors">
-                    <Mail className="w-5 h-5 text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                    <p className="font-black text-sm text-primary uppercase">Send Inquiry</p>
-                    <p className="text-xs text-muted-foreground font-bold">Contact via form</p>
-                </div>
-                <ChevronRight className="w-4 h-4 text-primary/40 group-hover:text-primary transition-colors" />
-             </Link>
-          )}
-
-          {!hasPhone && !hasEmail && !isLoggedIn && (
-            <p className="text-sm text-muted-foreground text-center py-4 font-bold uppercase tracking-tighter">No contact details available</p>
+          {!hasPhone && !hasEmail && (
+            <p className="text-sm text-muted-foreground text-center py-4 font-bold uppercase tracking-tighter">No direct contact details available</p>
           )}
         </div>
 
