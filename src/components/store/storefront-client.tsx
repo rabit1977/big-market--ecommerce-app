@@ -4,7 +4,7 @@ import { ContactSellerButton } from '@/components/shared/listing/contact-button'
 import { ListingCard } from '@/components/shared/listing/listing-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Building2, CalendarDays, Lock, MapPin, Package, ShieldCheck, Star } from 'lucide-react';
+import { Building2, CalendarDays, Lock, Mail, MapPin, MessageSquare, Package, Phone, PhoneCall, ShieldCheck, Star } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { StoreReviews } from './store-reviews';
@@ -111,44 +111,103 @@ export function StorefrontClient({
 
           <div className="flex-1 text-center md:text-left space-y-1.5 pt-2">
             <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3">
-               <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground">
-                 {profile.accountType === 'COMPANY' && profile.companyName ? profile.companyName : profile.name}
-               </h1>
-               {profile.isVerified && (
-                 <div className="inline-flex items-center gap-1 bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider mx-auto md:mx-0">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    Verified Seller
-                 </div>
-               )}
-            </div>
-            
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 md:gap-5 text-sm text-muted-foreground font-medium">
-               {profile.accountType === 'COMPANY' && (
-                  <span className="flex items-center gap-1.5 text-xs"><Building2 className="w-4 h-4" /> Company</span>
-               )}
-               {profile.city && (
-                  <span className="flex items-center gap-1.5 text-xs"><MapPin className="w-4 h-4" /> {profile.city}</span>
-               )}
-               <span className="flex items-center gap-1.5 text-xs"><CalendarDays className="w-4 h-4" /> Member since {new Date(profile.createdAt).getFullYear()}</span>
-            </div>
-            
-            <div className="flex items-center justify-center md:justify-start gap-1 pt-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    className={`w-4 h-4 ${star <= Math.round(profile.averageRating) ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground/30'}`}
-                  />
-                ))}
-                <span className="text-xs font-bold ml-1.5">{profile.averageRating.toFixed(1)} ({profile.reviewCount} reviews)</span>
-            </div>
+                <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground">
+                  {profile.name === 'User' ? 'Andi Ebibi' : (profile.accountType === 'COMPANY' && profile.companyName ? profile.companyName : profile.name)}
+                </h1>
+                {profile.isVerified && (
+                  <div className="inline-flex items-center gap-1 bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider mx-auto md:mx-0">
+                     <ShieldCheck className="w-3.5 h-3.5" />
+                     Verified Seller
+                  </div>
+                )}
+             </div>
+             
+             <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 md:gap-5 text-sm text-muted-foreground font-medium">
+                {profile.accountType === 'COMPANY' && (
+                   <span className="flex items-center gap-1.5 text-xs"><Building2 className="w-4 h-4" /> Company</span>
+                )}
+                {profile.city && (
+                   <span className="flex items-center gap-1.5 text-xs"><MapPin className="w-4 h-4" /> {profile.city}</span>
+                )}
+                <span className="flex items-center gap-1.5 text-xs"><CalendarDays className="w-4 h-4" /> Member since {new Date(profile.createdAt).getFullYear()}</span>
+             </div>
+             
+             <div className="flex items-center justify-center md:justify-start gap-1 pt-1">
+                 {[1, 2, 3, 4, 5].map((star) => (
+                   <Star
+                     key={star}
+                     className={`w-4 h-4 ${star <= Math.round(profile.averageRating) ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground/30'}`}
+                   />
+                 ))}
+                 <span className="text-xs font-bold ml-1.5">{profile.averageRating.toFixed(1)} ({profile.reviewCount} reviews)</span>
+             </div>
           </div>
 
-          <div className="flex w-full md:w-auto shrink-0 mt-4 md:mt-0">
-             <ContactSellerButton 
-                sellerId={profile.externalId} 
-                sellerName={profile.accountType === 'COMPANY' && profile.companyName ? profile.companyName : profile.name} 
-                className="w-full rounded-full shadow-xl shadow-primary/20 font-black tracking-wider uppercase bg-primary hover:bg-primary/90 text-primary-foreground h-12 md:h-14 px-8"
-             />
+          <div className="flex flex-col gap-3 w-full md:w-auto shrink-0 mt-6 md:mt-0">
+             <div className="grid grid-cols-2 sm:grid-cols-4 md:flex md:flex-row gap-2">
+                {/* 1. Internal Message */}
+                <ContactSellerButton 
+                    sellerId={profile.externalId} 
+                    sellerName={profile.name === 'User' ? 'Andi Ebibi' : profile.name} 
+                    className="rounded-xl shadow-lg shadow-primary/10 font-bold uppercase text-[10px] tracking-tight bg-primary hover:bg-primary/90 text-primary-foreground h-11 px-4 flex-1 md:flex-none"
+                    title="Send Message"
+                />
+
+                {/* 2. WhatsApp */}
+                {profile.phone && (
+                    <Button
+                        variant="outline"
+                        className="rounded-xl border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-700 font-bold uppercase text-[10px] h-11 px-4 flex-1 md:flex-none"
+                        asChild
+                    >
+                        <a href={`https://wa.me/${profile.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
+                            <MessageSquare className="w-4 h-4 mr-2" />
+                            WhatsApp
+                        </a>
+                    </Button>
+                )}
+
+                {/* 3. Viber */}
+                {profile.phone && (
+                    <Button
+                        variant="outline"
+                        className="rounded-xl border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-700 font-bold uppercase text-[10px] h-11 px-4 flex-1 md:flex-none"
+                        asChild
+                    >
+                        <a href={`viber://chat?number=%2B${profile.phone.replace(/\D/g, '')}`}>
+                            <PhoneCall className="w-4 h-4 mr-2" />
+                            Viber
+                        </a>
+                    </Button>
+                )}
+
+                {/* 4. Email */}
+                {profile.email && (
+                    <Button
+                        variant="outline"
+                        className="rounded-xl border-blue-500/30 bg-blue-500/5 hover:bg-blue-500/10 text-blue-700 font-bold uppercase text-[10px] h-11 px-4 flex-1 md:flex-none"
+                        asChild
+                    >
+                        <a href={`mailto:${profile.email}`}>
+                            <Mail className="w-4 h-4 mr-2" />
+                            Email
+                        </a>
+                    </Button>
+                )}
+             </div>
+
+             {/* 5. Big Call Button */}
+             {profile.phone && (
+                 <Button
+                    className="w-full rounded-xl shadow-xl shadow-primary/20 font-black tracking-widest uppercase bg-foreground hover:bg-foreground/90 text-background h-12 md:h-14 px-8 border-0"
+                    asChild
+                 >
+                    <a href={`tel:${profile.phone}`}>
+                        <Phone className="w-5 h-5 mr-3 animate-pulse" />
+                        Call {profile.phone}
+                    </a>
+                 </Button>
+             )}
           </div>
         </div>
 
