@@ -62,39 +62,39 @@ export const HeroHeader = () => {
                 <CarouselItem className="basis-auto pl-2 first:pl-0">
                   <Link 
                     href="/categories"
-                    className="group flex items-center justify-center gap-2 px-3 py-1.5 md:py-2 rounded-full border border-border bg-background shadow-sm hover:border-muted/30  transition-all duration-300 shrink-0"
+                    className="group flex items-center justify-center gap-1 px-2.5 py-1 md:py-1.5 rounded-full border border-border bg-background shadow-xs hover:border-muted-foreground/20 hover:bg-muted/50 transition-all duration-300 shrink-0"
                   >
-                    <div className="w-5 h-5 rounded-full border border-border bg-muted/10 flex items-center justify-center group-hover:bg-muted/90 hover:bg-white transition-colors shadow-none">
-                      <LayoutGrid className="w-3 h-3 text-muted-foreground" />
+                    <div className="w-4 h-4 rounded-sm border border-border bg-muted/10 flex items-center justify-center group-hover:bg-foreground group-hover:text-background group-hover:border-foreground transition-all duration-300 shadow-none">
+                      <LayoutGrid className="w-2.5 h-2.5" />
                     </div>
-                    <span className="text-[9px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">{'categories'}</span>
+                    <span className="text-[8px] md:text-[10px] font-bold tracking-wider text-foreground uppercase whitespace-nowrap">{'categories'}</span>
                   </Link>
                 </CarouselItem>
-   {/* My Listings Button */}
+                {/* Browse All Button */}
                 <CarouselItem className="basis-auto pl-2">
                   <Link 
                     href="/listings"
-                    className="group flex items-center justify-center gap-2 px-3 py-1.5 md:py-2 rounded-full border border-border bg-background shadow-sm hover:border-muted/30  transition-all duration-300 shrink-0"
+                    className="group flex items-center justify-center gap-1 px-2.5 py-1 md:py-1.5 rounded-full border border-border bg-background shadow-xs hover:border-muted-foreground/20 hover:bg-muted/50 transition-all duration-300 shrink-0"
                   >
-                    <div className="w-5 h-5 rounded-full border border-border bg-muted/10 flex items-center justify-center group-hover:bg-muted/90 hover:bg-white transition-colors shadow-none">
-                      <List className="w-3 h-3 text-muted-foreground" />
+                    <div className="w-4 h-4 rounded-sm border border-border bg-muted/10 flex items-center justify-center group-hover:bg-foreground group-hover:text-background group-hover:border-foreground transition-all duration-300 shadow-none">
+                      <List className="w-2.5 h-2.5" />
                     </div>
-                    <span className="text-[9px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">{tNav('my_listings')}</span>
+                    <span className="text-[8px] md:text-[10px] font-bold tracking-wider text-foreground uppercase whitespace-nowrap">{'browse all'}</span>
                   </Link>
                 </CarouselItem>
 
-      {/* My Listings Button */}
+                {/* Favorites Button */}
                 <CarouselItem className="basis-auto pl-2">
                   <Link 
                     href="/favorites"
-                    className="group flex items-center justify-center gap-2 px-3 py-1.5 md:py-2 rounded-full border border-border bg-background shadow-sm hover:border-muted/30  transition-all duration-300 shrink-0"
+                    className="group flex items-center justify-center gap-1 px-2.5 py-1 md:py-1.5 rounded-full border border-border bg-background shadow-xs hover:border-muted-foreground/20 hover:bg-muted/50 transition-all duration-300 shrink-0"
                   >
-                    <div className="relative w-5 h-5 rounded-full border border-border bg-muted/10 flex items-center justify-center group-hover:bg-muted/90 hover:bg-white transition-colors shadow-none">
-                      <Heart className="w-3 h-3 text-muted-foreground" />
+                    <div className="relative w-4 h-4 rounded-sm border border-border bg-muted/10 flex items-center justify-center group-hover:bg-foreground group-hover:text-background group-hover:border-foreground transition-all duration-300 shadow-none">
+                      <Heart className="w-2.5 h-2.5" />
                     </div>
-                    <span className="text-[9px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">{tNav('favorites')}</span>
+                    <span className="text-[8px] md:text-[10px] font-bold tracking-wider text-foreground uppercase whitespace-nowrap">{tNav('favorites')}</span>
                     {favCount > 0 && (
-                      <span className="bg-foreground text-background text-[9px] ml-[-4px] font-black rounded-full w-4 h-4 flex items-center justify-center shadow-sm">
+                      <span className="bg-foreground text-background text-[7px] ml-[-4px] mb-[-4px] font-black rounded-full w-3 h-3 flex items-center justify-center shadow-lg border border-background z-10">
                         {favCount}
                       </span>
                     )}
@@ -105,10 +105,10 @@ export const HeroHeader = () => {
                   <CarouselItem key={store._id} className="basis-auto pl-2">
                     <Link 
                       href={`/store/${store.externalId}`}
-                      className="group flex items-center justify-center gap-2 pr-3 pl-1.5 py-1 md:py-1.5 rounded-full border border-border bg-background shadow-sm hover:border-muted/30 transition-all duration-300 shrink-0"
+                      className="group flex items-center justify-center gap-1 pr-2.5 pl-1 py-1 md:py-1.5 rounded-full border border-border bg-background shadow-xs hover:border-muted-foreground/20 hover:bg-muted/50 transition-all duration-300 shrink-0"
                     >
-                      <UserAvatar user={store as any} className="w-6 h-6 md:w-7 md:h-7 border border-border shadow-sm text-[9px]" />
-                      <span className="text-[9px] md:text-xs font-semibold tracking-wider text-foreground uppercase whitespace-nowrap">
+                      <UserAvatar user={store as any} className="w-4 h-4 border border-border rounded-sm shadow-sm text-[6px] group-hover:border-foreground transition-all duration-300" />
+                      <span className="text-[8px] md:text-[10px] font-bold tracking-wider text-foreground uppercase whitespace-nowrap">
                         {store.companyName || store.name || 'Store'}
                       </span>
                     </Link>
@@ -122,14 +122,14 @@ export const HeroHeader = () => {
                       type="button"
                       onClick={() => toggleFilter(filter.id)}
                       className={cn(
-                        "inline-flex items-center gap-1.5 px-3 py-1.5 md:py-2 rounded-full text-[9px] md:text-xs font-bold tracking-wider uppercase border transition-all duration-300 active:scale-95 whitespace-nowrap shrink-0",
+                        "inline-flex items-center gap-1 px-2.5 py-1 md:py-1.5 rounded-full text-[8px] md:text-[10px] font-bold tracking-wider uppercase border transition-all duration-300 active:scale-95 whitespace-nowrap shrink-0",
                         filters[filter.id]
                           ? "bg-foreground text-background border-foreground"
                           : "bg-background border-border text-foreground hover:bg-muted/50 hover:border-muted-foreground/30"
                       )}
                     >
                       <div className={cn(
-                        "w-3.5 h-3.5 rounded-sm border flex items-center justify-center transition-all shrink-0",
+                        "w-4 h-4 rounded-sm border flex items-center justify-center transition-all shrink-0",
                         filters[filter.id] 
                           ? "bg-background border-background" 
                           : "border-muted-foreground/40 bg-transparent group-hover:border-muted-foreground/60"
