@@ -1,7 +1,6 @@
 'use client';
 
 import { WishlistDropdown } from '@/components/listing/wishlist-dropdown';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
@@ -10,7 +9,6 @@ import {
     AlertTriangle,
     CheckCircle,
     MapPin,
-    MessageCircle,
     Phone,
     Shield,
     User
@@ -121,58 +119,24 @@ export function ListingContactPanel({
            <WishlistDropdown listingId={listing._id} />
         </div>
 
-        {/* Contact Seller Buttons */}
+        {/* Contact Seller Button */}
         {isActive && (
-          <>
-            <Button
-              size='lg'
-              onClick={() => setShowPhone(!showPhone)}
-              className='w-full h-12 md:h-14 text-base font-bold rounded-2xl shadow-xl transition-all btn-premium btn-glow shadow-primary/25 hover:shadow-primary/40'
-            >
-              <Phone className='mr-3 h-4 w-4' />
-              {showPhone ? listing.contactPhone || 'No phone provided' : 'Show Phone Number'}
-            </Button>
-
-            {showPhone && listing.contactPhone && (
-              <div className="grid grid-cols-2 gap-3 animate-in fade-in zoom-in duration-300">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="h-12 rounded-xl border-green-500/30 bg-green-500/5 hover:bg-green-500/10 text-green-700 font-bold"
-                  asChild
-                >
-                  <a 
-                    href={`https://wa.me/${listing.contactPhone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hello, I'm interested in your listing: ${listing.title}`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <MessageCircle className="mr-2 h-4 w-4" />
-                    WhatsApp
-                  </a>
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="h-12 rounded-xl border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-700 font-bold"
-                  asChild
-                >
-                  <a href={`viber://chat?number=%2B${listing.contactPhone.replace(/\D/g, '')}`}>
-                    <Phone className="mr-2 h-4 w-4" />
-                    Viber
-                  </a>
-                </Button>
-              </div>
-            )}
-
             <ContactSellerButton
               sellerId={listing.userId}
               listingId={listing._id}
               sellerName={listing.user?.name || undefined}
+              contactPhone={listing.contactPhone}
+              contactEmail={listing.contactEmail}
+              listingTitle={listing.title}
               size="lg"
-              variant="outline"
-              className="w-full h-12 md:h-14 text-base font-bold rounded-2xl border-2"
+              className="w-full h-12 md:h-14 text-base font-bold rounded-2xl shadow-xl transition-all btn-premium btn-glow shadow-primary/25 hover:shadow-primary/40 border-0"
+              label={
+                <>
+                  <Phone className="mr-3 h-5 w-5 animate-pulse" />
+                  Contact SelleR
+                </>
+              }
             />
-          </>
         )}
       </div>
 

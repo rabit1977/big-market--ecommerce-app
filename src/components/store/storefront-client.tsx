@@ -4,7 +4,7 @@ import { ContactSellerButton } from '@/components/shared/listing/contact-button'
 import { ListingCard } from '@/components/shared/listing/listing-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Building2, CalendarDays, Lock, Mail, MapPin, MessageSquare, Package, Phone, PhoneCall, ShieldCheck, Star } from 'lucide-react';
+import { Building2, CalendarDays, Lock, MapPin, Package, Phone, ShieldCheck, Star } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { StoreReviews } from './store-reviews';
@@ -144,70 +144,22 @@ export function StorefrontClient({
           </div>
 
           <div className="flex flex-col gap-3 w-full md:w-auto shrink-0 mt-6 md:mt-0">
-             <div className="grid grid-cols-2 sm:grid-cols-4 md:flex md:flex-row gap-2">
-                {/* 1. Internal Message */}
+             <div className="grid grid-cols-1 md:flex md:flex-row gap-2">
+                {/* Unified Contact Button */}
                 <ContactSellerButton 
                     sellerId={profile.externalId} 
-                    sellerName={profile.name === 'User' ? 'Andi Ebibi' : profile.name} 
-                    className="rounded-xl shadow-lg shadow-primary/10 font-bold uppercase text-[10px] tracking-tight bg-primary hover:bg-primary/90 text-primary-foreground h-11 px-4 flex-1 md:flex-none"
-                    title="Send Message"
+                    sellerName={profile.name === 'User' ? 'Andi Ebibi' : (profile.accountType === 'COMPANY' && profile.companyName ? profile.companyName : profile.name)} 
+                    contactPhone={profile.phone}
+                    contactEmail={profile.email}
+                    className="rounded-2xl shadow-xl shadow-primary/20 font-black tracking-widest uppercase bg-primary hover:bg-primary/90 text-primary-foreground h-12 md:h-14 px-8 border-0"
+                    label={
+                        <span className="flex items-center justify-center">
+                            <Phone className="w-5 h-5 mr-3 animate-pulse" />
+                            Contact SelleR
+                        </span>
+                    }
                 />
-
-                {/* 2. WhatsApp */}
-                {profile.phone && (
-                    <Button
-                        variant="outline"
-                        className="rounded-xl border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-700 font-bold uppercase text-[10px] h-11 px-4 flex-1 md:flex-none"
-                        asChild
-                    >
-                        <a href={`https://wa.me/${profile.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
-                            <MessageSquare className="w-4 h-4 mr-2" />
-                            WhatsApp
-                        </a>
-                    </Button>
-                )}
-
-                {/* 3. Viber */}
-                {profile.phone && (
-                    <Button
-                        variant="outline"
-                        className="rounded-xl border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-700 font-bold uppercase text-[10px] h-11 px-4 flex-1 md:flex-none"
-                        asChild
-                    >
-                        <a href={`viber://chat?number=%2B${profile.phone.replace(/\D/g, '')}`}>
-                            <PhoneCall className="w-4 h-4 mr-2" />
-                            Viber
-                        </a>
-                    </Button>
-                )}
-
-                {/* 4. Email */}
-                {profile.email && (
-                    <Button
-                        variant="outline"
-                        className="rounded-xl border-blue-500/30 bg-blue-500/5 hover:bg-blue-500/10 text-blue-700 font-bold uppercase text-[10px] h-11 px-4 flex-1 md:flex-none"
-                        asChild
-                    >
-                        <a href={`mailto:${profile.email}`}>
-                            <Mail className="w-4 h-4 mr-2" />
-                            Email
-                        </a>
-                    </Button>
-                )}
              </div>
-
-             {/* 5. Big Call Button */}
-             {profile.phone && (
-                 <Button
-                    className="w-full rounded-xl shadow-xl shadow-primary/20 font-black tracking-widest uppercase bg-foreground hover:bg-foreground/90 text-background h-12 md:h-14 px-8 border-0"
-                    asChild
-                 >
-                    <a href={`tel:${profile.phone}`}>
-                        <Phone className="w-5 h-5 mr-3 animate-pulse" />
-                        Call {profile.phone}
-                    </a>
-                 </Button>
-             )}
           </div>
         </div>
 
