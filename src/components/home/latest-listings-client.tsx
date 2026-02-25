@@ -49,8 +49,8 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-4">
+      <div className="flex md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className='text-xl md:text-2xl font-black tracking-tight mb-2'>
             {tHome('latest_listings')}
@@ -60,7 +60,7 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
         {/* Desktop View All Link */}
         <Link 
           href="/listings" 
-          className="hidden md:inline-flex items-center text-primary hover:text-primary/80 font-semibold transition-colors group"
+          className="flex max-w-xs items-center text-foreground border border-foreground rounded-full px-4 py-1.5 text-sm hover:text-muted-foreground hover:border-muted-foreground font-semibold transition-colors group"
         >
           {tHome('view_all')}
           <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -93,7 +93,7 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
       <div className="text-center mt-8 md:hidden">
         <Link 
           href="/listings" 
-          className="inline-flex items-center text-primary font-bold transition-colors group px-6 py-2 border-2 border-primary/20 rounded-full hover:bg-primary/5"
+          className="inline-flex items-center bg-foreground text-background font-bold transition-all hover:bg-foreground/90 group px-8 py-2.5 rounded-full shadow-lg active:scale-95"
         >
           {tHome('browse_all_listings')}
           <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />

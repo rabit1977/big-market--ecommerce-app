@@ -86,7 +86,7 @@ export const ListingCard = memo(
                 </div>
               )}
               {isVerified && (
-                 <div className="bg-primary text-white rounded-full p-0.5 sm:p-1 shadow-md">
+                 <div className="bg-[#0053a0] text-white rounded-full p-0.5 sm:p-1 shadow-md">
                     <ShieldCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                  </div>
               )}
@@ -132,7 +132,7 @@ export const ListingCard = memo(
                     )}
                     <div className="flex items-baseline gap-2">
                       <span className={cn(
-                          "font-bold text-primary",
+                          "font-bold text-foreground",
                           isCard ? "text-lg sm:text-xl" : "text-sm sm:text-base"
                       )} suppressHydrationWarning>
                           {listing.price > 0 ? formatCurrency(listing.price, (listing as any).currency) : 'Price on req'}
@@ -167,7 +167,7 @@ export const ListingCard = memo(
              // List View Content (kept mostly same)
              <>
                <div className="flex justify-between items-start gap-2">
-                    <h3 className="font-bold text-xs sm:text-sm md:text-base uppercase leading-tight line-clamp-2 group-hover:text-primary transition-colors text-foreground">
+                    <h3 className="font-bold text-xs sm:text-sm md:text-base uppercase leading-tight line-clamp-2 group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground">
 
                        {listing.title}
                     </h3>
@@ -194,7 +194,7 @@ export const ListingCard = memo(
                              </span>
                          )}
                          <div className="flex items-baseline gap-2">
-                           <span className="text-sm sm:text-base md:text-lg font-bold text-primary" suppressHydrationWarning>
+                           <span className="text-sm sm:text-base md:text-lg font-bold text-foreground" suppressHydrationWarning>
                                {listing.price > 0 ? formatCurrency(listing.price, (listing as any).currency) : 'Price on request'}
                            </span>
                            {listing.price > 0 && (
