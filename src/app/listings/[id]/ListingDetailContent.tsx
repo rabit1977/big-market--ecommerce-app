@@ -2,6 +2,7 @@
 
 import { ListingQA } from '@/components/listing/listing-qa';
 import { SaveAdButton } from '@/components/listing/save-ad-button';
+import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { ContactSellerButton } from '@/components/shared/listing/contact-button';
 import { ReportModal } from '@/components/shared/report-modal';
 import { UserAvatar } from '@/components/shared/user-avatar';
@@ -206,11 +207,14 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
         </div>
       </div>
 
-      <div className="container-wide px-4 pt-4 md:pt-6">
+      <div className="container-wide px-4 md:pt-3">
 
         {/* ── Desktop Actions ───────────────────────────────────────────── */}
-        <div className="hidden md:flex items-center justify-end mb-8 pb-4 border-b border-border">
-          <div className="flex items-center gap-3">
+        <div className="hidden md:flex items-center justify-between mb-8 border-b border-border">
+          <div className="pt-6">
+            <AppBreadcrumbs/>
+          </div>
+          <div className="flex items-center justify-between gap-3">
             <button
               onClick={handleShare}
               className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-full text-sm font-bold text-foreground hover:bg-accent transition-all shadow-sm"

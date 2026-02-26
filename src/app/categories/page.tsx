@@ -217,17 +217,9 @@ export default async function CategoriesPage() {
       {/* Hero Section */}
       <div className='bg-muted/30 border-b relative overflow-hidden'>
          <div className="absolute inset-0 bg-grid-black/[0.02] dark:bg-grid-white/[0.02]" />
-         <div className='container-wide py-10 sm:py-16 relative'>
+         <div className='container-wide py-1 sm:py-3 relative'>
             <div className='max-w-7xl mx-auto'>
-                <AppBreadcrumbs className="mb-8" />
-                <div className='text-center max-w-2xl mx-auto'>
-                    <h1 className='text-3xl sm:text-5xl font-black text-foreground mb-4 tracking-tight'>
-                        Explore Categories
-                    </h1>
-                    <p className='text-lg text-muted-foreground font-medium'>
-                        Discover thousands of unique items, services, and opportunities across our platform.
-                    </p>
-                </div>
+                <AppBreadcrumbs className="mb-3" />
             </div>
          </div>
       </div>
