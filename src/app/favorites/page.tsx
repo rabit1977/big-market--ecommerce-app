@@ -96,7 +96,7 @@ export default function FavoritesPage({ searchParams }: PageProps) {
         </div>
 
         {/* Pass userId down — avoids re-reading session in every child */}
-        <FavoritesTabs userId={session!.user!.id} defaultTab={activeTab} />
+        <FavoritesTabs userId={session?.user?.id ?? ""} defaultTab={activeTab} />
       </div>
     </div>
   );

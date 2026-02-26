@@ -1,0 +1,40 @@
+
+> classifieds-platform@0.1.0 build C:\Users\rabit\OneDrive\Desktop\Nextjs Projects\Full Stack ecommerce app -2\classifieds-platform
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\rabit\pnpm-lock.yaml as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\rabit\OneDrive\Desktop\Nextjs Projects\Full Stack ecommerce app -2\classifieds-platform\pnpm-lock.yaml
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+- Experiments (use with caution):
+  · serverActions
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 1 errors:
+./OneDrive/Desktop/Nextjs Projects/Full Stack ecommerce app -2/classifieds-platform/src/app/listings/[id]/ListingDetailContent.tsx:99:7
+Ecmascript file had an error
+[0m [90m  97 |[39m   keyStr[33m.[39mcharAt(e3 [33m&[39m [35m63[39m)[33m;[39m
+ [90m  98 |[39m
+[31m[1m>[22m[39m[90m  99 |[39m [36mconst[39m rgbDataURL [33m=[39m (r[33m:[39m number[33m,[39m g[33m:[39m number[33m,[39m b[33m:[39m number) [33m=>[39m
+ [90m     |[39m       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 100 |[39m   [32m`data:image/gif;base64,R0lGODlhAQABAPAA${triplet(0, r, g) + triplet(b, 255, 255)}/yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==`[39m[33m;[39m
+ [90m 101 |[39m
+ [90m 102 |[39m [90m// ─── Main Component ───────────────────────────────────────────────────────────[39m[0m
+
+the name `rgbDataURL` is defined multiple times
+
+Import trace:
+  Server Component:
+    ./OneDrive/Desktop/Nextjs Projects/Full Stack ecommerce app -2/classifieds-platform/src/app/listings/[id]/ListingDetailContent.tsx
+    ./OneDrive/Desktop/Nextjs Projects/Full Stack ecommerce app -2/classifieds-platform/src/app/listings/[id]/page.tsx
+
+
+    at <unknown> (./OneDrive/Desktop/Nextjs Projects/Full Stack ecommerce app -2/classifieds-platform/src/app/listings/[id]/ListingDetailContent.tsx:99:7)
+ ELIFECYCLE  Command failed with exit code 1.

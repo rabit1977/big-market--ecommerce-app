@@ -88,7 +88,7 @@ export function LeaveReviewModal({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-         <Button variant="outline" className="w-full font-bold">
+         <Button variant="outline" className="w-full  border-1 border-border rounded-2xl cursor-pointer hover:text-foreground transition-colors font-bold">
            Leave a Review
          </Button>
       </DialogTrigger>

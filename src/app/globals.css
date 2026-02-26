@@ -690,6 +690,11 @@
   .status-cancelled {
     @apply bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300;
   }
+
+  .mask-fade-bottom {
+    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  }
 }
 
 /* ============================================

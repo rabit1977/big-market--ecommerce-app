@@ -10,13 +10,13 @@ import { PROMOTIONS, getPromotionConfig } from '@/lib/constants/promotions';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { Check, CreditCard, Megaphone } from 'lucide-react';
-import { User } from 'next-auth';
+import { Session } from 'next-auth';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
 interface PromotePageClientProps {
   listing: ListingWithRelations;
-  user?: User;
+  user?: Session['user'];
 }
 
 const VAT_RATE = 0.18; // Standard VAT
