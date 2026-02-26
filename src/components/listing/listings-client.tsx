@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { ListingRowCarousel } from './listing-row-carousel';
+import { SaveSearchButton } from './save-search-button';
 
 interface ListingsClientProps {
   initialListings: any[];
@@ -28,6 +29,7 @@ interface ListingsClientProps {
     homeAppliances: any[];
     computers: any[];
     diy: any[];
+    homeAndGarden: any[];
   };
 }
 
@@ -164,15 +166,22 @@ export function ListingsClient({
       {/* Main Content */}
       <div className="space-y-6">
         {/* Mobile inline Filters & Sort button */}
-        <div className="lg:hidden">
+        <div className="lg:hidden flex w-full gap-2">
           <Button
             onClick={() => setIsMobileFiltersOpen(true)}
             variant="outline"
-            className="w-full h-10 font-bold tracking-tight border border-border bg-background text-foreground hover:bg-muted/50 flex items-center justify-center gap-2 rounded-xl shadow-xs active:scale-95 transition-all"
+            className="flex-1 h-10 font-bold tracking-tight border border-border bg-background text-foreground hover:bg-muted/50 flex items-center justify-center gap-2 rounded-xl shadow-xs active:scale-95 transition-all"
           >
             <SlidersHorizontal className="h-4 w-4" />
             Filters & Sort
           </Button>
+          <div className='flex items-center justify-between'>
+                         <div className="flex items-center ">
+                           <Suspense fallback={<div className="w-10 h-10 bg-muted rounded-full animate-pulse" />}>
+                              <SaveSearchButton />
+                           </Suspense>
+                         </div>
+                       </div>
         </div>
 
         {/* Listings Grid or Hub */}
@@ -221,6 +230,11 @@ export function ListingsClient({
              <ListingRowCarousel 
                 title="Do it Yourself" 
                 listings={hubData.diy} 
+                viewAllHref="/listings?category=home-services" 
+             />
+             <ListingRowCarousel 
+                title="Home and Garden" 
+                listings={hubData.homeAndGarden} 
                 viewAllHref="/listings?category=home-garden" 
              />
              

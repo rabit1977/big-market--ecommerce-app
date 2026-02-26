@@ -110,7 +110,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   const isHubView = !query && !category && !city && !params.subCategory && !params.minPrice && !params.maxPrice && !params.listingNumber;
 
   // Fetch data directly with filters
-  const [categories, listingsResult, carsListings, realEstateListings, electronicsListings, motorVehiclesListings, mobilePhonesListings, homeAppliancesListings, computersListings, diyListings] = await Promise.all([
+  const [categories, listingsResult, carsListings, realEstateListings, electronicsListings, motorVehiclesListings, mobilePhonesListings, homeAppliancesListings, computersListings, diyListings, homeAndGardenListings] = await Promise.all([
     fetchQuery(api.categories.list),
     fetchQuery(api.listings.list, {
         category: category !== 'all' ? category : undefined,
@@ -136,6 +136,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
     isHubView ? fetchQuery(api.listings.list, { category: 'mobile-phones', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
     isHubView ? fetchQuery(api.listings.list, { category: 'appliances', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
     isHubView ? fetchQuery(api.listings.list, { category: 'computers-laptops', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
+    isHubView ? fetchQuery(api.listings.list, { category: 'home-services', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]), // Using home-services for DIY
     isHubView ? fetchQuery(api.listings.list, { category: 'home-garden', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
   ]);
 
@@ -182,6 +183,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
     ...homeAppliancesListings.map(l => (l as any).userId),
     ...computersListings.map(l => (l as any).userId),
     ...diyListings.map(l => (l as any).userId),
+    ...homeAndGardenListings.map(l => (l as any).userId),
   ]));
 
   const users = await fetchQuery(api.users.getByExternalIds, { ids: allIdsForUsers });
@@ -199,6 +201,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   const homeAppliancesWithUsers = homeAppliancesListings.map(attachUser);
   const computersWithUsers = computersListings.map(attachUser);
   const diyWithUsers = diyListings.map(attachUser);
+  const homeAndGardenWithUsers = homeAndGardenListings.map(attachUser);
 
   const pagination = {
     page,
@@ -219,13 +222,6 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
               {query && ` for "${query}"`}
             </p>
           </div>
-         <div className='flex items-center justify-between'>
-          <div className="flex items-center gap-4">
-            <Suspense fallback={<div className="w-24 h-9 bg-muted rounded-full animate-pulse" />}>
-               <SaveSearchButton />
-            </Suspense>
-          </div>
-        </div>
         </div>
       </div>
 
@@ -246,6 +242,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
                homeAppliances: homeAppliancesWithUsers,
                computers: computersWithUsers,
                diy: diyWithUsers,
+               homeAndGarden: homeAndGardenWithUsers,
             } : undefined}
           />
         </Suspense>

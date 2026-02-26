@@ -90,16 +90,16 @@ export function SaveSearchButton() {
     <Button
       variant={isSaved ? "secondary" : "outline"}
       size="sm"
-      className={`gap-2 rounded-full font-bold shadow-sm transition-all ${isSaved ? 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20' : 'bg-card'}`}
+      className={`gap-2 rounded-full font-bold  transition-all ${isSaved ? 'bg-primary/10 text-primary border border-border  hover:bg-primary/20 hover:text-primary' : 'bg-card'}`}
       onClick={handleToggleSave}
       disabled={isPending || savedState === undefined}
     >
       {isPending ? (
-         <Loader2 className="w-4 h-4 animate-spin" />
+         <Loader2 className="w-5 h-5 animate-spin" />
       ) : isSaved ? (
-         <Bell className="w-4 h-4 fill-current" />
+         <Bell className="w-5 h-5 fill-current" />
       ) : (
-         <Bell className="w-4 h-4" />
+         <Bell className="w-5 h-5" />
       )}
       <span className="hidden sm:inline">{isSaved ? 'Alerts On' : 'Save Search'}</span>
     </Button>

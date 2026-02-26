@@ -21,7 +21,7 @@ export const ListingRowCarousel = ({ title, listings, viewAllHref }: ListingRowC
         <h2 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">{title}</h2>
         <Button asChild variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground font-bold">
           <Link href={viewAllHref} className="flex items-center gap-1">
-            Browse All <ChevronRight className="h-4 w-4" />
+            View All <ChevronRight className="h-4 w-4" />
           </Link>
         </Button>
       </div>
@@ -51,7 +51,7 @@ export const ListingRowCarousel = ({ title, listings, viewAllHref }: ListingRowC
                   <div className="w-8 h-8 rounded-full bg-background shadow-xs flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
                       <ChevronRight className="h-5 w-5 text-foreground" />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">View All</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">View All Listing in Grid</span>
               </Link>
           </CarouselItem>
         </CarouselContent>
