@@ -15,26 +15,111 @@
   · serverActions
 
   Creating an optimized production build ...
+✓ Compiled successfully in 26.4s
+  Running TypeScript ...
+  Collecting page data using 11 workers ...
+⚠ Using edge runtime on a page currently disables static generation for that page
+  Generating static pages using 11 workers (0/77) ...
+  Generating static pages using 11 workers (19/77) 
+  Generating static pages using 11 workers (38/77) 
+  Generating static pages using 11 workers (57/77) 
+✓ Generating static pages using 11 workers (77/77) in 1741.7ms
+  Finalizing page optimization ...
 
-> Build error occurred
-Error: Turbopack build failed with 1 errors:
-./OneDrive/Desktop/Nextjs Projects/Full Stack ecommerce app -2/classifieds-platform/src/app/listings/[id]/ListingDetailContent.tsx:99:7
-Ecmascript file had an error
-[0m [90m  97 |[39m   keyStr[33m.[39mcharAt(e3 [33m&[39m [35m63[39m)[33m;[39m
- [90m  98 |[39m
-[31m[1m>[22m[39m[90m  99 |[39m [36mconst[39m rgbDataURL [33m=[39m (r[33m:[39m number[33m,[39m g[33m:[39m number[33m,[39m b[33m:[39m number) [33m=>[39m
- [90m     |[39m       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 100 |[39m   [32m`data:image/gif;base64,R0lGODlhAQABAPAA${triplet(0, r, g) + triplet(b, 255, 255)}/yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==`[39m[33m;[39m
- [90m 101 |[39m
- [90m 102 |[39m [90m// ─── Main Component ───────────────────────────────────────────────────────────[39m[0m
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /about
+├ ƒ /account
+├ ƒ /account/addresses
+├ ƒ /account/del
+├ ƒ /account/edit
+├ ƒ /account/notifications
+├ ƒ /account/password
+├ ƒ /account/verification
+├ ƒ /admin/activity
+├ ƒ /admin/analytics
+├ ƒ /admin/categories
+├ ƒ /admin/dashboard
+├ ƒ /admin/listings
+├ ƒ /admin/listings/[id]/edit
+├ ƒ /admin/listings/new
+├ ƒ /admin/listings/promoted
+├ ƒ /admin/messages
+├ ƒ /admin/notifications
+├ ƒ /admin/recycle-bin
+├ ƒ /admin/revenue
+├ ƒ /admin/settings
+├ ƒ /admin/users
+├ ƒ /admin/users/[id]
+├ ƒ /admin/users/[id]/edit
+├ ƒ /admin/users/create
+├ ƒ /advertise
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/auth/forgot-password
+├ ƒ /api/auth/signup
+├ ƒ /api/debug-categories
+├ ƒ /api/listings/search
+├ ƒ /api/make-admin
+├ ƒ /api/subscribe
+├ ƒ /api/test-convex
+├ ƒ /api/upload
+├ ƒ /api/webhooks/stripe
+├ ƒ /apple-icon
+├ ƒ /auth
+├ ƒ /auth/complete-registration
+├ ƒ /auth/forgot-password
+├ ƒ /auth/pending
+├ ƒ /auth/reset-password
+├ ƒ /auth/signup
+├ ƒ /auth/suspended
+├ ƒ /careers
+├ ƒ /categories
+├ ƒ /compare
+├ ƒ /contact
+├ ƒ /dashboard
+├ ƒ /faq
+├ ƒ /favorites
+├ ƒ /help
+├ ƒ /help/certification
+├ ƒ /help/faq
+├ ƒ /help/getting-started
+├ ƒ /help/payments
+├ ƒ /help/posting-ads
+├ ƒ /help/safety
+├ ƒ /help/terms
+├ ƒ /icon
+├ ƒ /listings
+├ ƒ /listings/[id]
+├ ƒ /listings/[id]/success
+├ ○ /manifest.webmanifest
+├ ƒ /marketing
+├ ƒ /messages
+├ ƒ /mobile
+├ ƒ /my-listings
+├ ƒ /my-listings/[id]/edit
+├ ƒ /my-listings/promote/[id]
+├ ƒ /my-listings/saved-searches
+├ ƒ /my-listings/stats
+├ ƒ /my-listings/stats/[id]
+├ ƒ /premium
+├ ƒ /premium/success
+├ ƒ /pricing
+├ ƒ /pricing/success
+├ ƒ /privacy
+├ ○ /robots.txt
+├ ƒ /safety
+├ ƒ /sell
+├ ƒ /services
+├ ƒ /sitemap.xml
+├ ƒ /stickers
+├ ƒ /store/[id]
+├ ƒ /wallet
+└ ƒ /wallet/top-up
 
-the name `rgbDataURL` is defined multiple times
 
-Import trace:
-  Server Component:
-    ./OneDrive/Desktop/Nextjs Projects/Full Stack ecommerce app -2/classifieds-platform/src/app/listings/[id]/ListingDetailContent.tsx
-    ./OneDrive/Desktop/Nextjs Projects/Full Stack ecommerce app -2/classifieds-platform/src/app/listings/[id]/page.tsx
+ƒ Proxy (Middleware)
 
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
 
-    at <unknown> (./OneDrive/Desktop/Nextjs Projects/Full Stack ecommerce app -2/classifieds-platform/src/app/listings/[id]/ListingDetailContent.tsx:99:7)
- ELIFECYCLE  Command failed with exit code 1.

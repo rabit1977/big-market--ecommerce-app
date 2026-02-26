@@ -1,7 +1,6 @@
-import "@auth/core/types"
-import "next-auth/jwt"
+import { type DefaultSession } from "next-auth"
 
-declare module "@auth/core/types" {
+declare module "next-auth" {
   /**
    * The shape of the user object as it is stored in the database
    */
@@ -17,13 +16,16 @@ declare module "@auth/core/types" {
     email?: string | null
     name?: string | null
     image?: string | null
+    bio?: string | null
+    createdAt?: Date | number
+    updatedAt?: Date | number
   }
 
   /**
    * The shape of the session object returned by useSession
    */
   interface Session {
-    user: User
+    user: User & DefaultSession["user"]
   }
 }
 
@@ -39,5 +41,8 @@ declare module "next-auth/jwt" {
     convexId?: string
     email?: string | null
     name?: string | null
+    bio?: string | null
+    createdAt?: Date | number
+    updatedAt?: Date | number
   }
 }
