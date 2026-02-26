@@ -6,14 +6,12 @@ import { useRouter } from 'next/navigation';
 interface AccountStatsProps {
   totalListings: number;
   activeListings: number;
-  messagesCount: number;
   wishlistItems: number;
 }
 
 export function AccountStats({
   totalListings,
   activeListings,
-  messagesCount,
   wishlistItems,
 }: AccountStatsProps) {
   const router = useRouter();
@@ -58,7 +56,7 @@ export function AccountStats({
   ];
 
   return (
-    <div className='grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4'>
+    <div className='grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4'>
       {statItems.map((item, i) => (
           <button
             key={i}

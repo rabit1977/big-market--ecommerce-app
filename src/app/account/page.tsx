@@ -1,5 +1,4 @@
 import { getMyListingsAction } from '@/actions/listing-actions';
-import { getMyMessagesAction } from '@/actions/message-actions';
 import { getWishlistAction } from '@/actions/wishlist-actions';
 import { auth } from '@/auth';
 import { AccountStats } from '@/components/account/AccountStats';
@@ -26,21 +25,18 @@ const AccountPage = async () => {
   const session = await auth();
   const user = session?.user;
 
-  const [wishlistResult, listingsResult, messagesResult] = await Promise.all([
+  const [wishlistResult, listingsResult] = await Promise.all([
       getWishlistAction(),
       getMyListingsAction(),
-      getMyMessagesAction()
   ]);
   
   const wishlist = wishlistResult.wishlist ?? [];
   const userListings = listingsResult.listings ?? [];
-  const messages = messagesResult.messages ?? [];
 
   const stats = {
     totalListings: userListings.length,
     activeListings: userListings.filter((l: any) => l.status === 'ACTIVE').length,
     wishlistItemsCount: wishlist.length,
-    messagesCount: messages.length,
   };
 
   const memberSince = user?.createdAt
@@ -132,7 +128,6 @@ const AccountPage = async () => {
              totalListings={stats.totalListings}
              activeListings={stats.activeListings}
              wishlistItems={stats.wishlistItemsCount}
-             messagesCount={stats.messagesCount}
           />
 
           {/* Business & Account Sections */}
