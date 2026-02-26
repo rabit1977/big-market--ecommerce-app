@@ -110,7 +110,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   const isHubView = !query && !category && !city && !params.subCategory && !params.minPrice && !params.maxPrice && !params.listingNumber;
 
   // Fetch data directly with filters
-  const [categories, listingsResult, carsListings, realEstateListings, electronicsListings] = await Promise.all([
+  const [categories, listingsResult, carsListings, realEstateListings, electronicsListings, motorVehiclesListings, mobilePhonesListings, homeAppliancesListings, computersListings, diyListings] = await Promise.all([
     fetchQuery(api.categories.list),
     fetchQuery(api.listings.list, {
         category: category !== 'all' ? category : undefined,
@@ -129,9 +129,14 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
         dateRange: ensureString(params.date),
         dynamicFilters: ensureString(params.filters)
     }),
-    isHubView ? fetchQuery(api.listings.list, { category: 'avtomobili', limit: 8, status: 'ACTIVE' }) : Promise.resolve([]),
-    isHubView ? fetchQuery(api.listings.list, { category: 'nedviznosti', limit: 8, status: 'ACTIVE' }) : Promise.resolve([]),
-    isHubView ? fetchQuery(api.listings.list, { category: 'elektronika', limit: 8, status: 'ACTIVE' }) : Promise.resolve([]),
+    isHubView ? fetchQuery(api.listings.list, { category: 'cars', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
+    isHubView ? fetchQuery(api.listings.list, { category: 'real-estate', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
+    isHubView ? fetchQuery(api.listings.list, { category: 'electronics', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
+    isHubView ? fetchQuery(api.listings.list, { category: 'vehicles', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
+    isHubView ? fetchQuery(api.listings.list, { category: 'mobile-phones', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
+    isHubView ? fetchQuery(api.listings.list, { category: 'appliances', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
+    isHubView ? fetchQuery(api.listings.list, { category: 'computers-laptops', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
+    isHubView ? fetchQuery(api.listings.list, { category: 'home-garden', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
   ]);
 
   const listings = listingsResult;
@@ -172,6 +177,11 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
     ...carsListings.map(l => (l as any).userId),
     ...realEstateListings.map(l => (l as any).userId),
     ...electronicsListings.map(l => (l as any).userId),
+    ...motorVehiclesListings.map(l => (l as any).userId),
+    ...mobilePhonesListings.map(l => (l as any).userId),
+    ...homeAppliancesListings.map(l => (l as any).userId),
+    ...computersListings.map(l => (l as any).userId),
+    ...diyListings.map(l => (l as any).userId),
   ]));
 
   const users = await fetchQuery(api.users.getByExternalIds, { ids: allIdsForUsers });
@@ -184,6 +194,11 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   const carsWithUsers = carsListings.map(attachUser);
   const realEstateWithUsers = realEstateListings.map(attachUser);
   const electronicsWithUsers = electronicsListings.map(attachUser);
+  const motorVehiclesWithUsers = motorVehiclesListings.map(attachUser);
+  const mobilePhonesWithUsers = mobilePhonesListings.map(attachUser);
+  const homeAppliancesWithUsers = homeAppliancesListings.map(attachUser);
+  const computersWithUsers = computersListings.map(attachUser);
+  const diyWithUsers = diyListings.map(attachUser);
 
   const pagination = {
     page,
@@ -194,23 +209,18 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   return (
     <div className="bg-background min-h-screen pb-20">
       {/* Header */}
-      <div className="bg-card border-b border-border/50 py-4 md:py-6 mb-6">
+      <div className="bg-card border-b border-border/50 pt-4 pb-2">
         <div className="container-wide">
-          <div className="">
+          <div className="flex items-center justify-between">
             <AppBreadcrumbs />
-          </div>
-         <div className='flex items-center justify-between'>
-          <h1 className="text-xl font-bold md:text-2xl">
-            {category && category !== 'all'
-              ? categories.find((c) => c.slug === category)?.name || 'Listings'
-              : 'All Listings'}
-          </h1>
-          <div className="flex items-center gap-4">
-            <p className="text-muted-foreground md:text-lg text-sm hidden sm:block">
+             <p className="text-muted-foreground md:text-lg text-sm hidden sm:block">
               {total} {total === 1 ? 'result' : 'results'} found
               {city && city !== 'all' && ` in ${city}`}
               {query && ` for "${query}"`}
             </p>
+          </div>
+         <div className='flex items-center justify-between'>
+          <div className="flex items-center gap-4">
             <Suspense fallback={<div className="w-24 h-9 bg-muted rounded-full animate-pulse" />}>
                <SaveSearchButton />
             </Suspense>
@@ -231,6 +241,11 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
                cars: carsWithUsers,
                realEstate: realEstateWithUsers,
                electronics: electronicsWithUsers,
+               motorVehicles: motorVehiclesWithUsers,
+               mobilePhones: mobilePhonesWithUsers,
+               homeAppliances: homeAppliancesWithUsers,
+               computers: computersWithUsers,
+               diy: diyWithUsers,
             } : undefined}
           />
         </Suspense>

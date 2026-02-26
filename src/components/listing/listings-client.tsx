@@ -23,6 +23,11 @@ interface ListingsClientProps {
     cars: any[];
     realEstate: any[];
     electronics: any[];
+    motorVehicles: any[];
+    mobilePhones: any[];
+    homeAppliances: any[];
+    computers: any[];
+    diy: any[];
   };
 }
 
@@ -179,19 +184,44 @@ export function ListingsClient({
                 viewAllHref="/listings?sort=newest" 
              />
              <ListingRowCarousel 
-                title="Premium Cars" 
+                title="Cars" 
                 listings={hubData.cars} 
-                viewAllHref="/listings?category=avtomobili" 
+                viewAllHref="/listings?category=vehicles" 
              />
              <ListingRowCarousel 
-                title="Top Real Estate" 
+                title="Real Estates" 
                 listings={hubData.realEstate} 
-                viewAllHref="/listings?category=nedviznosti" 
+                viewAllHref="/listings?category=real-estate" 
              />
              <ListingRowCarousel 
-                title="Tech & Electronics" 
+                title="Electronics & PC" 
                 listings={hubData.electronics} 
-                viewAllHref="/listings?category=elektronika" 
+                viewAllHref="/listings?category=electronics" 
+             />
+             <ListingRowCarousel 
+                title="Motor Vehicles" 
+                listings={hubData.motorVehicles} 
+                viewAllHref="/listings?category=vehicles" 
+             />
+             <ListingRowCarousel 
+                title="Mobile Phones" 
+                listings={hubData.mobilePhones} 
+                viewAllHref="/listings?category=mobile-phones" 
+             />
+             <ListingRowCarousel 
+                title="Home Appliances" 
+                listings={hubData.homeAppliances} 
+                viewAllHref="/listings?category=appliances" 
+             />
+             <ListingRowCarousel 
+                title="Computers" 
+                listings={hubData.computers} 
+                viewAllHref="/listings?category=computers-laptops" 
+             />
+             <ListingRowCarousel 
+                title="Do it Yourself" 
+                listings={hubData.diy} 
+                viewAllHref="/listings?category=home-garden" 
              />
              
              <div className="pt-8 pb-12 text-center">

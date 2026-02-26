@@ -389,7 +389,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
 
             {/* Specifications */}
             {filteredSpecs.length > 0 && (
-              <div className="space-y-3 px-3 pt-4 md:pt-2">
+              <div className="space-y-3 pt-4 md:pt-2">
                 <div className="flex items-center gap-2 px-1">
                    <div className="w-1 h-4 bg-primary rounded-full" />
                    <h3 className="font-black text-foreground uppercase tracking-tight text-xs">
