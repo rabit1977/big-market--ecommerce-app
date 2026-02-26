@@ -67,7 +67,7 @@ export const HeroHeader = () => {
                     <div className="w-4 h-4 rounded-sm border border-border bg-muted/10 flex items-center justify-center group-hover:bg-foreground group-hover:text-background group-hover:border-foreground transition-all duration-300 shadow-none">
                       <LayoutGrid className="w-2.5 h-2.5" />
                     </div>
-                    <span className="text-[8px] md:text-[10px] font-bold tracking-wider text-foreground uppercase whitespace-nowrap">{'categories'}</span>
+                    <span className="text-[10px] md:text-[11px] font-bold tracking-wider text-foreground uppercase whitespace-nowrap">{'categories'}</span>
                   </Link>
                 </CarouselItem>
                 {/* Browse All Button */}
@@ -78,8 +78,8 @@ export const HeroHeader = () => {
                   >
                     <div className="w-4 h-4 rounded-sm border border-border bg-muted/10 flex items-center justify-center group-hover:bg-foreground group-hover:text-background group-hover:border-foreground transition-all duration-300 shadow-none">
                       <List className="w-2.5 h-2.5" />
-                    </div>
-                    <span className="text-[8px] md:text-[10px] font-bold tracking-wider text-foreground uppercase whitespace-nowrap">{'browse all'}</span>
+                    </div>  
+                    <span className="text-[10px] md:text-[11px] font-bold tracking-wider text-foreground uppercase whitespace-nowrap">{'browse all'}</span>
                   </Link>
                 </CarouselItem>
 
@@ -92,7 +92,7 @@ export const HeroHeader = () => {
                     <div className="relative w-4 h-4 rounded-sm border border-border bg-muted/10 flex items-center justify-center group-hover:bg-foreground group-hover:text-background group-hover:border-foreground transition-all duration-300 shadow-none">
                       <Heart className="w-2.5 h-2.5" />
                     </div>
-                    <span className="text-[8px] md:text-[10px] font-bold tracking-wider text-foreground uppercase whitespace-nowrap">{tNav('favorites')}</span>
+                    <span className="text-[10px] md:text-[11px] font-bold tracking-wider text-foreground uppercase whitespace-nowrap">{tNav('favorites')}</span>
                     {favCount > 0 && (
                       <span className="bg-foreground text-background text-[7px] ml-[-4px] mb-[-4px] font-black rounded-full w-3 h-3 flex items-center justify-center shadow-lg border border-background z-10">
                         {favCount}
@@ -108,7 +108,7 @@ export const HeroHeader = () => {
                       className="group flex items-center justify-center gap-1 pr-2.5 pl-1 py-1 md:py-1.5 rounded-full border border-border bg-background shadow-xs hover:border-muted-foreground/20 hover:bg-muted/50 transition-all duration-300 shrink-0"
                     >
                       <UserAvatar user={store as any} className="w-4 h-4 border border-border rounded-sm shadow-sm text-[6px] group-hover:border-foreground transition-all duration-300" />
-                      <span className="text-[8px] md:text-[10px] font-bold tracking-wider text-foreground uppercase whitespace-nowrap">
+                      <span className="text-[10px] md:text-[11px] font-bold tracking-wider text-foreground border-foreground uppercase whitespace-nowrap">
                         {store.companyName || store.name || 'Store'}
                       </span>
                     </Link>
@@ -124,18 +124,18 @@ export const HeroHeader = () => {
                       className={cn(
                         "inline-flex items-center gap-1 px-2.5 py-1 md:py-1.5 rounded-full text-[8px] md:text-[10px] font-bold tracking-wider uppercase border transition-all duration-300 active:scale-95 whitespace-nowrap shrink-0",
                         filters[filter.id]
-                          ? "bg-foreground text-background border-foreground"
+                          ? "bg-background text-foreground "
                           : "bg-background border-border text-foreground hover:bg-muted/50 hover:border-muted-foreground/30"
                       )}
                     >
                       <div className={cn(
                         "w-4 h-4 rounded-sm border flex items-center justify-center transition-all shrink-0",
                         filters[filter.id] 
-                          ? "bg-background border-background" 
+                          ? "bg-foreground text-background border-foreground" 
                           : "border-muted-foreground/40 bg-transparent group-hover:border-muted-foreground/60"
                       )}>
                         {filters[filter.id] && (
-                          <svg className="w-2.5 h-2.5 text-foreground" viewBox="0 0 12 12" fill="none">
+                          <svg className="w-2.5 h-2.5 text-background" viewBox="0 0 12 12" fill="none">
                             <path d="M2 6L5 9L10 3" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                           </svg>
                         )}
