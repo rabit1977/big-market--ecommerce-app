@@ -60,7 +60,7 @@ export const ListingCard = memo(
 
         {/* Image Section - The container for the 'card' look */}
         <div className={cn(
-          "relative shrink-0 overflow-hidden z-20 rounded-2xl sm:rounded-3xl bg-muted transition-all duration-300 shadow-xs group-hover:shadow-md group-hover:-translate-y-0.5",
+          "relative shrink-0 overflow-hidden z-20 rounded-2xl sm:rounded-3xl bg-muted transition-all duration-300 shadow-xs group-hover:shadow-md group-hover:-translate-y-0.5 pointer-events-none",
           isGrid ? "aspect-square w-full" : isCard ? "aspect-video w-full" : "w-24 sm:w-32 md:w-48 h-full"
         )}>
           <Image
