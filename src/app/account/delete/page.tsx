@@ -1,16 +1,17 @@
 'use client';
+// Re-saving to trigger TS server refresh
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { api } from '@/convex/_generated/api';
 import { useMutation } from 'convex/react';
 import { AlertTriangle, Loader2, Trash2 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { api } from '../../../../convex/_generated/api';
 
 export default function DeleteAccountPage() {
     const { data: session } = useSession();
