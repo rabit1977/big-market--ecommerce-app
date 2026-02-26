@@ -54,13 +54,13 @@ export const ListingCard = memo(
         {/* Main Card Link - Higher Z-Index but below heart button */}
         <Link 
           href={`/listings/${listing.id || listing._id}`} 
-          className="absolute inset-0 z-20" 
+          className="absolute inset-0 z-10" 
           aria-label={`View ${listing.title}`} 
         />
 
         {/* Image Section - The container for the 'card' look */}
         <div className={cn(
-          "relative shrink-0 overflow-hidden z-10 rounded-2xl sm:rounded-3xl bg-muted transition-all duration-300 shadow-xs group-hover:shadow-md group-hover:-translate-y-0.5",
+          "relative shrink-0 overflow-hidden z-20 rounded-2xl sm:rounded-3xl bg-muted transition-all duration-300 shadow-xs group-hover:shadow-md group-hover:-translate-y-0.5 pointer-events-none",
           isGrid ? "aspect-square w-full" : isCard ? "aspect-video w-full" : "w-24 sm:w-32 md:w-48 h-full"
         )}>
           <Image
@@ -108,7 +108,7 @@ export const ListingCard = memo(
 
         {/* Content Section */}
         <div className={cn(
-          "flex flex-1 flex-col justify-between relative z-10 pointer-events-none min-w-0 pt-2 pb-1",
+          "flex flex-1 flex-col justify-between relative z-20 pointer-events-none min-w-0 pt-2 pb-1",
           (isGrid || isCard) ? "space-y-1" : "px-3 py-1",
         )}>
            
