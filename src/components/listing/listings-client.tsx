@@ -165,8 +165,7 @@ export function ListingsClient({
 
       {/* Main Content */}
       <div className="space-y-6">
-        {/* Mobile inline Filters & Sort button */}
-        <div className="lg:hidden flex w-full gap-2">
+        <div className="lg:hidden flex items-center w-full gap-2">
           <Button
             onClick={() => setIsMobileFiltersOpen(true)}
             variant="outline"
@@ -175,13 +174,9 @@ export function ListingsClient({
             <SlidersHorizontal className="h-4 w-4" />
             Filters & Sort
           </Button>
-          <div className='flex items-center justify-between'>
-                         <div className="flex items-center ">
-                           <Suspense fallback={<div className="w-10 h-10 bg-muted rounded-full animate-pulse" />}>
-                              <SaveSearchButton />
-                           </Suspense>
-                         </div>
-                       </div>
+          <Suspense fallback={<div className="w-10 h-10 bg-muted rounded-xl animate-pulse" />}>
+             <SaveSearchButton />
+          </Suspense>
         </div>
 
         {/* Listings Grid or Hub */}
@@ -249,20 +244,31 @@ export function ListingsClient({
              </div>
           </div>
         ) : initialListings.length > 0 ? (
-          <ListingGrid 
-             listings={initialListings as any} 
-             onOpenFilters={() => setIsMobileFiltersOpen(true)}
-             sortBy={initialFilters.sortBy}
-             onSortChange={(val) => handleFilterChange({ ...initialFilters, sortBy: val })}
-             onQuickFilter={(extraFilters) => handleFilterChange({ ...initialFilters, ...extraFilters })}
-          />
+          <div className="relative">
+            <ListingGrid 
+               listings={initialListings as any} 
+               onOpenFilters={() => setIsMobileFiltersOpen(true)}
+               sortBy={initialFilters.sortBy}
+               onSortChange={(val) => handleFilterChange({ ...initialFilters, sortBy: val })}
+               onQuickFilter={(extraFilters) => handleFilterChange({ ...initialFilters, ...extraFilters })}
+            />
+            {/* Desktop Save Search Button - Floats next to Results count area conceptually */}
+            <div className="hidden lg:block absolute -top-12 right-0">
+               <Suspense fallback={<div className="w-24 h-10 bg-muted rounded-xl animate-pulse" />}>
+                  <SaveSearchButton />
+               </Suspense>
+            </div>
+          </div>
         ) : (
-          <div className="text-center py-20">
+          <div className="text-center py-20 bg-muted/10 rounded-3xl border-2 border-dashed border-border/50">
             <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-2xl font-bold mb-2">No listings found</h3>
-            <p className="text-muted-foreground">
+            <h2 className="text-2xl font-bold mb-2">No listings found</h2>
+            <p className="text-muted-foreground mb-8">
               Try adjusting your filters or search criteria
             </p>
+            <Button onClick={() => window.location.href = '/listings'} variant="outline" className="rounded-full font-bold">
+               Clear all filters
+            </Button>
           </div>
         )}
 

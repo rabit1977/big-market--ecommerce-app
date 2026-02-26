@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { api } from '@/convex/_generated/api';
+import { cn } from '@/lib/utils';
 import { useMutation, useQuery } from 'convex/react';
 import { Bell, Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
