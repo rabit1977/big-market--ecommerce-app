@@ -1,5 +1,4 @@
 import { ListingsClient } from '@/components/listing/listings-client';
-import { SaveSearchButton } from '@/components/listing/save-search-button';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { fetchQuery } from 'convex/nextjs';
@@ -129,10 +128,10 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
         dateRange: ensureString(params.date),
         dynamicFilters: ensureString(params.filters)
     }),
-    isHubView ? fetchQuery(api.listings.list, { category: 'cars', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
+    isHubView ? fetchQuery(api.listings.list, { category: 'cars', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]), // Specific for Cars
     isHubView ? fetchQuery(api.listings.list, { category: 'real-estate', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
     isHubView ? fetchQuery(api.listings.list, { category: 'electronics', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
-    isHubView ? fetchQuery(api.listings.list, { category: 'vehicles', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
+    isHubView ? fetchQuery(api.listings.list, { category: 'vehicles', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]), // Parent for Motor Vehicles
     isHubView ? fetchQuery(api.listings.list, { category: 'mobile-phones', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
     isHubView ? fetchQuery(api.listings.list, { category: 'appliances', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),
     isHubView ? fetchQuery(api.listings.list, { category: 'computers-laptops', limit: 12, status: 'ACTIVE' }) : Promise.resolve([]),

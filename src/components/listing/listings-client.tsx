@@ -195,7 +195,7 @@ export function ListingsClient({
              <ListingRowCarousel 
                 title="Cars" 
                 listings={hubData.cars} 
-                viewAllHref="/listings?category=vehicles" 
+                viewAllHref="/listings?category=cars" 
              />
              <ListingRowCarousel 
                 title="Real Estates" 
