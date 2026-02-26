@@ -5,17 +5,19 @@ import { query } from "./_generated/server";
 export const getStats = query({
   args: {},
   handler: async (ctx) => {
-    const usersCount = (await ctx.db.query("users").collect()).length;
-    const activeListingsCount = (await ctx.db
+    // Note: Convex doesn't have a direct count() yet, but we can iterate efficiently or use a counter if needed.
+    // For now, we'll keep it but be aware of scan limits.
+    const users = await ctx.db.query("users").collect();
+    const activeListings = await ctx.db
       .query("listings")
       .withIndex("by_status", (q) => q.eq("status", "ACTIVE"))
-      .collect()).length;
-    const listingsCount = (await ctx.db.query("listings").collect()).length;
+      .collect();
+    const totalListings = await ctx.db.query("listings").collect();
     const promotedListings = await ctx.db
       .query("listings")
       .withIndex("by_promoted", (q) => q.eq("isPromoted", true))
       .collect();
-    const verificationRequestsCount = 0; // Removed verificationRequests table
+    
     const contactSubmissionsCount = (await ctx.db
       .query("contactSubmissions")
       .withIndex("by_status", (q) => q.eq("status", "NEW"))
@@ -24,7 +26,6 @@ export const getStats = query({
     const now = new Date();
     const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
 
-    // Calculate Today's Revenue (Gross)
     const todayTransactions = await ctx.db
       .query("transactions")
       .withIndex("by_createdAt", (q) => q.gt("createdAt", startOfToday))
@@ -35,11 +36,11 @@ export const getStats = query({
       .reduce((acc, t) => acc + (t.amount || 0), 0);
 
     return {
-      users: usersCount,
-      activeListings: activeListingsCount,
-      listings: listingsCount,
+      users: users.length,
+      activeListings: activeListings.length,
+      listings: totalListings.length,
       promotedListings: promotedListings.length,
-      pendingVerifications: verificationRequestsCount,
+      pendingVerifications: 0,
       newInquiries: contactSubmissionsCount,
       totalRevenue,
     };
@@ -98,9 +99,12 @@ export const getListingsDetailed = query({
     status: v.optional(v.string()),
     isPromoted: v.optional(v.boolean()),
     listingNumber: v.optional(v.number()),
+    limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     let listings;
+    const limit = args.limit || 100;
+
     if (args.listingNumber) {
         const exact = await ctx.db
             .query("listings")
@@ -111,7 +115,7 @@ export const getListingsDetailed = query({
         listings = await ctx.db
             .query("listings")
             .withIndex("by_promoted", (q) => q.eq("isPromoted", true))
-            .collect();
+            .take(limit);
     } else {
         const statusFilter = args.status || "ACTIVE";
         if (statusFilter === "ALL") {
@@ -119,31 +123,36 @@ export const getListingsDetailed = query({
                 .query("listings")
                 .withIndex("by_createdAt")
                 .order("desc")
-                .collect();
+                .take(limit);
         } else {
             listings = await ctx.db
                 .query("listings")
                 .withIndex("by_status", (q) => q.eq("status", statusFilter))
                 .order("desc")
-                .collect();
+                .take(limit);
         }
     }
 
-    const detailedListings = await Promise.all(
-      listings.map(async (listing) => {
+    // Optimization: Collect unique user IDs and fetch them in parallel (more efficiently)
+    const userIds = [...new Set(listings.map(l => l.userId))];
+    const userEntries = await Promise.all(
+      userIds.map(async (id) => {
         const user = await ctx.db
           .query("users")
-          .withIndex("by_externalId", (q) => q.eq("externalId", listing.userId))
+          .withIndex("by_externalId", (q) => q.eq("externalId", id))
           .unique();
-        
-        return {
-          ...listing,
-          creatorName: user?.name || user?.email || "Unknown",
-          creatorPhone: user?.phone || "No Phone",
-        };
+        return [id, user];
       })
     );
+    const userMap = new Map(userEntries as any);
 
-    return detailedListings;
+    return listings.map((listing) => {
+      const user: any = userMap.get(listing.userId);
+      return {
+        ...listing,
+        creatorName: user?.name || user?.email || "Unknown",
+        creatorPhone: user?.phone || "No Phone",
+      };
+    });
   },
 });

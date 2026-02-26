@@ -48,7 +48,7 @@ export default function DeleteAccountPage() {
                              Delete Account
                         </CardTitle>
                         <CardDescription className="text-xs md:text-sm mt-1 leading-relaxed">
-                            This action is permanent and cannot be undone. All your data, including listings and messages, will be permanently removed.
+                            This action is permanent and cannot be undone. All your data, including your listings and profile information, will be permanently removed.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="p-4 md:p-6 pt-0 md:pt-0 space-y-4 md:space-y-5">

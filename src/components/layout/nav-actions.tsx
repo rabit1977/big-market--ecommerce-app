@@ -223,7 +223,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
     : [];
 
   const dangerItems: MenuItem[] = [
-    { href: '/account/delete', icon: Trash, label: t('delete_account'), danger: true },
+    { href: '/account/del', icon: Trash, label: t('delete_account'), danger: true },
   ];
 
   return (
