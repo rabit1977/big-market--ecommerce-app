@@ -6,7 +6,7 @@ import { useFavorites } from '@/lib/context/favorites-context';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils/formatters';
-import { Heart, MapPin, ShieldCheck } from 'lucide-react';
+import { BadgeCheck, Heart, MapPin, ShieldCheck } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -46,7 +46,7 @@ export const ListingCard = memo(
     return (
       <div
         className={cn(
-          "group relative bg-white dark:bg-muted-foreground/5 border rounded-3xl hover:scale p-1.5 flex transition-all duration-300",
+          "group relative bg-white dark:bg-muted-foreground/5 border rounded-3xl hover:scale-[1.01] p-1.5 flex transition-all duration-300",
           (isGrid || isCard) ? "flex-col h-full" : "flex-row h-24 sm:h-28 md:h-40", 
           isCard && "mb-4",
         )}
@@ -81,8 +81,14 @@ export const ListingCard = memo(
                     <PromotionIcon iconName={promoConfig.icon} className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-white fill-current" />
                 </div>
               )}
-              {isVerified && (
-                 <div className="bg-primary text-white rounded-full p-0.5 sm:p-1 shadow-md">
+              {/* Seller Verification / Membership Badge */}
+              {tier === 'BUSINESS' ? (
+                <div className="bg-amber-500 text-white rounded-full p-0.5 sm:p-1 pr-2 sm:pr-2.5 shadow-md flex items-center gap-1 animate-in fade-in zoom-in duration-500">
+                   <BadgeCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                   <span className="text-[7px] sm:text-[8px] font-black uppercase tracking-tighter leading-none">Verified Store</span>
+                </div>
+              ) : isVerified && (
+                 <div className="bg-primary text-white rounded-full p-0.5 sm:p-1 shadow-md animate-in fade-in zoom-in duration-500">
                     <ShieldCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                  </div>
               )}
