@@ -6,7 +6,7 @@ import { useFavorites } from '@/lib/context/favorites-context';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils/formatters';
-import { BadgeCheck, Heart, MapPin, ShieldCheck } from 'lucide-react';
+import { BadgeCheck, Heart, MapPin } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -46,7 +46,7 @@ export const ListingCard = memo(
     return (
       <div
         className={cn(
-          "group relative bg-white dark:bg-muted-foreground/5 border rounded-3xl hover:scale-[1.01] p-1.5 flex transition-all duration-300",
+          "group relative bg-slate-50 dark:bg-muted-foreground/5 border rounded-3xl  p-1.5 flex transition-all duration-300",
           (isGrid || isCard) ? "flex-col h-full" : "flex-row h-24 sm:h-28 md:h-40", 
           isCard && "mb-4",
         )}
@@ -60,40 +60,22 @@ export const ListingCard = memo(
 
         {/* Image Section - The container for the 'card' look */}
         <div className={cn(
-          "relative shrink-0 overflow-hidden z-20 rounded-t-2xl sm:rounded-3xl bg-muted transition-all duration-300 shadow-xs group-hover:shadow-md group-hover:-translate-y-0.5 pointer-events-none",
-          isGrid ? "aspect-square w-full" : isCard ? "aspect-video w-full" : "w-24 sm:w-32 md:w-48 h-full"
+          "relative shrink-0 overflow-hidden z-20 bg-muted transition-all duration-300 shadow-xs group-hover:shadow-md group-hover:-translate-y-0.5 pointer-events-none",
+          isGrid ? "aspect-square w-full rounded-t-2xl" : isCard ? "aspect-video w-full rounded-t-2xl" : "w-24 sm:w-32 md:w-48 h-full rounded-l-2xl"
         )}>
           <Image
             src={activeImage}
             alt={listing.title}
             fill
             className="object-cover transition-transform duration-700 ease-out group-hover:scale-105 pointer-events-none"
-            sizes={isCard ? "(max-width: 768px) 100vw, 80vw" : isGrid ? "(max-width: 768px) 50vw, 25vw" : "(max-width: 768px) 33vw, 20vw"}
+            sizes={isCard ? "(max-width: 768px) 100vw, 80vw" : isGrid ? "(max-width: 768px) 50vw, 25vw " : "(max-width: 768px) 33vw, 20vw"}
           />
+           {isPromoted && promoConfig && (
+                            <div className={cn("flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full absolute top-2 left-2 z-50 bg-white/90 dark:bg-black/70 backdrop-blur-xs opacity-80", promoConfig.badgeColor.replace('bg-', 'text-'))} title="Promoted">
+                                <PromotionIcon iconName={promoConfig.icon} className="h-3 w-3 fill-current" />
+                            </div>
+                        )}
           
-          {/* Status Badges Overlay */}
-          <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-20 pointer-events-none flex flex-col gap-1 sm:gap-2">
-              {isPromoted && promoConfig && promoConfig.badgeColor && (
-                <div className={cn(
-                    "flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full shadow-lg border border-white/20 backdrop-blur-md transition-all duration-300", 
-                    promoConfig.badgeColor
-                )}>
-                    <PromotionIcon iconName={promoConfig.icon} className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-white fill-current" />
-                </div>
-              )}
-              {/* Seller Verification / Membership Badge */}
-              {tier === 'BUSINESS' ? (
-                <div className="bg-amber-500 text-white rounded-full p-0.5 sm:p-1 pr-2 sm:pr-2.5 shadow-md flex items-center gap-1 animate-in fade-in zoom-in duration-500">
-                   <BadgeCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                   <span className="text-[7px] sm:text-[8px] font-black uppercase tracking-tighter leading-none">Verified Store</span>
-                </div>
-              ) : isVerified && (
-                 <div className="bg-primary text-white rounded-full p-0.5 sm:p-1 shadow-md animate-in fade-in zoom-in duration-500">
-                    <ShieldCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                 </div>
-              )}
-          </div>
-
           {!isOwner && (
             <button
                 onClick={handleToggleWishlist}
@@ -120,13 +102,16 @@ export const ListingCard = memo(
            
            {(isGrid || isCard) ? (
              <>
-                <div className="flex flex-col">
+                <div className="flex items-start justify-between gap-1.5">
                     <h3 className={cn(
                         "font-medium text-[13px] sm:text-[14px] leading-snug line-clamp-2 text-foreground group-hover:underline decoration-foreground/30 underline-offset-2 transition-all",
                         isCard && "text-base sm:text-lg"
                     )}>
                        {listing.title}
                     </h3>
+                    <div className="flex items-center gap-1 shrink-0">
+                        <SellerBadge tier={tier} isVerified={isVerified} />
+                    </div>
                 </div>
                 
                 <div className="mt-auto space-y-0.5">
@@ -139,7 +124,7 @@ export const ListingCard = memo(
                         </span>
                         {listing.previousPrice && listing.previousPrice > listing.price && (
                             <span className="text-[10px] sm:text-xs text-muted-foreground line-through opacity-70" suppressHydrationWarning>
-                                {formatCurrency(listing.previousPrice, (listing as any).currency)}
+                                {formatCurrency(listing.previousPrice as number, (listing as any).currency)}
                             </span>
                         )}
                     </div>
@@ -168,10 +153,20 @@ export const ListingCard = memo(
            ) : (
              // List View Content
              <>
-               <div className="flex justify-between items-start gap-2">
-                    <h3 className="font-bold text-xs sm:text-sm md:text-base leading-tight line-clamp-2 group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground">
-                       {listing.title}
-                    </h3>
+                <div className="flex justify-between items-start gap-2">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <h3 className="font-bold text-xs sm:text-sm md:text-base leading-tight line-clamp-2 group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground">
+                         {listing.title}
+                      </h3>
+                      <div className="flex items-center gap-1 shrink-0">
+                          {isPromoted && promoConfig && (
+                              <div className={cn("flex items-center justify-center w-4 h-4 rounded-full opacity-70", promoConfig.badgeColor.replace('bg-', 'text-'))}>
+                                  <PromotionIcon iconName={promoConfig.icon} className="h-2.5 w-2.5 fill-current" />
+                              </div>
+                          )}
+                          <SellerBadge tier={tier} isVerified={isVerified} />
+                      </div>
+                    </div>
                     <span className="text-[9px] sm:text-[10px] text-muted-foreground whitespace-nowrap shrink-0" suppressHydrationWarning>
                         {listing.createdAt ? new Date(listing.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Now'}
                     </span>
@@ -187,7 +182,7 @@ export const ListingCard = memo(
                     </span>
                     {listing.previousPrice && listing.previousPrice > listing.price && (
                         <span className="text-[10px] sm:text-xs text-muted-foreground line-through opacity-70" suppressHydrationWarning>
-                            {formatCurrency(listing.previousPrice, (listing as any).currency)}
+                            {formatCurrency(listing.previousPrice as number, (listing as any).currency)}
                         </span>
                     )}
                 </div>
@@ -205,3 +200,21 @@ export const ListingCard = memo(
 );
 
 ListingCard.displayName = 'ListingCard';
+
+const SellerBadge = ({ tier, isVerified, className }: { tier?: string; isVerified?: boolean; className?: string }) => {
+  if (tier === 'BUSINESS') {
+    return (
+      <div className={cn("flex items-center justify-center w-5 h-5 rounded-full bg-amber-400/10 backdrop-blur-xs shadow-[0_0_8px_rgba(251,191,36,0.1)] transition-all duration-300", className)} title="Verified Store">
+        <BadgeCheck className="w-3.5 h-3.5 text-amber-500 fill-amber-500/20" />
+      </div>
+    );
+  }
+  if (isVerified) {
+    return (
+      <div className={cn("flex items-center justify-center w-5 h-5 rounded-full bg-blue-400/10 backdrop-blur-xs shadow-[0_0_8px_rgba(59,130,246,0.1)] transition-all duration-300", className)} title="Verified User">
+        <BadgeCheck className="w-3.5 h-3.5 text-blue-500 fill-blue-500/20" />
+      </div>
+    );
+  }
+  return null;
+};

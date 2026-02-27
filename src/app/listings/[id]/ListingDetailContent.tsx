@@ -341,11 +341,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
             <div className="md:hidden space-y-4 px-4 bg-background border-b py-2">
               <div className="space-y-2">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  {seller?.isVerified && (
-                    <span className="text-[10px] font-black uppercase text-primary bg-primary/10 px-2 py-0.5 rounded tracking-tighter">
-                      Verified Seller
-                    </span>
-                  )}
+                  {/* SellerBadge will be next to title now */}
                   {!!condition && (
                     <span className="text-[10px] font-bold uppercase text-muted-foreground py-0.5 rounded tracking-wider">
                       Condition: {String(condition)}
@@ -364,7 +360,10 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     </span>
                   )}
                 </div>
-                <h1 className="text-xl font-bold text-foreground leading-tight">{listing.title}</h1>
+                <div className="flex items-start justify-between gap-2">
+                  <h1 className="text-xl font-bold text-foreground leading-tight flex-1">{listing.title}</h1>
+                  <SellerBadge tier={(seller as any)?.membershipTier} isVerified={seller?.isVerified} />
+                </div>
                 <div className="flex flex-col">
                   {listing.previousPrice && listing.previousPrice > listing.price && (
                     <span suppressHydrationWarning className="text-xs font-bold text-muted-foreground/50 line-through mb-[-2px]">
@@ -515,9 +514,10 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
               <div className="bg-card border-2 border-border rounded-3xl p-6 md:p-8 shadow-xl shadow-foreground/5 space-y-6">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <h1 className="text-xl font-bold text-muted-foreground tracking-tight leading-tight uppercase">
+                    <h1 className="text-xl font-bold text-muted-foreground tracking-tight leading-tight uppercase flex-1">
                       {listing.title}
                     </h1>
+                    <SellerBadge tier={(seller as any)?.membershipTier} isVerified={seller?.isVerified} />
                     {listing.price > 0 && (
                       <span className="text-[10px] font-black text-primary uppercase tracking-tighter bg-primary/5 px-2 py-0.5 rounded">
                         {listing.isPriceNegotiable ? 'Po dogovor' : 'Fixed'}
@@ -787,3 +787,21 @@ function DeleteListingButton({ listingId, compact }: { listingId: string; compac
     </AlertDialog>
   );
 }
+
+const SellerBadge = ({ tier, isVerified, className }: { tier?: string; isVerified?: boolean; className?: string }) => {
+  if (tier === 'BUSINESS') {
+    return (
+      <div className={cn("flex items-center justify-center w-5 h-5 rounded-full bg-amber-400/10 backdrop-blur-xs shadow-[0_0_8px_rgba(251,191,36,0.1)] transition-all duration-300 shrink-0", className)} title="Verified Store">
+        <BadgeCheck className="w-3.5 h-3.5 text-amber-500 fill-amber-500/20" />
+      </div>
+    );
+  }
+  if (isVerified) {
+    return (
+      <div className={cn("flex items-center justify-center w-5 h-5 rounded-full bg-blue-400/10 backdrop-blur-xs shadow-[0_0_8px_rgba(59,130,246,0.1)] transition-all duration-300 shrink-0", className)} title="Verified User">
+        <BadgeCheck className="w-3.5 h-3.5 text-blue-500 fill-blue-500/20" />
+      </div>
+    );
+  }
+  return null;
+};
