@@ -97,7 +97,7 @@ export default function RevenuePage() {
         <div className='space-y-1'>
            <h1 className='text-xl md:text-3xl width-full font-black tracking-tight flex items-center gap-3 justify-start'>
              Revenue Intelligence
-             <span className='inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold ring-1 ring-inset ring-emerald-500/20 uppercase tracking-widest'>
+             <span className='inline-flex items-center justify-center px-1.5 py-0.5 rounded-md bg-secondary text-primary text-[10px] font-bold border border-border uppercase tracking-widest'>
                 Live
              </span>
              {isTransitioning && <Loader2 className="w-4 h-4 text-muted-foreground animate-spin ml-2" />}
@@ -135,7 +135,7 @@ export default function RevenuePage() {
                             onClick={handleReset}
                             variant="ghost"
                             size="sm"
-                            className="h-8 px-3 rounded-lg text-[11px] uppercase tracking-wider font-bold text-destructive hover:bg-destructive/10"
+                            className="h-8 px-3 rounded-md text-[11px] uppercase tracking-wider font-bold text-destructive"
                         >
                             <Trash2 className="w-3.5 h-3.5 mr-1.5" />
                             Reset
@@ -164,25 +164,25 @@ export default function RevenuePage() {
                         title="Gross Revenue" 
                         value={formatCurrency(stats.totalRevenue)} 
                         icon={DollarSign}
-                        className="col-span-1 bg-gradient-to-br from-primary/10 via-primary/5 to-card border-primary/20 shadow-primary/5"
+                        className="col-span-1 bg-card border-border shadow-none"
                         valueClassName="text-3xl text-primary"
                     />
                     <CompactStat 
                         title="Net Revenue" 
                         value={formatCurrency(stats.netRevenue)} 
                         icon={TrendingUp}
-                        className="bg-blue-500/5 col-span-1 border-blue-500/20"
+                        className="bg-card col-span-1 border-border shadow-none"
                     />
                     <CompactStat 
                         title="VAT (18%)" 
                         value={formatCurrency(stats.vatRevenue)} 
                         icon={TrendingUp}
-                        className="bg-emerald-500/5 col-span-2 border-emerald-500/20"
+                        className="bg-card col-span-2 border-border shadow-none"
                     />
                 </div>
 
-                <Card className="rounded-2xl border-border/50 shadow-md bg-card flex flex-col flex-1">
-                    <div className="p-4 border-b border-border/40 bg-muted/10">
+                <Card className="rounded-lg border-border shadow-none bg-card flex flex-col flex-1">
+                    <div className="p-4 border-b border-border bg-secondary/50">
                         <h2 className="text-[13px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                             <Zap className="w-4 h-4 text-amber-500" />
                             Revenue Vectors
@@ -198,8 +198,8 @@ export default function RevenuePage() {
             </div>
 
             <div className="lg:col-span-4 flex flex-col">
-                <Card className="rounded-2xl border-border/50 shadow-md bg-card flex flex-col h-full overflow-hidden">
-                    <div className="p-4 border-b border-border/40 bg-muted/10 flex items-center justify-between">
+                <Card className="rounded-lg border-border shadow-none bg-card flex flex-col h-full overflow-hidden">
+                    <div className="p-4 border-b border-border bg-secondary/50 flex items-center justify-between">
                         <h2 className="text-[13px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                             Recent Transactions Ledger
                         </h2>
@@ -318,7 +318,7 @@ export default function RevenuePage() {
 
 function CompactStat({ title, value, icon: Icon, className, valueClassName }: any) {
     return (
-        <Card className={cn("overflow-hidden rounded-xl bg-card border border-border/50", className)}>
+        <Card className={cn("overflow-hidden rounded-lg bg-card border border-border transition-colors hover:bg-secondary/30", className)}>
             <CardContent className="p-4 flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-1">
                     <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground truncate">{title}</p>
@@ -331,17 +331,17 @@ function CompactStat({ title, value, icon: Icon, className, valueClassName }: an
 }
 
 function CategoryRow({ title, amount, color, icon: Icon }: any) {
-    const colors = {
-        amber: "bg-amber-500/10 text-amber-600 border-amber-500/20 shadow-amber-500/5",
-        blue: "bg-blue-500/10 text-blue-600 border-blue-500/20 shadow-blue-500/5",
-        purple: "bg-purple-500/10 text-purple-600 border-purple-500/20 shadow-purple-500/5",
-        emerald: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 shadow-emerald-500/5",
+    const colors: Record<string, string> = {
+        amber: "text-amber-500",
+        blue: "text-blue-500",
+        purple: "text-purple-500",
+        emerald: "text-emerald-500",
     };
     
-    const style = (colors as any)[color] || colors.blue;
+    const style = colors[color] || colors.blue;
 
     return (
-        <div className={cn("flex flex-col min-[380px]:flex-row min-[380px]:items-center justify-between gap-1 min-[380px]:gap-3 p-3 rounded-xl border bg-card/40 hover:bg-card transition-colors", style)}>
+        <div className={cn("flex flex-col min-[380px]:flex-row min-[380px]:items-center justify-between gap-1 min-[380px]:gap-3 p-3 rounded-lg border bg-card hover:bg-secondary/30 transition-colors", style)}>
             <div className="flex items-center gap-3 min-w-0">
                 <div className="p-1.5 bg-background shadow-sm rounded-lg border border-border/50 shrink-0">
                     <Icon className="w-4 h-4" />
@@ -380,15 +380,16 @@ function getPurchaseDetails(t: any): { label: string; sub?: string } {
 }
 
 function BadgeType({ type }: { type: string }) {
+    const base = "inline-flex items-center px-1.5 py-0.5 mt-0.5 rounded-md text-[9px] font-bold border w-fit transition-colors";
+    
     if (type === 'SUBSCRIPTION') {
-        return <span className="inline-flex items-center px-1.5 py-0.5 mt-0.5 rounded-full text-[9px] font-bold bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800 w-fit">Subscription</span>;
+        return <span className={cn(base, "bg-secondary text-primary border-border hover:bg-muted")}>Subscription</span>;
     }
     if (type === 'PROMOTION' || type === 'LISTING_PROMOTION') {
-        return <span className="inline-flex items-center px-1.5 py-0.5 mt-0.5 rounded-full text-[9px] font-bold bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 border border-purple-200 dark:border-purple-800 w-fit">Promotion</span>;
+        return <span className={cn(base, "bg-secondary text-foreground border-border hover:bg-muted")}>Promotion</span>;
     }
     if (type === 'TOPUP') {
-        return <span className="inline-flex items-center px-1.5 py-0.5 mt-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 w-fit">Top-Up</span>;
+        return <span className={cn(base, "bg-secondary text-emerald-500 border-border hover:bg-muted")}>Top-Up</span>;
     }
-    return <span className="inline-flex items-center px-1.5 py-0.5 mt-0.5 rounded-full text-[9px] font-bold bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400 border border-gray-200 dark:border-gray-700 w-fit">{type}</span>;
+    return <span className={cn(base, "bg-secondary text-muted-foreground border-border hover:bg-muted")}>{type}</span>;
 }
-

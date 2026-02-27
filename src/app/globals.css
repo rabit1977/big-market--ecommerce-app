@@ -59,19 +59,26 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-premium-card: var(--radius-2xl);
   --radius-premium-interactive: var(--radius-xl);
-  --radius-yt: 12px;
-  --radius-pill: 9999px;
-  --breakpoint-xs: 480px;
+  /* YouTube Specific Geometry */
+  --yt-button-padding: 10px 16px;
+  --yt-button-border-radius: 8px; /* Modern YT rounding */
+  --yt-card-padding: 16px;
+  --yt-container-gap: 24px;
+  --yt-line-height: 1.4;
+  --yt-font-weight-medium: 500;
+  --yt-font-weight-bold: 700;
+  --yt-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --yt-border-width: 1px;
 }
 
 
 :root {
-  /* Core Radius */
-  --radius: 0.75rem;
+  /* Core Radius (Targeting 8px for rounded-lg) */
+  --radius: 0.5rem;
   
-  /* ===== YT Light Mode ===== */
-  --background: #ffffff;
-  --foreground: #0f0f0f;
+  /* ===== YT Light Mode Palette (Dynamic) ===== */
+  --background: #ffffff; /* --yt-spec-base-background */
+  --foreground: #0f0f0f; /* --yt-spec-text-primary */
   
   --card: #ffffff;
   --card-foreground: #0f0f0f;
@@ -79,95 +86,95 @@
   --popover: #ffffff;
   --popover-foreground: #0f0f0f;
   
-  --primary: #ff0000;
+  --primary: #ff0000; /* YouTube Red */
   --primary-foreground: #ffffff;
   
-  --secondary: #f0f0f0;
-  --secondary-foreground: #606060;
+  --secondary: #f2f2f2; /* --yt-spec-white-2 */
+  --secondary-foreground: #0f0f0f;
   
-  --muted: #f0f0f0;
-  --muted-foreground: #606060;
+  --muted: #f2f2f2;
+  --muted-foreground: #606060; /* --yt-spec-text-secondary */
   
-  --accent: #e5e5e5;
+  --accent: #f8f8f8; /* --ytd-searchbox-legacy-button-color */
   --accent-foreground: #0f0f0f;
   
-  --destructive: #ef4444;
+  --destructive: #ff4e45; /* --yt-brand-light-red */
+  --destructive-foreground: #ffffff;
   
-  --border: #e5e5e5;
-  --input: #f0f0f0;
-  --ring: #ff0000;
+  --border: rgba(0, 0, 0, 0.1); /* --yt-spec-outline */
+  --input: #f8f8f8;
+  --ring: #065fd4; /* --yt-spec-call-to-action */
   
-  /* YT Specific Mapping */
+  /* YT Specific Mapping for utility use */
   --yt-bg: #ffffff;
-  --yt-hover: #e5e5e5;
-  --yt-border: #e5e5e5;
+  --yt-hover: #f2f2f2;
+  --yt-border: rgba(0, 0, 0, 0.1);
   --yt-text: #0f0f0f;
   --yt-text-sec: #606060;
-  --yt-search: #f0f0f0;
+  --yt-search: #f8f8f8;
 
-  /* Chart Colors */
+  /* Chart Colors (Vibrant YouTube Palette) */
   --chart-1: #ff0000;
-  --chart-2: #3b82f6;
-  --chart-3: #8b5cf6;
-  --chart-4: #a855f7;
-  --chart-5: #0ea5e9;
+  --chart-2: #065fd4;
+  --chart-3: #2ba640;
+  --chart-4: #fbc02d;
+  --chart-5: #3ea6ff;
   
   /* Sidebar */
   --sidebar: #ffffff;
   --sidebar-foreground: #0f0f0f;
   --sidebar-primary: #ff0000;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e5e5e5;
+  --sidebar-accent: #f2f2f2;
   --sidebar-accent-foreground: #0f0f0f;
-  --sidebar-border: #e2e8f0;
-  --sidebar-ring: #ff0000;
+  --sidebar-border: rgba(0, 0, 0, 0.1);
+  --sidebar-ring: #065fd4;
 }
 
 .dark {
-  /* ===== YT Dark Mode ===== */
-  
-  --background: #0f0f0f;
-  --foreground: #f1f1f1;
+  /* ===== YT Dark Mode Palette (Dynamic) ===== */
+  --background: #0f0f0f; /* --yt-spec-base-background */
+  --foreground: #f1f1f1; /* --yt-spec-text-primary */
   
   --card: #0f0f0f;
   --card-foreground: #f1f1f1;
   
-  --popover: #121212;
+  --popover: #0f0f0f;
   --popover-foreground: #f1f1f1;
   
-  --primary: #ff0000;
+  --primary: #ff0000; /* YouTube Red (Contrast) */
   --primary-foreground: #ffffff;
   
-  --secondary: #121212;
-  --secondary-foreground: #aaaaaa;
+  --secondary: #272727; /* --yt-spec-black-1 */
+  --secondary-foreground: #f1f1f1;
   
-  --muted: #121212;
-  --muted-foreground: #aaaaaa;
+  --muted: #272727;
+  --muted-foreground: #aaaaaa; /* --yt-spec-text-secondary */
   
-  --accent: #272727;
+  --accent: #3f3f3f; /* --yt-spec-outline-opaque */
   --accent-foreground: #ffffff;
   
-  --destructive: #ef4444;
+  --destructive: #ff4e45; /* --yt-brand-light-red */
   --destructive-foreground: #ffffff;
   
-  --border: #3f3f3f;
-  --input: #121212;
-  --ring: #ff0000;
+  --border: rgba(255, 255, 255, 0.1); /* --yt-spec-outline */
+  --input: #272727;
+  --ring: #3ea6ff; /* --yt-spec-call-to-action */
 
   /* YT Specific Mapping */
   --yt-bg: #0f0f0f;
   --yt-hover: #272727;
-  --yt-border: #3f3f3f;
+  --yt-border: rgba(255, 255, 255, 0.1);
   --yt-text: #f1f1f1;
   --yt-text-sec: #aaaaaa;
   --yt-search: #121212;
   
   /* Chart Colors */
   --chart-1: #ff0000;
-  --chart-2: #60a5fa;
-  --chart-3: #a78bfa;
-  --chart-4: #c084fc;
-  --chart-5: #38bdf8;
+  --chart-2: #3ea6ff;
+  --chart-3: #2ba640;
+  --chart-4: #fbc02d;
+  --chart-5: #65b8ff;
   
   /* Sidebar */
   --sidebar: #0f0f0f;
@@ -176,8 +183,14 @@
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #272727;
   --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #3f3f3f;
-  --sidebar-ring: #ff0000;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #3ea6ff;
+
+  /* YouTube Geometry Mapping */
+  --spacing-yt-gap: 24px;
+  --spacing-yt-item: 16px;
+  --line-height-yt: 1.5;
+  --border-width-yt: 1px;
 }
 
 /* ============================================
@@ -275,6 +288,24 @@
   background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);
 }
 
+/* YouTube Palette */
+[data-palette="youtube"] {
+  --primary: #ff0000;
+  --ring: #065fd4;
+  --sidebar-primary: #ff0000;
+  --sidebar-ring: #065fd4;
+}
+.dark [data-palette="youtube"] {
+  --ring: #3ea6ff;
+}
+[data-palette="youtube"] .gradient-text,
+[data-palette="youtube"] .gradient-text-animate {
+  background-image: linear-gradient(135deg, #ff0000, #ff4e45, #c00);
+}
+[data-palette="youtube"] .gradient-primary {
+  background: linear-gradient(135deg, #ff0000, #cc0000);
+}
+
 /* TikTok Palette */
 [data-palette="tiktok"] {
   --primary: #ff0050;
@@ -314,8 +345,8 @@
 
   /* Premium Typography Scale — Mobile-first */
   h1 { 
-    @apply text-2xl font-extrabold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl;
-    letter-spacing: -0.025em;
+    @apply text-2xl font-bold tracking-tight sm:text-3xl md:text-3xl lg:text-4xl;
+    letter-spacing: -0.02em;
   }
   h2 { 
     @apply text-xl font-bold tracking-tight sm:text-2xl md:text-3xl lg:text-4xl;
@@ -402,15 +433,15 @@
   }
 
   .dark .glass {
-    background: rgba(22, 22, 29, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(15, 15, 15, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .glass-card {
     @apply rounded-2xl backdrop-blur-lg;
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.08);
+    box-shadow: none;
   }
 
   .dark .glass-card {
@@ -420,21 +451,21 @@
 
   /* ===== Premium Card Styles ===== */
   .card-premium {
-    @apply relative bg-card rounded-(--radius-premium-card) border border-border/50 overflow-hidden;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px -2px rgba(0, 0, 0, 0.06);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    @apply relative bg-card rounded-lg border border-border overflow-hidden;
+    box-shadow: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .card-premium:hover {
-    @apply border-primary/30 shadow-xl shadow-primary/5 -translate-y-1;
+    @apply border-primary/30 -translate-y-1;
   }
 
   .dark .card-premium {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 4px 12px -2px rgba(0, 0, 0, 0.4);
+    box-shadow: none;
   }
 
   .dark .card-premium:hover {
-    @apply border-primary/40 shadow-xl shadow-primary/10;
+    @apply border-primary/40;
   }
 
   /* ===== Premium Buttons ===== */
@@ -448,12 +479,12 @@
 
   /* ===== Input Premium ===== */
   .input-premium {
-    @apply h-11 rounded-(--radius-premium-interactive) border border-border/60 bg-background/50 px-4 transition-all duration-200;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    @apply h-11 rounded-lg border border-border bg-background px-4 transition-all duration-200;
+    box-shadow: none;
   }
 
   .input-premium:hover {
-    @apply border-primary/30 bg-background;
+    @apply border-primary/30;
   }
 
   .input-premium:focus {
@@ -546,8 +577,8 @@
 
   /* ===== Input Premium ===== */
   .input-premium {
-    @apply h-11 rounded-xl border-border bg-background px-4 transition-all duration-200;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    @apply h-11 rounded-lg border border-border bg-background px-4 transition-all duration-200;
+    box-shadow: none;
   }
 
   .input-premium:hover {
@@ -582,7 +613,7 @@
 
   /* ===== Stat Card ===== */
   .stat-card {
-    @apply bg-card rounded-xl border border-border p-5 transition-all duration-200;
+    @apply bg-card rounded-lg border border-border p-5 transition-all duration-150;
   }
 
   .stat-card:hover {
@@ -595,7 +626,7 @@
 
   /* ===== Dashboard Stats Container ===== */
   .stat-icon-container {
-    @apply w-12 h-12 rounded-xl flex items-center justify-center;
+    @apply w-12 h-12 rounded-lg flex items-center justify-center;
   }
 
   /* ===== Status Badges ===== */

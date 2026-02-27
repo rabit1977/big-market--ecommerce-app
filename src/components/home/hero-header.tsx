@@ -62,12 +62,12 @@ export const HeroHeader = () => {
                 <CarouselItem className="basis-auto pl-2 first:pl-0">
                   <Link 
                     href="/categories"
-                    className="group flex items-center justify-center gap-1.5 px-3.5 py-1.5 md:py-2 rounded-xl border border-border bg-card shadow-sm hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 shrink-0"
+                    className="group flex items-center justify-center gap-1.5 px-3.5 py-1.5 md:py-2 rounded-(--yt-button-border-radius) border border-border bg-card hover:border-primary/50 hover:bg-secondary transition-all duration-150 shrink-0"
                   >
-                    <div className="w-5 h-5 rounded-lg border border-border bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all duration-300">
+                    <div className="w-5 h-5 rounded-md border border-border bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all duration-150">
                       <LayoutGrid className="w-3 h-3" />
                     </div>
-                    <span className="text-[11px] md:text-[12px] font-bold tracking-wide text-foreground uppercase whitespace-nowrap">{tHome('categories') || 'categories'}</span>
+                    <span className="text-[11px] md:text-[12px] font-medium tracking-wide text-foreground uppercase whitespace-nowrap">{tHome('categories') || 'categories'}</span>
                   </Link>
                 </CarouselItem>
 
@@ -75,12 +75,12 @@ export const HeroHeader = () => {
                 <CarouselItem className="basis-auto pl-2">
                   <Link 
                     href="/listings"
-                    className="group flex items-center justify-center gap-1.5 px-3.5 py-1.5 md:py-2 rounded-xl border border-border bg-card shadow-sm hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 shrink-0"
+                    className="group flex items-center justify-center gap-1.5 px-3.5 py-1.5 md:py-2 rounded-(--yt-button-border-radius) border border-border bg-card hover:border-primary/50 hover:bg-secondary transition-all duration-150 shrink-0"
                   >
-                    <div className="w-5 h-5 rounded-lg border border-border bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all duration-300">
+                    <div className="w-5 h-5 rounded-md border border-border bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all duration-150">
                       <List className="w-3 h-3" />
                     </div>  
-                    <span className="text-[11px] md:text-[12px] font-bold tracking-wide text-foreground uppercase whitespace-nowrap">{tHome('browse_all') || 'browse all'}</span>
+                    <span className="text-[11px] md:text-[12px] font-medium tracking-wide text-foreground uppercase whitespace-nowrap">{tHome('browse_all') || 'browse all'}</span>
                   </Link>
                 </CarouselItem>
 
@@ -88,12 +88,12 @@ export const HeroHeader = () => {
                 <CarouselItem className="basis-auto pl-2">
                   <Link 
                     href="/favorites"
-                    className="group flex items-center justify-center gap-1.5 px-3.5 py-1.5 md:py-2 rounded-xl border border-border bg-card shadow-sm hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 shrink-0"
+                    className="group flex items-center justify-center gap-1.5 px-3.5 py-1.5 md:py-2 rounded-(--yt-button-border-radius) border border-border bg-card hover:border-primary/50 hover:bg-secondary transition-all duration-150 shrink-0"
                   >
-                    <div className="relative w-5 h-5 rounded-lg border border-border bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all duration-300">
+                    <div className="relative w-5 h-5 rounded-md border border-border bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all duration-150">
                       <Heart className={cn("w-3 h-3", favCount > 0 && "fill-current")} />
                     </div>
-                    <span className="text-[11px] md:text-[12px] font-bold tracking-wide text-foreground uppercase whitespace-nowrap">{tNav('favorites')}</span>
+                    <span className="text-[11px] md:text-[12px] font-medium tracking-wide text-foreground uppercase whitespace-nowrap">{tNav('favorites')}</span>
                     {favCount > 0 && (
                       <span className="bg-primary text-white text-[8px] ml-[-6px] mb-[-6px] font-black rounded-full min-w-4 h-4 px-1 flex items-center justify-center shadow-md border-2 border-background z-10 transition-transform group-hover:scale-110">
                         {favCount}
@@ -109,10 +109,10 @@ export const HeroHeader = () => {
                   <CarouselItem key={store._id} className="basis-auto pl-2">
                     <Link 
                       href={`/store/${store.externalId}`}
-                      className="group flex items-center justify-center gap-1.5 pr-3.5 pl-1.5 py-1.5 md:py-2 rounded-xl border border-border bg-card shadow-sm hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 shrink-0"
+                      className="group flex items-center justify-center gap-1.5 pr-3.5 pl-1.5 py-1.5 md:py-2 rounded-(--yt-button-border-radius) border border-border bg-card hover:border-primary/50 hover:bg-secondary transition-all duration-150 shrink-0"
                     >
-                      <UserAvatar user={store as any} className="w-5 h-5 border border-border rounded-lg shadow-xs group-hover:border-primary transition-all duration-300" />
-                      <span className="text-[11px] md:text-[12px] font-bold tracking-wide text-foreground uppercase whitespace-nowrap">
+                      <UserAvatar user={store as any} className="w-5 h-5 border border-border rounded-md group-hover:border-primary transition-all duration-150" />
+                      <span className="text-[11px] md:text-[12px] font-medium tracking-wide text-foreground uppercase whitespace-nowrap">
                         {store.companyName || store.name || 'Store'}
                       </span>
                     </Link>
@@ -128,10 +128,10 @@ export const HeroHeader = () => {
                       type="button"
                       onClick={() => toggleFilter(filter.id)}
                       className={cn(
-                        "inline-flex items-center gap-2 px-3.5 py-1.5 md:py-2 rounded-xl text-[10px] md:text-[11px] font-bold tracking-wide uppercase border transition-all duration-300 active:scale-95 whitespace-nowrap shrink-0 shadow-sm",
+                        "inline-flex items-center gap-2 px-3.5 py-1.5 md:py-2 rounded-(--yt-button-border-radius) text-[10px] md:text-[11px] font-medium tracking-wide uppercase border transition-all duration-150 active:scale-95 whitespace-nowrap shrink-0",
                         filters[filter.id]
-                          ? "bg-primary/5 border-primary/40 text-primary shadow-primary/5"
-                          : "bg-card border-border text-foreground hover:bg-muted/50 hover:border-muted-foreground/30"
+                          ? "bg-primary border-primary text-white"
+                          : "bg-card border-border text-foreground hover:bg-secondary hover:border-border"
                       )}
                     >
                       <div className={cn(

@@ -74,7 +74,7 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
               className="shrink-0 flex items-center group"
               aria-label="Biggest Market home page"
             >
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-sm shadow-primary/20 group-hover:scale-105 transition-transform">
+              <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center group-hover:bg-primary/90 transition-all duration-150">
                 <Zap className="h-4 w-4 text-white" fill="currentColor" />
               </div>
             </Link>
@@ -97,10 +97,10 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
             className="flex shrink-0 items-center gap-2.5 group mr-1"
             aria-label="Biggest Market home page"
           >
-            <div className="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-105 transition-all duration-300">
-              <Zap className="h-5.5 w-5.5 text-white" fill="currentColor" />
+            <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center group-hover:bg-primary/90 transition-all duration-150">
+              <Zap className="h-5 w-5 text-white" fill="currentColor" />
             </div>
-            <span className="text-xl font-black tracking-tight text-foreground leading-none whitespace-nowrap">
+            <span className="text-xl font-bold tracking-tight text-foreground leading-none whitespace-nowrap">
               Biggest Market<span className="text-primary">.</span>
             </span>
           </Link>
@@ -111,10 +111,10 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
           <div className="flex items-center gap-1.5 lg:gap-2 shrink-0">
             <Button
               asChild
-              className="bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-md shadow-primary/10 px-6 h-10 transition-all hover:shadow-lg hover:shadow-primary/20 hover:scale-[1.02] active:scale-[0.98]"
+              className="bg-primary hover:bg-primary/90 text-white font-medium rounded-(--yt-button-border-radius) px-6 h-9 transition-all active:scale-[0.98]"
             >
               <Link href="/sell">
-                <Plus className="h-4.5 w-4.5 stroke-[3]" />
+                <Plus className="h-4 w-4 stroke-[3]" />
                 {t('post_ad')}
               </Link>
             </Button>

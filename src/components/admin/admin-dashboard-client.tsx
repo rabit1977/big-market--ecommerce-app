@@ -41,12 +41,12 @@ export function AdminDashboardClient() {
       <div className="space-y-8 animate-pulse">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-32 w-full rounded-2xl" />
+            <Skeleton key={i} className="h-32 w-full rounded-lg" />
           ))}
         </div>
         <div className="grid gap-6 lg:grid-cols-3">
-          <Skeleton className="lg:col-span-2 h-[400px] rounded-2xl" />
-          <Skeleton className="h-[400px] rounded-2xl" />
+          <Skeleton className="lg:col-span-2 h-[400px] rounded-lg" />
+          <Skeleton className="h-[400px] rounded-lg" />
         </div>
       </div>
     );
@@ -57,9 +57,9 @@ export function AdminDashboardClient() {
       {/* Header with quick actions */}
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
         <div className='space-y-1'>
-          <h1 className='text-3xl sm:text-4xl font-black tracking-tight text-foreground flex items-center gap-3'>
+          <h1 className='text-3xl sm:text-4xl font-bold tracking-tight text-foreground flex items-center gap-3'>
             Dashboard
-            <span className='inline-flex items-center justify-center px-2 py-0.5 rounded-xl bg-primary/10 text-primary text-[10px] font-bold ring-1 ring-inset ring-primary/20 uppercase tracking-widest'>
+            <span className='inline-flex items-center justify-center px-1.5 py-0.5 rounded-md bg-secondary text-primary text-[10px] font-bold border border-border uppercase tracking-widest'>
               Live
             </span>
           </h1>
@@ -73,13 +73,13 @@ export function AdminDashboardClient() {
                onTimeRangeChange={setTimeRange}
                showSearch={false}
            />
-           <Button variant="outline" size="sm" asChild className="hidden sm:flex rounded-xl">
+           <Button variant="outline" size="sm" asChild className="hidden sm:flex rounded-lg">
               <Link href="/admin/analytics">
                 <BarChart3 className="w-4 h-4 mr-2" />
                 View Reports
               </Link>
            </Button>
-           <Button size="sm" asChild className="rounded-xl shadow-lg shadow-primary/25">
+           <Button size="sm" asChild className="rounded-lg">
               <Link href="/admin/users/create">
                 <Plus className="w-4 h-4 mr-2" />
                 Create User
@@ -121,11 +121,11 @@ export function AdminDashboardClient() {
       <div className='grid gap-6 lg:grid-cols-3'>
         
         {/* Pending Approvals */}
-        <Card className="lg:col-span-2 rounded-2xl border-border/50 shadow-xl overflow-hidden bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm">
+        <Card className="lg:col-span-2 rounded-lg border-border shadow-none overflow-hidden bg-card transition-colors hover:bg-secondary/30">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
             <div className="space-y-1">
               <CardTitle className="text-xl font-bold flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-amber-500" />
+                <ShieldCheck className="w-5 h-5 text-indigo-500" />
                 Pending Approvals
               </CardTitle>
               <CardDescription>
@@ -139,8 +139,8 @@ export function AdminDashboardClient() {
           <CardContent>
             {!pendingListings || pendingListings.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4">
-                  <Plus className="w-6 h-6 text-emerald-500" />
+                <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center mb-4 border border-border">
+                  <Plus className="w-6 h-6 text-muted-foreground" />
                 </div>
                 <h3 className="font-bold">All caught up!</h3>
                 <p className="text-sm text-muted-foreground">No pending listings to review right now.</p>
@@ -148,9 +148,9 @@ export function AdminDashboardClient() {
             ) : (
               <div className="space-y-4">
                 {pendingListings.slice(0, 5).map((listing: any) => (
-                  <div key={listing._id} className="flex items-center justify-between p-4 rounded-2xl bg-muted/30 border border-border/40 hover:bg-muted/50 transition-colors">
+                  <div key={listing._id} className="flex items-center justify-between p-4 rounded-lg bg-secondary/50 border border-border hover:bg-secondary transition-colors">
                     <div className="flex items-center gap-4">
-                       <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-600 font-bold">
+                       <div className="w-12 h-12 rounded-md bg-muted border border-border flex items-center justify-center text-foreground font-bold">
                           {listing.title[0]}
                        </div>
                        <div>
@@ -174,7 +174,7 @@ export function AdminDashboardClient() {
         </Card>
 
         {/* Recent Activity */}
-        <Card className="rounded-2xl border-border/50 shadow-xl overflow-hidden bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm">
+        <Card className="rounded-lg border-border shadow-none overflow-hidden bg-card transition-colors hover:bg-secondary/30">
           <CardHeader>
             <CardTitle className="text-xl font-bold flex items-center gap-2">
               <Clock className="w-5 h-5 text-primary" />
@@ -192,29 +192,26 @@ export function AdminDashboardClient() {
       </div>
 
       {/* Verification Summary */}
-      <Card className="rounded-2xl border-border/50 shadow-xl p-8 sm:p-10 bg-gradient-to-br from-indigo-500 to-violet-600 text-white relative overflow-hidden group">
+      <Card className="rounded-lg border border-border shadow-none p-8 sm:p-10 bg-card relative overflow-hidden group">
          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-3">
-               <Badge className="bg-white/20 text-white hover:bg-white/30 border-none px-3 py-1 font-black text-[10px] uppercase tracking-widest">
+               <Badge className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 px-3 py-1 font-bold text-[10px] uppercase tracking-widest rounded-md">
                   Action Required
                </Badge>
-               <h2 className="text-2xl sm:text-4xl font-black tracking-tight">
+               <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground">
                   {stats?.pendingVerifications ?? 0} Pending ID Verifications
                </h2>
-               <p className="text-indigo-100 font-medium max-w-lg">
+               <p className="text-muted-foreground font-medium max-w-lg">
                   There are users waiting for their identity verification. Verifying users boosts platform trust and safety.
                </p>
             </div>
-            <Button size="lg" variant="secondary" asChild className="rounded-xl px-8 bg-white text-indigo-600 hover:bg-indigo-50 font-bold h-14">
+            <Button size="lg" asChild className="rounded-lg px-8 font-bold h-14 border border-primary">
                <Link href="/admin/users?tab=verifications">
                   Go to Verifications
                   <ArrowRight className="ml-2 w-5 h-5" />
                </Link>
             </Button>
          </div>
-         {/* Decoration */}
-         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-[100px] -mr-32 -mt-32 group-hover:scale-110 transition-transform duration-700" />
-         <ShieldCheck className="absolute bottom-0 right-0 w-48 h-48 text-white/5 -mb-12 -mr-12" />
       </Card>
     </div>
   );
@@ -226,8 +223,8 @@ function ActivityLogs({ logs }: { logs: any[] }) {
   return (
     <div className="space-y-4">
       {logs.map((log, i) => (
-        <div key={log._id} className="flex gap-4 p-3 rounded-xl hover:bg-muted/50 transition-colors">
-          <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center shrink-0">
+        <div key={log._id} className="flex gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+          <div className="w-10 h-10 rounded-md bg-muted flex items-center justify-center shrink-0 border border-border">
              <ActivityIcon action={log.action} />
           </div>
           <div className="flex-1 min-w-0">

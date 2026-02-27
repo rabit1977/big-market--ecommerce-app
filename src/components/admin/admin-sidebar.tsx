@@ -2,7 +2,6 @@
 
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
 import {
     BarChart3,
     CreditCard,
@@ -61,8 +60,8 @@ export const AdminSidebar = () => {
       {/* Desktop Sidebar */}
       <aside className='hidden lg:flex w-64 flex-col fixed inset-y-0 z-50 bg-card border-r border-border'>
         <div className='flex items-center h-16 px-6 border-b border-border justify-between'>
-            <Link href='/admin/dashboard' className='flex items-center gap-2.5 font-black text-xl tracking-tight text-foreground transition-all hover:opacity-90'>
-                <div className='w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20'>
+            <Link href='/admin/dashboard' className='flex items-center gap-2.5 font-extrabold text-xl tracking-tighter text-foreground transition-all hover:opacity-90'>
+                <div className='w-9 h-9 rounded-lg bg-primary text-primary-foreground flex items-center justify-center border border-primary/20'>
                     <LayoutDashboard className='w-5 h-5' />
                 </div>
                 <span>Admin</span>
@@ -114,7 +113,7 @@ export const AdminSidebar = () => {
       <header className='lg:hidden fixed top-0 left-0 right-0 z-50 h-14 bg-background/80 backdrop-blur-md border-b border-border flex items-center justify-between px-4'>
             <div className='flex items-center gap-2'>
                 <Link href='/admin/dashboard' className='font-bold text-lg flex items-center gap-2'>
-                    <div className='w-7 h-7 rounded bg-primary text-primary-foreground flex items-center justify-center'>
+                    <div className='w-7 h-7 rounded-md bg-primary text-primary-foreground flex items-center justify-center border border-primary/10'>
                          <LayoutDashboard className='w-4 h-4' />
                     </div>
                     <span className="text-sm">Admin</span>
@@ -162,7 +161,7 @@ export const AdminSidebar = () => {
                     <span className="text-[10px] font-medium">Menu</span>
                 </button>
             </SheetTrigger>
-            <SheetContent side="bottom" className='h-[85vh] rounded-t-2xl p-0 flex flex-col'>
+            <SheetContent side="bottom" className='h-[85vh] rounded-t-lg p-0 flex flex-col border-t border-border shadow-none'>
                  <div className="p-4 border-b flex items-center justify-between">
                      <SheetTitle>Admin Menu</SheetTitle>
                      {/* Close button is auto-added by SheetContent usually, but title is needed for a11y */}
@@ -170,26 +169,26 @@ export const AdminSidebar = () => {
                  <ScrollArea className="flex-1 p-4">
                      <div className="grid grid-cols-3 gap-4 mb-8">
                          {navItems.map((item) => (
-                             <Link
-                                key={item.href}
-                                href={item.href}
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className={cn(
-                                    "flex flex-col items-center justify-center gap-2 p-3 rounded-xl border bg-card hover:bg-muted/50 transition-all",
-                                    (pathname === item.href || pathname.startsWith(item.href + '/')) 
-                                        ? "border-primary/50 bg-primary/5 text-primary" 
-                                        : "border-border"
-                                )}
-                             >
-                                 <item.icon className="w-6 h-6" />
-                                 <span className="text-xs text-center font-medium line-clamp-1">{item.label}</span>
-                             </Link>
+                              <Link
+                                 key={item.href}
+                                 href={item.href}
+                                 onClick={() => setIsMobileMenuOpen(false)}
+                                 className={cn(
+                                     "flex flex-col items-center justify-center gap-2 p-3 rounded-lg border bg-card hover:bg-secondary/50 transition-all",
+                                     (pathname === item.href || pathname.startsWith(item.href + '/')) 
+                                         ? "border-primary/50 bg-primary/5 text-primary" 
+                                         : "border-border"
+                                 )}
+                              >
+                                  <item.icon className="w-5 h-5" />
+                                  <span className="text-[10px] text-center font-bold line-clamp-1 uppercase tracking-tight">{item.label}</span>
+                              </Link>
                          ))}
                      </div>
                      
                      <div className="rounded-xl border border-border bg-muted/30 p-4">
                          <div className="flex items-center gap-3 mb-4">
-                             <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                             <div className="w-10 h-10 rounded-lg bg-secondary border border-border flex items-center justify-center text-primary font-bold">
                                  {session?.user?.name?.[0] || 'A'}
                              </div>
                              <div className="overflow-hidden">
@@ -218,15 +217,15 @@ function NavItem({ item, isActive }: { item: NavItem; isActive: boolean }) {
         <Link
             href={item.href}
             className={cn(
-                'flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300',
+                'flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-bold transition-all duration-200',
                 isActive 
-                    ? 'bg-primary text-white shadow-md shadow-primary/20' 
-                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                    ? 'bg-secondary text-primary border border-border' 
+                    : 'text-muted-foreground hover:bg-secondary/50 hover:text-foreground'
             )}
         >
-            <item.icon className={cn('w-4.5 h-4.5', isActive ? 'text-white' : 'text-muted-foreground/70')} />
+            <item.icon className={cn('w-4.5 h-4.5', isActive ? 'text-primary' : 'text-muted-foreground/50')} />
             {item.label}
-            {isActive && <motion.div layoutId="active-pill" className="ml-auto w-1.5 h-1.5 rounded-full bg-white" />}
+            {isActive && <div className="ml-auto w-1 h-4 rounded-full bg-primary" />}
         </Link>
     );
 }

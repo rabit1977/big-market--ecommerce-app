@@ -183,21 +183,21 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
                   className="block h-full"
               >
                 <Card className={`
-                  group relative overflow-hidden border bg-gradient-to-br ${colorClass}
-                  hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 cursor-pointer
-                  rounded-2xl h-full min-h-[90px] md:min-h-[120px] flex flex-col items-center justify-center p-2
+                  group relative overflow-hidden border border-border bg-background
+                  hover:border-primary/50 transition-all duration-150 cursor-pointer
+                  rounded-lg h-full min-h-[90px] md:min-h-[120px] flex flex-col items-center justify-center p-2
                 `}>
                   <div className="flex flex-col items-center text-center space-y-2 sm:space-y-3">
                     {/* Icon Container */}
                     <div className="relative">
-                      <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl bg-background/50 backdrop-blur-md flex items-center justify-center group-hover:scale-105 group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-sm border border-white/20">
-                        <Icon className="w-5 h-5 sm:w-5.5 sm:h-5.5 md:w-6.5 md:h-6.5 text-foreground/70 group-hover:text-white transition-colors duration-300" />
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-md bg-secondary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-150 border border-border">
+                        <Icon className="w-5 h-5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6 text-foreground/70 group-hover:text-white transition-colors duration-150" />
                       </div>
                     </div>
 
                     {/* Category Name */}
                     <div className="z-10 relative">
-                      <h3 className="font-bold text-[10px] sm:text-[11px] md:text-sm text-foreground/80 group-hover:text-primary transition-colors duration-300 line-clamp-2 leading-tight uppercase tracking-tight">
+                      <h3 className="font-medium text-[10px] sm:text-[11px] md:text-sm text-foreground/80 group-hover:text-primary transition-colors duration-150 line-clamp-2 leading-tight uppercase tracking-tight">
                         {category.name}
                       </h3>
                     </div>

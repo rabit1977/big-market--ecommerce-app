@@ -80,7 +80,6 @@ export function ListingsClient({
   }), [searchParams]);
 
   const handleFilterChange = (filters: FilterState) => {
-    // Build URL search params
     const params = new URLSearchParams(searchParams.toString());
     
     if (filters.category && filters.category !== 'all') params.set('category', filters.category);
@@ -103,7 +102,6 @@ export function ListingsClient({
     
     if (filters.sortBy) params.set('sort', filters.sortBy);
     
-    // New Professional Filters
     if (filters.userType) params.set('userType', filters.userType);
     else params.delete('userType');
 
@@ -122,18 +120,13 @@ export function ListingsClient({
     if (filters.dateRange && filters.dateRange !== 'all') params.set('date', filters.dateRange);
     else params.delete('date');
 
-    // Dynamic Filters
     if (filters.dynamicFilters) params.set('filters', filters.dynamicFilters);
     else params.delete('filters');
 
-    // Listing ID Search
     if (filters.listingNumber) params.set('listingNumber', filters.listingNumber.toString());
     else params.delete('listingNumber');
 
-    // Reset pagination
     params.delete('page');
-
-    // Navigate with new params
     router.push(`/listings?${params.toString()}`);
   };
 
@@ -146,9 +139,8 @@ export function ListingsClient({
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 relative">
-      {/* Mobile Filter Sheet */}
       <Sheet open={isMobileFiltersOpen} onOpenChange={setIsMobileFiltersOpen}>
-         <SheetContent side="bottom" className="w-full h-[85vh] overflow-y-auto p-0 rounded-t-[2rem]">
+         <SheetContent side="bottom" className="w-full h-[85vh] overflow-y-auto p-0 rounded-t-lg border-t border-border">
             <SheetTitle className="sr-only">Filter Listings</SheetTitle>
             <div className="p-4 pt-8">
                <FilterPanel onFilterChange={handleFilterChange} categories={categories} initialFilters={initialFilters} idPrefix="mobile-filter" template={template} />
@@ -156,88 +148,43 @@ export function ListingsClient({
          </SheetContent>
       </Sheet>
 
-      {/* Mobile Filter Button — inline at top of content, only on mobile */}
-
-      {/* Sidebar Filters (Desktop Only) - Now wider! */}
       <aside className="hidden lg:block lg:sticky lg:top-24 h-fit">
         <FilterPanel onFilterChange={handleFilterChange} categories={categories} initialFilters={initialFilters} idPrefix="desktop-filter" template={template} />
       </aside>
 
-      {/* Main Content */}
       <div className="space-y-6">
         <div className="lg:hidden flex items-center w-full gap-2">
           <Button
             onClick={() => setIsMobileFiltersOpen(true)}
             variant="outline"
-            className="flex-1 h-10 font-bold tracking-tight border border-border bg-background text-foreground hover:bg-muted/50 flex items-center justify-center gap-2 rounded-xl shadow-xs active:scale-95 transition-all"
+            className="flex-1 h-10 font-medium tracking-tight border border-border bg-background text-foreground hover:bg-secondary flex items-center justify-center gap-2 rounded-lg active:scale-95 transition-all"
           >
             <SlidersHorizontal className="h-4 w-4" />
             Filters & Sort
           </Button>
-          <Suspense fallback={<div className="w-10 h-10 bg-muted rounded-xl animate-pulse" />}>
+          <Suspense fallback={<div className="w-10 h-10 bg-muted rounded-lg animate-pulse" />}>
              <SaveSearchButton />
           </Suspense>
         </div>
 
-        {/* Listings Grid or Hub */}
         {showHub && hubData ? (
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-             <ListingRowCarousel 
-                title="Latest Discoveries" 
-                listings={hubData.all} 
-                viewAllHref="/listings?sort=newest" 
-             />
-             <ListingRowCarousel 
-                title="Cars" 
-                listings={hubData.cars} 
-                viewAllHref="/listings?category=cars" 
-             />
-             <ListingRowCarousel 
-                title="Real Estates" 
-                listings={hubData.realEstate} 
-                viewAllHref="/listings?category=real-estate" 
-             />
-             <ListingRowCarousel 
-                title="Electronics & PC" 
-                listings={hubData.electronics} 
-                viewAllHref="/listings?category=electronics" 
-             />
-             <ListingRowCarousel 
-                title="Motor Vehicles" 
-                listings={hubData.motorVehicles} 
-                viewAllHref="/listings?category=vehicles" 
-             />
-             <ListingRowCarousel 
-                title="Mobile Phones" 
-                listings={hubData.mobilePhones} 
-                viewAllHref="/listings?category=mobile-phones" 
-             />
-             <ListingRowCarousel 
-                title="Home Appliances" 
-                listings={hubData.homeAppliances} 
-                viewAllHref="/listings?category=appliances" 
-             />
-             <ListingRowCarousel 
-                title="Computers" 
-                listings={hubData.computers} 
-                viewAllHref="/listings?category=computers-laptops" 
-             />
-             <ListingRowCarousel 
-                title="Do it Yourself" 
-                listings={hubData.diy} 
-                viewAllHref="/listings?category=home-services" 
-             />
-             <ListingRowCarousel 
-                title="Home and Garden" 
-                listings={hubData.homeAndGarden} 
-                viewAllHref="/listings?category=home-garden" 
-             />
+             <ListingRowCarousel title="Latest Discoveries" listings={hubData.all} viewAllHref="/listings?sort=newest" />
+             <ListingRowCarousel title="Cars" listings={hubData.cars} viewAllHref="/listings?category=cars" />
+             <ListingRowCarousel title="Real Estates" listings={hubData.realEstate} viewAllHref="/listings?category=real-estate" />
+             <ListingRowCarousel title="Electronics & PC" listings={hubData.electronics} viewAllHref="/listings?category=electronics" />
+             <ListingRowCarousel title="Motor Vehicles" listings={hubData.motorVehicles} viewAllHref="/listings?category=vehicles" />
+             <ListingRowCarousel title="Mobile Phones" listings={hubData.mobilePhones} viewAllHref="/listings?category=mobile-phones" />
+             <ListingRowCarousel title="Home Appliances" listings={hubData.homeAppliances} viewAllHref="/listings?category=appliances" />
+             <ListingRowCarousel title="Computers" listings={hubData.computers} viewAllHref="/listings?category=computers-laptops" />
+             <ListingRowCarousel title="Do it Yourself" listings={hubData.diy} viewAllHref="/listings?category=home-services" />
+             <ListingRowCarousel title="Home and Garden" listings={hubData.homeAndGarden} viewAllHref="/listings?category=home-garden" />
              
              <div className="pt-8 pb-12 text-center">
                 <Button 
                   onClick={() => setShowHub(false)}
                   variant="outline" 
-                  className="rounded-full px-8 h-12 font-bold border-2 hover:bg-muted"
+                  className="rounded-lg px-8 h-12 font-medium border border-border hover:bg-secondary transition-all"
                 >
                     View All Listings in Grid
                 </Button>
@@ -252,27 +199,25 @@ export function ListingsClient({
                onSortChange={(val) => handleFilterChange({ ...initialFilters, sortBy: val })}
                onQuickFilter={(extraFilters) => handleFilterChange({ ...initialFilters, ...extraFilters })}
             />
-            {/* Desktop Save Search Button - Floats next to Results count area conceptually */}
             <div className="hidden lg:block absolute -top-12 right-0">
-               <Suspense fallback={<div className="w-24 h-10 bg-muted rounded-xl animate-pulse" />}>
+               <Suspense fallback={<div className="w-24 h-10 bg-muted rounded-lg animate-pulse" />}>
                   <SaveSearchButton />
                </Suspense>
             </div>
           </div>
         ) : (
-          <div className="text-center py-20 bg-muted/10 rounded-3xl border-2 border-dashed border-border/50">
+          <div className="text-center py-20 bg-background rounded-lg border border-border">
             <div className="text-6xl mb-4">🔍</div>
-            <h2 className="text-2xl font-bold mb-2">No listings found</h2>
+            <h2 className="text-2xl font-bold mb-2 text-foreground">No listings found</h2>
             <p className="text-muted-foreground mb-8">
               Try adjusting your filters or search criteria
             </p>
-            <Button onClick={() => window.location.href = '/listings'} variant="outline" className="rounded-full font-bold">
+            <Button onClick={() => window.location.href = '/listings'} variant="outline" className="rounded-lg font-medium border border-border">
                Clear all filters
             </Button>
           </div>
         )}
 
-        {/* Pagination */}
         {pagination && pagination.totalPages > 1 && (
           <div className="flex items-center justify-center gap-2 pt-8">
             <Button
@@ -280,6 +225,7 @@ export function ListingsClient({
               size="sm"
               onClick={() => handlePageChange(pagination.page - 1)}
               disabled={pagination.page === 1}
+              className="rounded-lg border border-border font-medium"
             >
               <ChevronLeft className="h-4 w-4 mr-1" />
               Previous
@@ -288,7 +234,6 @@ export function ListingsClient({
             <div className="flex items-center gap-1">
               {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
                 .filter((page) => {
-                  // Show first, last, current, and pages around current
                   return (
                     page === 1 ||
                     page === pagination.totalPages ||
@@ -296,7 +241,6 @@ export function ListingsClient({
                   );
                 })
                 .map((page, index, array) => {
-                  // Add ellipsis
                   const prevPage = array[index - 1];
                   const showEllipsis = prevPage && page - prevPage > 1;
 
@@ -309,7 +253,7 @@ export function ListingsClient({
                         variant={page === pagination.page ? 'default' : 'outline'}
                         size="sm"
                         onClick={() => handlePageChange(page)}
-                        className="w-10"
+                        className="w-10 rounded-lg border border-border font-medium"
                       >
                         {page}
                       </Button>
@@ -323,6 +267,7 @@ export function ListingsClient({
               size="sm"
               onClick={() => handlePageChange(pagination.page + 1)}
               disabled={pagination.page === pagination.totalPages}
+              className="rounded-lg border border-border font-medium"
             >
               Next
               <ChevronRight className="h-4 w-4 ml-1" />

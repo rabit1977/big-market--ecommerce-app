@@ -173,9 +173,9 @@ export function AdminListingsHub() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
                 <div className="space-y-1">
-                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight flex items-center gap-3">
+                    <h1 className="text-3xl sm:text-4xl font-bold tracking-tight flex items-center gap-3">
                         {promotedOnly ? 'Promoted Listings' : 'All Listings'}
-                        <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold ring-1 ring-inset ring-primary/20">
+                        <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-md bg-secondary text-foreground text-xs font-bold border border-border">
                             {filtered.length}
                         </span>
                     </h1>
@@ -183,7 +183,7 @@ export function AdminListingsHub() {
                         {promotedOnly ? 'Monitor featured and boosted listings.' : 'Review, approve, reject and manage all listings.'}
                     </p>
                 </div>
-                <Button asChild className="rounded-full font-bold shadow-lg shadow-primary/20 shrink-0">
+                <Button asChild className="rounded-lg font-medium shadow-none shrink-0 h-11 border border-primary">
                     <Link href="/admin/listings/create">
                         <Package className="h-4 w-4 mr-2" />
                         Add Listing
@@ -194,12 +194,12 @@ export function AdminListingsHub() {
             {/* Stats row */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
                 {[
-                    { label: 'Total',    value: total,   color: 'border-primary/20 bg-primary/5',   text: 'text-primary' },
+                    { label: 'Total',    value: total,   color: 'border-border bg-card',   text: 'text-foreground' },
                     { label: 'Active',   value: active,  color: 'border-emerald-500/20 bg-emerald-500/5', text: 'text-emerald-600' },
                     { label: 'Pending',  value: pending, color: 'border-amber-500/20 bg-amber-500/5',  text: 'text-amber-600' },
-                    { label: 'Promoted', value: promo,   color: 'border-primary/20 bg-primary/5', text: 'text-primary' },
+                    { label: 'Promoted', value: promo,   color: 'border-border bg-card', text: 'text-foreground' },
                 ].map(s => (
-                    <div key={s.label} className={`glass-card rounded-2xl p-4 border ${s.color} flex items-center justify-between`}>
+                    <div key={s.label} className={`rounded-lg p-4 border ${s.color} flex items-center justify-between`}>
                         <div>
                             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{s.label}</p>
                             <p className={`text-2xl font-black ${s.text}`}>{s.value}</p>
@@ -209,7 +209,7 @@ export function AdminListingsHub() {
             </div>
 
             {/* Filters */}
-            <div className="glass-card rounded-2xl p-4 border border-border/60 space-y-3">
+            <div className="bg-card rounded-lg p-4 border border-border space-y-3 shadow-none">
                 {/* Row 1 */}
                 <AdminFilterToolbar
                     timeRange={timeRange}
@@ -232,7 +232,7 @@ export function AdminListingsHub() {
                         <select
                             value={statusFilter}
                             onChange={e => { setStatus(e.target.value); setPage(1); }}
-                            className="h-8 pl-3 pr-7 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 font-bold appearance-none cursor-pointer text-foreground"
+                            className="h-8 pl-3 pr-7 text-xs bg-muted/40 border border-border/50 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 font-bold appearance-none cursor-pointer text-foreground"
                         >
                             <option value="ALL">All Statuses</option>
                             <option value="ACTIVE">Active</option>
@@ -250,7 +250,7 @@ export function AdminListingsHub() {
                         <select
                             value={promotedOnly ? 'promoted' : 'all'}
                             onChange={e => { setPromoted(e.target.value === 'promoted'); setPage(1); }}
-                            className="h-8 pl-3 pr-7 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 font-bold appearance-none cursor-pointer text-foreground"
+                            className="h-8 pl-3 pr-7 text-xs bg-muted/40 border border-border/50 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 font-bold appearance-none cursor-pointer text-foreground"
                         >
                             <option value="all">All Listings</option>
                             <option value="promoted">⭐ Promoted Only</option>
@@ -267,14 +267,14 @@ export function AdminListingsHub() {
 
                 {/* Bulk action bar */}
                 {selected.length > 0 && (
-                    <div className="flex items-center gap-3 p-2.5 bg-primary/5 border border-primary/20 rounded-xl animate-in fade-in duration-200">
-                        <span className="text-xs font-bold text-primary">{selected.length} selected</span>
+                    <div className="flex items-center gap-3 p-2.5 bg-secondary border border-border rounded-lg animate-in fade-in duration-200">
+                        <span className="text-xs font-medium text-foreground">{selected.length} selected</span>
                         <Button
                             variant="destructive"
                             size="sm"
                             onClick={handleBulkDelete}
                             disabled={isPending}
-                            className="h-7 px-3 text-xs"
+                            className="h-7 px-3 text-xs rounded-md shadow-none"
                         >
                             <Trash2 className="w-3 h-3 mr-1" />
                             Delete Selected
@@ -287,10 +287,10 @@ export function AdminListingsHub() {
             </div>
 
             {/* Table */}
-            <div className="glass-card rounded-[2rem] overflow-hidden border border-border/60 shadow-xl shadow-black/5">
+            <div className="bg-card rounded-lg overflow-hidden border border-border shadow-none">
                 {filtered.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20 text-center">
-                        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                        <div className="w-16 h-16 rounded-md bg-muted flex items-center justify-center mb-4">
                             <Package className="w-8 h-8 text-muted-foreground/40" />
                         </div>
                         <p className="font-bold text-foreground">No listings found</p>
@@ -317,7 +317,7 @@ export function AdminListingsHub() {
                                 {paginated.map((listing: any) => (
                                     <tr key={listing.id} className={cn(
                                         "hover:bg-muted/30 transition-colors",
-                                        selected.includes(listing.id) && "bg-primary/5"
+                                        selected.includes(listing.id) && "bg-secondary"
                                     )}>
                                         <td className="px-4 py-3">
                                             <input type="checkbox"
@@ -328,7 +328,7 @@ export function AdminListingsHub() {
                                         </td>
                                         <td className="px-4 py-3">
                                             <div className="flex items-center gap-3">
-                                                <div className="relative h-10 w-10 rounded-lg overflow-hidden border border-border bg-muted shrink-0">
+                                                <div className="relative h-10 w-10 rounded-md overflow-hidden border border-border bg-muted shrink-0">
                                                     {listing.thumbnail ? (
                                                         <Image src={listing.thumbnail} alt={listing.title || ''} fill className="object-cover" />
                                                     ) : (
@@ -337,7 +337,7 @@ export function AdminListingsHub() {
                                                         </div>
                                                     )}
                                                     {(listing.isPromoted || listing.promotionTier) && (
-                                                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 rounded-full flex items-center justify-center">
+                                                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 rounded-md flex items-center justify-center">
                                                             <Sparkles className="w-2 h-2 text-white" />
                                                         </div>
                                                     )}
@@ -353,7 +353,7 @@ export function AdminListingsHub() {
                                         </td>
                                         <td className="px-4 py-3">
                                             <span className={cn(
-                                                'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border',
+                                                'inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold border',
                                                 STATUS_COLORS[listing.status] || STATUS_COLORS.INACTIVE
                                             )}>
                                                 {listing.status === 'PENDING_APPROVAL' ? 'Pending' :
@@ -379,13 +379,13 @@ export function AdminListingsHub() {
                                                 {(listing.status === 'PENDING_APPROVAL' || listing.status === 'REJECTED') && (
                                                     <>
                                                         <button onClick={() => handleApprove(listing.id)} disabled={isPending}
-                                                            className="h-7 w-7 rounded-lg flex items-center justify-center bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-colors"
+                                                            className="h-7 w-7 rounded-md flex items-center justify-center bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-all active:scale-95"
                                                             title={listing.status === 'REJECTED' ? "Restore/Approve" : "Approve"}>
                                                             <Check className="h-3.5 w-3.5" />
                                                         </button>
                                                         {listing.status === 'PENDING_APPROVAL' && (
                                                             <button onClick={() => handleReject(listing.id)} disabled={isPending}
-                                                                className="h-7 w-7 rounded-lg flex items-center justify-center bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-colors"
+                                                                className="h-7 w-7 rounded-md flex items-center justify-center bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-all active:scale-95"
                                                                 title="Reject">
                                                                 <X className="h-3.5 w-3.5" />
                                                             </button>
@@ -394,32 +394,32 @@ export function AdminListingsHub() {
                                                 )}
                                                 {listing.status === 'ACTIVE' && (
                                                     <button onClick={() => handleReject(listing.id)} disabled={isPending}
-                                                        className="h-7 w-7 rounded-lg flex items-center justify-center bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 transition-colors"
+                                                        className="h-7 w-7 rounded-md flex items-center justify-center bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 transition-all active:scale-95"
                                                         title="Suspend">
                                                         <Ban className="h-3.5 w-3.5" />
                                                     </button>
                                                 )}
                                                 <Link href={`/admin/listings/${listing.id}/edit`}
-                                                    className="h-7 w-7 rounded-lg flex items-center justify-center bg-muted/60 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                                                    className="h-7 w-7 rounded-md flex items-center justify-center bg-muted/60 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                                                     title="Edit">
                                                     <Edit className="h-3.5 w-3.5" />
                                                 </Link>
                                                 <Link href={`/listings/${listing.id}`}
-                                                    className="h-7 w-7 rounded-lg flex items-center justify-center bg-muted/60 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                                                    className="h-7 w-7 rounded-md flex items-center justify-center bg-muted/60 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                                                     title="View">
                                                     <Eye className="h-3.5 w-3.5" />
                                                 </Link>
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild>
                                                         <button disabled={isPending}
-                                                            className="h-7 w-7 rounded-lg flex items-center justify-center bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-colors"
+                                                            className="h-7 w-7 rounded-md flex items-center justify-center bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-all active:scale-95"
                                                             title="Delete">
                                                             <Trash2 className="h-3.5 w-3.5" />
                                                         </button>
                                                     </AlertDialogTrigger>
-                                                    <AlertDialogContent className="rounded-2xl">
+                                                    <AlertDialogContent className="rounded-lg border border-border">
                                                         <AlertDialogHeader>
-                                                            <AlertDialogTitle className="flex items-center gap-2 font-black uppercase tracking-tight text-destructive">
+                                                            <AlertDialogTitle className="flex items-center gap-2 font-bold uppercase tracking-tight text-destructive">
                                                                 <Trash2 className="w-5 h-5" />
                                                                 Move to Recycle Bin?
                                                             </AlertDialogTitle>
@@ -429,10 +429,10 @@ export function AdminListingsHub() {
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
-                                                            <AlertDialogCancel className="rounded-xl font-bold uppercase text-xs h-10">Cancel</AlertDialogCancel>
+                                                            <AlertDialogCancel className="rounded-lg font-medium uppercase text-xs h-10 border border-border">Cancel</AlertDialogCancel>
                                                             <AlertDialogAction 
                                                                 onClick={() => handleDelete(listing.id)} 
-                                                                className="bg-destructive hover:bg-destructive/90 text-white rounded-xl font-bold tracking-wider uppercase text-xs h-10 shadow-lg shadow-destructive/20"
+                                                                className="bg-destructive hover:bg-destructive/90 text-white rounded-lg font-medium tracking-wider uppercase text-xs h-10 shadow-none"
                                                             >
                                                                 Move to Bin
                                                             </AlertDialogAction>

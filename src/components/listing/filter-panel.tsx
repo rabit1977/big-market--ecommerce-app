@@ -178,8 +178,6 @@ export function FilterPanel({
   const updateFilter = useCallback((key: keyof FilterState, value: any) => {
     setFilters((prev) => {
       const next = { ...prev, [key]: value };
-      // Schedule onFilterChange outside the updater to avoid calling router.push
-      // during a render (which would trigger the "Cannot update Router while rendering" error).
       setTimeout(() => onFilterChange(next), 0);
       return next;
     });
@@ -197,7 +195,7 @@ export function FilterPanel({
     onFilterChange(DEFAULT_FILTERS);
   }, [onFilterChange]);
 
-  // ── Price range — batch two filter updates into one ───────────────────────
+  // ── Price range ───────────────────────────────────────────────────────────
 
   const handlePriceSlider = useCallback((value: number[]) => {
     const [min, max] = value as [number, number];
@@ -262,8 +260,6 @@ export function FilterPanel({
         next[key] = value;
       }
       const jsonString = Object.keys(next).length > 0 ? JSON.stringify(next) : undefined;
-      // Update filters state and notify parent outside the updater to avoid
-      // calling router.push during render.
       setFilters((prevFilters) => {
         const nextFilters = { ...prevFilters, dynamicFilters: jsonString };
         setTimeout(() => onFilterChange(nextFilters), 0);
@@ -306,16 +302,16 @@ export function FilterPanel({
 
   return (
     <div className="space-y-3">
-      <Card className="p-3 space-y-3">
+      <Card className="p-3 space-y-3 rounded-lg border border-border shadow-none bg-card">
         {/* Header */}
-        <div className="flex items-center justify-between pb-2 border-b">
+        <div className="flex items-center justify-between pb-2 border-b border-border">
           <h3 className="font-bold text-sm">Filters</h3>
           {activeFilterCount > 0 && (
             <Button
               variant="ghost"
               size="sm"
               onClick={clearFilters}
-              className="text-primary hover:text-primary/80 h-7 px-2 text-xs"
+              className="text-primary hover:text-primary/80 h-7 px-2 text-xs font-medium rounded-md"
             >
               Clear All
             </Button>
@@ -323,7 +319,7 @@ export function FilterPanel({
         </div>
 
         {/* Listing ID Search */}
-        <div className="space-y-1 border-b pb-2">
+        <div className="space-y-1 border-b border-border pb-2">
           <Label htmlFor={`${idPrefix}-listingNumber`} className="text-[10px] uppercase text-muted-foreground font-medium">
             Find Specific Item
           </Label>
@@ -335,14 +331,14 @@ export function FilterPanel({
         </div>
 
         {/* Category Hierarchy */}
-        <div className="space-y-2 pb-2 border-b">
+        <div className="space-y-2 pb-2 border-b border-border">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div className="space-y-1">
               <Label htmlFor={`${idPrefix}-category`} className="text-[10px] uppercase text-muted-foreground font-medium">
                 Category
               </Label>
               <Select value={filters.category || 'all'} onValueChange={handleMainCategoryChange}>
-                <SelectTrigger id={`${idPrefix}-category`} className="h-8 text-xs">
+                <SelectTrigger id={`${idPrefix}-category`} className="h-8 text-xs rounded-md">
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent>
@@ -366,7 +362,7 @@ export function FilterPanel({
                 onValueChange={handleSubCategoryChange}
                 disabled={!filters.category || subCategories.length === 0}
               >
-                <SelectTrigger id={`${idPrefix}-subcategory`} className="h-8 text-xs">
+                <SelectTrigger id={`${idPrefix}-subcategory`} className="h-8 text-xs rounded-md">
                   <SelectValue placeholder={!filters.category ? 'Select Category' : 'All'} />
                 </SelectTrigger>
                 <SelectContent>
@@ -392,7 +388,7 @@ export function FilterPanel({
                 }
                 onValueChange={handleSubSubCategoryChange}
               >
-                <SelectTrigger id={`${idPrefix}-subsubcategory`} className="h-8 text-xs">
+                <SelectTrigger id={`${idPrefix}-subsubcategory`} className="h-8 text-xs rounded-md">
                   <SelectValue placeholder="All Types" />
                 </SelectTrigger>
                 <SelectContent>
@@ -408,7 +404,7 @@ export function FilterPanel({
 
         {/* Dynamic Template Fields */}
         {filterableTemplateFields.length > 0 && (
-          <div className="space-y-2 pb-2 border-b">
+          <div className="space-y-2 pb-2 border-b border-border">
             <h4 className="font-semibold text-[10px] text-primary uppercase tracking-wider">Specifics</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {filterableTemplateFields.map((field: any) => (
@@ -417,7 +413,7 @@ export function FilterPanel({
                     {field.label}
                   </Label>
                   {field.options.length > 8 ? (
-                    <ScrollArea className="h-[120px] w-full rounded border p-1.5">
+                    <ScrollArea className="h-[120px] w-full rounded-md border border-border p-1.5 bg-background">
                       <div className="space-y-1">
                         {field.options.map((opt: string) => (
                           <div key={opt} className="flex items-center space-x-1.5">
@@ -425,9 +421,9 @@ export function FilterPanel({
                               id={`${idPrefix}-${field.key}-${opt}`}
                               checked={(dynamicFilters[field.key] || []).includes(opt)}
                               onCheckedChange={() => toggleDynamicArrayFilter(field.key, opt)}
-                              className="h-3 w-3"
+                              className="h-3.5 w-3.5 rounded-sm"
                             />
-                            <label htmlFor={`${idPrefix}-${field.key}-${opt}`} className="text-[11px] leading-none cursor-pointer">
+                            <label htmlFor={`${idPrefix}-${field.key}-${opt}`} className="text-[11px] font-medium leading-none cursor-pointer">
                               {opt}
                             </label>
                           </div>
@@ -439,7 +435,7 @@ export function FilterPanel({
                       value={dynamicFilters[field.key] || 'all'}
                       onValueChange={(val) => updateDynamicFilter(field.key, val === 'all' ? undefined : val)}
                     >
-                      <SelectTrigger id={`${idPrefix}-${field.key}`} className="h-8 text-xs">
+                      <SelectTrigger id={`${idPrefix}-${field.key}`} className="h-8 text-xs rounded-md">
                         <SelectValue placeholder="All" />
                       </SelectTrigger>
                       <SelectContent>
@@ -457,11 +453,11 @@ export function FilterPanel({
         )}
 
         {/* Sort & Location */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pb-2 border-b">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pb-2 border-b border-border">
           <div className="space-y-1">
             <Label htmlFor={`${idPrefix}-sort`} className="text-[10px] uppercase text-muted-foreground font-medium">Sort By</Label>
             <Select value={filters.sortBy} onValueChange={(val) => updateFilter('sortBy', val)}>
-              <SelectTrigger id={`${idPrefix}-sort`} className="h-8 text-xs">
+              <SelectTrigger id={`${idPrefix}-sort`} className="h-8 text-xs rounded-md">
                 <SelectValue placeholder="Newest" />
               </SelectTrigger>
               <SelectContent>
@@ -475,7 +471,7 @@ export function FilterPanel({
               <MapPin className="h-2.5 w-2.5" /> Location
             </Label>
             <Select value={filters.city} onValueChange={(val) => updateFilter('city', val)}>
-              <SelectTrigger id={`${idPrefix}-city`} className="h-8 text-xs">
+              <SelectTrigger id={`${idPrefix}-city`} className="h-8 text-xs rounded-md">
                 <SelectValue placeholder="All Cities" />
               </SelectTrigger>
               <SelectContent>
@@ -489,14 +485,14 @@ export function FilterPanel({
         </div>
 
         {/* Price Range */}
-        <div className="space-y-1.5 pb-2 border-b">
+        <div className="space-y-1.5 pb-2 border-b border-border">
           <Label className="text-[10px] uppercase text-muted-foreground font-medium">Price Range (€)</Label>
-          <div className="space-y-2">
+          <div className="space-y-3 pt-2">
             <Slider
               value={priceRange}
               onValueChange={handlePriceSlider}
               max={PRICE_MAX_DEFAULT}
-              step={1000}
+              step={100}
               className="w-full"
             />
             <div className="flex items-center gap-2">
@@ -505,30 +501,30 @@ export function FilterPanel({
                 type="number"
                 value={priceRange[0]}
                 onChange={handlePriceMinInput}
-                className="h-7 text-xs"
+                className="h-8 text-xs rounded-md bg-background"
                 placeholder="Min"
               />
-              <span className="text-muted-foreground text-xs">-</span>
+              <span className="text-muted-foreground text-xs font-bold">-</span>
               <Input
                 id={`${idPrefix}-priceMax`}
                 type="number"
                 value={priceRange[1]}
                 onChange={handlePriceMaxInput}
-                className="h-7 text-xs"
+                className="h-8 text-xs rounded-md bg-background"
                 placeholder="Max"
               />
             </div>
-            <div className="text-[10px] text-muted-foreground text-center">
+            <div className="text-[10px] font-medium text-muted-foreground text-center tabular-nums">
               €{priceRange[0].toLocaleString()} – €{priceRange[1].toLocaleString()}
             </div>
           </div>
         </div>
 
         {/* Date Posted */}
-        <div className="space-y-1.5">
-          <Label htmlFor={`${idPrefix}-date`} className="text-xs">Date Posted</Label>
+        <div className="space-y-1.5 pb-2 border-b border-border">
+          <Label htmlFor={`${idPrefix}-date`} className="text-[10px] uppercase text-muted-foreground font-medium">Date Posted</Label>
           <Select value={filters.dateRange || 'all'} onValueChange={(val) => updateFilter('dateRange', val)}>
-            <SelectTrigger id={`${idPrefix}-date`} className="h-9 text-sm">
+            <SelectTrigger id={`${idPrefix}-date`} className="h-8 text-xs rounded-md">
               <SelectValue placeholder="Anytime" />
             </SelectTrigger>
             <SelectContent>
@@ -542,9 +538,9 @@ export function FilterPanel({
 
         {/* Condition */}
         <div className="space-y-1.5">
-          <Label htmlFor={`${idPrefix}-condition`} className="text-xs">Condition</Label>
+          <Label htmlFor={`${idPrefix}-condition`} className="text-[10px] uppercase text-muted-foreground font-medium">Condition</Label>
           <Select value={filters.condition} onValueChange={(val) => updateFilter('condition', val)}>
-            <SelectTrigger id={`${idPrefix}-condition`} className="h-9 text-sm">
+            <SelectTrigger id={`${idPrefix}-condition`} className="h-8 text-xs rounded-md">
               <SelectValue placeholder="Any Condition" />
             </SelectTrigger>
             <SelectContent>
@@ -556,8 +552,8 @@ export function FilterPanel({
 
         {/* Active Filter Badges */}
         {activeFilterCount > 0 && (
-          <div className="pt-3 border-t space-y-2">
-            <Label className="text-[10px] text-muted-foreground uppercase tracking-wider">Active Filters:</Label>
+          <div className="pt-3 border-t border-border space-y-2">
+            <Label className="text-[10px] text-muted-foreground uppercase tracking-widest">Active Controls</Label>
             <div className="flex flex-wrap gap-1.5">
               {filters.category && filters.category !== 'all' && (
                 <FilterBadge label={categories.find((c) => c.slug === filters.category)?.name} onRemove={() => handleMainCategoryChange('all')} />
@@ -580,7 +576,7 @@ export function FilterPanel({
               {filters.dateRange && filters.dateRange !== 'all' && (
                 <FilterBadge label={DATE_RANGE_LABELS[filters.dateRange]} onRemove={() => updateFilter('dateRange', 'all')} />
               )}
-              {(filters.priceMin !== undefined || filters.priceMax !== undefined) && (
+              {(filters.priceMin !== undefined || filters.priceMax !== undefined) && (filters.priceMin !== PRICE_MIN_DEFAULT || filters.priceMax !== PRICE_MAX_DEFAULT) && (
                 <FilterBadge
                   label={`€${filters.priceMin ?? 0} – €${filters.priceMax ?? PRICE_MAX_DEFAULT}`}
                   onRemove={() => {
@@ -593,11 +589,6 @@ export function FilterPanel({
                   }}
                 />
               )}
-              {filters.userType     && <FilterBadge label={filters.userType.toLowerCase()}  onRemove={() => updateFilter('userType', undefined)} />}
-              {filters.adType       && <FilterBadge label={filters.adType.toLowerCase()}    onRemove={() => updateFilter('adType', undefined)} />}
-              {filters.isTradePossible && <FilterBadge label="Exchange Possible" onRemove={() => updateFilter('isTradePossible', false)} />}
-              {filters.isVatIncluded   && <FilterBadge label="VAT Incl."         onRemove={() => updateFilter('isVatIncluded', false)} />}
-              {filters.isAffordable    && <FilterBadge label="Best Deals"        onRemove={() => updateFilter('isAffordable', false)} />}
             </div>
           </div>
         )}
@@ -611,9 +602,9 @@ export function FilterPanel({
 function FilterBadge({ label, onRemove }: { label?: string; onRemove: () => void }) {
   if (!label) return null;
   return (
-    <Badge variant="secondary" className="gap-1 text-[10px] h-5 px-1.5">
+    <Badge variant="secondary" className="gap-1 text-[10px] h-6 px-2 rounded-md font-medium border border-border">
       {label}
-      <X className="h-3 w-3 cursor-pointer hover:text-red-500" onClick={onRemove} />
+      <X className="h-3 w-3 cursor-pointer hover:text-red-500 transition-colors" onClick={onRemove} />
     </Badge>
   );
 }

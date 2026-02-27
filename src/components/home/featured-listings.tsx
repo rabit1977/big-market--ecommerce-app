@@ -61,10 +61,9 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
              <div className="flex items-center justify-between px-1 mb-2">
                   <div className="flex items-center gap-2">
                     <div className="relative flex items-center justify-center">
-                        <div className="absolute inset-0 bg-foreground/10 rounded-full animate-ping scale-150" />
-                        <span className="relative flex h-2 w-2 rounded-full bg-foreground" />
+                        <span className="relative flex h-2 w-2 rounded-full bg-primary" />
                     </div>
-                    <h2 className="text-base font-black tracking-tight uppercase text-foreground/80">
+                    <h2 className="text-base font-bold tracking-tight uppercase text-foreground/80">
                         {title || tHome('top_boosted')}
                     </h2>
                   </div>
@@ -76,14 +75,14 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                     const promoConfig = (listing as any).isPromoted ? getPromotionConfig((listing as any).promotionTier) : null;
                     const bgColor = promoConfig?.bgColor || "bg-card";
                     return (
-                        <div key={listing._id} className="group ">
-                             <Link href={`/listings/${listing._id}`}>
-                                <Card className={cn(
-                                    "p-0 overflow-hidden border-border/50 hover:border-primary/30 transition-all duration-300 rounded-2xl bg-card shadow-sm hover:shadow-xl hover:-translate-y-1",
-                                    promoConfig && `ring-1 ring-inset ring-primary/20 ${bgColor.replace('bg-', 'bg-opacity-5 bg-')}`
-                                )}>
+                         <div key={listing._id} className="group ">
+                              <Link href={`/listings/${listing._id}`}>
+                                 <Card className={cn(
+                                     "p-0 overflow-hidden border-border hover:border-primary/50 transition-all duration-150 rounded-md bg-card",
+                                     promoConfig && `ring-1 ring-inset ring-primary/30 ${bgColor.replace('bg-', 'bg-')}`
+                                 )}>
                                      {/* Image Area - Added flex-none, block, m-0, p-0 to kill all gaps */}
-                                     <div className="relative aspect-[4/3] w-full flex-none block m-0 p-0 overflow-hidden bg-white">
+                                     <div className="relative aspect-[4/3] w-full flex-none block m-0 p-0 overflow-hidden bg-muted rounded-t-md">
                                          <Image 
                                             src={imageUrl} 
                                             alt={listing.title} 
@@ -96,14 +95,14 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                          <div className="absolute top-2 left-2 z-10 flex flex-col gap-2">
                                             {promoConfig && (
                                                 <div className={cn(
-                                                    "w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shadow-lg backdrop-blur-md border border-white/20",
+                                                    "w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20",
                                                     promoConfig.badgeColor
                                                 )}>
                                                     <PromotionIcon iconName={promoConfig.icon} className="w-4 h-4 text-white fill-current" />
                                                 </div>
                                             )}
                                             {listing.isVerified && (
-                                                <div className="bg-[#0053a0] text-white rounded-full p-1.5 shadow-md">
+                                                <div className="bg-primary text-white rounded-full p-1.5">
                                                     <ShieldCheck className="h-4 w-4" />
                                                 </div>
                                             )}
@@ -111,7 +110,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
 
                                           {/* Price Tag Overlay - Bottom Right */}
                                           <div className="absolute bottom-2 right-2 z-10">
-                                              <div className="bg-background/90 backdrop-blur text-foreground px-2 py-1 rounded-md shadow-sm border border-border/50">
+                                              <div className="bg-background/90 backdrop-blur text-foreground px-2 py-1 rounded-md border border-border/50">
                                                   <span className="text-xs font-black">
                                                       {formatCurrency(listing.price, listing.currency)}
                                                   </span>
@@ -119,25 +118,25 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                           </div>
                                      </div>
 
-                                     {/* Simple Content */}
-                                     <div className="p-3 bg-card/50">
-                                          <h3 className="text-sm font-bold line-clamp-2 leading-snug group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground mb-2">
-                                              {listing.title}
-                                          </h3>
-                                          
-                                          <div className="flex items-center justify-between text-muted-foreground">
-                                              <div className="flex items-center gap-1 text-[10px]">
-                                                  <MapPin className="w-3 h-3 text-primary" />
-                                                  {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
-                                              </div>
-                                              <div className="text-[10px] font-medium opacity-70 italic">
-                                                  {tHome('view_deal')} &rarr;
-                                              </div>
-                                          </div>
-                                     </div>
-                                </Card>
-                             </Link>
-                        </div>
+                                      {/* Simple Content */}
+                                      <div className="p-3 bg-card">
+                                           <h3 className="text-sm font-medium line-clamp-2 leading-snug group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground mb-2">
+                                               {listing.title}
+                                           </h3>
+                                           
+                                           <div className="flex items-center justify-between text-muted-foreground">
+                                               <div className="flex items-center gap-1 text-[10px] font-medium">
+                                                   <MapPin className="w-3 h-3 text-primary" />
+                                                   {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
+                                               </div>
+                                               <div className="text-[10px] font-medium opacity-70 italic">
+                                                   {tHome('view_deal')} &rarr;
+                                               </div>
+                                           </div>
+                                      </div>
+                                 </Card>
+                              </Link>
+                         </div>
                     );
                  })}
              </div>
@@ -194,14 +193,14 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                 const discountPercent = hasDiscount ? Math.round(((listing.previousPrice! - listing.price) / listing.previousPrice!) * 100) : 0;
 
                 return (
-                  <CarouselItem 
-                    key={listing._id} 
-                    className="pl-3 sm:pl-5 basis-[46%] xs:basis-[42%] sm:basis-[30%] md:basis-[22%] lg:basis-[18%]"
-                  >
-                    <Link href={`/listings/${listing._id}`} className="group block h-full border border-border/50 rounded-2xl bg-card p-1 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20 hover:-translate-y-1">
-                        <div className="relative flex flex-col h-full">
-                            {/* eBay Style Image Card */}
-                            <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-muted transition-all duration-300 shadow-xs pointer-events-none">
+                   <CarouselItem 
+                     key={listing._id} 
+                     className="pl-3 sm:pl-5 basis-[46%] xs:basis-[42%] sm:basis-[30%] md:basis-[22%] lg:basis-[18%]"
+                   >
+                     <Link href={`/listings/${listing._id}`} className="group block h-full border border-border rounded-lg bg-card p-1 transition-all duration-150 hover:border-primary/50">
+                         <div className="relative flex flex-col h-full">
+                             {/* eBay Style Image Card */}
+                             <div className="relative aspect-square w-full rounded-md overflow-hidden bg-muted transition-all duration-150 pointer-events-none">
                                 <Image
                                     src={imageUrl}
                                     alt={listing.title}

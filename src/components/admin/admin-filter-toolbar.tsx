@@ -106,7 +106,7 @@ export function AdminFilterToolbar({
                             value={searchValue}
                             onChange={e => onSearchChange?.(e.target.value)}
                             placeholder={searchPlaceholder}
-                            className="w-full h-9 pl-9 pr-8 text-sm bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all placeholder:text-muted-foreground"
+                            className="w-full h-9 pl-9 pr-8 text-sm bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:border-primary/50 transition-colors placeholder:text-muted-foreground"
                         />
                         {searchValue && (
                             <button
@@ -126,7 +126,7 @@ export function AdminFilterToolbar({
                         <select
                             value={timeRange}
                             onChange={e => onTimeRangeChange(e.target.value as TimeRange)}
-                            className="h-9 pl-8 pr-7 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 font-bold appearance-none cursor-pointer text-foreground min-w-[100px]"
+                            className="h-9 pl-8 pr-7 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:border-primary/50 font-bold appearance-none cursor-pointer text-foreground min-w-[100px]"
                         >
                             {TIME_RANGES.map(r => (
                                 <option key={r.id} value={r.id}>{r.label}</option>
@@ -145,7 +145,7 @@ export function AdminFilterToolbar({
                         <select
                             value={sortValue}
                             onChange={e => onSortChange?.(e.target.value)}
-                            className="h-9 pl-3 pr-8 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 font-medium appearance-none cursor-pointer"
+                            className="h-9 pl-3 pr-8 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:border-primary/50 font-medium appearance-none cursor-pointer"
                         >
                             {sortOptions.map(opt => (
                                 <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -175,7 +175,7 @@ export function AdminFilterToolbar({
             {(searchValue) && (
                 <div className="flex items-center gap-2 flex-wrap">
                     {searchValue && (
-                        <span className="inline-flex items-center gap-1.5 text-xs font-medium bg-primary/10 text-primary border border-primary/20 px-2.5 py-1 rounded-full">
+                        <span className="inline-flex items-center gap-1.5 text-xs font-bold bg-secondary text-primary border border-border px-2 py-1 rounded-md">
                             <Search className="w-2.5 h-2.5" />
                             &ldquo;{searchValue}&rdquo;
                             <button onClick={clearSearch} className="ml-0.5 hover:opacity-70">
@@ -232,7 +232,7 @@ export function AdminPagination({
                     className={cn(
                         'h-8 w-8 rounded-lg flex items-center justify-center text-xs font-bold transition-all',
                         p === page
-                            ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20'
+                            ? 'bg-secondary text-primary border border-primary/30 shadow-none'
                             : 'hover:bg-muted/60 text-foreground/70'
                     )}
                 >

@@ -8,10 +8,10 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
       type={type}
       data-slot="input"
       className={cn(
-        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground flex h-10 md:h-11 w-full min-w-0 rounded-(--radius-premium-interactive) border border-border/60 bg-background/50 px-4 py-2 text-base shadow-xs transition-all duration-300 outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        "focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:bg-background",
-        "hover:border-primary/30 hover:bg-background",
-        "dark:bg-input/30 dark:hover:bg-input/40 dark:focus-visible:bg-input/50",
+        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground flex h-9 md:h-10 w-full min-w-0 rounded-(--yt-button-border-radius) border border-border bg-background px-4 py-2 text-base transition-all duration-150 outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        "focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary",
+        "hover:border-primary/50",
+        "dark:bg-transparent dark:border-border dark:focus-visible:border-primary",
         "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
         className
       )}

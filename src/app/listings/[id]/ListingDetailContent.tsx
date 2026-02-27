@@ -176,7 +176,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
     <div className="min-h-screen bg-background pb-12 border-b border-border">
 
       {/* ── Mobile Header ────────────────────────────────────────────────── */}
-      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-md px-4 py-3 flex items-center justify-between shadow-sm md:hidden">
+      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-md px-4 py-3 flex items-center justify-between border-b border-border md:hidden">
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.back()}
@@ -217,7 +217,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
           <div className="flex items-center justify-between gap-3">
             <button
               onClick={handleShare}
-              className="flex items-center gap-2 px-4 py-2 bg-card border border-border/50 rounded-xl text-sm font-bold text-foreground hover:bg-accent transition-all shadow-sm"
+              className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg text-sm font-medium text-foreground hover:bg-secondary transition-all"
             >
               <Share2 className="w-4 h-4" />
               Share
@@ -229,7 +229,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
               <>
                 <Link
                   href={`/my-listings/${listing._id}/edit`}
-                  className="flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-xl text-sm font-bold text-primary hover:bg-primary/20 transition-all shadow-sm"
+                  className="flex items-center gap-2 px-4 py-2 bg-secondary border border-border rounded-lg text-sm font-medium text-foreground hover:bg-border transition-all"
                 >
                   <Edit className="w-4 h-4" />
                   Edit Ad
@@ -246,7 +246,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
           <div className="md:col-span-7 lg:col-span-8 space-y-4 md:space-y-6">
 
             {/* Image Gallery */}
-            <div className="relative group bg-slate-900 overflow-hidden md:rounded-2xl shadow-xl border border-border/50">
+            <div className="relative group bg-slate-900 overflow-hidden md:rounded-lg border border-border">
               <div className="relative aspect-[4/3] md:aspect-video w-full">
                 <Image 
                   src={mainImage} 
@@ -258,7 +258,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   className="object-cover" 
                   priority 
                 />  
-                <div className="hidden md:flex absolute top-3 right-3 text-white bg-black/60 backdrop-blur-md p-2.5 rounded-xl border border-white/10 flex-col">
+                <div className="hidden md:flex absolute top-3 right-3 text-white bg-black/60 backdrop-blur-md p-2.5 rounded-lg border border-white/10 flex-col">
                   <span className="text-sm font-black tracking-tight leading-none text-white uppercase">
                     Item: {listingRef}
                   </span>
@@ -291,7 +291,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 )}
               </div>
               <div className="absolute bottom-4 left-4">
-                <div className="bg-black/50 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full border border-white/10 uppercase tracking-widest">
+                <div className="bg-black/50 backdrop-blur-md text-white text-[10px] font-medium px-3 py-1.5 rounded-md border border-white/10 uppercase tracking-widest">
                   {selectedImage + 1} / {Math.max(images.length, 1)}
                 </div>
               </div>
@@ -391,7 +391,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
               <div className="space-y-3 pt-4 md:pt-2">
                 <div className="flex items-center gap-2 px-1">
                    <div className="w-1 h-4 bg-primary rounded-full" />
-                   <h3 className="font-black text-foreground uppercase tracking-tight text-xs">
+                   <h3 className="font-bold text-foreground uppercase tracking-tight text-xs">
                     Technical Specifications
                   </h3>
                 </div>
@@ -403,10 +403,10 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
             )}
 
             {/* Description */}
-            <div className="bg-card md:rounded-2xl border border-border shadow-sm px-5 py-6 md:px-8 md:py-8 space-y-4">
+            <div className="bg-card md:rounded-lg border border-border px-5 py-6 md:px-8 md:py-8 space-y-4">
               <div className="flex items-center gap-2">
                 <div className="w-1 h-4 bg-primary rounded-full" />
-                <h3 className="font-black text-foreground uppercase tracking-tight text-xs">
+                <h3 className="font-bold text-foreground uppercase tracking-tight text-xs">
                   About this Item
                 </h3>
               </div>
@@ -420,7 +420,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 {listing.description.length > 300 && (
                   <button 
                     onClick={() => setIsDescExpanded(!isDescExpanded)}
-                    className="mt-4 flex items-center gap-1.5 text-primary text-xs font-black uppercase tracking-widest hover:text-primary/80 transition-colors bg-primary/5 px-4 py-2 rounded-lg"
+                    className="mt-4 flex items-center gap-1.5 text-foreground text-[11px] font-medium uppercase tracking-widest hover:bg-secondary transition-all bg-background border border-border px-4 py-2 rounded-lg"
                   >
                     {isDescExpanded ? (
                       <>
@@ -486,11 +486,11 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                         <span>Contact Options</span>
                       </div>
                     }
-                    className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-lg uppercase tracking-tight shadow-xl shadow-primary/20 inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95"
+                    className="w-full h-12 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium text-base uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95"
                   />
                 </div>
               )}
-              <Button asChild variant="outline" className="w-full h-10 border rounded-2xl text-muted-foreground border-border bg-background border-1 font-black text-base uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95">
+              <Button asChild variant="outline" className="w-full h-10 border rounded-lg text-muted-foreground border-border bg-background font-medium text-sm uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95">
                 <Link href={`/store/${listing.userId}`}>Visit Storefront</Link>
               </Button>
             </div>
@@ -511,7 +511,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
             <div className="sticky top-24 space-y-6  overflow-y-auto pr-1 no-scrollbar z-10">
 
               {/* Price & Actions Card */}
-              <div className="bg-card border border-border/60 rounded-2xl p-6 md:p-8 shadow-xl shadow-foreground/5 space-y-6">
+              <div className="bg-card border border-border rounded-lg p-6 md:p-8 space-y-6">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <h1 className="text-xl font-bold text-muted-foreground tracking-tight leading-tight uppercase flex-1">
@@ -547,14 +547,14 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                           <span>Contact Options</span>
                         </div>
                       }
-                      className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-lg uppercase tracking-tight shadow-xl shadow-primary/20 inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95"
+                      className="w-full h-12 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium text-base uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95"
                     />
                   </div>
                 )}
               </div>
 
               {/* RESTORED: Seller Card */}
-              <div className="bg-card border border-border/60 rounded-2xl p-6 shadow-sm overflow-hidden">
+              <div className="bg-card border border-border rounded-lg p-6 overflow-hidden">
                 <div className="flex items-center gap-4 mb-6">
                   <Link href={`/store/${listing.userId}`} className="shrink-0 hover:opacity-80 transition-opacity">
                      <UserAvatar user={seller} className="w-16 h-16 border-4 border-muted shadow-md" />
@@ -578,13 +578,13 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="p-3 bg-muted rounded-xl text-center border border-border">
+                  <div className="p-3 bg-secondary rounded-lg text-center border border-border">
                     <div className="text-base font-black text-foreground">
                       {sellerProfile?.activeListingsCount ?? '0'}
                     </div>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">Active Ads</p>
                   </div>
-                  <div className="p-3 bg-muted rounded-xl text-center border border-border">
+                  <div className="p-3 bg-secondary rounded-lg text-center border border-border">
                     <div className="text-base font-black text-foreground">
                       {sellerReviewStats && sellerReviewStats.totalReviews > 0
                         ? sellerReviewStats.averageRating.toFixed(1)
@@ -599,7 +599,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 </div>
                 
                 <div className="mt-4 flex flex-col gap-2">
-                   <Button asChild variant="secondary" className="w-full h-10 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-base uppercase tracking-tight shadow-xl shadow-primary/20 inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95">
+                   <Button asChild variant="secondary" className="w-full h-10 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium text-sm uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95">
                      <Link href={`/store/${listing.userId}`}>Visit Storefront</Link>
                    </Button>
                    <LeaveReviewModal listingId={listing._id} sellerId={listing.userId} />
@@ -615,12 +615,12 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   Safety & Trust
                 </p>
                 <ReportModal targetId={listing._id} targetType="listing">
-                  <button className="w-full flex items-center justify-between p-4 bg-card border border-border/60 rounded-2xl group hover:border-primary/20 transition-all">
+                  <button className="w-full flex items-center justify-between p-4 bg-card border border-border rounded-lg group hover:bg-secondary transition-all">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
-                        <ShieldAlert className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
+                      <div className="p-2 rounded-md bg-secondary group-hover:bg-border transition-colors border border-border">
+                        <ShieldAlert className="w-4 h-4 text-muted-foreground group-hover:text-foreground" />
                       </div>
-                      <span className="text-xs font-bold text-foreground">Report suspicious activity</span>
+                      <span className="text-xs font-medium text-foreground">Report suspicious activity</span>
                     </div>
                     <ChevronLeft className="w-4 h-4 text-muted-foreground rotate-180" />
                   </button>
@@ -701,7 +701,7 @@ const LazyMap = memo(function LazyMap({
   region?: string;
 }) {
   return (
-    <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-sm aspect-[1.5/1] relative group">
+    <div className="bg-card border border-border rounded-lg overflow-hidden aspect-[1.5/1] relative group">
       <iframe
         width="100%"
         height="100%"
@@ -712,7 +712,7 @@ const LazyMap = memo(function LazyMap({
         title={`Map of ${city}`}
       />
       <div className="absolute bottom-4 left-4 right-4 pointer-events-none">
-        <div className="bg-card/95 backdrop-blur-md px-4 py-2 rounded-2xl text-xs font-black shadow-xl border border-border flex items-center gap-2 w-fit text-foreground uppercase tracking-tight">
+        <div className="bg-card/95 backdrop-blur-md px-4 py-2 rounded-md text-[11px] font-medium border border-border flex items-center gap-2 w-fit text-foreground uppercase tracking-tight">
           <MapPin className="w-4 h-4 text-primary" />
           {city} • {region ?? 'CENTAR'}
         </div>
@@ -747,8 +747,8 @@ function DeleteListingButton({ listingId, compact }: { listingId: string; compac
           variant={compact ? 'ghost' : 'destructive'}
           className={
             compact
-              ? 'h-9 px-4 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 font-bold text-sm transition-all'
-              : 'h-10 sm:h-11 md:h-12 bg-red-600 rounded-xl hover:bg-red-700 text-white font-bold text-xs sm:text-sm sm:col-span-2 md:col-span-1 min-w-0'
+              ? 'h-9 px-4 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 font-medium text-sm transition-all'
+              : 'h-10 sm:h-11 md:h-12 bg-red-600 rounded-lg hover:bg-red-700 text-white font-medium text-xs sm:text-sm sm:col-span-2 md:col-span-1 min-w-0'
           }
           disabled={isPending}
         >
@@ -758,7 +758,7 @@ function DeleteListingButton({ listingId, compact }: { listingId: string; compac
           </div>
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="rounded-[2.5rem] border-2 border-border p-10 max-w-md">
+      <AlertDialogContent className="rounded-lg border border-border p-10 max-w-md">
         <AlertDialogHeader className="space-y-4">
           <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-2">
             <Trash2 className="w-8 h-8 text-red-600" />
@@ -772,13 +772,13 @@ function DeleteListingButton({ listingId, compact }: { listingId: string; compac
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="flex-col sm:flex-row gap-3 pt-6">
-          <AlertDialogCancel className="rounded-full font-black uppercase text-xs tracking-widest h-14 border-2 flex-1">
+          <AlertDialogCancel className="rounded-lg font-bold uppercase text-[11px] tracking-widest h-12 border border-border flex-1">
             Keep Listing
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isPending}
-            className="rounded-full bg-red-600 hover:bg-red-700 text-white font-black uppercase text-xs tracking-widest h-14 shadow-xl shadow-red-200 flex-1 disabled:opacity-70"
+            className="rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold uppercase text-[11px] tracking-widest h-12 flex-1 disabled:opacity-70"
           >
             {isPending ? 'Deleting…' : 'Delete Permanently'}
           </AlertDialogAction>

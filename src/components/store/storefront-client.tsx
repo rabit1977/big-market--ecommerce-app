@@ -41,7 +41,7 @@ export function StorefrontClient({
           
           {/* Upgrade Prompt for the Owner */}
           {isOwner && (
-            <div className="mb-8 p-6 bg-primary/5 border border-primary/20 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="mb-8 p-6 bg-secondary border border-border rounded-lg flex flex-col md:flex-row items-center justify-between gap-4">
                <div>
                   <h3 className="text-xl font-bold flex items-center gap-2 mb-1">
                     <Lock className="w-5 h-5 text-primary" /> Unlock Your Premium Storefront
@@ -51,14 +51,14 @@ export function StorefrontClient({
                   </p>
                </div>
                <Link href="/premium" className="shrink-0">
-                  <Button className="font-bold uppercase tracking-wide">Upgrade for 450 den</Button>
+                  <Button className="font-medium uppercase tracking-wide rounded-lg h-10 px-6">Upgrade for 450 den</Button>
                </Link>
             </div>
           )}
 
           {/* Basic User Info */}
-          <div className="flex items-center gap-4 mb-8 pb-8 border-b">
-            <Avatar className="h-16 w-16 rounded-xl">
+          <div className="flex items-center gap-4 mb-8 pb-8 border-b border-border">
+            <Avatar className="h-16 w-16 rounded-lg">
               <AvatarImage src={profile.image || ''} alt={profile.name || 'User'} className="object-cover" />
               <AvatarFallback className="text-xl bg-muted text-muted-foreground font-bold">
                 {profile.name?.charAt(0).toUpperCase() || 'U'}
@@ -102,7 +102,7 @@ export function StorefrontClient({
       <div className="container max-w-6xl mx-auto px-4 sm:px-6">
         {/* Profile Header */}
         <div className="relative flex flex-col md:flex-row items-center md:items-end gap-4 md:gap-6 -mt-16 md:-mt-20 mb-8 md:mb-12">
-          <Avatar className="h-32 w-32 md:h-40 md:w-40 border-4 border-background shadow-xl rounded-2xl">
+          <Avatar className="h-32 w-32 md:h-40 md:w-40 border-4 border-background rounded-lg shadow-none bg-card">
             <AvatarImage src={profile.image || ''} alt={profile.name || 'User'} className="object-cover" />
             <AvatarFallback className="text-4xl bg-muted text-muted-foreground font-bold">
               {profile.name?.charAt(0).toUpperCase() || 'U'}
@@ -115,7 +115,7 @@ export function StorefrontClient({
                   {profile.name === 'User' ? 'Andi Ebibi' : (profile.accountType === 'COMPANY' && profile.companyName ? profile.companyName : profile.name)}
                 </h1>
                 {profile.isVerified && (
-                  <div className="inline-flex items-center gap-1 bg-primary/10 text-primary px-2.5 py-0.5 rounded-xl text-xs font-bold uppercase tracking-wider mx-auto md:mx-0">
+                  <div className="inline-flex items-center gap-1 bg-primary/10 text-primary px-2.5 py-0.5 rounded-md text-xs font-bold uppercase tracking-wider mx-auto md:mx-0">
                      <ShieldCheck className="w-3.5 h-3.5" />
                      Verified Seller
                   </div>
@@ -151,7 +151,7 @@ export function StorefrontClient({
                     sellerName={profile.name === 'User' ? 'Andi Ebibi' : (profile.accountType === 'COMPANY' && profile.companyName ? profile.companyName : profile.name)} 
                     contactPhone={profile.phone}
                     contactEmail={profile.email}
-                    className="rounded-2xl shadow-xl shadow-primary/20 font-black tracking-widest uppercase bg-primary hover:bg-primary/90 text-primary-foreground h-12 md:h-14 px-8 border-0"
+                    className="rounded-lg shadow-none font-medium tracking-tight h-12 md:h-12 px-8 border border-primary bg-primary hover:bg-primary/95 text-primary-foreground transition-all active:scale-95"
                     label={
                         <span className="flex items-center justify-center">
                             <Phone className="w-5 h-5 mr-3 animate-pulse" />
@@ -165,9 +165,9 @@ export function StorefrontClient({
 
         {/* Listings Grid */}
         <div className="space-y-6">
-           <div className="flex items-center justify-between border-b pb-4">
+           <div className="flex items-center justify-between border-b border-border pb-4">
               <h2 className="text-xl md:text-2xl font-bold uppercase tracking-tight">Active Listings</h2>
-              <span className="bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xs px-3 py-1 rounded-xl">{activeListings.length} found</span>
+              <span className="bg-primary text-primary-foreground font-bold text-xs px-3 py-1 rounded-md">{activeListings.length} found</span>
            </div>
 
            {activeListings.length > 0 ? (
@@ -177,7 +177,7 @@ export function StorefrontClient({
                 ))}
              </div>
            ) : (
-             <div className="text-center py-20 bg-muted/30 rounded-2xl border border-dashed border-border/60">
+             <div className="text-center py-20 bg-background rounded-lg border border-border">
                 <Package className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
                 <h3 className="text-lg font-bold text-foreground mb-1 uppercase tracking-wider">No active listings</h3>
                 <p className="text-sm text-muted-foreground">This seller currently has no items for sale.</p>
