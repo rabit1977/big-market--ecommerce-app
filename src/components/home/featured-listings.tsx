@@ -74,12 +74,9 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                  {featuredListings.map((listing) => {
                     const imageUrl = listing.thumbnail || (listing.images && listing.images[0]) || '/placeholder-listing.jpg';
                     const promoConfig = (listing as any).isPromoted ? getPromotionConfig((listing as any).promotionTier) : null;
-                    const badgeColor = promoConfig?.badgeColor || "bg-muted-foreground";
-                    const borderColor = promoConfig?.borderColor || "border-border";
                     const bgColor = promoConfig?.bgColor || "bg-card";
-                    
                     return (
-                        <div key={listing._id} className="group">
+                        <div key={listing._id} className="group ">
                              <Link href={`/listings/${listing._id}`}>
                                 <Card className={cn(
                                     "p-0 overflow-hidden border-border/40 hover:border-foreground/20 transition-all duration-300 rounded-xl bg-card shadow-sm hover:shadow-xl hover:-translate-y-1",
@@ -201,10 +198,10 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                     key={listing._id} 
                     className="pl-3 sm:pl-5 basis-[46%] xs:basis-[42%] sm:basis-[30%] md:basis-[22%] lg:basis-[18%]"
                   >
-                    <Link href={`/listings/${listing._id}`} className="group block h-full">
+                    <Link href={`/listings/${listing._id}`} className="group block h-full border rounded-2xl sm:rounded-3xl bg-slate-50 p-1 dark:bg-muted-foreground/5">
                         <div className="relative flex flex-col h-full">
                             {/* eBay Style Image Card */}
-                            <div className="relative aspect-square w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-muted transition-all duration-300 shadow-sm group-hover:shadow-lg group-hover:-translate-y-1">
+                            <div className="relative aspect-square w-full rounded-t-2xl sm:rounded-t-3xl  overflow-hidden bg-muted transition-all duration-300 shadow-sm group-hover:shadow-lg group-hover:-translate-y-1">
                                 <Image
                                     src={imageUrl}
                                     alt={listing.title}
