@@ -63,7 +63,7 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className={inter.className}>
+      <body className={`bg-slate-100 dark:bg-background min-h-screen ${inter.className}`}>
         <NextIntlClientProvider messages={messages} locale={locale}>
           <Providers initialFavorites={wishlist}>
             <ThemeApplier />
@@ -72,10 +72,10 @@ export default async function RootLayout({
               <AnalyticsProvider />
             </Suspense>
             <CommandPalette />
-            <div className='min-h-screen bg-background text-foreground relative'>
+            <div className='min-h-screen text-foreground relative'>
               <Watermark />
               <div className='relative z-10'>
-                <Suspense fallback={<div className="h-16 w-full bg-background" />}>
+                <Suspense fallback={<div className="h-16 w-full" />}>
                   <MobileSidebarWrapper
                     initialWishlistCount={initialWishlistCount}
                   />

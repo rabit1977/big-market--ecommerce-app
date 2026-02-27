@@ -197,7 +197,7 @@ function FavoritesTabs({
                        {folder} <span className="text-muted-foreground text-sm font-normal">({groupedFavorites[folder].length})</span>
                     </h3>
                  </div>
-                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-4">
+                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-4">
                    {groupedFavorites[folder].map(
                      (listing: any) =>
                        listing && (

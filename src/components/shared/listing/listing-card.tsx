@@ -46,7 +46,7 @@ export const ListingCard = memo(
     return (
       <div
         className={cn(
-          "group relative flex transition-all duration-300",
+          "group relative bg-white dark:bg-muted-foreground/5 border rounded-3xl hover:scale p-1.5 flex transition-all duration-300",
           (isGrid || isCard) ? "flex-col h-full" : "flex-row h-24 sm:h-28 md:h-40", 
           isCard && "mb-4",
         )}
@@ -60,7 +60,7 @@ export const ListingCard = memo(
 
         {/* Image Section - The container for the 'card' look */}
         <div className={cn(
-          "relative shrink-0 overflow-hidden z-20 rounded-2xl sm:rounded-3xl bg-muted transition-all duration-300 shadow-xs group-hover:shadow-md group-hover:-translate-y-0.5 pointer-events-none",
+          "relative shrink-0 overflow-hidden z-20 rounded-t-2xl sm:rounded-3xl bg-muted transition-all duration-300 shadow-xs group-hover:shadow-md group-hover:-translate-y-0.5 pointer-events-none",
           isGrid ? "aspect-square w-full" : isCard ? "aspect-video w-full" : "w-24 sm:w-32 md:w-48 h-full"
         )}>
           <Image
