@@ -116,7 +116,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             ref={ref}
             type="search"
             placeholder={tNav('search_placeholder')}
-            className="h-10 md:h-11 rounded-full pl-10 sm:pl-16 pr-24 sm:pr-32 bg-secondary/80 border-border/60 shadow-sm
+            className="h-10 md:h-11 rounded-2xl pl-10 sm:pl-16 pr-24 sm:pr-32 bg-secondary/60 border-border/50 shadow-xs
                        focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary/30
                        text-sm placeholder:text-muted-foreground/60
                        [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden
@@ -139,10 +139,10 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
               size="sm"
               onClick={() => setIsCityPanelOpen(true)}
               aria-label={`Filter by city. Currently: ${selectedCity === 'all' ? 'All Cities' : selectedCity}`}
-              className="h-7 md:h-8 gap-1 px-2 md:px-2.5 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all border border-transparent hover:border-primary/20"
+              className="h-7.5 md:h-8.5 gap-1.5 px-2.5 md:px-3 rounded-xl text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all border border-border/40 hover:border-primary/20 bg-background/50"
             >
               <MapPin className="h-3.5 w-3.5" />
-              <span className="text-xs font-medium truncate max-w-[60px] sm:max-w-[80px] hidden sm:inline">
+              <span className="text-xs font-bold truncate max-w-[60px] sm:max-w-[80px] hidden sm:inline">
                 {selectedCity === 'all' ? (tCommon('all_cities') || 'All Cities') : selectedCity}
               </span>
               <ChevronDown className="h-3 w-3 opacity-50" />
@@ -153,12 +153,13 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                 onClick={onClear}
                 disabled={isPending}
                 aria-label="Clear search"
-                className="p-1.5 text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 rounded-full hover:bg-muted"
+                className="p-1.5 text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 rounded-lg hover:bg-muted"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
             )}
           </div>
+
         </div>
 
         {/* City Panel — portaled */}

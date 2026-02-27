@@ -56,10 +56,14 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-premium-card: var(--radius-2xl);
+  --radius-premium-interactive: var(--radius-xl);
   --radius-yt: 12px;
   --radius-pill: 9999px;
   --breakpoint-xs: 480px;
 }
+
 
 :root {
   /* Core Radius */
@@ -416,15 +420,13 @@
 
   /* ===== Premium Card Styles ===== */
   .card-premium {
-    @apply relative bg-card rounded-2xl border border-border overflow-hidden;
+    @apply relative bg-card rounded-(--radius-premium-card) border border-border/50 overflow-hidden;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px -2px rgba(0, 0, 0, 0.06);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .card-premium:hover {
-    border-color: var(--primary);
-    box-shadow: 0 4px 16px -4px rgba(255, 0, 0, 0.12), 0 12px 24px -8px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
+    @apply border-primary/30 shadow-xl shadow-primary/5 -translate-y-1;
   }
 
   .dark .card-premium {
@@ -432,52 +434,44 @@
   }
 
   .dark .card-premium:hover {
-    border-color: rgba(255, 0, 0, 0.4);
-    box-shadow: 0 4px 20px -4px rgba(255, 0, 0, 0.15), 0 12px 28px -8px rgba(0, 0, 0, 0.5);
-  }
-
-  /* ===== Gradient Text (Primary Red) ===== */
-  .gradient-text {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, #ff0000, #ff4d4d, #b30000);
-  }
-
-  .gradient-text-animate {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, #ff0000, #ff4d4d, #b30000, #ff0000);
-    background-size: 300% 300%;
-    animation: gradient-flow 4s ease infinite;
-  }
-
-  /* ===== Gradient Backgrounds ===== */
-  .gradient-primary {
-    background: linear-gradient(135deg, #ff0000, #cc0000);
-  }
-  
-  /* Hero gradient - subtle, consistent with YouTube red */
-  .gradient-hero {
-    background: linear-gradient(180deg, 
-      rgba(255, 0, 0, 0.02) 0%, 
-      rgba(248, 250, 252, 1) 100%
-    );
-  }
-
-  .dark .gradient-hero {
-    background: linear-gradient(180deg, 
-      rgba(255, 0, 0, 0.03) 0%, 
-      rgba(15, 15, 15, 1) 100%
-    );
+    @apply border-primary/40 shadow-xl shadow-primary/10;
   }
 
   /* ===== Premium Buttons ===== */
   .btn-premium {
-    @apply relative overflow-hidden font-semibold;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    @apply relative overflow-hidden font-bold rounded-(--radius-premium-interactive) transition-all duration-300;
   }
 
   .btn-premium:active {
-    transform: scale(0.98);
+    @apply scale-[0.98];
   }
+
+  /* ===== Input Premium ===== */
+  .input-premium {
+    @apply h-11 rounded-(--radius-premium-interactive) border border-border/60 bg-background/50 px-4 transition-all duration-200;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  }
+
+  .input-premium:hover {
+    @apply border-primary/30 bg-background;
+  }
+
+  .input-premium:focus {
+    @apply border-primary ring-2 ring-primary/20 bg-background;
+  }
+
+  .dark .input-premium {
+    @apply bg-input/30 border-input;
+  }
+  
+  .dark .input-premium:hover {
+    @apply bg-input/40 border-primary/40;
+  }
+
+  .dark .input-premium:focus {
+    @apply bg-input/50 border-primary;
+  }
+
 
   .btn-glow {
     @apply relative overflow-hidden;

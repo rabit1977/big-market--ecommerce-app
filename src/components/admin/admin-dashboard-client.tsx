@@ -8,15 +8,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
 import {
-  ArrowRight,
-  ArrowUpRight,
-  BarChart3,
-  Clock,
-  CreditCard,
-  Plus,
-  ShieldCheck,
-  Tag,
-  Users
+    ArrowRight,
+    ArrowUpRight,
+    BarChart3,
+    Clock,
+    CreditCard,
+    Plus,
+    ShieldCheck,
+    Tag,
+    Users
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -59,7 +59,7 @@ export function AdminDashboardClient() {
         <div className='space-y-1'>
           <h1 className='text-3xl sm:text-4xl font-black tracking-tight text-foreground flex items-center gap-3'>
             Dashboard
-            <span className='inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold ring-1 ring-inset ring-primary/20 uppercase tracking-widest'>
+            <span className='inline-flex items-center justify-center px-2 py-0.5 rounded-xl bg-primary/10 text-primary text-[10px] font-bold ring-1 ring-inset ring-primary/20 uppercase tracking-widest'>
               Live
             </span>
           </h1>
@@ -73,13 +73,13 @@ export function AdminDashboardClient() {
                onTimeRangeChange={setTimeRange}
                showSearch={false}
            />
-           <Button variant="outline" size="sm" asChild className="hidden sm:flex rounded-full">
+           <Button variant="outline" size="sm" asChild className="hidden sm:flex rounded-xl">
               <Link href="/admin/analytics">
                 <BarChart3 className="w-4 h-4 mr-2" />
                 View Reports
               </Link>
            </Button>
-           <Button size="sm" asChild className="rounded-full shadow-lg shadow-primary/25">
+           <Button size="sm" asChild className="rounded-xl shadow-lg shadow-primary/25">
               <Link href="/admin/users/create">
                 <Plus className="w-4 h-4 mr-2" />
                 Create User
@@ -121,7 +121,7 @@ export function AdminDashboardClient() {
       <div className='grid gap-6 lg:grid-cols-3'>
         
         {/* Pending Approvals */}
-        <Card className="lg:col-span-2 rounded-[2rem] border-border/50 shadow-xl overflow-hidden bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm">
+        <Card className="lg:col-span-2 rounded-2xl border-border/50 shadow-xl overflow-hidden bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
             <div className="space-y-1">
               <CardTitle className="text-xl font-bold flex items-center gap-2">
@@ -174,7 +174,7 @@ export function AdminDashboardClient() {
         </Card>
 
         {/* Recent Activity */}
-        <Card className="rounded-[2rem] border-border/50 shadow-xl overflow-hidden bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm">
+        <Card className="rounded-2xl border-border/50 shadow-xl overflow-hidden bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm">
           <CardHeader>
             <CardTitle className="text-xl font-bold flex items-center gap-2">
               <Clock className="w-5 h-5 text-primary" />
@@ -192,7 +192,7 @@ export function AdminDashboardClient() {
       </div>
 
       {/* Verification Summary */}
-      <Card className="rounded-[2.5rem] border-border/50 shadow-xl p-8 sm:p-10 bg-gradient-to-br from-indigo-500 to-violet-600 text-white relative overflow-hidden group">
+      <Card className="rounded-2xl border-border/50 shadow-xl p-8 sm:p-10 bg-gradient-to-br from-indigo-500 to-violet-600 text-white relative overflow-hidden group">
          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-3">
                <Badge className="bg-white/20 text-white hover:bg-white/30 border-none px-3 py-1 font-black text-[10px] uppercase tracking-widest">
@@ -205,7 +205,7 @@ export function AdminDashboardClient() {
                   There are users waiting for their identity verification. Verifying users boosts platform trust and safety.
                </p>
             </div>
-            <Button size="lg" variant="secondary" asChild className="rounded-full px-8 bg-white text-indigo-600 hover:bg-indigo-50 font-bold h-14">
+            <Button size="lg" variant="secondary" asChild className="rounded-xl px-8 bg-white text-indigo-600 hover:bg-indigo-50 font-bold h-14">
                <Link href="/admin/users?tab=verifications">
                   Go to Verifications
                   <ArrowRight className="ml-2 w-5 h-5" />

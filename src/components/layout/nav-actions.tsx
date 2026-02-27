@@ -236,7 +236,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
               <TooltipTrigger asChild>
                 <Button
                   asChild variant="ghost" size="icon"
-                  className="relative hidden md:flex h-9 w-9 rounded-full text-primary hover:bg-primary/10"
+                  className="relative hidden md:flex h-9 w-9 rounded-xl text-primary hover:bg-primary/10 border border-transparent hover:border-primary/20 transition-all"
                 >
                   <Link href="/admin/dashboard" aria-label="Admin Dashboard">
                     <LayoutDashboard className="h-4.5 w-4.5" />
@@ -254,7 +254,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
             <TooltipTrigger asChild>
               <Button
                 asChild variant="ghost" size="icon"
-                className="relative hidden lg:flex h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10"
+                className="relative hidden lg:flex h-9 w-9 rounded-xl text-muted-foreground hover:text-primary hover:bg-primary/10 border border-transparent hover:border-primary/20 transition-all"
               >
                 <Link href="/favorites" aria-label={`Favorites${initialWishlistCount > 0 ? ` (${initialWishlistCount})` : ''}`}>
                   <Heart className="h-4.5 w-4.5" />
@@ -263,7 +263,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                       <motion.span
                         key="wishlist-badge"
                         initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                        className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-background"
+                        className="absolute -top-1 -right-1 flex min-w-4 h-4 items-center justify-center rounded-full bg-primary text-[9px] font-black text-white ring-2 ring-background px-1 shadow-sm"
                         aria-hidden="true"
                       >
                         {initialWishlistCount > 9 ? '9+' : initialWishlistCount}
@@ -287,7 +287,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
             <TooltipTrigger asChild>
               <Button
                 asChild variant="ghost" size="icon"
-                className="relative h-9 w-9 hidden sm:flex rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 border border-border/40"
+                className="relative h-9 w-9 hidden sm:flex rounded-xl text-muted-foreground hover:text-primary hover:bg-primary/10 border border-border/40 hover:border-primary/20 transition-all"
               >
                 <Link href="/help" aria-label="Help Center">
                   <HelpCircle className="h-4.5 w-4.5" />

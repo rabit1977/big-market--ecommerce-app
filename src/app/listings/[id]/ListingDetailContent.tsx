@@ -8,15 +8,15 @@ import { ReportModal } from '@/components/shared/report-modal';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import { LeaveReviewModal } from '@/components/store/leave-review-modal';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
@@ -27,18 +27,18 @@ import { cn, formatCurrency } from '@/lib/utils';
 import { rgbDataURL } from '@/lib/utils/utils';
 import { useQuery as useConvexQuery, useMutation } from 'convex/react';
 import {
-  BadgeCheck,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronUp,
-  Edit,
-  MapPin,
-  MessageSquare,
-  MoreVertical,
-  Share2,
-  ShieldAlert,
-  Trash2
+    BadgeCheck,
+    ChevronDown,
+    ChevronLeft,
+    ChevronRight,
+    ChevronUp,
+    Edit,
+    MapPin,
+    MessageSquare,
+    MoreVertical,
+    Share2,
+    ShieldAlert,
+    Trash2
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -217,7 +217,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
           <div className="flex items-center justify-between gap-3">
             <button
               onClick={handleShare}
-              className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-full text-sm font-bold text-foreground hover:bg-accent transition-all shadow-sm"
+              className="flex items-center gap-2 px-4 py-2 bg-card border border-border/50 rounded-xl text-sm font-bold text-foreground hover:bg-accent transition-all shadow-sm"
             >
               <Share2 className="w-4 h-4" />
               Share
@@ -229,7 +229,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
               <>
                 <Link
                   href={`/my-listings/${listing._id}/edit`}
-                  className="flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-sm font-bold text-primary hover:bg-primary/20 transition-all shadow-sm"
+                  className="flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-xl text-sm font-bold text-primary hover:bg-primary/20 transition-all shadow-sm"
                 >
                   <Edit className="w-4 h-4" />
                   Edit Ad
@@ -246,7 +246,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
           <div className="md:col-span-7 lg:col-span-8 space-y-4 md:space-y-6">
 
             {/* Image Gallery */}
-            <div className="relative group bg-slate-900 overflow-hidden md:rounded-2xl shadow-xl">
+            <div className="relative group bg-slate-900 overflow-hidden md:rounded-2xl shadow-xl border border-border/50">
               <div className="relative aspect-[4/3] md:aspect-video w-full">
                 <Image 
                   src={mainImage} 
@@ -258,7 +258,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   className="object-cover" 
                   priority 
                 />  
-                <div className="hidden md:flex absolute top-2 right-2 text-white bg-black/50 p-2 rounded-lg flex-col">
+                <div className="hidden md:flex absolute top-3 right-3 text-white bg-black/60 backdrop-blur-md p-2.5 rounded-xl border border-white/10 flex-col">
                   <span className="text-sm font-black tracking-tight leading-none text-white uppercase">
                     Item: {listingRef}
                   </span>
@@ -511,7 +511,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
             <div className="sticky top-24 space-y-6  overflow-y-auto pr-1 no-scrollbar z-10">
 
               {/* Price & Actions Card */}
-              <div className="bg-card border-2 border-border rounded-3xl p-6 md:p-8 shadow-xl shadow-foreground/5 space-y-6">
+              <div className="bg-card border border-border/60 rounded-2xl p-6 md:p-8 shadow-xl shadow-foreground/5 space-y-6">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <h1 className="text-xl font-bold text-muted-foreground tracking-tight leading-tight uppercase flex-1">
@@ -554,7 +554,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
               </div>
 
               {/* RESTORED: Seller Card */}
-              <div className="bg-card border border-border rounded-3xl p-6 shadow-sm overflow-hidden">
+              <div className="bg-card border border-border/60 rounded-2xl p-6 shadow-sm overflow-hidden">
                 <div className="flex items-center gap-4 mb-6">
                   <Link href={`/store/${listing.userId}`} className="shrink-0 hover:opacity-80 transition-opacity">
                      <UserAvatar user={seller} className="w-16 h-16 border-4 border-muted shadow-md" />
@@ -615,7 +615,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   Safety & Trust
                 </p>
                 <ReportModal targetId={listing._id} targetType="listing">
-                  <button className="w-full flex items-center justify-between p-4 bg-card border border-border rounded-2xl group hover:border-primary/20 transition-all">
+                  <button className="w-full flex items-center justify-between p-4 bg-card border border-border/60 rounded-2xl group hover:border-primary/20 transition-all">
                     <div className="flex items-center gap-3">
                       <div className="p-2 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
                         <ShieldAlert className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
@@ -747,8 +747,8 @@ function DeleteListingButton({ listingId, compact }: { listingId: string; compac
           variant={compact ? 'ghost' : 'destructive'}
           className={
             compact
-              ? 'h-9 px-4 rounded-full border border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 font-bold text-sm transition-all'
-              : 'h-10 sm:h-11 md:h-12 bg-red-600 hover:bg-red-700 text-white font-bold text-xs sm:text-sm sm:col-span-2 md:col-span-1 min-w-0'
+              ? 'h-9 px-4 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 font-bold text-sm transition-all'
+              : 'h-10 sm:h-11 md:h-12 bg-red-600 rounded-xl hover:bg-red-700 text-white font-bold text-xs sm:text-sm sm:col-span-2 md:col-span-1 min-w-0'
           }
           disabled={isPending}
         >

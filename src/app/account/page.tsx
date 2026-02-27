@@ -65,11 +65,11 @@ const AccountPage = async () => {
           </div>
 
           {/* Profile Header Card */}
-          <header className='bg-card border border-border rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 shadow-sm'>
+          <header className='bg-card border border-border/60 rounded-2xl p-4 sm:p-6 md:p-8 shadow-sm'>
              <div className='flex flex-col sm:flex-row items-center sm:items-end gap-4 sm:gap-6 text-center sm:text-left'>
                {/* Avatar */}
                <div className='relative shrink-0'>
-                 <Avatar className='w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-xl md:rounded-2xl shadow-sm ring-2 md:ring-4 ring-background'>
+                 <Avatar className='w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-xl shadow-sm ring-2 md:ring-4 ring-background'>
                    <AvatarFallback className='text-xl sm:text-3xl font-bold bg-muted text-foreground uppercase'>
                      {userInitials}
                    </AvatarFallback>
@@ -84,7 +84,7 @@ const AccountPage = async () => {
                      <h1 className='text-xl sm:text-2xl md:text-3xl font-black text-foreground uppercase tracking-tighter truncate'>
                         {user?.name || 'My Account'}
                      </h1>
-                     <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 font-bold px-2 py-0.5 rounded-md text-[10px]">
+                     <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 font-bold px-2 py-0.5 rounded-xl text-[10px]">
                         {user?.role || 'User'}
                      </Badge>
                    </div>
@@ -135,7 +135,7 @@ const AccountPage = async () => {
             <div className='lg:col-span-8 space-y-4 sm:space-y-6'>
               
               {/* Account Information Card */}
-              <div className='bg-card border border-border rounded-2xl md:rounded-3xl overflow-hidden shadow-sm'>
+              <div className='bg-card border border-border/60 rounded-2xl md:rounded-2xl overflow-hidden shadow-sm'>
                   <div className='px-4 sm:px-6 py-3 sm:py-4 border-b border-border/50 bg-muted/50'>
                     <h2 className='text-[10px] sm:text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2'>
                         <ShieldCheck className="h-3.5 w-3.5 text-primary"/>
@@ -191,7 +191,7 @@ const AccountPage = async () => {
             {/* Right Sidebar */}
             <div className='lg:col-span-4 space-y-4 sm:space-y-6'>
               {/* Quick Navigation Card */}
-              <div className='bg-card border border-border rounded-2xl md:rounded-3xl overflow-hidden shadow-sm'>
+              <div className='bg-card border border-border/60 rounded-2xl md:rounded-2xl overflow-hidden shadow-sm'>
                   <div className='px-4 sm:px-6 py-3 sm:py-4 border-b border-border/50 bg-muted/50'>
                     <h3 className='text-[10px] sm:text-xs font-bold uppercase tracking-widest text-muted-foreground'>Quick Links</h3>
                   </div>
@@ -217,7 +217,7 @@ const AccountPage = async () => {
               </div>
 
               {/* Wallet/Credits Preview */}
-              <div className='bg-primary/5 border border-primary/10 rounded-2xl md:rounded-3xl p-5 sm:p-6 relative overflow-hidden group'>
+              <div className='bg-primary/5 border border-primary/10 rounded-2xl md:rounded-2xl p-5 sm:p-6 relative overflow-hidden group'>
                   <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:scale-110 transition-transform">
                      <Wallet className="w-20 h-20 sm:w-24 sm:h-24 text-primary" />
                   </div>

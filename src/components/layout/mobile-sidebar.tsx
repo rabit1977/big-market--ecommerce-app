@@ -143,10 +143,10 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b shrink-0">
               <Link href="/" onClick={onClose} className="flex items-center gap-2.5 group">
-                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-sm shadow-primary/20">
-                  <Zap className="h-4 w-4 text-white" fill="currentColor" />
+                <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-105 transition-all">
+                  <Zap className="h-5 w-5 text-white" fill="currentColor" />
                 </div>
-                <span className="font-bold text-base tracking-tight text-foreground">
+                <span className="font-black text-lg tracking-tight text-foreground">
                   Biggest Market<span className="text-primary">.</span>
                 </span>
               </Link>
@@ -165,10 +165,10 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                   variant="ghost"
                   size="icon"
                   onClick={onClose}
-                  className="h-8 w-8 rounded-full hover:bg-muted"
+                  className="h-9 w-9 rounded-xl hover:bg-muted"
                   aria-label="Close menu"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-5 w-5" />
                 </Button>
               </div>
             </div>
@@ -181,7 +181,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                   placeholder="Search categories..."
                   value={categorySearch}
                   onChange={(e) => setCategorySearch(e.target.value)}
-                  className="h-9 pl-9 pr-8 rounded-lg text-sm bg-muted/50 border-border/50"
+                  className="h-10 pl-10 pr-8 rounded-xl text-sm bg-muted/50 border-border/50 focus-visible:bg-background transition-all"
                   autoFocus={false}
                 />
                 {categorySearch && (
@@ -239,26 +239,26 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                                 </div>
                               </AccordionTrigger>
                               <AccordionContent className="pb-1 pt-0">
-                                <div className="ml-3 pl-3 border-l-2 border-border/40 flex flex-col gap-0.5 mt-0.5">
-                                  {subs.map((sub) => (
+                                  <div className="ml-3 pl-3 border-l-2 border-primary/10 flex flex-col gap-0.5 mt-0.5">
+                                    {subs.map((sub) => (
+                                      <Link
+                                        key={sub.id}
+                                        href={`/listings?category=${encodeURIComponent(cat.name)}&subCategory=${encodeURIComponent(sub.name)}`}
+                                        onClick={onClose}
+                                        className="py-2.5 px-3 rounded-xl text-[13px] text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all font-bold flex items-center justify-between group"
+                                      >
+                                        <span>{sub.name}</span>
+                                        <ChevronRight className="w-4 h-4 opacity-0 -translate-x-1 group-hover:opacity-50 group-hover:translate-x-0 transition-all" />
+                                      </Link>
+                                    ))}
                                     <Link
-                                      key={sub.id}
-                                      href={`/listings?category=${encodeURIComponent(cat.name)}&subCategory=${encodeURIComponent(sub.name)}`}
+                                      href={`/listings?category=${encodeURIComponent(cat.name)}`}
                                       onClick={onClose}
-                                      className="py-2 px-3 rounded-lg text-[13px] text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-all font-semibold flex items-center justify-between group"
+                                      className="py-2 px-3 rounded-xl text-xs font-black text-primary hover:bg-primary/10 transition-all mt-0.5 uppercase tracking-wider"
                                     >
-                                      <span>{sub.name}</span>
-                                      <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-50 group-hover:translate-x-0 transition-all" />
+                                      View all {cat.name} →
                                     </Link>
-                                  ))}
-                                  <Link
-                                    href={`/listings?category=${encodeURIComponent(cat.name)}`}
-                                    onClick={onClose}
-                                    className="py-1.5 px-3 rounded-lg text-xs font-bold text-primary hover:bg-primary/10 transition-colors mt-0.5"
-                                  >
-                                    View all in {cat.name} →
-                                  </Link>
-                                </div>
+                                  </div>
                               </AccordionContent>
                             </>
                           ) : (

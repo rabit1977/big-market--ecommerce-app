@@ -61,8 +61,8 @@ export const AdminSidebar = () => {
       {/* Desktop Sidebar */}
       <aside className='hidden lg:flex w-64 flex-col fixed inset-y-0 z-50 bg-card border-r border-border'>
         <div className='flex items-center h-16 px-6 border-b border-border justify-between'>
-            <Link href='/admin/dashboard' className='flex items-center gap-2 font-bold text-lg tracking-tight'>
-                <div className='w-8 h-8 rounded bg-primary text-primary-foreground flex items-center justify-center'>
+            <Link href='/admin/dashboard' className='flex items-center gap-2.5 font-black text-xl tracking-tight text-foreground transition-all hover:opacity-90'>
+                <div className='w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20'>
                     <LayoutDashboard className='w-5 h-5' />
                 </div>
                 <span>Admin</span>
@@ -218,15 +218,15 @@ function NavItem({ item, isActive }: { item: NavItem; isActive: boolean }) {
         <Link
             href={item.href}
             className={cn(
-                'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                'flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300',
                 isActive 
-                    ? 'bg-primary/10 text-primary' 
+                    ? 'bg-primary text-white shadow-md shadow-primary/20' 
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
             )}
         >
-            <item.icon className={cn('w-4 h-4', isActive && 'text-primary')} />
+            <item.icon className={cn('w-4.5 h-4.5', isActive ? 'text-white' : 'text-muted-foreground/70')} />
             {item.label}
-            {isActive && <motion.div layoutId="active-pill" className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />}
+            {isActive && <motion.div layoutId="active-pill" className="ml-auto w-1.5 h-1.5 rounded-full bg-white" />}
         </Link>
     );
 }

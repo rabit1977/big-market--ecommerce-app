@@ -79,8 +79,8 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                         <div key={listing._id} className="group ">
                              <Link href={`/listings/${listing._id}`}>
                                 <Card className={cn(
-                                    "p-0 overflow-hidden border-border/40 hover:border-foreground/20 transition-all duration-300 rounded-xl bg-card shadow-sm hover:shadow-xl hover:-translate-y-1",
-                                    promoConfig && `ring-1 ring-inset ring-border ${bgColor.replace('bg-', 'bg-opacity-5 bg-')}`
+                                    "p-0 overflow-hidden border-border/50 hover:border-primary/30 transition-all duration-300 rounded-2xl bg-card shadow-sm hover:shadow-xl hover:-translate-y-1",
+                                    promoConfig && `ring-1 ring-inset ring-primary/20 ${bgColor.replace('bg-', 'bg-opacity-5 bg-')}`
                                 )}>
                                      {/* Image Area - Added flex-none, block, m-0, p-0 to kill all gaps */}
                                      <div className="relative aspect-[4/3] w-full flex-none block m-0 p-0 overflow-hidden bg-white">
@@ -144,7 +144,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
              
              <Link 
                 href="/listings?featured=true" 
-                className="flex items-center justify-center w-full py-3 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground hover:bg-muted/30 rounded-lg border border-dashed border-border hover:border-muted-foreground/30 transition-all"
+                className="flex items-center justify-center w-full py-3 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-xl border border-dashed border-border hover:border-primary/20 transition-all"
              >
                 {tHome('see_all_premium')}
              </Link>
@@ -198,10 +198,10 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                     key={listing._id} 
                     className="pl-3 sm:pl-5 basis-[46%] xs:basis-[42%] sm:basis-[30%] md:basis-[22%] lg:basis-[18%]"
                   >
-                    <Link href={`/listings/${listing._id}`} className="group block h-full border rounded-2xl sm:rounded-3xl bg-slate-50 p-1 dark:bg-muted-foreground/5">
+                    <Link href={`/listings/${listing._id}`} className="group block h-full border border-border/50 rounded-2xl bg-card p-1 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20 hover:-translate-y-1">
                         <div className="relative flex flex-col h-full">
                             {/* eBay Style Image Card */}
-                            <div className="relative aspect-square w-full rounded-t-2xl sm:rounded-t-3xl  overflow-hidden bg-muted transition-all duration-300 shadow-sm group-hover:shadow-lg group-hover:-translate-y-1">
+                            <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-muted transition-all duration-300 shadow-xs pointer-events-none">
                                 <Image
                                     src={imageUrl}
                                     alt={listing.title}
@@ -214,7 +214,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                 <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-20 pointer-events-none flex flex-col gap-1 sm:gap-2">
                                     {(listing as any).isPromoted && (
                                         <div className={cn(
-                                            "flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full shadow-lg border border-white/20 backdrop-blur-md transition-all duration-300", 
+                                            "flex items-center justify-center w-5 h-5 sm:w-7 sm:h-7 rounded-full shadow-lg border border-white/20 backdrop-blur-md transition-all duration-300", 
                                             getPromotionConfig((listing as any).promotionTier)?.badgeColor || "bg-foreground"
                                         )}>
                                             <PromotionIcon 

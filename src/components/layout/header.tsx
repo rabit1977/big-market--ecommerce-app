@@ -3,7 +3,7 @@
 import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Plus, Store, Zap } from 'lucide-react';
+import { Plus, Zap } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -97,10 +97,10 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
             className="flex shrink-0 items-center gap-2.5 group mr-1"
             aria-label="Biggest Market home page"
           >
-            <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-md shadow-primary/20 group-hover:scale-105 transition-all duration-300">
-              <Zap className="h-5 w-5 text-white" fill="currentColor" />
+            <div className="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-105 transition-all duration-300">
+              <Zap className="h-5.5 w-5.5 text-white" fill="currentColor" />
             </div>
-            <span className="text-lg font-black tracking-tight text-foreground leading-none whitespace-nowrap">
+            <span className="text-xl font-black tracking-tight text-foreground leading-none whitespace-nowrap">
               Biggest Market<span className="text-primary">.</span>
             </span>
           </Link>
@@ -108,16 +108,18 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
             <SearchBar />
           </div>
 
-          <div className="flex items-center gap-1 lg:gap-1.5 shrink-0">
+          <div className="flex items-center gap-1.5 lg:gap-2 shrink-0">
             <Button
               asChild
-              className="bg-primary hover:bg-primary/90 text-white font-bold rounded-full shadow-md shadow-primary/15 px-5 h-9 transition-all hover:shadow-lg hover:shadow-primary/20 hover:scale-[1.02] active:scale-[0.98]"
+              className="bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-md shadow-primary/10 px-6 h-10 transition-all hover:shadow-lg hover:shadow-primary/20 hover:scale-[1.02] active:scale-[0.98]"
             >
               <Link href="/sell">
-                <Plus className="h-4 w-4 stroke-[3]" />
+                <Plus className="h-4.5 w-4.5 stroke-[3]" />
                 {t('post_ad')}
               </Link>
             </Button>
+
+            <div className="mx-1 w-px h-6 bg-border/40" />
 
             <NotificationBell />
             <NavActions initialWishlistCount={initialWishlistCount} />
@@ -125,6 +127,7 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
         </div>
       </div>
     </header>
+
   );
 };
 
