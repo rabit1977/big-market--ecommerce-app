@@ -103,8 +103,8 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
     <div className='flex-col space-y-6'>
       <div className='flex items-center justify-between'>
         <div>
-          <h2 className='text-xl md:text-3xl font-bold tracking-tight'>Store Settings</h2>
-          <p className='text-muted-foreground text-sm md:text-base'>
+          <h2 className='text-3xl font-bold tracking-tight text-foreground'>Store Settings</h2>
+          <p className='text-sm text-muted-foreground font-medium mt-1'>
             Manage your store preferences and configurations.
           </p>
         </div>
@@ -113,17 +113,17 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
           <Tabs defaultValue='general' className='space-y-4 text-sm w-full'>
-            <TabsList className="w-full h-auto p-2 bg-muted/60 rounded-xl grid grid-cols-3 gap-2">
-              <TabsTrigger value='general' className='h-9 md:h-10 text-xs md:text-sm w-full data-[state=active]:bg-background data-[state=active]:shadow-sm'>General</TabsTrigger>
-              <TabsTrigger value='social' className='h-9 md:h-10 text-xs md:text-sm w-full data-[state=active]:bg-background data-[state=active]:shadow-sm'>Social Media</TabsTrigger>
-              <TabsTrigger value='policies' className='h-9 md:h-10 text-xs md:text-sm w-full data-[state=active]:bg-background data-[state=active]:shadow-sm'>Policies</TabsTrigger>
+            <TabsList className="w-full h-auto p-2 rounded-lg border border-border bg-background grid grid-cols-3 gap-2">
+              <TabsTrigger value='general' className='h-8 px-4 text-sm font-medium rounded-md data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground data-[state=active]:font-semibold'>General</TabsTrigger>
+              <TabsTrigger value='social' className='h-8 px-4 text-sm font-medium rounded-md data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground data-[state=active]:font-semibold'>Social Media</TabsTrigger>
+              <TabsTrigger value='policies' className='h-8 px-4 text-sm font-medium rounded-md data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground data-[state=active]:font-semibold'>Policies</TabsTrigger>
             </TabsList>
 
             <TabsContent value='general'>
-              <Card>
-                <CardHeader>
-                  <CardTitle className='text-base md:text-xl'>General Information</CardTitle>
-                  <CardDescription className='text-xs md:text-sm'>
+              <Card className="rounded-lg border border-border shadow-none overflow-hidden">
+                <CardHeader className="bg-muted/30 border-b border-border">
+                  <CardTitle className='text-lg font-bold'>General Information</CardTitle>
+                  <CardDescription className='text-sm font-medium'>
                     Basic details about your platform.
                   </CardDescription>
                 </CardHeader>
@@ -135,7 +135,7 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
                       <FormItem>
                         <FormLabel className='text-xs md:text-sm'>Site Name</FormLabel>
                         <FormControl>
-                          <Input className='text-xs md:text-sm p-2 md:p-3 h-8 md:h-10 w-full rounded-md text-foreground' placeholder='Biggest Market' {...field} />
+                          <Input className='h-10 px-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground' placeholder='Biggest Market' {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -149,7 +149,7 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
                         <FormItem>
                           <FormLabel className='text-xs md:text-sm'>Contact Email</FormLabel>
                           <FormControl>
-                            <Input className='text-xs md:text-sm p-2 md:p-3 h-8 md:h-10 w-full rounded-md text-foreground' placeholder='support@example.com' {...field} value={field.value || ''} />
+                            <Input className='h-10 px-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground' placeholder='support@example.com' {...field} value={field.value || ''} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -162,7 +162,7 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
                         <FormItem>
                           <FormLabel className='text-xs md:text-sm'>Contact Phone</FormLabel>
                           <FormControl>
-                            <Input className='text-xs md:text-sm p-2 md:p-3 h-8 md:h-10 w-full rounded-md text-foreground' placeholder='+389...' {...field} value={field.value || ''} />
+                            <Input className='h-10 px-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground' placeholder='+389...' {...field} value={field.value || ''} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -177,7 +177,7 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
                         <FormItem>
                           <FormLabel className='text-xs md:text-sm'>Currency Code</FormLabel>
                           <FormControl>
-                            <Input className='text-xs md:text-sm p-2 md:p-3 h-8 md:h-10 w-full rounded-md text-foreground' placeholder='MKD' {...field} />
+                            <Input className='h-10 px-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground' placeholder='MKD' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -190,7 +190,7 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
                         <FormItem>
                           <FormLabel   className='text-xs md:text-sm'>Currency Symbol</FormLabel>
                           <FormControl>
-                            <Input className='text-xs md:text-sm p-2 md:p-3 h-8 md:h-10 w-full rounded-md text-foreground ' placeholder='ден' {...field} />
+                            <Input className='h-10 px-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground' placeholder='ден' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -202,10 +202,10 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
             </TabsContent>
 
             <TabsContent value='social'>
-              <Card>
-                <CardHeader>
-                  <CardTitle className='text-sm md:text-xl'>Social Media Links</CardTitle>
-                  <CardDescription className='text-xs md:text-sm'>
+              <Card className="rounded-lg border border-border shadow-none overflow-hidden">
+                <CardHeader className="bg-muted/30 border-b border-border">
+                  <CardTitle className='text-lg font-bold'>Social Media Links</CardTitle>
+                  <CardDescription className='text-sm font-medium'>
                     Links to your official social media profiles.
                   </CardDescription>
                 </CardHeader>
@@ -217,7 +217,7 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
                       <FormItem className='w-full'>
                         <FormLabel className='text-xs md:text-sm'>Facebook URL</FormLabel>
                         <FormControl>
-                          <Input className='text-xs md:text-sm p-2 md:p-3 h-8 md:h-10 w-full rounded-md text-foreground' placeholder='https://facebook.com/...' {...field} value={field.value || ''} />
+                          <Input className='h-10 px-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground' placeholder='https://facebook.com/...' {...field} value={field.value || ''} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -230,7 +230,7 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
                       <FormItem className='w-full'>
                         <FormLabel className='text-xs md:text-sm'>Instagram URL</FormLabel>
                         <FormControl>
-                          <Input className='text-xs md:text-sm p-2 md:p-3 h-8 md:h-10 w-full rounded-md text-foreground' placeholder='https://instagram.com/...' {...field} value={field.value || ''} />
+                          <Input className='h-10 px-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground' placeholder='https://instagram.com/...' {...field} value={field.value || ''} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -243,7 +243,7 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
                       <FormItem className='w-full'>
                         <FormLabel className='text-xs md:text-sm'>Twitter/X URL</FormLabel>
                         <FormControl>
-                          <Input className='text-xs md:text-sm p-2 md:p-3 h-8 md:h-10 w-full rounded-md text-foreground' placeholder='https://twitter.com/...' {...field} value={field.value || ''} />
+                          <Input className='h-10 px-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground' placeholder='https://twitter.com/...' {...field} value={field.value || ''} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -254,10 +254,10 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
             </TabsContent>
 
             <TabsContent value='policies'>
-              <Card>
-                <CardHeader>
-                  <CardTitle className='text-sm md:text-xl'>Legal Policies</CardTitle>
-                  <CardDescription className='text-xs md:text-sm'>
+              <Card className="rounded-lg border border-border shadow-none overflow-hidden">
+                <CardHeader className="bg-muted/30 border-b border-border">
+                  <CardTitle className='text-lg font-bold'>Legal Policies</CardTitle>
+                  <CardDescription className='text-sm font-medium'>
                     Manage your platform terms and privacy guidelines.
                   </CardDescription>
                 </CardHeader>
@@ -269,7 +269,7 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
                         <FormItem className='w-full'>
                             <FormLabel className='text-xs md:text-sm'>Terms of Service</FormLabel>
                             <FormControl>
-                                <Textarea className="min-h-[100px] md:min-h-[150px] text-xs md:text-sm p-2 md:p-3 h-8 md:h-auto w-full rounded-md text-foreground" placeholder='Your terms...' {...field} value={field.value || ''} />
+                                <Textarea className="min-h-[100px] md:min-h-[150px] px-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground" placeholder='Your terms...' {...field} value={field.value || ''} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -282,7 +282,7 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
                         <FormItem className='w-full'>
                             <FormLabel className='text-xs md:text-sm'>Privacy Policy</FormLabel>
                             <FormControl>
-                                <Textarea className="min-h-[100px] md:min-h-[150px] text-xs md:text-sm p-2 md:p-3 h-8 md:h-auto w-full rounded-md text-foreground" placeholder='Your privacy policy...' {...field} value={field.value || ''} />
+                                <Textarea className="min-h-[100px] md:min-h-[150px] px-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground" placeholder='Your privacy policy...' {...field} value={field.value || ''} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -294,7 +294,7 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
           </Tabs>
 
           <div className='flex justify-end'>
-            <Button type='submit' className="h-10 px-4 py-2 text-sm md:h-12 md:px-8 md:text-base w-full md:w-auto" disabled={isPending}>
+            <Button type='submit' className="rounded-lg font-bold tracking-wide shadow-none min-w-[200px]" disabled={isPending}>
               {isPending ? (
                 <>
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />

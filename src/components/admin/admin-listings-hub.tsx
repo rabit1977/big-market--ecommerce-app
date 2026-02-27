@@ -175,7 +175,7 @@ export function AdminListingsHub() {
                 <div className="space-y-1">
                     <h1 className="text-3xl sm:text-4xl font-bold tracking-tight flex items-center gap-3">
                         {promotedOnly ? 'Promoted Listings' : 'All Listings'}
-                        <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-md bg-secondary text-foreground text-xs font-bold border border-border">
+                        <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-lg bg-secondary text-foreground text-xs font-bold border border-border">
                             {filtered.length}
                         </span>
                     </h1>
@@ -195,11 +195,11 @@ export function AdminListingsHub() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
                 {[
                     { label: 'Total',    value: total,   color: 'border-border bg-card',   text: 'text-foreground' },
-                    { label: 'Active',   value: active,  color: 'border-emerald-500/20 bg-emerald-500/5', text: 'text-emerald-600' },
-                    { label: 'Pending',  value: pending, color: 'border-amber-500/20 bg-amber-500/5',  text: 'text-amber-600' },
+                    { label: 'Active',   value: active,  color: 'border-border bg-card', text: 'text-emerald-600' },
+                    { label: 'Pending',  value: pending, color: 'border-border bg-card',  text: 'text-amber-600' },
                     { label: 'Promoted', value: promo,   color: 'border-border bg-card', text: 'text-foreground' },
                 ].map(s => (
-                    <div key={s.label} className={`rounded-lg p-4 border ${s.color} flex items-center justify-between`}>
+                    <div key={s.label} className={`rounded-lg p-4 border ${s.color} hover:bg-secondary/30 transition-colors flex items-center justify-between`}>
                         <div>
                             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{s.label}</p>
                             <p className={`text-2xl font-black ${s.text}`}>{s.value}</p>
@@ -232,7 +232,7 @@ export function AdminListingsHub() {
                         <select
                             value={statusFilter}
                             onChange={e => { setStatus(e.target.value); setPage(1); }}
-                            className="h-8 pl-3 pr-7 text-xs bg-muted/40 border border-border/50 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 font-bold appearance-none cursor-pointer text-foreground"
+                            className="h-8 pl-3 pr-7 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:border-primary/50 font-bold appearance-none cursor-pointer text-foreground"
                         >
                             <option value="ALL">All Statuses</option>
                             <option value="ACTIVE">Active</option>
@@ -250,7 +250,7 @@ export function AdminListingsHub() {
                         <select
                             value={promotedOnly ? 'promoted' : 'all'}
                             onChange={e => { setPromoted(e.target.value === 'promoted'); setPage(1); }}
-                            className="h-8 pl-3 pr-7 text-xs bg-muted/40 border border-border/50 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 font-bold appearance-none cursor-pointer text-foreground"
+                            className="h-8 pl-3 pr-7 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:border-primary/50 font-bold appearance-none cursor-pointer text-foreground"
                         >
                             <option value="all">All Listings</option>
                             <option value="promoted">⭐ Promoted Only</option>
@@ -316,7 +316,7 @@ export function AdminListingsHub() {
                             <tbody className="divide-y divide-border/40">
                                 {paginated.map((listing: any) => (
                                     <tr key={listing.id} className={cn(
-                                        "hover:bg-muted/30 transition-colors",
+                                        "hover:bg-muted/30 transition-colors opacity-90 hover:opacity-100",
                                         selected.includes(listing.id) && "bg-secondary"
                                     )}>
                                         <td className="px-4 py-3">
@@ -328,7 +328,7 @@ export function AdminListingsHub() {
                                         </td>
                                         <td className="px-4 py-3">
                                             <div className="flex items-center gap-3">
-                                                <div className="relative h-10 w-10 rounded-md overflow-hidden border border-border bg-muted shrink-0">
+                                                <div className="relative h-10 w-10 rounded-lg overflow-hidden border border-border bg-muted shrink-0 shadow-none">
                                                     {listing.thumbnail ? (
                                                         <Image src={listing.thumbnail} alt={listing.title || ''} fill className="object-cover" />
                                                     ) : (
@@ -417,7 +417,7 @@ export function AdminListingsHub() {
                                                             <Trash2 className="h-3.5 w-3.5" />
                                                         </button>
                                                     </AlertDialogTrigger>
-                                                    <AlertDialogContent className="rounded-lg border border-border">
+                                                    <AlertDialogContent className="rounded-2xl border border-border shadow-none">
                                                         <AlertDialogHeader>
                                                             <AlertDialogTitle className="flex items-center gap-2 font-bold uppercase tracking-tight text-destructive">
                                                                 <Trash2 className="w-5 h-5" />

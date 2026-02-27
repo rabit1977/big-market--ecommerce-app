@@ -108,9 +108,9 @@ export function UsersClientPage() {
       {/* Header */}
       <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-4 duration-500'>
         <div className='space-y-1'>
-          <h1 className='text-3xl sm:text-4xl font-black tracking-tight text-foreground flex items-center gap-3'>
+          <h1 className='text-3xl sm:text-4xl font-bold tracking-tight text-foreground flex items-center gap-3'>
             Admin &amp; Users
-            <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold ring-1 ring-inset ring-primary/20">
+            <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-lg bg-secondary text-primary text-xs font-bold border border-border">
                {users.length}
             </span>
           </h1>
@@ -118,7 +118,7 @@ export function UsersClientPage() {
             Manage your store users and their roles in real-time
           </p>
         </div>
-        <Button asChild className="rounded-full font-bold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all btn-premium">
+        <Button asChild className="rounded-lg font-bold shadow-none transition-all btn-premium border border-primary">
           <Link href='/admin/users/create'>
             <UserPlus className='h-5 w-5 mr-2' />
             Add New User
@@ -129,14 +129,14 @@ export function UsersClientPage() {
       {/* Stats Cards */}
       <div className='grid gap-3 sm:gap-5 grid-cols-2 md:grid-cols-3 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100'>
         {[
-            { label: 'Total Users', value: users.length, icon: Users, color: 'text-blue-500', bg: 'bg-blue-500/10', border: 'border-blue-500/20' },
-            { label: 'Administrators', value: adminCount, icon: Shield, color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/20' },
-            { label: 'Regular Customers', value: userCount, icon: UserIcon, color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
+            { label: 'Total Users', value: users.length, icon: Users, color: 'text-foreground', bg: 'bg-secondary', border: 'border-border' },
+            { label: 'Administrators', value: adminCount, icon: Shield, color: 'text-primary', bg: 'bg-secondary', border: 'border-border' },
+            { label: 'Regular Customers', value: userCount, icon: UserIcon, color: 'text-emerald-500', bg: 'bg-secondary', border: 'border-border' },
         ].map(stat => (
-             <div key={stat.label} className={`glass-card p-3 sm:p-6 rounded-2xl sm:rounded-3xl flex items-center justify-between hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group gap-2 flex-row-reverse ${stat.border}`}>
+             <div key={stat.label} className={`bg-card p-3 sm:p-5 rounded-lg border flex items-center justify-between hover:bg-secondary/30 transition-all duration-300 relative overflow-hidden group gap-2 flex-row-reverse ${stat.border}`}>
                 <div className='flex justify-between items-start mb-2'>
-                    <div className={`p-2 sm:p-3 rounded-full sm:rounded-full ${stat.bg} ${stat.color} ring-1 ring-inset ring-white/10 group-hover:scale-110 transition-transform`}>
-                       <stat.icon className='h-4 w-4 sm:h-5 sm:w-5 ' />
+                    <div className={`p-2 sm:p-3 rounded-lg ${stat.bg} ${stat.color} group-hover:scale-105 transition-transform`}>
+                       <stat.icon className='h-4 w-4 sm:h-5 sm:w-5' />
                     </div>
                 </div>
                 <div className='flex flex-col items-start min-w-24'>
@@ -148,7 +148,7 @@ export function UsersClientPage() {
       </div>
 
       {/* Filter Section */}
-      <div className='glass-card rounded-2xl p-4 border border-border/60 space-y-3'>
+      <div className='bg-card rounded-lg p-4 border border-border space-y-3'>
         {/* Row 1: search + time + sort + export */}
         <AdminFilterToolbar
             timeRange={timeRange}
@@ -170,7 +170,7 @@ export function UsersClientPage() {
           <select
               value={statusFilter}
               onChange={e => { setStatus(e.target.value); setPage(1); }}
-              className="h-8 px-2 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 font-medium cursor-pointer"
+              className="h-8 px-2 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:border-primary/50 font-bold cursor-pointer"
           >
               <option value="ALL">All Statuses</option>
               <option value="ACTIVE">Active</option>
@@ -196,7 +196,7 @@ export function UsersClientPage() {
 
 
       {/* Users Table */}
-      <div className='glass-card rounded-[2.5rem] overflow-hidden shadow-xl shadow-black/5 border border-border/60 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200'>
+      <div className='bg-card rounded-lg overflow-hidden shadow-none border border-border animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200'>
          <div className="p-6 border-b border-border/50 bg-secondary/5 backdrop-blur-sm flex items-center justify-between">
             <h2 className='text-xl font-bold flex items-center gap-3'>
               <Users className="h-5 w-5 text-primary" />

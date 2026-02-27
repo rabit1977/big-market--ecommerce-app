@@ -134,10 +134,10 @@ export function AdminRecycleBinClient() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
                 <div className="space-y-1">
-                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight flex items-center gap-3">
+                    <h1 className="text-3xl sm:text-4xl font-bold tracking-tight flex items-center gap-3">
                         Recycle Bin
                         {items.length > 0 && (
-                            <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-full bg-red-500/10 text-red-600 text-xs font-bold ring-1 ring-inset ring-red-500/20">
+                            <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-lg bg-red-500/10 text-red-600 text-xs font-bold border border-red-500/20">
                                 {items.length}
                             </span>
                         )}
@@ -154,7 +154,7 @@ export function AdminRecycleBinClient() {
                                 variant="destructive"
                                 size="sm"
                                 disabled={purging}
-                                className="shrink-0 rounded-full font-bold"
+                                className="shrink-0 rounded-lg font-bold"
                             >
                                 {purging
                                     ? <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
@@ -163,9 +163,9 @@ export function AdminRecycleBinClient() {
                                 Purge &gt;30 Day Old
                             </Button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="rounded-2xl">
+                        <AlertDialogContent className="rounded-lg border border-border shadow-none">
                             <AlertDialogHeader>
-                                <AlertDialogTitle className="flex items-center gap-2 font-black uppercase tracking-tight text-destructive">
+                                <AlertDialogTitle className="flex items-center gap-2 font-bold uppercase tracking-tight text-destructive">
                                     <Trash2 className="w-5 h-5" />
                                     Purge Old Listings?
                                 </AlertDialogTitle>
@@ -174,10 +174,10 @@ export function AdminRecycleBinClient() {
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel className="rounded-xl font-bold uppercase text-xs h-10">Cancel</AlertDialogCancel>
+                                <AlertDialogCancel className="rounded-lg font-bold uppercase text-xs h-10">Cancel</AlertDialogCancel>
                                 <AlertDialogAction 
                                     onClick={handlePurgeOld}
-                                    className="bg-destructive hover:bg-destructive/90 text-white rounded-xl font-bold tracking-wider uppercase text-xs h-10 shadow-lg shadow-destructive/20"
+                                    className="bg-destructive hover:bg-destructive/90 text-white rounded-lg font-bold tracking-wider uppercase text-xs h-10"
                                 >
                                     Yes, Purge Old
                                 </AlertDialogAction>
@@ -188,7 +188,7 @@ export function AdminRecycleBinClient() {
             </div>
 
             {/* Warning banner */}
-            <div className="flex items-start gap-3 p-4 rounded-2xl bg-amber-500/5 border border-amber-500/20 text-sm text-amber-700 dark:text-amber-400">
+            <div className="flex items-start gap-3 p-4 rounded-lg bg-amber-500/5 border border-border text-sm text-amber-700 dark:text-amber-400">
                 <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
                 <div>
                     <strong>Auto-cleanup:</strong> Items in the recycle bin are automatically and permanently deleted after 30 days.
@@ -197,7 +197,7 @@ export function AdminRecycleBinClient() {
             </div>
 
             {/* Filter toolbar */}
-            <div className="glass-card rounded-2xl p-4 border border-border/60 space-y-3">
+            <div className="bg-card rounded-lg p-4 border border-border space-y-3 shadow-none">
                 <AdminFilterToolbar
                     searchValue={search}
                     onSearchChange={(q) => { setSearch(q); setPage(1); }}
@@ -216,9 +216,9 @@ export function AdminRecycleBinClient() {
                                     <Undo2 className="w-3 h-3" /> Restore All
                                 </Button>
                             </AlertDialogTrigger>
-                            <AlertDialogContent className="rounded-2xl">
+                            <AlertDialogContent className="rounded-lg border border-border shadow-none">
                                 <AlertDialogHeader>
-                                    <AlertDialogTitle className="flex items-center gap-2 font-black uppercase tracking-tight text-emerald-600">
+                                    <AlertDialogTitle className="flex items-center gap-2 font-bold uppercase tracking-tight text-emerald-600">
                                         <Undo2 className="w-5 h-5" />
                                         Restore {selected.length} Listings?
                                     </AlertDialogTitle>
@@ -227,10 +227,10 @@ export function AdminRecycleBinClient() {
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                    <AlertDialogCancel className="rounded-xl font-bold uppercase text-xs h-10">Cancel</AlertDialogCancel>
+                                    <AlertDialogCancel className="rounded-lg font-bold uppercase text-xs h-10">Cancel</AlertDialogCancel>
                                     <AlertDialogAction 
                                         onClick={handleBulkRestore}
-                                        className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold tracking-wider uppercase text-xs h-10 shadow-lg shadow-emerald-600/20"
+                                        className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold tracking-wider uppercase text-xs h-10"
                                     >
                                         Yes, Restore
                                     </AlertDialogAction>
@@ -245,9 +245,9 @@ export function AdminRecycleBinClient() {
                                     <Trash2 className="w-3 h-3" /> Delete Permanently
                                 </Button>
                             </AlertDialogTrigger>
-                            <AlertDialogContent className="rounded-2xl">
+                            <AlertDialogContent className="rounded-lg border border-border shadow-none">
                                 <AlertDialogHeader>
-                                    <AlertDialogTitle className="flex items-center gap-2 font-black uppercase tracking-tight text-destructive">
+                                    <AlertDialogTitle className="flex items-center gap-2 font-bold uppercase tracking-tight text-destructive">
                                         <Trash2 className="w-5 h-5" />
                                         Permanently Delete {selected.length} Listings?
                                     </AlertDialogTitle>
@@ -256,10 +256,10 @@ export function AdminRecycleBinClient() {
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                    <AlertDialogCancel className="rounded-xl font-bold uppercase text-xs h-10">Cancel</AlertDialogCancel>
+                                    <AlertDialogCancel className="rounded-lg font-bold uppercase text-xs h-10">Cancel</AlertDialogCancel>
                                     <AlertDialogAction 
                                         onClick={handleBulkPurge}
-                                        className="bg-destructive hover:bg-destructive/90 text-white rounded-xl font-bold tracking-wider uppercase text-xs h-10 shadow-lg shadow-destructive/20"
+                                        className="bg-destructive hover:bg-destructive/90 text-white rounded-lg font-bold tracking-wider uppercase text-xs h-10"
                                     >
                                         Permanently Delete
                                     </AlertDialogAction>
@@ -279,7 +279,7 @@ export function AdminRecycleBinClient() {
 
             {/* Table */}
             {items.length === 0 ? (
-                <div className="glass-card rounded-[2rem] p-20 flex flex-col items-center justify-center text-center border border-border/60">
+                <div className="bg-card rounded-lg p-20 flex flex-col items-center justify-center text-center border border-border shadow-none">
                     <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-6">
                         <Trash2 className="w-10 h-10 text-muted-foreground/30" />
                     </div>
@@ -289,7 +289,7 @@ export function AdminRecycleBinClient() {
                     </p>
                 </div>
             ) : (
-                <div className="glass-card rounded-[2rem] overflow-hidden border border-border/60 shadow-xl shadow-black/5">
+                <div className="bg-card rounded-lg overflow-hidden border border-border shadow-none">
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead className="bg-muted/30 text-muted-foreground text-xs uppercase tracking-wider font-semibold">

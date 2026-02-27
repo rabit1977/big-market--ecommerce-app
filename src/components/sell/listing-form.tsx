@@ -243,13 +243,13 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
         <div className="flex items-center justify-between">
             <SectionHeader title="Basic Information" />
             {isAdmin && (
-                <div className="flex items-center gap-2 bg-yellow-100 dark:bg-yellow-900/30 px-3 py-1 rounded-full border border-yellow-200 dark:border-yellow-800">
-                    <Label htmlFor="status" className="text-[10px] uppercase font-black text-yellow-800 dark:text-yellow-500">Status</Label>
+                <div className="flex items-center gap-2 bg-secondary px-3 py-1 rounded-lg border border-border transition-colors">
+                    <Label htmlFor="status" className="text-[10px] uppercase font-bold text-muted-foreground">Status</Label>
                     <Select 
                         value={(formData as any).status} 
                         onValueChange={(val) => setFormData(prev => ({ ...prev, status: val }))}
                     >
-                        <SelectTrigger className="h-6 w-[110px] text-xs border-0 bg-transparent focus:ring-0 px-0 font-bold text-yellow-900 dark:text-yellow-400">
+                        <SelectTrigger className="h-6 w-[110px] text-xs border-0 bg-transparent focus:ring-0 px-0 font-bold text-foreground">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent align="end">
@@ -387,9 +387,9 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
       {/* Media */}
       <div className="space-y-4">
         <SectionHeader title="Media Gallery" />
-        <div className="bg-muted/10 p-4 rounded-xl border border-dashed border-border/60 hover:border-border transition-colors">
+        <div className="bg-secondary/20 p-4 rounded-lg border border-border/40 hover:border-border/60 transition-colors">
           <ListingImageUpload value={images} onChange={setImages} />
-          <p className="text-[10px] text-muted-foreground mt-2 text-center">
+          <p className="text-[10px] text-muted-foreground mt-2 text-center font-medium">
             Upload up to 10 images. Drag and drop to reorder. First image will be the thumbnail.
           </p>
         </div>
@@ -463,7 +463,7 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
                 type="button" 
                 variant="default"
                 disabled={isPending} 
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold tracking-wide rounded-full min-w-[160px]"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold tracking-wide rounded-lg min-w-[160px] shadow-none"
                 onClick={() => handleSubmit(undefined, 'ACTIVE')}
             >
                 {isPending ? (
@@ -474,7 +474,7 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
             </Button>
         )}
 
-        <Button type="submit" disabled={isPending} className="min-w-[140px] font-bold tracking-wide rounded-full">
+        <Button type="submit" disabled={isPending} className="min-w-[140px] font-bold tracking-wide rounded-lg shadow-none">
           {isPending ? (
             <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</>
           ) : (

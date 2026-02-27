@@ -82,27 +82,27 @@ export function CategoryTemplateBuilder({ value, onChange }: CategoryTemplateBui
   return (
     <div className="space-y-4">
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'builder' | 'json')}>
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="builder">Visual Builder</TabsTrigger>
-          <TabsTrigger value="json">Raw JSON</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 bg-secondary p-1 h-10 rounded-lg">
+          <TabsTrigger value="builder" className="rounded-md font-bold text-xs">Visual Builder</TabsTrigger>
+          <TabsTrigger value="json" className="rounded-md font-bold text-xs">Raw JSON</TabsTrigger>
         </TabsList>
         
         <TabsContent value="builder" className="space-y-4 mt-4">
           {fields.length === 0 ? (
-             <div className="text-center p-6 border-2 border-dashed rounded-lg text-muted-foreground">
-                <p className="mb-4">No custom fields defined for this category.</p>
-                <Button type="button" variant="outline" onClick={addField}>
+             <div className="text-center p-8 bg-secondary/20 rounded-lg border border-border text-muted-foreground transition-colors">
+                <p className="mb-4 text-sm font-medium">No custom fields defined for this category.</p>
+                <Button type="button" variant="outline" onClick={addField} className="rounded-lg font-bold border-primary text-primary hover:bg-primary/10">
                   <Plus className="w-4 h-4 mr-2" /> Add First Field
                 </Button>
              </div>
           ) : (
              <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
                 {fields.map((field, idx) => (
-                  <Card key={idx} className="p-3 border-muted-foreground/20">
+                  <Card key={idx} className="p-3 border-muted-foreground/20 rounded-lg">
                     <div className="flex justify-between items-start mb-3">
-                       <span className="text-xs font-bold bg-muted px-2 py-1 rounded">Field {idx + 1}</span>
-                       <Button type="button" variant="ghost" size="icon" className="h-6 w-6 text-destructive hover:bg-destructive/10" onClick={() => removeField(idx)}>
-                          <Trash2 className="w-4 h-4" />
+                       <span className="text-[10px] uppercase font-bold bg-secondary px-2 py-0.5 rounded-lg border border-border text-muted-foreground">Field {idx + 1}</span>
+                       <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:bg-destructive/10 rounded-lg" onClick={() => removeField(idx)}>
+                          <Trash2 className="w-3.5 h-3.5" />
                        </Button>
                     </div>
                     
@@ -172,7 +172,7 @@ export function CategoryTemplateBuilder({ value, onChange }: CategoryTemplateBui
                   </Card>
                 ))}
                 
-                <Button type="button" variant="outline" className="w-full mt-2" onClick={addField}>
+                <Button type="button" variant="outline" className="w-full mt-2 rounded-lg font-bold border-primary text-primary hover:bg-primary/10 transition-colors" onClick={addField}>
                   <Plus className="w-4 h-4 mr-2" /> Add Field
                 </Button>
              </div>

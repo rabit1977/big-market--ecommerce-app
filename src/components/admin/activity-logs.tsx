@@ -29,15 +29,15 @@ interface ActivityLogsProps {
 }
 
 const getActivityIcon = (action: string) => {
-  if (action.includes('PRODUCT_CREATED')) return { icon: Plus, color: 'text-emerald-500 bg-emerald-100 dark:bg-emerald-950' };
-  if (action.includes('PRODUCT_UPDATED')) return { icon: PencilLine, color: 'text-blue-500 bg-blue-100 dark:bg-blue-950' };
-  if (action.includes('PRODUCT_DELETED')) return { icon: Trash2, color: 'text-red-500 bg-red-100 dark:bg-red-950' };
-  if (action.includes('ORDER')) return { icon: ShoppingCart, color: 'text-purple-500 bg-purple-100 dark:bg-purple-950' };
-  if (action.includes('ORDER_CANCELLED')) return { icon: XCircle, color: 'text-red-500 bg-red-100 dark:bg-red-950' };
-  if (action.includes('USER')) return { icon: User, color: 'text-amber-500 bg-amber-100 dark:bg-amber-950' };
-  if (action.includes('COUPON')) return { icon: Tag, color: 'text-pink-500 bg-pink-100 dark:bg-pink-950' };
-  if (action.includes('SETTINGS')) return { icon: Settings, color: 'text-slate-500 bg-slate-100 dark:bg-slate-800' };
-  return { icon: Package, color: 'text-slate-500 bg-slate-100 dark:bg-slate-800' };
+  if (action.includes('PRODUCT_CREATED')) return { icon: Plus, color: 'text-emerald-500' };
+  if (action.includes('PRODUCT_UPDATED')) return { icon: PencilLine, color: 'text-blue-500' };
+  if (action.includes('PRODUCT_DELETED')) return { icon: Trash2, color: 'text-red-500' };
+  if (action.includes('ORDER')) return { icon: ShoppingCart, color: 'text-purple-500' };
+  if (action.includes('ORDER_CANCELLED')) return { icon: XCircle, color: 'text-red-500' };
+  if (action.includes('USER')) return { icon: User, color: 'text-amber-500' };
+  if (action.includes('COUPON')) return { icon: Tag, color: 'text-pink-500' };
+  if (action.includes('SETTINGS')) return { icon: Settings, color: 'text-slate-500' };
+  return { icon: Package, color: 'text-slate-500' };
 };
 
 // Simple relative time formatter
@@ -76,9 +76,9 @@ export function ActivityLogs({ logs }: ActivityLogsProps) {
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.05 }}
-            className='flex items-start gap-4 p-3 rounded-xl hover:bg-muted/50 transition-colors group'
+            className='flex items-start gap-4 p-3 rounded-lg hover:bg-secondary/40 transition-colors group'
           >
-            <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${color}`}>
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 bg-secondary border border-border/50 ${color}`}>
               <Icon className='h-4 w-4' />
             </div>
             <div className='flex-1 min-w-0'>

@@ -148,9 +148,9 @@ export default function CategoriesClient() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h2 className="text-3xl font-black tracking-tight flex items-center gap-3">
+          <h2 className="text-3xl font-bold tracking-tight flex items-center gap-3">
             Categories
-            <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold ring-1 ring-inset ring-primary/20">
+            <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-lg bg-secondary text-foreground text-xs font-bold border border-border">
               {totalCount}
             </span>
           </h2>
@@ -158,13 +158,13 @@ export default function CategoriesClient() {
             {activeCount} active · {featuredCount} featured
           </p>
         </div>
-        <Button onClick={() => openCreate(null)} className="rounded-full font-bold shadow-lg shadow-primary/20 shrink-0">
+        <Button onClick={() => openCreate(null)} className="rounded-lg font-bold shadow-none shrink-0 border border-primary">
           <Plus className="mr-2 h-4 w-4" /> New Root Category
         </Button>
       </div>
 
       {/* Filter toolbar */}
-      <div className="glass-card rounded-2xl p-4 border border-border/60 space-y-3">
+      <div className="bg-card rounded-lg p-4 border border-border space-y-3 shadow-none">
         <AdminFilterToolbar
           searchValue={search}
           onSearchChange={setSearch}
@@ -177,10 +177,10 @@ export default function CategoriesClient() {
             <button
               key={f}
               onClick={() => setActive(f)}
-              className={`px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all ${
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all ${
                 activeFilter === f
                   ? 'bg-primary text-primary-foreground border-primary'
-                  : 'border-border/50 text-muted-foreground hover:text-foreground'
+                  : 'border-border/50 text-muted-foreground hover:bg-secondary/50'
               }`}
             >
               {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -192,8 +192,8 @@ export default function CategoriesClient() {
         </div>
       </div>
 
-      <Card className="rounded-[2rem] overflow-hidden border border-border/60 shadow-xl shadow-black/5 glass-card">
-        <CardHeader className="border-b border-border/40 bg-muted/20">
+      <Card className="rounded-lg overflow-hidden border border-border shadow-none">
+        <CardHeader className="border-b border-border bg-muted">
           <CardTitle>Category Tree</CardTitle>
           <CardDescription>Expand folders to view subcategories.</CardDescription>
         </CardHeader>
@@ -277,7 +277,7 @@ const CategoryTreeItem = memo(function CategoryTreeItem({
   return (
     <div>
       <div
-        className="group flex items-center gap-2 py-2 px-2 hover:bg-muted/50 rounded-md transition-colors"
+        className="group flex items-center gap-2 py-2 px-2 hover:bg-secondary/40 rounded-lg transition-colors"
         style={{ marginLeft: paddingLeft }}
       >
         <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={toggleExpand}>
@@ -296,12 +296,12 @@ const CategoryTreeItem = memo(function CategoryTreeItem({
           )}
           <span className="font-medium truncate text-sm">{category.name}</span>
           {typeof category.count === 'number' && (
-            <span className="text-xs text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded-full">
+            <span className="text-[10px] font-bold text-muted-foreground bg-secondary px-1.5 py-0.5 rounded-lg border border-border">
               {category.count}
             </span>
           )}
           {!category.isActive && (
-            <span className="text-[10px] bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 px-1.5 py-0.5 rounded-full">
+            <span className="text-[10px] font-bold bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 px-1.5 py-0.5 rounded-lg border border-red-200 dark:border-red-900">
               Inactive
             </span>
           )}
@@ -485,9 +485,11 @@ function CategoryDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-xl">
+      <DialogContent className="sm:max-w-xl rounded-lg border border-border shadow-none">
         <DialogHeader>
-          <DialogTitle>{editingCategory ? 'Edit Category' : 'Create Category'}</DialogTitle>
+          <DialogTitle className="font-bold tracking-tight">
+            {editingCategory ? 'Edit Category' : 'Create Category'}
+          </DialogTitle>
           <DialogDescription>
             {editingCategory ? 'Modify category details.' : 'Add a new category to the hierarchy.'}
           </DialogDescription>

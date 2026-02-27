@@ -41,15 +41,15 @@ export default function CreateUserPage() {
   return (
     <div className='max-w-4xl mx-auto pb-20'>
       <div className='mb-8 animate-in fade-in slide-in-from-top-4 duration-500'>
-        <Button variant='ghost' asChild className='hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full mb-6 -ml-3'>
+        <Button variant='ghost' asChild className='hover:bg-secondary rounded-lg mb-6 -ml-3'>
           <Link href='/admin/users'>
             <ArrowLeft className='h-4 w-4 mr-2' />
             Back to Users
           </Link>
         </Button>
         <div className='flex items-center gap-4'>
-          <div className='h-12 w-12 rounded-2xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center shadow-lg shadow-primary/25'>
-            <UserPlus className='h-6 w-6 text-white' />
+          <div className='h-12 w-12 rounded-lg bg-secondary flex items-center justify-center border border-border shadow-none'>
+            <UserPlus className='h-6 w-6 text-primary' />
           </div>
           <div>
             <h1 className='text-3xl sm:text-4xl font-black tracking-tight text-foreground'>
@@ -63,11 +63,11 @@ export default function CreateUserPage() {
       </div>
 
       <div className="grid gap-6">
-        <div className='glass-card rounded-[2.5rem] p-8 sm:p-10 shadow-xl shadow-black/5 border border-border/60 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100'>
+        <div className='bg-card rounded-lg p-8 sm:p-10 shadow-none border border-border animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100'>
           <UserForm onSubmit={handleSubmit} isSubmitting={isPending} />
         </div>
 
-        <div className='p-6 rounded-3xl border border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-950/20 max-w-2xl animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200'>
+        <div className='p-6 rounded-lg border border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-950/20 max-w-2xl animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200'>
           <h3 className='text-base font-bold flex items-center gap-2 mb-3 text-blue-800 dark:text-blue-300'>
             <Info className="h-4 w-4" />
             Password Requirements

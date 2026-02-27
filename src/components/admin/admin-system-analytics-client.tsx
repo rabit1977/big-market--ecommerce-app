@@ -26,25 +26,25 @@ export function AdminSystemAnalyticsClient() {
   const statItems = [
     {
       label: 'Total Users', value: stats.users, icon: Users, color: 'text-primary',
-      bg: 'bg-primary/10', border: 'border-primary/20',
+      bg: 'bg-secondary', border: 'border-border',
       delta: deltas?.newUsers,
       description: 'Registered platform users',
     },
     {
       label: 'Total Listings', value: stats.listings, icon: BarChart3, color: 'text-primary',
-      bg: 'bg-primary/10', border: 'border-primary/20',
+      bg: 'bg-secondary', border: 'border-border',
       delta: deltas?.newListings,
       description: 'All active and inactive listings',
     },
     {
       label: 'Promoted Listings', value: stats.promotedListings, icon: CreditCard, color: 'text-primary',
-      bg: 'bg-primary/10', border: 'border-primary/20',
+      bg: 'bg-secondary', border: 'border-border',
       delta: undefined,
       description: 'Listings with active promotions',
     },
     {
       label: 'Pending Verifications', value: stats.pendingVerifications, icon: ShieldCheck, color: 'text-primary',
-      bg: 'bg-primary/10', border: 'border-primary/20',
+      bg: 'bg-secondary', border: 'border-border',
       delta: undefined,
       description: 'Users awaiting ID verification',
     },
@@ -62,14 +62,14 @@ export function AdminSystemAnalyticsClient() {
     <div className='space-y-8 pb-20'>
       {/* Header */}
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center justify-between animate-in fade-in slide-in-from-top-4 duration-500'>
-        <div className='space-y-2'>
-           <h1 className='text-3xl sm:text-4xl font-black tracking-tight flex items-center gap-3'>
+        <div className='flex flex-col space-y-1 mb-6'>
+           <h1 className='text-3xl font-bold tracking-tight text-foreground flex items-center gap-3'>
              System Analytics
-             <span className='inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold ring-1 ring-inset ring-primary/20 uppercase tracking-widest'>
+             <span className='inline-flex items-center justify-center px-2 py-1 rounded-lg bg-secondary text-foreground text-[10px] font-bold border border-border uppercase tracking-widest'>
                 Live
              </span>
            </h1>
-           <p className='text-muted-foreground font-medium text-sm'>
+           <p className='text-sm text-muted-foreground font-medium'>
                Real-time platform statistics and activity metrics.
            </p>
         </div>
@@ -91,9 +91,9 @@ export function AdminSystemAnalyticsClient() {
           </h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {revenueItems.map(r => (
-              <div key={r.label} className="glass-card rounded-2xl p-5 border border-border/60 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+              <div key={r.label} className="bg-card rounded-lg p-5 border border-border hover:bg-secondary/40 transition-colors shadow-none">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{r.label}</p>
-                <p className="text-xl font-black text-foreground mt-1">{r.value}</p>
+                <p className="text-xl font-bold text-foreground mt-1">{r.value}</p>
               </div>
             ))}
           </div>
@@ -109,17 +109,17 @@ export function AdminSystemAnalyticsClient() {
           {statItems.map((stat, idx) => (
             <div
               key={stat.label}
-              className={`glass-card rounded-3xl p-6 border ${stat.border} hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col justify-between ${
+              className={`bg-card rounded-lg p-6 border border-border hover:bg-secondary/40 transition-colors shadow-none group flex flex-col justify-between ${
                 idx < 2 ? 'xl:col-span-1' : ''
               }`}
             >
               <div className="flex items-start justify-between mb-4">
-                <div className={`p-3 rounded-2xl ${stat.bg} ring-1 ring-inset ring-white/10 group-hover:scale-110 transition-transform`}>
+                <div className={`p-3 rounded-lg ${stat.bg} border border-border transition-colors`}>
                   <stat.icon className={`h-5 w-5 ${stat.color}`} />
                 </div>
                 {stat.delta !== undefined && (
-                  <div className={`flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full ${
-                    stat.delta > 0 ? 'bg-emerald-500/10 text-emerald-600' : 'bg-muted text-muted-foreground'
+                  <div className={`flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-lg ${
+                    stat.delta > 0 ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' : 'bg-secondary text-muted-foreground border border-border'
                   }`}>
                     {stat.delta > 0 ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
                     +{stat.delta} today
@@ -127,9 +127,9 @@ export function AdminSystemAnalyticsClient() {
                 )}
               </div>
               <div>
-                <div className="text-3xl font-black tracking-tight mb-1 text-foreground">{stat.value}</div>
+                <div className="text-3xl font-bold tracking-tight mb-1 text-foreground">{stat.value}</div>
                 <h3 className="text-sm font-bold text-foreground/90">{stat.label}</h3>
-                <p className="text-[10px] text-muted-foreground mt-1 font-medium italic">{stat.description}</p>
+                <p className="text-[10px] text-muted-foreground mt-1 font-medium">{stat.description}</p>
               </div>
             </div>
           ))}
@@ -137,7 +137,7 @@ export function AdminSystemAnalyticsClient() {
       </div>
 
       {/* Placeholder for future charts */}
-      <Card className="rounded-[2rem] border-border/50 shadow-xl overflow-hidden bg-card/60 backdrop-blur-md animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+      <Card className="rounded-lg border-border/50 shadow-none overflow-hidden bg-card/60 backdrop-blur-md animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
         <CardHeader className="p-6 md:p-8 border-b border-border/40 bg-muted/20">
           <CardTitle className="text-xl font-bold flex items-center gap-3 tracking-tight">
             <Clock className="h-5 w-5 text-primary" />
@@ -146,8 +146,8 @@ export function AdminSystemAnalyticsClient() {
           <p className="text-sm text-muted-foreground mt-1">Activity charts and trajectory analysis over time.</p>
         </CardHeader>
         <CardContent className="p-6 md:p-8">
-          <div className="flex flex-col items-center justify-center py-12 text-center bg-muted/30 rounded-xl border border-dashed border-border/60">
-             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+          <div className="flex flex-col items-center justify-center py-12 text-center bg-muted/30 rounded-lg border border-dashed border-border/60">
+             <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                 <BarChart3 className="w-8 h-8 text-primary/60" />
              </div>
              <h3 className="font-bold text-lg text-foreground mb-2">Charts Coming Soon</h3>
