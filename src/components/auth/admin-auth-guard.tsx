@@ -53,7 +53,7 @@ const AdminAuthGuard: React.FC<AdminAuthGuardProps> = ({
   }, [isLoading, isUnauthenticated, isAdmin, router, authRedirectTo, unauthorizedRedirectTo]);
 
   const loadingUI = fallback ?? (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-900">
+    <div className="flex min-h-screen items-center justify-center bg-popover dark:bg-slate-900">
       <div className="text-center space-y-4">
         <Loader2 className="h-16 w-16 animate-spin text-slate-400 mx-auto" />
         <p className="text-slate-600 dark:text-slate-400 font-medium">

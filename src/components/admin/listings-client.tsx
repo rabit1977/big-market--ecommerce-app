@@ -59,7 +59,7 @@ export function ListingsClient({ listings }: ListingsClientProps) {
   const isAllSelected = listings.length > 0 && selectedIds.length === listings.length;
 
   return (
-    <div className='space-y-4 bg-slate-100 dark:bg-background'>
+    <div className='space-y-4 bg-background dark:bg-background'>
       {/* Header Actions */}
       <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-4 bg-muted/30 rounded-xl border border-border/50'>
         <div className='flex items-center gap-3'>

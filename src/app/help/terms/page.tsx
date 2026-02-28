@@ -328,7 +328,7 @@ export default function TermsPage() {
                                 <AccordionItem value="security" id="security" className="border-b border-border/50 px-6 md:px-10">
                                     <AccordionTrigger className="hover:no-underline py-8 text-left group">
                                         <div className="flex items-center gap-5">
-                                            <div className="w-12 h-12 rounded-2xl bg-slate-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <div className="w-12 h-12 rounded-2xl bg-popover0/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                                                 <Key className="w-6 h-6 text-slate-600" />
                                             </div>
                                             <div>

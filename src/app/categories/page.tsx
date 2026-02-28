@@ -213,7 +213,7 @@ export default async function CategoriesPage() {
   }
 
   return (
-    <div className='min-h-screen bg-slate-100 dark:bg-background'>
+    <div className='min-h-screen bg-background dark:bg-background'>
       {/* Hero Section */}
       <div className='relative overflow-hidden'>
          <div className="absolute inset-0 bg-grid-black/[0.02] dark:bg-grid-white/[0.02]" />

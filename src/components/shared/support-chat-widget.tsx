@@ -349,7 +349,7 @@ export function SupportChatWidget() {
                       />
                     </div>
                   </div>
-                  <div className="px-4 py-2 bg-slate-100 dark:bg-slate-800/50 border-b border-border">
+                  <div className="px-4 py-2 bg-background dark:bg-slate-800/50 border-b border-border">
                     <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest text-center">Select a chat to view or reply</p>
                   </div>
                   <div className="flex-1 overflow-y-auto overscroll-contain">
@@ -399,7 +399,7 @@ export function SupportChatWidget() {
               ) : (
                 // Chat view
                 <>
-                  <div className="flex-1 overflow-y-auto overscroll-contain p-4 bg-slate-50 dark:bg-slate-900/50">
+                  <div className="flex-1 overflow-y-auto overscroll-contain p-4 bg-popover dark:bg-slate-900/50">
                     <div className="space-y-4">
                       {!isAdmin && (
                         <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-bl-none px-4 py-3 text-sm max-w-[85%] shadow-sm">

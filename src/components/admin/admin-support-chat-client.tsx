@@ -7,7 +7,7 @@ import { api } from '@/convex/_generated/api';
 import { cn } from '@/lib/utils';
 import { useConvex, useMutation, usePaginatedQuery, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
-import { ArrowLeft, Image as ImageIcon, Search, Send, ShieldAlert } from 'lucide-react';
+import { ArrowLeft, Image as ImageIcon, Loader2, Search, Send, ShieldAlert } from 'lucide-react';
 import Image from 'next/image';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';

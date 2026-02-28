@@ -9,6 +9,7 @@ import { CheckCircle2, Headset, Loader2, Mail, Phone, Trash2, User } from 'lucid
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { CommunicationFilters } from './communication-filters';
+import { cn } from '@/lib/utils';
 
 export function ContactInquiriesClient() {
   const [activeTab, setActiveTab] = useState<'NEW' | 'RESOLVED'>('NEW');

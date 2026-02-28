@@ -12,27 +12,27 @@
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
 import type { LucideIcon } from 'lucide-react';
 import {
-    BadgeCheck,
-    BookOpen,
-    CircleHelp,
-    Contact,
-    CreditCard,
-    ExternalLink,
-    Flag,
-    Mail,
-    MessageSquare,
-    PencilLine,
-    Rocket,
-    ShieldAlert,
-    UserPlus
+  BadgeCheck,
+  BookOpen,
+  CircleHelp,
+  Contact,
+  CreditCard,
+  ExternalLink,
+  Flag,
+  Mail,
+  MessageSquare,
+  PencilLine,
+  Rocket,
+  ShieldAlert,
+  UserPlus
 } from 'lucide-react';
 import Link from 'next/link';
 import { HelpSearch } from './help-search';
@@ -117,7 +117,7 @@ const helpCategories: HelpCategory[] = [
     description: 'Our policies ensuring a fair and professional marketplace for everyone.',
     icon: BookOpen,
     color: 'text-slate-500',
-    bgColor: 'bg-slate-500/10',
+    bgColor: 'bg-popover0/10',
     href: '/help/terms',
     items: [
       { label: 'Privacy & Data Protection', href: '/help/terms#privacy' },

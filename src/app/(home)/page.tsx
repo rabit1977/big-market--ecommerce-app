@@ -81,7 +81,7 @@ export default async function HomePage({ searchParams }: PageProps) {
   }));
 
   return (
-    <div className='min-h-screen bg-slate-100 dark:bg-background'>
+    <div className='min-h-screen bg-background dark:bg-background'>
       {/* 1. Hero Section with Search (Absolute Top) */}
       <Hero />
 
@@ -97,7 +97,7 @@ export default async function HomePage({ searchParams }: PageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
             
             {/* Latest Listings - Left Column */}
-            <div className="lg:col-span-3 bg-slate-100 dark:bg-background">
+            <div className="lg:col-span-3 bg-background dark:bg-background">
                 <LatestListingsClient 
                   initialListings={latestListings as any} 
                   categories={categories} 

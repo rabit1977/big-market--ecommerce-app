@@ -8,7 +8,7 @@ export const AccountSkeleton = () => {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className='min-h-screen bg-slate-50 dark:bg-slate-950/50'
+      className='min-h-screen bg-popover dark:bg-slate-950/50'
     >
       <div className='container-wide py-10 sm:py-16'>
         {/* Profile Header Skeleton */}

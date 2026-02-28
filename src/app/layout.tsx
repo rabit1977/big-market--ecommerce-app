@@ -63,7 +63,7 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className={`bg-slate-100 dark:bg-background min-h-screen ${inter.className}`}>
+      <body className={`bg-background dark:bg-background min-h-screen ${inter.className}`}>
         <NextIntlClientProvider messages={messages} locale={locale}>
           <Providers initialFavorites={wishlist}>
             <ThemeApplier />

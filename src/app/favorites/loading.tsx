@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 
 export default function WishlistLoading() {
   return (
-    <div className='min-h-screen bg-slate-50 dark:bg-slate-950/50 pb-20'>
+    <div className='min-h-screen bg-popover dark:bg-slate-950/50 pb-20'>
       <div className='container-wide py-10 sm:py-16'>
         {/* Header Skeleton */}
         <motion.div 

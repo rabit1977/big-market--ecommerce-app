@@ -9,7 +9,7 @@ export const ListingDetailSkeleton = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className='bg-slate-50/50 min-h-screen'
+      className='bg-popover/50 min-h-screen'
     >
       {/* Mobile Header Skeleton */}
       <div className='md:hidden sticky top-0 z-40 bg-white border-b px-4 py-3 flex items-center justify-between'>
@@ -82,7 +82,7 @@ export const ListingDetailSkeleton = () => {
               transition={{ delay: 0.3 }}
               className='bg-white md:rounded-2xl border border-slate-200 overflow-hidden'
             >
-                <div className='p-4 border-b bg-slate-50'>
+                <div className='p-4 border-b bg-popover'>
                     <Skeleton className='h-4 w-40' />
                 </div>
                 <div className='grid grid-cols-1 md:grid-cols-2'>

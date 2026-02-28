@@ -198,7 +198,7 @@ export default function CertificationHelpPage() {
                                 <p className="text-primary-foreground/80 text-sm leading-relaxed mb-8">
                                     Ready to join our elite circle of trusted sellers? Complete your verification now and start reaping the benefits.
                                 </p>
-                                <Button className="w-full bg-white text-primary hover:bg-slate-100 font-bold rounded-xl h-12" asChild>
+                                <Button className="w-full bg-white text-primary hover:bg-background font-bold rounded-xl h-12" asChild>
                                     <Link href="/account/verification">Apply for Badge &rarr;</Link>
                                 </Button>
                                 <div className="absolute top-0 right-0 p-4 opacity-10">

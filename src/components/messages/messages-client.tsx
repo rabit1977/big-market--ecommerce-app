@@ -10,26 +10,26 @@ import { useMutation, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
 import {
-    ArrowLeft,
-    BadgeCheck,
-    Image as ImageIcon,
-    Loader2,
-    MessageSquare,
-    Search,
-    Send,
-    ShieldAlert
+  ArrowLeft,
+  BadgeCheck,
+  Image as ImageIcon,
+  Loader2,
+  MessageSquare,
+  Search,
+  Send,
+  ShieldAlert
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import {
-    memo,
-    useCallback,
-    useEffect,
-    useLayoutEffect,
-    useMemo,
-    useRef,
-    useState
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState
 } from 'react';
 import { toast } from 'sonner';
 import { api } from '../../../convex/_generated/api';
@@ -493,7 +493,7 @@ export function MessagesClient({
               {/* Messages Area */}
               <div
                 ref={messagesAreaRef}
-                className="flex-1 overflow-y-auto p-4 bg-slate-50/50 dark:bg-slate-900/20"
+                className="flex-1 overflow-y-auto p-4 bg-popover/50 dark:bg-slate-900/20"
               >
                 <div className="flex flex-col justify-end min-h-full gap-4">
                   {messages.length === 0 && (
