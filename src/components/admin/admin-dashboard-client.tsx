@@ -8,15 +8,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
 import {
-    ArrowRight,
-    ArrowUpRight,
-    BarChart3,
-    Clock,
-    CreditCard,
-    Plus,
-    ShieldCheck,
-    Tag,
-    Users
+  ArrowRight,
+  ArrowUpRight,
+  BarChart3,
+  Clock,
+  CreditCard,
+  Plus,
+  ShieldCheck,
+  Tag,
+  Users
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -56,14 +56,14 @@ export function AdminDashboardClient() {
     <div className='space-y-8 pb-20'>
       {/* Header with quick actions */}
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
-        <div className='space-y-1'>
-          <h1 className='text-3xl sm:text-4xl font-bold tracking-tight text-foreground flex items-center gap-3'>
+        <div className='flex flex-col space-y-1'>
+          <h1 className='text-3xl font-bold tracking-tight text-foreground flex items-center gap-3'>
             Dashboard
-            <span className='inline-flex items-center justify-center px-1.5 py-0.5 rounded-md bg-secondary text-primary text-[10px] font-bold border border-border uppercase tracking-widest'>
+            <span className='inline-flex items-center justify-center px-1.5 py-0.5 rounded-lg bg-secondary text-foreground text-[10px] font-bold border border-border uppercase tracking-widest'>
               Live
             </span>
           </h1>
-          <p className='text-lg text-muted-foreground font-medium'>
+          <p className='text-sm text-muted-foreground font-medium'>
             Welcome back! Here's what's happening on your platform.
           </p>
         </div>
@@ -121,14 +121,14 @@ export function AdminDashboardClient() {
       <div className='grid gap-6 lg:grid-cols-3'>
         
         {/* Pending Approvals */}
-        <Card className="lg:col-span-2 rounded-lg border-border shadow-none overflow-hidden bg-card transition-colors hover:bg-secondary/30">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <Card className="lg:col-span-2 rounded-lg border-border shadow-none overflow-hidden bg-card transition-colors hover:bg-secondary/40">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 bg-muted/30 border-b border-border">
             <div className="space-y-1">
-              <CardTitle className="text-xl font-bold flex items-center gap-2">
+              <CardTitle className="text-lg font-bold flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-indigo-500" />
                 Pending Approvals
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-sm font-medium">
                 Review listings waiting for moderator approval
               </CardDescription>
             </div>
@@ -148,9 +148,9 @@ export function AdminDashboardClient() {
             ) : (
               <div className="space-y-4">
                 {pendingListings.slice(0, 5).map((listing: any) => (
-                  <div key={listing._id} className="flex items-center justify-between p-4 rounded-lg bg-secondary/50 border border-border hover:bg-secondary transition-colors">
+                  <div key={listing._id} className="flex items-center justify-between p-4 rounded-lg bg-muted/30 border border-border hover:bg-secondary transition-colors">
                     <div className="flex items-center gap-4">
-                       <div className="w-12 h-12 rounded-md bg-muted border border-border flex items-center justify-center text-foreground font-bold">
+                       <div className="w-12 h-12 rounded-lg bg-muted border border-border flex items-center justify-center text-foreground font-bold">
                           {listing.title[0]}
                        </div>
                        <div>
@@ -159,8 +159,8 @@ export function AdminDashboardClient() {
                        </div>
                     </div>
                     <div className="flex items-center gap-3">
-                       <p className="text-sm font-black tabular-nums">{listing.price} MKD</p>
-                       <Button size="sm" variant="ghost" className="h-8 w-8 p-0 rounded-full" asChild>
+                       <p className="text-sm font-bold tabular-nums">{listing.price} MKD</p>
+                       <Button size="sm" variant="ghost" className="h-8 w-8 p-0 rounded-lg" asChild>
                           <Link href={`/admin/listings`}>
                             <ArrowUpRight className="w-4 h-4" />
                           </Link>
@@ -174,13 +174,13 @@ export function AdminDashboardClient() {
         </Card>
 
         {/* Recent Activity */}
-        <Card className="rounded-lg border-border shadow-none overflow-hidden bg-card transition-colors hover:bg-secondary/30">
-          <CardHeader>
-            <CardTitle className="text-xl font-bold flex items-center gap-2">
+        <Card className="rounded-lg border-border shadow-none overflow-hidden bg-card transition-colors hover:bg-secondary/40">
+          <CardHeader className="bg-muted/30 border-b border-border">
+            <CardTitle className="text-lg font-bold flex items-center gap-2">
               <Clock className="w-5 h-5 text-primary" />
               Recent Activity
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-sm font-medium">
               Platform activity logs
             </CardDescription>
           </CardHeader>
@@ -195,7 +195,7 @@ export function AdminDashboardClient() {
       <Card className="rounded-lg border border-border shadow-none p-8 sm:p-10 bg-card relative overflow-hidden group">
          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-3">
-               <Badge className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 px-3 py-1 font-bold text-[10px] uppercase tracking-widest rounded-md">
+               <Badge className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 px-3 py-1 font-bold text-[10px] uppercase tracking-widest rounded-lg">
                   Action Required
                </Badge>
                <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground">

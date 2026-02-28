@@ -453,9 +453,9 @@ export function FilterPanel({
         )}
 
         {/* Sort & Location */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pb-2 border-b border-border">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pb-2 border-b border-border ">
           <div className="space-y-1">
-            <Label htmlFor={`${idPrefix}-sort`} className="text-[10px] uppercase text-muted-foreground font-medium">Sort By</Label>
+            <Label htmlFor={`${idPrefix}-sort`} className="text-[10px] uppercase text-muted-foreground  font-medium">Sort By</Label>
             <Select value={filters.sortBy} onValueChange={(val) => updateFilter('sortBy', val)}>
               <SelectTrigger id={`${idPrefix}-sort`} className="h-8 text-xs rounded-md">
                 <SelectValue placeholder="Newest" />

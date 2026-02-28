@@ -47,7 +47,7 @@ export const HeroHeader = () => {
   };
 
   return (
-    <div className='bg-background border-b border-border/50'>
+    <div className=''>
       <div className='container-wide py-3 md:py-4'>
 
         {/* Navigation & Filters Container */}

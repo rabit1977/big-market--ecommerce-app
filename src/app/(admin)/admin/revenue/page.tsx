@@ -94,10 +94,10 @@ export default function RevenuePage() {
   return (
     <div className='space-y-6 pb-20 max-w-7xl'>
         <div className='flex flex-col gap-4 sm:flex-col justify-between animate-in fade-in slide-in-from-top-4 duration-500'>
-        <div className='space-y-1'>
-           <h1 className='text-xl md:text-3xl width-full font-black tracking-tight flex items-center gap-3 justify-start'>
+        <div className='flex flex-col space-y-1 mb-6'>
+           <h1 className='text-3xl font-bold tracking-tight flex items-center gap-3'>
              Revenue Intelligence
-             <span className='inline-flex items-center justify-center px-1.5 py-0.5 rounded-md bg-secondary text-primary text-[10px] font-bold border border-border uppercase tracking-widest'>
+             <span className='inline-flex items-center justify-center px-2 py-1 rounded-lg bg-secondary text-foreground text-[10px] font-bold border border-border uppercase tracking-widest'>
                 Live
              </span>
              {isTransitioning && <Loader2 className="w-4 h-4 text-muted-foreground animate-spin ml-2" />}
@@ -135,7 +135,7 @@ export default function RevenuePage() {
                             onClick={handleReset}
                             variant="ghost"
                             size="sm"
-                            className="h-8 px-3 rounded-md text-[11px] uppercase tracking-wider font-bold text-destructive"
+                            className="h-8 px-3 rounded-lg text-[10px] uppercase tracking-wider font-bold text-destructive hover:bg-destructive/10"
                         >
                             <Trash2 className="w-3.5 h-3.5 mr-1.5" />
                             Reset
@@ -181,9 +181,9 @@ export default function RevenuePage() {
                     />
                 </div>
 
-                <Card className="rounded-lg border-border shadow-none bg-card flex flex-col flex-1">
-                    <div className="p-4 border-b border-border bg-secondary/50">
-                        <h2 className="text-[13px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                <Card className="rounded-lg border-border shadow-none bg-card flex flex-col flex-1 overflow-hidden">
+                    <div className="p-4 border-b border-border bg-muted/30">
+                        <h2 className="text-[12px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                             <Zap className="w-4 h-4 text-amber-500" />
                             Revenue Vectors
                         </h2>
@@ -199,7 +199,7 @@ export default function RevenuePage() {
 
             <div className="lg:col-span-4 flex flex-col">
                 <Card className="rounded-lg border-border shadow-none bg-card flex flex-col h-full overflow-hidden">
-                    <div className="p-4 border-b border-border bg-secondary/50 flex items-center justify-between">
+                    <div className="p-4 border-b border-border bg-muted/30 flex items-center justify-between">
                         <h2 className="text-[13px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                             Recent Transactions Ledger
                         </h2>
@@ -207,7 +207,7 @@ export default function RevenuePage() {
                     
                     <div className="flex-1 overflow-x-auto">
                         <table className="w-full text-sm text-left whitespace-nowrap">
-                            <thead className="bg-muted/30 text-muted-foreground font-semibold text-xs uppercase tracking-wider">
+                            <thead className="bg-muted/30 text-muted-foreground font-bold text-xs uppercase tracking-wider">
                                 <tr>
                                     <th className="px-4 py-3">Customer</th>
                                     <th className="px-4 py-3">Purchase Details</th>
@@ -220,7 +220,7 @@ export default function RevenuePage() {
                                     <tr>
                                         <td colSpan={5} className="px-6 py-16 text-center">
                                             <div className="flex flex-col items-center justify-center">
-                                                <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
+                                                <div className="w-12 h-12 rounded-md bg-muted flex items-center justify-center mb-4">
                                                     <DollarSign className="w-6 h-6 text-muted-foreground/50" />
                                                 </div>
                                                 <p className="font-bold text-foreground">No transactions</p>
@@ -246,11 +246,11 @@ export default function RevenuePage() {
                                             {/* Customer */}
                                             <td className="px-4 py-3">
                                                 <div className="flex items-center gap-2.5">
-                                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${isUnknown ? 'bg-muted text-muted-foreground' : 'bg-primary/10 text-primary'}`}>
+                                                    <div className={`w-8 h-8 rounded-md flex items-center justify-center text-xs font-bold shrink-0 ${isUnknown ? 'bg-muted text-muted-foreground' : 'bg-primary/10 text-primary'}`}>
                                                         {initials}
                                                     </div>
                                                     <div className="flex flex-col min-w-0">
-                                                        <span className={`text-xs font-bold truncate ${isUnknown ? 'text-muted-foreground italic' : 'text-foreground'}`}>
+                                                        <span className={`text-xs font-bold truncate ${isUnknown ? 'text-muted-foreground' : 'text-foreground'}`}>
                                                             {t.userName || 'Unknown'}
                                                         </span>
                                                         {t.userEmail && (
@@ -269,7 +269,7 @@ export default function RevenuePage() {
                                             </td>
                                             {/* Amount */}
                                             <td className="px-4 py-3 text-right">
-                                                <span className="font-black tabular-nums text-sm text-foreground">
+                                                <span className="font-bold tabular-nums text-sm text-foreground">
                                                     {formatCurrency(t.amount)}
                                                 </span>
                                             </td>
@@ -318,13 +318,13 @@ export default function RevenuePage() {
 
 function CompactStat({ title, value, icon: Icon, className, valueClassName }: any) {
     return (
-        <Card className={cn("overflow-hidden rounded-lg bg-card border border-border transition-colors hover:bg-secondary/30", className)}>
+        <Card className={cn("overflow-hidden rounded-lg bg-card border border-border shadow-none transition-colors hover:bg-secondary/40", className)}>
             <CardContent className="p-4 flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-1">
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground truncate">{title}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground truncate">{title}</p>
                     <Icon className="w-4 h-4 text-muted-foreground/50 shrink-0" />
                 </div>
-                <p className={cn("text-[17px] sm:text-xl font-black tracking-tight", valueClassName)}>{value}</p>
+                <p className={cn("text-2xl font-bold tracking-tight", valueClassName)}>{value}</p>
             </CardContent>
         </Card>
     );
@@ -341,15 +341,15 @@ function CategoryRow({ title, amount, color, icon: Icon }: any) {
     const style = colors[color] || colors.blue;
 
     return (
-        <div className={cn("flex flex-col min-[380px]:flex-row min-[380px]:items-center justify-between gap-1 min-[380px]:gap-3 p-3 rounded-lg border bg-card hover:bg-secondary/30 transition-colors", style)}>
+        <div className={cn("flex flex-col min-[380px]:flex-row min-[380px]:items-center justify-between gap-1 min-[380px]:gap-3 p-3 rounded-lg border border-border bg-card hover:bg-secondary/40 transition-colors group")}>
             <div className="flex items-center gap-3 min-w-0">
-                <div className="p-1.5 bg-background shadow-sm rounded-lg border border-border/50 shrink-0">
-                    <Icon className="w-4 h-4" />
+                <div className="w-9 h-9 bg-secondary rounded-lg border border-border/50 flex items-center justify-center shrink-0 transition-colors group-hover:bg-background">
+                    <Icon className={cn("w-4 h-4", style)} />
                 </div>
                 <span className="font-bold text-sm text-foreground/90 truncate">{title}</span>
             </div>
-            <div className="flex min-[380px]:justify-end pl-[42px] min-[380px]:pl-0">
-                <span className="font-mono font-bold text-foreground whitespace-nowrap shrink-0">
+            <div className="flex min-[380px]:justify-end pl-[48px] min-[380px]:pl-0">
+                <span className="font-bold text-sm text-foreground whitespace-nowrap shrink-0">
                     {new Intl.NumberFormat('mk-MK', { style: 'currency', currency: 'MKD', minimumFractionDigits: 0 }).format(amount)}
                 </span>
             </div>

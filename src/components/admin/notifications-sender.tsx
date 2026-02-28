@@ -89,35 +89,35 @@ export function NotificationsSender() {
   }
 
   return (
-    <div className='w-full max-w-4xl mx-auto space-y-8'>
-      <div className="flex flex-col gap-2">
-           <h2 className='text-3xl font-bold tracking-tight'>Notification Center</h2>
-           <p className='text-muted-foreground'>Send system-wide alerts, promotions, or updates to your users.</p>
+    <div className='flex flex-col space-y-6'>
+      <div className="flex flex-col space-y-1">
+           <h2 className='text-3xl font-bold tracking-tight text-foreground'>Notification Center</h2>
+           <p className='text-sm text-muted-foreground font-medium'>Send system-wide alerts, promotions, or updates to your users.</p>
       </div>
 
-      <Card className="border-border/50 shadow-md">
-        <CardHeader>
-           <CardTitle className="flex items-center gap-2">
+      <Card className="rounded-lg border bg-card text-card-foreground shadow-none">
+        <CardHeader className="border-b px-6 py-4">
+           <CardTitle className="flex items-center gap-2 text-lg font-bold">
                 <Megaphone className="h-5 w-5 text-primary" />
                 Compose Notification
            </CardTitle>
-           <CardDescription>
+           <CardDescription className="text-sm font-medium">
                 Create a new notification to be delivered to user inboxes.
            </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-6">
-                    <TabsTrigger value="broadcast" className="gap-2">
+                <TabsList className="grid w-full grid-cols-2 h-11 p-1 bg-secondary rounded-lg border border-border gap-1">
+                    <TabsTrigger value="broadcast" className="h-full text-xs font-bold rounded-lg data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:shadow-none gap-2">
                         <Megaphone className="h-4 w-4" /> Broadcast to All
                     </TabsTrigger>
-                    <TabsTrigger value="single" className="gap-2">
+                    <TabsTrigger value="single" className="h-full text-xs font-bold rounded-lg data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:shadow-none gap-2">
                         <User className="h-4 w-4" /> Specific User
                     </TabsTrigger>
                 </TabsList>
 
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-6">
                         <div className="grid gap-6">
                             {/* Type Selection */}
                             <FormField
@@ -125,10 +125,10 @@ export function NotificationsSender() {
                                 name="type"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Notification Type</FormLabel>
+                                        <FormLabel className='text-[11px] font-black text-muted-foreground uppercase tracking-wider'>Notification Type</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
-                                                <SelectTrigger>
+                                                <SelectTrigger className="rounded-lg font-medium">
                                                     <SelectValue placeholder="Select type" />
                                                 </SelectTrigger>
                                             </FormControl>
@@ -139,7 +139,7 @@ export function NotificationsSender() {
                                                 <SelectItem value={NotificationTypes.ORDER_UPDATE}>Order Update</SelectItem>
                                             </SelectContent>
                                         </Select>
-                                        <FormDescription>
+                                        <FormDescription className="text-[11px] font-medium">
                                             Determines the icon and categorization of the alert.
                                         </FormDescription>
                                         <FormMessage />
@@ -154,9 +154,9 @@ export function NotificationsSender() {
                                     name="targetUserEmail"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>User Email</FormLabel>
+                                            <FormLabel className='text-[11px] font-black text-muted-foreground uppercase tracking-wider'>User Email</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="user@example.com" {...field} />
+                                                <Input className="rounded-lg font-medium" placeholder="user@example.com" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -170,9 +170,9 @@ export function NotificationsSender() {
                                 name="title"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Title</FormLabel>
+                                        <FormLabel className='text-[11px] font-black text-muted-foreground uppercase tracking-wider'>Title</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="e.g. Flash Sale Started!" {...field} />
+                                            <Input className="rounded-lg font-medium" placeholder="e.g. Flash Sale Started!" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -185,11 +185,11 @@ export function NotificationsSender() {
                                 name="message"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Message</FormLabel>
+                                        <FormLabel className='text-[11px] font-black text-muted-foreground uppercase tracking-wider'>Message</FormLabel>
                                         <FormControl>
                                             <Textarea 
                                                 placeholder="Enter the main content of your notification..." 
-                                                className="min-h-[120px]" 
+                                                className="min-h-[120px] rounded-lg font-medium" 
                                                 {...field} 
                                             />
                                         </FormControl>
@@ -204,11 +204,11 @@ export function NotificationsSender() {
                                 name="link"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Action Link (Optional)</FormLabel>
+                                        <FormLabel className='text-[11px] font-black text-muted-foreground uppercase tracking-wider'>Action Link (Optional)</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="e.g. /products/summer-sale" {...field} />
+                                            <Input className="rounded-lg font-medium" placeholder="e.g. /products/summer-sale" {...field} />
                                         </FormControl>
-                                        <FormDescription>
+                                        <FormDescription className="text-[11px] font-medium">
                                             Where should the user go when they click this notification?
                                         </FormDescription>
                                         <FormMessage />
@@ -218,7 +218,7 @@ export function NotificationsSender() {
                         </div>
 
                         <div className="flex justify-end pt-4">
-                            <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
+                            <Button type="submit" disabled={isPending} className="w-full rounded-lg font-bold tracking-wide shadow-none min-w-[200px]">
                                 {isPending ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

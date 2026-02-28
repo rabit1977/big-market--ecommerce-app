@@ -42,8 +42,8 @@ export const DashboardCard = memo(({
   return (
     <div 
       className={cn(
-        'stat-card group relative overflow-hidden border border-border rounded-lg bg-card',
-        'p-4 sm:p-6', // Smaller padding on mobile
+        'group relative overflow-hidden border border-border rounded-lg bg-card shadow-none transition-colors hover:bg-secondary/40',
+        'p-4 sm:p-6',
         className
       )}
     >
@@ -51,11 +51,11 @@ export const DashboardCard = memo(({
       <div className='relative z-10'>
         {/* Header */}
         <div className='flex items-start justify-between'>
-          <p className='text-xs sm:text-sm font-medium text-muted-foreground'>
+          <p className='text-[10px] sm:text-xs font-bold uppercase tracking-widest text-muted-foreground'>
             {title}
           </p>
           {Icon && (
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-md flex items-center justify-center bg-secondary border border-border transition-colors group-hover:bg-muted">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-secondary border border-border transition-colors group-hover:bg-background">
               <Icon className={cn('h-4 w-4 sm:h-5 sm:w-5', colors.iconColor)} />
             </div>
           )}
@@ -63,8 +63,8 @@ export const DashboardCard = memo(({
 
         {/* Value */}
         <div className='mt-2 sm:mt-4 flex items-end justify-between'>
-          <div className='flex flex-col'>
-            <p className='text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight'>
+          <div className='flex flex-col min-w-0'>
+            <p className='text-2xl sm:text-3xl font-bold tracking-tight text-foreground'>
               {typeof value === 'number' ? value.toLocaleString() : value}
             </p>
             
@@ -78,13 +78,13 @@ export const DashboardCard = memo(({
 
           {/* Trend Indicator */}
           {trend && trend.value > 0 && (
-            <div className='flex flex-col items-end gap-1'>
+            <div className='flex flex-col items-end gap-1 shrink-0'>
               <span
                 className={cn(
-                  'inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] sm:text-xs font-bold leading-none',
+                  'inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] sm:text-xs font-bold border',
                   trend.isPositive
-                    ? 'text-emerald-700 bg-emerald-100 dark:text-emerald-400 dark:bg-emerald-950/50'
-                    : 'text-red-700 bg-red-100 dark:text-red-400 dark:bg-red-950/50'
+                    ? 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20'
+                    : 'text-red-500 bg-red-500/10 border-red-500/20'
                 )}
               >
                 {trend.isPositive ? (
@@ -95,7 +95,7 @@ export const DashboardCard = memo(({
                 <span>{Math.abs(trend.value)}%</span>
               </span>
               <span className='text-[9px] text-muted-foreground hidden sm:inline-block font-medium'>
-                vs last month
+                vs period
               </span>
             </div>
           )}
