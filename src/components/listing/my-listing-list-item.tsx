@@ -103,7 +103,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
         )}
       >
         {/* Legend-style Status Labels */}
-        <div className="absolute -top-3 left-6 md:left-10 z-20 flex gap-2">
+        <div className="absolute -top-3 left-6 md:left-10 z-20 justify-center w-full flex gap-2">
             {listing.status === 'ACTIVE' && (
                 <div className="bg-background px-3 py-1 rounded-full border-1 border-card-foreground/10 text-[9px] font-black uppercase tracking-[0.2em] text-foreground flex items-center shadow-sm">
                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse" />
@@ -140,7 +140,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
         <div className="flex-1 flex flex-col p-2.5 sm:p-4 md:p-5 min-w-0 rounded-r-[2rem]"> {/* Added rounding to match parent */}
             <div className="flex justify-between items-start gap-3 mb-1.5 sm:mb-2">
                 <Link href={`/listings/${listing.id}`} className="block min-w-0 group/link">
-                   <h3 className="font-bold text-sm sm:text-base md:text-lg leading-tight group-hover/link:text-primary transition-colors line-clamp-1 mb-1 text-foreground"> {/* Smaller Title */}
+                   <h3 className="font-bold text-base sm:text-lg pt-2 md:text-lg leading-tight group-hover/link:text-primary transition-colors line-clamp-1 mb-1 text-foreground"> {/* Smaller Title */}
                       {listing.title}
                    </h3>
                    <div className="flex items-center gap-2 text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-widest">
