@@ -196,7 +196,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                 return (
                    <CarouselItem 
                      key={listing._id} 
-                     className="pl-3 sm:pl-5 basis-[46%] xs:basis-[42%] sm:basis-[40%] md:basis-[32%] lg:basis-[22%]"
+                     className="pl-3 sm:pl-5 basis-[60%] xs:basis-[48%] sm:basis-[40%] md:basis-[32%] lg:basis-[25%]"
                    >
                      <Link href={`/listings/${listing._id}`} className="group block h-full bm-interactive rounded-2xl bg-card transition-all duration-200 ">
                          <div className="relative flex flex-col h-full">
