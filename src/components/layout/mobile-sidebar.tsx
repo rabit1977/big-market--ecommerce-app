@@ -286,13 +286,13 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
             </div>
 
             {/* Footer */}
-            <div className="border-t px-4 py-3 shrink-0">
+            <div className="group border-t px-4 py-3 shrink-0">
               <Link
                 href="/listings"
                 onClick={onClose}
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-primary/5 hover:bg-primary/10 text-primary text-sm font-bold transition-colors"
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-card border border-border text-foreground text-sm font-bold transition-colors"
               >
-                <Grid3X3 className="h-4 w-4" />
+                <Grid3X3 className="h-4 w-4 group-hover:text-primary transition-colors" />
                 Browse All Categories
               </Link>
             </div>

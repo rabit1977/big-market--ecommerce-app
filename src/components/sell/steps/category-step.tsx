@@ -142,7 +142,7 @@ export function CategoryStep({
   const currentTitle = level === 0 ? "Select Category" : level === 1 ? "Select Subcategory" : "Select Specific Type";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 hover">
       <div className="flex items-center gap-4">
         {level > 0 && (
           <button 
@@ -173,11 +173,11 @@ export function CategoryStep({
                 else if (level === 1) handleSubSelect(item);
                 else handleSubSubSelect(item);
               }}
-              className="p-4 cursor-pointer hover:border-primary/50 hover:shadow-md transition-all group"
+              className="p-4 cursor-pointer hover:border-popover-foreground/50 hover:shadow-md transition-all group"
             >
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-muted group-hover:bg-primary/10 flex items-center justify-center transition-colors">
-                  <Icon className="w-6 h-6 group-hover:text-primary transition-colors" />
+                <div className="w-12 h-12 rounded-xl bg-muted group-hover:bg-popover flex items-center justify-center transition-colors">
+                  <Icon className="w-6 h-6 group-hover:text-primary transition-colors " />
                 </div>
                 
                 <div className="flex-1">

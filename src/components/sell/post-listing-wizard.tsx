@@ -231,7 +231,7 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
         </div>
 
         {/* Step Content */}
-        <Card className="p-6 md:p-8">
+        <Card className="p-6 md:p-8 bg-background">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
