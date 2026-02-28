@@ -197,7 +197,8 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                      key={listing._id} 
                      className="pl-3 sm:pl-5 basis-[46%] xs:basis-[42%] sm:basis-[40%] md:basis-[32%] lg:basis-[22%]"
                    >
-                     <Link href={`/listings/${listing._id}`} className="group block h-full border-1 border-card-foreground/50 rounded-2xl bg-card transition-all duration-200 hover:border-card-foreground">
+                     <Link href={`/listings/${listing._id}`} className="group block h-full border-1 border-card-foreground/50 hover:border-card-foreground
+                     border-1 dark:border-card-foreground/20 dark:hover:border-card-foreground/50 rounded-2xl bg-card transition-all duration-200 ">
                          <div className="relative flex flex-col h-full">
                              {/* eBay Style Image Card */}
                              <div className="relative aspect-square w-full rounded-t-2xl overflow-hidden bg-muted transition-all duration-200 pointer-events-none">
