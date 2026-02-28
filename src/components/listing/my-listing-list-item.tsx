@@ -99,8 +99,8 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95 }}
         className={cn(
-            "group relative flex flex-row bg-card border border-border/60 shadow-sm hover:shadow-xl hover:border-primary/20 rounded-[1.5rem] overflow-hidden transition-all duration-300",
-            isPromoted && promoConfig?.borderColor && `border-2 ${promoConfig.borderColor.replace('/20', '/50')}`
+            "group relative flex flex-row bg-card border border-border transition-all duration-200 rounded-lg overflow-hidden hover:bg-secondary/20 shadow-none",
+            isPromoted && promoConfig?.borderColor && `ring-1 ring-inset ring-primary/20`
         )}
       >
         {/* Image Section */}
@@ -116,20 +116,20 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
           {/* Status Badge Overlay */}
           <div className="absolute top-2 left-2 z-10 flex flex-col gap-1.5 items-start">
              {listing.status === 'ACTIVE' && (
-                 <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white border-0 shadow-lg shadow-emerald-500/20 text-[10px] uppercase tracking-wider font-bold h-6 px-2 rounded-lg">
+                 <Badge variant="outline" className="bg-background/80 backdrop-blur text-emerald-600 border-emerald-500/20 text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg shadow-none">
                     <CheckCircle className="w-3 h-3 mr-1" /> Active
                  </Badge>
              )}
 
              {listing.status === 'PENDING_APPROVAL' && (
-                 <Badge className="bg-amber-500 hover:bg-amber-600 text-white border-0 shadow-lg shadow-amber-500/20 text-[10px] uppercase tracking-wider font-bold h-6 px-2 rounded-lg">
+                 <Badge variant="outline" className="bg-background/80 backdrop-blur text-amber-600 border-amber-500/20 text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg shadow-none">
                     <Clock className="w-3 h-3 mr-1" /> Pending Approval
                  </Badge>
              )}
 
              {isPromoted && promoConfig && (
-                 <Badge className={cn("text-white border-0 shadow-lg text-[10px] uppercase tracking-wider font-bold h-6 px-2 rounded-lg flex items-center", promoConfig.badgeColor)}>
-                    <PromotionIcon iconName={promoConfig.icon} className="w-3 h-3 mr-1 fill-current/50" />
+                 <Badge variant="outline" className={cn("bg-background/80 backdrop-blur border-primary/20 text-primary text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg flex items-center shadow-none")}>
+                    <PromotionIcon iconName={promoConfig.icon} className="w-3 h-3 mr-1" />
                     {daysLeft} days left
                  </Badge>
              )}
@@ -145,32 +145,32 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                    <h3 className="font-bold text-sm sm:text-base md:text-lg leading-tight group-hover/link:text-primary transition-colors line-clamp-1 mb-1 text-foreground"> {/* Smaller Title */}
                       {listing.title}
                    </h3>
-                   <div className="flex items-center gap-2 text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-wider">
+                   <div className="flex items-center gap-2 text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-widest">
                      <span>ID: {listing.id!.slice(-6)}</span>
                      <span>•</span>
                      <span>{formatDistanceToNow(new Date(listing.createdAt!), { addSuffix: true })}</span>
                    </div>
                 </Link>
                 
-                <Link href={`/listings/${listing.id}`} target="_blank" className="p-2 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors hidden sm:flex">
+                <Link href={`/listings/${listing.id}`} target="_blank" className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors hidden sm:flex border border-transparent hover:border-border shadow-none">
                     <ExternalLink className="w-4 h-4" />
                 </Link>
             </div>
 
             <div className="mb-3 sm:mb-4">
-                <div className="text-base sm:text-lg md:text-xl font-black text-primary tracking-tight"> {/* Smaller Price */}
+                <div className="text-base sm:text-lg md:text-xl font-bold text-primary tracking-tight">
                     {formatCurrency(listing.price, (listing as any).currency)}
                 </div>
                 
                 {/* Specs Summary */}
                 <div className="flex flex-wrap gap-1.5 mt-2">
                     {listing.condition && (
-                        <span className="bg-muted px-2 py-1 rounded-md text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest border border-border/50">
+                        <span className="bg-secondary px-2 py-1 rounded-lg text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest border border-border">
                             {listing.condition}
                         </span>
                     )}
                     {listing.specifications?.year && (
-                        <span className="bg-muted px-2 py-1 rounded-md text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest border border-border/50">
+                        <span className="bg-secondary px-2 py-1 rounded-lg text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest border border-border">
                             {listing.specifications.year}
                         </span>
                     )}
@@ -182,7 +182,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                 <Button 
                     asChild
                     className={cn(
-                        "flex-1 bg-amber-500 hover:bg-amber-600 text-white font-black h-8 sm:h-9 shadow-sm text-[10px] sm:text-xs uppercase tracking-wide rounded-xl transition-all",
+                        "flex-1 bg-amber-500 hover:bg-amber-600 text-amber-50 font-bold h-9 shadow-none text-[10px] sm:text-xs uppercase tracking-widest rounded-lg transition-all",
                         listing.status === 'PENDING_APPROVAL' && "opacity-50 cursor-not-allowed pointer-events-none"
                     )}
                     size="sm"
@@ -196,7 +196,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                 <AlertDialog open={isRenewDialogOpen} onOpenChange={setIsRenewDialogOpen}>
                     <Button 
                         className={cn(
-                            "flex-1 bg-foreground text-background hover:bg-primary hover:text-white font-black h-8 sm:h-9 shadow-sm text-[10px] sm:text-xs uppercase tracking-wide rounded-xl transition-all",
+                            "flex-1 bg-foreground text-background hover:bg-foreground/90 font-bold h-9 shadow-none text-[10px] sm:text-xs uppercase tracking-widest rounded-lg transition-all",
                             (listing.status === 'PENDING_APPROVAL' || isStatsLoading) && "opacity-50 cursor-not-allowed pointer-events-none"
                         )}
                         size="sm"
@@ -206,30 +206,30 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                         <RefreshCw className={cn("w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5", (isPending || isStatsLoading) && "animate-spin")} />
                         {isStatsLoading ? 'Checking...' : 'Renew Ad'}
                     </Button>
-                    <AlertDialogContent className="rounded-2xl max-w-sm">
+                    <AlertDialogContent className="rounded-lg max-w-sm border-border bg-card">
                         <AlertDialogHeader>
-                            <AlertDialogTitle className="flex items-center gap-2 font-black uppercase tracking-tight">
+                            <AlertDialogTitle className="flex items-center gap-2 font-bold uppercase tracking-tight text-lg">
                                 <RefreshCw className="w-5 h-5 text-primary" />
                                 Renew Listing
                             </AlertDialogTitle>
                             <AlertDialogDescription asChild className="space-y-3 pt-2">
                                 <div className="space-y-3">
                                     {!renewalStats?.canRenewNow ? ( 
-                                        <div className="bg-amber-500/10 p-3 rounded-xl border border-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-bold flex gap-3">
+                                        <div className="bg-amber-500/10 p-3 rounded-lg border border-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-bold flex gap-3">
                                             <AlertTriangle className="w-5 h-5 shrink-0" />
                                             <p>You can renew again in {renewalStats?.hoursUntilRenew} hour{renewalStats?.hoursUntilRenew !== 1 ? 's' : ''}. Renewals are allowed once every 24 hours.</p> 
                                         </div>
                                     ) : renewalStats?.remainingMonthly <= 0 ? (
-                                        <div className="bg-destructive/10 p-3 rounded-xl border border-destructive/20 text-destructive text-xs font-bold flex gap-3">
+                                        <div className="bg-destructive/10 p-3 rounded-lg border border-destructive/20 text-destructive text-xs font-bold flex gap-3">
                                             <AlertTriangle className="w-5 h-5 shrink-0" />
                                             <p>You have reached your monthly limit of 15 renewals.</p>
                                         </div>
                                     ) : (
                                         <>
-                                            <div className="bg-primary/5 p-4 rounded-2xl border border-primary/10 text-foreground text-sm font-medium leading-relaxed">
-                                                Dear user, you have <span className="font-black text-primary text-base">{renewalStats?.remainingMonthly}</span> times left this month to renew your ads.
+                                            <div className="bg-secondary p-4 rounded-lg border border-border text-foreground text-sm font-medium leading-relaxed">
+                                                Dear user, you have <span className="font-bold text-primary text-base">{renewalStats?.remainingMonthly}</span> times left this month to renew your ads.
                                             </div>
-                                            <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider px-1">
+                                            <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest px-1">
                                                 Renew this listing for another 30 days for {PRICING.RENEWAL} MKD.
                                             </p>
                                         </>
@@ -238,11 +238,11 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter className="gap-2 sm:gap-0 mt-2">
-                            <AlertDialogCancel className="rounded-xl font-bold uppercase text-[10px] sm:text-xs h-10 transition-all border-border/50">Cancel</AlertDialogCancel>
+                            <AlertDialogCancel className="rounded-lg font-bold uppercase text-[10px] sm:text-xs h-10 transition-all border-border shadow-none">Cancel</AlertDialogCancel>
                             {renewalStats?.canRenewNow && renewalStats?.remainingMonthly > 0 && ( 
                                 <AlertDialogAction 
                                     onClick={handleConfirmRenew} 
-                                    className="bg-primary hover:bg-primary/90 text-white rounded-xl font-black uppercase text-[10px] sm:text-xs h-10 shadow-lg shadow-primary/20"
+                                    className="bg-primary hover:bg-primary/90 text-white rounded-lg font-bold uppercase text-[10px] sm:text-xs h-10 shadow-none"
                                 >
                                     Renew Now
                                 </AlertDialogAction>
@@ -266,12 +266,12 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                                 )}
                             >
                                 <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/btn:scale-110 transition-transform" />
-                                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider hidden sm:inline">Delete</span>
+                                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest hidden sm:inline">Delete</span>
                             </button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="rounded-2xl max-w-sm">
+                        <AlertDialogContent className="rounded-lg max-w-sm border-border bg-card">
                             <AlertDialogHeader>
-                                <AlertDialogTitle className="flex items-center gap-2 font-black uppercase tracking-tight">
+                                <AlertDialogTitle className="flex items-center gap-2 font-bold uppercase tracking-tight text-lg">
                                     <Trash2 className="w-5 h-5 text-destructive" />
                                     Move to Recycle Bin?
                                 </AlertDialogTitle>
@@ -285,8 +285,8 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel className="rounded-xl font-bold uppercase text-xs h-10">Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90 rounded-xl font-black uppercase text-xs h-10 shadow-lg shadow-destructive/20">Move to Bin</AlertDialogAction>
+                                <AlertDialogCancel className="rounded-lg font-bold uppercase text-xs h-10 shadow-none border-border">Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90 rounded-lg font-bold uppercase text-xs h-10 shadow-none">Move to Bin</AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>

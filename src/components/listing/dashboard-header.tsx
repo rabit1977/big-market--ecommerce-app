@@ -35,7 +35,7 @@ export function MyListingsDashboardHeader() {
   });
 
   if (!dashboardData) return (
-      <div className="w-full h-32 md:h-40 bg-muted/50 animate-pulse rounded-[2rem] mb-6 md:mb-8" />
+      <div className="w-full h-32 md:h-40 bg-muted/50 animate-pulse rounded-lg mb-6 md:mb-8" />
   );
 
   const { user, stats } = dashboardData;
@@ -51,17 +51,16 @@ export function MyListingsDashboardHeader() {
   return (
     <div className="space-y-4 md:space-y-6 mb-6 md:mb-8">
       {/* 1. Header Card: Identity & Wallet */}
-      <div className="bg-card rounded-[2rem] p-4 md:p-6 shadow-xl shadow-foreground/5 border border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 relative overflow-hidden group hover:border-primary/20 transition-all">
-          {/* Background decoration */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full blur-3xl -z-0 opacity-50 translate-x-20 -translate-y-20 group-hover:scale-110 transition-transform duration-500" />
+      <div className="bg-card rounded-lg p-4 md:p-6 shadow-none border border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 relative overflow-hidden transition-all hover:bg-secondary/20">
+
           
           <div className="flex items-center gap-4 md:gap-5 relative z-10 w-full md:w-auto">
              <div className="relative">
-                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-3xl border-4 border-background shadow-lg overflow-hidden bg-muted flex items-center justify-center shrink-0">
+                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-lg border-2 border-border overflow-hidden bg-muted flex items-center justify-center shrink-0">
                      {user.image ? (
                          <img src={user.image} alt={displayName || 'User'} className="w-full h-full object-cover" />
                      ) : (
-                         <span className="text-sm md:text-lg font-black text-muted-foreground">
+                         <span className="text-sm md:text-lg font-bold text-muted-foreground">
                              {(displayName || 'U').slice(0, 2).toUpperCase()}
                          </span>
                      )}
@@ -80,21 +79,21 @@ export function MyListingsDashboardHeader() {
                  )}
              </div>
              <div className="min-w-0">
-                 <h1 className="text-lg md:text-xl font-black text-foreground flex items-center gap-2 truncate uppercase tracking-tight leading-none mb-1">
+                 <h1 className="text-lg md:text-xl font-bold text-foreground flex items-center gap-2 truncate uppercase tracking-tight leading-none mb-2">
                      {displayName}
                      {user.membershipStatus === 'ACTIVE' && (
-                         <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[9px] md:text-[10px] font-black uppercase tracking-wider border border-amber-500/20 flex items-center gap-1 shrink-0">
-                             <Crown className="w-3 h-3 icon-glow-amber" />
+                         <span className="px-2 py-1 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] font-bold uppercase tracking-widest border border-amber-500/20 flex items-center gap-1 shrink-0">
+                             <Crown className="w-3 h-3" />
                              {user.membershipTier}
                          </span>
                      )}
                  </h1>
-                 <p className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-wide">
+                 <p className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-widest">
                      {isCompany ? 'Verified Business Account' : 'Personal Account'}
                  </p>
                  
                  {user.membershipExpiresAt && (
-                     <div className="flex items-center gap-1.5 mt-2 text-[10px] text-emerald-500 font-bold uppercase tracking-wider bg-emerald-500/10 w-fit px-2 py-0.5 rounded-full">
+                     <div className="flex items-center gap-1.5 mt-2 text-[10px] text-emerald-600 font-bold uppercase tracking-widest bg-secondary w-fit px-2 py-1 rounded-lg border border-border">
                          <Activity className="w-3 h-3" />
                          <span>Active until {format(new Date(user.membershipExpiresAt), 'MMM dd, yyyy')}</span>
                      </div>
@@ -102,12 +101,12 @@ export function MyListingsDashboardHeader() {
              </div>
           </div>
 
-          <div className="flex items-center gap-4 relative z-10 w-full md:w-auto bg-muted/50 p-3 md:p-4 rounded-3xl border border-border/50 hover:bg-muted transition-colors">
+          <div className="flex items-center gap-4 relative z-10 w-full md:w-auto bg-input p-3 md:p-4 rounded-lg border border-border hover:bg-secondary/30 transition-colors">
               <div className="text-right flex-1 md:flex-none">
-                  <div className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-0.5">Balance</div>
-                  <div className="text-lg md:text-2xl font-black text-foreground leading-none">{Math.round(user.credits)} <span className="text-[10px] md:text-xs font-bold text-muted-foreground ml-0.5">MKD</span></div>
+                  <div className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Balance</div>
+                  <div className="text-lg md:text-2xl font-bold text-foreground leading-none">{Math.round(user.credits)} <span className="text-[10px] md:text-xs font-bold text-muted-foreground ml-0.5">MKD</span></div>
               </div>
-              <Button asChild size="sm" className="rounded-2xl font-black shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90 h-10 md:h-11 text-xs px-5 md:px-6 uppercase tracking-wider transition-all hover:scale-105">
+              <Button asChild size="sm" className="rounded-lg font-bold bg-primary hover:bg-primary/90 h-10 text-xs px-5 md:px-6 uppercase tracking-widest transition-all shadow-none">
                   <Link href="/wallet/top-up">
                       <Plus className="w-4 h-4 mr-1.5 stroke-[3]" />
                       Top Up
@@ -119,17 +118,17 @@ export function MyListingsDashboardHeader() {
       {/* 2. Scrollable Stats Section */}
       <div className="flex overflow-x-auto pb-4 gap-3 md:gap-4 snap-x md:grid md:grid-cols-4 md:overflow-visible md:pb-0 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-none">
           {/* Money Spent Total */}
-          <Card className="min-w-[200px] md:min-w-0 snap-center rounded-[1.5rem] border-border shadow-sm hover:shadow-md hover:border-rose-500/30 transition-all bg-card group cursor-default">
+          <Card className="min-w-[200px] md:min-w-0 snap-center rounded-lg border-border shadow-none hover:bg-secondary/30 transition-all bg-card group cursor-default">
               <CardContent className="p-4 md:p-5 flex flex-col justify-between h-full">
                   <div className="flex items-center justify-between mb-3">
-                      <div className="w-9 h-9 md:w-10 md:h-10 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500 group-hover:bg-rose-500 group-hover:text-white transition-colors">
+                      <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-rose-500/10 flex items-center justify-center text-rose-500 group-hover:bg-rose-500 group-hover:text-white transition-colors">
                           <DollarSign className="w-5 h-5" />
                       </div>
-                      <span className="text-[9px] font-black text-rose-500 bg-rose-500/10 px-2 py-1 rounded-lg uppercase tracking-wider">Lifetime</span>
+                      <span className="text-[9px] font-bold text-rose-500 bg-rose-500/10 px-2 py-1 rounded-lg uppercase tracking-widest">Lifetime</span>
                   </div>
                   <div>
                       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Total Spent</p>
-                      <h3 className="text-xl md:text-2xl font-black text-foreground tracking-tight group-hover:text-rose-500 transition-colors">
+                      <h3 className="text-xl md:text-2xl font-bold text-foreground tracking-tight group-hover:text-rose-500 transition-colors">
                           {/* @ts-ignore - totalSpend added in backend but types might flag */}
                           {Math.round(stats.totalSpend || 0)} <span className="text-[10px] font-bold text-muted-foreground">MKD</span>
                       </h3>
@@ -138,29 +137,29 @@ export function MyListingsDashboardHeader() {
           </Card>
 
           {/* Renewal & Listing Quotas */}
-          <Card className="min-w-[280px] md:min-w-0 snap-center rounded-[1.5rem] border-border shadow-sm hover:shadow-md hover:border-primary/30 transition-all md:col-span-2 bg-card group cursor-default">
+          <Card className="min-w-[280px] md:min-w-0 snap-center rounded-lg border-border shadow-none hover:bg-secondary/30 transition-all md:col-span-2 bg-card group cursor-default">
               <CardContent className="p-4 md:p-5">
                   <div className="flex items-center gap-3 mb-4">
-                      <div className="w-9 h-9 md:w-10 md:h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                      <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
                           <RefreshCw className="w-5 h-5" />
                       </div>
                       <div>
-                          <h3 className="font-black text-foreground text-sm uppercase tracking-tight">Account Limits</h3>
-                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Quota Usage</p>
+                          <h3 className="font-bold text-foreground text-sm uppercase tracking-tight">Account Limits</h3>
+                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Quota Usage</p>
                       </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4 border-t border-border/50 pt-3">
                       <div>
-                          <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest mb-1">Renewals</p>
+                          <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest mb-1">Renewals</p>
                           <div className="flex items-baseline gap-1">
-                            <p className="text-lg md:text-xl font-black text-foreground group-hover:text-primary transition-colors">{renewalsUsed}</p>
+                            <p className="text-lg md:text-xl font-bold text-foreground group-hover:text-primary transition-colors">{renewalsUsed}</p>
                             <span className="text-xs font-bold text-muted-foreground">/ {renewalsLimit}</span>
                           </div>
                       </div>
                       <div className="border-l-2 border-border/50 pl-4">
-                          <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest mb-1">Listings Posted</p>
+                          <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest mb-1">Listings Posted</p>
                           <div className="flex items-baseline gap-1">
-                            <p className="text-lg md:text-xl font-black text-foreground">{listingsUsed}</p>
+                            <p className="text-lg md:text-xl font-bold text-foreground">{listingsUsed}</p>
                             <span className="text-xs font-bold text-muted-foreground">/ {listingsLimit}</span>
                           </div>
                       </div>
@@ -169,7 +168,7 @@ export function MyListingsDashboardHeader() {
           </Card>
 
           {/* Advertising Stats */}
-          <Card className="min-w-[200px] md:min-w-0 snap-center rounded-[1.5rem] border-border shadow-sm hover:shadow-md hover:border-amber-500/30 transition-all bg-card group cursor-default">
+          <Card className="min-w-[200px] md:min-w-0 snap-center rounded-lg border-border shadow-none hover:bg-secondary/30 transition-all bg-card group cursor-default">
               <CardContent className="p-4 md:p-5 flex flex-col justify-between h-full">
                   <div className="flex items-center justify-between mb-3">
                       <div className="w-9 h-9 md:w-10 md:h-10 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500 group-hover:bg-amber-500 group-hover:text-white transition-colors">

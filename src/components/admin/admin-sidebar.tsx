@@ -139,11 +139,11 @@ export const AdminSidebar = () => {
                     href={item.href}
                     className={cn(
                         'flex flex-col items-center justify-center w-full h-full gap-1 transition-colors',
-                        isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                        isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
                     )}
                 >
-                    <item.icon className={cn("w-5 h-5", isActive && "fill-current")} />
-                    <span className="text-[10px] font-medium">{item.label}</span>
+                    <item.icon className={cn("w-5 h-5 transition-colors", isActive ? "text-primary fill-primary/10" : "text-muted-foreground")} />
+                    <span className={cn("text-[10px] font-bold uppercase tracking-widest", isActive ? "text-primary" : "text-muted-foreground")}>{item.label}</span>
                 </Link>
             );
         })}
@@ -174,14 +174,14 @@ export const AdminSidebar = () => {
                                  href={item.href}
                                  onClick={() => setIsMobileMenuOpen(false)}
                                  className={cn(
-                                     "flex flex-col items-center justify-center gap-2 p-3 rounded-lg border bg-card hover:bg-secondary/50 transition-all",
+                                     "flex flex-col items-center justify-center gap-2 p-3 rounded-lg border transition-all",
                                      (pathname === item.href || pathname.startsWith(item.href + '/')) 
-                                         ? "border-primary/50 bg-primary/5 text-primary" 
-                                         : "border-border"
+                                         ? "bg-secondary border-border text-foreground" 
+                                         : "bg-card border-border text-muted-foreground"
                                  )}
                               >
-                                  <item.icon className="w-5 h-5" />
-                                  <span className="text-[10px] text-center font-bold line-clamp-1 uppercase tracking-tight">{item.label}</span>
+                                  <item.icon className={cn("w-5 h-5", (pathname === item.href || pathname.startsWith(item.href + '/')) ? "text-primary" : "text-muted-foreground")} />
+                                  <span className="text-[10px] text-center font-bold line-clamp-1 uppercase tracking-widest">{item.label}</span>
                               </Link>
                          ))}
                      </div>
@@ -217,13 +217,13 @@ function NavItem({ item, isActive }: { item: NavItem; isActive: boolean }) {
         <Link
             href={item.href}
             className={cn(
-                'flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-bold transition-all duration-200',
+                'flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-bold transition-all duration-200 uppercase tracking-widest',
                 isActive 
-                    ? 'bg-secondary text-primary border border-border' 
+                    ? 'bg-secondary text-foreground border border-border shadow-none' 
                     : 'text-muted-foreground hover:bg-secondary/50 hover:text-foreground'
             )}
         >
-            <item.icon className={cn('w-4.5 h-4.5', isActive ? 'text-primary' : 'text-muted-foreground/50')} />
+            <item.icon className={cn('w-4.5 h-4.5 transition-colors', isActive ? 'text-primary' : 'text-muted-foreground/40')} />
             {item.label}
             {isActive && <div className="ml-auto w-1 h-4 rounded-full bg-primary" />}
         </Link>

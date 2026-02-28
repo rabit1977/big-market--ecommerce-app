@@ -60,10 +60,10 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
         {/* Desktop View All Link */}
         <Link 
           href="/listings" 
-          className="group flex items-center justify-center gap-1.5 px-3.5 py-1.5 md:py-2 rounded-(--yt-button-border-radius) border border-border bg-card hover:border-primary/50 hover:bg-secondary transition-all duration-150 shrink-0"
+          className="group flex items-center justify-center gap-1.5 px-3.5 py-1.5 md:py-2 rounded-lg border border-border bg-secondary/50 hover:bg-secondary transition-all duration-200 shrink-0 shadow-none"
         >
-          {tHome('view_all')}
-          <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+          <span className="text-xs font-bold uppercase tracking-widest">{tHome('view_all')}</span>
+          <ArrowRight className="w-3.5 h-3.5 ml-1 transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
 
@@ -93,9 +93,9 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
       <div className="text-center mt-8 md:hidden">
         <Link 
           href="/listings" 
-          className="inline-flex items-center bg-foreground text-background font-bold transition-all hover:bg-foreground/90 group px-8 py-2.5 rounded-full shadow-lg active:scale-95"
+          className="inline-flex items-center bg-secondary hover:bg-secondary/80 text-foreground font-bold transition-all group px-8 py-3 rounded-lg border border-border shadow-none"
         >
-          {tHome('browse_all_listings')}
+          <span className="text-xs uppercase tracking-widest">{tHome('browse_all_listings')}</span>
           <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>

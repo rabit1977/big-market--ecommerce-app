@@ -45,8 +45,8 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
   }
 
   return (
-    <div className='container max-w-5xl mx-auto pt-4 md:pt-8 min-h-screen pb-20 bg-background px-4'>
-      <AppBreadcrumbs className="mb-6 md:mb-8" />
+    <div className='container max-w-5xl mx-auto pt-4 md:pt-8 min-h-screen pb-20 px-4'>
+      <AppBreadcrumbs className="mb-6 md:mb-8 text-muted-foreground/60" />
       
       {/* Dashboard Stats Header */}
       <MyListingsDashboardHeader />
@@ -54,15 +54,14 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
       {/* Listings Section Header */}
       <div className='flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8 border-b border-border pb-4 md:pb-6'>
         <div>
-           <h2 className='text-2xl md:text-3xl font-black tracking-tight text-foreground uppercase leading-none'>My Listings</h2>
-           <div className="h-1 w-12 bg-primary rounded-full mt-2 mb-2" />
-           <p className='text-muted-foreground text-xs md:text-sm font-bold uppercase tracking-wider'>Manage your active and sold items</p>
+           <h2 className='text-2xl md:text-3xl font-bold tracking-tight text-foreground uppercase leading-none'>My Listings</h2>
+           <p className='text-muted-foreground text-xs md:text-sm font-bold uppercase tracking-widest mt-3'>Manage your active and sold items</p>
         </div>
         <div className="flex items-center gap-3 w-full md:w-auto">
-            <Suspense fallback={<div className="h-10 w-[300px] bg-muted animate-pulse rounded-full" />}>
+            <Suspense fallback={<div className="h-10 w-[300px] bg-muted animate-pulse rounded-lg" />}>
                 <MyListingsSearch />
             </Suspense>
-            <Button asChild className="gap-2 rounded-full font-black shadow-xl shadow-primary/20 bg-primary hover:bg-primary/90 shrink-0 h-10 md:h-12 text-xs md:text-sm px-6 uppercase tracking-tight transition-all hover:scale-105">
+            <Button asChild className="gap-2 rounded-lg font-bold bg-primary hover:bg-primary/90 shrink-0 h-10 text-xs md:text-sm px-6 uppercase tracking-widest transition-all shadow-none">
                 <Link href="/sell">
                     <Plus className="h-4 w-4 stroke-[3]" />
                     <span className="hidden sm:inline">Post Ad</span>
@@ -79,15 +78,15 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
               ))}
           </div>
       ) : (
-          <div className='text-center py-8 md:py-24 bg-card rounded-[2rem] border-2 border-dashed border-border/60 hover:border-primary/20 transition-all duration-300 group shadow-sm'>
-              <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:bg-primary/10 transition-all duration-300">
-                  <Package className="h-8 w-8 text-muted-foreground group-hover:text-primary transition-colors" />
+          <div className='text-center py-8 md:py-24 bg-card rounded-lg border border-border transition-all duration-200 group shadow-none'>
+              <div className="w-20 h-20 bg-muted rounded-lg flex items-center justify-center mx-auto mb-6 transition-all duration-200">
+                  <Package className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 className='text-xl md:text-2xl font-black text-foreground uppercase tracking-tight mb-2'>No listings yet</h3>
-              <p className='text-muted-foreground max-w-sm mx-auto mb-8 text-xs md:text-sm font-bold'>
+              <h3 className='text-xl md:text-2xl font-bold text-foreground uppercase tracking-tight mb-2'>No listings yet</h3>
+              <p className='text-muted-foreground max-w-sm mx-auto mb-8 text-xs md:text-sm font-bold uppercase tracking-widest'>
                   You haven&apos;t posted any ads yet. Start selling today!
               </p>
-              <Button asChild size="lg" className="rounded-full font-black text-sm uppercase tracking-wider shadow-xl shadow-primary/20 h-12 px-8 hover:scale-105 transition-transform">
+              <Button asChild size="lg" className="rounded-lg font-bold text-sm uppercase tracking-widest h-12 px-8 transition-transform shadow-none">
                   <Link href="/sell">Create Listing</Link>
               </Button>
           </div>

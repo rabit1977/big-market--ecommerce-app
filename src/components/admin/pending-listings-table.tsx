@@ -127,13 +127,13 @@ export function PendingListingsTable({ listings }: PendingListingsTableProps) {
                     asChild
                   >
                     <Link href={`/listings/${listing._id}`}>
-                        <Eye className="h-4 w-4 text-muted-foreground" />
+                        <Eye className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
                     </Link>
                   </Button>
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-500/10 rounded-lg"
+                    className="h-8 w-8 bg-blue-500 hover:bg-blue-600 text-blue-50 rounded-lg shadow-none"
                     asChild
                   >
                     <Link href={`/admin/listings/${listing._id}/edit`}>
@@ -144,17 +144,16 @@ export function PendingListingsTable({ listings }: PendingListingsTableProps) {
                     size="icon"
                     onClick={() => handleApprove(listing._id)}
                     disabled={isPending}
-                    className="h-8 w-8 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow-none"
+                    className="h-8 w-8 bg-emerald-500 hover:bg-emerald-600 text-emerald-50 rounded-lg shadow-none"
                     title="Approve"
                   >
                     <CheckCircle className="h-4 w-4" />
                   </Button>
                   <Button
                     size="icon"
-                    variant="destructive"
                     onClick={() => handleReject(listing._id)}
                     disabled={isPending}
-                    className="h-8 w-8 rounded-lg shadow-none"
+                    className="h-8 w-8 bg-rose-500 hover:bg-rose-600 text-rose-50 rounded-lg shadow-none"
                     title="Reject"
                   >
                     <XCircle className="h-4 w-4" />
