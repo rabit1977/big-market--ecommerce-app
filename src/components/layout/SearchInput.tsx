@@ -116,11 +116,11 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             ref={ref}
             type="search"
             placeholder={tNav('search_placeholder')}
-            className="h-9 md:h-10 rounded-(--yt-button-border-radius) pl-10 sm:pl-16 pr-24 sm:pr-32 bg-background border-border 
+            className="h-9 md:h-10 rounded-lg pl-10 sm:pl-16 pr-24 sm:pr-32 bg-input border-border 
                        focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary
                        text-sm placeholder:text-muted-foreground/60
                        [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden
-                       transition-all duration-150"
+                       transition-all duration-150 shadow-none font-bold uppercase tracking-widest text-[10px] sm:text-xs"
             value={value}
             onChange={(e) => onChange(e.target.value)}
             onFocus={onFocus}

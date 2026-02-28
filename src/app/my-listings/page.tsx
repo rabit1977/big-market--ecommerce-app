@@ -45,7 +45,8 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
   }
 
   return (
-    <div className='container max-w-5xl mx-auto pt-4 md:pt-8 min-h-screen pb-20 px-4'>
+    <div className='min-h-screen bg-slate-100 dark:bg-background pt-4 md:pt-8 pb-20'>
+      <div className='container max-w-5xl mx-auto px-4'>
       <AppBreadcrumbs className="mb-6 md:mb-8 text-muted-foreground/60" />
       
       {/* Dashboard Stats Header */}
@@ -91,6 +92,7 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
               </Button>
           </div>
       )}
+      </div>
     </div>
   );
 }

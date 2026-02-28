@@ -63,7 +63,7 @@ export function ListingSearchInput({
           inputMode="numeric"
           pattern="[0-9]*"
           placeholder="ID"
-          className="h-9 text-xs pl-6 pr-2 bg-background/50 focus:bg-background transition-colors"
+          className="h-9 text-xs pl-6 pr-2 bg-input border-border focus:bg-input transition-colors rounded-lg shadow-none font-bold uppercase tracking-widest"
           value={value}
           onChange={handleInputChange}
           disabled={isPending}

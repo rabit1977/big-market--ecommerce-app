@@ -1,7 +1,7 @@
 'use client';
 
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react"
+import { Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
@@ -35,8 +35,8 @@ export function AdminListingSearch() {
       <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
       <Input
         type="search"
-        placeholder="Search by Item #..."
-        className="pl-9 h-9 bg-background"
+        placeholder="SEARCH BY ITEM #..."
+        className="pl-9 h-9 bg-input border-border rounded-lg shadow-none font-bold uppercase tracking-widest text-[10px] sm:text-xs"
         value={text}
         onChange={(e) => setText(e.target.value)}
       />

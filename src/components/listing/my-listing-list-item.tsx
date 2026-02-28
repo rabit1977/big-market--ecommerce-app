@@ -116,20 +116,20 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
           {/* Status Badge Overlay */}
           <div className="absolute top-2 left-2 z-10 flex flex-col gap-1.5 items-start">
              {listing.status === 'ACTIVE' && (
-                 <Badge variant="outline" className="bg-background/80 backdrop-blur text-emerald-600 border-border text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg shadow-none">
-                    <CheckCircle className="w-3 h-3 mr-1 text-emerald-500/80" /> Active
+                 <Badge variant="outline" className="bg-background/80 backdrop-blur text-foreground border-border text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg shadow-none">
+                    <CheckCircle className="w-3 h-3 mr-1 text-foreground/40" /> Active
                  </Badge>
              )}
 
              {listing.status === 'PENDING_APPROVAL' && (
-                 <Badge variant="outline" className="bg-background/80 backdrop-blur text-amber-600 border-border text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg shadow-none">
-                    <Clock className="w-3 h-3 mr-1 text-amber-500/80" /> Pending Approval
+                 <Badge variant="outline" className="bg-background/80 backdrop-blur text-foreground border-border text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg shadow-none">
+                    <Clock className="w-3 h-3 mr-1 text-foreground/40" /> Pending Approval
                  </Badge>
              )}
 
              {isPromoted && promoConfig && (
-                 <Badge variant="outline" className={cn("bg-background/80 backdrop-blur border-border text-primary text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg flex items-center shadow-none")}>
-                    <PromotionIcon iconName={promoConfig.icon} className="w-3 h-3 mr-1 text-primary/80" />
+                 <Badge variant="outline" className={cn("bg-background/80 backdrop-blur border-border text-foreground text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg flex items-center shadow-none")}>
+                    <PromotionIcon iconName={promoConfig.icon} className="w-3 h-3 mr-1 text-foreground/40" />
                     {daysLeft} days left
                  </Badge>
              )}
@@ -158,7 +158,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
             </div>
 
             <div className="mb-3 sm:mb-4">
-                <div className="text-base sm:text-lg md:text-xl font-bold text-primary tracking-tight">
+                <div className="text-base sm:text-lg md:text-xl font-bold text-foreground tracking-tight">
                     {formatCurrency(listing.price, (listing as any).currency)}
                 </div>
                 
@@ -260,10 +260,10 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                         <AlertDialogTrigger asChild>
                             <button 
                                 disabled={listing.status === 'PENDING_APPROVAL'}
-                                className={cn(
-                                    "flex items-center gap-1.5 group/btn hover:text-destructive transition-colors text-primary",
-                                    listing.status === 'PENDING_APPROVAL' && "opacity-50 cursor-not-allowed pointer-events-none"
-                                )}
+                                 className={cn(
+                                     "flex items-center gap-1.5 group/btn hover:text-destructive transition-colors text-foreground",
+                                     listing.status === 'PENDING_APPROVAL' && "opacity-50 cursor-not-allowed pointer-events-none"
+                                 )}
                             >
                                 <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/btn:scale-110 transition-transform" />
                                 <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest hidden sm:inline">Delete</span>
@@ -291,7 +291,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                         </AlertDialogContent>
                     </AlertDialog>
 
-                    <Link href={`/my-listings/stats/${listing.id}`} className="flex items-center gap-1.5 group/btn hover:text-emerald-500 transition-colors text-primary">
+                    <Link href={`/my-listings/stats/${listing.id}`} className="flex items-center gap-1.5 group/btn hover:text-emerald-500 transition-colors text-foreground">
                         <BarChart2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/btn:scale-110 transition-transform" />
                         <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest hidden sm:inline">Stats</span>
                     </Link>
@@ -299,7 +299,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                     <Link 
                         href={listing.status === 'PENDING_APPROVAL' ? '#' : `/my-listings/${listing.id}/edit`} 
                         className={cn(
-                            "flex items-center gap-1.5 group/btn hover:text-amber-500 transition-colors text-primary",
+                            "flex items-center gap-1.5 group/btn hover:text-amber-500 transition-colors text-foreground",
                             listing.status === 'PENDING_APPROVAL' && "opacity-50 cursor-not-allowed pointer-events-none"
                         )}
                     >
