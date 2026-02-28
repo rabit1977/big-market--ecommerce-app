@@ -99,7 +99,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95 }}
         className={cn(
-            "group relative flex flex-row bg-card border border-border transition-all duration-200 rounded-lg overflow-hidden hover:bg-secondary/20 shadow-none",
+            "group relative flex flex-row bg-card transition-all duration-200 rounded-lg overflow-hidden bm-interactive shadow-none",
             isPromoted && promoConfig?.borderColor && `ring-1 ring-inset ring-primary/20`
         )}
       >
@@ -152,7 +152,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                    </div>
                 </Link>
                 
-                <Link href={`/listings/${listing.id}`} target="_blank" className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors hidden sm:flex border border-transparent hover:border-border shadow-none">
+                <Link href={`/listings/${listing.id}`} target="_blank" className="p-2 rounded-lg text-muted-foreground transition-colors hidden sm:flex bm-interactive shadow-none">
                     <ExternalLink className="w-4 h-4" />
                 </Link>
             </div>
@@ -165,12 +165,12 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                 {/* Specs Summary */}
                 <div className="flex flex-wrap gap-1.5 mt-2">
                     {listing.condition && (
-                        <span className="bg-secondary px-2 py-1 rounded-lg text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest border border-border">
+                        <span className="bg-secondary px-2 py-1 rounded-lg text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest bm-interactive">
                             {listing.condition}
                         </span>
                     )}
                     {listing.specifications?.year && (
-                        <span className="bg-secondary px-2 py-1 rounded-lg text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest border border-border">
+                        <span className="bg-secondary px-2 py-1 rounded-lg text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest bm-interactive">
                             {listing.specifications.year}
                         </span>
                     )}
@@ -261,7 +261,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                             <button 
                                 disabled={listing.status === 'PENDING_APPROVAL'}
                                  className={cn(
-                                     "flex items-center gap-1.5 group/btn hover:text-destructive transition-colors text-foreground",
+                                     "flex items-center gap-1.5 group/btn transition-colors text-foreground px-2 py-1 rounded-md bm-interactive",
                                      listing.status === 'PENDING_APPROVAL' && "opacity-50 cursor-not-allowed pointer-events-none"
                                  )}
                             >
@@ -275,7 +275,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                                     <Trash2 className="w-5 h-5 text-destructive" />
                                     Move to Recycle Bin?
                                 </AlertDialogTitle>
-                                <AlertDialogDescription className="space-y-2 pt-1">
+                                <AlertDialogDescription className="space-y-2 pt-1 border-none shadow-none">
                                     <span className="block">
                                         &quot;{listing.title}&quot; will be moved to the recycle bin.
                                     </span>
@@ -285,13 +285,13 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel className="rounded-lg font-bold uppercase text-xs h-10 shadow-none border-border">Cancel</AlertDialogCancel>
+                                <AlertDialogCancel className="rounded-lg font-bold uppercase text-xs h-10 shadow-none border-border bm-interactive">Cancel</AlertDialogCancel>
                                 <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90 rounded-lg font-bold uppercase text-xs h-10 shadow-none">Move to Bin</AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
 
-                    <Link href={`/my-listings/stats/${listing.id}`} className="flex items-center gap-1.5 group/btn hover:text-emerald-500 transition-colors text-foreground">
+                    <Link href={`/my-listings/stats/${listing.id}`} className="flex items-center gap-1.5 group/btn transition-colors text-foreground px-2 py-1 rounded-md bm-interactive">
                         <BarChart2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/btn:scale-110 transition-transform" />
                         <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest hidden sm:inline">Stats</span>
                     </Link>
@@ -299,7 +299,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                     <Link 
                         href={listing.status === 'PENDING_APPROVAL' ? '#' : `/my-listings/${listing.id}/edit`} 
                         className={cn(
-                            "flex items-center gap-1.5 group/btn hover:text-amber-500 transition-colors text-foreground",
+                            "flex items-center gap-1.5 group/btn transition-colors text-foreground px-2 py-1 rounded-md bm-interactive",
                             listing.status === 'PENDING_APPROVAL' && "opacity-50 cursor-not-allowed pointer-events-none"
                         )}
                     >

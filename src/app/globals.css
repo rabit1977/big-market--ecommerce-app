@@ -5,7 +5,7 @@
 
 /* ============================================
    DESIGN SYSTEM: Biggest Market Theme (BM)
-   Colors: YouTube Red Primary (#ff0000)
+   Colors: Biggest Market Red (#ff0000)
    ============================================ */
 
 @theme inline {
@@ -77,10 +77,10 @@
   /* Core Radius (Targeting 8px for rounded-lg) */
   --radius: 0.5rem;
   
-  /* ===== YT Light Mode Palette (Modern Minimalism) ===== */
+  /* ===== BM Light Mode Palette (Modern Minimalism) ===== */
   /* User Specific: Page background -> Slate 100, Elements -> Slate 50 */
   --background: #f1f5f9; /* Slate 100 - Page Background */
-  --foreground: #0f0f0f; /* YouTube Spec Text Primary */
+  --foreground: #0f0f0f; /* BM Spec Text Primary */
   
   --card: #ffffff; /* Slate 50 - Card/Surface Background */
   --card-foreground: #0f0f0f;
@@ -88,7 +88,7 @@
   --popover: #f1f5f9; /* Slate 50 */
   --popover-foreground: #0f0f0f;
   
-  --primary: #ff0000; /* YouTube Red */
+  --primary: #ff0000; /* BM Red */
   --primary-foreground: #f1f5f9;
   
   --secondary: #f1f5f9; /* Slate 50 */
@@ -113,7 +113,7 @@
   --bm-text: #0f0f0f;
   --bm-text-sec: #606060;
 
-  /* YouTube Premium Accents — Used ONLY for icons/buttons, never for page borders */
+  /* BM Premium Accents — Used ONLY for icons/buttons, never for page borders */
   --chart-1: #ff0000;
   --chart-2: #065fd4;
   --chart-3: #2ba640;
@@ -132,7 +132,7 @@
 }
 
 .dark {
-  /* ===== YT Dark Mode Palette (Pure Onyx) ===== */
+  /* ===== BM Dark Mode Palette (Pure Onyx) ===== */
   --background: #0f0f0f; /* Pure black background */
   --foreground: #f1f1f1;
   
@@ -208,7 +208,7 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* YouTube Inspired Typography */
+  /* Biggest Market Inspired Typography */
   h1, h2, h3, h4 { @apply font-bold tracking-tight text-foreground; letter-spacing: -0.02em; }
   h1 { @apply text-2xl sm:text-3xl; }
   h2 { @apply text-xl sm:text-2xl; }

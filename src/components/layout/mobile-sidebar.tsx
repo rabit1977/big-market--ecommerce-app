@@ -2,10 +2,10 @@
 
 import { getPublicCategoriesAction } from '@/actions/category-actions';
 import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -155,7 +155,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                   variant="ghost"
                   size="icon"
                   onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="h-8 w-8 rounded-full hover:bg-muted"
+                  className="h-8 w-8 rounded-full bm-interactive"
                   aria-label="Toggle theme"
                 >
                   <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -165,7 +165,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                   variant="ghost"
                   size="icon"
                   onClick={onClose}
-                  className="h-9 w-9 rounded-xl hover:bg-muted"
+                  className="h-9 w-9 rounded-xl bm-interactive"
                   aria-label="Close menu"
                 >
                   <X className="h-5 w-5" />
@@ -181,7 +181,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                   placeholder="Search categories..."
                   value={categorySearch}
                   onChange={(e) => setCategorySearch(e.target.value)}
-                  className="h-10 pl-10 pr-8 rounded-xl text-sm bg-muted/50 border-border/50 focus-visible:bg-background transition-all"
+                  className="h-10 pl-10 pr-8 rounded-xl text-sm bg-muted/50 focus-visible:bg-background transition-all bm-interactive"
                   autoFocus={false}
                 />
                 {categorySearch && (
@@ -226,7 +226,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                         <AccordionItem key={cat.id} value={cat.id} className="border-none mb-0.5">
                           {hasSubs ? (
                             <>
-                              <AccordionTrigger className="py-2.5 px-3 rounded-xl hover:bg-muted/50 text-[13px] font-bold hover:no-underline text-foreground transition-all group data-[state=open]:bg-muted/30">
+                              <AccordionTrigger className="py-2.5 px-3 rounded-xl hover:no-underline text-[13px] font-bold text-foreground transition-all group data-[state=open]:bg-muted/30 bm-interactive">
                                 <div className="flex items-center gap-2.5">
                                   <div className={cn(
                                     'w-1.5 h-1.5 rounded-full transition-colors',
@@ -245,16 +245,16 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                                         key={sub.id}
                                         href={`/listings?category=${encodeURIComponent(cat.name)}&subCategory=${encodeURIComponent(sub.name)}`}
                                         onClick={onClose}
-                                        className="py-2.5 px-3 rounded-xl text-[13px] text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all font-bold flex items-center justify-between group"
+                                        className="py-2.5 px-3 rounded-xl text-[13px] text-muted-foreground hover:text-foreground transition-all font-bold flex items-center justify-between group bm-interactive"
                                       >
                                         <span>{sub.name}</span>
-                                        <ChevronRight className="w-4 h-4 opacity-0 -translate-x-1 group-hover:opacity-50 group-hover:translate-x-0 transition-all" />
+                                        <ChevronRight className="w-4 h-4 opacity-0 -translate-x-1 group-hover:opacity-50 group-hover:translate-x-0 transition-all text-primary" />
                                       </Link>
                                     ))}
                                     <Link
                                       href={`/listings?category=${encodeURIComponent(cat.name)}`}
                                       onClick={onClose}
-                                      className="py-2 px-3 rounded-xl text-xs font-black text-primary hover:bg-primary/10 transition-all mt-0.5 uppercase tracking-wider"
+                                      className="py-2 px-3 rounded-xl text-xs font-black text-primary hover:underline underline-offset-4 transition-all mt-0.5 uppercase tracking-wider"
                                     >
                                       View all {cat.name} →
                                     </Link>
@@ -265,7 +265,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                             <Link
                               href={`/listings?category=${encodeURIComponent(cat.name)}`}
                               onClick={onClose}
-                              className="flex items-center gap-2.5 py-2.5 px-3 rounded-xl text-[13px] font-bold text-foreground hover:bg-muted/50 transition-all group"
+                              className="flex items-center gap-2.5 py-2.5 px-3 rounded-xl text-[13px] font-bold text-foreground transition-all group bm-interactive"
                             >
                               <div className="w-1.5 h-1.5 rounded-full bg-primary/25 group-hover:bg-primary/50 transition-colors" />
                               <span>{cat.name}</span>
@@ -290,7 +290,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
               <Link
                 href="/listings"
                 onClick={onClose}
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-card border border-border text-foreground text-sm font-bold transition-colors"
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-card text-foreground text-sm font-bold transition-all bm-interactive"
               >
                 <Grid3X3 className="h-4 w-4 group-hover:text-primary transition-colors" />
                 Browse All Categories

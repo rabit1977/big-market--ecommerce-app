@@ -133,14 +133,12 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
         href={item.href}
         onClick={closePanel}
         className={cn(
-          'flex items-center gap-2.5 py-2 px-2.5 rounded-(--bm-button-border-radius) text-[13px] font-medium transition-all group',
+          'flex items-center gap-2.5 py-2 px-2.5 rounded-(--bm-button-border-radius) text-[13px] font-medium transition-all group bm-interactive',
           isActive
-            ? 'bg-secondary text-foreground font-bold'
+            ? 'bg-secondary/50 text-foreground font-bold'
             : item.danger
               ? 'text-muted-foreground hover:text-destructive hover:bg-destructive/5'
-              : item.highlight
-                ? 'text-primary bg-primary/5 hover:bg-primary/10 font-semibold'
-                : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+              : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
         )}
       >
         <item.icon className={cn(
@@ -172,8 +170,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
 
   if (!user) {
     return (
-      <Button asChild variant="ghost" size="sm" className="h-9 px-3 rounded-full font-bold border-1 border-card-foreground/50 hover:border-card-foreground
-                     border-1 dark:border-card-foreground/20 dark:hover:border-card-foreground/50 ml-1">
+      <Button asChild variant="ghost" size="sm" className="h-9 px-3 rounded-full font-bold ml-1 bm-interactive">
         <Link href="/auth">
           <User  className="h-4 w-4 mr-1.5" />
           {tNav('login')}
@@ -237,7 +234,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
               <TooltipTrigger asChild>
                 <Button
                   asChild variant="ghost" size="icon"
-                  className="relative hidden md:flex h-9 w-9 rounded-(--bm-button-border-radius) text-muted-foreground hover:text-foreground hover:bg-secondary border border-transparent hover:border-border transition-all duration-150"
+                  className="relative hidden md:flex h-9 w-9 rounded-(--bm-button-border-radius) text-muted-foreground hover:text-foreground bm-interactive transition-all duration-150"
                 >
                   <Link href="/admin/dashboard" aria-label="Admin Dashboard">
                     <LayoutDashboard className="h-4.5 w-4.5" />
@@ -255,7 +252,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
             <TooltipTrigger asChild>
               <Button
                 asChild variant="ghost" size="icon"
-                className="relative hidden lg:flex h-9 w-9 rounded-(--bm-button-border-radius) text-muted-foreground hover:text-foreground hover:bg-secondary border border-transparent hover:border-border transition-all duration-150"
+                className="relative hidden lg:flex h-9 w-9 rounded-(--bm-button-border-radius) text-muted-foreground hover:text-foreground bm-interactive transition-all duration-150"
               >
                 <Link href="/favorites" aria-label={`Favorites${initialWishlistCount > 0 ? ` (${initialWishlistCount})` : ''}`}>
                   <Heart className="h-4.5 w-4.5" />
@@ -288,7 +285,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
             <TooltipTrigger asChild>
               <Button
                 asChild variant="ghost" size="icon"
-                className="relative h-9 w-9 hidden sm:flex rounded-(--bm-button-border-radius) text-muted-foreground hover:text-foreground hover:bg-secondary border border-border/60 hover:border-border transition-all duration-150"
+                className="relative h-9 w-9 hidden sm:flex rounded-(--bm-button-border-radius) text-muted-foreground hover:text-foreground bm-interactive transition-all duration-150"
               >
                 <Link href="/help" aria-label="Help Center">
                   <HelpCircle className="h-4.5 w-4.5" />
@@ -376,7 +373,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                     <Link
                       href="/sell"
                       onClick={closePanel}
-                      className="flex items-center justify-center gap-1.5 py-1.5 rounded-(--bm-button-border-radius) bg-primary text-white text-[11px] font-medium hover:bg-primary/90 transition-all"
+                      className="flex items-center justify-center gap-1.5 py-1.5 rounded-(--bm-button-border-radius) bg-background bm-interactive text-foreground text-[11px] font-medium transition-all"
                     >
                       <Pencil className="w-3 h-3" />
                       {t('post_ad')}
@@ -384,7 +381,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                     <Link
                       href="/premium"
                       onClick={closePanel}
-                      className="flex items-center justify-center gap-1.5 py-1.5 rounded-(--bm-button-border-radius) bg-secondary text-foreground text-[11px] font-medium hover:bg-border transition-all border border-border"
+                      className="flex items-center justify-center gap-1.5 py-1.5 rounded-(--bm-button-border-radius) bg-background bm-interactive text-foreground text-[11px] font-medium transition-all"
                     >
                       <Star className="w-3 h-3 text-primary" />
                       {t('premium')}

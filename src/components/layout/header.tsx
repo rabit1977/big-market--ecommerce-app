@@ -111,10 +111,10 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
           <div className="flex items-center gap-1.5 lg:gap-2 shrink-0">
             <Button
               asChild
-              className="bg-primary hover:bg-primary/90 text-white font-medium rounded-(--bm-button-border-radius) px-6 h-9 transition-all active:scale-[0.98]"
+              className="bg-background text-foreground font-medium rounded-(--bm-button-border-radius) px-6 h-9 transition-all active:scale-[0.98] bm-interactive"
             >
               <Link href="/sell">
-                <Plus className="h-4 w-4 stroke-[3]" />
+                <Plus className="h-4 w-4 stroke-[3] text-primary" />
                 {t('post_ad')}
               </Link>
             </Button>
