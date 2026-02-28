@@ -69,7 +69,7 @@ export function ListingDetailGallery({ listing }: ListingDetailGalleryProps) {
     <div className="flex flex-col gap-6 select-none">
       {/* Main Image */}
       <div
-        className="group relative aspect-[4/3] sm:aspect-square w-full overflow-hidden rounded-3xl border border-border bg-white shadow-sm cursor-zoom-in"
+        className="group relative aspect-[4/3] sm:aspect-square w-full overflow-hidden rounded-lg border border-border bg-card shadow-none cursor-zoom-in"
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setIsZoomed(true)}
         onMouseLeave={() => setIsZoomed(false)}
@@ -147,9 +147,9 @@ export function ListingDetailGallery({ listing }: ListingDetailGalleryProps) {
               aria-label={`View image ${idx + 1}`}
               onClick={() => setActiveImageIndex(idx)}
               className={cn(
-                'relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border transition-all hover:opacity-100',
+                'relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border transition-all hover:opacity-100',
                 activeImageIndex === idx
-                  ? 'border-primary ring-2 ring-primary/20 opacity-100'
+                  ? 'border-border bg-secondary ring-2 ring-primary/20 opacity-100'
                   : 'border-transparent opacity-60 hover:border-border'
               )}
             >

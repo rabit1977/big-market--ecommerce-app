@@ -66,10 +66,7 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
     return (
       <motion.div
         layout
-        initial={{ opacity: 0, scale: 0.98 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        className="group relative flex flex-col h-full rounded-2xl bg-card border border-border/50 shadow-sm transition-all duration-300 overflow-hidden"
+        className="group relative flex flex-col h-full rounded-lg bg-card border border-border shadow-none transition-all duration-200 hover:bg-secondary/30 overflow-hidden"
       >
         <div className="relative aspect-[4/3] bg-white overflow-hidden">
           <Image

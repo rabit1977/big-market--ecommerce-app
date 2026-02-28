@@ -78,11 +78,11 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                          <div key={listing._id} className="group ">
                               <Link href={`/listings/${listing._id}`}>
                                  <Card className={cn(
-                                     "p-0 overflow-hidden border-border hover:border-primary/50 transition-all duration-150 rounded-md bg-card",
-                                     promoConfig && `ring-1 ring-inset ring-primary/30 ${bgColor.replace('bg-', 'bg-')}`
+                                     "p-0 overflow-hidden border-border transition-all duration-200 rounded-lg bg-card hover:bg-secondary/30 shadow-none",
+                                     promoConfig && `ring-1 ring-inset ring-primary/10 ${bgColor.replace('bg-', 'bg-')}`
                                  )}>
                                      {/* Image Area - Added flex-none, block, m-0, p-0 to kill all gaps */}
-                                     <div className="relative aspect-[4/3] w-full flex-none block m-0 p-0 overflow-hidden bg-muted rounded-t-md">
+                                     <div className="relative aspect-[4/3] w-full flex-none block m-0 p-0 overflow-hidden bg-muted rounded-t-lg">
                                          <Image 
                                             src={imageUrl} 
                                             alt={listing.title} 
@@ -110,8 +110,8 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
 
                                           {/* Price Tag Overlay - Bottom Right */}
                                           <div className="absolute bottom-2 right-2 z-10">
-                                              <div className="bg-background/90 backdrop-blur text-foreground px-2 py-1 rounded-md border border-border/50">
-                                                  <span className="text-xs font-black">
+                                              <div className="bg-background/90 backdrop-blur text-foreground px-2 py-1 rounded-lg border border-border/50 shadow-none">
+                                                  <span className="text-xs font-bold">
                                                       {formatCurrency(listing.price, listing.currency)}
                                                   </span>
                                               </div>
@@ -143,7 +143,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
              
              <Link 
                 href="/listings?featured=true" 
-                className="flex items-center justify-center w-full py-3 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-xl border border-dashed border-border hover:border-primary/20 transition-all"
+                className="flex items-center justify-center w-full py-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg border border-dashed border-border transition-all shadow-none"
              >
                 {tHome('see_all_premium')}
              </Link>
@@ -197,10 +197,10 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                      key={listing._id} 
                      className="pl-3 sm:pl-5 basis-[46%] xs:basis-[42%] sm:basis-[30%] md:basis-[22%] lg:basis-[18%]"
                    >
-                     <Link href={`/listings/${listing._id}`} className="group block h-full border border-border rounded-lg bg-card p-1 transition-all duration-150 hover:border-primary/50">
+                     <Link href={`/listings/${listing._id}`} className="group block h-full border border-border rounded-lg bg-card p-1 transition-all duration-200 hover:bg-secondary/30 shadow-none">
                          <div className="relative flex flex-col h-full">
                              {/* eBay Style Image Card */}
-                             <div className="relative aspect-square w-full rounded-md overflow-hidden bg-muted transition-all duration-150 pointer-events-none">
+                             <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-muted transition-all duration-200 pointer-events-none">
                                 <Image
                                     src={imageUrl}
                                     alt={listing.title}
