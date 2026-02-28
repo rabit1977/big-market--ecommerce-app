@@ -179,7 +179,7 @@ export function ListingGrid({
             </Button>
           )}
 
-          <div className="bg-card flex items-center bm-interactive rounded-md p-1 h-9 bg-background shrink-0" role="group" aria-label="View mode">
+          <div className="bg-muted/10 flex items-center bm-interactive rounded-lg p-1 h-9 shrink-0" role="group" aria-label="View mode">
             {viewModes.map(({ mode, icon, label }) => (
               <ViewToggle
                 key={mode}
@@ -244,16 +244,16 @@ const ViewToggle = memo(function ViewToggle({
 
 function EmptyState({ onClear, tListings }: { onClear?: () => void, tListings: any }) {
   return (
-    <div className="text-center py-20 border-2 border-dashed rounded-xl bg-muted/5">
-      <div className="bg-background border rounded-full h-16 w-16 flex items-center justify-center mx-auto mb-4 shadow-sm">
-        <SlidersHorizontal className="h-8 w-8 text-muted-foreground" />
+    <div className="text-center py-20 border-1 border-dashed border-card-foreground/20 rounded-2xl bg-card/40 backdrop-blur-sm">
+      <div className="bg-background border-1 border-card-foreground/10 rounded-full h-16 w-16 flex items-center justify-center mx-auto mb-4 shadow-sm">
+        <SlidersHorizontal className="h-8 w-8 text-primary/60" />
       </div>
-      <h3 className="text-lg font-semibold mb-1">{tListings('no_listings_found')}</h3>
-      <p className="text-muted-foreground text-sm max-w-sm mx-auto mb-6">
+      <h3 className="text-xl font-bold mb-2">{tListings('no_listings_found')}</h3>
+      <p className="text-muted-foreground text-sm max-w-sm mx-auto mb-6 font-medium">
         {tListings('no_results_desc')}
       </p>
       {onClear && (
-        <Button variant="outline" onClick={onClear}>
+        <Button variant="outline" className="bm-interactive rounded-lg px-6 h-10 font-bold" onClick={onClear}>
           {tListings('clear_all_filters')}
         </Button>
       )}
