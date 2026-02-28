@@ -1,7 +1,6 @@
 'use client';
 
 import { approveListingAction, rejectListingAction } from '@/actions/listing-actions';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     Table,
@@ -61,32 +60,35 @@ export function PendingListingsTable({ listings }: PendingListingsTableProps) {
 
   if (!listings || listings.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center bg-muted/30 rounded-xl border border-dashed">
-        <p className="text-muted-foreground font-medium">No pending listings found</p>
-        <p className="text-sm text-muted-foreground/70">New listings will appear here for approval</p>
+      <div className="flex flex-col items-center justify-center py-12 text-center bg-secondary/20 rounded-lg border border-border border-dashed">
+        <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center mb-4 border border-border">
+          <CheckCircle className="w-6 h-6 text-muted-foreground" />
+        </div>
+        <p className="text-foreground font-bold text-sm">No Pending Listings</p>
+        <p className="text-xs text-muted-foreground font-medium uppercase tracking-tight mt-1">New listings will appear here for your review</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border bg-card overflow-hidden">
+    <div className="rounded-lg border border-border bg-card overflow-hidden shadow-none">
         <div className="overflow-x-auto">
       <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[80px]">Image</TableHead>
-            <TableHead className="min-w-[200px]">Title</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Price</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+        <TableHeader className="bg-muted/30">
+          <TableRow className="border-border hover:bg-transparent">
+            <TableHead className="w-[80px] text-[10px] font-bold uppercase tracking-widest">Image</TableHead>
+            <TableHead className="min-w-[200px] text-[10px] font-bold uppercase tracking-widest">Title</TableHead>
+            <TableHead className="text-[10px] font-bold uppercase tracking-widest">Category</TableHead>
+            <TableHead className="text-[10px] font-bold uppercase tracking-widest">Price</TableHead>
+            <TableHead className="text-[10px] font-bold uppercase tracking-widest">Date</TableHead>
+            <TableHead className="text-right text-[10px] font-bold uppercase tracking-widest">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {listings.map((listing) => (
-            <TableRow key={listing._id} className="group">
+            <TableRow key={listing._id} className="group border-border hover:bg-secondary/30 transition-colors">
               <TableCell>
-                <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-muted border border-border">
+                <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-secondary border border-border">
                     {listing.thumbnail || (listing.images && listing.images[0]) ? (
                          <Image 
                             src={listing.thumbnail || listing.images[0]} 
@@ -95,41 +97,43 @@ export function PendingListingsTable({ listings }: PendingListingsTableProps) {
                             className="object-cover" 
                         />
                     ) : (
-                        <div className="flex bg-muted h-full w-full items-center justify-center text-[10px] text-muted-foreground">No Img</div>
+                        <div className="flex bg-muted h-full w-full items-center justify-center text-[10px] text-muted-foreground font-bold">MISSING</div>
                     )}
                 </div>
               </TableCell>
-              <TableCell className="font-medium">
+              <TableCell>
                 <div className="flex flex-col">
-                    <Link href={`/listings/${listing._id}`} className="hover:text-primary transition-colors line-clamp-1">
+                    <Link href={`/listings/${listing._id}`} className="text-foreground font-bold hover:text-primary transition-colors line-clamp-1">
                         {listing.title}
                     </Link>
-                    <span className="text-xs text-muted-foreground line-clamp-1">{listing.description}</span>
+                    <span className="text-[10px] text-muted-foreground font-medium line-clamp-1">{listing.description}</span>
                 </div>
               </TableCell>
               <TableCell>
-                <Badge variant="secondary" className="font-normal text-xs">{listing.category}</Badge>
+                <div className="inline-flex items-center px-1.5 py-0.5 rounded-lg text-[10px] font-bold bg-secondary text-foreground border border-border uppercase tracking-tight">
+                  {listing.category}
+                </div>
               </TableCell>
-              <TableCell className="font-medium">{formatCurrency(listing.price)}</TableCell>
-              <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+              <TableCell className="font-bold text-sm">{formatCurrency(listing.price)}</TableCell>
+              <TableCell className="text-[10px] text-muted-foreground font-bold uppercase tracking-tight whitespace-nowrap">
                 {new Date(listing._creationTime).toLocaleDateString()}
               </TableCell>
               <TableCell className="text-right">
-                <div className="flex justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                <div className="flex justify-end gap-1.5 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all">
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="h-8 w-8"
+                    className="h-8 w-8 rounded-lg hover:bg-secondary"
                     asChild
                   >
                     <Link href={`/listings/${listing._id}`}>
-                        <Eye className="h-4 w-4" />
+                        <Eye className="h-4 w-4 text-muted-foreground" />
                     </Link>
                   </Button>
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                    className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-500/10 rounded-lg"
                     asChild
                   >
                     <Link href={`/admin/listings/${listing._id}/edit`}>
@@ -138,19 +142,19 @@ export function PendingListingsTable({ listings }: PendingListingsTableProps) {
                   </Button>
                   <Button
                     size="icon"
-                    className="h-8 w-8 bg-emerald-600 hover:bg-emerald-700 text-white"
-                    disabled={isPending}
                     onClick={() => handleApprove(listing._id)}
-                    title="Approve immediately"
+                    disabled={isPending}
+                    className="h-8 w-8 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow-none"
+                    title="Approve"
                   >
                     <CheckCircle className="h-4 w-4" />
                   </Button>
                   <Button
                     size="icon"
                     variant="destructive"
-                    className="h-8 w-8"
-                    disabled={isPending}
                     onClick={() => handleReject(listing._id)}
+                    disabled={isPending}
+                    className="h-8 w-8 rounded-lg shadow-none"
                     title="Reject"
                   >
                     <XCircle className="h-4 w-4" />

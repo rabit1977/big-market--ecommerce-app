@@ -1,7 +1,6 @@
 'use client';
 
 import { UserAvatar } from '@/components/shared/user-avatar';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { api } from '@/convex/_generated/api';
@@ -250,31 +249,31 @@ export function AdminSupportChatClient() {
         onExport={handleExport}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-0 lg:gap-4 h-[600px] border rounded-xl overflow-hidden bg-card shadow-sm">
+      <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-0 h-[600px] border border-border rounded-lg overflow-hidden bg-card shadow-none">
 
         {/* ── Sidebar ───────────────────────────────────────────────────────── */}
         <div className={cn(
-          'flex flex-col border-r border-border bg-muted/10',
+          'flex flex-col border-r border-border bg-secondary/10',
           selectedConversation ? 'hidden lg:flex' : 'flex',
         )}>
           <div className="flex-1 overflow-y-auto overscroll-contain min-h-0 scrollbar-hide">
             {status === "LoadingFirstPage" ? (
               <div className="flex flex-col items-center justify-center h-40 gap-2 opacity-50">
-                 <div className="h-6 w-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                 <span className="text-xs font-bold uppercase tracking-widest">Loading...</span>
+                 <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                 <span className="text-[10px] font-bold uppercase tracking-widest">Loading...</span>
               </div>
             ) : conversations.length === 0 ? (
-              <div className="p-8 text-center space-y-4 opacity-60">
-                <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mx-auto">
+              <div className="p-8 text-center space-y-4">
+                <div className="h-12 w-12 rounded-lg bg-secondary flex items-center justify-center mx-auto border border-border">
                     <Search className="h-5 w-5 text-muted-foreground" />
                 </div>
                 <div>
                     <p className="text-sm font-bold">No results found</p>
-                    <p className="text-xs text-muted-foreground mt-1">Try adjusting your filters or search term.</p>
+                    <p className="text-xs text-muted-foreground mt-1 font-medium">Try adjusting your filters or search term.</p>
                 </div>
               </div>
             ) : (
-              <div className="divide-y divide-border/50">
+              <div className="divide-y divide-border">
                 {conversations.map((conv) => (
                   <ConversationRow
                     key={conv._id}
@@ -284,20 +283,15 @@ export function AdminSupportChatClient() {
                   />
                 ))}
                 {status === "CanLoadMore" && (
-                  <div className="p-4 bg-muted/5 mt-1 border-t border-border/10">
+                  <div className="p-4 bg-muted/5">
                      <Button 
                         variant="outline" 
                         size="sm" 
-                        className="w-full text-[10px] font-bold uppercase tracking-widest h-8 rounded-lg hover:bg-primary hover:text-white transition-all shadow-sm" 
+                        className="w-full text-[10px] font-bold uppercase tracking-widest h-8 rounded-lg border-border" 
                         onClick={() => loadMore(15)}
                     >
-                        Load More Conversations
+                        Load More
                      </Button>
-                  </div>
-                )}
-                {status === "LoadingMore" && (
-                  <div className="p-4 text-center">
-                     <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
                   </div>
                 )}
               </div>
@@ -313,25 +307,24 @@ export function AdminSupportChatClient() {
         {selectedConversation ? (
           <>
             {/* Header */}
-            <div className="p-3 border-b flex items-center gap-3 shadow-sm z-10">
+            <div className="px-4 py-3 border-b border-border flex items-center gap-3 bg-muted/30 z-10">
               <Button
                 variant="ghost"
                 size="icon"
-                className="lg:hidden"
+                className="lg:hidden h-8 w-8 rounded-lg"
                 onClick={() => setSelectedConversation(null)}
-                aria-label="Back to conversations"
               >
                 <ArrowLeft className="w-4 h-4" />
               </Button>
-              <UserAvatar user={selectedConversation.otherUser} className="w-8 h-8 md:w-10 md:h-10 border" />
-              <div>
-                <h3 className="font-bold text-sm md:text-base">{selectedConversation.otherUser?.name}</h3>
-                <p className="text-xs text-muted-foreground">{selectedConversation.otherUser?.email}</p>
+              <UserAvatar user={selectedConversation.otherUser} className="w-8 h-8 md:w-10 md:h-10 border border-border rounded-lg" />
+              <div className="min-w-0">
+                <h3 className="font-bold text-sm truncate">{selectedConversation.otherUser?.name}</h3>
+                <p className="text-[10px] text-muted-foreground font-medium truncate">{selectedConversation.otherUser?.email}</p>
               </div>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 bg-slate-50 dark:bg-slate-900/50 min-h-0">
+            <div className="flex-1 overflow-y-auto p-4 bg-secondary/5 min-h-0">
               <div className="space-y-4">
                 {messages.map((msg) => (
                   <MessageBubble
@@ -346,8 +339,8 @@ export function AdminSupportChatClient() {
 
             {/* Upload progress */}
             {uploadProgress !== null && (
-              <div className="px-3 pb-1">
-                <div className="h-1 w-full bg-muted rounded-full overflow-hidden">
+              <div className="px-4 py-1">
+                <div className="h-1 w-full bg-secondary rounded-full overflow-hidden">
                   <div
                     className="h-full bg-primary transition-all duration-200"
                     style={{ width: `${uploadProgress}%` }}
@@ -357,7 +350,7 @@ export function AdminSupportChatClient() {
             )}
 
             {/* Input */}
-            <div className="p-3 border-t bg-muted/10">
+            <div className="p-4 border-t border-border bg-card">
               <form
                 onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }}
                 className="flex gap-2"
@@ -368,34 +361,38 @@ export function AdminSupportChatClient() {
                   onChange={handleImageUpload}
                   accept="image/*"
                   className="hidden"
-                  aria-label="Upload image"
                 />
                 <Button
                   type="button"
                   size="icon"
                   variant="ghost"
+                  className="h-10 w-10 text-muted-foreground hover:bg-secondary rounded-lg"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
-                  aria-label="Attach image"
                 >
-                  <ImageIcon className="w-5 h-5 text-muted-foreground" />
+                  <ImageIcon className="w-5 h-5" />
                 </Button>
                 <Input
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
-                  placeholder="Type a reply..."
-                  className="flex-1"
+                  placeholder="Type a message..."
+                  className="flex-1 h-10 rounded-lg bg-secondary/30 border-border font-medium"
                 />
-                <Button type="submit" size="icon" disabled={!newMessage.trim() || isUploading}>
+                <Button type="submit" size="icon" className="h-10 w-10 rounded-lg shadow-none" disabled={!newMessage.trim() || isUploading}>
                   <Send className="w-4 h-4" />
                 </Button>
               </form>
             </div>
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center h-full text-muted-foreground opacity-50">
-            <ShieldAlert className="w-16 h-16 mb-4" />
-            <p>Select a conversation to view chat</p>
+          <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-8 text-center space-y-4">
+            <div className="w-16 h-16 rounded-lg bg-secondary flex items-center justify-center border border-border">
+              <ShieldAlert className="w-8 h-8" />
+            </div>
+            <div>
+              <p className="font-bold text-foreground">Moderation Chat</p>
+              <p className="text-sm font-medium">Select a conversation from the sidebar to start moderating.</p>
+            </div>
           </div>
         )}
       </div>
@@ -419,22 +416,22 @@ const ConversationRow = memo(function ConversationRow({
     <button
       onClick={() => onSelect(conv)}
       className={cn(
-        'w-full p-3 flex items-start gap-3 hover:bg-muted/50 transition-colors text-left relative',
-        isSelected && 'bg-primary/5 border-l-2 border-l-primary',
+        'w-full p-4 flex items-start gap-3 transition-colors text-left relative group',
+        isSelected ? 'bg-secondary border-r-2 border-primary' : 'hover:bg-secondary/40',
       )}
     >
-      <UserAvatar user={conv.otherUser} className="w-10 h-10 border bg-background shrink-0" />
+      <UserAvatar user={conv.otherUser} className="w-10 h-10 border border-border bg-background shrink-0 rounded-lg" />
       <div className="flex-1 min-w-0 overflow-hidden">
-        <div className="flex justify-between items-center mb-1">
+        <div className="flex justify-between items-center mb-0.5">
           <span className="font-bold text-sm truncate">{conv.otherUser?.name ?? 'User'}</span>
-          <span className="text-[10px] text-muted-foreground whitespace-nowrap ml-2">
-            {formatDistanceToNow(new Date(conv.lastMessageAt), { addSuffix: true })}
+          <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-tight whitespace-nowrap ml-2">
+            {formatDistanceToNow(new Date(conv.lastMessageAt))} ago
           </span>
         </div>
-        <p className="text-xs text-muted-foreground truncate">{conv.lastMessage}</p>
+        <p className="text-xs text-muted-foreground truncate font-medium">{conv.lastMessage || 'No messages'}</p>
       </div>
       {(conv.unreadCount ?? 0) > 0 && (
-        <Badge className="h-2 w-2 p-0 rounded-full shrink-0 mt-1" />
+        <div className="h-2 w-2 bg-primary rounded-full shrink-0 mt-1.5" />
       )}
     </button>
   );
@@ -451,28 +448,28 @@ const MessageBubble = memo(function MessageBubble({
   return (
     <div className={cn('flex gap-2', isAdmin ? 'justify-end' : 'justify-start')}>
       {!isAdmin && (
-        <UserAvatar user={otherUser} className="w-6 h-6 self-end mb-1 shrink-0" />
+        <UserAvatar user={otherUser} className="w-6 h-6 self-end mb-1 shrink-0 rounded-md border border-border" />
       )}
       <div className={cn(
-        'max-w-[80%] rounded-2xl px-4 py-2 text-sm shadow-sm border',
+        'max-w-[85%] rounded-lg px-3 py-2 text-sm border shadow-none',
         isAdmin
-          ? 'bg-primary text-primary-foreground border-primary/20 rounded-br-none'
-          : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-bl-none',
+          ? 'bg-primary text-primary-foreground border-primary/20'
+          : 'bg-card border-border text-foreground',
       )}>
         {msg.imageUrl && (
-          <div className="relative aspect-video w-48 rounded-lg overflow-hidden mb-2">
-            <Image src={msg.imageUrl} alt="Image attachment" fill className="object-cover" />
+          <div className="relative aspect-video w-48 rounded-lg overflow-hidden mb-2 border border-border/50">
+            <Image src={msg.imageUrl} alt="Attachment" fill className="object-cover" />
           </div>
         )}
         <p className={cn(
-          "whitespace-pre-wrap break-words leading-relaxed !m-0",
-          isAdmin ? "text-white font-medium" : "text-slate-900 dark:text-slate-100"
+          "whitespace-pre-wrap break-words leading-relaxed !m-0 font-medium",
+          isAdmin ? "text-white" : "text-foreground"
         )}>{msg.content}</p>
         <p className={cn(
-          'text-[9px] mt-1 !m-0',
-          isAdmin ? 'text-right text-white/80' : 'text-left text-slate-500 dark:text-slate-400',
+          'text-[9px] mt-1 font-bold uppercase tracking-tight opacity-70',
+          isAdmin ? 'text-right' : 'text-left',
         )}>
-          {formatDistanceToNow(new Date(msg.createdAt), { addSuffix: true })}
+          {formatDistanceToNow(new Date(msg.createdAt))} ago
         </p>
       </div>
     </div>

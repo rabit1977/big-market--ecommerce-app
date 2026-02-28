@@ -24,7 +24,7 @@ const QUICK_FILTERS = [
 ];
 
 export const HeroHeader = () => {
-  const tHome = useTranslations('Home');
+  const tHome = useTranslations('');
   const tFilters = useTranslations('QuickFilters');
   const tNav = useTranslations('NavActions');
   
@@ -67,7 +67,7 @@ export const HeroHeader = () => {
                     <div className="w-5 h-5 rounded-md border border-border bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all duration-150">
                       <LayoutGrid className="w-3 h-3" />
                     </div>
-                    <span className="text-[11px] md:text-[12px] font-medium tracking-wide text-foreground uppercase whitespace-nowrap">{tHome('categories') || 'categories'}</span>
+                    <span className="text-[11px] md:text-[12px] font-medium tracking-wide text-foreground uppercase whitespace-nowrap">{tHome('categories')}</span>
                   </Link>
                 </CarouselItem>
 

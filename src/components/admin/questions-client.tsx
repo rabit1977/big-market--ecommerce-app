@@ -1,29 +1,28 @@
 'use client';
 
 import { answerQuestionAction, deleteQuestionAction, toggleQuestionVisibilityAction } from '@/actions/qa-actions';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from '@/components/ui/dialog';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import {
-  CheckCircle2,
-  Eye,
-  EyeOff,
-  MessageCircle,
-  Trash2
+    CheckCircle2,
+    Eye,
+    EyeOff,
+    MessageCircle,
+    Trash2
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -133,21 +132,21 @@ export function QuestionsClient({
   };
 
   return (
-    <div className='bg-background rounded-xl space-y-6'>
+    <div className='bg-card rounded-lg space-y-6'>
       <CommunicationFilters 
         onSearch={(val) => handleFilterChange(val, undefined)}
         onDateChange={(range) => handleFilterChange(undefined, range ? { from: range.from?.getTime(), to: range.to?.getTime() } : {})}
         onExport={handleExport}
       />
 
-      <div className="border border-border/50 rounded-xl overflow-hidden shadow-sm">
+      <div className="border border-border rounded-lg overflow-hidden shadow-none bg-card">
         {/* List Header */}
-        <div className='p-3 md:p-4 border-b border-border/50 flex items-center justify-between bg-muted/20'>
-            <h3 className="font-bold text-sm">Question Threads</h3>
-            <Badge variant="outline" className="px-3 py-1 h-8 flex items-center gap-1 bg-background text-xs">
-                <MessageCircle className="w-3 h-3" />
+        <div className='p-4 border-b border-border flex items-center justify-between bg-muted/30'>
+            <h3 className="font-bold text-[12px] uppercase tracking-widest text-muted-foreground">Question Threads</h3>
+            <div className="px-3 py-1 rounded-lg bg-secondary text-foreground text-[10px] font-bold border border-border uppercase tracking-widest flex items-center gap-1.5">
+                <MessageCircle className="w-3.5 h-3.5" />
                 {total} Questions
-            </Badge>
+            </div>
         </div>
 
       {/* List */}
