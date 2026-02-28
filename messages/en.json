@@ -91,7 +91,8 @@
     "added_to_compare": "Added to comparison",
     "removed_from_compare": "Removed from comparison",
     "compare": "Compare",
-    "remove_from_compare": "Remove from Compare"
+    "remove_from_compare": "Remove from Compare",
+    "filters": "Filters"
   },
   "QuickFilters": {
     "forSale": "For Sale",

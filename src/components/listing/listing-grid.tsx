@@ -3,11 +3,11 @@
 import { ListingCard } from '@/components/shared/listing/listing-card';
 import { Button } from '@/components/ui/button';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
 import { api } from '@/convex/_generated/api';
 import { ListingWithRelations } from '@/lib/types';
@@ -39,6 +39,7 @@ interface ListingGridProps {
   sortBy?: string;
   onSortChange?: (value: string) => void;
   onQuickFilter?: (filters: FilterState) => void;
+  onOpenFilters?: () => void;
 }
 
 const getSortOptions = (t: any) => [
@@ -66,6 +67,7 @@ export function ListingGrid({
   sortBy = 'newest',
   onSortChange,
   onQuickFilter,
+  onOpenFilters,
 }: ListingGridProps) {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
@@ -137,6 +139,17 @@ export function ListingGrid({
 
         {/* Desktop Controls */}
         <div className="flex flex-1 items-center gap-2 w-full sm:w-auto justify-between">
+          {onOpenFilters && (
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-9 w-9 shrink-0 bg-card border border-border"
+              onClick={onOpenFilters}
+              aria-label={tListings('filters')}
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+            </Button>
           <Select value={sortBy} onValueChange={handleSortChange} disabled={isPending}>
             <SelectTrigger className="h-9 w-full sm:w-[180px] text-xs bg-card">
               <div className="flex items-center gap-2">
@@ -152,6 +165,8 @@ export function ListingGrid({
               ))}
             </SelectContent>
           </Select>
+          </div>
+          )}
           {showSaveSearch && (
             <Button
               variant="outline"

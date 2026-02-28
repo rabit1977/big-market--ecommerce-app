@@ -194,7 +194,6 @@ export function ListingsClient({
           <div className="relative">
             <ListingGrid 
                listings={initialListings as any} 
-               onOpenFilters={() => setIsMobileFiltersOpen(true)}
                sortBy={initialFilters.sortBy}
                onSortChange={(val) => handleFilterChange({ ...initialFilters, sortBy: val })}
                onQuickFilter={(extraFilters) => handleFilterChange({ ...initialFilters, ...extraFilters })}
