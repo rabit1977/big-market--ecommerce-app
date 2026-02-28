@@ -133,12 +133,12 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
         href={item.href}
         onClick={closePanel}
         className={cn(
-          'flex items-center gap-2.5 py-2 px-2.5 rounded-(--bm-button-border-radius) text-[13px] font-medium transition-all group bm-interactive',
+          'flex items-center gap-2.5 py-2 px-2.5 rounded-(--bm-button-border-radius) text-[13px] font-medium transition-all group',
           isActive
             ? 'bg-secondary/50 text-foreground font-bold'
             : item.danger
               ? 'text-muted-foreground hover:text-destructive hover:bg-destructive/5'
-              : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+              : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
         )}
       >
         <item.icon className={cn(

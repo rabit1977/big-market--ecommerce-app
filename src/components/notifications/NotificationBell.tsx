@@ -1,18 +1,18 @@
 'use client';
 
 import {
-  deleteNotificationAction,
-  getNotificationsAction,
-  getUnreadCountAction,
-  markAllNotificationsAsReadAction,
-  markNotificationAsReadAction,
+    deleteNotificationAction,
+    getNotificationsAction,
+    getUnreadCountAction,
+    markAllNotificationsAsReadAction,
+    markNotificationAsReadAction,
 } from '@/actions/notification-actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { NotificationWithMeta } from '@/lib/types';
@@ -168,7 +168,7 @@ export function NotificationBell({
           variant="ghost"
           size="icon"
           className={cn(
-            'relative h-10 w-10 rounded-full hover:bg-primary/10 hover:text-primary transition-colors',
+            'relative h-10 w-10 rounded-full bm-interactive transition-all',
             className
           )}
           aria-label={`Notifications (${unreadCount} unread)`}
@@ -214,7 +214,7 @@ export function NotificationBell({
               size="sm"
               onClick={handleMarkAllAsRead}
               disabled={isPending}
-              className="h-7 text-[11px] font-bold text-primary hover:text-primary hover:bg-primary/10 px-2 rounded-lg"
+              className="h-7 text-[11px] font-bold text-muted-foreground bm-interactive px-2 rounded-lg"
             >
               {isPending
                 ? <Loader2 className="w-3 h-3 animate-spin mr-1" />

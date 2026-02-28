@@ -7,7 +7,7 @@ import { getPromotionConfig } from '@/lib/constants/promotions';
 import { useFavorites } from '@/lib/context/favorites-context';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils/formatters';
-import { Heart, MapPin, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Heart, MapPin, ShieldCheck } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -41,7 +41,7 @@ interface FeaturedListingsProps {
 }
 
 export function FeaturedListings({ listings, variant = 'horizontal', title }: FeaturedListingsProps) {
-  const tHome = useTranslations('Home');
+  const tHome = useTranslations('');
   const tCommon = useTranslations('Common');
   const { isFavorite, toggleFavorite } = useFavorites();
 
@@ -143,7 +143,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
              
              <Link 
                 href="/listings?featured=true" 
-                className="flex items-center justify-center w-full py-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg border border-dashed border-border transition-all shadow-none"
+                className="flex items-center justify-center w-full py-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground transition-all shadow-none bm-interactive rounded-lg bg-card"
              >
                 {tHome('see_all_premium')}
              </Link>
@@ -157,15 +157,16 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
       <div className="container-wide py-6 sm:py-10">
         <div className="flex flex-col gap-6 mb-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
-              {title || tHome('top_deals_boosted')}
+            <h2 className="text-xl uppercase sm:text-2xl font-bold tracking-tight text-foreground">
+              {title || tHome('top deals')}
             </h2>
 
              <Link 
                href="/listings?featured=true" 
-               className="text-sm font-semibold text-foreground/80 hover:underline underline-offset-4 transition-all"
+               className="flex items-center gap-1 bg-card text-sm font-semibold text-foreground/80 underline-offset-4 capitalize rounded-lg transition-all bm-interactive p-2"
              >
-               {tHome('explore_all')}
+               {tHome('explore all')}
+               <ArrowRight className="w-4 h-4 ml-1" />
              </Link>
           </div>
         </div>
