@@ -57,7 +57,7 @@ export function MobileBottomNav({ wishlistCount = 0 }: MobileBottomNavProps) {
     <nav
       aria-label="Mobile navigation"
       className={cn(
-        'fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border/50 pb-[env(safe-area-inset-bottom)] transition-all duration-300 md:hidden',
+        'fixed bottom-0 left-0 right-0 z-50 bg-card backdrop-blur-lg border-t border-border/50 pb-[env(safe-area-inset-bottom)] transition-all duration-300 md:hidden',
         isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
       )}
     >

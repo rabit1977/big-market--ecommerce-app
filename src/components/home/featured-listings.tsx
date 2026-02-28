@@ -57,7 +57,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
   // Vertical (Sidebar) Layout
   if (variant === 'vertical') {
      return (
-        <div className="space-y-3 sticky top-24 ">
+        <div className="space-y-3 sticky top-24">
              <div className="flex items-center justify-between px-1 mb-2">
                   <div className="flex items-center gap-2">
                     <div className="relative flex items-center justify-center">
@@ -120,16 +120,16 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
 
                                       {/* Simple Content */}
                                       <div className="p-3 bg-card">
-                                           <h3 className="text-sm font-medium line-clamp-2 leading-snug group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground mb-2">
+                                           <h3 className="text-base sm:text-lg font-semibold line-clamp-2 leading-snug group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground mb-2 truncate">
                                                {listing.title}
                                            </h3>
                                            
                                            <div className="flex items-center justify-between text-muted-foreground">
-                                               <div className="flex items-center gap-1 text-[10px] font-medium">
+                                               <div className="flex items-center gap-1 text-sm font-medium">
                                                    <MapPin className="w-3 h-3 text-primary" />
                                                    {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
                                                </div>
-                                               <div className="text-[10px] font-medium opacity-70 italic">
+                                               <div className="text-xs font-medium opacity-80 italic">
                                                    {tHome('view_deal')} &rarr;
                                                </div>
                                            </div>
@@ -195,12 +195,12 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                 return (
                    <CarouselItem 
                      key={listing._id} 
-                     className="pl-3 sm:pl-5 basis-[46%] xs:basis-[42%] sm:basis-[30%] md:basis-[22%] lg:basis-[18%]"
+                     className="pl-3 sm:pl-5 basis-[46%] xs:basis-[42%] sm:basis-[40%] md:basis-[32%] lg:basis-[22%]"
                    >
-                     <Link href={`/listings/${listing._id}`} className="group block h-full border border-border rounded-lg bg-card p-1 transition-all duration-200 hover:border-card-foreground hover:border-1">
+                     <Link href={`/listings/${listing._id}`} className="group block h-full border-1 border-card-foreground/50 rounded-2xl bg-card transition-all duration-200 hover:border-card-foreground">
                          <div className="relative flex flex-col h-full">
                              {/* eBay Style Image Card */}
-                             <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-muted transition-all duration-200 pointer-events-none">
+                             <div className="relative aspect-square w-full rounded-t-2xl overflow-hidden bg-muted transition-all duration-200 pointer-events-none">
                                 <Image
                                     src={imageUrl}
                                     alt={listing.title}
@@ -218,24 +218,16 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                         )}>
                                             <PromotionIcon 
                                                 iconName={getPromotionConfig((listing as any).promotionTier)?.icon || 'sparkles'} 
-                                                className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white fill-current" 
+                                                className="h-3 w-3 sm:h-4 sm:w-4 text-white fill-current" 
                                             />
                                         </div>
                                     )}
                                     {listing.isVerified && (
                                         <div className="bg-primary text-white rounded-full p-1 sm:p-1.5 shadow-md">
-                                            <ShieldCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                            <ShieldCheck className="h-3 w-3 sm:h-4 sm:w-4" />
                                         </div>
                                     )}
                                 </div>
-                                
-                                {/* Heart Button - eBay style */}
-                                <button 
-                                    onClick={handleToggleWishlist}
-                                    className="absolute top-2 right-2 z-20 w-8 h-8 rounded-full bg-black/70 backdrop-blur shadow-sm flex items-center justify-center dark:text-foreground text-white transition-all hover:scale-110 active:scale-95"
-                                >
-                                    <Heart className={cn("w-4 h-4 transition-colors", isWished && "fill-red-500 text-red-500")} />
-                                </button>
 
                                 {/* Discount Badge - eBay style */}
                                 {hasDiscount && (
@@ -248,26 +240,35 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                             </div>
 
                             {/* eBay Style Content Section */}
-                            <div className="pt-2.5 pb-2 flex flex-col flex-1">
-                                <h3 className="text-[13px] sm:text-[14px] font-medium leading-[1.3] line-clamp-2 text-foreground/90 group-hover:underline decoration-foreground/30 underline-offset-2 mb-1.5 transition-all">
+                            <div className=" pb-3 flex flex-col flex-1 p-2">
+                                <h3 className="text-base sm:text-lg font-semibold leading-[1.3] line-clamp-2 text-foreground/90 group-hover:underline decoration-foreground/30 underline-offset-2 mb-1.5 transition-all">
                                     {listing.title}
                                 </h3>
                                 
                                 <div className="mt-auto space-y-0.5">
-                                    <div className="flex items-baseline gap-1.5 flex-wrap">
-                                        <span className="text-sm sm:text-base font-bold text-foreground">
+                                    <div className="flex items-baseline gap-1.5 flex-wrap mb-2">
+                                        <span className="text-base sm:text-lg font-bold text-foreground">
                                             {formatCurrency(listing.price, listing.currency)}
                                         </span>
                                         {hasDiscount && (
-                                            <span className="text-[10px] sm:text-xs text-muted-foreground line-through opacity-70">
+                                            <span className="text-sm sm:text-base text-muted-foreground line-through opacity-70">
                                                 {formatCurrency(listing.previousPrice!, listing.currency)}
                                             </span>
                                         )}
                                     </div>
                                     
-                                    <div className="flex items-center gap-1 text-[10px] text-muted-foreground/80 font-medium">
+                                    <div className="flex items-center justify-between gap-1 text-sm sm:text-base text-muted-foreground font-medium">
+                                    <div className='flex items-center gap-1'>
                                         <MapPin className="w-3 h-3 text-primary" />
                                         {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
+                                    </div>
+                                          {/* Heart Button - eBay style */}
+                                <button 
+                                    onClick={handleToggleWishlist}
+                                    className="z-20 w-6 h-6 p-1 rounded-full bg-black/10 hover:bg-black/30  shadow-sm flex items-center justify-center text-foreground hover:text-white transition-all hover:scale-110 active:scale-95"
+                                >
+                                    <Heart className={cn("w-4 h-4 transition-colors", isWished && "fill-red-500 text-red-500")} />
+                                </button>
                                     </div>
 
                                     {listing.condition && (

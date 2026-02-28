@@ -53,10 +53,10 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full transition-all duration-300',
+        'sticky top-0 z-50 w-full bg-background transition-all duration-300',
         isScrolled
-          ? 'bg-background/95 backdrop-blur-md border-b border-border/50 shadow-sm'
-          : 'bg-background/90 backdrop-blur-sm border-b border-border/30'
+          ? 'bg-background backdrop-blur-md border-b border-border/50 shadow-sm'
+          : 'bg-background backdrop-blur-sm border-b border-border/30'
       )}
       role="banner"
     >

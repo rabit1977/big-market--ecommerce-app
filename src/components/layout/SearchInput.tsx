@@ -91,9 +91,9 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 
     return (
       <>
-        <div className="relative group">
+        <div className="relative group ">
           {/* Left: Menu + Search icon */}
-          <div className="absolute left-1 top-1/2 -translate-y-1/2 flex items-center z-20">
+          <div className="absolute left-1 top-1/2 -translate-y-1/2 flex items-center z-20 bg-card">
             <button
               type="button"
               onClick={toggle}
@@ -116,7 +116,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             ref={ref}
             type="search"
             placeholder={tNav('search_placeholder')}
-            className="h-9 md:h-10 rounded-lg pl-10 sm:pl-16 pr-24 sm:pr-32 bg-input border-border 
+            className="h-9 md:h-10 rounded-lg pl-10 sm:pl-16 pr-24 sm:pr-32 bg-input border-border bg-card
                        focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary
                        text-sm placeholder:text-muted-foreground/60
                        [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden
