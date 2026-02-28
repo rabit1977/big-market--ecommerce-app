@@ -78,13 +78,13 @@
   
   /* ===== YT Light Mode Palette (Modern Minimalism) ===== */
   /* User Specific: Page background -> Slate 100, Elements -> Slate 50 */
-  --background: #f1f5f9; /* Slate 100 - Page Background */
+  --background: #ffffff; /* Slate 100 - Page Background */
   --foreground: #0f0f0f; /* YouTube Spec Text Primary */
   
-  --card: #f8fafc; /* Slate 50 - Card/Surface Background */
+  --card: #f1f5f9; /* Slate 50 - Card/Surface Background */
   --card-foreground: #0f0f0f;
   
-  --popover: #ffffff; /* Slate 50 */
+  --popover: #f1f5f9; /* Slate 50 */
   --popover-foreground: #0f0f0f;
   
   --primary: #ff0000; /* YouTube Red */

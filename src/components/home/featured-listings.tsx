@@ -57,7 +57,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
   // Vertical (Sidebar) Layout
   if (variant === 'vertical') {
      return (
-        <div className="space-y-3 sticky top-24">
+        <div className="space-y-3 sticky top-24 ">
              <div className="flex items-center justify-between px-1 mb-2">
                   <div className="flex items-center gap-2">
                     <div className="relative flex items-center justify-center">
@@ -78,7 +78,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                          <div key={listing._id} className="group ">
                               <Link href={`/listings/${listing._id}`}>
                                  <Card className={cn(
-                                     "p-0 overflow-hidden border-border transition-all duration-200 rounded-lg bg-card hover:bg-secondary/30 shadow-none",
+                                     "p-0 overflow-hidden border-border transition-all duration-200 rounded-lg bg-card hover:bg-card hover:border-card-foreground hover:border-1 shadow-none",
                                      promoConfig && `ring-1 ring-inset ring-primary/10 ${bgColor.replace('bg-', 'bg-')}`
                                  )}>
                                      {/* Image Area - Added flex-none, block, m-0, p-0 to kill all gaps */}
@@ -153,7 +153,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
 
   // Horizontal (Default) Layout - Repurposed to look like eBay
   return (
-    <div className="w-full overflow-hidden">
+    <div className="w-full overflow-hidden ">
       <div className="container-wide py-6 sm:py-10">
         <div className="flex flex-col gap-6 mb-6">
           <div className="flex items-center justify-between">
@@ -197,7 +197,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                      key={listing._id} 
                      className="pl-3 sm:pl-5 basis-[46%] xs:basis-[42%] sm:basis-[30%] md:basis-[22%] lg:basis-[18%]"
                    >
-                     <Link href={`/listings/${listing._id}`} className="group block h-full border border-border rounded-lg bg-card p-1 transition-all duration-200 hover:bg-secondary/30 shadow-none">
+                     <Link href={`/listings/${listing._id}`} className="group block h-full border border-border rounded-lg bg-card p-1 transition-all duration-200 hover:border-card-foreground hover:border-1">
                          <div className="relative flex flex-col h-full">
                              {/* eBay Style Image Card */}
                              <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-muted transition-all duration-200 pointer-events-none">
