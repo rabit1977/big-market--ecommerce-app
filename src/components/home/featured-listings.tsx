@@ -143,9 +143,9 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
              
              <Link 
                 href="/listings?featured=true" 
-                className="flex items-center justify-center w-full py-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground transition-all shadow-none bm-interactive rounded-lg bg-card"
+                className="flex items-center justify-center w-full py-3 text-sm  font-bold uppercase tracking-widest text-muted-foreground transition-all shadow-none bm-interactive rounded-lg bg-card"
              >
-                {tHome('see_all_premium')}
+                {tHome('see all premium')}
              </Link>
         </div>
      );
