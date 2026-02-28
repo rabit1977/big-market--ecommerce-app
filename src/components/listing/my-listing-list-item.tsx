@@ -13,7 +13,6 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { PRICING } from '@/lib/constants/pricing';
 import { getPromotionConfig } from '@/lib/constants/promotions';
@@ -21,7 +20,7 @@ import { ListingWithRelations } from '@/lib/types/listing';
 import { cn, formatCurrency } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
-import { AlertTriangle, BarChart2, CheckCircle, Clock, Edit, ExternalLink, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
+import { AlertTriangle, BarChart2, Clock, Edit, ExternalLink, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
@@ -99,12 +98,33 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95 }}
         className={cn(
-            "group relative flex flex-row bg-card transition-all duration-300 rounded-xl overflow-hidden bm-interactive shadow-none",
-            isPromoted && promoConfig?.borderColor && `ring-1 ring-inset ring-primary/20`
+            "group relative flex flex-row bg-card/40 backdrop-blur-sm transition-all duration-300 rounded-[2rem] overflow-visible bm-interactive shadow-none mt-4",
+            // Removed red ring for promoted items
         )}
       >
+        {/* Legend-style Status Labels */}
+        <div className="absolute -top-3 left-6 md:left-10 z-20 flex gap-2">
+            {listing.status === 'ACTIVE' && (
+                <div className="bg-background px-3 py-1 rounded-full border-1 border-card-foreground/10 text-[9px] font-black uppercase tracking-[0.2em] text-foreground flex items-center shadow-sm">
+                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse" />
+                   Active
+                </div>
+            )}
+            {listing.status === 'PENDING_APPROVAL' && (
+                <div className="bg-background px-3 py-1 rounded-full border-1 border-card-foreground/10 text-[9px] font-black uppercase tracking-[0.2em] text-amber-600 flex items-center shadow-sm">
+                   <Clock className="w-3 h-3 mr-2 opacity-60" />
+                   Pending
+                </div>
+            )}
+            {isPromoted && promoConfig && (
+                <div className="bg-primary text-white px-3 py-1 rounded-full border-1 border-primary/20 text-[9px] font-black uppercase tracking-[0.2em] flex items-center shadow-lg shadow-primary/20">
+                   <PromotionIcon iconName={promoConfig.icon} className="w-3 h-3 mr-2" />
+                   {daysLeft} Days PRO
+                </div>
+            )}
+        </div>
         {/* Image Section */}
-        <div className="relative w-24 sm:w-36 md:w-48 aspect-[4/3] sm:aspect-square md:aspect-video bg-muted shrink-0 overflow-hidden">
+        <div className="relative w-24 sm:w-36 md:w-48 aspect-[4/3] sm:aspect-square md:aspect-video bg-muted shrink-0 overflow-hidden rounded-l-[2rem]">
           <Image
             src={activeImage}
             alt={listing.title}
@@ -113,33 +133,11 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           
-          {/* Status Badge Overlay */}
-          <div className="absolute top-2 left-2 z-10 flex flex-col gap-1.5 items-start">
-             {listing.status === 'ACTIVE' && (
-                 <Badge variant="outline" className="bg-background/80 backdrop-blur text-foreground border-border text-[10px] uppercase tracking-widest font-black h-6 px-2.5 rounded-lg shadow-none">
-                    <CheckCircle className="w-3.5 h-3.5 mr-1.5 text-foreground/40" /> Active
-                 </Badge>
-             )}
-
-             {listing.status === 'PENDING_APPROVAL' && (
-                 <Badge variant="outline" className="bg-background/80 backdrop-blur text-foreground border-border text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg shadow-none">
-                    <Clock className="w-3 h-3 mr-1 text-foreground/40" /> Pending Approval
-                 </Badge>
-             )}
-
-             {isPromoted && promoConfig && (
-                 <Badge variant="outline" className={cn("bg-background/80 backdrop-blur border-border text-foreground text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg flex items-center shadow-none")}>
-                    <PromotionIcon iconName={promoConfig.icon} className="w-3 h-3 mr-1 text-foreground/40" />
-                    {daysLeft} days left
-                 </Badge>
-             )}
-          </div>
-          
            {/* Favorite Button removed for owned listings */}
         </div>
 
         {/* Content Section */}
-        <div className="flex-1 flex flex-col p-2.5 sm:p-4 md:p-5 min-w-0"> {/* Reduced padding */}
+        <div className="flex-1 flex flex-col p-2.5 sm:p-4 md:p-5 min-w-0 rounded-r-[2rem]"> {/* Added rounding to match parent */}
             <div className="flex justify-between items-start gap-3 mb-1.5 sm:mb-2">
                 <Link href={`/listings/${listing.id}`} className="block min-w-0 group/link">
                    <h3 className="font-bold text-sm sm:text-base md:text-lg leading-tight group-hover/link:text-primary transition-colors line-clamp-1 mb-1 text-foreground"> {/* Smaller Title */}
@@ -158,7 +156,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
             </div>
 
             <div className="mb-3 sm:mb-4">
-                <div className="text-base sm:text-lg md:text-xl font-bold text-foreground tracking-tight">
+                <div className="text-xl sm:text-2xl md:text-3xl font-black text-foreground tracking-tighter uppercase">
                     {formatCurrency(listing.price, (listing as any).currency)}
                 </div>
                 
@@ -196,14 +194,14 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                 <AlertDialog open={isRenewDialogOpen} onOpenChange={setIsRenewDialogOpen}>
                     <Button 
                         className={cn(
-                            "flex-1 bg-primary hover:bg-primary/95 text-white font-black h-10 shadow-none text-[10px] sm:text-xs uppercase tracking-[0.15em] rounded-xl transition-all active:scale-95",
+                            "flex-1 bg-secondary/50 hover:bg-secondary text-foreground font-black h-10 shadow-none text-[10px] sm:text-xs uppercase tracking-[0.15em] rounded-xl transition-all active:scale-95 border-1 bm-interactive",
                             (listing.status === 'PENDING_APPROVAL' || isStatsLoading) && "opacity-50 cursor-not-allowed pointer-events-none"
                         )}
                         size="sm"
                         onClick={handleRenewClick}
                         disabled={isPending || isStatsLoading || listing.status === 'PENDING_APPROVAL'}
                     >
-                        <RefreshCw className={cn("w-3.5 h-3.5 mr-2 text-white/90", (isPending || isStatsLoading) && "animate-spin")} />
+                        <RefreshCw className={cn("w-3.5 h-3.5 mr-2 text-foreground/40", (isPending || isStatsLoading) && "animate-spin")} />
                         {isStatsLoading ? '...' : 'Renew'}
                     </Button>
                     <AlertDialogContent className="rounded-lg max-w-sm border-border bg-card">

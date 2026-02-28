@@ -35,13 +35,13 @@ export function MyListingsSearch() {
   };
 
   return (
-    <div className="relative w-full sm:w-[300px]">
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+    <div className="relative w-full">
+      <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 opacity-40" />
       <Input
         value={value}
         onChange={handleChange}
-        placeholder="SEARCH YOUR LISTINGS..."
-        className="pl-9 h-10 rounded-lg bg-input border-border font-bold text-[10px] sm:text-xs tracking-widest uppercase shadow-none focus-visible:ring-primary/20"
+        placeholder="Search your inventory..."
+        className="pl-14 h-14 rounded-2xl bg-muted/40 backdrop-blur-sm border-1 border-card-foreground/10 placeholder:text-[10px] placeholder:font-black placeholder:uppercase placeholder:tracking-[0.2em] bm-interactive font-black text-foreground text-xs tracking-widest uppercase shadow-none ring-0 focus-visible:ring-0"
       />
     </div>
   );

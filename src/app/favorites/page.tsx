@@ -89,7 +89,7 @@ export default function FavoritesPage({ searchParams }: PageProps) {
             <h1 className="text-base md:text-xl font-black tracking-tight text-foreground">
               Saved Items
             </h1>
-            <p className="text-[10px] md:text-xs text-muted-foreground font-medium">
+            <p className="text-xs md:text-sm text-muted-foreground font-medium">
               Your favorites, searches, and history
             </p>
           </div>
@@ -156,22 +156,22 @@ function FavoritesTabs({
 
   return (
     <Tabs defaultValue={defaultTab} className="w-full">
-      <TabsList className="w-full grid grid-cols-3 mb-4 md:mb-6 h-9 md:h-10 bg-muted p-0.5 rounded-lg md:rounded-xl">
+      <TabsList className="w-full grid grid-cols-3 mb-4 md:mb-6 h-10 md:h-12 p-0.5 rounded-lg md:rounded-xl bm-interactive bg-card">
         <TabsTrigger
           value="listings"
-          className="rounded-md text-[10px] md:text-xs font-bold data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+          className="rounded-lg md:rounded-xl text-xs md:text-sm font-bold"
         >
           Favorites ({listingFavorites?.length ?? 0})
         </TabsTrigger>
         <TabsTrigger
           value="searches"
-          className="rounded-md text-[10px] md:text-xs font-bold data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+          className="rounded-lg md:rounded-xl text-xs md:text-sm font-bold"
         >
           Searches ({optimisticSearches.length})
         </TabsTrigger>
         <TabsTrigger
           value="visited"
-          className="rounded-md text-[10px] md:text-xs font-bold data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+          className="rounded-lg md:rounded-xl text-xs md:text-sm font-bold"
         >
           History
         </TabsTrigger>
@@ -197,7 +197,7 @@ function FavoritesTabs({
                        {folder} <span className="text-muted-foreground text-sm font-normal">({groupedFavorites[folder].length})</span>
                     </h3>
                  </div>
-                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-4">
+                 <div className="grid lg:grid-cols-2 2xl:grid-cols-3 gap-2.5 md:gap-4">
                    {groupedFavorites[folder].map(
                      (listing: any) =>
                        listing && (
@@ -248,7 +248,7 @@ function FavoritesTabs({
             action={{ label: 'Browse Listings', href: '/listings' }}
           />
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-2.5 md:gap-4">
             {visitedHistory.map(
               (listing) =>
                 listing && (
