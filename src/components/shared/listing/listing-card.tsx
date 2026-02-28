@@ -46,7 +46,7 @@ export const ListingCard = memo(
     return (
       <div
         className={cn(
-          "group relative bg-card border border-border rounded-lg p-2.5 flex transition-all duration-200 hover:bg-secondary/30",
+          "group relative bg-card rounded-lg p-2.5 flex bm-interactive",
           (isGrid || isCard) ? "flex-col h-full" : "flex-row h-24 sm:h-28 md:h-40", 
           isCard && "mb-4",
         )}

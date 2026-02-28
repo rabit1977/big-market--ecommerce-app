@@ -302,7 +302,7 @@ export function FilterPanel({
 
   return (
     <div className="space-y-3">
-      <Card className="p-3 space-y-3 rounded-lg border border-border shadow-none bg-card">
+      <Card className="p-3 space-y-3 rounded-lg border-none shadow-none bg-card bm-interactive">
         {/* Header */}
         <div className="flex items-center justify-between pb-2 border-b border-border">
           <h3 className="font-bold text-sm">Filters</h3>
@@ -338,7 +338,7 @@ export function FilterPanel({
                 Category
               </Label>
               <Select value={filters.category || 'all'} onValueChange={handleMainCategoryChange}>
-                <SelectTrigger id={`${idPrefix}-category`} className="h-8 text-xs rounded-md">
+                <SelectTrigger id={`${idPrefix}-category`} className="h-8 text-xs rounded-md bm-interactive">
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent>
@@ -362,7 +362,7 @@ export function FilterPanel({
                 onValueChange={handleSubCategoryChange}
                 disabled={!filters.category || subCategories.length === 0}
               >
-                <SelectTrigger id={`${idPrefix}-subcategory`} className="h-8 text-xs rounded-md">
+                <SelectTrigger id={`${idPrefix}-subcategory`} className="h-8 text-xs rounded-md bm-interactive">
                   <SelectValue placeholder={!filters.category ? 'Select Category' : 'All'} />
                 </SelectTrigger>
                 <SelectContent>
@@ -388,7 +388,7 @@ export function FilterPanel({
                 }
                 onValueChange={handleSubSubCategoryChange}
               >
-                <SelectTrigger id={`${idPrefix}-subsubcategory`} className="h-8 text-xs rounded-md">
+                <SelectTrigger id={`${idPrefix}-subsubcategory`} className="h-8 text-xs rounded-md bm-interactive">
                   <SelectValue placeholder="All Types" />
                 </SelectTrigger>
                 <SelectContent>
@@ -413,7 +413,7 @@ export function FilterPanel({
                     {field.label}
                   </Label>
                   {field.options.length > 8 ? (
-                    <ScrollArea className="h-[120px] w-full rounded-md border border-border p-1.5 bg-background">
+                    <ScrollArea className="h-[120px] w-full rounded-md p-1.5 bg-background bm-interactive">
                       <div className="space-y-1">
                         {field.options.map((opt: string) => (
                           <div key={opt} className="flex items-center space-x-1.5">
@@ -435,7 +435,7 @@ export function FilterPanel({
                       value={dynamicFilters[field.key] || 'all'}
                       onValueChange={(val) => updateDynamicFilter(field.key, val === 'all' ? undefined : val)}
                     >
-                      <SelectTrigger id={`${idPrefix}-${field.key}`} className="h-8 text-xs rounded-md">
+                      <SelectTrigger id={`${idPrefix}-${field.key}`} className="h-8 text-xs rounded-md bm-interactive">
                         <SelectValue placeholder="All" />
                       </SelectTrigger>
                       <SelectContent>
@@ -457,7 +457,7 @@ export function FilterPanel({
           <div className="space-y-1">
             <Label htmlFor={`${idPrefix}-sort`} className="text-[10px] uppercase text-muted-foreground  font-medium">Sort By</Label>
             <Select value={filters.sortBy} onValueChange={(val) => updateFilter('sortBy', val)}>
-              <SelectTrigger id={`${idPrefix}-sort`} className="h-8 text-xs rounded-md">
+              <SelectTrigger id={`${idPrefix}-sort`} className="h-8 text-xs rounded-md bm-interactive">
                 <SelectValue placeholder="Newest" />
               </SelectTrigger>
               <SelectContent>
@@ -471,7 +471,7 @@ export function FilterPanel({
               <MapPin className="h-2.5 w-2.5" /> Location
             </Label>
             <Select value={filters.city} onValueChange={(val) => updateFilter('city', val)}>
-              <SelectTrigger id={`${idPrefix}-city`} className="h-8 text-xs rounded-md">
+              <SelectTrigger id={`${idPrefix}-city`} className="h-8 text-xs rounded-md bm-interactive">
                 <SelectValue placeholder="All Cities" />
               </SelectTrigger>
               <SelectContent>
@@ -501,7 +501,7 @@ export function FilterPanel({
                 type="number"
                 value={priceRange[0]}
                 onChange={handlePriceMinInput}
-                className="h-8 text-xs rounded-md bg-background"
+                className="h-8 text-xs rounded-md bg-background bm-interactive"
                 placeholder="Min"
               />
               <span className="text-muted-foreground text-xs font-bold">-</span>
@@ -510,7 +510,7 @@ export function FilterPanel({
                 type="number"
                 value={priceRange[1]}
                 onChange={handlePriceMaxInput}
-                className="h-8 text-xs rounded-md bg-background"
+                className="h-8 text-xs rounded-md bg-background bm-interactive"
                 placeholder="Max"
               />
             </div>
@@ -524,7 +524,7 @@ export function FilterPanel({
         <div className="space-y-1.5 pb-2 border-b border-border">
           <Label htmlFor={`${idPrefix}-date`} className="text-[10px] uppercase text-muted-foreground font-medium">Date Posted</Label>
           <Select value={filters.dateRange || 'all'} onValueChange={(val) => updateFilter('dateRange', val)}>
-            <SelectTrigger id={`${idPrefix}-date`} className="h-8 text-xs rounded-md">
+            <SelectTrigger id={`${idPrefix}-date`} className="h-8 text-xs rounded-md bm-interactive">
               <SelectValue placeholder="Anytime" />
             </SelectTrigger>
             <SelectContent>
@@ -540,7 +540,7 @@ export function FilterPanel({
         <div className="space-y-1.5">
           <Label htmlFor={`${idPrefix}-condition`} className="text-[10px] uppercase text-muted-foreground font-medium">Condition</Label>
           <Select value={filters.condition} onValueChange={(val) => updateFilter('condition', val)}>
-            <SelectTrigger id={`${idPrefix}-condition`} className="h-8 text-xs rounded-md">
+            <SelectTrigger id={`${idPrefix}-condition`} className="h-8 text-xs rounded-md bm-interactive">
               <SelectValue placeholder="Any Condition" />
             </SelectTrigger>
             <SelectContent>

@@ -63,7 +63,7 @@ export function ListingSearchInput({
           inputMode="numeric"
           pattern="[0-9]*"
           placeholder="ID"
-          className="h-9 text-xs pl-6 pr-2 bg-input border-border focus:bg-input transition-colors rounded-lg shadow-none font-bold uppercase tracking-widest"
+          className="h-9 text-xs pl-6 pr-2 bg-input focus:bg-input transition-colors rounded-lg shadow-none font-bold uppercase tracking-widest bm-interactive"
           value={value}
           onChange={handleInputChange}
           disabled={isPending}
@@ -75,7 +75,7 @@ export function ListingSearchInput({
         size="icon" 
         variant="ghost" 
         disabled={!value || isPending}
-        className="h-9 w-9 text-muted-foreground hover:text-primary shrink-0"
+        className="h-9 w-9 text-muted-foreground hover:text-primary shrink-0 bm-interactive"
       >
         {isPending ? (
           <Loader2 className="h-4 w-4 animate-spin" />

@@ -139,39 +139,39 @@ export function ListingGrid({
 
         {/* Desktop Controls */}
         <div className="flex flex-1 items-center gap-2 w-full sm:w-auto justify-between">
-          {onOpenFilters && (
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-9 w-9 shrink-0 bg-card border border-border"
-              onClick={onOpenFilters}
-              aria-label={tListings('filters')}
-            >
-              <SlidersHorizontal className="h-4 w-4" />
-            </Button>
-          <Select value={sortBy} onValueChange={handleSortChange} disabled={isPending}>
-            <SelectTrigger className="h-9 w-full sm:w-[180px] text-xs bg-card">
-              <div className="flex items-center gap-2">
-                <ArrowUpDown className="h-3.5 w-3.5  text-foreground" />
-                <SelectValue placeholder={tListings('sort_option')} />
-              </div>
-            </SelectTrigger>
-            <SelectContent className='bg-card'>
-              {sortOptions.map((o) => (
-                <SelectItem key={o.value} value={o.value} className="text-xs">
-                  {o.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            {onOpenFilters && (
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 shrink-0 bg-card bm-interactive"
+                onClick={onOpenFilters}
+                aria-label={tListings('filters')}
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+              </Button>
+            )}
+            <Select value={sortBy} onValueChange={handleSortChange} disabled={isPending}>
+              <SelectTrigger className="h-9 w-full sm:w-[180px] text-xs bg-card bm-interactive">
+                <div className="flex items-center gap-2">
+                  <ArrowUpDown className="h-3.5 w-3.5 text-foreground" />
+                  <SelectValue placeholder={tListings('sort_option')} />
+                </div>
+              </SelectTrigger>
+              <SelectContent className="bg-card">
+                {sortOptions.map((o) => (
+                  <SelectItem key={o.value} value={o.value} className="text-xs">
+                    {o.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          )}
           {showSaveSearch && (
             <Button
               variant="outline"
               size="icon"
-              className="h-9 w-9 shrink-0"
+              className="h-9 w-9 shrink-0 bm-interactive"
               aria-label={tListings('save_this_search')}
               onClick={handleSaveSearch}
             >
@@ -179,7 +179,7 @@ export function ListingGrid({
             </Button>
           )}
 
-          <div className="bg-card flex items-center border rounded-md p-1 h-9 bg-background shrink-0" role="group" aria-label="View mode">
+          <div className="bg-card flex items-center bm-interactive rounded-md p-1 h-9 bg-background shrink-0" role="group" aria-label="View mode">
             {viewModes.map(({ mode, icon, label }) => (
               <ViewToggle
                 key={mode}

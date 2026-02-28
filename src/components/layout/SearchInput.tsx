@@ -97,7 +97,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             <button
               type="button"
               onClick={toggle}
-              className="p-1.5 md:p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-150"
+              className="p-1.5 md:p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary bm-interactive transition-all duration-150"
               aria-label="Open categories menu"
             >
               <Menu className="h-4 w-4" />
@@ -116,7 +116,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             ref={ref}
             type="search"
             placeholder={tNav('search_placeholder')}
-            className="h-9 md:h-10 rounded-lg pl-10 sm:pl-16 pr-24 sm:pr-32 bg-input border-border bg-card
+            className="h-9 md:h-10 rounded-lg pl-10 sm:pl-16 pr-24 sm:pr-32 bg-input bg-card bm-interactive
                        focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary
                        text-sm placeholder:text-muted-foreground/60
                        [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden
@@ -139,7 +139,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
               size="sm"
               onClick={() => setIsCityPanelOpen(true)}
               aria-label={`Filter by city. Currently: ${selectedCity === 'all' ? 'All Cities' : selectedCity}`}
-              className="h-7.5 md:h-8 px-2.5 md:px-3 rounded-(--yt-button-border-radius) text-muted-foreground hover:text-foreground hover:bg-secondary transition-all border border-border bg-background"
+              className="h-7.5 md:h-8 px-2.5 md:px-3 rounded-(--bm-button-border-radius) text-muted-foreground hover:text-foreground hover:bg-secondary transition-all bm-interactive bg-background"
             >
               <MapPin className="h-3.5 w-3.5" />
               <span className="text-xs font-medium truncate max-w-[60px] sm:max-w-[80px] hidden sm:inline">
@@ -211,7 +211,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                         placeholder={tCommon('search_cities') || 'Search cities...'}
                         value={citySearch}
                         onChange={(e) => setCitySearch(e.target.value)}
-                        className="h-9 pl-9 rounded-(--yt-button-border-radius) text-sm bg-background border-border"
+                        className="h-9 pl-9 rounded-(--bm-button-border-radius) text-sm bg-background bm-interactive"
                         autoFocus
                       />
                     </div>
@@ -243,7 +243,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                             key={city}
                             onClick={() => handleCitySelect(city)}
                             className={cn(
-                              'w-full flex items-center gap-3 py-2.5 px-3 rounded-(--yt-button-border-radius) text-sm font-medium transition-all',
+                              'w-full flex items-center gap-3 py-2.5 px-3 rounded-(--bm-button-border-radius) text-sm font-medium transition-all bm-interactive',
                               selectedCity === city
                                 ? 'bg-secondary text-foreground font-bold'
                                 : 'text-muted-foreground hover:text-foreground hover:bg-secondary'

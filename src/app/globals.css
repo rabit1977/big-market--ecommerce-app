@@ -4,7 +4,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ============================================
-   DESIGN SYSTEM: YouTube Inspired Theme
+   DESIGN SYSTEM: Biggest Market Theme (BM)
    Colors: YouTube Red Primary (#ff0000)
    ============================================ */
 
@@ -43,14 +43,14 @@
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
   
-  /* YouTube Custom Colors */
-  --color-yt-bg: var(--yt-bg);
-  --color-yt-hover: var(--yt-hover);
-  --color-yt-border: var(--yt-border);
-  --color-yt-text: var(--yt-text);
-  --color-yt-text-sec: var(--yt-text-sec);
-  --color-yt-search: var(--yt-search);
-  --color-yt-red: #ff0000;
+  /* Biggest Market Custom Colors */
+  --color-bm-bg: var(--bm-bg);
+  --color-bm-hover: var(--bm-hover);
+  --color-bm-border: var(--bm-border);
+  --color-bm-text: var(--bm-text);
+  --color-bm-text-sec: var(--bm-text-sec);
+  --color-bm-search: var(--bm-search);
+  --color-bm-red: #ff0000;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -59,16 +59,17 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-premium-card: var(--radius-2xl);
   --radius-premium-interactive: var(--radius-xl);
-  /* YouTube Specific Geometry */
-  --yt-button-padding: 10px 16px;
-  --yt-button-border-radius: 8px; /* Modern YT rounding */
-  --yt-card-padding: 16px;
-  --yt-container-gap: 24px;
-  --yt-line-height: 1.4;
-  --yt-font-weight-medium: 500;
-  --yt-font-weight-bold: 700;
-  --yt-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  --yt-border-width: 1px;
+  /* Biggest Market Specific Geometry */
+  --bm-button-padding: 10px 16px;
+  --bm-button-border-radius: 8px; /* Modern rounding */
+  --bm-card-padding: 16px;
+  --bm-container-gap: 24px;
+  --bm-line-height: 1.4;
+  --bm-font-weight-medium: 500;
+  --bm-font-weight-bold: 700;
+  --bm-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --bm-border-width: 1px;
+  --border-1: 1px;
 }
 
 
@@ -106,11 +107,11 @@
   --input: #f8fafc; /* Slate 50 */
   --ring: #065fd4;
   
-  --yt-bg: #f1f5f9;
-  --yt-hover: rgba(0, 0, 0, 0.05);
-  --yt-border: rgba(0, 0, 0, 0.08);
-  --yt-text: #0f0f0f;
-  --yt-text-sec: #606060;
+  --bm-bg: #f1f5f9;
+  --bm-hover: rgba(0, 0, 0, 0.05);
+  --bm-border: rgba(0, 0, 0, 0.08);
+  --bm-text: #0f0f0f;
+  --bm-text-sec: #606060;
 
   /* YouTube Premium Accents — Used ONLY for icons/buttons, never for page borders */
   --chart-1: #ff0000;
@@ -161,10 +162,10 @@
   --input: #1a1a1a;
   --ring: #3ea6ff;
   
-  --yt-hover: rgba(255, 255, 255, 0.1);
-  --yt-border: rgba(255, 255, 255, 0.1);
-  --yt-text: #f1f1f1;
-  --yt-text-sec: #aaaaaa;
+  --bm-hover: rgba(255, 255, 255, 0.1);
+  --bm-border: rgba(255, 255, 255, 0.1);
+  --bm-text: #f1f1f1;
+  --bm-text-sec: #aaaaaa;
   
   /* Sidebar */
   --sidebar: #0f0f0f;
@@ -188,6 +189,7 @@
 [data-palette="twitter"] { --primary: #1d9bf0; --ring: #1d9bf0; }
 [data-palette="instagram"] { --primary: #e1306c; --ring: #c13584; }
 [data-palette="youtube"]  { --primary: #ff0000; --ring: #ff0000; }
+[data-palette="biggest-market"] { --primary: #ff0000; --ring: #ff0000; }
 [data-palette="tiktok"]   { --primary: #ff0050; --ring: #00f2ea; }
 
 @layer base {
@@ -236,6 +238,11 @@
     scrollbar-width: none;
   }
   .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  /* ===== Unified Interactive Border (BM) ===== */
+  .bm-interactive {
+    @apply border-1 border-card-foreground/20 hover:border-card-foreground/50 dark:border-card-foreground/20 dark:hover:border-card-foreground/50 transition-all duration-200 hover:bg-background dark:hover:bg-background;
+  }
 
   /* ===== Premium Standard Surfaces ===== */
   .surface-card {

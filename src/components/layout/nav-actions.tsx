@@ -10,13 +10,13 @@ import { cn } from '@/lib/utils';
 import { useQuery } from 'convex/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-    BadgeCheck, BarChart, Bell,
-    ChevronRight, CreditCard, Crown,
-    Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
-    Package, Pencil, Settings, ShieldCheck,
-    Star, Store, Trash,
-    User,
-    Wallet, X
+  BadgeCheck, BarChart, Bell,
+  ChevronRight, CreditCard, Crown,
+  Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
+  Package, Pencil, Settings, ShieldCheck,
+  Star, Store, Trash,
+  User,
+  Wallet, X
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -133,7 +133,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
         href={item.href}
         onClick={closePanel}
         className={cn(
-          'flex items-center gap-2.5 py-2 px-2.5 rounded-(--yt-button-border-radius) text-[13px] font-medium transition-all group',
+          'flex items-center gap-2.5 py-2 px-2.5 rounded-(--bm-button-border-radius) text-[13px] font-medium transition-all group',
           isActive
             ? 'bg-secondary text-foreground font-bold'
             : item.danger
@@ -172,7 +172,8 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
 
   if (!user) {
     return (
-      <Button asChild variant="ghost" size="sm" className="h-9 px-3 rounded-full font-bold hover:bg-muted ml-1">
+      <Button asChild variant="ghost" size="sm" className="h-9 px-3 rounded-full font-bold border-1 border-card-foreground/50 hover:border-card-foreground
+                     border-1 dark:border-card-foreground/20 dark:hover:border-card-foreground/50 ml-1">
         <Link href="/auth">
           <User  className="h-4 w-4 mr-1.5" />
           {tNav('login')}
@@ -236,7 +237,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
               <TooltipTrigger asChild>
                 <Button
                   asChild variant="ghost" size="icon"
-                  className="relative hidden md:flex h-9 w-9 rounded-(--yt-button-border-radius) text-muted-foreground hover:text-foreground hover:bg-secondary border border-transparent hover:border-border transition-all duration-150"
+                  className="relative hidden md:flex h-9 w-9 rounded-(--bm-button-border-radius) text-muted-foreground hover:text-foreground hover:bg-secondary border border-transparent hover:border-border transition-all duration-150"
                 >
                   <Link href="/admin/dashboard" aria-label="Admin Dashboard">
                     <LayoutDashboard className="h-4.5 w-4.5" />
@@ -254,7 +255,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
             <TooltipTrigger asChild>
               <Button
                 asChild variant="ghost" size="icon"
-                className="relative hidden lg:flex h-9 w-9 rounded-(--yt-button-border-radius) text-muted-foreground hover:text-foreground hover:bg-secondary border border-transparent hover:border-border transition-all duration-150"
+                className="relative hidden lg:flex h-9 w-9 rounded-(--bm-button-border-radius) text-muted-foreground hover:text-foreground hover:bg-secondary border border-transparent hover:border-border transition-all duration-150"
               >
                 <Link href="/favorites" aria-label={`Favorites${initialWishlistCount > 0 ? ` (${initialWishlistCount})` : ''}`}>
                   <Heart className="h-4.5 w-4.5" />
@@ -287,7 +288,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
             <TooltipTrigger asChild>
               <Button
                 asChild variant="ghost" size="icon"
-                className="relative h-9 w-9 hidden sm:flex rounded-(--yt-button-border-radius) text-muted-foreground hover:text-foreground hover:bg-secondary border border-border/60 hover:border-border transition-all duration-150"
+                className="relative h-9 w-9 hidden sm:flex rounded-(--bm-button-border-radius) text-muted-foreground hover:text-foreground hover:bg-secondary border border-border/60 hover:border-border transition-all duration-150"
               >
                 <Link href="/help" aria-label="Help Center">
                   <HelpCircle className="h-4.5 w-4.5" />
@@ -375,7 +376,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                     <Link
                       href="/sell"
                       onClick={closePanel}
-                      className="flex items-center justify-center gap-1.5 py-1.5 rounded-(--yt-button-border-radius) bg-primary text-white text-[11px] font-medium hover:bg-primary/90 transition-all"
+                      className="flex items-center justify-center gap-1.5 py-1.5 rounded-(--bm-button-border-radius) bg-primary text-white text-[11px] font-medium hover:bg-primary/90 transition-all"
                     >
                       <Pencil className="w-3 h-3" />
                       {t('post_ad')}
@@ -383,7 +384,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                     <Link
                       href="/premium"
                       onClick={closePanel}
-                      className="flex items-center justify-center gap-1.5 py-1.5 rounded-(--yt-button-border-radius) bg-secondary text-foreground text-[11px] font-medium hover:bg-border transition-all border border-border"
+                      className="flex items-center justify-center gap-1.5 py-1.5 rounded-(--bm-button-border-radius) bg-secondary text-foreground text-[11px] font-medium hover:bg-border transition-all border border-border"
                     >
                       <Star className="w-3 h-3 text-primary" />
                       {t('premium')}
@@ -413,15 +414,15 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
 
                   {renderSectionLabel(t('listings_section'))}
                   <div className="px-1.5">{accountItems.map(renderMenuItem)}</div>
-                  <div className="mx-3 my-1 h-px bg-border/30" />
+                  <div className="mx-3 my-1 h-px" />
 
                   {renderSectionLabel(t('support_section'))}
                   <div className="px-1.5">{supportItems.map(renderMenuItem)}</div>
-                  <div className="mx-3 my-1 h-px bg-border/30" />
+                  <div className="mx-3 my-1 h-px" />
 
                   {renderSectionLabel(t('account_section'))}
                   <div className="px-1.5">{settingsItems.map(renderMenuItem)}</div>
-                  <div className="mx-3 my-1 h-px bg-border/30" />
+                  <div className="mx-3 my-1 h-px" />
 
                   <div className="px-1.5 pb-1">{dangerItems.map(renderMenuItem)}</div>
                 </div>

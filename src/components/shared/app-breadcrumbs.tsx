@@ -1,12 +1,12 @@
 'use client';
 
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { cn } from '@/lib/utils';
 import { Home } from 'lucide-react';
@@ -101,7 +101,7 @@ export function AppBreadcrumbs({ className, customLabel, items }: AppBreadcrumbs
   const pathSegments = pathname.split('/').filter(Boolean);
   
   return (
-    <Breadcrumb className={cn("mb-6 bg-card px-2 rounded-2xl w-fit max-w-full overflow-hidden py-2", className)}>
+    <Breadcrumb className={cn("mb-6 bg-card px-2 rounded-2xl w-fit max-w-full overflow-hidden py-2 bm-interactive", className)}>
       <BreadcrumbList className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground flex-nowrap overflow-x-auto no-scrollbar">
         <BreadcrumbItem className="shrink-0">
           <BreadcrumbLink asChild>

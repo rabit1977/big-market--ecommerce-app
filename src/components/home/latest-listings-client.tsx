@@ -60,7 +60,7 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
         {/* Desktop View All Link */}
         <Link 
           href="/listings" 
-          className="group flex items-center justify-center gap-1.5 px-3.5 py-1.5 md:py-2 rounded-lg bg-card border border-border hover:bg-secondary transition-all duration-200 shrink-0 shadow-none"
+          className="group flex items-center justify-center gap-1.5 px-3.5 py-1.5 md:py-2 rounded-lg bg-card bm-interactive transition-all duration-200 shrink-0 shadow-none"
         >
           <span className="text-xs font-bold uppercase tracking-widest">{tHome('view_all')}</span>
           <ArrowRight className="w-3.5 h-3.5 ml-1 transition-transform group-hover:translate-x-1" />
@@ -93,7 +93,7 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
       <div className="text-center mt-8 md:hidden">
         <Link 
           href="/listings" 
-          className="inline-flex items-center bg-secondary hover:bg-secondary/80 text-foreground font-bold transition-all group px-8 py-3 rounded-lg border border-border shadow-none"
+          className="inline-flex items-center bg-secondary text-foreground font-bold transition-all group px-8 py-3 rounded-lg bm-interactive shadow-none"
         >
           <span className="text-xs uppercase tracking-widest">{tHome('browse_all_listings')}</span>
           <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />

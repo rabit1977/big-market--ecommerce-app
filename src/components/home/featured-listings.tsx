@@ -78,7 +78,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                          <div key={listing._id} className="group ">
                               <Link href={`/listings/${listing._id}`}>
                                  <Card className={cn(
-                                     "p-0 overflow-hidden border-border transition-all duration-200 rounded-lg bg-card hover:bg-card hover:border-card-foreground hover:border-1 shadow-none",
+                                     "p-0 overflow-hidden bm-interactive transition-all duration-200 rounded-lg bg-card shadow-none",
                                      promoConfig && `ring-1 ring-inset ring-primary/10 ${bgColor.replace('bg-', 'bg-')}`
                                  )}>
                                      {/* Image Area - Added flex-none, block, m-0, p-0 to kill all gaps */}
@@ -197,8 +197,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                      key={listing._id} 
                      className="pl-3 sm:pl-5 basis-[46%] xs:basis-[42%] sm:basis-[40%] md:basis-[32%] lg:basis-[22%]"
                    >
-                     <Link href={`/listings/${listing._id}`} className="group block h-full border-1 border-card-foreground/50 hover:border-card-foreground
-                     border-1 dark:border-card-foreground/20 dark:hover:border-card-foreground/50 rounded-2xl bg-card transition-all duration-200 ">
+                     <Link href={`/listings/${listing._id}`} className="group block h-full bm-interactive rounded-2xl bg-card transition-all duration-200 ">
                          <div className="relative flex flex-col h-full">
                              {/* eBay Style Image Card */}
                              <div className="relative aspect-square w-full rounded-t-2xl overflow-hidden bg-muted transition-all duration-200 pointer-events-none">
