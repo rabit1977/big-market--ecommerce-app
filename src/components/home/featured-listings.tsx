@@ -48,7 +48,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
   if (!listings || !Array.isArray(listings)) return null;
 
   // Limit listings based on variant
-  const featuredListings = variant === 'vertical' ? listings.slice(0, 5) : listings.slice(0, 15);
+  const featuredListings = variant === 'vertical' ? listings.slice(0, 4) : listings.slice(0, 15);
 
   if (featuredListings.length === 0) {
     return null;
@@ -78,7 +78,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                          <div key={listing._id} className="group ">
                               <Link href={`/listings/${listing._id}`}>
                                  <Card className={cn(
-                                     "p-0 overflow-hidden bm-interactive transition-all duration-200 rounded-lg bg-card shadow-none",
+                                     "p-0 overflow-hidden  transition-all duration-200 rounded-lg bg-card shadow-none",
                                      promoConfig && `ring-1 ring-inset ring-primary/10 ${bgColor.replace('bg-', 'bg-')}`
                                  )}>
                                      {/* Image Area - Added flex-none, block, m-0, p-0 to kill all gaps */}
@@ -119,18 +119,31 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                      </div>
 
                                       {/* Simple Content */}
-                                      <div className="p-3 bg-card">
-                                           <h3 className="text-base sm:text-lg font-semibold line-clamp-2 leading-snug group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground mb-2 truncate">
+                                      <div className="p-3 bg-card flex-1">
+                                           <h3 className="text-base sm:text-lg font-bold line-clamp-2 leading-snug group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground mb-2 truncate">
                                                {listing.title}
                                            </h3>
                                            
-                                           <div className="flex items-center justify-between text-muted-foreground">
+                                           <div className="flex items-center gap-1.5 flex-wrap mb-2">
+                                                {promoConfig && (
+                                                   <div className={cn("flex items-center justify-center w-4 h-4 rounded-full opacity-70", promoConfig.badgeColor.replace('bg-', 'text-'))}>
+                                                       <PromotionIcon iconName={promoConfig.icon} className="h-2.5 w-2.5 fill-current" />
+                                                   </div>
+                                               )}
+                                               {listing.isVerified && (
+                                                   <div className="bg-primary/10 text-primary rounded-full p-0.5">
+                                                       <ShieldCheck className="h-3 w-3" />
+                                                   </div>
+                                               )}
+                                           </div>
+
+                                           <div className="flex items-center justify-between text-muted-foreground mt-auto">
                                                <div className="flex items-center gap-1 text-sm font-medium">
                                                    <MapPin className="w-3 h-3 text-primary" />
                                                    {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
                                                </div>
-                                               <div className="text-xs font-medium opacity-80 italic">
-                                                   {tHome('view_deal')} &rarr;
+                                               <div className="text-xs font-bold text-foreground opacity-90 capitalize">
+                                                   {tHome('view deal') || 'View Deal'} &rarr;
                                                </div>
                                            </div>
                                       </div>
@@ -141,12 +154,14 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                  })}
              </div>
              
-             <Link 
-                href="/listings?featured=true" 
-                className="flex items-center justify-center w-full py-3 text-sm  font-bold uppercase tracking-widest text-muted-foreground transition-all shadow-none bm-interactive rounded-lg bg-card"
-             >
-                {tHome('see all premium')}
-             </Link>
+             {listings.length > 4 && (
+                <Link 
+                    href="/listings?featured=true" 
+                    className="flex items-center justify-center w-full py-3 text-sm font-bold uppercase tracking-widest text-muted-foreground transition-all shadow-none bm-interactive rounded-lg bg-card mt-2"
+                >
+                    {tHome('view more') || tHome('see all premium')}
+                </Link>
+             )}
         </div>
      );
   }
@@ -242,10 +257,23 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
 
                             {/* eBay Style Content Section */}
                             <div className=" pb-3 flex flex-col flex-1 p-2">
-                                <h3 className="text-base sm:text-lg font-semibold leading-[1.3] line-clamp-2 text-foreground/90 group-hover:underline decoration-foreground/30 underline-offset-2 mb-1.5 transition-all">
+                                <h3 className="text-base sm:text-lg font-bold leading-[1.3] line-clamp-2 text-foreground/90 group-hover:underline decoration-foreground/30 underline-offset-2 mb-1.5 transition-all">
                                     {listing.title}
                                 </h3>
                                 
+                                <div className="flex items-center gap-1.5 flex-wrap mb-2">
+                                     {(listing as any).isPromoted && (
+                                        <div className={cn("flex items-center justify-center w-4 h-4 rounded-full opacity-70", getPromotionConfig((listing as any).promotionTier)?.badgeColor.replace('bg-', 'text-'))}>
+                                            <PromotionIcon iconName={getPromotionConfig((listing as any).promotionTier)?.icon || 'sparkles'} className="h-2.5 w-2.5 fill-current" />
+                                        </div>
+                                    )}
+                                    {listing.isVerified && (
+                                        <div className="bg-primary/10 text-primary rounded-full p-0.5">
+                                            <ShieldCheck className="h-3 w-3" />
+                                        </div>
+                                    )}
+                                </div>
+
                                 <div className="mt-auto space-y-0.5">
                                     <div className="flex items-baseline gap-1.5 flex-wrap mb-2">
                                         <span className="text-base sm:text-lg font-bold text-foreground">
@@ -259,21 +287,21 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                     </div>
                                     
                                     <div className="flex items-center justify-between gap-1 text-sm sm:text-base text-muted-foreground font-medium">
-                                    <div className='flex items-center gap-1'>
-                                        <MapPin className="w-3 h-3 text-primary" />
-                                        {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
-                                    </div>
-                                          {/* Heart Button - eBay style */}
-                                <button 
-                                    onClick={handleToggleWishlist}
-                                    className="z-20 w-6 h-6 p-1 rounded-full bg-black/10 hover:bg-black/30  shadow-sm flex items-center justify-center text-foreground hover:text-white transition-all hover:scale-110 active:scale-95"
-                                >
-                                    <Heart className={cn("w-4 h-4 transition-colors", isWished && "fill-red-500 text-red-500")} />
-                                </button>
+                                        <div className='flex items-center gap-1 font-semibold uppercase tracking-tight text-[10px]'>
+                                            <MapPin className="w-3 h-3 text-primary" />
+                                            {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
+                                        </div>
+                                        {/* Heart Button - eBay style */}
+                                        <button 
+                                            onClick={handleToggleWishlist}
+                                            className="z-20 w-7 h-7 p-1 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 shadow-sm flex items-center justify-center text-foreground hover:text-white transition-all hover:scale-110 active:scale-95"
+                                        >
+                                            <Heart className={cn("w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors", isWished && "fill-red-500 text-red-500")} />
+                                        </button>
                                     </div>
 
                                     {listing.condition && (
-                                        <div className="text-[10px] text-muted-foreground/60 font-medium capitalize">
+                                        <div className="text-[10px] text-muted-foreground/60 font-semibold uppercase tracking-tight mt-1">
                                             {listing.condition === 'NEW' ? 'Brand New' : 'Pre-owned'}
                                         </div>
                                     )}
