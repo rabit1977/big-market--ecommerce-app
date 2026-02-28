@@ -42,8 +42,8 @@ export const DashboardCard = memo(({
   return (
     <div 
       className={cn(
-        'group relative overflow-hidden border border-border rounded-lg bg-card shadow-none transition-colors hover:bg-secondary/40',
-        'p-4 sm:p-6',
+        'group relative overflow-hidden rounded-xl bg-card transition-all duration-300 bm-interactive shadow-none',
+        'p-5 sm:p-7',
         className
       )}
     >
@@ -55,8 +55,8 @@ export const DashboardCard = memo(({
             {title}
           </p>
           {Icon && (
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-secondary border border-border transition-colors group-hover:bg-background">
-              <Icon className={cn('h-4 w-4 sm:h-5 sm:w-5', colors.iconColor)} />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center bg-muted/40 border-1 border-card-foreground/10 transition-all duration-300 group-hover:bg-background group-hover:border-card-foreground/20">
+              <Icon className={cn('h-5 w-5 sm:h-6 sm:w-6', colors.iconColor)} />
             </div>
           )}
         </div>
@@ -81,10 +81,10 @@ export const DashboardCard = memo(({
             <div className='flex flex-col items-end gap-1 shrink-0'>
               <span
                 className={cn(
-                  'inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] sm:text-xs font-bold border',
+                  'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider border',
                   trend.isPositive
-                    ? 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20'
-                    : 'text-red-500 bg-red-500/10 border-red-500/20'
+                    ? 'text-emerald-600 bg-emerald-500/10 border-emerald-500/20'
+                    : 'text-red-600 bg-red-500/10 border-red-500/20'
                 )}
               >
                 {trend.isPositive ? (

@@ -173,9 +173,9 @@ export function AdminListingsHub() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
                 <div className="space-y-1">
-                    <h1 className="text-3xl sm:text-4xl font-bold tracking-tight flex items-center gap-3">
-                        {promotedOnly ? 'Promoted Listings' : 'All Listings'}
-                        <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-lg bg-secondary text-foreground text-xs font-bold border border-border">
+                    <h1 className="text-3xl sm:text-5xl font-black tracking-tighter flex items-center gap-3 uppercase">
+                        {promotedOnly ? 'Promoted' : 'Listings'}
+                        <span className="inline-flex items-center justify-center px-2 py-1 rounded-xl bg-primary/10 text-primary text-[10px] font-black border border-primary/20 uppercase tracking-widest">
                             {filtered.length}
                         </span>
                     </h1>
@@ -183,10 +183,10 @@ export function AdminListingsHub() {
                         {promotedOnly ? 'Monitor featured and boosted listings.' : 'Review, approve, reject and manage all listings.'}
                     </p>
                 </div>
-                <Button asChild className="rounded-lg font-medium shadow-none shrink-0 h-11 border border-primary">
+                <Button asChild className="rounded-xl font-black uppercase tracking-widest shadow-none shrink-0 h-12 px-6 border border-primary">
                     <Link href="/admin/listings/create">
                         <Package className="h-4 w-4 mr-2" />
-                        Add Listing
+                        Add New Ad
                     </Link>
                 </Button>
             </div>
@@ -194,22 +194,22 @@ export function AdminListingsHub() {
             {/* Stats row */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
                 {[
-                    { label: 'Total',    value: total,   color: 'border-border bg-card',   text: 'text-foreground' },
-                    { label: 'Active',   value: active,  color: 'border-border bg-card', text: 'text-emerald-600' },
-                    { label: 'Pending',  value: pending, color: 'border-border bg-card',  text: 'text-amber-600' },
-                    { label: 'Promoted', value: promo,   color: 'border-border bg-card', text: 'text-foreground' },
+                    { label: 'Total',    value: total,   color: 'bm-interactive bg-card',   text: 'text-foreground' },
+                    { label: 'Active',   value: active,  color: 'bm-interactive bg-card', text: 'text-emerald-600' },
+                    { label: 'Pending',  value: pending, color: 'bm-interactive bg-card',  text: 'text-amber-600' },
+                    { label: 'Promoted', value: promo,   color: 'bm-interactive bg-card', text: 'text-foreground' },
                 ].map(s => (
-                    <div key={s.label} className={`rounded-lg p-4 border ${s.color} hover:bg-secondary/30 transition-colors flex items-center justify-between`}>
+                    <div key={s.label} className={`rounded-xl p-5 ${s.color} transition-all duration-300 flex items-center justify-between`}>
                         <div>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{s.label}</p>
-                            <p className={`text-2xl font-black ${s.text}`}>{s.value}</p>
+                            <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground mb-1">{s.label}</p>
+                            <p className={`text-3xl font-black tracking-tight ${s.text}`}>{s.value}</p>
                         </div>
                     </div>
                 ))}
             </div>
 
             {/* Filters */}
-            <div className="bg-card rounded-lg p-4 border border-border space-y-3 shadow-none">
+            <div className="bg-card rounded-xl p-5 bm-interactive space-y-4 shadow-none">
                 {/* Row 1 */}
                 <AdminFilterToolbar
                     timeRange={timeRange}
@@ -232,7 +232,7 @@ export function AdminListingsHub() {
                         <select
                             value={statusFilter}
                             onChange={e => { setStatus(e.target.value); setPage(1); }}
-                            className="h-8 pl-3 pr-7 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:border-primary/50 font-bold appearance-none cursor-pointer text-foreground"
+                            className="h-9 pl-4 pr-8 text-[10px] bg-muted/40 border-1 border-card-foreground/10 rounded-xl focus:outline-none focus:border-card-foreground/30 font-black uppercase tracking-widest appearance-none cursor-pointer text-foreground transition-all"
                         >
                             <option value="ALL">All Statuses</option>
                             <option value="ACTIVE">Active</option>
@@ -240,7 +240,7 @@ export function AdminListingsHub() {
                             <option value="REJECTED">Rejected</option>
                             <option value="INACTIVE">Inactive</option>
                         </select>
-                        <svg className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
                     </div>
@@ -250,36 +250,36 @@ export function AdminListingsHub() {
                         <select
                             value={promotedOnly ? 'promoted' : 'all'}
                             onChange={e => { setPromoted(e.target.value === 'promoted'); setPage(1); }}
-                            className="h-8 pl-3 pr-7 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:border-primary/50 font-bold appearance-none cursor-pointer text-foreground"
+                            className="h-9 pl-4 pr-8 text-[10px] bg-muted/40 border-1 border-card-foreground/10 rounded-xl focus:outline-none focus:border-card-foreground/30 font-black uppercase tracking-widest appearance-none cursor-pointer text-foreground transition-all"
                         >
                             <option value="all">All Listings</option>
                             <option value="promoted">⭐ Promoted Only</option>
                         </select>
-                        <svg className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
                     </div>
 
-                    <span className="ml-auto text-xs text-muted-foreground shrink-0">
-                        <span className="font-bold text-foreground">{filtered.length}</span> of <span className="font-bold text-foreground">{total}</span> listings
+                    <span className="ml-auto text-[10px] font-black uppercase tracking-widest text-muted-foreground shrink-0">
+                        <span className="text-foreground">{filtered.length}</span> / <span className="text-foreground">{total}</span>
                     </span>
                 </div>
 
                 {/* Bulk action bar */}
                 {selected.length > 0 && (
-                    <div className="flex items-center gap-3 p-2.5 bg-secondary border border-border rounded-lg animate-in fade-in duration-200">
-                        <span className="text-xs font-medium text-foreground">{selected.length} selected</span>
+                    <div className="flex items-center gap-4 p-3 bg-secondary border-1 border-card-foreground/10 rounded-xl animate-in fade-in zoom-in-95 duration-300">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-foreground">{selected.length} Selected</span>
                         <Button
                             variant="destructive"
                             size="sm"
                             onClick={handleBulkDelete}
                             disabled={isPending}
-                            className="h-7 px-3 text-xs rounded-md shadow-none"
+                            className="h-8 px-4 text-[10px] font-black uppercase tracking-widest rounded-lg shadow-none"
                         >
-                            <Trash2 className="w-3 h-3 mr-1" />
-                            Delete Selected
+                            <Trash2 className="w-3.5 h-3.5 mr-1.5" />
+                            Delete
                         </Button>
-                        <button onClick={() => setSelected([])} className="text-xs text-muted-foreground hover:text-foreground ml-auto">
+                        <button onClick={() => setSelected([])} className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground ml-auto transition-colors">
                             Clear
                         </button>
                     </div>

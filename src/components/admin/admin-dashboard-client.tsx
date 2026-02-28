@@ -8,15 +8,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
 import {
-  ArrowRight,
-  ArrowUpRight,
-  BarChart3,
-  Clock,
-  CreditCard,
-  Plus,
-  ShieldCheck,
-  Tag,
-  Users
+    ArrowRight,
+    ArrowUpRight,
+    BarChart3,
+    Clock,
+    CreditCard,
+    Plus,
+    ShieldCheck,
+    Tag,
+    Users
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -57,13 +57,13 @@ export function AdminDashboardClient() {
       {/* Header with quick actions */}
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
         <div className='flex flex-col space-y-1'>
-          <h1 className='text-3xl font-bold tracking-tight text-foreground flex items-center gap-3'>
+          <h1 className='text-3xl sm:text-5xl font-black tracking-tighter text-foreground flex items-center gap-4 uppercase'>
             Dashboard
-            <span className='inline-flex items-center justify-center px-1.5 py-0.5 rounded-lg bg-secondary text-foreground text-[10px] font-bold border border-border uppercase tracking-widest'>
+            <span className='inline-flex items-center justify-center px-2 py-1 rounded-xl bg-primary/10 text-primary text-[10px] font-black border border-primary/20 uppercase tracking-widest'>
               Live
             </span>
           </h1>
-          <p className='text-sm text-muted-foreground font-medium'>
+          <p className='text-[10px] sm:text-xs text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60'>
             Welcome back! Here's what's happening on your platform.
           </p>
         </div>
@@ -73,13 +73,13 @@ export function AdminDashboardClient() {
                onTimeRangeChange={setTimeRange}
                showSearch={false}
            />
-           <Button variant="outline" size="sm" asChild className="hidden sm:flex rounded-lg">
+           <Button variant="outline" size="sm" asChild className="hidden sm:flex rounded-xl font-black uppercase tracking-widest px-6 h-10 border-1 border-card-foreground/20 bm-interactive shadow-none transition-all">
               <Link href="/admin/analytics">
                 <BarChart3 className="w-4 h-4 mr-2" />
                 View Reports
               </Link>
            </Button>
-           <Button size="sm" asChild className="rounded-lg">
+           <Button size="sm" asChild className="rounded-xl font-black uppercase tracking-widest px-6 h-10 shadow-none border border-primary transition-all active:scale-95">
               <Link href="/admin/users/create">
                 <Plus className="w-4 h-4 mr-2" />
                 Create User
@@ -121,19 +121,16 @@ export function AdminDashboardClient() {
       <div className='grid gap-6 lg:grid-cols-3'>
         
         {/* Pending Approvals */}
-        <Card className="lg:col-span-2 rounded-lg border-border shadow-none overflow-hidden bg-card transition-colors hover:bg-secondary/40">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 bg-muted/30 border-b border-border">
+        <Card className="lg:col-span-2 rounded-2xl md:rounded-2xl overflow-hidden bm-interactive shadow-none">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 py-5 px-6 bg-muted/30 border-b border-card-foreground/10">
             <div className="space-y-1">
-              <CardTitle className="text-lg font-bold flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-indigo-500" />
+              <CardTitle className="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-primary" />
                 Pending Approvals
               </CardTitle>
-              <CardDescription className="text-sm font-medium">
-                Review listings waiting for moderator approval
-              </CardDescription>
             </div>
-            <Link href="/admin/listings?status=PENDING_APPROVAL" className="text-xs text-primary font-bold hover:underline flex items-center gap-1">
-              View All <ArrowRight className="w-3 h-3" />
+            <Link href="/admin/listings?status=PENDING_APPROVAL" className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline flex items-center gap-1.5">
+              View All <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </CardHeader>
           <CardContent>
@@ -148,21 +145,21 @@ export function AdminDashboardClient() {
             ) : (
               <div className="space-y-4">
                 {pendingListings.slice(0, 5).map((listing: any) => (
-                  <div key={listing._id} className="flex items-center justify-between p-4 rounded-lg bg-muted/30 border border-border hover:bg-secondary transition-colors">
-                    <div className="flex items-center gap-4">
-                       <div className="w-12 h-12 rounded-lg bg-muted border border-border flex items-center justify-center text-foreground font-bold">
-                          {listing.title[0]}
+                  <div key={listing._id} className="flex items-center justify-between p-4 rounded-xl bg-muted/40 border-1 border-card-foreground/10 group-hover:bg-background transition-all duration-300">
+                    <div className="flex items-center gap-5">
+                       <div className="w-14 h-14 rounded-xl bg-card border-1 border-card-foreground/10 flex items-center justify-center text-foreground font-black text-xl uppercase tracking-tighter shadow-sm overflow-hidden">
+                          {listing.images?.[0] ? <img src={listing.images[0]} className="w-full h-full object-cover" /> : listing.title[0]}
                        </div>
                        <div>
-                          <p className="font-bold text-sm line-clamp-1">{listing.title}</p>
-                          <p className="text-xs text-muted-foreground">{listing.city}</p>
+                          <p className="font-black text-xs sm:text-sm uppercase tracking-tight text-foreground line-clamp-1">{listing.title}</p>
+                          <p className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-muted-foreground opacity-60 mt-1">{listing.city}</p>
                        </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                       <p className="text-sm font-bold tabular-nums">{listing.price} MKD</p>
-                       <Button size="sm" variant="ghost" className="h-8 w-8 p-0 rounded-lg" asChild>
+                    <div className="flex items-center gap-4">
+                       <p className="text-sm sm:text-lg font-black tracking-tighter uppercase whitespace-nowrap">{listing.price} MKD</p>
+                       <Button size="sm" variant="ghost" className="h-10 w-10 p-0 rounded-xl bm-interactive" asChild>
                           <Link href={`/admin/listings`}>
-                            <ArrowUpRight className="w-4 h-4" />
+                            <ArrowUpRight className="w-5 h-5" />
                           </Link>
                        </Button>
                     </div>
@@ -192,23 +189,26 @@ export function AdminDashboardClient() {
       </div>
 
       {/* Verification Summary */}
-      <Card className="rounded-lg border border-border shadow-none p-8 sm:p-10 bg-card relative overflow-hidden group">
-         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="space-y-3">
-               <Badge className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 px-3 py-1 font-bold text-[10px] uppercase tracking-widest rounded-lg">
+      <Card className="rounded-2xl md:rounded-3xl p-10 sm:p-14 relative overflow-hidden group bm-interactive shadow-none bg-primary/5 border-primary/20">
+         <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:scale-110 transition-transform">
+            <ShieldCheck className="w-40 h-40 text-primary" />
+         </div>
+         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-10">
+            <div className="space-y-5">
+               <Badge className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 px-4 py-1.5 font-black text-[10px] uppercase tracking-[0.2em] rounded-xl">
                   Action Required
                </Badge>
-               <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground">
-                  {stats?.pendingVerifications ?? 0} Pending ID Verifications
+               <h2 className="text-3xl sm:text-6xl font-black tracking-tighter text-foreground uppercase leading-tight">
+                  {stats?.pendingVerifications ?? 0} Pending ID <br className="hidden sm:block" /> Verifications
                </h2>
-               <p className="text-muted-foreground font-medium max-w-lg">
+               <p className="text-muted-foreground font-black text-xs sm:text-sm uppercase tracking-widest opacity-60 max-w-lg">
                   There are users waiting for their identity verification. Verifying users boosts platform trust and safety.
                </p>
             </div>
-            <Button size="lg" asChild className="rounded-lg px-8 font-bold h-14 border border-primary">
+            <Button size="lg" asChild className="rounded-xl px-12 font-black uppercase tracking-widest h-16 shadow-none border border-primary active:scale-95 transition-all">
                <Link href="/admin/users?tab=verifications">
                   Go to Verifications
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <ArrowRight className="ml-3 w-6 h-6 text-white" />
                </Link>
             </Button>
          </div>

@@ -106,7 +106,7 @@ export function AdminFilterToolbar({
                             value={searchValue}
                             onChange={e => onSearchChange?.(e.target.value)}
                             placeholder={searchPlaceholder}
-                            className="w-full h-9 pl-9 pr-8 text-sm bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:border-primary/50 transition-colors placeholder:text-muted-foreground"
+                            className="w-full h-10 pl-10 pr-8 text-sm bg-card border-1 border-card-foreground/20 rounded-xl focus:outline-none focus:border-card-foreground/50 transition-all placeholder:text-muted-foreground font-medium"
                         />
                         {searchValue && (
                             <button
@@ -126,7 +126,7 @@ export function AdminFilterToolbar({
                         <select
                             value={timeRange}
                             onChange={e => onTimeRangeChange(e.target.value as TimeRange)}
-                            className="h-9 pl-8 pr-7 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:border-primary/50 font-bold appearance-none cursor-pointer text-foreground min-w-[100px]"
+                            className="h-10 pl-9 pr-8 text-[10px] bg-card border-1 border-card-foreground/20 rounded-xl focus:outline-none focus:border-card-foreground/50 font-black uppercase tracking-widest appearance-none cursor-pointer text-foreground min-w-[110px] transition-all"
                         >
                             {TIME_RANGES.map(r => (
                                 <option key={r.id} value={r.id}>{r.label}</option>
@@ -145,7 +145,7 @@ export function AdminFilterToolbar({
                         <select
                             value={sortValue}
                             onChange={e => onSortChange?.(e.target.value)}
-                            className="h-9 pl-3 pr-8 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:border-primary/50 font-medium appearance-none cursor-pointer"
+                            className="h-10 pl-4 pr-9 text-[10px] bg-card border-1 border-card-foreground/20 rounded-xl focus:outline-none focus:border-card-foreground/50 font-black uppercase tracking-widest appearance-none cursor-pointer transition-all"
                         >
                             {sortOptions.map(opt => (
                                 <option key={opt.value} value={opt.value}>{opt.label}</option>

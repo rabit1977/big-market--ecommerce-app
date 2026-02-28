@@ -99,7 +99,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95 }}
         className={cn(
-            "group relative flex flex-row bg-card transition-all duration-200 rounded-lg overflow-hidden bm-interactive shadow-none",
+            "group relative flex flex-row bg-card transition-all duration-300 rounded-xl overflow-hidden bm-interactive shadow-none",
             isPromoted && promoConfig?.borderColor && `ring-1 ring-inset ring-primary/20`
         )}
       >
@@ -116,8 +116,8 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
           {/* Status Badge Overlay */}
           <div className="absolute top-2 left-2 z-10 flex flex-col gap-1.5 items-start">
              {listing.status === 'ACTIVE' && (
-                 <Badge variant="outline" className="bg-background/80 backdrop-blur text-foreground border-border text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg shadow-none">
-                    <CheckCircle className="w-3 h-3 mr-1 text-foreground/40" /> Active
+                 <Badge variant="outline" className="bg-background/80 backdrop-blur text-foreground border-border text-[10px] uppercase tracking-widest font-black h-6 px-2.5 rounded-lg shadow-none">
+                    <CheckCircle className="w-3.5 h-3.5 mr-1.5 text-foreground/40" /> Active
                  </Badge>
              )}
 
@@ -152,7 +152,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                    </div>
                 </Link>
                 
-                <Link href={`/listings/${listing.id}`} target="_blank" className="p-2 rounded-lg text-muted-foreground transition-colors hidden sm:flex bm-interactive shadow-none">
+                 <Link href={`/listings/${listing.id}`} target="_blank" className="p-2.5 rounded-xl text-muted-foreground transition-all hover:text-primary bm-interactive shadow-none">
                     <ExternalLink className="w-4 h-4" />
                 </Link>
             </div>
@@ -182,13 +182,13 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                 <Button 
                     asChild
                     className={cn(
-                        "flex-1 bg-primary hover:bg-primary/90 text-white font-bold h-9 shadow-none text-[10px] sm:text-xs uppercase tracking-widest rounded-lg transition-all",
+                        "flex-1 bg-primary hover:bg-primary/95 text-white font-black h-10 shadow-none text-[10px] sm:text-xs uppercase tracking-[0.15em] rounded-xl transition-all active:scale-95",
                         listing.status === 'PENDING_APPROVAL' && "opacity-50 cursor-not-allowed pointer-events-none"
                     )}
                     size="sm"
                 >
                     <Link href={`/my-listings/promote/${listing.id}`}>
-                        <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5 text-white/80" />
+                        <Sparkles className="w-3.5 h-3.5 mr-2 text-white/90" />
                         Promote
                     </Link>
                 </Button>
@@ -196,15 +196,15 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                 <AlertDialog open={isRenewDialogOpen} onOpenChange={setIsRenewDialogOpen}>
                     <Button 
                         className={cn(
-                            "flex-1 bg-primary hover:bg-primary/90 text-white font-bold h-9 shadow-none text-[10px] sm:text-xs uppercase tracking-widest rounded-lg transition-all",
+                            "flex-1 bg-primary hover:bg-primary/95 text-white font-black h-10 shadow-none text-[10px] sm:text-xs uppercase tracking-[0.15em] rounded-xl transition-all active:scale-95",
                             (listing.status === 'PENDING_APPROVAL' || isStatsLoading) && "opacity-50 cursor-not-allowed pointer-events-none"
                         )}
                         size="sm"
                         onClick={handleRenewClick}
                         disabled={isPending || isStatsLoading || listing.status === 'PENDING_APPROVAL'}
                     >
-                        <RefreshCw className={cn("w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5 text-white/80", (isPending || isStatsLoading) && "animate-spin")} />
-                        {isStatsLoading ? 'Checking...' : 'Renew Ad'}
+                        <RefreshCw className={cn("w-3.5 h-3.5 mr-2 text-white/90", (isPending || isStatsLoading) && "animate-spin")} />
+                        {isStatsLoading ? '...' : 'Renew'}
                     </Button>
                     <AlertDialogContent className="rounded-lg max-w-sm border-border bg-card">
                         <AlertDialogHeader>
@@ -253,61 +253,59 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
             </div>
 
             {/* Icon Actions Row */}
-            <div className="flex items-center justify-between border-t border-border/50 pt-2 sm:pt-3 mt-1 sm:px-2"> {/* Reduced padding top */}
-                <div className="flex gap-4 sm:gap-8 w-full justify-between sm:justify-start">
+            <div className="flex items-center justify-between border-t border-card-foreground/10 pt-4 mt-3 sm:px-1"> 
+                <div className="flex gap-3 sm:gap-6 w-full justify-between sm:justify-start">
                     
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <button 
                                 disabled={listing.status === 'PENDING_APPROVAL'}
                                  className={cn(
-                                     "flex items-center gap-1.5 group/btn transition-colors text-foreground px-2 py-1 rounded-md bm-interactive",
+                                     "flex items-center gap-2 group/btn transition-all text-foreground px-3 py-2 rounded-xl bm-interactive hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30",
                                      listing.status === 'PENDING_APPROVAL' && "opacity-50 cursor-not-allowed pointer-events-none"
                                  )}
                             >
-                                <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/btn:scale-110 transition-transform" />
-                                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest hidden sm:inline">Delete</span>
+                                <Trash2 className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
+                                <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Delete</span>
                             </button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="rounded-lg max-w-sm border-border bg-card">
+                        <AlertDialogContent className="rounded-2xl max-w-sm border-1 border-card-foreground/20 bg-card shadow-2xl">
                             <AlertDialogHeader>
-                                <AlertDialogTitle className="flex items-center gap-2 font-bold uppercase tracking-tight text-lg">
+                                <AlertDialogTitle className="flex items-center gap-2 font-black uppercase tracking-tight text-lg">
                                     <Trash2 className="w-5 h-5 text-destructive" />
-                                    Move to Recycle Bin?
+                                    Move to Bin?
                                 </AlertDialogTitle>
-                                <AlertDialogDescription className="space-y-2 pt-1 border-none shadow-none">
-                                    <span className="block">
+                                <AlertDialogDescription className="space-y-3 pt-2 font-medium">
+                                    <span className="block text-foreground">
                                         &quot;{listing.title}&quot; will be moved to the recycle bin.
                                     </span>
-                                    <span className="block text-xs text-muted-foreground">
-                                        You can restore it from the admin recycle bin within 30 days before it is permanently deleted.
+                                    <span className="block text-xs text-muted-foreground uppercase tracking-wider">
+                                        Restore within 30 days before permanent deletion.
                                     </span>
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel className="rounded-lg font-bold uppercase text-xs h-10 shadow-none border-border bm-interactive">Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90 rounded-lg font-bold uppercase text-xs h-10 shadow-none">Move to Bin</AlertDialogAction>
+                            <AlertDialogFooter className="gap-2 sm:gap-0 mt-4">
+                                <AlertDialogCancel className="rounded-xl font-black uppercase tracking-widest text-[10px] h-12 shadow-none border-1 border-card-foreground/20 bm-interactive transition-all">Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90 text-white rounded-xl font-black uppercase tracking-widest text-[10px] h-12 shadow-none transition-all active:scale-95">Move to Bin</AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
 
-                    <Link href={`/my-listings/stats/${listing.id}`} className="flex items-center gap-1.5 group/btn transition-colors text-foreground px-2 py-1 rounded-md bm-interactive">
-                        <BarChart2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/btn:scale-110 transition-transform" />
-                        <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest hidden sm:inline">Stats</span>
+                    <Link href={`/my-listings/stats/${listing.id}`} className="flex items-center gap-2 group/btn transition-all text-foreground px-3 py-2 rounded-xl bm-interactive">
+                        <BarChart2 className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
+                        <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Stats</span>
                     </Link>
 
                     <Link 
                         href={listing.status === 'PENDING_APPROVAL' ? '#' : `/my-listings/${listing.id}/edit`} 
                         className={cn(
-                            "flex items-center gap-1.5 group/btn transition-colors text-foreground px-2 py-1 rounded-md bm-interactive",
+                            "flex items-center gap-2 group/btn transition-all text-foreground px-3 py-2 rounded-xl bm-interactive",
                             listing.status === 'PENDING_APPROVAL' && "opacity-50 cursor-not-allowed pointer-events-none"
                         )}
                     >
-                        <Edit className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/btn:scale-110 transition-transform" />
-                        <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest hidden sm:inline">Edit</span>
+                        <Edit className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
+                        <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Edit</span>
                     </Link>
-
-
                 </div>
             </div>
         </div>

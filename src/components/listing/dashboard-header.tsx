@@ -1,5 +1,6 @@
 'use client';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -51,16 +52,16 @@ export function MyListingsDashboardHeader() {
   return (
     <div className="space-y-4 md:space-y-6 mb-6 md:mb-8">
       {/* 1. Header Card: Identity & Wallet */}
-      <div className="bg-card rounded-lg p-4 md:p-6 shadow-none border border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 relative overflow-hidden transition-all hover:bg-secondary/20">
+      <div className="bg-card rounded-2xl p-4 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden transition-all bm-interactive shadow-none">
 
           
           <div className="flex items-center gap-4 md:gap-5 relative z-10 w-full md:w-auto">
              <div className="relative">
-                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-lg border-2 border-border overflow-hidden bg-muted flex items-center justify-center shrink-0">
+                 <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl border-1 border-card-foreground/10 overflow-hidden bg-muted flex items-center justify-center shrink-0 shadow-sm transition-all group-hover:border-card-foreground/20">
                      {user.image ? (
                          <img src={user.image} alt={displayName || 'User'} className="w-full h-full object-cover" />
                      ) : (
-                         <span className="text-sm md:text-lg font-bold text-muted-foreground">
+                         <span className="text-xl md:text-2xl font-black text-muted-foreground uppercase opacity-40">
                              {(displayName || 'U').slice(0, 2).toUpperCase()}
                          </span>
                      )}
@@ -78,18 +79,18 @@ export function MyListingsDashboardHeader() {
                      </TooltipProvider>
                  )}
              </div>
-             <div className="min-w-0">
-                 <h1 className="text-lg md:text-xl font-bold text-foreground flex items-center gap-2 truncate uppercase tracking-tight leading-none mb-2">
+             <div className="min-w-0 space-y-2">
+                 <h1 className="text-xl md:text-3xl font-black text-foreground flex items-center gap-3 truncate uppercase tracking-tighter leading-none">
                      {displayName}
                      {user.membershipStatus === 'ACTIVE' && (
-                         <span className="px-2 py-1 rounded-lg bg-secondary text-primary text-[10px] font-bold uppercase tracking-widest border border-border flex items-center gap-1 shrink-0">
-                             <Crown className="w-3 h-3 text-primary/80" />
+                         <Badge variant="secondary" className="font-black px-2.5 py-1 rounded-xl text-[10px] uppercase tracking-[0.15em] shrink-0 border border-primary/20 bg-primary/10 text-primary">
+                             <Crown className="w-3.5 h-3.5 mr-1.5" />
                              {user.membershipTier}
-                         </span>
+                         </Badge>
                      )}
                  </h1>
-                 <p className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-widest">
-                     {isCompany ? 'Verified Business Account' : 'Personal Account'}
+                 <p className="text-muted-foreground text-[10px] md:text-xs font-black uppercase tracking-[0.2em] opacity-60">
+                     {isCompany ? 'Verified Business' : 'Personal Account'}
                  </p>
                  
                  {user.membershipExpiresAt && (
@@ -101,14 +102,14 @@ export function MyListingsDashboardHeader() {
              </div>
           </div>
 
-          <div className="flex items-center gap-4 relative z-10 w-full md:w-auto bg-input p-3 md:p-4 rounded-lg border border-border hover:bg-secondary/30 transition-colors">
+          <div className="flex items-center gap-6 relative z-10 w-full md:w-auto bg-muted/30 p-5 md:p-6 rounded-2xl border-1 border-card-foreground/10 transition-all hover:bg-muted/50">
               <div className="text-right flex-1 md:flex-none">
-                  <div className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Balance</div>
-                  <div className="text-lg md:text-2xl font-bold text-foreground leading-none">{Math.round(user.credits)} <span className="text-[10px] md:text-xs font-bold text-muted-foreground ml-0.5">MKD</span></div>
+                  <div className="text-[10px] md:text-[11px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1.5 opacity-60">Balance</div>
+                  <div className="text-2xl md:text-4xl font-black text-foreground leading-none tracking-tighter uppercase">{Math.round(user.credits)} <span className="text-xs md:text-sm font-black text-muted-foreground ml-1">MKD</span></div>
               </div>
-              <Button asChild size="sm" className="rounded-lg font-bold bg-primary hover:bg-primary/90 h-10 text-xs px-5 md:px-6 uppercase tracking-widest transition-all shadow-none">
+              <Button asChild size="lg" className="rounded-xl font-black uppercase tracking-widest h-12 px-6 md:px-10 transition-all active:scale-95 shadow-none border border-card-foreground/5">
                   <Link href="/wallet/top-up">
-                      <Plus className="w-4 h-4 mr-1.5 stroke-[3]" />
+                      <Plus className="w-4 h-4 mr-2" />
                       Top Up
                   </Link>
               </Button>

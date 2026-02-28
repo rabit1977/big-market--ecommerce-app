@@ -53,18 +53,18 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
       <MyListingsDashboardHeader />
 
       {/* Listings Section Header */}
-      <div className='flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8 border-b border-border pb-4 md:pb-6'>
+      <div className='flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 md:mb-12 border-b border-card-foreground/10 pb-8'>
         <div>
-           <h2 className='text-2xl md:text-3xl font-bold tracking-tight text-foreground uppercase leading-none'>My Listings</h2>
-           <p className='text-muted-foreground text-xs md:text-sm font-bold uppercase tracking-widest mt-3'>Manage your active and sold items</p>
+           <h2 className='text-3xl md:text-5xl font-black tracking-tighter text-foreground uppercase leading-none'>My Listings</h2>
+           <p className='text-muted-foreground text-[10px] md:text-xs font-black uppercase tracking-[0.2em] mt-4 opacity-60'>Manage your active and sold items</p>
         </div>
         <div className="flex items-center gap-3 w-full md:w-auto">
-            <Suspense fallback={<div className="h-10 w-[300px] bg-muted animate-pulse rounded-lg" />}>
+            <Suspense fallback={<div className="h-10 w-[300px] bg-muted/40 animate-pulse rounded-xl border-1 border-card-foreground/10" />}>
                 <MyListingsSearch />
             </Suspense>
-            <Button asChild className="gap-2 rounded-lg font-bold bg-primary hover:bg-primary/90 shrink-0 h-10 text-xs md:text-sm px-6 uppercase tracking-widest transition-all shadow-none">
+            <Button asChild className="gap-2 rounded-xl font-black bg-primary hover:bg-primary/95 shrink-0 h-10 text-[10px] md:text-xs px-6 uppercase tracking-[0.15em] transition-all shadow-none active:scale-95 border border-primary/20">
                 <Link href="/sell">
-                    <Plus className="h-4 w-4 stroke-[3]" />
+                    <Plus className="h-3.5 w-3.5" />
                     <span className="hidden sm:inline">Post Ad</span>
                     <span className="sm:hidden">Post Listing</span>
                 </Link>
@@ -79,16 +79,16 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
               ))}
           </div>
       ) : (
-          <div className='text-center py-8 md:py-24 bg-card rounded-lg border border-border transition-all duration-200 group shadow-none'>
-              <div className="w-20 h-20 bg-muted rounded-lg flex items-center justify-center mx-auto mb-6 transition-all duration-200">
-                  <Package className="h-8 w-8 text-muted-foreground" />
+          <div className='text-center py-12 md:py-32 bg-card rounded-2xl bm-interactive shadow-none'>
+              <div className="w-24 h-24 bg-muted/40 border-1 border-card-foreground/10 rounded-2xl flex items-center justify-center mx-auto mb-8 transition-all duration-300 group-hover:bg-background group-hover:border-card-foreground/20">
+                  <Package className="h-10 w-10 text-muted-foreground opacity-40" />
               </div>
-              <h3 className='text-xl md:text-2xl font-bold text-foreground uppercase tracking-tight mb-2'>No listings yet</h3>
-              <p className='text-muted-foreground max-w-sm mx-auto mb-8 text-xs md:text-sm font-bold uppercase tracking-widest'>
+              <h3 className='text-2xl md:text-4xl font-black text-foreground uppercase tracking-tighter mb-4'>No listings yet</h3>
+              <p className='text-muted-foreground max-w-sm mx-auto mb-10 text-[10px] md:text-xs font-black uppercase tracking-[0.15em] opacity-60'>
                   You haven&apos;t posted any ads yet. Start selling today!
               </p>
-              <Button asChild size="lg" className="rounded-lg font-bold text-sm uppercase tracking-widest h-12 px-8 transition-transform shadow-none">
-                  <Link href="/sell">Create Listing</Link>
+              <Button asChild size="lg" className="rounded-xl font-black text-xs uppercase tracking-widest h-14 px-12 transition-all active:scale-95 shadow-none border border-primary/20 bg-primary hover:bg-primary/95 text-white">
+                  <Link href="/sell">Post Ad Now</Link>
               </Button>
           </div>
       )}
