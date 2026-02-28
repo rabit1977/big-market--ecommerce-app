@@ -82,8 +82,8 @@ export function MyListingsDashboardHeader() {
                  <h1 className="text-lg md:text-xl font-bold text-foreground flex items-center gap-2 truncate uppercase tracking-tight leading-none mb-2">
                      {displayName}
                      {user.membershipStatus === 'ACTIVE' && (
-                         <span className="px-2 py-1 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] font-bold uppercase tracking-widest border border-amber-500/20 flex items-center gap-1 shrink-0">
-                             <Crown className="w-3 h-3" />
+                         <span className="px-2 py-1 rounded-lg bg-secondary text-primary text-[10px] font-bold uppercase tracking-widest border border-border flex items-center gap-1 shrink-0">
+                             <Crown className="w-3 h-3 text-primary/80" />
                              {user.membershipTier}
                          </span>
                      )}
@@ -121,14 +121,14 @@ export function MyListingsDashboardHeader() {
           <Card className="min-w-[200px] md:min-w-0 snap-center rounded-lg border-border shadow-none hover:bg-secondary/30 transition-all bg-card group cursor-default">
               <CardContent className="p-4 md:p-5 flex flex-col justify-between h-full">
                   <div className="flex items-center justify-between mb-3">
-                      <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-rose-500/10 flex items-center justify-center text-rose-500 group-hover:bg-rose-500 group-hover:text-white transition-colors">
+                      <div className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center text-primary transition-colors">
                           <DollarSign className="w-5 h-5" />
                       </div>
-                      <span className="text-[9px] font-bold text-rose-500 bg-rose-500/10 px-2 py-1 rounded-lg uppercase tracking-widest">Lifetime</span>
+                      <span className="text-[9px] font-bold text-primary bg-secondary px-2 py-1 rounded-lg uppercase tracking-widest">Lifetime</span>
                   </div>
                   <div>
                       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Total Spent</p>
-                      <h3 className="text-xl md:text-2xl font-bold text-foreground tracking-tight group-hover:text-rose-500 transition-colors">
+                      <h3 className="text-xl md:text-2xl font-bold text-foreground tracking-tight group-hover:text-primary transition-colors">
                           {/* @ts-ignore - totalSpend added in backend but types might flag */}
                           {Math.round(stats.totalSpend || 0)} <span className="text-[10px] font-bold text-muted-foreground">MKD</span>
                       </h3>
@@ -140,7 +140,7 @@ export function MyListingsDashboardHeader() {
           <Card className="min-w-[280px] md:min-w-0 snap-center rounded-lg border-border shadow-none hover:bg-secondary/30 transition-all md:col-span-2 bg-card group cursor-default">
               <CardContent className="p-4 md:p-5">
                   <div className="flex items-center gap-3 mb-4">
-                      <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                      <div className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center text-primary transition-colors">
                           <RefreshCw className="w-5 h-5" />
                       </div>
                       <div>

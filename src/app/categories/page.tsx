@@ -213,9 +213,9 @@ export default async function CategoriesPage() {
   }
 
   return (
-    <div className='min-h-screen bg-background'>
+    <div className='min-h-screen bg-slate-100 dark:bg-background'>
       {/* Hero Section */}
-      <div className='bg-muted/30 border-b relative overflow-hidden'>
+      <div className='relative overflow-hidden'>
          <div className="absolute inset-0 bg-grid-black/[0.02] dark:bg-grid-white/[0.02]" />
          <div className='container-wide py-1 sm:py-3 relative'>
             <div className='max-w-7xl mx-auto'>

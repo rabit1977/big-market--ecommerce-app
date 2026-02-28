@@ -26,7 +26,9 @@
     "filter_listings": "Филтрирај Огласи",
     "browse_all_listings": "Разгледај Сите Огласи",
     "explore_categories": "Истражи Категории",
-    "quick_filters": "Брзи Филтри"
+    "quick_filters": "Брзи Филтри",
+    "categories": "Категории",
+    "browse_all": "Види Сите"
   },
   "Stats": {
     "active_listings": "Активни Огласи",

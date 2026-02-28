@@ -40,8 +40,8 @@ export function MyListingsSearch() {
       <Input
         value={value}
         onChange={handleChange}
-        placeholder="Search your listings..."
-        className="pl-9 h-10 rounded-full bg-white border-slate-200"
+        placeholder="SEARCH YOUR LISTINGS..."
+        className="pl-9 h-10 rounded-lg bg-input border-border font-bold text-[10px] sm:text-xs tracking-widest uppercase shadow-none focus-visible:ring-primary/20"
       />
     </div>
   );

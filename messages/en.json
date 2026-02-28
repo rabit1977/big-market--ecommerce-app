@@ -26,7 +26,9 @@
     "filter_listings": "Filter Listings",
     "browse_all_listings": "Browse All Listings",
     "explore_categories": "Explore Categories",
-    "quick_filters": "Quick Filters"
+    "quick_filters": "Quick Filters",
+    "categories": "Categories",
+    "browse_all": "Browse All"
   },
   "Stats": {
     "active_listings": "Active Listings",

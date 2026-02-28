@@ -81,7 +81,7 @@ export default async function HomePage({ searchParams }: PageProps) {
   }));
 
   return (
-    <>
+    <div className='min-h-screen bg-slate-100 dark:bg-background'>
       {/* 1. Hero Section with Search (Absolute Top) */}
       <Hero />
 
@@ -93,11 +93,11 @@ export default async function HomePage({ searchParams }: PageProps) {
       </div>
 
       {/* 3. Main Content Grid */}
-      <div className="container-wide py-8 bg-muted/20">
+      <div className="container-wide py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
             
             {/* Latest Listings - Left Column */}
-            <div className="lg:col-span-3">
+            <div className="lg:col-span-3 bg-slate-100 dark:bg-background">
                 <LatestListingsClient 
                   initialListings={latestListings as any} 
                   categories={categories} 
@@ -113,6 +113,6 @@ export default async function HomePage({ searchParams }: PageProps) {
 
         </div>
       </div>
-    </>
+    </div>
   );
 }

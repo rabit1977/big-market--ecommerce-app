@@ -24,7 +24,7 @@ const QUICK_FILTERS = [
 ];
 
 export const HeroHeader = () => {
-  const tHome = useTranslations('');
+  const tHome = useTranslations('Home');
   const tFilters = useTranslations('QuickFilters');
   const tNav = useTranslations('NavActions');
   

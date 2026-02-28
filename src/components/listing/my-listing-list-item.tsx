@@ -116,20 +116,20 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
           {/* Status Badge Overlay */}
           <div className="absolute top-2 left-2 z-10 flex flex-col gap-1.5 items-start">
              {listing.status === 'ACTIVE' && (
-                 <Badge variant="outline" className="bg-background/80 backdrop-blur text-emerald-600 border-emerald-500/20 text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg shadow-none">
-                    <CheckCircle className="w-3 h-3 mr-1" /> Active
+                 <Badge variant="outline" className="bg-background/80 backdrop-blur text-emerald-600 border-border text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg shadow-none">
+                    <CheckCircle className="w-3 h-3 mr-1 text-emerald-500/80" /> Active
                  </Badge>
              )}
 
              {listing.status === 'PENDING_APPROVAL' && (
-                 <Badge variant="outline" className="bg-background/80 backdrop-blur text-amber-600 border-amber-500/20 text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg shadow-none">
-                    <Clock className="w-3 h-3 mr-1" /> Pending Approval
+                 <Badge variant="outline" className="bg-background/80 backdrop-blur text-amber-600 border-border text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg shadow-none">
+                    <Clock className="w-3 h-3 mr-1 text-amber-500/80" /> Pending Approval
                  </Badge>
              )}
 
              {isPromoted && promoConfig && (
-                 <Badge variant="outline" className={cn("bg-background/80 backdrop-blur border-primary/20 text-primary text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg flex items-center shadow-none")}>
-                    <PromotionIcon iconName={promoConfig.icon} className="w-3 h-3 mr-1" />
+                 <Badge variant="outline" className={cn("bg-background/80 backdrop-blur border-border text-primary text-[10px] uppercase tracking-widest font-bold h-6 px-2 rounded-lg flex items-center shadow-none")}>
+                    <PromotionIcon iconName={promoConfig.icon} className="w-3 h-3 mr-1 text-primary/80" />
                     {daysLeft} days left
                  </Badge>
              )}
@@ -182,13 +182,13 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                 <Button 
                     asChild
                     className={cn(
-                        "flex-1 bg-amber-500 hover:bg-amber-600 text-amber-50 font-bold h-9 shadow-none text-[10px] sm:text-xs uppercase tracking-widest rounded-lg transition-all",
+                        "flex-1 bg-primary hover:bg-primary/90 text-white font-bold h-9 shadow-none text-[10px] sm:text-xs uppercase tracking-widest rounded-lg transition-all",
                         listing.status === 'PENDING_APPROVAL' && "opacity-50 cursor-not-allowed pointer-events-none"
                     )}
                     size="sm"
                 >
                     <Link href={`/my-listings/promote/${listing.id}`}>
-                        <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5" />
+                        <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5 text-white/80" />
                         Promote
                     </Link>
                 </Button>
@@ -196,14 +196,14 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                 <AlertDialog open={isRenewDialogOpen} onOpenChange={setIsRenewDialogOpen}>
                     <Button 
                         className={cn(
-                            "flex-1 bg-foreground text-background hover:bg-foreground/90 font-bold h-9 shadow-none text-[10px] sm:text-xs uppercase tracking-widest rounded-lg transition-all",
+                            "flex-1 bg-primary hover:bg-primary/90 text-white font-bold h-9 shadow-none text-[10px] sm:text-xs uppercase tracking-widest rounded-lg transition-all",
                             (listing.status === 'PENDING_APPROVAL' || isStatsLoading) && "opacity-50 cursor-not-allowed pointer-events-none"
                         )}
                         size="sm"
                         onClick={handleRenewClick}
                         disabled={isPending || isStatsLoading || listing.status === 'PENDING_APPROVAL'}
                     >
-                        <RefreshCw className={cn("w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5", (isPending || isStatsLoading) && "animate-spin")} />
+                        <RefreshCw className={cn("w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5 text-white/80", (isPending || isStatsLoading) && "animate-spin")} />
                         {isStatsLoading ? 'Checking...' : 'Renew Ad'}
                     </Button>
                     <AlertDialogContent className="rounded-lg max-w-sm border-border bg-card">
@@ -261,7 +261,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                             <button 
                                 disabled={listing.status === 'PENDING_APPROVAL'}
                                 className={cn(
-                                    "flex items-center gap-1.5 group/btn hover:text-destructive transition-colors text-muted-foreground",
+                                    "flex items-center gap-1.5 group/btn hover:text-destructive transition-colors text-primary",
                                     listing.status === 'PENDING_APPROVAL' && "opacity-50 cursor-not-allowed pointer-events-none"
                                 )}
                             >
@@ -291,20 +291,20 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                         </AlertDialogContent>
                     </AlertDialog>
 
-                    <Link href={`/my-listings/stats/${listing.id}`} className="flex items-center gap-1.5 group/btn hover:text-emerald-500 transition-colors text-muted-foreground">
+                    <Link href={`/my-listings/stats/${listing.id}`} className="flex items-center gap-1.5 group/btn hover:text-emerald-500 transition-colors text-primary">
                         <BarChart2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/btn:scale-110 transition-transform" />
-                        <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider hidden sm:inline">Stats</span>
+                        <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest hidden sm:inline">Stats</span>
                     </Link>
 
                     <Link 
                         href={listing.status === 'PENDING_APPROVAL' ? '#' : `/my-listings/${listing.id}/edit`} 
                         className={cn(
-                            "flex items-center gap-1.5 group/btn hover:text-amber-500 transition-colors text-muted-foreground",
+                            "flex items-center gap-1.5 group/btn hover:text-amber-500 transition-colors text-primary",
                             listing.status === 'PENDING_APPROVAL' && "opacity-50 cursor-not-allowed pointer-events-none"
                         )}
                     >
                         <Edit className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/btn:scale-110 transition-transform" />
-                        <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider hidden sm:inline">Edit</span>
+                        <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest hidden sm:inline">Edit</span>
                     </Link>
 
 
