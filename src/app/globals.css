@@ -91,13 +91,13 @@
   --primary-foreground: #f1f5f9;
   
   --secondary: #f1f5f9; /* Slate 50 */
-  --secondary-foreground: #0f0f0f;
+  --secondary-foreground: #0f0f0f;  
   
   --muted: #f1f5f9; /* Slate 100 */
   --muted-foreground: #606060;
   
   --accent: #f8fafc; /* Slate 50 */
-  --accent-foreground: #0f0f0f;
+  --accent-foreground: #0f0f0f; 
   
   --destructive: #ff0000;
   --destructive-foreground: #ffffff;

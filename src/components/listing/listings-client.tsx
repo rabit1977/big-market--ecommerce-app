@@ -157,7 +157,7 @@ export function ListingsClient({
           <Button
             onClick={() => setIsMobileFiltersOpen(true)}
             variant="outline"
-            className="flex-1 h-10 font-medium tracking-tight border border-border bg-background text-foreground hover:bg-secondary flex items-center justify-center gap-2 rounded-lg active:scale-95 transition-all"
+            className="flex-1 h-10 font-medium tracking-tight border border-border bg-card text-foreground hover:bg-secondary flex items-center justify-center gap-2 rounded-lg active:scale-95 transition-all"
           >
             <SlidersHorizontal className="h-4 w-4" />
             Filters & Sort

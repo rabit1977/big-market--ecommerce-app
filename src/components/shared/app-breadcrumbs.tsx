@@ -63,11 +63,11 @@ export function AppBreadcrumbs({ className, customLabel, items }: AppBreadcrumbs
   // Custom items override
   if (items) {
       return (
-        <Breadcrumb className={cn("-mt-1 mb-6 bg-transparent w-fit max-w-full overflow-hidden", className)}>
+        <Breadcrumb className={cn("-mt-1 mb-6 bg-background w-fit max-w-full overflow-hidden", className)}>
             <BreadcrumbList className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-muted-foreground flex-nowrap overflow-x-auto no-scrollbar">
                 <BreadcrumbItem className="shrink-0">
                     <BreadcrumbLink asChild>
-                        <Link href={isAdmin ? "/admin/dashboard" : "/"} className="flex items-center gap-1 hover:text-primary transition-colors">
+                        <Link href={isAdmin ? "/admin/dashboard" : "/"} className="flex items-center gap-1 hover:text-foreground transition-colors">
                             <Home className="h-3.5 w-3.5" />
                         </Link>
                     </BreadcrumbLink>
@@ -82,7 +82,7 @@ export function AppBreadcrumbs({ className, customLabel, items }: AppBreadcrumbs
                                 </BreadcrumbPage>
                             ) : (
                                 <BreadcrumbLink asChild>
-                                    <Link href={item.href} className="hover:text-primary transition-colors hover:underline underline-offset-4 decoration-2">
+                                    <Link href={item.href} className="hover:text-foreground transition-colors hover:underline underline-offset-4 decoration-2">
                                         {item.label}
                                     </Link>
                                 </BreadcrumbLink>
@@ -101,11 +101,11 @@ export function AppBreadcrumbs({ className, customLabel, items }: AppBreadcrumbs
   const pathSegments = pathname.split('/').filter(Boolean);
   
   return (
-    <Breadcrumb className={cn("mb-6 bg-transparent w-fit max-w-full overflow-hidden py-2", className)}>
+    <Breadcrumb className={cn("mb-6 bg-card px-2 rounded-2xl w-fit max-w-full overflow-hidden py-2", className)}>
       <BreadcrumbList className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground flex-nowrap overflow-x-auto no-scrollbar">
         <BreadcrumbItem className="shrink-0">
           <BreadcrumbLink asChild>
-            <Link href={isAdmin ? "/admin/dashboard" : "/"} className="flex items-center gap-1 hover:text-primary transition-colors">
+            <Link href={isAdmin ? "/admin/dashboard" : "/"} className="flex items-center gap-1 hover:text-foreground transition-colors">
               <Home className="h-3.5 w-3.5" />
             </Link>
           </BreadcrumbLink>

@@ -70,7 +70,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
      // We should return empty results instead of showing everything.
      return (
         <div className="bg-background dark:bg-background min-h-screen pb-10">
-          <div className="bg-card border-border/50 py-2 md:py-4">
+          <div className="border-border/50 py-2 md:py-4">
             <div className="container-wide">
               <AppBreadcrumbs items={[{ label: 'Listings', href: '/listings' }, { label: 'Not Found' }]} />
               <div className='flex items-center justify-between'>
@@ -81,7 +81,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
             </div>
           </div>
           <div className="container-wide text-center py-20">
-             <div className="text-6xl mb-4">🔍</div>
+             <div className="text-6xl mb-4 bg-background">🔍</div>
              <h3 className="text-2xl font-bold mb-2">No listing found with ID {listingNumberVal}</h3>
              <p className="text-muted-foreground">
                Please check the ID and try again, or browse our latest listings below.
@@ -211,11 +211,11 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   return (
     <div className="bg-background dark:bg-background min-h-screen pb-20">
       {/* Header */}
-      <div className="bg-card pt-4">
+      <div className="bg-background pt-4">
         <div className="container-wide">
           <div className="flex items-center justify-between">
             <AppBreadcrumbs />
-             <p className="text-muted-foreground md:text-lg text-sm hidden sm:block">
+             <p className="text-foreground md:text-lg text-sm hidden sm:block">
               {total} {total === 1 ? 'result' : 'results'} found
               {city && city !== 'all' && ` in ${city}`}
               {query && ` for "${query}"`}

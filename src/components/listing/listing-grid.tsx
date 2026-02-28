@@ -35,7 +35,6 @@ interface FilterState {
 interface ListingGridProps {
   listings: ListingWithRelations[];
   className?: string;
-  onOpenFilters?: () => void;
   showSaveSearch?: boolean;
   sortBy?: string;
   onSortChange?: (value: string) => void;
@@ -63,7 +62,6 @@ const VIEW_MODE_KEY = 'listing-view-mode';
 export function ListingGrid({
   listings,
   className,
-  onOpenFilters,
   showSaveSearch = true,
   sortBy = 'newest',
   onSortChange,
@@ -138,15 +136,15 @@ export function ListingGrid({
         </div>
 
         {/* Desktop Controls */}
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+        <div className="flex flex-1 items-center gap-2 w-full sm:w-auto justify-between">
           <Select value={sortBy} onValueChange={handleSortChange} disabled={isPending}>
-            <SelectTrigger className="h-9 w-full sm:w-[180px] text-xs">
+            <SelectTrigger className="h-9 w-full sm:w-[180px] text-xs bg-card">
               <div className="flex items-center gap-2">
-                <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" />
+                <ArrowUpDown className="h-3.5 w-3.5  text-foreground" />
                 <SelectValue placeholder={tListings('sort_option')} />
               </div>
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className='bg-card'>
               {sortOptions.map((o) => (
                 <SelectItem key={o.value} value={o.value} className="text-xs">
                   {o.label}
@@ -154,7 +152,6 @@ export function ListingGrid({
               ))}
             </SelectContent>
           </Select>
-
           {showSaveSearch && (
             <Button
               variant="outline"
@@ -167,7 +164,7 @@ export function ListingGrid({
             </Button>
           )}
 
-          <div className="flex items-center border rounded-md p-1 h-9 bg-background shrink-0" role="group" aria-label="View mode">
+          <div className="bg-card flex items-center border rounded-md p-1 h-9 bg-background shrink-0" role="group" aria-label="View mode">
             {viewModes.map(({ mode, icon, label }) => (
               <ViewToggle
                 key={mode}

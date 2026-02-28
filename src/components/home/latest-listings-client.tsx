@@ -60,7 +60,7 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
         {/* Desktop View All Link */}
         <Link 
           href="/listings" 
-          className="group flex items-center justify-center gap-1.5 px-3.5 py-1.5 md:py-2 rounded-lg border border-border bg-secondary/50 hover:bg-secondary transition-all duration-200 shrink-0 shadow-none"
+          className="group flex items-center justify-center gap-1.5 px-3.5 py-1.5 md:py-2 rounded-lg bg-card border border-border hover:bg-secondary transition-all duration-200 shrink-0 shadow-none"
         >
           <span className="text-xs font-bold uppercase tracking-widest">{tHome('view_all')}</span>
           <ArrowRight className="w-3.5 h-3.5 ml-1 transition-transform group-hover:translate-x-1" />
