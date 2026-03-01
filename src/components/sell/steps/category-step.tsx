@@ -19,6 +19,7 @@ import {
     Sofa,
     Wrench
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { ListingFormData } from '../post-listing-wizard';
 
@@ -57,18 +58,16 @@ export function CategoryStep({
   updateFormData,
   onNext,
 }: CategoryStepProps) {
-  // Initialize state based on existing formData to preserve history on "Back"
+  const t = useTranslations('Sell');
+
   const initialState = useMemo(() => {
     if (formData.subCategory) {
-       // Try to find the selected item
        const leaf = categories.find(c => c.slug === formData.subCategory);
        if (leaf?.parentId) {
            const parent = categories.find(c => c._id === leaf.parentId);
            if (parent?.parentId) {
-               // It's a level 3 item (Grandparent -> Parent -> Leaf)
                return { level: 2, mainId: parent.parentId, subId: leaf.parentId };
            }
-           // It's a level 2 item (Parent -> Leaf)
            return { level: 1, mainId: leaf.parentId, subId: null };
        }
     }
@@ -79,7 +78,7 @@ export function CategoryStep({
     return { level: 0, mainId: null, subId: null };
   }, [formData, categories]);
 
-  const [level, setLevel] = useState(initialState.level); // 0: Main, 1: Sub, 2: Sub-Sub
+  const [level, setLevel] = useState(initialState.level);
   const [selectedMainId, setSelectedMainId] = useState<string | null>(initialState.mainId);
   const [selectedSubId, setSelectedSubId] = useState<string | null>(initialState.subId);
 
@@ -139,7 +138,8 @@ export function CategoryStep({
   };
 
   const currentItems = level === 0 ? mainCategories : level === 1 ? subCategories : subSubCategories;
-  const currentTitle = level === 0 ? "Select Category" : level === 1 ? "Select Subcategory" : "Select Specific Type";
+  const currentTitle = level === 0 ? t('cat_select_title') : level === 1 ? t('cat_select_sub') : t('cat_select_type');
+  const currentDesc = level === 0 ? t('cat_desc_main') : t('cat_desc_sub');
 
   return (
     <div className="space-y-6 hover">
@@ -154,9 +154,7 @@ export function CategoryStep({
         )}
         <div>
           <h2 className="text-2xl font-bold">{currentTitle}</h2>
-          <p className="text-muted-foreground">
-            {level === 0 ? "Choose the main category for your listing" : "Refine your selection to help buyers find you"}
-          </p>
+          <p className="text-muted-foreground">{currentDesc}</p>
         </div>
       </div>
 
@@ -183,7 +181,7 @@ export function CategoryStep({
                 <div className="flex-1">
                   <p className="font-semibold">{item.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {level === 0 ? `Post in ${item.name}` : `Select ${item.name}`}
+                    {level === 0 ? t('cat_post_in', { name: item.name }) : t('cat_select', { name: item.name })}
                   </p>
                 </div>
 

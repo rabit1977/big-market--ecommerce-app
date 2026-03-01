@@ -5,14 +5,16 @@ import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import { Star } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export function StoreReviews({ sellerId }: { sellerId: string }) {
   const reviews = useQuery(api.reviews.getSellerReviews, { sellerId });
+  const t = useTranslations('StoreReviews');
 
   if (reviews === undefined) {
     return (
       <div className="space-y-4 py-8">
-        <h2 className="text-xl md:text-2xl font-bold uppercase tracking-tight">Customer Reviews</h2>
+        <h2 className="text-xl md:text-2xl font-bold uppercase tracking-tight">{t('title')}</h2>
         <div className="animate-pulse flex flex-col gap-4">
           <div className="h-32 bg-muted rounded-xl w-full" />
           <div className="h-32 bg-muted rounded-xl w-full" />
@@ -24,8 +26,8 @@ export function StoreReviews({ sellerId }: { sellerId: string }) {
   return (
     <div className="space-y-6 pt-12">
       <div className="flex items-center justify-between border-b pb-4">
-         <h2 className="text-xl md:text-2xl font-bold uppercase tracking-tight">Customer Reviews</h2>
-         <span className="bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xs px-3 py-1 rounded-full">{reviews.length} reviews</span>
+         <h2 className="text-xl md:text-2xl font-bold uppercase tracking-tight">{t('title')}</h2>
+         <span className="bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xs px-3 py-1 rounded-full">{t('reviews_count', { count: reviews.length })}</span>
       </div>
 
       {reviews.length > 0 ? (
@@ -67,7 +69,7 @@ export function StoreReviews({ sellerId }: { sellerId: string }) {
 
               {/* Context */}
               <div className="mt-2 pt-4 border-t border-dashed text-xs text-muted-foreground/70 font-medium">
-                 Reviewed item: <span className="text-muted-foreground line-clamp-1 mt-0.5 italic">{review.listingTitle}</span>
+                 {t('reviewed_item')} <span className="text-muted-foreground line-clamp-1 mt-0.5 italic">{review.listingTitle}</span>
               </div>
             </div>
           ))}
@@ -75,8 +77,8 @@ export function StoreReviews({ sellerId }: { sellerId: string }) {
       ) : (
         <div className="text-center py-16 bg-muted/40 rounded-3xl border border-dashed border-border/60">
            <Star className="w-10 h-10 text-muted-foreground mx-auto mb-3 opacity-40" />
-           <h3 className="text-base font-bold text-foreground mb-1 uppercase tracking-tight">No Reviews Yet</h3>
-           <p className="text-sm text-muted-foreground">This seller hasn't received any customer reviews.</p>
+           <h3 className="text-base font-bold text-foreground mb-1 uppercase tracking-tight">{t('no_reviews_title')}</h3>
+           <p className="text-sm text-muted-foreground">{t('no_reviews_desc')}</p>
         </div>
       )}
     </div>

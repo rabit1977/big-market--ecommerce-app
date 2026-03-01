@@ -24,6 +24,7 @@ import {
     Trash2,
     Undo2
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -31,6 +32,7 @@ import { toast } from 'sonner';
 const ITEMS_PER_PAGE = 15;
 
 export function AdminRecycleBinClient() {
+    const t = useTranslations('AdminRecycleBin');
     const deletedRaw = useQuery(api.recycleBin.listDeleted, {});
 
     const restore    = useMutation(api.recycleBin.restore);
@@ -70,20 +72,20 @@ export function AdminRecycleBinClient() {
     const handleRestore = async (id: string, title: string) => {
         try {
             await restore({ listingId: id as any });
-            toast.success(`"${title}" restored to Active`);
+            toast.success(`"${title}" ${t('restore_btn')}d`);
             setSelected(prev => prev.filter(x => x !== id));
         } catch (e: any) {
-            toast.error(e.message || 'Failed to restore');
+            toast.error(e.message || t('restore_failed'));
         }
     };
 
     const handlePurge = async (id: string, title: string) => {
         try {
             await purge({ listingId: id as any });
-            toast.success(`"${title}" permanently deleted`);
+            toast.success(`"${title}" ${t('delete_perm')}d`);
             setSelected(prev => prev.filter(x => x !== id));
         } catch (e: any) {
-            toast.error(e.message || 'Failed to delete');
+            toast.error(e.message || t('delete_failed'));
         }
     };
 
@@ -91,9 +93,9 @@ export function AdminRecycleBinClient() {
         setPurging(true);
         try {
             const result = await purgeOld({ olderThanDays: 30 });
-            toast.success(`Purged ${(result as any).purged} items older than 30 days`);
+            toast.success(t('purged_count', { count: (result as any).purged }));
         } catch (e: any) {
-            toast.error(e.message || 'Failed');
+            toast.error(e.message || t('delete_failed'));
         } finally {
             setPurging(false);
             setConfirming(null);
@@ -102,10 +104,9 @@ export function AdminRecycleBinClient() {
 
     const handleBulkRestore = async () => {
         for (const id of selected) {
-            const item = items.find(i => i._id === id);
             await restore({ listingId: id as any }).catch(() => {});
-            toast.success(`Restored ${selected.length} listings`);
         }
+        toast.success(t('restored_count', { count: selected.length }));
         setSelected([]);
     };
 
@@ -113,7 +114,7 @@ export function AdminRecycleBinClient() {
         for (const id of selected) {
             await purge({ listingId: id as any }).catch(() => {});
         }
-        toast.success(`${selected.length} listings permanently deleted`);
+        toast.success(t('deleted_count', { count: selected.length }));
         setSelected([]);
     };
 
@@ -135,7 +136,7 @@ export function AdminRecycleBinClient() {
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
                 <div className="space-y-1">
                     <h1 className="text-3xl sm:text-4xl font-bold tracking-tight flex items-center gap-3">
-                        Recycle Bin
+                        {t('title')}
                         {items.length > 0 && (
                             <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-lg bg-red-500/10 text-red-600 text-xs font-bold border border-red-500/20">
                                 {items.length}
@@ -143,7 +144,7 @@ export function AdminRecycleBinClient() {
                         )}
                     </h1>
                     <p className="text-sm text-muted-foreground font-medium">
-                        Soft-deleted listings. Items are auto-purged after <strong>30 days</strong>.
+                        {t('desc', { days: 30 })}
                     </p>
                 </div>
 
@@ -160,26 +161,26 @@ export function AdminRecycleBinClient() {
                                     ? <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
                                     : <Trash2 className="w-3.5 h-3.5 mr-2" />
                                 }
-                                Purge &gt;30 Day Old
+                                {t('purge_old_btn')}
                             </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent className="rounded-lg border border-border shadow-none">
                             <AlertDialogHeader>
                                 <AlertDialogTitle className="flex items-center gap-2 font-bold uppercase tracking-tight text-destructive">
                                     <Trash2 className="w-5 h-5" />
-                                    Purge Old Listings?
+                                    {t('purge_old_title')}
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    This will permanently delete ALL listings in the recycle bin that have been deleted for more than 30 days. This action CANNOT be undone.
+                                    {t('purge_old_desc')}
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel className="rounded-lg font-bold uppercase text-xs h-10">Cancel</AlertDialogCancel>
+                                <AlertDialogCancel className="rounded-lg font-bold uppercase text-xs h-10">{t('cancel')}</AlertDialogCancel>
                                 <AlertDialogAction 
                                     onClick={handlePurgeOld}
                                     className="bg-destructive hover:bg-destructive/90 text-white rounded-lg font-bold tracking-wider uppercase text-xs h-10"
                                 >
-                                    Yes, Purge Old
+                                    {t('yes_purge_old')}
                                 </AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
@@ -187,12 +188,10 @@ export function AdminRecycleBinClient() {
                 )}
             </div>
 
-            {/* Warning banner */}
             <div className="flex items-start gap-3 p-4 rounded-lg bg-amber-500/5 border border-border text-sm text-amber-700 dark:text-amber-400">
                 <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
                 <div>
-                    <strong>Auto-cleanup:</strong> Items in the recycle bin are automatically and permanently deleted after 30 days.
-                    You can restore any item within that window. Permanently deleted items <em>cannot</em> be recovered.
+                    <strong>{t('warning')}</strong> {t('warning_desc')}
                 </div>
             </div>
 
@@ -201,79 +200,79 @@ export function AdminRecycleBinClient() {
                 <AdminFilterToolbar
                     searchValue={search}
                     onSearchChange={(q) => { setSearch(q); setPage(1); }}
-                    searchPlaceholder="Search by title, #ID, or Convex ID..."
+                    searchPlaceholder={t('search_placeholder')}
                     showTimeRange={false}
                 />
 
                 {/* Bulk actions */}
                 {selected.length > 0 && (
                     <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border/30 animate-in fade-in duration-200">
-                        <span className="text-xs font-bold text-foreground">{selected.length} selected</span>
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button size="sm" variant="outline" 
-                                    className="h-7 px-3 text-xs font-bold gap-1.5 text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/10">
-                                    <Undo2 className="w-3 h-3" /> Restore All
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent className="rounded-lg border border-border shadow-none">
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle className="flex items-center gap-2 font-bold uppercase tracking-tight text-emerald-600">
-                                        <Undo2 className="w-5 h-5" />
-                                        Restore {selected.length} Listings?
-                                    </AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        These {selected.length} selected listings will be fully restored and made active again across the platform.
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel className="rounded-lg font-bold uppercase text-xs h-10">Cancel</AlertDialogCancel>
-                                    <AlertDialogAction 
-                                        onClick={handleBulkRestore}
-                                        className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold tracking-wider uppercase text-xs h-10"
-                                    >
-                                        Yes, Restore
-                                    </AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
+                            <span className="text-xs font-bold text-foreground">{t('selected', { count: selected.length })}</span>
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button size="sm" variant="outline" 
+                                        className="h-7 px-3 text-xs font-bold gap-1.5 text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/10">
+                                        <Undo2 className="w-3 h-3" /> {t('restore_all')}
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent className="rounded-lg border border-border shadow-none">
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle className="flex items-center gap-2 font-bold uppercase tracking-tight text-emerald-600">
+                                            <Undo2 className="w-5 h-5" />
+                                            {t('restore_title', { count: selected.length })}
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            {t('restore_desc', { count: selected.length })}
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel className="rounded-lg font-bold uppercase text-xs h-10">{t('cancel')}</AlertDialogCancel>
+                                        <AlertDialogAction 
+                                            onClick={handleBulkRestore}
+                                            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold tracking-wider uppercase text-xs h-10"
+                                        >
+                                            {t('yes_restore')}
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
 
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button size="sm" variant="destructive" 
-                                    className="h-7 px-3 text-xs font-bold gap-1.5">
-                                    <Trash2 className="w-3 h-3" /> Delete Permanently
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent className="rounded-lg border border-border shadow-none">
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle className="flex items-center gap-2 font-bold uppercase tracking-tight text-destructive">
-                                        <Trash2 className="w-5 h-5" />
-                                        Permanently Delete {selected.length} Listings?
-                                    </AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        These {selected.length} listings will be completely wiped from the database. <br /><strong>This CANNOT be undone.</strong>
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel className="rounded-lg font-bold uppercase text-xs h-10">Cancel</AlertDialogCancel>
-                                    <AlertDialogAction 
-                                        onClick={handleBulkPurge}
-                                        className="bg-destructive hover:bg-destructive/90 text-white rounded-lg font-bold tracking-wider uppercase text-xs h-10"
-                                    >
-                                        Permanently Delete
-                                    </AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                        <button onClick={() => setSelected([])} className="text-xs text-muted-foreground hover:text-foreground ml-auto">
-                            Clear selection
-                        </button>
-                    </div>
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button size="sm" variant="destructive" 
+                                        className="h-7 px-3 text-xs font-bold gap-1.5">
+                                        <Trash2 className="w-3 h-3" /> {t('delete_perm')}
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent className="rounded-lg border border-border shadow-none">
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle className="flex items-center gap-2 font-bold uppercase tracking-tight text-destructive">
+                                            <Trash2 className="w-5 h-5" />
+                                            {t('delete_perm_title', { count: selected.length })}
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            {t('delete_perm_desc', { count: selected.length })} <br /><strong>{t('cannot_undone')}</strong>
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel className="rounded-lg font-bold uppercase text-xs h-10">{t('cancel')}</AlertDialogCancel>
+                                        <AlertDialogAction 
+                                            onClick={handleBulkPurge}
+                                            className="bg-destructive hover:bg-destructive/90 text-white rounded-lg font-bold tracking-wider uppercase text-xs h-10"
+                                        >
+                                            {t('delete_perm')}
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                            <button onClick={() => setSelected([])} className="text-xs text-muted-foreground hover:text-foreground ml-auto">
+                                {t('clear_selection')}
+                            </button>
+                        </div>
                 )}
 
                 <p className="text-xs text-muted-foreground">
-                    <span className="font-bold text-foreground">{items.length}</span> item{items.length !== 1 ? 's' : ''} in recycle bin
+                    <span className="font-bold text-foreground">{items.length}</span> {t('items_count', { count: items.length })}
                 </p>
             </div>
 
@@ -283,9 +282,9 @@ export function AdminRecycleBinClient() {
                     <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-6">
                         <Trash2 className="w-10 h-10 text-muted-foreground/30" />
                     </div>
-                    <h3 className="text-xl font-bold text-foreground">Recycle bin is empty</h3>
+                    <h3 className="text-xl font-bold text-foreground">{t('empty_title')}</h3>
                     <p className="text-sm text-muted-foreground mt-2">
-                        Deleted listings will appear here and can be restored within 30 days.
+                        {t('empty_desc')}
                     </p>
                 </div>
             ) : (
@@ -298,11 +297,11 @@ export function AdminRecycleBinClient() {
                                         <input type="checkbox" checked={allSelected} onChange={toggleAll}
                                             className="rounded border-border cursor-pointer" />
                                     </th>
-                                    <th className="px-4 py-3 text-left">Listing</th>
-                                    <th className="px-4 py-3 text-left hidden md:table-cell">Deleted By</th>
-                                    <th className="px-4 py-3 text-left hidden md:table-cell">Deleted</th>
-                                    <th className="px-4 py-3 text-left">Auto-purge</th>
-                                    <th className="px-4 py-3 text-right">Actions</th>
+                                    <th className="px-4 py-3 text-left">{t('col_listing')}</th>
+                                    <th className="px-4 py-3 text-left hidden md:table-cell">{t('col_deleted_by')}</th>
+                                    <th className="px-4 py-3 text-left hidden md:table-cell">{t('col_deleted')}</th>
+                                    <th className="px-4 py-3 text-left">{t('col_auto_purge')}</th>
+                                    <th className="px-4 py-3 text-right">{t('col_actions')}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-border/40">
@@ -337,7 +336,7 @@ export function AdminRecycleBinClient() {
                                                 </div>
                                             </td>
                                             <td className="px-4 py-3 hidden md:table-cell">
-                                                <span className="text-xs text-muted-foreground">{listing.deletedByName || 'Admin'}</span>
+                                                <span className="text-xs text-muted-foreground">{listing.deletedByName || t('admin_fallback')}</span>
                                             </td>
                                             <td className="px-4 py-3 hidden md:table-cell">
                                                 <div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -350,7 +349,7 @@ export function AdminRecycleBinClient() {
                                             </td>
                                             <td className="px-4 py-3">
                                                 <span className={cn('text-xs font-bold flex items-center gap-1', urgency)}>
-                                                    {dLeft === 0 ? '⚠ Purging today' : `${dLeft}d left`}
+                                                    {dLeft === 0 ? `⚠ ${t('purging_today')}` : t('days_left', { count: dLeft })}
                                                 </span>
                                             </td>
                                             <td className="px-4 py-3">
@@ -368,20 +367,20 @@ export function AdminRecycleBinClient() {
                                                             <AlertDialogHeader>
                                                                 <AlertDialogTitle className="flex items-center gap-2 font-black uppercase tracking-tight text-emerald-600">
                                                                     <Undo2 className="w-5 h-5" />
-                                                                    Restore Listing?
+                                                                    {t('restore_listing_title')}
                                                                 </AlertDialogTitle>
                                                                 <AlertDialogDescription>
                                                                     <span className="block mb-2 font-medium text-foreground">"{listing.title}"</span>
-                                                                    This listing will be fully restored and made active again across the platform.
+                                                                    {t('restore_listing_desc')}
                                                                 </AlertDialogDescription>
                                                             </AlertDialogHeader>
                                                             <AlertDialogFooter>
-                                                                <AlertDialogCancel className="rounded-xl font-bold uppercase text-xs h-10">Cancel</AlertDialogCancel>
+                                                                <AlertDialogCancel className="rounded-xl font-bold uppercase text-xs h-10">{t('cancel')}</AlertDialogCancel>
                                                                 <AlertDialogAction 
                                                                     onClick={() => handleRestore(listing._id, listing.title)}
                                                                     className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold tracking-wider uppercase text-xs h-10 shadow-lg shadow-emerald-600/20"
                                                                 >
-                                                                    Restore
+                                                                    {t('restore_btn')}
                                                                 </AlertDialogAction>
                                                             </AlertDialogFooter>
                                                         </AlertDialogContent>
@@ -400,20 +399,20 @@ export function AdminRecycleBinClient() {
                                                             <AlertDialogHeader>
                                                                 <AlertDialogTitle className="flex items-center gap-2 font-black uppercase tracking-tight text-destructive">
                                                                     <Trash2 className="w-5 h-5" />
-                                                                    Permanently Delete?
+                                                                    {t('delete_single_title')}
                                                                 </AlertDialogTitle>
                                                                 <AlertDialogDescription>
                                                                     <span className="block mb-2 font-medium text-foreground">"{listing.title}"</span>
-                                                                    This listing will be completely wiped from the database. <br /><strong>This CANNOT be undone.</strong>
+                                                                    {t('delete_single_desc')} <br /><strong>{t('cannot_undone')}</strong>
                                                                 </AlertDialogDescription>
                                                             </AlertDialogHeader>
                                                             <AlertDialogFooter>
-                                                                <AlertDialogCancel className="rounded-xl font-bold uppercase text-xs h-10">Cancel</AlertDialogCancel>
+                                                                <AlertDialogCancel className="rounded-xl font-bold uppercase text-xs h-10">{t('cancel')}</AlertDialogCancel>
                                                                 <AlertDialogAction 
                                                                     onClick={() => handlePurge(listing._id, listing.title)}
                                                                     className="bg-destructive hover:bg-destructive/90 text-white rounded-xl font-bold tracking-wider uppercase text-xs h-10 shadow-lg shadow-destructive/20"
                                                                 >
-                                                                    Permanently Delete
+                                                                    {t('delete_perm')}
                                                                 </AlertDialogAction>
                                                             </AlertDialogFooter>
                                                         </AlertDialogContent>

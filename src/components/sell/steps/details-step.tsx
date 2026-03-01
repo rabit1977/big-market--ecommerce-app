@@ -13,6 +13,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { ChevronLeft } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { ListingFormData } from '../post-listing-wizard';
 
 interface DetailsStepProps {
@@ -42,20 +43,14 @@ const cities = [
   'Štip', 'Strumica', 'Kavadarci', 'Kočani', 'Kičevo', 'Struga', 'Radoviš', 'Gevgelija',
 ];
 
-const conditions = [
-  { value: 'new', label: 'New' },
-  { value: 'like-new', label: 'Like New' },
-  { value: 'good', label: 'Good' },
-  { value: 'used', label: 'Used' },
-];
-
 export function DetailsStep({
   categories,
   formData,
   updateFormData,
   onBack,
 }: DetailsStepProps) {
-  // Use subcategory if selected, otherwise fallback to main category
+  const t = useTranslations('Sell');
+
   const selectedCategory = categories.find((c) => c.slug === formData.subCategory) || 
                            categories.find((c) => c.slug === formData.category);
 
@@ -82,14 +77,14 @@ export function DetailsStep({
           >
             <ChevronLeft className="h-5 w-5" />
           </Button>
-          <h2 className="text-2xl font-bold lg:hidden">Listing Details</h2>
+          <h2 className="text-2xl font-bold lg:hidden">{t('details_title')}</h2>
         </div>
 
         <div className="space-y-6">
         {/* Title */}
         <div className="space-y-2">
           <Label htmlFor="title" className="text-sm font-semibold">
-            Title <span className="text-destructive">*</span>
+            {t('label_title')} <span className="text-destructive">*</span>
           </Label>
           <Input
             id="title"
@@ -105,7 +100,7 @@ export function DetailsStep({
           <div className="p-6 bg-primary/5 rounded-2xl border border-primary/10 space-y-6">
             <h3 className="font-bold text-lg flex items-center gap-2">
               <span className="w-2 h-2 bg-primary rounded-full" />
-              {selectedCategory.name} Specifications
+              {t('specs_header', { name: selectedCategory.name })}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {selectedCategory.template.fields.map((field) => (
@@ -120,7 +115,7 @@ export function DetailsStep({
                       onValueChange={(val) => handleSpecChange(field.key, val)}
                     >
                       <SelectTrigger id={`spec-${field.key}`} className="h-11 bg-background">
-                        <SelectValue placeholder={`Select ${field.label}`} />
+                        <SelectValue placeholder={t('select_placeholder', { label: field.label })} />
                       </SelectTrigger>
                       <SelectContent>
                         {field.options?.map((opt) => (
@@ -158,7 +153,7 @@ export function DetailsStep({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <Label htmlFor="price" className="text-sm font-semibold">
-              Price <span className="text-destructive">*</span>
+              {t('label_price')} <span className="text-destructive">*</span>
             </Label>
             <div className="flex flex-col gap-4">
               <div className="flex gap-2">
@@ -197,11 +192,11 @@ export function DetailsStep({
                   onValueChange={(val) => updateFormData({ isPriceNegotiable: val === 'negotiable' })}
                 >
                   <SelectTrigger className="h-11 bg-background border-2 focus:border-primary flex-1">
-                    <SelectValue placeholder="Price Type" />
+                    <SelectValue placeholder={t('label_price')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="fixed">Fixed Price</SelectItem>
-                    <SelectItem value="negotiable">Po dogovor (Negotiable)</SelectItem>
+                    <SelectItem value="fixed">{t('price_fixed')}</SelectItem>
+                    <SelectItem value="negotiable">{t('price_negotiable')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -211,14 +206,14 @@ export function DetailsStep({
 
           <div className="space-y-2">
             <Label htmlFor="city" className="text-sm font-semibold">
-              City <span className="text-destructive">*</span>
+              {t('label_city')} <span className="text-destructive">*</span>
             </Label>
             <Select
               value={formData.city}
               onValueChange={(value) => updateFormData({ city: value })}
             >
               <SelectTrigger className="h-11 bg-background border-2 focus:border-primary">
-                <SelectValue placeholder="Select city" />
+                <SelectValue placeholder={t('city_placeholder')} />
               </SelectTrigger>
               <SelectContent>
                 {cities.map((city) => (
@@ -233,11 +228,11 @@ export function DetailsStep({
 
         <div className="space-y-2">
           <Label htmlFor="description" className="text-sm font-semibold">
-            Description <span className="text-destructive">*</span>
+            {t('label_description')} <span className="text-destructive">*</span>
           </Label>
           <Textarea
             id="description"
-            placeholder="Describe your item in detail..."
+            placeholder={t('desc_placeholder')}
             value={formData.description || ''}
             onChange={(e) => updateFormData({ description: e.target.value })}
             rows={8}
@@ -246,11 +241,11 @@ export function DetailsStep({
         </div>
 
         <div className="pt-6 border-t space-y-4">
-          <h3 className="font-bold text-lg">Contact Information</h3>
+          <h3 className="font-bold text-lg">{t('label_location_contact')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="contactPhone" className="text-sm font-medium">
-                Phone Number <span className="text-destructive">*</span>
+                {t('label_contact_phone')} <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="contactPhone"
@@ -263,7 +258,7 @@ export function DetailsStep({
             </div>
             <div className="space-y-2">
               <Label htmlFor="contactEmail" className="text-sm font-medium">
-                Email Address <span className="text-destructive">*</span>
+                {t('label_contact_email')} <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="contactEmail"
@@ -283,15 +278,14 @@ export function DetailsStep({
       <div className="hidden lg:block lg:col-span-1">
         <div className="sticky top-8 space-y-4">
           <div className="p-6 bg-muted/50 rounded-xl border">
-            <h2 className="text-2xl font-bold mb-4">Listing Details</h2>
+            <h2 className="text-2xl font-bold mb-4">{t('details_title')}</h2>
             <p className="text-muted-foreground mb-4">
-              Provide detailed information about your {selectedCategory?.name || 'item'} to help buyers find it easily. 
-              Be as specific as possible to attract the right buyers.
+              {t('sidebar_desc', { name: selectedCategory?.name || 'item' })}
             </p>
             <div className="text-sm text-muted-foreground space-y-2">
-              <p>• Title should be clear and concise</p>
-              <p>• Describe the condition accurately</p>
-              <p>• Include specific features or specs</p>
+              <p>{t('tip_title')}</p>
+              <p>{t('tip_condition')}</p>
+              <p>{t('tip_specs')}</p>
             </div>
           </div>
         </div>

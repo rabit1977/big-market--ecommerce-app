@@ -9,12 +9,14 @@ import { Label } from '@/components/ui/label';
 import { useQuery } from 'convex/react';
 import { Loader2, Lock } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { api } from '../../../../convex/_generated/api';
 
 export default function PasswordPage() {
     const { data: session } = useSession();
+    const t = useTranslations('Password');
     const user = useQuery(api.users.getByExternalId, { externalId: session?.user?.id || '' });
 
     const [oldPass, setOldPass] = useState('');
@@ -27,15 +29,15 @@ export default function PasswordPage() {
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
         if (hasPassword && !oldPass) {
-            toast.error("Current password is required");
+            toast.error(t('err_required'));
             return;
         }
         if (newPass !== confirmPass) {
-            toast.error("Passwords do not match");
+            toast.error(t('err_mismatch'));
             return;
         }
         if (newPass.length < 6) {
-             toast.error("Password must be at least 6 characters");
+             toast.error(t('err_length'));
              return;
         }
         
@@ -48,22 +50,22 @@ export default function PasswordPage() {
             });
             
             if (res.success) {
-                toast.success("Password updated successfully");
+                toast.success(t('success'));
                 setOldPass('');
                 setNewPass('');
                 setConfirmPass('');
             } else {
-                toast.error(res.error || "Failed to update password");
+                toast.error(res.error || t('failed'));
             }
         } catch (err) {
-            toast.error("Failed to update password");
+            toast.error(t('failed'));
         } finally {
             setSubmitting(false);
         }
     };
 
-    if (user === undefined) return <div className="p-20 text-center text-muted-foreground">Loading...</div>;
-    if (user === null) return <div className="p-20 text-center text-muted-foreground">User not found</div>;
+    if (user === undefined) return <div className="p-20 text-center text-muted-foreground">{t('loading')}</div>;
+    if (user === null) return <div className="p-20 text-center text-muted-foreground">{t('user_not_found')}</div>;
 
     return (
         <div className="min-h-screen pt-4 md:pt-6 pb-8 bg-muted/20">
@@ -77,24 +79,22 @@ export default function PasswordPage() {
                              <div className="p-1.5 bg-primary/10 rounded-lg">
                                  <Lock className="w-4 h-4 text-primary" />
                              </div>
-                             Change Password
+                             {t('title')}
                         </CardTitle>
                         <CardDescription className="text-xs md:text-sm mt-1">
-                            {hasPassword 
-                              ? "Update your existing password." 
-                              : "You logged in via a provider (Google/GitHub). You can set a password to log in with email/password too."}
+                            {hasPassword ? t('desc_existing') : t('desc_provider')}
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="p-4 md:p-6 pt-0 md:pt-0">
                         <form onSubmit={handleSave} className="space-y-3 md:space-y-4">
                             {hasPassword && (
                                 <div className="space-y-1.5 mb-6">
-                                    <Label className="text-xs md:text-sm font-semibold">Current Password</Label>
+                                    <Label className="text-xs md:text-sm font-semibold">{t('current_password')}</Label>
                                     <Input 
                                         type="password" 
                                         value={oldPass} 
                                         onChange={e => setOldPass(e.target.value)}
-                                        placeholder="Enter current password"
+                                        placeholder={t('current_placeholder')}
                                         required
                                         className="h-9 md:h-10 text-sm border-primary/20 bg-primary/5 focus-visible:ring-primary/20"
                                     />
@@ -102,23 +102,23 @@ export default function PasswordPage() {
                             )}
 
                             <div className="space-y-1.5">
-                                <Label className="text-xs md:text-sm font-semibold">New Password</Label>
+                                <Label className="text-xs md:text-sm font-semibold">{t('new_password')}</Label>
                                 <Input 
                                     type="password" 
                                     value={newPass} 
                                     onChange={e => setNewPass(e.target.value)}
-                                    placeholder="Enter new password"
+                                    placeholder={t('new_placeholder')}
                                     required
                                     className="h-9 md:h-10 text-sm"
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <Label className="text-xs md:text-sm font-semibold">Confirm New Password</Label>
+                                <Label className="text-xs md:text-sm font-semibold">{t('confirm_password')}</Label>
                                 <Input 
                                     type="password" 
                                     value={confirmPass} 
                                     onChange={e => setConfirmPass(e.target.value)}
-                                    placeholder="Confirm new password"
+                                    placeholder={t('confirm_placeholder')}
                                     required
                                     className="h-9 md:h-10 text-sm"
                                 />
@@ -126,7 +126,7 @@ export default function PasswordPage() {
                             
                             <Button type="submit" className="w-full h-10 md:h-11 rounded-xl font-bold text-sm" disabled={submitting}>
                                 {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                                {hasPassword ? "Update Password" : "Set Password"}
+                                {hasPassword ? t('update_btn') : t('set_btn')}
                              </Button>
                         </form>
                     </CardContent>

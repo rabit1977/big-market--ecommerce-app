@@ -47,7 +47,7 @@ export const ListingCard = memo(
       <div
         className={cn(
           "group relative bg-card rounded-xl flex bm-interactive overflow-hidden transition-all duration-200",
-          (isGrid || isCard) ? "flex-col h-full" : "flex-row h-28 sm:h-32 md:h-44", 
+          (isGrid || isCard) ? "flex-col h-full" : "flex-row h-40 sm:h-44 md:h-48", 
           isCard && "mb-4",
         )}
       >
@@ -61,7 +61,7 @@ export const ListingCard = memo(
         {/* Image Section - The container for the 'card' look */}
         <div className={cn(
           "relative shrink-0 overflow-hidden z-20 bg-muted transition-all duration-150 pointer-events-none",
-          isGrid ? "aspect-square w-full rounded-t-xl" : isCard ? "aspect-video w-full rounded-t-xl" : "w-32 sm:w-40 md:w-56 h-full rounded-l-xl"
+          isGrid ? "aspect-square w-full rounded-t-xl" : isCard ? "aspect-video w-full rounded-t-xl" : "w-36 sm:w-40 md:w-56 h-full rounded-l-xl"
         )}>
 
           <Image
@@ -102,14 +102,9 @@ export const ListingCard = memo(
                         )}>
                            {listing.title}
                         </h3>
-                    </div>
                     <div className="flex items-center gap-1.5 flex-wrap">
-                         {isPromoted && promoConfig && (
-                            <div className={cn("flex items-center justify-center w-4 h-4 rounded-full opacity-70", promoConfig.badgeColor.replace('bg-', 'text-'))}>
-                                <PromotionIcon iconName={promoConfig.icon} className="h-2.5 w-2.5 fill-current" />
-                            </div>
-                        )}
                         <SellerBadge tier={tier} isVerified={isVerified} />
+                    </div>
                     </div>
                 </div>
                 
@@ -122,15 +117,15 @@ export const ListingCard = memo(
                             {listing.price > 0 ? formatCurrency(listing.price, (listing as any).currency) : 'Price on req'}
                         </span>
                         {listing.previousPrice && listing.previousPrice > listing.price && (
-                            <span className="text-[10px] sm:text-xs text-muted-foreground line-through opacity-70" suppressHydrationWarning>
+                            <span className="text-xs sm:text-sm text-muted-foreground line-through opacity-70" suppressHydrationWarning>
                                 {formatCurrency(listing.previousPrice as number, (listing as any).currency)}
                             </span>
                         )}
                     </div>
                     
                     <div className="flex items-center justify-between">
-                         <div className="flex items-center gap-1 text-[11px] text-muted-foreground/80 font-medium capitalize">
-                            <MapPin className="w-3 h-3 text-primary" />
+                         <div className="flex items-center gap-1 text-xs text-muted-foreground/80 font-medium capitalize">
+                            <MapPin className="w-4 h-4 text-primary" />
                             {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
                         </div>
 
@@ -150,11 +145,11 @@ export const ListingCard = memo(
                         </p>
                     )}
 
-                    <div className="flex items-center justify-between pt-1 border-t border-border/40 mt-1">
-                        <div className="text-[10px] text-muted-foreground/60 font-semibold uppercase tracking-tight">
+                    <div className="flex items-center justify-between pt-2 border-t-1 border-border/40 mt-2">
+                        <div className="text-xs text-foreground/70 font-medium uppercase tracking-tight">
                             {listing.condition === 'NEW' ? 'Brand New' : 'Pre-owned'}
                         </div>
-                        <div className="text-[9px] text-muted-foreground/40 font-medium" suppressHydrationWarning>
+                        <div className="text-xs text-foreground/70 font-medium" suppressHydrationWarning>
                            {new Date(listing.createdAt).toLocaleDateString()}
                         </div>
                     </div>
@@ -165,25 +160,21 @@ export const ListingCard = memo(
              <>
                 <div className="space-y-1.5">
                     <div className="flex justify-between items-start gap-2">
-                        <div className="flex flex-col gap-1 min-w-0">
-                          <h3 className="font-bold text-sm sm:text-base md:text-lg leading-tight line-clamp-2 group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground">
-                             {listing.title}
-                          </h3>
-                          <div className="flex items-center gap-1.5 shrink-0">
-                               {isPromoted && promoConfig && (
-                                  <div className={cn("flex items-center justify-center w-4 h-4 rounded-full opacity-70", promoConfig.badgeColor.replace('bg-', 'text-'))}>
-                                      <PromotionIcon iconName={promoConfig.icon} className="h-2.5 w-2.5 fill-current" />
-                                  </div>
-                              )}
+                        <div className="flex flex-row items-center gap-1 min-w-0">
+                          <div className="flex items-center gap-1 shrink-0 ">
                               <SellerBadge tier={tier} isVerified={isVerified} />
                           </div>
+                          <h3 className="font-bold text-sm sm:text-base md:text-lg leading-tight line-clamp-2 group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground">
+
+                             {listing.title}
+                          </h3> 
                         </div>
-                        <span className="text-[9px] sm:text-[10px] text-muted-foreground font-medium uppercase tracking-wider whitespace-nowrap shrink-0 opacity-60" suppressHydrationWarning>
+                        <span className="text-[10px] sm:text-[11px] text-foreground font-medium uppercase tracking-wider whitespace-nowrap shrink-0 opacity-60" suppressHydrationWarning>
                             {listing.createdAt ? new Date(listing.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Now'}
                         </span>
                     </div>
 
-                    <div className="hidden sm:block text-[11px] md:text-xs text-muted-foreground/80 line-clamp-2 opacity-70 font-medium">
+                    <div className="hidden sm:block text-[11px] md:text-sm text-muted-foreground/80 line-clamp-2 opacity-70 font-medium">
                         {listing.description}
                     </div>
                 </div>
@@ -228,8 +219,8 @@ ListingCard.displayName = 'ListingCard';
 const SellerBadge = ({ tier, isVerified, className }: { tier?: string; isVerified?: boolean; className?: string }) => {
   if (tier === 'BUSINESS') {
     return (
-      <div className={cn("flex items-center justify-center w-5 h-5 rounded-full bg-amber-400/10 backdrop-blur-xs shadow-[0_0_8px_rgba(251,191,36,0.1)] transition-all duration-300", className)} title="Verified Store">
-        <BadgeCheck className="w-3.5 h-3.5 text-amber-500 fill-amber-500/20" />
+      <div className={cn("flex items-center justify-center w-6 h-6 rounded-full bg-blue-400/10 backdrop-blur-xs shadow-[0_0_8px_rgba(251,191,36,0.1)] transition-all duration-300", className)} title="Verified Store">
+        <BadgeCheck className="w-4 h-4 text-blue-500 fill-blue-500/20" />
       </div>
     );
   }

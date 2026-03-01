@@ -5,6 +5,7 @@ import { ListingGrid } from '@/components/listing/listing-grid';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { ListingRowCarousel } from './listing-row-carousel';
@@ -40,6 +41,7 @@ export function ListingsClient({
   template,
   hubData
 }: ListingsClientProps) {
+  const t = useTranslations('Listings');
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -160,7 +162,7 @@ export function ListingsClient({
             className="flex-1 h-10 font-medium tracking-tight border border-border bg-card text-foreground hover:bg-secondary flex items-center justify-center gap-2 rounded-lg active:scale-95 transition-all"
           >
             <SlidersHorizontal className="h-4 w-4" />
-            Filters & Sort
+            {t('filters_sort')}
           </Button>
           <Suspense fallback={<div className="w-10 h-10 bg-muted rounded-lg animate-pulse" />}>
              <SaveSearchButton />
@@ -169,16 +171,16 @@ export function ListingsClient({
 
         {showHub && hubData ? (
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-             <ListingRowCarousel title="Latest Discoveries" listings={hubData.all} viewAllHref="/listings?sort=newest" />
-             <ListingRowCarousel title="Cars" listings={hubData.cars} viewAllHref="/listings?category=cars" />
-             <ListingRowCarousel title="Real Estates" listings={hubData.realEstate} viewAllHref="/listings?category=real-estate" />
-             <ListingRowCarousel title="Electronics & PC" listings={hubData.electronics} viewAllHref="/listings?category=electronics" />
-             <ListingRowCarousel title="Motor Vehicles" listings={hubData.motorVehicles} viewAllHref="/listings?category=vehicles" />
-             <ListingRowCarousel title="Mobile Phones" listings={hubData.mobilePhones} viewAllHref="/listings?category=mobile-phones" />
-             <ListingRowCarousel title="Home Appliances" listings={hubData.homeAppliances} viewAllHref="/listings?category=appliances" />
-             <ListingRowCarousel title="Computers" listings={hubData.computers} viewAllHref="/listings?category=computers-laptops" />
-             <ListingRowCarousel title="Do it Yourself" listings={hubData.diy} viewAllHref="/listings?category=home-services" />
-             <ListingRowCarousel title="Home and Garden" listings={hubData.homeAndGarden} viewAllHref="/listings?category=home-garden" />
+             <ListingRowCarousel title={t('hub_latest')} listings={hubData.all} viewAllHref="/listings?sort=newest" />
+             <ListingRowCarousel title={t('hub_cars')} listings={hubData.cars} viewAllHref="/listings?category=cars" />
+             <ListingRowCarousel title={t('hub_real_estate')} listings={hubData.realEstate} viewAllHref="/listings?category=real-estate" />
+             <ListingRowCarousel title={t('hub_electronics')} listings={hubData.electronics} viewAllHref="/listings?category=electronics" />
+             <ListingRowCarousel title={t('hub_motor_vehicles')} listings={hubData.motorVehicles} viewAllHref="/listings?category=vehicles" />
+             <ListingRowCarousel title={t('hub_mobile_phones')} listings={hubData.mobilePhones} viewAllHref="/listings?category=mobile-phones" />
+             <ListingRowCarousel title={t('hub_home_appliances')} listings={hubData.homeAppliances} viewAllHref="/listings?category=appliances" />
+             <ListingRowCarousel title={t('hub_computers')} listings={hubData.computers} viewAllHref="/listings?category=computers-laptops" />
+             <ListingRowCarousel title={t('hub_diy')} listings={hubData.diy} viewAllHref="/listings?category=home-services" />
+             <ListingRowCarousel title={t('hub_home_garden')} listings={hubData.homeAndGarden} viewAllHref="/listings?category=home-garden" />
              
              <div className="pt-8 pb-12 text-center">
                 <Button 
@@ -186,7 +188,7 @@ export function ListingsClient({
                   variant="outline" 
                   className="rounded-lg px-8 h-12 font-medium border border-border hover:bg-secondary transition-all"
                 >
-                    View All Listings in Grid
+                    {t('view_all_grid')}
                 </Button>
              </div>
           </div>
@@ -207,12 +209,12 @@ export function ListingsClient({
         ) : (
           <div className="text-center py-20 bg-background rounded-lg border border-border">
             <div className="text-6xl mb-4">🔍</div>
-            <h2 className="text-2xl font-bold mb-2 text-foreground">No listings found</h2>
+            <h2 className="text-2xl font-bold mb-2 text-foreground">{t('no_listings_found')}</h2>
             <p className="text-muted-foreground mb-8">
-              Try adjusting your filters or search criteria
+              {t('try_adjusting')}
             </p>
             <Button onClick={() => window.location.href = '/listings'} variant="outline" className="rounded-lg font-medium border border-border">
-               Clear all filters
+               {t('clear_all_filters')}
             </Button>
           </div>
         )}
@@ -227,7 +229,7 @@ export function ListingsClient({
               className="rounded-lg border border-border font-medium"
             >
               <ChevronLeft className="h-4 w-4 mr-1" />
-              Previous
+              {t('previous')}
             </Button>
             
             <div className="flex items-center gap-1">
@@ -268,7 +270,7 @@ export function ListingsClient({
               disabled={pagination.page === pagination.totalPages}
               className="rounded-lg border border-border font-medium"
             >
-              Next
+              {t('next')}
               <ChevronRight className="h-4 w-4 ml-1" />
             </Button>
           </div>

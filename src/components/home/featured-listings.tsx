@@ -41,7 +41,7 @@ interface FeaturedListingsProps {
 }
 
 export function FeaturedListings({ listings, variant = 'horizontal', title }: FeaturedListingsProps) {
-  const tHome = useTranslations('');
+  const tHome = useTranslations('Home');
   const tCommon = useTranslations('Common');
   const { isFavorite, toggleFavorite } = useFavorites();
 
@@ -125,11 +125,6 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                            </h3>
                                            
                                            <div className="flex items-center gap-1.5 flex-wrap mb-2">
-                                                {promoConfig && (
-                                                   <div className={cn("flex items-center justify-center w-4 h-4 rounded-full opacity-70", promoConfig.badgeColor.replace('bg-', 'text-'))}>
-                                                       <PromotionIcon iconName={promoConfig.icon} className="h-2.5 w-2.5 fill-current" />
-                                                   </div>
-                                               )}
                                                {listing.isVerified && (
                                                    <div className="bg-primary/10 text-primary rounded-full p-0.5">
                                                        <ShieldCheck className="h-3 w-3" />
@@ -143,7 +138,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                                    {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
                                                </div>
                                                <div className="text-xs font-bold text-foreground opacity-90 capitalize">
-                                                   {tHome('view deal') || 'View Deal'} &rarr;
+                                                   {tHome('view_deal')} &rarr;
                                                </div>
                                            </div>
                                       </div>
@@ -159,7 +154,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                     href="/listings?featured=true" 
                     className="flex items-center justify-center w-full py-3 text-sm font-bold uppercase tracking-widest text-muted-foreground transition-all shadow-none bm-interactive rounded-lg bg-card mt-2"
                 >
-                    {tHome('view more') || tHome('see all premium')}
+                    {tHome('see_all_premium')}
                 </Link>
              )}
         </div>
@@ -173,14 +168,14 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
         <div className="flex flex-col gap-6 mb-6">
           <div className="flex items-center justify-between">
             <h2 className="text-xl uppercase sm:text-2xl font-bold tracking-tight text-foreground">
-              {title || tHome('top deals')}
+              {title || tHome('top_deals_boosted')}
             </h2>
 
              <Link 
                href="/listings?featured=true" 
                className="flex items-center gap-1 bg-card text-sm font-semibold text-foreground/80 underline-offset-4 capitalize rounded-lg transition-all bm-interactive p-2"
              >
-               {tHome('explore all')}
+               {tHome('explore_all')}
                <ArrowRight className="w-4 h-4 ml-1" />
              </Link>
           </div>
@@ -262,11 +257,6 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                 </h3>
                                 
                                 <div className="flex items-center gap-1.5 flex-wrap mb-2">
-                                     {(listing as any).isPromoted && (
-                                        <div className={cn("flex items-center justify-center w-4 h-4 rounded-full opacity-70", getPromotionConfig((listing as any).promotionTier)?.badgeColor.replace('bg-', 'text-'))}>
-                                            <PromotionIcon iconName={getPromotionConfig((listing as any).promotionTier)?.icon || 'sparkles'} className="h-2.5 w-2.5 fill-current" />
-                                        </div>
-                                    )}
                                     {listing.isVerified && (
                                         <div className="bg-primary/10 text-primary rounded-full p-0.5">
                                             <ShieldCheck className="h-3 w-3" />
@@ -302,7 +292,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
 
                                     {listing.condition && (
                                         <div className="text-[10px] text-muted-foreground/60 font-semibold uppercase tracking-tight mt-1">
-                                            {listing.condition === 'NEW' ? 'Brand New' : 'Pre-owned'}
+                                            {listing.condition === 'NEW' ? tCommon('brand_new') : tCommon('pre_owned')}
                                         </div>
                                     )}
                                 </div>

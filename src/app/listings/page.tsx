@@ -2,6 +2,7 @@ import { ListingsClient } from '@/components/listing/listings-client';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { fetchQuery } from 'convex/nextjs';
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
@@ -46,6 +47,7 @@ const ensureString = (val: any): string | undefined => {
 
 export default async function ListingsPage({ searchParams }: ListingsPageProps) {
   const params = await searchParams;
+  const t = await getTranslations('Listings');
 
   // Direct ID Search Redirect
   const listingNumberVal = ensureString(params.listingNumber);
@@ -66,28 +68,28 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
          console.error("Error fetching listing by number:", error);
      }
      
-     // If we are here, listingNumber was provided but NOT found.
+       // If we are here, listingNumber was provided but NOT found.
      // We should return empty results instead of showing everything.
      return (
         <div className="bg-background dark:bg-background min-h-screen pb-10">
           <div className="border-border/50 py-2 md:py-4">
             <div className="container-wide">
-              <AppBreadcrumbs items={[{ label: 'Listings', href: '/listings' }, { label: 'Not Found' }]} />
+              <AppBreadcrumbs items={[{ label: t('not_found_title'), href: '/listings' }, { label: t('not_found_title') }]} />
               <div className='flex items-center justify-between'>
                 <h1 className="text-xl font-bold md:text-2xl">
-                    Listing Not Found
+                    {t('not_found_title')}
                 </h1>
               </div>
             </div>
           </div>
           <div className="container-wide text-center py-20">
              <div className="text-6xl mb-4 bg-background">🔍</div>
-             <h3 className="text-2xl font-bold mb-2">No listing found with ID {listingNumberVal}</h3>
+             <h3 className="text-2xl font-bold mb-2">{t('no_listing_with_id', { id: listingNumberVal })}</h3>
              <p className="text-muted-foreground">
-               Please check the ID and try again, or browse our latest listings below.
+               {t('check_id_again')}
              </p>
              <Button asChild className="mt-6" variant="outline">
-                <Link href="/listings">View All Listings</Link>
+                <Link href="/listings">{t('view_all_listings')}</Link>
              </Button>
           </div>
         </div>
@@ -216,9 +218,9 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
           <div className="flex items-center justify-between">
             <AppBreadcrumbs />
              <p className="text-foreground md:text-lg text-sm hidden sm:block">
-              {total} {total === 1 ? 'result' : 'results'} found
-              {city && city !== 'all' && ` in ${city}`}
-              {query && ` for "${query}"`}
+              {total} {total === 1 ? t('result') : t('results')} {t('found')}
+              {city && city !== 'all' && ` ${t('in_city', { city })}`}
+              {query && ` ${t('for_query', { query })}`}
             </p>
           </div>
         </div>

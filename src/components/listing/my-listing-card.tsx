@@ -25,6 +25,7 @@ import { formatPrice } from '@/lib/utils/formatters';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
 import { Clock, Edit, MoreVertical, RefreshCw, Trash } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTransition } from 'react';
@@ -35,15 +36,16 @@ interface MyListingCardProps {
 }
 
 export const MyListingCard = ({ listing }: MyListingCardProps) => {
+    const t = useTranslations('MyListings');
     const [isPending, startTransition] = useTransition();
 
     const handleDelete = async () => {
         startTransition(async () => {
              const res = await deleteListingAction(listing.id!);
              if(res.success) {
-                 toast.success('Listing moved to recycle bin');
+                 toast.success(t('listing_moved_to_bin'));
              } else {
-                 toast.error(res.error || 'Failed to delete');
+                 toast.error(res.error || t('failed_to_delete'));
              }
         });
     };
@@ -54,9 +56,9 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
         startTransition(async () => {
             const res = await renewListingAction(listing.id!);
             if(res.success) {
-                toast.success('Listing renewed');
+                toast.success(t('listing_renewed'));
             } else {
-                toast.error(res.error || 'Failed');
+                toast.error(res.error || t('failed_to_renew'));
             }
         });
     };
@@ -93,7 +95,7 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
                       <DropdownMenuItem asChild>
                           <Link href={`/my-listings/${listing.id}/edit`}>
                               <Edit className="h-4 w-4 mr-2" />
-                              Edit Listing
+                              {t('edit')}
                           </Link>
                       </DropdownMenuItem>
                       
@@ -102,7 +104,7 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
                       {listing.status !== 'ACTIVE' && (
                           <DropdownMenuItem onClick={handleRenew}>
                               <RefreshCw className="h-4 w-4 mr-2" />
-                              Relist / Renew
+                              {t('renew')}
                           </DropdownMenuItem>
                       )}
 
@@ -110,20 +112,20 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
                           <AlertDialogTrigger asChild>
                               <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive focus:text-destructive">
                                   <Trash className="h-4 w-4 mr-2" />
-                                  Delete
+                                  {t('delete')}
                               </DropdownMenuItem>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                               <AlertDialogHeader>
-                                  <AlertDialogTitle>Move to Recycle Bin?</AlertDialogTitle>
+                                  <AlertDialogTitle>{t('move_to_bin')}</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                      &quot;{listing.title}&quot; will be moved to the recycle bin. You can restore it from the admin panel within 30 days.
+                                      &quot;{listing.title}&quot; {t('will_be_moved_to_bin')} {t('restore_within')}
                                   </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
                                   <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                      Move to Bin
+                                      {t('move_to_bin_confirm')}
                                   </AlertDialogAction>
                               </AlertDialogFooter>
                           </AlertDialogContent>
@@ -153,12 +155,12 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
            <div className="pt-3 mt-auto flex gap-2">
                <Button asChild variant="outline" size="sm" className="flex-1">
                    <Link href={`/my-listings/${listing.id}/edit`}>
-                       Edit
+                       {t('edit')}
                    </Link>
                </Button>
                <Button asChild variant="ghost" size="sm" className="flex-1">
                    <Link href={`/listings/${listing.id}`}>
-                       View
+                       {t('stats')}
                    </Link>
                </Button>
            </div>

@@ -18,15 +18,15 @@ import {
     Tag,
     Users
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useState } from 'react';
-
-// I will create this one to handle Convex data
 import { DashboardCard } from './dashboard-card';
 
 export function AdminDashboardClient() {
   const [timeRange, setTimeRange] = useState<TimeRange>('today');
   const since = getSinceFromRange(timeRange);
+  const t = useTranslations('AdminControls');
 
   const stats = useQuery(api.admin.getStats);
   const dailyDeltas = useQuery(api.admin.getDailyDeltas);
@@ -35,6 +35,16 @@ export function AdminDashboardClient() {
   const revenue = useQuery(api.transactions.getRevenueStats, { since });
 
   const isLoading = !stats || !dailyDeltas;
+
+  const timeRangeLabel = (r: TimeRange) => {
+    switch (r) {
+      case 'today':  return t('today');
+      case 'week':   return t('seven_days');
+      case 'month':  return t('thirty_days');
+      case 'year':   return t('year');
+      default:       return t('all_time');
+    }
+  };
 
   if (isLoading) {
     return (
@@ -58,13 +68,13 @@ export function AdminDashboardClient() {
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
         <div className='flex flex-col space-y-1'>
           <h1 className='text-3xl sm:text-5xl font-black tracking-tighter text-foreground flex items-center gap-4 uppercase'>
-            Dashboard
+            {t('dashboard_title')}
             <span className='inline-flex items-center justify-center px-2 py-1 rounded-xl bg-primary/10 text-primary text-[10px] font-black border border-primary/20 uppercase tracking-widest'>
-              Live
+              {t('live')}
             </span>
           </h1>
           <p className='text-[10px] sm:text-xs text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60'>
-            Welcome back! Here's what's happening on your platform.
+            {t('welcome_back')}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
@@ -76,13 +86,13 @@ export function AdminDashboardClient() {
            <Button variant="outline" size="sm" asChild className="hidden sm:flex rounded-xl font-black uppercase tracking-widest px-6 h-10 border-1 border-card-foreground/20 bm-interactive shadow-none transition-all">
               <Link href="/admin/analytics">
                 <BarChart3 className="w-4 h-4 mr-2" />
-                View Reports
+                {t('view_reports')}
               </Link>
            </Button>
            <Button size="sm" asChild className="rounded-xl font-black uppercase tracking-widest px-6 h-10 shadow-none border border-primary transition-all active:scale-95">
               <Link href="/admin/users/create">
                 <Plus className="w-4 h-4 mr-2" />
-                Create User
+                {t('create_user')}
               </Link>
            </Button>
         </div>
@@ -91,29 +101,28 @@ export function AdminDashboardClient() {
       {/* Main Stats Grid */}
       <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-4'>
         <DashboardCard
-          title="Total Users"
+          title={t('total_users')}
           value={stats?.users ?? 0}
           icon={Users}
           color="blue"
           trend={{ value: dailyDeltas?.newUsers ?? 0, isPositive: (dailyDeltas?.newUsers ?? 0) > 0 }}
-          description={`${dailyDeltas?.newUsers ?? 0} joined today`}
+          description={t('joined_today', { count: dailyDeltas?.newUsers ?? 0 })}
         />
         <DashboardCard
-          title="Active Listings"
+          title={t('active_listings')}
           value={stats?.activeListings ?? 0}
           icon={Tag}
           color="emerald"
           trend={{ value: dailyDeltas?.newListings ?? 0, isPositive: (dailyDeltas?.newListings ?? 0) > 0 }}
-          description={`${dailyDeltas?.newListings ?? 0} posted today (Total: ${stats?.listings ?? 0})`}
+          description={t('posted_today', { count: dailyDeltas?.newListings ?? 0, total: stats?.listings ?? 0 })}
         />
         <DashboardCard
-          title={`Revenue (${timeRange === 'today' ? 'Today' : timeRange === 'week' ? '7 Days' : timeRange === 'month' ? '30 Days' : timeRange === 'year' ? 'Year' : 'All Time'})`}
+          title={`${t('revenue')} (${timeRangeLabel(timeRange)})`}
           value={revenue ? `${revenue.totalRevenue?.toFixed(0) ?? '0'} MKD` : `${(stats?.totalRevenue ?? 0).toLocaleString()} MKD`}
           icon={CreditCard}
           color="violet"
           trend={{ value: dailyDeltas?.revenueToday ?? 0, isPositive: (dailyDeltas?.revenueToday ?? 0) > 0 }}
-
-          description={`Since start of today`}
+          description={t('since_today')}
         />
       </div>
 
@@ -126,11 +135,11 @@ export function AdminDashboardClient() {
             <div className="space-y-1">
               <CardTitle className="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-primary" />
-                Pending Approvals
+                {t('pending_approvals')}
               </CardTitle>
             </div>
             <Link href="/admin/listings?status=PENDING_APPROVAL" className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline flex items-center gap-1.5">
-              View All <ArrowRight className="w-3.5 h-3.5" />
+              {t('view_all')} <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </CardHeader>
           <CardContent>
@@ -139,8 +148,8 @@ export function AdminDashboardClient() {
                 <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center mb-4 border border-border">
                   <Plus className="w-6 h-6 text-muted-foreground" />
                 </div>
-                <h3 className="font-bold">All caught up!</h3>
-                <p className="text-sm text-muted-foreground">No pending listings to review right now.</p>
+                <h3 className="font-bold">{t('all_caught_up')}</h3>
+                <p className="text-sm text-muted-foreground">{t('no_pending')}</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -175,14 +184,14 @@ export function AdminDashboardClient() {
           <CardHeader className="bg-muted/30 border-b border-border">
             <CardTitle className="text-lg font-bold flex items-center gap-2">
               <Clock className="w-5 h-5 text-primary" />
-              Recent Activity
+              {t('recent_activity')}
             </CardTitle>
             <CardDescription className="text-sm font-medium">
-              Platform activity logs
+              {t('platform_logs')}
             </CardDescription>
           </CardHeader>
           <CardContent className="px-2">
-            <ActivityLogs logs={recentLogs || []} />
+            <ActivityLogs logs={recentLogs || []} noActivityLabel={t('no_activity')} />
           </CardContent>
         </Card>
 
@@ -196,18 +205,18 @@ export function AdminDashboardClient() {
          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-10">
             <div className="space-y-5">
                <Badge className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 px-4 py-1.5 font-black text-[10px] uppercase tracking-[0.2em] rounded-xl">
-                  Action Required
+                  {t('action_required')}
                </Badge>
                <h2 className="text-3xl sm:text-6xl font-black tracking-tighter text-foreground uppercase leading-tight">
-                  {stats?.pendingVerifications ?? 0} Pending ID <br className="hidden sm:block" /> Verifications
+                  {t('pending_verifications', { count: stats?.pendingVerifications ?? 0 })}
                </h2>
                <p className="text-muted-foreground font-black text-xs sm:text-sm uppercase tracking-widest opacity-60 max-w-lg">
-                  There are users waiting for their identity verification. Verifying users boosts platform trust and safety.
+                  {t('verifications_desc')}
                </p>
             </div>
             <Button size="lg" asChild className="rounded-xl px-12 font-black uppercase tracking-widest h-16 shadow-none border border-primary active:scale-95 transition-all">
                <Link href="/admin/users?tab=verifications">
-                  Go to Verifications
+                  {t('go_to_verifications')}
                   <ArrowRight className="ml-3 w-6 h-6 text-white" />
                </Link>
             </Button>
@@ -217,8 +226,8 @@ export function AdminDashboardClient() {
   );
 }
 
-function ActivityLogs({ logs }: { logs: any[] }) {
-  if (logs.length === 0) return <p className="text-center py-4 text-muted-foreground text-sm">No recent activity.</p>;
+function ActivityLogs({ logs, noActivityLabel }: { logs: any[]; noActivityLabel: string }) {
+  if (logs.length === 0) return <p className="text-center py-4 text-muted-foreground text-sm">{noActivityLabel}</p>;
   
   return (
     <div className="space-y-4">

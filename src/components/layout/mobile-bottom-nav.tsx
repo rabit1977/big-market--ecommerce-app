@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { Heart, Home, LayoutGrid, Package, PlusCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -10,26 +11,19 @@ interface MobileBottomNavProps {
   wishlistCount?: number;
 }
 
-interface NavItem {
-  label: string;
-  icon: React.ElementType;
-  href: string;
-  primary?: boolean;
-  showBadge?: boolean;
-}
-
-const NAV_ITEMS: NavItem[] = [
-  { label: 'Home',       icon: Home,       href: '/' },
-  { label: 'Categories', icon: LayoutGrid,  href: '/categories' },
-  { label: 'Sell',       icon: PlusCircle,  href: '/sell',        primary: true },
-  { label: 'Favorites',  icon: Heart,       href: '/favorites',   showBadge: true },
-  { label: 'My Listings',     icon: Package,     href: '/my-listings' },
-];
-
 export function MobileBottomNav({ wishlistCount = 0 }: MobileBottomNavProps) {
+  const t = useTranslations('NavActions');
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(true);
   const lastScrollYRef = useRef(0);
+
+  const NAV_ITEMS = [
+    { label: t('home'),        icon: Home,       href: '/' },
+    { label: t('categories'), icon: LayoutGrid, href: '/categories' },
+    { label: t('post_ad'),     icon: PlusCircle,  href: '/sell',      primary: true },
+    { label: t('favorites'),   icon: Heart,       href: '/favorites',  showBadge: true },
+    { label: t('my_listings'), icon: Package,     href: '/my-listings' },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,7 +62,7 @@ export function MobileBottomNav({ wishlistCount = 0 }: MobileBottomNavProps) {
 
           return (
             <Link
-              key={item.label}
+              key={item.href}
               href={item.href}
               aria-label={badgeCount > 0 ? `${item.label} (${badgeCount})` : item.label}
               aria-current={active ? 'page' : undefined}

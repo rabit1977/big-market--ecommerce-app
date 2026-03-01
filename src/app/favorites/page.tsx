@@ -14,13 +14,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useMutation, useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import {
-    Heart,
-    History as HistoryIcon,
-    Loader2,
-    Search,
-    Trash2,
+  Heart,
+  History as HistoryIcon,
+  Loader2,
+  Search,
+  Trash2,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { memo, use, useOptimistic, useTransition } from 'react';
 import { toast } from 'sonner';
@@ -44,6 +45,7 @@ export default function FavoritesPage({ searchParams }: PageProps) {
   // React 19 / Next.js 15: unwrap the Promise synchronously inside a Client
   // Component via the `use()` hook — no useEffect needed.
   const { tab } = use(searchParams);
+  const t = useTranslations('Favorites');
   const activeTab =
     tab === 'searches' || tab === 'listings' || tab === 'visited'
       ? tab
@@ -62,13 +64,13 @@ export default function FavoritesPage({ searchParams }: PageProps) {
   if (status === 'unauthenticated') {
     return (
       <div className="min-h-screen pt-4 md:pt-6 flex flex-col items-center justify-center gap-3 px-4">
-        <h1 className="text-lg font-bold text-foreground">Please Sign In</h1>
+        <h1 className="text-lg font-bold text-foreground">{t('please_sign_in')}</h1>
         <p className="text-xs text-muted-foreground">
-          You need to be logged in to view favorites.
+          {t('sign_in_to_view')}
         </p>
         <Link href="/auth">
           <Button size="sm" className="rounded-lg font-bold text-xs">
-            Sign In
+            {t('sign_in')}
           </Button>
         </Link>
       </div>
@@ -87,10 +89,10 @@ export default function FavoritesPage({ searchParams }: PageProps) {
           </div>
           <div>
             <h1 className="text-base md:text-xl font-black tracking-tight text-foreground">
-              Saved Items
+              {t('saved_items')}
             </h1>
             <p className="text-xs md:text-sm text-muted-foreground font-medium">
-              Your favorites, searches, and history
+              {t('favorites_searches_history')}
             </p>
           </div>
         </div>
@@ -111,6 +113,7 @@ function FavoritesTabs({
   userId: string;
   defaultTab: string;
 }) {
+  const t = useTranslations('Favorites');
   const listingFavorites = useQuery(api.favorites.getPopulated, { userId });
   const savedSearches = useQuery(api.searches.getSavedSearches, { userId });
   const visitedHistory = useQuery(api.history.getMyHistory, { userId });
@@ -132,10 +135,10 @@ function FavoritesTabs({
       removeOptimisticSearch(id);
       try {
         await deleteSearchMutation({ id: id as any });
-        toast.success('Search removed');
+        toast.success(t('search_removed'));
       } catch {
         // Revert is automatic — useOptimistic rolls back on error
-        toast.error('Failed to remove search');
+        toast.error(t('failed_to_remove'));
       }
     });
   };
@@ -161,19 +164,19 @@ function FavoritesTabs({
           value="listings"
           className="rounded-lg md:rounded-xl text-xs md:text-sm font-bold"
         >
-          Favorites ({listingFavorites?.length ?? 0})
+          {t('favorites_tab', { count: listingFavorites?.length ?? 0 })}
         </TabsTrigger>
         <TabsTrigger
           value="searches"
           className="rounded-lg md:rounded-xl text-xs md:text-sm font-bold"
         >
-          Searches ({optimisticSearches.length})
+          {t('searches_tab', { count: optimisticSearches.length })}
         </TabsTrigger>
         <TabsTrigger
           value="visited"
           className="rounded-lg md:rounded-xl text-xs md:text-sm font-bold"
         >
-          History
+          {t('history_tab')}
         </TabsTrigger>
       </TabsList>
 
@@ -184,9 +187,9 @@ function FavoritesTabs({
         ) : listingFavorites.length === 0 ? (
           <EmptyState
             icon={<Heart className="w-8 h-8 md:w-10 md:h-10 text-muted-foreground/40" />}
-            title="No favorites yet"
-            description="Save listings you like to view them later."
-            action={{ label: 'Browse Listings', href: '/listings' }}
+            title={t('no_favorites')}
+            description={t('no_favorites_desc')}
+            action={{ label: t('browse_listings'), href: '/listings' }}
           />
         ) : (
           <div className="space-y-8">
@@ -218,9 +221,9 @@ function FavoritesTabs({
         ) : optimisticSearches.length === 0 ? (
           <EmptyState
             icon={<Search className="w-8 h-8 md:w-10 md:h-10 text-muted-foreground/40" />}
-            title="No saved searches"
-            description="Save your search queries to get notified of new results."
-            action={{ label: 'Start Searching', href: '/listings' }}
+            title={t('no_saved_searches')}
+            description={t('no_saved_searches_desc')}
+            action={{ label: t('start_searching'), href: '/listings' }}
           />
         ) : (
           <div className="flex flex-col gap-2">
@@ -243,9 +246,9 @@ function FavoritesTabs({
         ) : visitedHistory.length === 0 ? (
           <EmptyState
             icon={<HistoryIcon className="w-8 h-8 md:w-10 md:h-10 text-muted-foreground/40" />}
-            title="No recently visited ads"
-            description="Ads you view will appear here."
-            action={{ label: 'Browse Listings', href: '/listings' }}
+            title={t('no_history')}
+            description={t('no_history_desc')}
+            action={{ label: t('browse_listings'), href: '/listings' }}
           />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-2.5 md:gap-4">
@@ -281,6 +284,7 @@ const SavedSearchRow = memo(function SavedSearchRow({
   onDelete: (id: string) => void;
   isPending: boolean;
 }) {
+  const t = useTranslations('Favorites');
   return (
     <div className="group flex items-center gap-2.5 md:gap-3 bg-card p-2.5 md:p-3 rounded-xl border border-border/50 hover:border-border hover:shadow-sm transition-all">
       <div className="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-muted flex items-center justify-center shrink-0">
@@ -292,7 +296,7 @@ const SavedSearchRow = memo(function SavedSearchRow({
           {search.name || search.query}
         </h3>
         <p className="text-[9px] md:text-[10px] text-muted-foreground truncate font-medium">
-          Saved {formatDistanceToNow(search._creationTime)} ago
+          {t('saved_ago', { time: formatDistanceToNow(search._creationTime) })}
         </p>
       </Link>
 

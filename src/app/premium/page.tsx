@@ -19,34 +19,37 @@ import {
     User
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-const faqs = [
-  {
-    q: 'How can I activate my ad promotion?',
-    a: 'Activating a promotion is seamless. If you have already submitted your ad, simply open it and click the "Promote" link next to the star icon to choose your boost. Registered users can also manage activations directly from their account dashboard for maximum efficiency.',
-  },
-  {
-    q: 'How long do ads remain promoted?',
-    a: 'All professional boosts remain active for a full 14-day cycle. Once this period expires, your listing transitions back to a standard free ad automatically, ensuring your ad stays published without interruption.',
-  },
-  {
-    q: 'Why doesn\'t my premium ad appear at the very top?',
-    a: 'To ensure maximum fairness and variety, all promoted ads are displayed on the search page in a dynamic rotation. Listings are surfaced based on relevant viewer criteria: the region, the category, and specific keywords contained in your title.',
-  },
-  {
-    q: 'What payment methods are supported?',
-    a: 'We recommend paying with a debit or credit card for instant activation and secure processing. Alternatively, we also support bank transfers via pro-forma invoicing for your convenience.',
-  },
-];
-
 export default function PremiumPage() {
   const { data: session } = useSession();
   const router = useRouter();
+  const t = useTranslations('Premium');
   const [isProcessing, setIsProcessing] = useState<string | null>(null);
+
+  // FAQs are translated inline
+  const faqs = [
+    {
+      q: 'How can I activate my ad promotion?',
+      a: 'Activating a promotion is seamless. If you have already submitted your ad, simply open it and click the "Promote" link next to the star icon to choose your boost. Registered users can also manage activations directly from their account dashboard for maximum efficiency.',
+    },
+    {
+      q: 'How long do ads remain promoted?',
+      a: 'All professional boosts remain active for a full 14-day cycle. Once this period expires, your listing transitions back to a standard free ad automatically, ensuring your ad stays published without interruption.',
+    },
+    {
+      q: "Why doesn't my premium ad appear at the very top?",
+      a: 'To ensure maximum fairness and variety, all promoted ads are displayed on the search page in a dynamic rotation. Listings are surfaced based on relevant viewer criteria: the region, the category, and specific keywords contained in your title.',
+    },
+    {
+      q: 'What payment methods are supported?',
+      a: 'We recommend paying with a debit or credit card for instant activation and secure processing. Alternatively, we also support bank transfers via pro-forma invoicing for your convenience.',
+    },
+  ];
 
   const handleSubscribe = async (planId: string, price: number) => {
     if (!session?.user?.id || !session?.user?.email) {
@@ -93,7 +96,7 @@ export default function PremiumPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-3xl md:text-5xl font-black tracking-tight text-foreground mb-4"
           >
-            Premium Services
+            {t('title')}
           </motion.h1>
           <motion.p
              initial={{ opacity: 0, y: 20 }}
@@ -101,7 +104,7 @@ export default function PremiumPage() {
              transition={{ delay: 0.1 }}
              className="text-lg text-muted-foreground max-w-2xl mx-auto"
           >
-            Verification for individuals and professional tools for businesses.
+            {t('subtitle')}
           </motion.p>
         </div>
       </section>
@@ -122,10 +125,10 @@ export default function PremiumPage() {
                     </div>
                     <CardHeader>
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold w-fit mb-2">
-                            For Individuals
+                            {t('for_individuals')}
                         </div>
-                        <CardTitle className="text-2xl">Verified User</CardTitle>
-                        <CardDescription>Essential for posting listings safely</CardDescription>
+                        <CardTitle className="text-2xl">{t('verified_user')}</CardTitle>
+                        <CardDescription>{t('verified_desc')}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="flex items-baseline gap-1 mb-4">
@@ -136,19 +139,19 @@ export default function PremiumPage() {
                         <ul className="space-y-3 text-sm">
                             <li className="flex gap-2 items-start">
                                 <Check className="w-4 h-4 text-green-500 mt-0.5" />
-                                <span><strong className="text-foreground">Required</strong> to post listings</span>
+                                <span><strong className="text-foreground">{t('required_badge')}</strong> {t('required_to_post')}</span>
                             </li>
                             <li className="flex gap-2 items-start">
                                 <Check className="w-4 h-4 text-green-500 mt-0.5" />
-                                <span>Get the <BadgeCheck className="w-3 h-3 inline text-primary" /> Verified Badge</span>
+                                <span>{t('verified_badge')} <BadgeCheck className="w-3 h-3 inline text-primary" /></span>
                             </li>
                             <li className="flex gap-2 items-start">
                                 <Check className="w-4 h-4 text-green-500 mt-0.5" />
-                                <span>Listing Limit: 50 listings/year</span>
+                                <span>{t('listing_limit')}</span>
                             </li>
                             <li className="flex gap-2 items-start">
                                 <Check className="w-4 h-4 text-green-500 mt-0.5" />
-                                <span>Access to Promotion Options</span>
+                                <span>{t('promotion_access')}</span>
                             </li>
                         </ul>
                     </CardContent>
@@ -159,7 +162,7 @@ export default function PremiumPage() {
                             onClick={() => handleSubscribe('verified', 98)}
                             disabled={!!isProcessing}
                         >
-                            {isProcessing === 'verified' ? 'Processing...' : 'Get Verified'}
+                            {isProcessing === 'verified' ? t('processing') : t('get_verified_btn')}
                         </Button>
                     </CardFooter>
                 </Card>
@@ -177,10 +180,10 @@ export default function PremiumPage() {
                     </div>
                     <CardHeader>
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold w-fit mb-2">
-                            For Businesses
+                            {t('for_businesses')}
                         </div>
-                        <CardTitle className="text-2xl">Business Premium</CardTitle>
-                        <CardDescription>Professional tools for shops & agencies</CardDescription>
+                        <CardTitle className="text-2xl">{t('business_premium')}</CardTitle>
+                        <CardDescription>{t('business_desc')}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="flex items-baseline gap-1 mb-4">
@@ -191,19 +194,19 @@ export default function PremiumPage() {
                         <ul className="space-y-3 text-sm">
                             <li className="flex gap-2 items-start">
                                 <Check className="w-4 h-4 text-amber-500 mt-0.5" />
-                                <span><strong className="text-foreground">Unlimited</strong> listings management</span>
+                                <span><strong className="text-foreground">{t('unlimited')}</strong> {t('unlimited_listings')}</span>
                             </li>
                             <li className="flex gap-2 items-start">
                                 <Check className="w-4 h-4 text-amber-500 mt-0.5" />
-                                <span>Custom Shop URL & Branding</span>
+                                <span>{t('custom_shop')}</span>
                             </li>
                             <li className="flex gap-2 items-start">
                                 <Check className="w-4 h-4 text-amber-500 mt-0.5" />
-                                <span>Advanced Analytics & Dashboard</span>
+                                <span>{t('advanced_analytics')}</span>
                             </li>
                             <li className="flex gap-2 items-start">
                                 <Check className="w-4 h-4 text-amber-500 mt-0.5" />
-                                <span>Multi-user team access</span>
+                                <span>{t('multi_user')}</span>
                             </li>
                         </ul>
                     </CardContent>
@@ -214,7 +217,7 @@ export default function PremiumPage() {
                             onClick={() => handleSubscribe('business', 450)}
                             disabled={!!isProcessing}
                         >
-                             {isProcessing === 'business' ? 'Processing...' : 'Go Business'}
+                             {isProcessing === 'business' ? t('processing') : t('go_business_btn')}
                         </Button>
                     </CardFooter>
                 </Card>
@@ -222,17 +225,17 @@ export default function PremiumPage() {
         </div>
       </section>
 
-      {/* Promotion Options — Synced from PROMOTIONS constant */}
+      {/* Promotion Options */}
       <section className="bg-muted/30 py-16 border-y border-border/50">
         <div className="container-wide">
              <div className="text-center max-w-2xl mx-auto mb-12">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold mb-4">
                     <Rocket className="w-3.5 h-3.5" />
-                    Boost Your Sales
+                    {t('boost_sales')}
                 </div>
-                <h2 className="text-3xl font-black tracking-tight mb-4">Listing Promotion Options</h2>
+                <h2 className="text-3xl font-black tracking-tight mb-4">{t('promotion_options')}</h2>
                 <p className="text-muted-foreground">
-                    Available to Verified Users. Choose these powerful add-ons to reach more buyers and sell faster.
+                    {t('promotion_subtitle')}
                 </p>
              </div>
 
@@ -251,7 +254,7 @@ export default function PremiumPage() {
                         )}>
                             {promo.isMain && (
                                 <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-bl-xl">
-                                    Popular
+                                    {t('popular')}
                                 </div>
                             )}
                             <CardHeader className="pb-3">
@@ -281,10 +284,10 @@ export default function PremiumPage() {
 
              <div className="text-center mt-8">
                 <p className="text-sm text-muted-foreground mb-4">
-                    To promote a specific listing, go to <strong>My Listings</strong> and click <strong>Promote</strong> on any listing.
+                    {t('promote_hint')}
                 </p>
                 <Button variant="outline" asChild className="rounded-full">
-                    <Link href="/my-listings">Go to My Listings</Link>
+                    <Link href="/my-listings">{t('go_to_listings')}</Link>
                 </Button>
              </div>
         </div>
@@ -295,7 +298,7 @@ export default function PremiumPage() {
           <div className="max-w-3xl mx-auto">
                 <h2 className="text-2xl font-black mb-8 flex items-center gap-2">
                     <HelpCircle className="w-6 h-6 text-primary" />
-                    Frequently Asked Questions
+                    {t('faq_title')}
                 </h2>
                 <div className="grid gap-6">
                     {faqs.map((faq, i) => (
@@ -311,7 +314,7 @@ export default function PremiumPage() {
       {/* Payment Methods */}
       <section className="border-t border-border/50 bg-muted/10 py-12">
         <div className="container-wide text-center">
-            <h3 className="font-bold mb-6">Secure Payment Methods</h3>
+            <h3 className="font-bold mb-6">{t('secure_payments')}</h3>
             <div className="flex flex-wrap justify-center gap-4 sm:gap-8 items-center opacity-70 grayscale hover:grayscale-0 transition-all">
                 <div className="flex items-center gap-2 bg-background border border-border/50 px-4 py-2 rounded-lg">
                     <CreditCard className="w-5 h-5" />

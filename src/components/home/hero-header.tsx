@@ -80,7 +80,7 @@ export const HeroHeader = () => {
                     <div className="w-5 h-5 rounded-lg bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-200">
                       <List className="w-3 h-3" />
                     </div>  
-                    <span className="text-[10px] md:text-[11px] font-bold tracking-widest text-foreground uppercase whitespace-nowrap">{tHome('browse_all') || 'browse all'}</span>
+                    <span className="text-[10px] md:text-[11px] font-bold tracking-widest text-foreground uppercase whitespace-nowrap">{tHome('browse_all')}</span>
                   </Link>
                 </CarouselItem>
 

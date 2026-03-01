@@ -1,6 +1,5 @@
 'use client';
 
-
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,12 +20,14 @@ import {
     Wallet
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { api } from '../../../convex/_generated/api';
 
 export default function WalletPage() {
     const { data: session } = useSession();
     const userId = session?.user?.id || '';
+    const t = useTranslations('Wallet');
     
     const user = useQuery(api.users.getByExternalId, { externalId: userId });
     const transactions = useQuery(api.wallet.getTransactions, { userId });
@@ -37,7 +38,7 @@ export default function WalletPage() {
         bonuses: 0
     };
 
-    if (!user) return <div className="p-20 text-center text-muted-foreground">Loading Wallet...</div>;
+    if (!user) return <div className="p-20 text-center text-muted-foreground">{t('loading')}</div>;
 
     return (
         <div className="min-h-screen pt-4 md:pt-6 pb-8 bg-muted/20">
@@ -50,7 +51,7 @@ export default function WalletPage() {
                         <Wallet className="w-5 h-5 md:w-7 md:h-7 text-primary" />
                     </div>
                     <div className="min-w-0">
-                         <h1 className="text-lg md:text-2xl font-black tracking-tighter text-foreground">My Wallet</h1>
+                         <h1 className="text-lg md:text-2xl font-black tracking-tighter text-foreground">{t('title')}</h1>
                          <p className="text-muted-foreground text-[10px] md:text-sm font-medium">ID: {user.externalId.slice(-6).toUpperCase()}</p>
                     </div>
                 </div>
@@ -58,18 +59,18 @@ export default function WalletPage() {
                 {/* Tabs Navigation */}
                 <Tabs defaultValue="payments" className="w-full">
                     <TabsList className="grid w-full grid-cols-2 mb-4 md:mb-6 h-10 md:h-11 bg-muted p-0.5 md:p-1 rounded-lg md:rounded-xl">
-                        <TabsTrigger value="payments" className="rounded-md md:rounded-lg font-bold text-xs md:text-sm data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Payments</TabsTrigger>
-                        <TabsTrigger value="expenses" className="rounded-md md:rounded-lg font-bold text-xs md:text-sm data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Expenses</TabsTrigger>
+                        <TabsTrigger value="payments" className="rounded-md md:rounded-lg font-bold text-xs md:text-sm data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">{t('payments_tab')}</TabsTrigger>
+                        <TabsTrigger value="expenses" className="rounded-md md:rounded-lg font-bold text-xs md:text-sm data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">{t('expenses_tab')}</TabsTrigger>
                     </TabsList>
 
                     <div className="mb-4 md:mb-6 flex justify-end">
                         <Select defaultValue="current">
                           <SelectTrigger className="w-[150px] md:w-[180px] bg-card border-border text-xs md:text-sm h-9">
-                            <SelectValue placeholder="Select month" />
+                            <SelectValue placeholder={t('select_month')} />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="current">Current Month</SelectItem>
-                            <SelectItem value="last">Last Month</SelectItem>
+                            <SelectItem value="current">{t('current_month')}</SelectItem>
+                            <SelectItem value="last">{t('last_month')}</SelectItem>
                           </SelectContent>
                         </Select>
                     </div>
@@ -77,15 +78,15 @@ export default function WalletPage() {
                     {/* Stats Grid */}
                     <div className="grid grid-cols-3 gap-2 md:gap-4 mb-5 md:mb-8 bg-card rounded-xl md:rounded-2xl border border-border/50 shadow-sm p-3 md:p-5 text-center">
                         <div>
-                            <div className="text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Balance</div>
+                            <div className="text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">{t('balance')}</div>
                             <div className="font-black text-base md:text-xl text-foreground">{formatPrice(stats.payments)}</div>
                         </div>
                         <div className="border-l border-border/50 relative">
-                            <div className="text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Spent</div>
+                            <div className="text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">{t('spent')}</div>
                             <div className="font-black text-base md:text-xl text-foreground">{formatPrice(stats.spent)}</div>
                         </div>
                         <div className="border-l border-border/50">
-                            <div className="text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Bonuses</div>
+                            <div className="text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">{t('bonuses')}</div>
                             <div className="font-black text-base md:text-xl text-foreground">{formatPrice(stats.bonuses)}</div>
                         </div>
                     </div>
@@ -96,18 +97,18 @@ export default function WalletPage() {
                         asChild
                     >
                         <Link href="/wallet/top-up">
-                            Top Up Account
+                            {t('top_up_btn')}
                         </Link>
                     </Button>
 
                     {/* Content Area */}
                     <div className="mt-6 md:mt-8 min-h-[200px]">
-                        <h3 className="font-bold text-foreground mb-3 text-sm md:text-base">Recent Transactions</h3>
+                        <h3 className="font-bold text-foreground mb-3 text-sm md:text-base">{t('recent_transactions')}</h3>
                         {!transactions ? (
                              <div className="flex justify-center p-8"><Loader2 className="animate-spin text-muted-foreground w-6 h-6" /></div>
                         ) : transactions.length === 0 ? (
                             <div className="text-center py-12 border-2 border-dashed border-border rounded-xl">
-                                <span className="text-muted-foreground text-xs font-medium">No transactions found</span>
+                                <span className="text-muted-foreground text-xs font-medium">{t('no_transactions')}</span>
                             </div>
                         ) : (
                             <div className="space-y-2">

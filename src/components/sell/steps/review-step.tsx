@@ -12,6 +12,7 @@ import {
     Package,
     Phone
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { ListingFormData } from '../post-listing-wizard';
 
@@ -25,16 +26,17 @@ interface ReviewStepProps {
 }
 
 export function ReviewStep({ formData, categories }: ReviewStepProps) {
+  const t = useTranslations('Sell');
   const category = categories.find((c) => c.slug === formData.category);
   const images = formData.images || [];
 
   const completionChecks = [
-    { label: 'Category selected', completed: !!formData.category },
-    { label: 'Title provided', completed: !!formData.title },
-    { label: 'Description added', completed: !!formData.description },
-    { label: 'Price set', completed: !!formData.price },
-    { label: 'Location specified', completed: !!formData.city },
-    { label: 'Images uploaded', completed: images.length > 0 },
+    { label: t('check_category'), completed: !!formData.category },
+    { label: t('check_title'), completed: !!formData.title },
+    { label: t('check_description'), completed: !!formData.description },
+    { label: t('check_price'), completed: !!formData.price },
+    { label: t('check_location'), completed: !!formData.city },
+    { label: t('check_images'), completed: images.length > 0 },
   ];
 
   const allComplete = completionChecks.every((check) => check.completed);
@@ -42,15 +44,13 @@ export function ReviewStep({ formData, categories }: ReviewStepProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold mb-2">Review Your Listing</h2>
-        <p className="text-muted-foreground">
-          Make sure everything looks good before publishing
-        </p>
+        <h2 className="text-2xl font-bold mb-2">{t('review_title')}</h2>
+        <p className="text-muted-foreground">{t('review_desc')}</p>
       </div>
 
       {/* Completion Checklist */}
       <Card className="p-4">
-        <h3 className="font-semibold mb-3">Completion Checklist</h3>
+        <h3 className="font-semibold mb-3">{t('checklist_title')}</h3>
         <div className="space-y-2">
           {completionChecks.map((check, index) => (
             <div key={index} className="flex items-center gap-2">
@@ -73,7 +73,7 @@ export function ReviewStep({ formData, categories }: ReviewStepProps) {
         {allComplete && (
           <div className="mt-4 p-3 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-900 rounded-lg">
             <p className="text-sm font-medium text-green-800 dark:text-green-200">
-              ✓ Your listing is ready to publish!
+              {t('ready_to_publish')}
             </p>
           </div>
         )}
@@ -86,7 +86,7 @@ export function ReviewStep({ formData, categories }: ReviewStepProps) {
           <div className="relative aspect-video bg-muted">
             <Image
               src={formData.thumbnail || images[0]}
-              alt={formData.title || 'Listing preview'}
+              alt={formData.title || t('untitled')}
               fill
               className="object-cover"
             />
@@ -108,7 +108,7 @@ export function ReviewStep({ formData, categories }: ReviewStepProps) {
           )}
 
           {/* Title */}
-          <h3 className="text-2xl font-bold">{formData.title || 'Untitled'}</h3>
+          <h3 className="text-2xl font-bold">{formData.title || t('untitled')}</h3>
 
           {/* Price */}
           <div className="flex items-baseline gap-2">
@@ -117,7 +117,7 @@ export function ReviewStep({ formData, categories }: ReviewStepProps) {
             </span>
             {formData.isPriceNegotiable && (
               <Badge variant="outline" className="capitalize">
-                Po dogovor
+                {t('price_negotiable')}
               </Badge>
             )}
             {formData.condition && (
@@ -132,9 +132,9 @@ export function ReviewStep({ formData, categories }: ReviewStepProps) {
 
           {/* Description */}
           <div>
-            <h4 className="font-semibold mb-2">Description</h4>
+            <h4 className="font-semibold mb-2">{t('label_description_section')}</h4>
             <p className="text-muted-foreground whitespace-pre-wrap">
-              {formData.description || 'No description provided'}
+              {formData.description || t('no_description')}
             </p>
           </div>
 
@@ -142,7 +142,7 @@ export function ReviewStep({ formData, categories }: ReviewStepProps) {
 
           {/* Location & Contact */}
           <div className="space-y-3">
-            <h4 className="font-semibold">Location & Contact</h4>
+            <h4 className="font-semibold">{t('label_location_contact')}</h4>
             
             <div className="space-y-2 text-sm">
               {formData.city && (
@@ -174,13 +174,13 @@ export function ReviewStep({ formData, categories }: ReviewStepProps) {
       {/* Publishing Info */}
       <Card className="p-4 bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900">
         <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
-          📢 What happens next?
+          {t('what_next_title')}
         </h4>
         <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
-          <li>• Your listing will be published immediately</li>
-          <li>• It will appear in search results within minutes</li>
-          <li>• You'll receive notifications when users contact you</li>
-          <li>• You can edit or delete your listing anytime</li>
+          <li>{t('what_next1')}</li>
+          <li>{t('what_next2')}</li>
+          <li>{t('what_next3')}</li>
+          <li>{t('what_next4')}</li>
         </ul>
       </Card>
     </div>

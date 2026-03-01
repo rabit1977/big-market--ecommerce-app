@@ -6,22 +6,15 @@ import { Button } from '@/components/ui/button';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
 import { Loader2, Shield, User as UserIcon, UserPlus, Users } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useState } from 'react';
 
 const ITEMS_PER_PAGE = 15;
 
-const SORT_OPTIONS = [
-    { label: 'Newest First',  value: 'newest' },
-    { label: 'Oldest First',  value: 'oldest' },
-    { label: 'Name A–Z',      value: 'name_asc' },
-    { label: 'Name Z–A',      value: 'name_desc' },
-    { label: 'Admins First',  value: 'role' },
-    { label: 'Status',        value: 'status' },
-];
-
 export function UsersClientPage() {
   const usersRaw = useQuery(api.users.list);
+  const t = useTranslations('AdminControls');
 
   const [timeRange, setTimeRange] = useState<TimeRange>('all');
   const [search, setSearch]       = useState('');
@@ -29,6 +22,15 @@ export function UsersClientPage() {
   const [statusFilter, setStatus] = useState<string>('ALL');
   const [roleFilter, setRole]     = useState<string>('ALL');
   const [page, setPage]           = useState(1);
+
+  const SORT_OPTIONS = [
+    { label: t('users_title').includes('Admin') ? 'Newest First' : 'Newest First', value: 'newest' },
+    { label: 'Oldest First',  value: 'oldest' },
+    { label: 'Name A–Z',      value: 'name_asc' },
+    { label: 'Name Z–A',      value: 'name_desc' },
+    { label: 'Admins First',  value: 'role' },
+    { label: 'Status',        value: 'status' },
+  ];
 
   if (usersRaw === undefined) {
     return (
@@ -109,19 +111,19 @@ export function UsersClientPage() {
       <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-4 duration-500'>
         <div className='space-y-1'>
           <h1 className='text-3xl sm:text-4xl font-bold tracking-tight text-foreground flex items-center gap-3'>
-            Admin &amp; Users
+            {t('users_title')}
             <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-lg bg-secondary text-primary text-xs font-bold border border-border">
                {users.length}
             </span>
           </h1>
           <p className='text-xs md:text-sm text-muted-foreground font-medium'>
-            Manage your store users and their roles in real-time
+            {t('users_desc')}
           </p>
         </div>
         <Button asChild className="rounded-lg font-bold shadow-none transition-all btn-premium border border-primary">
           <Link href='/admin/users/create'>
             <UserPlus className='h-5 w-5 mr-2' />
-            Add New User
+            {t('add_new_user')}
           </Link>
         </Button>
       </div>
@@ -129,9 +131,9 @@ export function UsersClientPage() {
       {/* Stats Cards */}
       <div className='grid gap-3 sm:gap-5 grid-cols-2 md:grid-cols-3 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100'>
         {[
-            { label: 'Total Users', value: users.length, icon: Users, color: 'text-foreground', bg: 'bg-secondary', border: 'border-border' },
-            { label: 'Administrators', value: adminCount, icon: Shield, color: 'text-primary', bg: 'bg-secondary', border: 'border-border' },
-            { label: 'Regular Customers', value: userCount, icon: UserIcon, color: 'text-emerald-500', bg: 'bg-secondary', border: 'border-border' },
+            { label: t('total_users_stat'), value: users.length, icon: Users, color: 'text-foreground', bg: 'bg-secondary', border: 'border-border' },
+            { label: t('administrators'),   value: adminCount,   icon: Shield, color: 'text-primary',     bg: 'bg-secondary', border: 'border-border' },
+            { label: t('regular_customers'),value: userCount,    icon: UserIcon, color: 'text-emerald-500', bg: 'bg-secondary', border: 'border-border' },
         ].map(stat => (
              <div key={stat.label} className={`bg-card p-3 sm:p-5 rounded-lg border flex items-center justify-between hover:bg-secondary/30 transition-all duration-300 relative overflow-hidden group gap-2 flex-row-reverse ${stat.border}`}>
                 <div className='flex justify-between items-start mb-2'>
@@ -166,25 +168,25 @@ export function UsersClientPage() {
 
         {/* Row 2: status + role + result count — always in its own wrapping row */}
         <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-border/30">
-          <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">Filter by:</span>
+          <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">{t('filter_by')}</span>
           <select
               value={statusFilter}
               onChange={e => { setStatus(e.target.value); setPage(1); }}
               className="h-8 px-2 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:border-primary/50 font-bold cursor-pointer"
           >
-              <option value="ALL">All Statuses</option>
-              <option value="ACTIVE">Active</option>
-              <option value="PENDING_APPROVAL">Pending</option>
-              <option value="SUSPENDED">Suspended</option>
+              <option value="ALL">{t('all_statuses')}</option>
+              <option value="ACTIVE">{t('status_active')}</option>
+              <option value="PENDING_APPROVAL">{t('status_pending')}</option>
+              <option value="SUSPENDED">{t('suspended')}</option>
           </select>
           <select
               value={roleFilter}
               onChange={e => { setRole(e.target.value); setPage(1); }}
               className="h-8 px-2 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 font-medium cursor-pointer"
           >
-              <option value="ALL">All Roles</option>
-              <option value="ADMIN">Admins only</option>
-              <option value="USER">Users only</option>
+              <option value="ALL">{t('all_roles')}</option>
+              <option value="ADMIN">{t('admins_only')}</option>
+              <option value="USER">{t('users_only')}</option>
           </select>
 
           <span className="text-xs text-muted-foreground ml-auto shrink-0">
@@ -200,7 +202,7 @@ export function UsersClientPage() {
          <div className="p-6 border-b border-border/50 bg-secondary/5 backdrop-blur-sm flex items-center justify-between">
             <h2 className='text-xl font-bold flex items-center gap-3'>
               <Users className="h-5 w-5 text-primary" />
-              {sorted.length > 0 ? `${sorted.length} User${sorted.length > 1 ? 's' : ''} Found` : 'No Users Found'}
+              {sorted.length > 0 ? t('users_found', { count: sorted.length }) : t('no_users_found')}
             </h2>
          </div>
          <div className='p-3 pt-0'>
@@ -218,8 +220,8 @@ export function UsersClientPage() {
               <div className='w-20 h-20 mx-auto rounded-full bg-secondary flex items-center justify-center mb-6'>
                  <Users className='h-10 w-10 text-muted-foreground/50' />
               </div>
-              <h3 className="text-xl font-bold text-foreground">No users found</h3>
-              <p className="mt-2">Try adjusting your search or filters.</p>
+              <h3 className="text-xl font-bold text-foreground">{t('no_users_found')}</h3>
+              <p className="mt-2">{t('try_adjusting')}</p>
             </div>
           )}
         </div>

@@ -41,6 +41,7 @@ import {
     Trash2
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -94,6 +95,7 @@ interface ListingDetailContentProps {
 
 export function ListingDetailContent({ listing, initialQuestions = [] }: ListingDetailContentProps) {
   const router = useRouter();
+  const t = useTranslations('ListingDetail');
   const [selectedImage, setSelectedImage] = useState(0);
   const { isFavorite: isFavCheck } = useFavorites();
   const isFavorite = isFavCheck(listing._id);
@@ -165,7 +167,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
       navigator.share({ title: listing.title, text: listing.description, url: window.location.href });
     } else {
       navigator.clipboard.writeText(window.location.href);
-      toast.success('Link copied to clipboard');
+      toast.success(t('link_copied'));
     }
   };
 
@@ -187,7 +189,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
           </button>
           <div className="flex flex-col">
             <span className="text-sm font-black tracking-tight leading-none text-foreground uppercase">
-              Item: {listingRef}
+              {t('item_ref')}: {listingRef}
             </span>
             <span
               suppressHydrationWarning
@@ -220,7 +222,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
               className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg text-sm font-medium text-foreground hover:bg-secondary transition-all"
             >
               <Share2 className="w-4 h-4" />
-              Share
+              {t('share')}
             </button>
             {!isListingOwner && (
               <SaveAdButton listingId={listing._id} />
@@ -232,7 +234,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   className="flex items-center gap-2 px-4 py-2 bg-secondary border border-border rounded-lg text-sm font-medium text-foreground hover:bg-border transition-all"
                 >
                   <Edit className="w-4 h-4" />
-                  Edit Ad
+                  {t('edit_ad')}
                 </Link>
                 <DeleteListingButton listingId={listing._id} compact />
               </>
@@ -260,7 +262,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 />  
                 <div className="hidden md:flex absolute top-3 right-3 text-white bg-black/60 backdrop-blur-md p-2.5 rounded-lg border border-white/10 flex-col">
                   <span className="text-sm font-black tracking-tight leading-none text-white uppercase">
-                    Item: {listingRef}
+                    {t('item_ref')}: {listingRef}
                   </span>
                   <span
                     suppressHydrationWarning
@@ -344,7 +346,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   {/* SellerBadge will be next to title now */}
                   {!!condition && (
                     <span className="text-[10px] font-bold uppercase text-muted-foreground py-0.5 rounded tracking-wider">
-                      Condition: {String(condition)}
+                      {t('condition')}: {String(condition)}
                     </span>
                   )}
                   {listing.status !== 'ACTIVE' && (
@@ -356,7 +358,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                           : 'bg-red-100 text-red-700 border border-red-200',
                       )}
                     >
-                      {listing.status === 'PENDING_APPROVAL' ? 'Pending Approval' : listing.status}
+                      {listing.status === 'PENDING_APPROVAL' ? t('pending_approval') : listing.status}
                     </span>
                   )}
                 </div>
@@ -372,12 +374,12 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   )}
                   <div className="flex items-baseline gap-2">
                     <span suppressHydrationWarning className="text-4xl font-black text-foreground tracking-tighter">
-                      {listing.price > 0 ? formatCurrency(listing.price, listing.currency) : 'Price on request'}
+                      {listing.price > 0 ? formatCurrency(listing.price, listing.currency) : t('price_on_request')}
                     </span>
                     <div className="flex items-center gap-2 mt-0.5">
                       {listing.price > 0 && (
                         <span className="text-[10px] font-black text-primary uppercase tracking-tighter bg-primary/5 px-1.5 py-0.5 rounded">
-                          {listing.isPriceNegotiable ? 'Po dogovor' : 'Fixed'}
+                          {listing.isPriceNegotiable ? t('negotiable') : t('fixed')}
                         </span>
                       )}
                     </div>
@@ -392,7 +394,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 <div className="flex items-center gap-2 px-1">
                    <div className="w-1 h-4 bg-primary rounded-full" />
                    <h3 className="font-bold text-foreground uppercase tracking-tight text-xs">
-                    Technical Specifications
+                    {t('technical_specs')}
                   </h3>
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-0.5 px-1">
@@ -407,7 +409,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
               <div className="flex items-center gap-2">
                 <div className="w-1 h-4 bg-primary rounded-full" />
                 <h3 className="font-bold text-foreground uppercase tracking-tight text-xs">
-                  About this Item
+                  {t('about_item')}
                 </h3>
               </div>
               <div className="relative">
@@ -425,12 +427,12 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     {isDescExpanded ? (
                       <>
                         <ChevronUp className="w-3.5 h-3.5" />
-                        Show Less
+                        {t('show_less')}
                       </>
                     ) : (
                       <>
                         <ChevronDown className="w-3.5 h-3.5" />
-                        Read Full Description
+                        {t('read_full_desc')}
                       </>
                     )}
                   </button>
@@ -449,9 +451,9 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   {seller?.isVerified && <BadgeCheck className="w-4 h-4 text-primary" />}
                 </Link>
                 <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider" suppressHydrationWarning>
-                  Member since {seller?.createdAt || (seller as any)?._creationTime 
+                  {t('member_since')} {seller?.createdAt || (seller as any)?._creationTime 
                     ? new Date(seller.createdAt || (seller as any)._creationTime).toLocaleDateString('mk-MK', {day: '2-digit', month: '2-digit', year: 'numeric'}) 
-                    : 'Recently'}
+                    : t('recently')}
                 </p>
                 {contactEmail && (
                   <p className="text-[10px] text-primary font-semibold uppercase tracking-wider mt-0.5 hover:underline cursor-pointer">
@@ -483,7 +485,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     label={
                       <div className="flex items-center gap-2">
                         <MessageSquare className="w-5 h-5" />
-                        <span>Contact Options</span>
+                        <span>{t('contact_options')}</span>
                       </div>
                     }
                     className="w-full h-12 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium text-base uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95"
@@ -491,7 +493,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 </div>
               )}
               <Button asChild variant="outline" className="w-full h-10 border rounded-lg text-muted-foreground border-border bg-background font-medium text-sm uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95">
-                <Link href={`/store/${listing.userId}`}>Visit Storefront</Link>
+                <Link href={`/store/${listing.userId}`}>{t('visit_storefront')}</Link>
               </Button>
             </div>
             <div className="mt-4 flex flex-col gap-2 cursor-pointer md:hidden">
@@ -520,7 +522,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     <SellerBadge tier={(seller as any)?.membershipTier} isVerified={seller?.isVerified} />
                     {listing.price > 0 && (
                       <span className="text-[10px] font-black text-primary uppercase tracking-tighter bg-primary/5 px-2 py-0.5 rounded">
-                        {listing.isPriceNegotiable ? 'Po dogovor' : 'Fixed'}
+                        {listing.isPriceNegotiable ? t('negotiable') : t('fixed')}
                       </span>
                     )}
                   </div>
@@ -529,7 +531,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     {listing.city}, {listing.region ?? 'Skopje'}
                   </div>
                    <div suppressHydrationWarning className="text-5xl font-black text-foreground tracking-tighter leading-none">
-                    {listing.price > 0 ? formatCurrency(listing.price, listing.currency) : 'Call for Price'}
+                    {listing.price > 0 ? formatCurrency(listing.price, listing.currency) : t('call_for_price')}
                   </div>
                 </div>
                 {!isListingOwner && (
@@ -544,7 +546,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                       label={
                         <div className="flex items-center gap-2">
                           <MessageSquare className="w-5 h-5" />
-                          <span>Contact Options</span>
+                          <span>{t('contact_options')}</span>
                         </div>
                       }
                       className="w-full h-12 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium text-base uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95"
@@ -565,10 +567,10 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                       {seller?.isVerified && <BadgeCheck className="w-5 h-5 text-primary" />}
                     </Link>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest" suppressHydrationWarning>
-                      {seller?.isVerified ? 'Verified' : 'Member'} since{' - '}
+                      {seller?.isVerified ? t('verified') : t('member')}{' since - '}
                       {seller?.createdAt || (seller as any)?._creationTime 
                         ? new Date(seller.createdAt || (seller as any)._creationTime).toLocaleDateString('mk-MK', {day: 'numeric', month: 'short', year: 'numeric'}) 
-                        : 'Recently'}
+                        : t('recently')}
                     </p>
                     {contactEmail && (
                       <p className="text-sm underline font-bold text-muted-foreground mt-0.5">
@@ -582,7 +584,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     <div className="text-base font-black text-foreground">
                       {sellerProfile?.activeListingsCount ?? '0'}
                     </div>
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">Active Ads</p>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">{t('active_ads')}</p>
                   </div>
                   <div className="p-3 bg-secondary rounded-lg text-center border border-border">
                     <div className="text-base font-black text-foreground">
@@ -592,15 +594,15 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     </div>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">
                       {sellerReviewStats && sellerReviewStats.totalReviews > 0
-                        ? `${sellerReviewStats.totalReviews} Review${sellerReviewStats.totalReviews !== 1 ? 's' : ''}`
-                        : 'Seller Rating'}
+                        ? `${sellerReviewStats.totalReviews} ${t('reviews')}${sellerReviewStats.totalReviews !== 1 ? '' : ''}`
+                        : t('seller_rating')}
                     </p>
                   </div>
                 </div>
                 
                 <div className="mt-4 flex flex-col gap-2">
                    <Button asChild variant="secondary" className="w-full h-10 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium text-sm uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95">
-                     <Link href={`/store/${listing.userId}`}>Visit Storefront</Link>
+                     <Link href={`/store/${listing.userId}`}>{t('visit_storefront')}</Link>
                    </Button>
                    <LeaveReviewModal listingId={listing._id} sellerId={listing.userId} />
                 </div>
@@ -612,7 +614,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
               {/* Safety */}
               <div className="space-y-2 px-2">
                 <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-3">
-                  Safety & Trust
+                  {t('safety_trust')}
                 </p>
                 <ReportModal targetId={listing._id} targetType="listing">
                   <button className="w-full flex items-center justify-between p-4 bg-card border border-border rounded-lg group hover:bg-secondary transition-all">
@@ -620,7 +622,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                       <div className="p-2 rounded-md bg-secondary group-hover:bg-border transition-colors border border-border">
                         <ShieldAlert className="w-4 h-4 text-muted-foreground group-hover:text-foreground" />
                       </div>
-                      <span className="text-xs font-medium text-foreground">Report suspicious activity</span>
+                      <span className="text-xs font-medium text-foreground">{t('report_suspicious')}</span>
                     </div>
                     <ChevronLeft className="w-4 h-4 text-muted-foreground rotate-180" />
                   </button>
@@ -650,14 +652,14 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
           <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 space-y-2">
             <div className="flex items-center gap-2 text-amber-900">
               <ShieldAlert className="w-4 h-4" />
-              <span className="font-black text-xs uppercase tracking-tighter">Safety First</span>
+              <span className="font-black text-xs uppercase tracking-tighter">{t('safety_first')}</span>
             </div>
             <p className="text-xs text-amber-800 leading-relaxed font-medium mb-3">
-              Do not pay in advance. Meet the seller in a public place. Always inspect the item before buying.
+              {t('safety_tip')}
             </p>
             <ReportModal targetId={listing._id} targetType="listing">
               <button className="w-full flex items-center justify-between p-3 bg-white border border-amber-200 rounded-xl group hover:border-amber-400 transition-all text-left mt-2">
-                <span className="text-xs font-bold text-amber-900">Report suspicious activity</span>
+                <span className="text-xs font-bold text-amber-900">{t('report_suspicious')}</span>
                 <ChevronLeft className="w-4 h-4 text-amber-700 rotate-180" />
               </button>
             </ReportModal>
@@ -724,8 +726,8 @@ const LazyMap = memo(function LazyMap({
 // ─── Delete Button ────────────────────────────────────────────────────────────
 
 function DeleteListingButton({ listingId, compact }: { listingId: string; compact?: boolean }) {
-  // React 19: useTransition natively supports async boundaries
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations('ListingDetail');
   const deleteListing = useMutation(api.listings.remove);
   const router = useRouter();
 
@@ -735,7 +737,7 @@ function DeleteListingButton({ listingId, compact }: { listingId: string; compac
         await deleteListing({ id: listingId as Id<'listings'> });
         router.push('/my-listings');
       } catch {
-        toast.error('Failed to delete listing. Please try again.');
+        toast.error(t('delete_confirm_desc'));
       }
     });
   };
@@ -754,7 +756,7 @@ function DeleteListingButton({ listingId, compact }: { listingId: string; compac
         >
           <div className="flex items-center justify-center gap-1.5 sm:gap-2 min-w-0 w-full">
             <Trash2 className="w-4 h-4 shrink-0" />
-            {isPending ? '...' : compact ? 'Delete' : <span className="truncate">Delete Listing</span>}
+            {isPending ? '...' : compact ? t('delete') : <span className="truncate">{t('delete_listing').replace('?', '')}</span>}
           </div>
         </Button>
       </AlertDialogTrigger>
@@ -764,23 +766,22 @@ function DeleteListingButton({ listingId, compact }: { listingId: string; compac
             <Trash2 className="w-8 h-8 text-red-600" />
           </div>
           <AlertDialogTitle className="text-3xl font-black uppercase tracking-tight text-center">
-            Delete Listing?
+            {t('delete_listing')}
           </AlertDialogTitle>
           <AlertDialogDescription className="font-bold text-muted-foreground text-center text-base">
-            This action is permanent and cannot be undone. Are you sure you want to remove this ad from
-            Biggest Market?
+            {t('delete_confirm_desc')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="flex-col sm:flex-row gap-3 pt-6">
           <AlertDialogCancel className="rounded-lg font-bold uppercase text-[11px] tracking-widest h-12 border border-border flex-1">
-            Keep Listing
+            {t('keep_listing')}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isPending}
             className="rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold uppercase text-[11px] tracking-widest h-12 flex-1 disabled:opacity-70"
           >
-            {isPending ? 'Deleting…' : 'Delete Permanently'}
+            {isPending ? t('deleting') : t('delete_permanently')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -6,6 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { useMutation } from 'convex/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { api } from '../../../convex/_generated/api';
@@ -47,14 +48,8 @@ export interface ListingFormData {
   thumbnail?: string;
 }
 
-const steps = [
-  { id: 1, name: 'Category', description: 'Choose a category' },
-  { id: 2, name: 'Details', description: 'Add listing details' },
-  { id: 3, name: 'Images', description: 'Upload photos' },
-  { id: 4, name: 'Review', description: 'Review & publish' },
-];
-
 export function PostListingWizard({ categories, userId }: PostListingWizardProps) {
+  const t = useTranslations('Sell');
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<ListingFormData>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,6 +57,13 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
 
   const createListing = useMutation(api.listings.create);
   const router = useRouter();
+
+  const steps = [
+    { id: 1, name: t('step_category'), description: t('step_category_desc') },
+    { id: 2, name: t('step_details'), description: t('step_details_desc') },
+    { id: 3, name: t('step_images'), description: t('step_images_desc') },
+    { id: 4, name: t('step_review'), description: t('step_review_desc') },
+  ];
 
   const updateFormData = (data: Partial<ListingFormData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
@@ -86,7 +88,6 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
       case 1:
         return !!formData.category;
       case 2:
-        // Basic fields
         const hasBasicFields = !!(
           formData.title &&
           formData.description &&
@@ -95,24 +96,17 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
           formData.contactPhone &&
           formData.contactEmail
         );
-
         if (!hasBasicFields) return false;
-
-        // Check required specification fields from category template
         const selectedCategory = categories.find((c) => c.slug === formData.subCategory) || 
                                 categories.find((c) => c.slug === formData.category);
-        
         if (selectedCategory?.template?.fields) {
           const requiredFields = selectedCategory.template.fields.filter((f: any) => f.required);
           const hasAllSpecs = requiredFields.every((field: any) => {
             const val = formData.specifications?.[field.key];
-             // Check if value is defined and not an empty string (if it's a string)
             return val !== undefined && val !== null && val !== '';
           });
-          
           if (!hasAllSpecs) return false;
         }
-
         return true;
       case 3:
         return formData.images && formData.images.length > 0;
@@ -132,7 +126,6 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
       const sanitizedImages = formData.images || [];
       const thumbnail = sanitizedImages[0] || undefined;
       
-      // Prepare listing data
       const listingData = {
         title: formData.title,
         description: formData.description || '',
@@ -152,15 +145,12 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
         clientNonce,
       };
 
-      // Submit to Convex
       const listingId = await createListing(listingData);
-      
-      // Redirect to success page
-      import('sonner').then(({ toast }) => toast.success('Listing submitted for approval!'));
+      import('sonner').then(({ toast }) => toast.success(t('submit_success')));
       router.push(`/listings/${listingId}/success`);
     } catch (error: any) {
       console.error('Error creating listing:', error);
-      import('sonner').then(({ toast }) => toast.error(`Failed to create listing: ${error.message || 'Unknown error'}`));
+      import('sonner').then(({ toast }) => toast.error(t('submit_failed', { message: error.message || 'Unknown error' })));
     } finally {
       setIsSubmitting(false);
     }
@@ -174,9 +164,9 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
         {/* Progress Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-bold">Post a Listing</h1>
+            <h1 className="text-3xl font-bold">{t('page_title')}</h1>
             <span className="text-sm text-muted-foreground">
-              Step {currentStep} of {steps.length}
+              {t('step_of', { current: currentStep, total: steps.length })}
             </span>
           </div>
           
@@ -281,7 +271,7 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
             className="gap-2"
           >
             <ChevronLeft className="w-4 h-4" />
-            Previous
+            {t('prev')}
           </Button>
 
           <div className="flex flex-col items-end gap-2">
@@ -289,7 +279,6 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
               <Button
                 onClick={() => {
                    if (currentStep === 2 && !canProceed()) {
-                     // Check basic fields first
                      const basicRequired = ['title', 'price', 'city', 'condition', 'contactPhone', 'contactEmail'];
                      for (const field of basicRequired) {
                        // @ts-ignore
@@ -298,14 +287,13 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
                          if (element) {
                            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
                            element.focus();
-                           import('sonner').then(({ toast }) => toast.error(`Please fill in the required field: ${field}`));
-                           return; // Stop after finding the first one
+                           import('sonner').then(({ toast }) => toast.error(t('fill_field', { field })));
+                           return;
                          }
                        }
                      }
-                     // Check dynamic specification fields
                      const selectedCategory = categories.find((c) => c.slug === formData.subCategory) || 
-                                            categories.find((c) => c.slug === formData.category);
+                                             categories.find((c) => c.slug === formData.category);
                      if (selectedCategory?.template?.fields) {
                         const requiredFields = selectedCategory.template.fields.filter((f: any) => f.required);
                         for (const field of requiredFields) {
@@ -314,13 +302,13 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
                                 const element = document.getElementById(`spec-${field.key}`);
                                 if (element) {
                                     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                    import('sonner').then(({ toast }) => toast.error(`Please fill in the required field: ${field.label}`));
+                                    import('sonner').then(({ toast }) => toast.error(t('fill_field', { field: field.label })));
                                     return;
                                 }
                             }
                         }
                      }
-                     import('sonner').then(({ toast }) => toast.error('Please fill in all required fields.'));
+                     import('sonner').then(({ toast }) => toast.error(t('fill_required')));
                      return;
                    }
                    nextStep();
@@ -328,7 +316,7 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
                 disabled={currentStep !== 2 && !canProceed()}
                 className="gap-2"
               >
-                Next
+                {t('next')}
                 <ChevronRight className="w-4 h-4" />
               </Button>
             ) : (
@@ -340,12 +328,12 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
                 {isSubmitting ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Submitting...
+                    {t('submitting')}
                   </>
                 ) : (
                   <>
                     <Check className="w-4 h-4" />
-                    Submit for Review
+                    {t('submit_for_review')}
                   </>
                 )}
               </Button>

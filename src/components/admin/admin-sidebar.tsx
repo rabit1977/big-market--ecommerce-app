@@ -16,6 +16,7 @@ import {
     Users
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
@@ -31,28 +32,28 @@ interface NavItem {
     children?: NavItem[];
 }
 
-const navItems: NavItem[] = [
-    { href: '/admin/dashboard',          label: 'Overview',               icon: LayoutDashboard },
-    { href: '/admin/analytics',          label: 'Analytics',              icon: BarChart3 },
-    { href: '/admin/revenue',            label: 'Revenue',                icon: CreditCard },
-    { href: '/admin/listings',           label: 'All Listings',           icon: Tag },
-    { href: '/admin/listings/promoted',  label: 'Promoted Listings',      icon: Sparkles },
-    { href: '/admin/categories',         label: 'Categories',             icon: Layers },
-    { href: '/admin/users',              label: 'Users',                  icon: Users },
-    { href: '/admin/recycle-bin',        label: 'Recycle Bin',            icon: Trash2 },
-];
-
 export const AdminSidebar = () => {
   const pathname = usePathname();
+  const t = useTranslations('Admin');
   const { data: session } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
-  // Filter items for bottom nav (limit to 4) + Menu
+  const navItems: NavItem[] = [
+    { href: '/admin/dashboard',          label: t('overview'),           icon: LayoutDashboard },
+    { href: '/admin/analytics',          label: t('analytics'),          icon: BarChart3 },
+    { href: '/admin/revenue',            label: t('revenue'),            icon: CreditCard },
+    { href: '/admin/listings',           label: t('all_listings'),       icon: Tag },
+    { href: '/admin/listings/promoted',  label: t('promoted_listings'),  icon: Sparkles },
+    { href: '/admin/categories',         label: t('categories'),         icon: Layers },
+    { href: '/admin/users',              label: t('users'),              icon: Users },
+    { href: '/admin/recycle-bin',        label: t('recycle_bin'),        icon: Trash2 },
+  ];
+
   const bottomNavItems = [
-    { href: '/admin/dashboard',  icon: LayoutDashboard, label: 'Home' },
-    { href: '/admin/listings',   icon: Tag,            label: 'Listings' },
-    { href: '/admin/users',      icon: Users,          label: 'Users' },
-    { href: '/admin/recycle-bin', icon: Trash2,        label: 'Bin' },
+    { href: '/admin/dashboard',   icon: LayoutDashboard, label: t('home_label') },
+    { href: '/admin/listings',    icon: Tag,             label: t('listings_label') },
+    { href: '/admin/users',       icon: Users,           label: t('users') },
+    { href: '/admin/recycle-bin', icon: Trash2,          label: t('bin_label') },
   ];
 
   return (
@@ -66,7 +67,7 @@ export const AdminSidebar = () => {
                 </div>
                 <span>Admin</span>
             </Link>
-            <Button variant="ghost" size="icon" asChild title="Go to Website">
+            <Button variant="ghost" size="icon" asChild title={t('store')}>
                 <Link href="/">
                     <Home className="w-5 h-5" />
                 </Link>
@@ -76,12 +77,10 @@ export const AdminSidebar = () => {
         <ScrollArea className='flex-1 py-4'>
             <div className='px-4 space-y-1'>
                 {navItems.map((item) => {
-                    // For /admin/listings specifically, use exact match so /admin/listings/promoted
-                    // doesn't also highlight "All Listings"
                     const isActive = item.href === '/admin/listings'
                         ? pathname === '/admin/listings'
                         : pathname === item.href || pathname.startsWith(item.href + '/');
-                    return <NavItem key={item.href} item={item} isActive={isActive} />;
+                    return <NavItemLink key={item.href} item={item} isActive={isActive} />;
                 })}
             </div>
         </ScrollArea>
@@ -98,18 +97,18 @@ export const AdminSidebar = () => {
                 <Button variant="outline" size="sm" asChild className='w-full justify-start text-xs h-8'>
                     <Link href="/">
                         <Home className='w-3.5 h-3.5 mr-2' />
-                        Store
+                        {t('store')}
                     </Link>
                 </Button>
                 <Button variant="outline" size="sm" onClick={() => signOut({ callbackUrl: '/' })} className='w-full justify-start text-xs h-8 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30'>
                     <LogOut className='w-3.5 h-3.5 mr-2' />
-                    Logout
+                    {t('logout')}
                 </Button>
             </div>
         </div>
       </aside>
 
-      {/* Mobile Top Header (Minimal) */}
+      {/* Mobile Top Header */}
       <header className='lg:hidden fixed top-0 left-0 right-0 z-50 h-14 bg-background/80 backdrop-blur-md border-b border-border flex items-center justify-between px-4'>
             <div className='flex items-center gap-2'>
                 <Link href='/admin/dashboard' className='font-bold text-lg flex items-center gap-2'>
@@ -158,13 +157,12 @@ export const AdminSidebar = () => {
                     )}
                 >
                     <Menu className="w-5 h-5" />
-                    <span className="text-[10px] font-medium">Menu</span>
+                    <span className="text-[10px] font-medium">{t('menu')}</span>
                 </button>
             </SheetTrigger>
             <SheetContent side="bottom" className='h-[85vh] rounded-t-lg p-0 flex flex-col border-t border-border shadow-none'>
                  <div className="p-4 border-b flex items-center justify-between">
-                     <SheetTitle>Admin Menu</SheetTitle>
-                     {/* Close button is auto-added by SheetContent usually, but title is needed for a11y */}
+                     <SheetTitle>{t('admin_menu')}</SheetTitle>
                  </div>
                  <ScrollArea className="flex-1 p-4">
                      <div className="grid grid-cols-3 gap-4 mb-8">
@@ -198,7 +196,7 @@ export const AdminSidebar = () => {
                          </div>
                          <Button variant="destructive" className='w-full' onClick={() => signOut({ callbackUrl: '/' })}>
                              <LogOut className='w-4 h-4 mr-2' />
-                             Sign Out
+                             {t('sign_out')}
                          </Button>
                      </div>
                  </ScrollArea>
@@ -209,10 +207,10 @@ export const AdminSidebar = () => {
   );
 };
 
-export const AdminBottomNav = () => null; // Removed in favor of pure Sidebar/Drawer approach for enterprise feel
-export const AdminMobileHeader = () => null; // Integrated into main component
+export const AdminBottomNav = () => null;
+export const AdminMobileHeader = () => null;
 
-function NavItem({ item, isActive }: { item: NavItem; isActive: boolean }) {
+function NavItemLink({ item, isActive }: { item: NavItem; isActive: boolean }) {
     return (
         <Link
             href={item.href}

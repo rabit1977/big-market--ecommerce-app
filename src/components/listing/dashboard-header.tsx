@@ -22,11 +22,13 @@ import {
     RefreshCw
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { api } from '../../../convex/_generated/api';
 
 
 export function MyListingsDashboardHeader() {
+  const t = useTranslations('Dashboard');
   const { data: session } = useSession();
   const dashboardData = useQuery(api.users.getMyDashboardStats, { 
       externalId: session?.user?.id || '' 
@@ -70,7 +72,7 @@ export function MyListingsDashboardHeader() {
                                       <CheckCircle2 className="w-4 h-4" />
                                   </div>
                              </TooltipTrigger>
-                             <TooltipContent>Verified Account</TooltipContent>
+                             <TooltipContent>{t('verified_account')}</TooltipContent>
                          </Tooltip>
                      </TooltipProvider>
                  )}
@@ -85,7 +87,7 @@ export function MyListingsDashboardHeader() {
                         {user.isVerified && (
                             <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500/20 font-black px-3 py-1 rounded-xl text-[10px] uppercase tracking-[0.15em] shrink-0">
                                 <CheckCircle2 className="w-3 h-3 mr-1.5" />
-                                Verified
+                                {t('verified')}
                             </Badge>
                         )}
                         {user.membershipStatus === 'ACTIVE' && (
@@ -99,13 +101,13 @@ export function MyListingsDashboardHeader() {
                   
                   <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                       <p className="text-muted-foreground text-[10px] md:text-xs font-black uppercase tracking-[0.2em] opacity-60">
-                          {isCompany ? 'Verified Business' : 'Personal Account'}
+                          {isCompany ? t('verified_business') : t('personal_account')}
                       </p>
                       
                       {user.membershipExpiresAt && (
                           <div className="flex items-center gap-2 text-[10px] text-emerald-600 font-black uppercase tracking-[0.15em] bg-emerald-500/10 w-fit px-3 py-1.5 rounded-xl border border-emerald-500/20">
                               <Activity className="w-3 h-3" />
-                              <span>PRO Active until {format(new Date(user.membershipExpiresAt), 'MMM dd, yyyy')}</span>
+                              <span>{t('pro_active_until', { date: format(new Date(user.membershipExpiresAt), 'MMM dd, yyyy') })}</span>
                           </div>
                       )}
                   </div>
@@ -114,7 +116,7 @@ export function MyListingsDashboardHeader() {
 
           <div className="flex flex-col sm:flex-row items-center gap-6 relative z-10 w-full lg:w-auto bg-muted/40 backdrop-blur-md p-6 md:p-8 rounded-3xl border-1 border-card-foreground/10 transition-all hover:bg-muted/60 lg:min-w-[400px]">
               <div className="text-center sm:text-left flex-1">
-                  <div className="text-[10px] md:text-[11px] font-black text-muted-foreground uppercase tracking-[0.25em] mb-2 opacity-60">Available Balance</div>
+                  <div className="text-[10px] md:text-[11px] font-black text-muted-foreground uppercase tracking-[0.25em] mb-2 opacity-60">{t('available_balance')}</div>
                   <div className="text-3xl md:text-5xl font-black text-foreground leading-none tracking-tighter uppercase flex items-baseline gap-2">
                     {Math.round(user.credits)} 
                     <span className="text-xs md:text-sm font-black text-muted-foreground opacity-60">MKD</span>
@@ -123,7 +125,7 @@ export function MyListingsDashboardHeader() {
               <Button asChild size="lg" className="w-full sm:w-auto rounded-2xl font-black uppercase tracking-[0.2em] h-14 px-8 md:px-12 transition-all active:scale-95 shadow-lg shadow-primary/10 border border-primary/20 bg-primary hover:bg-primary/95 text-white">
                   <Link href="/wallet/top-up">
                       <Plus className="w-5 h-5 mr-2" />
-                      Top Up
+                      {t('top_up')}
                   </Link>
               </Button>
           </div>
@@ -138,10 +140,10 @@ export function MyListingsDashboardHeader() {
                       <div className="w-12 h-12 rounded-2xl bg-foreground/5 flex items-center justify-center text-foreground transition-transform group-hover:scale-110">
                           <DollarSign className="w-6 h-6" />
                       </div>
-                      <span className="text-[10px] font-black text-foreground bg-muted px-3 py-1.5 rounded-xl uppercase tracking-[0.15em]">Lifetime</span>
+                      <span className="text-[10px] font-black text-foreground bg-muted px-3 py-1.5 rounded-xl uppercase tracking-[0.15em]">{t('lifetime')}</span>
                   </div>
                   <div className="space-y-1">
-                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] opacity-60">Total Investment</p>
+                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] opacity-60">{t('total_investment')}</p>
                       <h3 className="text-2xl md:text-3xl font-black text-foreground tracking-tighter uppercase group-hover:text-primary transition-colors">
                           {Math.round(stats.totalSpend || 0)} <span className="text-xs font-black text-muted-foreground">MKD</span>
                       </h3>
@@ -157,20 +159,20 @@ export function MyListingsDashboardHeader() {
                           <RefreshCw className="w-6 h-6" />
                       </div>
                       <div>
-                          <h3 className="font-black text-foreground text-sm md:text-base uppercase tracking-widest">Account Quotas</h3>
-                          <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">Limit Tracking</p>
+                          <h3 className="font-black text-foreground text-sm md:text-base uppercase tracking-widest">{t('account_quotas')}</h3>
+                          <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">{t('limit_tracking')}</p>
                       </div>
                   </div>
                   <div className="grid grid-cols-2 gap-8 border-t border-card-foreground/10 pt-6">
                       <div className="space-y-2">
-                          <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">Monthly Renewals</p>
+                          <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">{t('monthly_renewals')}</p>
                           <div className="flex items-baseline gap-2">
                             <p className="text-2xl md:text-3xl font-black text-foreground group-hover:text-primary transition-colors">{renewalsUsed}</p>
                             <span className="text-xs font-black text-muted-foreground">/ {renewalsLimit}</span>
                           </div>
                       </div>
                       <div className="border-l border-card-foreground/10 pl-8 space-y-2">
-                          <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">Total Listings</p>
+                          <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">{t('total_listings')}</p>
                           <div className="flex items-baseline gap-2">
                             <p className="text-2xl md:text-3xl font-black text-foreground group-hover:text-primary transition-colors">{listingsUsed}</p>
                             <span className="text-xs font-black text-muted-foreground">/ {listingsLimit}</span>
@@ -192,9 +194,9 @@ export function MyListingsDashboardHeader() {
                       </Link>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] opacity-60">Reach & Visibility</p>
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] opacity-60">{t('reach_visibility')}</p>
                     <h3 className="text-2xl md:text-3xl font-black text-foreground tracking-tighter uppercase group-hover:text-amber-500 transition-colors">
-                        {(stats?.totalViews ?? 0).toLocaleString()} <span className="text-xs font-black text-muted-foreground ml-1">Views</span>
+                        {(stats?.totalViews ?? 0).toLocaleString()} <span className="text-xs font-black text-muted-foreground ml-1">{t('views')}</span>
                     </h3>
                   </div>
               </CardContent>

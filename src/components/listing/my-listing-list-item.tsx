@@ -21,6 +21,7 @@ import { cn, formatCurrency } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
 import { AlertTriangle, BarChart2, Clock, Edit, ExternalLink, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
@@ -31,6 +32,7 @@ interface MyListingListItemProps {
 }
 
 export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
+    const t = useTranslations('MyListings');
     const [isPending, startTransition] = useTransition();
     const [renewalStats, setRenewalStats] = useState<any>(null);
     const [isStatsLoading, setIsStatsLoading] = useState(false);
@@ -42,9 +44,9 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
         startTransition(async () => {
              const res = await deleteListingAction(listing.id!);
              if(res.success) {
-                 toast.success('Listing moved to recycle bin');
+                 toast.success(t('listing_moved_to_bin'));
              } else {
-                 toast.error(res.error || 'Failed to delete');
+                 toast.error(res.error || t('failed_to_delete'));
              }
         });
     };
@@ -59,10 +61,10 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                 setRenewalStats(res.stats);
                 setIsRenewDialogOpen(true);
             } else {
-                toast.error("Could not fetch renewal stats.");
+                toast.error(t('could_not_fetch_renewal'));
             }
         } catch (e) {
-            toast.error("An error occurred.");
+            toast.error(t('an_error_occurred'));
         } finally {
             setIsStatsLoading(false);
         }
@@ -73,9 +75,9 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
         startTransition(async () => {
              const res = await renewListingAction(listing.id!);
              if(res.success) {
-                 toast.success('Listing renewed! It now appears at the top of results.');
+                 toast.success(t('listing_renewed'));
              } else {
-                 toast.error(res.error || 'Failed to renew');
+                 toast.error(res.error || t('failed_to_renew'));
              }
         });
     };
@@ -85,12 +87,6 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
     const promoConfig = isPromoted ? getPromotionConfig(listing.promotionTier) : null;
     const daysLeft = isPromoted && listing.promotionExpiresAt ? Math.ceil((listing.promotionExpiresAt - Date.now()) / (1000 * 60 * 60 * 24)) : 0;
 
-// ... removed import from here
-
-// ... (keep surrounding imports)
-
-    // const getIcon = ... (DELETED)
-
     return (
       <motion.div
         layout
@@ -99,7 +95,6 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
         exit={{ opacity: 0, scale: 0.95 }}
         className={cn(
             "group relative flex flex-row bg-card/40 backdrop-blur-sm transition-all duration-300 rounded-[2rem] overflow-visible bm-interactive shadow-none mt-4",
-            // Removed red ring for promoted items
         )}
       >
         {/* Legend-style Status Labels */}
@@ -107,19 +102,19 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
             {listing.status === 'ACTIVE' && (
                 <div className="bg-background px-3 py-1 rounded-full border-1 border-card-foreground/10 text-[9px] font-black uppercase tracking-[0.2em] text-foreground flex items-center shadow-sm">
                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse" />
-                   Active
+                   {t('status_active')}
                 </div>
             )}
             {listing.status === 'PENDING_APPROVAL' && (
                 <div className="bg-background px-3 py-1 rounded-full border-1 border-card-foreground/10 text-[9px] font-black uppercase tracking-[0.2em] text-amber-600 flex items-center shadow-sm">
                    <Clock className="w-3 h-3 mr-2 opacity-60" />
-                   Pending
+                   {t('status_pending')}
                 </div>
             )}
             {isPromoted && promoConfig && (
                 <div className="bg-primary text-white px-3 py-1 rounded-full border-1 border-primary/20 text-[9px] font-black uppercase tracking-[0.2em] flex items-center shadow-lg shadow-primary/20">
                    <PromotionIcon iconName={promoConfig.icon} className="w-3 h-3 mr-2" />
-                   {daysLeft} Days PRO
+                   {t('days_pro', { days: daysLeft })}
                 </div>
             )}
         </div>
@@ -132,15 +127,14 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
             className="object-cover group-hover:scale-110 transition-transform duration-700"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
            {/* Favorite Button removed for owned listings */}
         </div>
 
         {/* Content Section */}
-        <div className="flex-1 flex flex-col p-2.5 sm:p-4 md:p-5 min-w-0 rounded-r-[2rem]"> {/* Added rounding to match parent */}
+        <div className="flex-1 flex flex-col p-2.5 sm:p-4 md:p-5 min-w-0 rounded-r-[2rem]">
             <div className="flex justify-between items-start gap-3 mb-1.5 sm:mb-2">
                 <Link href={`/listings/${listing.id}`} className="block min-w-0 group/link">
-                   <h3 className="font-bold text-base sm:text-lg pt-2 md:text-lg leading-tight group-hover/link:text-primary transition-colors line-clamp-1 mb-1 text-foreground"> {/* Smaller Title */}
+                   <h3 className="font-bold text-base sm:text-lg pt-2 md:text-lg leading-tight group-hover/link:text-primary transition-colors line-clamp-1 mb-1 text-foreground">
                       {listing.title}
                    </h3>
                    <div className="flex items-center gap-2 text-[10px] sm:text-xs text-muted-foreground font-bold uppercase tracking-widest">
@@ -187,7 +181,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                 >
                     <Link href={`/my-listings/promote/${listing.id}`}>
                         <Sparkles className="w-3.5 h-3.5 mr-2 text-white/90" />
-                        Promote
+                        {t('promote')}
                     </Link>
                 </Button>
 
@@ -202,33 +196,36 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                         disabled={isPending || isStatsLoading || listing.status === 'PENDING_APPROVAL'}
                     >
                         <RefreshCw className={cn("w-3.5 h-3.5 mr-2 text-foreground/40", (isPending || isStatsLoading) && "animate-spin")} />
-                        {isStatsLoading ? '...' : 'Renew'}
+                        {isStatsLoading ? '...' : t('renew')}
                     </Button>
                     <AlertDialogContent className="rounded-lg max-w-sm border-border bg-card">
                         <AlertDialogHeader>
                             <AlertDialogTitle className="flex items-center gap-2 font-bold uppercase tracking-tight text-lg">
                                 <RefreshCw className="w-5 h-5 text-primary" />
-                                Renew Listing
+                                {t('renew_listing')}
                             </AlertDialogTitle>
                             <AlertDialogDescription asChild className="space-y-3 pt-2">
                                 <div className="space-y-3">
                                     {!renewalStats?.canRenewNow ? ( 
                                         <div className="bg-amber-500/10 p-3 rounded-lg border border-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-bold flex gap-3">
                                             <AlertTriangle className="w-5 h-5 shrink-0" />
-                                            <p>You can renew again in {renewalStats?.hoursUntilRenew} hour{renewalStats?.hoursUntilRenew !== 1 ? 's' : ''}. Renewals are allowed once every 24 hours.</p> 
+                                            <p>{renewalStats?.hoursUntilRenew === 1 
+                                                ? t('renew_limit_warning', { hours: renewalStats?.hoursUntilRenew })
+                                                : t('renew_limit_warning_plural', { hours: renewalStats?.hoursUntilRenew })
+                                            }</p>
                                         </div>
                                     ) : renewalStats?.remainingMonthly <= 0 ? (
                                         <div className="bg-destructive/10 p-3 rounded-lg border border-destructive/20 text-destructive text-xs font-bold flex gap-3">
                                             <AlertTriangle className="w-5 h-5 shrink-0" />
-                                            <p>You have reached your monthly limit of 15 renewals.</p>
+                                            <p>{t('monthly_limit_reached')}</p>
                                         </div>
                                     ) : (
                                         <>
                                             <div className="bg-secondary p-4 rounded-lg border border-border text-foreground text-sm font-medium leading-relaxed">
-                                                Dear user, you have <span className="font-bold text-primary text-base">{renewalStats?.remainingMonthly}</span> times left this month to renew your ads.
+                                                {t('renewals_remaining', { count: renewalStats?.remainingMonthly })}
                                             </div>
                                             <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest px-1">
-                                                Renew this listing for another 30 days for {PRICING.RENEWAL} MKD.
+                                                {t('renew_for_days', { price: PRICING.RENEWAL })}
                                             </p>
                                         </>
                                     )}
@@ -236,13 +233,13 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter className="gap-2 sm:gap-0 mt-2">
-                            <AlertDialogCancel className="rounded-lg font-bold uppercase text-[10px] sm:text-xs h-10 transition-all border-border shadow-none">Cancel</AlertDialogCancel>
+                            <AlertDialogCancel className="rounded-lg font-bold uppercase text-[10px] sm:text-xs h-10 transition-all border-border shadow-none">{t('cancel')}</AlertDialogCancel>
                             {renewalStats?.canRenewNow && renewalStats?.remainingMonthly > 0 && ( 
                                 <AlertDialogAction 
                                     onClick={handleConfirmRenew} 
                                     className="bg-primary hover:bg-primary/90 text-white rounded-lg font-bold uppercase text-[10px] sm:text-xs h-10 shadow-none"
                                 >
-                                    Renew Now
+                                    {t('renew_now')}
                                 </AlertDialogAction>
                             )}
                         </AlertDialogFooter>
@@ -264,34 +261,34 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                                  )}
                             >
                                 <Trash2 className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
-                                <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Delete</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">{t('delete')}</span>
                             </button>
                         </AlertDialogTrigger>
                         <AlertDialogContent className="rounded-2xl max-w-sm border-1 border-card-foreground/20 bg-card shadow-2xl">
                             <AlertDialogHeader>
                                 <AlertDialogTitle className="flex items-center gap-2 font-black uppercase tracking-tight text-lg">
                                     <Trash2 className="w-5 h-5 text-destructive" />
-                                    Move to Bin?
+                                    {t('move_to_bin')}
                                 </AlertDialogTitle>
                                 <AlertDialogDescription className="space-y-3 pt-2 font-medium">
                                     <span className="block text-foreground">
-                                        &quot;{listing.title}&quot; will be moved to the recycle bin.
+                                        &quot;{listing.title}&quot; {t('will_be_moved_to_bin')}
                                     </span>
                                     <span className="block text-xs text-muted-foreground uppercase tracking-wider">
-                                        Restore within 30 days before permanent deletion.
+                                        {t('restore_within')}
                                     </span>
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter className="gap-2 sm:gap-0 mt-4">
-                                <AlertDialogCancel className="rounded-xl font-black uppercase tracking-widest text-[10px] h-12 shadow-none border-1 border-card-foreground/20 bm-interactive transition-all">Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90 text-white rounded-xl font-black uppercase tracking-widest text-[10px] h-12 shadow-none transition-all active:scale-95">Move to Bin</AlertDialogAction>
+                                <AlertDialogCancel className="rounded-xl font-black uppercase tracking-widest text-[10px] h-12 shadow-none border-1 border-card-foreground/20 bm-interactive transition-all">{t('cancel')}</AlertDialogCancel>
+                                <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90 text-white rounded-xl font-black uppercase tracking-widest text-[10px] h-12 shadow-none transition-all active:scale-95">{t('move_to_bin_confirm')}</AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
 
                     <Link href={`/my-listings/stats/${listing.id}`} className="flex items-center gap-2 group/btn transition-all text-foreground px-3 py-2 rounded-xl bm-interactive">
                         <BarChart2 className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
-                        <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Stats</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">{t('stats')}</span>
                     </Link>
 
                     <Link 
@@ -302,7 +299,7 @@ export const MyListingListItem = ({ listing }: MyListingListItemProps) => {
                         )}
                     >
                         <Edit className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
-                        <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Edit</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">{t('edit')}</span>
                     </Link>
                 </div>
             </div>

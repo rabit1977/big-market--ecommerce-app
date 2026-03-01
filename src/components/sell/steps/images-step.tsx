@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Image as ImageIcon, Star, Upload, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ListingFormData } from '../post-listing-wizard';
@@ -14,11 +15,11 @@ interface ImagesStepProps {
 }
 
 export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
+  const t = useTranslations('Sell');
   const [isDragging, setIsDragging] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [displayProgress, setDisplayProgress] = useState(0);
 
-  // Smooth progress animation
   const progressTargetRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -59,7 +60,6 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
     (e: React.DragEvent) => {
       e.preventDefault();
       setIsDragging(false);
-
       const files = Array.from(e.dataTransfer.files);
       handleFiles(files);
     },
@@ -73,13 +73,11 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
     }
   };
 
-
   const handleFiles = async (files: File[]) => {
-    // Filter for images only
     const imageFiles = files.filter((file) => file.type.startsWith('image/'));
 
     if (imageFiles.length === 0) {
-      alert('Please select image files only');
+      import('sonner').then(({ toast }) => toast.error(t('images_only')));
       return;
     }
 
@@ -103,7 +101,7 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
             xhr.upload.onprogress = (event) => {
               if (event.lengthComputable) {
                 const currentProgress = ((bytesUploadedSoFar + event.loaded) / totalSize) * 100;
-                setUploadProgress(Math.min(currentProgress, 99)); // Keep at 99 until finished
+                setUploadProgress(Math.min(currentProgress, 99));
               }
             };
 
@@ -131,17 +129,13 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
         }
         bytesUploadedSoFar += file.size;
         setUploadProgress((bytesUploadedSoFar / totalSize) * 100);
-        
-        console.log("Uploaded images:", uploadedImages);
       } catch (err) {
         console.error("Failed to upload image", err);
         import('sonner').then(({ toast }) => toast.error(`Error uploading ${file.name}`));
-        // Even if one fails, we count its "size" as processed to keep progress moving
         bytesUploadedSoFar += file.size;
       }
     }
 
-    // Update form data
     const currentImages = formData.images || [];
     const newImages = [...currentImages, ...uploadedImages];
     
@@ -172,10 +166,8 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold mb-2">Upload Photos</h2>
-        <p className="text-muted-foreground">
-          Add photos to make your listing stand out. First image will be the cover.
-        </p>
+        <h2 className="text-2xl font-bold mb-2">{t('images_title')}</h2>
+        <p className="text-muted-foreground">{t('images_desc')}</p>
       </div>
 
       {/* Upload Area */}
@@ -199,24 +191,24 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
           </div>
           
           <h3 className="text-lg font-bold mb-2">
-            {isDragging ? 'Drop images here' : 'Add Photos'}
+            {isDragging ? t('drop_here') : t('add_photos')}
           </h3>
           
           <p className="text-sm text-muted-foreground mb-6 max-w-xs mx-auto">
-            Drag and drop your photos here, or click to browse files
+            {t('drag_or_click')}
           </p>
           
           <Button type="button" variant="secondary" className="rounded-xl shadow-sm border font-bold">
             <ImageIcon className="w-4 h-4 mr-2" />
-            Select Files
+            {t('select_files')}
           </Button>
           
           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-6 opacity-60">
-            JPG, PNG, WebP • Max 5MB per image
+            {t('file_types')}
           </p>
         </div>
 
-        {/* Overlaid Progress - Cool Visual */}
+        {/* Overlaid Progress */}
         <AnimatePresence>
           {uploadProgress !== null && (
             <motion.div 
@@ -226,7 +218,6 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
               className="absolute inset-0 z-50 bg-background/90 backdrop-blur-sm flex flex-col items-center justify-center p-8"
             >
               <div className="relative w-24 h-24 mb-6">
-                {/* Circular Progress Path */}
                 <svg className="w-full h-full transform -rotate-90">
                   <circle
                     cx="48"
@@ -254,8 +245,8 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
                   <span className="text-xl font-black">{Math.round(displayProgress)}%</span>
                 </div>
               </div>
-              <p className="text-sm font-bold animate-pulse text-primary tracking-tight">OPTIMIZING & UPLOADING...</p>
-              <p className="text-[10px] text-muted-foreground mt-1 uppercase font-black tracking-widest">To Cloudinary</p>
+              <p className="text-sm font-bold animate-pulse text-primary tracking-tight">{t('uploading')}</p>
+              <p className="text-[10px] text-muted-foreground mt-1 uppercase font-black tracking-widest">{t('to_cloudinary')}</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -275,10 +266,10 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
         <div>
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold">
-              Uploaded Images ({images.length})
+              {t('uploaded_count', { count: images.length })}
             </h3>
             <p className="text-sm text-muted-foreground">
-              Click star to set as cover
+              {t('click_star')}
             </p>
           </div>
           
@@ -324,7 +315,7 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
                   {formData.thumbnail === imageUrl && (
                     <div className="absolute top-2 left-2 bg-yellow-400 text-black text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
                       <Star className="w-3 h-3 fill-current" />
-                      Cover
+                      {t('cover')}
                     </div>
                   )}
                 </div>
@@ -337,13 +328,13 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
       {/* Tips */}
       <Card className="p-4 bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900">
         <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
-          📸 Photo Tips
+          {t('photo_tips_title')}
         </h4>
         <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
-          <li>• Use good lighting and clear backgrounds</li>
-          <li>• Show the item from multiple angles</li>
-          <li>• Include close-ups of important details</li>
-          <li>• First image will be shown in search results</li>
+          <li>{t('photo_tip1')}</li>
+          <li>{t('photo_tip2')}</li>
+          <li>{t('photo_tip3')}</li>
+          <li>{t('photo_tip4')}</li>
         </ul>
       </Card>
     </div>

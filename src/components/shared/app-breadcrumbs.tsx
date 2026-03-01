@@ -1,48 +1,43 @@
 'use client';
 
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { cn } from '@/lib/utils';
 import { Home } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 
-const routeMap: Record<string, string> = {
-  sell: 'Post Listing',
-  account: 'My Account',
-  edit: 'Edit Profile',
-  verification: 'Account Verification',
-  password: 'Change Password',
-  delete: 'Delete Account',
-  addresses: 'My Addresses',
-  notifications: 'Notifications',
-  wallet: 'My Wallet',
-  'top-up': 'Top Up',
-  'my-listings': 'My Listings',
-  stats: 'Statistics',
-  categories: 'Explore Categories',
-  favorites: 'Favorites',
-  messages: 'Messages',
-  'trade-in': 'Trade In',
-  listings: 'Listings',
-  pricing: 'Pricing Plans',
-  premium: 'Premium Plans',
-  success: 'Success',
-  admin: 'Admin Panel',
-  dashboard: 'Dashboard',
-  'motor-vehicles': 'Motor Vehicles',
-  'cars': 'Cars',
-  'real-estate': 'Real Estate',
-  'home-and-garden': 'Home & Garden',
-  'fashion-clothing-shoes': 'Fashion & Clothing',
-  'mobile-phones-accessories': 'Mobile Phones',
+// Map URL segment → translation key in "Breadcrumbs" namespace
+const segmentToKey: Record<string, string> = {
+  sell:                      'sell',
+  account:                   'account',
+  edit:                      'edit',
+  verification:              'verification',
+  password:                  'password',
+  delete:                    'delete',
+  addresses:                 'addresses',
+  notifications:             'notifications',
+  wallet:                    'wallet',
+  'top-up':                  'top_up',
+  'my-listings':             'my_listings',
+  stats:                     'stats',
+  categories:                'categories',
+  favorites:                 'favorites',
+  messages:                  'messages',
+  listings:                  'listings',
+  pricing:                   'pricing',
+  premium:                   'premium',
+  success:                   'success',
+  admin:                     'admin',
+  dashboard:                 'dashboard',
 };
 
 interface BreadcrumbItemType {
@@ -58,9 +53,10 @@ interface AppBreadcrumbsProps {
 
 export function AppBreadcrumbs({ className, customLabel, items }: AppBreadcrumbsProps) {
   const pathname = usePathname();
+  const t = useTranslations('Breadcrumbs');
   const isAdmin = pathname.startsWith('/admin');
-  
-  // Custom items override
+
+  // Custom items override (passed in directly — labels are already translated by the caller)
   if (items) {
       return (
         <Breadcrumb className={cn("-mt-1 mb-6 bg-background w-fit max-w-full overflow-hidden", className)}>
@@ -113,30 +109,33 @@ export function AppBreadcrumbs({ className, customLabel, items }: AppBreadcrumbs
         
         {pathSegments.map((segment, index) => {
           let href = `/${pathSegments.slice(0, index + 1).join('/')}`;
-          
-          // Original href before mapping, used to check if we should skip rendering
           const originalHref = `/${pathSegments.slice(0, index + 1).join('/')}`;
           
-          // Special case for admin root to avoid 404
           if (segment === 'admin') href = '/admin/dashboard';
           
           const isLast = index === pathSegments.length - 1;
           
-          // If we are at /admin and current segment is admin, and it's last, show it.
-          // If we are at /admin/dashboard, and current segment is 'admin', it will point to /admin/dashboard.
-          // The next segment 'dashboard' will also point to /admin/dashboard.
-          // To avoid visual duplication when both point to same place:
           if (segment === 'admin' && pathname === '/admin/dashboard' && !isLast) {
               return null;
           }
 
-          let label = routeMap[segment] || segment.replace(/-/g, ' ');
-          
-          if (segment.length > 20 && !routeMap[segment]) {
-              label = segment.slice(0, 15) + '...';
+          // Translate the segment if we have a key, else humanize it
+          const key = segmentToKey[segment];
+          let label: string;
+          if (key) {
+            // safely try the translation key — fallback to humanized slug
+            try {
+              label = t(key as any);
+            } catch {
+              label = segment.replace(/-/g, ' ');
+            }
+          } else if (segment.length > 20) {
+            label = segment.slice(0, 15) + '...';
+          } else {
+            // Humanize unknown segments (e.g. dynamic IDs, category slugs)
+            label = segment.replace(/-/g, ' ');
           }
            
-          // If we have a custom label for the last item, use it
           if (isLast && customLabel) {
               label = customLabel;
           }

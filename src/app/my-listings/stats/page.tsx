@@ -14,18 +14,19 @@ import { useQuery } from 'convex/react';
 import { format } from 'date-fns';
 import { CalendarIcon, ChevronDown, Eye, Heart, MousePointerClick, TrendingUp } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { api } from '../../../../convex/_generated/api';
 
 export default function ListingStatsPage() {
     const { data: session } = useSession();
+    const t = useTranslations('ListingStats');
     const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
         from: new Date(new Date().setDate(new Date().getDate() - 30)),
         to: new Date()
     });
     
-    // Fetch stats - wait for session to load
     const statsData = useQuery(api.analytics.getUserStats, 
         session?.user?.id ? { 
             userId: session.user.id,
@@ -33,7 +34,6 @@ export default function ListingStatsPage() {
         } : "skip"
     );
 
-    // Process data similar to dashboard
     const chartData = statsData?.dailyStats?.map((d: { date: string, views: number, clicks: number }) => ({
         ...d,
         formattedDate: format(new Date(d.date), 'dd MMM'),
@@ -55,14 +55,14 @@ export default function ListingStatsPage() {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                     <div>
                         <h1 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight leading-none mb-2">
-                            Overview Statistics
+                            {t('title')}
                         </h1>
                         <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
-                            Performance of all your listings
+                            {t('subtitle')}
                         </p>
                     </div>
 
-                    {/* Date Picker - Styled like "Share" button */}
+                    {/* Date Picker */}
                     <Popover>
                         <PopoverTrigger asChild>
                             <Button
@@ -82,7 +82,7 @@ export default function ListingStatsPage() {
                                         format(dateRange.from, "MMM dd, yyyy")
                                     )
                                 ) : (
-                                    <span>Pick a date range</span>
+                                    <span>{t('pick_date')}</span>
                                 )}
                                 <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
                             </Button>
@@ -107,9 +107,9 @@ export default function ListingStatsPage() {
                     </Popover>
                 </div>
 
-                {/* KPI Cards Grid */}
+                {/* KPI Cards */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-6 mb-8">
-                    {/* Views Card */}
+                    {/* Views */}
                     <Card className="rounded-2xl md:rounded-[2rem] border border-border shadow-sm bg-card overflow-hidden group hover:border-orange-500/30 transition-all cursor-default relative">
                          <div className="absolute top-0 right-0 p-2 md:p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
                             <Eye className="w-12 h-12 md:w-24 md:h-24 transform rotate-12" />
@@ -120,7 +120,7 @@ export default function ListingStatsPage() {
                                     <Eye className="w-3.5 h-3.5 md:w-5 md:h-5" />
                                 </div>
                                 <span className="text-[8px] md:text-[9px] absolute bottom-2.5 right-2.5 font-black uppercase tracking-widest text-muted-foreground bg-muted px-1.5 py-0.5 rounded-md md:rounded-lg">
-                                    Total
+                                    {t('total_label')}
                                 </span>
                             </div>
                             <div>
@@ -128,13 +128,13 @@ export default function ListingStatsPage() {
                                     {totalViews}
                                 </div>
                                 <div className="text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-widest truncate">
-                                    Total Views
+                                    {t('total_views')}
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
-                    {/* Clicks (Leads) Card */}
+                    {/* Clicks / Leads */}
                     <Card className="rounded-2xl md:rounded-[2rem] border border-border shadow-sm bg-card overflow-hidden group hover:border-blue-500/30 transition-all cursor-default relative">
                         <div className="absolute top-0 right-0 p-2 md:p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
                             <MousePointerClick className="w-12 h-12 md:w-24 md:h-24 transform -rotate-12" />
@@ -145,7 +145,7 @@ export default function ListingStatsPage() {
                                     <MousePointerClick className="w-3.5 h-3.5 md:w-5 md:h-5" />
                                 </div>
                                 <span className="text-[8px] md:text-[9px] absolute bottom-2.5 right-2.5 font-black uppercase tracking-widest text-muted-foreground bg-muted px-1.5 py-0.5 rounded-md md:rounded-lg">
-                                    Total
+                                    {t('total_label')}
                                 </span>
                             </div>
                             <div>
@@ -153,13 +153,13 @@ export default function ListingStatsPage() {
                                     {totalClicks}
                                 </div>
                                 <div className="text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-widest truncate">
-                                    Leads
+                                    {t('leads')}
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
-                    {/* Favorites (Saved) Card */}
+                    {/* Favorites */}
                     <Card className="rounded-2xl md:rounded-[2rem] border border-border shadow-sm bg-card overflow-hidden group hover:border-rose-500/30 transition-all cursor-default relative">
                         <div className="absolute top-0 right-0 p-2 md:p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
                             <Heart className="w-12 h-12 md:w-24 md:h-24 transform rotate-12" />
@@ -170,7 +170,7 @@ export default function ListingStatsPage() {
                                     <Heart className="w-3.5 h-3.5 md:w-5 md:h-5 fill-current" />
                                 </div>
                                 <span className="text-[8px] md:text-[9px] absolute bottom-2.5 right-2.5 font-black uppercase tracking-widest text-muted-foreground bg-muted px-1.5 py-0.5 rounded-md md:rounded-lg">
-                                    Total
+                                    {t('total_label')}
                                 </span>
                             </div>
                             <div>
@@ -178,13 +178,13 @@ export default function ListingStatsPage() {
                                     {totalFavorites}
                                 </div>
                                 <div className="text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-widest truncate">
-                                    Favorites
+                                    {t('favorites')}
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
-                    {/* Ratio Card */}
+                    {/* Interest Rate */}
                     <Card className="rounded-2xl md:rounded-[2rem] border border-border shadow-sm bg-card overflow-hidden group hover:border-emerald-500/30 transition-all cursor-default relative">
                         <div className="absolute top-0 right-0 p-2 md:p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
                             <TrendingUp className="w-12 h-12 md:w-24 md:h-24 transform -rotate-6" />
@@ -195,7 +195,7 @@ export default function ListingStatsPage() {
                                     <TrendingUp className="w-3.5 h-3.5 md:w-5 md:h-5" />
                                 </div>
                                 <span className="text-[8px] md:text-[9px] absolute bottom-2.5 right-2.5 font-black uppercase tracking-widest text-muted-foreground bg-muted px-1.5 py-0.5 rounded-md md:rounded-lg">
-                                    AVG
+                                    {t('avg_label')}
                                 </span>
                             </div>
                             <div>
@@ -203,47 +203,47 @@ export default function ListingStatsPage() {
                                     {engagementRate}%
                                 </div>
                                 <div className="text-[9px] md:text-xs font-bold text-muted-foreground uppercase tracking-widest truncate">
-                                    Interest Rate
+                                    {t('interest_rate')}
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
                 </div>
 
-                {/* Main Visuals Area */}
+                {/* Main Visuals */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                     
-                    {/* Chart Section */}
+                    {/* Chart */}
                     <div className="lg:col-span-2">
                         <Card className="rounded-[2rem] border border-border shadow-sm bg-card overflow-hidden h-full flex flex-col">
                              <div className="px-6 py-5 border-b border-border/50 bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                 <div>
                                     <h3 className="font-black text-foreground uppercase tracking-tight text-sm md:text-base">
-                                        Performance Trends
+                                        {t('performance_trends')}
                                     </h3>
-                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Daily views vs actions</p>
+                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{t('daily_views')}</p>
                                 </div>
                                 <div className="flex items-center gap-4 bg-background/50 p-1.5 rounded-full border border-border/50 w-fit">
                                     <div className="flex items-center gap-2 px-3">
                                         <span className="w-2 h-2 rounded-full bg-orange-400 shadow-sm shadow-orange-400/50"></span>
-                                        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Views</span>
+                                        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{t('views_legend')}</span>
                                     </div>
                                     <div className="flex items-center gap-2 px-3 border-l border-border/50">
                                         <span className="w-2 h-2 rounded-full bg-blue-500 shadow-sm shadow-blue-500/50"></span>
-                                        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Leads</span>
+                                        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{t('leads_legend')}</span>
                                     </div>
                                 </div>
                             </div>
                             <CardContent className="p-4 md:p-6 flex-1 min-h-[350px]">
                                 <div className="h-full w-full min-h-[300px]">
                                     {!statsData ? (
-                                        <div className="h-full w-full flex items-center justify-center text-muted-foreground text-xs font-bold uppercase tracking-wider animate-pulse">Loading analytics...</div>
+                                        <div className="h-full w-full flex items-center justify-center text-muted-foreground text-xs font-bold uppercase tracking-wider animate-pulse">{t('loading_analytics')}</div>
                                     ) : chartData.length === 0 ? (
                                         <div className="h-full w-full flex flex-col items-center justify-center text-muted-foreground gap-4">
                                             <div className="p-4 rounded-full bg-muted">
                                                 <TrendingUp className="w-8 h-8 opacity-20" />
                                             </div>
-                                            <span className="text-xs font-bold uppercase tracking-widest">No activity recorded for this period.</span>
+                                            <span className="text-xs font-bold uppercase tracking-widest">{t('no_activity')}</span>
                                         </div>
                                     ) : (
                                         <ResponsiveContainer width="100%" height="100%">
@@ -279,13 +279,13 @@ export default function ListingStatsPage() {
                                                                     <div className="space-y-2">
                                                                         <div className="flex justify-between items-center gap-8">
                                                                             <span className="text-muted-foreground font-bold text-[10px] uppercase tracking-wider flex items-center gap-1.5">
-                                                                                <div className="w-1.5 h-1.5 rounded-full bg-orange-500" /> Views
+                                                                                <div className="w-1.5 h-1.5 rounded-full bg-orange-500" /> {t('views_legend')}
                                                                             </span>
                                                                             <span className="font-black text-foreground">{d.views}</span>
                                                                         </div>
                                                                         <div className="flex justify-between items-center gap-8">
                                                                             <span className="text-muted-foreground font-bold text-[10px] uppercase tracking-wider flex items-center gap-1.5">
-                                                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500" /> Leads
+                                                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500" /> {t('leads_legend')}
                                                                             </span>
                                                                             <span className="font-black text-foreground">{d.clicks}</span>
                                                                         </div>
@@ -296,20 +296,8 @@ export default function ListingStatsPage() {
                                                         return null;
                                                     }}
                                                 />
-                                                <Bar 
-                                                    dataKey="views" 
-                                                    fill="url(#colorViews)" 
-                                                    radius={[4, 4, 4, 4]} 
-                                                    maxBarSize={24}
-                                                    className="fill-orange-400"
-                                                />
-                                                <Bar 
-                                                    dataKey="clicks" 
-                                                    fill="url(#colorClicks)" 
-                                                    radius={[4, 4, 4, 4]} 
-                                                    maxBarSize={24} 
-                                                    className="fill-blue-500"
-                                                /> 
+                                                <Bar dataKey="views" fill="url(#colorViews)" radius={[4, 4, 4, 4]} maxBarSize={24} className="fill-orange-400" />
+                                                <Bar dataKey="clicks" fill="url(#colorClicks)" radius={[4, 4, 4, 4]} maxBarSize={24} className="fill-blue-500" /> 
                                             </BarChart>
                                         </ResponsiveContainer>
                                     )}
@@ -318,12 +306,12 @@ export default function ListingStatsPage() {
                         </Card>
                     </div>
 
-                    {/* Breakdown List */}
+                    {/* Activity List */}
                     <div className="lg:col-span-1">
                         <Card className="rounded-[2rem] border border-border shadow-sm bg-card overflow-hidden h-full flex flex-col max-h-[500px] lg:max-h-full">
                             <div className="px-5 py-5 border-b border-border/50 bg-muted/20">
                                 <h3 className="font-black text-foreground uppercase tracking-tight text-sm md:text-base">
-                                    Recent Activity
+                                    {t('recent_activity')}
                                 </h3>
                             </div>
                             <div className="overflow-y-auto custom-scrollbar flex-1 p-3 space-y-1">
@@ -344,7 +332,7 @@ export default function ListingStatsPage() {
                                         <div className="flex items-center gap-2">
                                             <div className="flex flex-col items-end">
                                                 <span className="text-sm font-black text-foreground">{row.views + row.clicks}</span>
-                                                <span className="text-[8px] text-muted-foreground font-bold uppercase tracking-widest">Act</span>
+                                                <span className="text-[8px] text-muted-foreground font-bold uppercase tracking-widest">{t('act_label')}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -355,7 +343,7 @@ export default function ListingStatsPage() {
                                             <TrendingUp className="w-8 h-8 opacity-20" />
                                         </div>
                                         <p className="text-xs font-bold uppercase tracking-widest leading-relaxed max-w-[150px]">
-                                            No activity to display yet
+                                            {t('no_activity_display')}
                                         </p>
                                     </div>
                                 )}

@@ -14,6 +14,7 @@ import { useOnClickOutside } from '@/lib/hooks/useOnClickOutside';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronRight, Grid3X3, Moon, Search, Sun, X, Zap } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -32,6 +33,7 @@ interface MobileSidebarProps {
 }
 
 export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
+  const t = useTranslations('Sidebar');
   const { activeCategory, setActiveCategory } = useSidebar();
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
@@ -137,7 +139,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed top-0 bottom-0 left-0 z-50 w-[85%] max-w-sm bg-background shadow-2xl flex flex-col overflow-hidden"
+            className="fixed top-0 bottom-0 left-0 z-50 w-[85%] max-w-sm bg-card shadow-2xl flex flex-col overflow-hidden"
             aria-label="Navigation menu"
           >
             {/* Header */}
@@ -165,7 +167,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                   variant="ghost"
                   size="icon"
                   onClick={onClose}
-                  className="h-9 w-9 rounded-xl bm-interactive"
+                  className="h-9 w-9 rounded-xl"
                   aria-label="Close menu"
                 >
                   <X className="h-5 w-5" />
@@ -178,17 +180,17 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search categories..."
+                  placeholder={t('search_categories')}
                   value={categorySearch}
                   onChange={(e) => setCategorySearch(e.target.value)}
-                  className="h-10 pl-10 pr-8 rounded-xl text-sm bg-muted/50 focus-visible:bg-background transition-all bm-interactive"
+                  className="h-10 pl-10 pr-8 rounded-xl text-sm bg-muted/50 focus-visible:bg-background transition-all"
                   autoFocus={false}
                 />
                 {categorySearch && (
                   <button
                     onClick={() => setCategorySearch('')}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                    aria-label="Clear search"
+                    aria-label={t('clear_search')}
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>
@@ -202,7 +204,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                 <div className="flex items-center justify-between px-3 mb-3">
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Grid3X3 className="h-3.5 w-3.5" />
-                    <span className="text-[10px] font-black uppercase tracking-widest">Categories</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest">{t('categories')}</span>
                   </div>
                   <span className="text-[10px] font-semibold text-muted-foreground/60">
                     {filteredRootCategories.length}
@@ -226,7 +228,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                         <AccordionItem key={cat.id} value={cat.id} className="border-none mb-0.5">
                           {hasSubs ? (
                             <>
-                              <AccordionTrigger className="py-2.5 px-3 rounded-xl hover:no-underline text-[13px] font-bold text-foreground transition-all group data-[state=open]:bg-muted/30 bm-interactive">
+                              <AccordionTrigger className="py-2.5 px-3 rounded-xl hover:no-underline text-[13px] font-bold text-foreground transition-all group data-[state=open]:bg-muted/30 ">
                                 <div className="flex items-center gap-2.5">
                                   <div className={cn(
                                     'w-1.5 h-1.5 rounded-full transition-colors',
@@ -245,7 +247,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                                         key={sub.id}
                                         href={`/listings?category=${encodeURIComponent(cat.name)}&subCategory=${encodeURIComponent(sub.name)}`}
                                         onClick={onClose}
-                                        className="py-2.5 px-3 rounded-xl text-[13px] text-muted-foreground hover:text-foreground transition-all font-bold flex items-center justify-between group bm-interactive"
+                                        className="py-2.5 px-3 rounded-xl text-[13px] text-muted-foreground hover:text-foreground transition-all font-bold flex items-center justify-between group"
                                       >
                                         <span>{sub.name}</span>
                                         <ChevronRight className="w-4 h-4 opacity-0 -translate-x-1 group-hover:opacity-50 group-hover:translate-x-0 transition-all text-primary" />
@@ -256,7 +258,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                                       onClick={onClose}
                                       className="py-2 px-3 rounded-xl text-xs font-black text-primary hover:underline underline-offset-4 transition-all mt-0.5 uppercase tracking-wider"
                                     >
-                                      View all {cat.name} →
+                                      {t('view_all', { category: cat.name })}
                                     </Link>
                                   </div>
                               </AccordionContent>
@@ -265,7 +267,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                             <Link
                               href={`/listings?category=${encodeURIComponent(cat.name)}`}
                               onClick={onClose}
-                              className="flex items-center gap-2.5 py-2.5 px-3 rounded-xl text-[13px] font-bold text-foreground transition-all group bm-interactive"
+                              className="flex items-center gap-2.5 py-2.5 px-3 rounded-xl text-[13px] font-bold text-foreground transition-all group"
                             >
                               <div className="w-1.5 h-1.5 rounded-full bg-primary/25 group-hover:bg-primary/50 transition-colors" />
                               <span>{cat.name}</span>
@@ -278,8 +280,8 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                 ) : (
                   <div className="text-center py-8">
                     <Search className="h-8 w-8 text-muted-foreground/30 mx-auto mb-2" />
-                    <p className="text-[13px] text-muted-foreground font-medium">No categories found</p>
-                    <p className="text-[11px] text-muted-foreground/60 mt-1">Try a different search term</p>
+                    <p className="text-[13px] text-muted-foreground font-medium">{t('no_categories_found')}</p>
+                    <p className="text-[11px] text-muted-foreground/60 mt-1">{t('try_different_search')}</p>
                   </div>
                 )}
               </div>
@@ -293,7 +295,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                 className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-card text-foreground text-sm font-bold transition-all bm-interactive"
               >
                 <Grid3X3 className="h-4 w-4 group-hover:text-primary transition-colors" />
-                Browse All Categories
+                {t('browse_all_categories')}
               </Link>
             </div>
           </motion.aside>

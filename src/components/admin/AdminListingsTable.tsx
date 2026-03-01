@@ -31,6 +31,7 @@ import {
 } from '@/components/ui/table';
 import { cn, formatCurrency } from '@/lib/utils';
 import { Check, CheckCircle, Clock, Eye, MoreHorizontal, Pencil, Trash2, XCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -44,6 +45,7 @@ interface AdminListingsTableProps {
 
 export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTableProps) {
   const router = useRouter();
+  const t = useTranslations('AdminControls');
   const [isPending, startTransition] = useTransition();
 
   const handleApprove = (id: string) => {
@@ -51,13 +53,13 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
         try {
             const res = await approveListingAction(id);
             if (res.success) {
-                toast.success('Listing approved');
+                toast.success(t('listing_approved'));
                 router.refresh();
             } else {
-                toast.error(res.error || 'Failed to approve');
+                toast.error(res.error || t('failed_to_approve'));
             }
         } catch (e) {
-            toast.error('Failed to approve');
+            toast.error(t('failed_to_approve'));
         }
     });
   };
@@ -67,13 +69,13 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
         try {
             const res = await rejectListingAction(id);
             if (res.success) {
-                toast.success('Listing rejected');
+                toast.success(t('listing_rejected'));
                 router.refresh();
             } else {
-                toast.error(res.error || 'Failed to reject');
+                toast.error(res.error || t('failed_to_reject'));
             }
         } catch (e) {
-            toast.error('Failed to reject');
+            toast.error(t('failed_to_reject'));
         }
     });
   };
@@ -83,13 +85,13 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
         try {
             const res = await deleteListingAction(id);
             if (res.success) {
-                toast.success('Listing moved to recycle bin');
+                toast.success(t('listing_moved_to_bin'));
                 router.refresh();
             } else {
-                toast.error(res.error || 'Failed to delete');
+                toast.error(res.error || t('failed_to_delete'));
             }
         } catch (e) {
-            toast.error('Failed to delete');
+            toast.error(t('failed_to_delete'));
         }
     });
   };
@@ -97,8 +99,8 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
   if (!listings || listings.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center bg-muted/30 rounded-xl border border-dashed">
-        <p className="text-muted-foreground font-medium">No listings found</p>
-        <p className="text-sm text-muted-foreground/70">Listings matching your filter will appear here</p>
+        <p className="text-muted-foreground font-medium">{t('no_listings_found')}</p>
+        <p className="text-sm text-muted-foreground/70">{t('listings_filter_hint')}</p>
       </div>
     );
   }
@@ -106,9 +108,9 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
   const getStatusBadge = (status: string) => {
       switch (status) {
           case 'ACTIVE':
-              return <Badge className="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 border-emerald-500/20 gap-1"><Check className="w-3 h-3" /> Active</Badge>;
+              return <Badge className="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 border-emerald-500/20 gap-1"><Check className="w-3 h-3" /> {t('status_active')}</Badge>;
           case 'PENDING_APPROVAL':
-              return <Badge className="bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 border-amber-500/20 gap-1"><Clock className="w-3 h-3" /> Pending</Badge>;
+              return <Badge className="bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 border-amber-500/20 gap-1"><Clock className="w-3 h-3" /> {t('status_pending')}</Badge>;
           case 'REJECTED':
               return <Badge variant="destructive" className="gap-1"><XCircle className="w-3 h-3" /> Rejected</Badge>;
           default:
@@ -122,25 +124,24 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
           <Table>
             <TableHeader className="sticky top-0 z-20 bg-card shadow-sm after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1px] after:bg-border pointer-events-auto">
               <TableRow className="hover:bg-transparent border-none">
-                <TableHead className="w-[80px] bg-card font-bold text-xs uppercase tracking-wider text-primary">Image</TableHead>
-                <TableHead className="min-w-[200px] bg-card font-bold text-xs uppercase tracking-wider text-primary">Listing Info</TableHead>
-                <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Status</TableHead>
-                <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Creator</TableHead>
-                <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Category</TableHead>
-                <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Price</TableHead>
+                <TableHead className="w-[80px] bg-card font-bold text-xs uppercase tracking-wider text-primary">{t('image_col')}</TableHead>
+                <TableHead className="min-w-[200px] bg-card font-bold text-xs uppercase tracking-wider text-primary">{t('listing_info_col')}</TableHead>
+                <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">{t('status_col')}</TableHead>
+                <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">{t('creator_col')}</TableHead>
+                <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">{t('category_col')}</TableHead>
+                <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">{t('price_col')}</TableHead>
                 {isPromotedView && (
                     <>
-                        <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Tier</TableHead>
-                        <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Expires</TableHead>
+                        <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">{t('tier_col')}</TableHead>
+                        <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">{t('expires_col')}</TableHead>
                     </>
                 )}
-                <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">Added Date</TableHead>
-                <TableHead className="text-right bg-card font-bold text-xs uppercase tracking-wider text-primary sticky right-0 z-30 shadow-l-sm">Management</TableHead>
+                <TableHead className="bg-card font-bold text-xs uppercase tracking-wider text-primary">{t('added_date_col')}</TableHead>
+                <TableHead className="text-right bg-card font-bold text-xs uppercase tracking-wider text-primary sticky right-0 z-30 shadow-l-sm">{t('management_col')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {listings.map((listing) => {
-                // Calculate expiry status if promoted
                 const isExpired = isPromotedView && listing.promotionExpiresAt && listing.promotionExpiresAt < Date.now();
                 const daysLeft = isPromotedView && listing.promotionExpiresAt 
                     ? Math.ceil((listing.promotionExpiresAt - Date.now()) / (1000 * 60 * 60 * 24)) 
@@ -199,7 +200,7 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                                 <div className={cn("flex flex-col", isExpired ? "text-destructive font-bold" : "text-emerald-600 font-bold")}>
                                     <span>{new Date(listing.promotionExpiresAt).toLocaleDateString()}</span>
                                     <span className="text-[10px] opacity-80 font-normal">
-                                        {isExpired ? 'Expired' : `${daysLeft} days left`}
+                                        {isExpired ? t('expired') : t('days_left', { count: daysLeft })}
                                     </span>
                                 </div>
                              ) : (
@@ -224,7 +225,6 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                   </TableCell>
                   <TableCell className="text-right sticky right-0 bg-card/95 backdrop-blur-sm group-hover:bg-muted/90 transition-colors z-10 border-l border-border/50">
                     <div className="flex justify-end gap-1">
-                      {/* Actions Dropdown */}
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
@@ -241,14 +241,14 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                            <DropdownMenuItem asChild className="cursor-pointer">
                             <Link href={`/listings/${listing._id}`} className="flex items-center">
                               <Eye className="h-4 w-4 mr-2" />
-                              View Listing
+                              {t('view_listing')}
                             </Link>
                           </DropdownMenuItem>
 
                           <DropdownMenuItem asChild className="cursor-pointer text-blue-600 focus:text-blue-700">
                             <Link href={`/my-listings/${listing._id}/edit`} className="flex items-center">
                               <Pencil className="h-4 w-4 mr-2" />
-                              Edit Listing
+                              {t('edit_listing')}
                             </Link>
                           </DropdownMenuItem>
                           
@@ -260,7 +260,7 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                                 onClick={() => handleApprove(listing._id)}
                               >
                                 <CheckCircle className="h-4 w-4 mr-2" />
-                                {listing.status === 'REJECTED' ? 'Approve (Unsuspend)' : 'Approve Listing'}
+                                {listing.status === 'REJECTED' ? t('approve_unsuspend') : t('approve_listing')}
                               </DropdownMenuItem>
                               
                               {listing.status !== 'REJECTED' && (
@@ -269,7 +269,7 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                                   onClick={() => handleReject(listing._id)}
                                 >
                                   <XCircle className="h-4 w-4 mr-2" />
-                                  Reject Listing
+                                  {t('reject_listing')}
                                 </DropdownMenuItem>
                               )}
                             </>
@@ -284,27 +284,27 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                                 onSelect={(e) => e.preventDefault()}
                               >
                                 <Trash2 className="h-4 w-4 mr-2" />
-                                Delete Listing
+                                {t('delete_listing')}
                               </DropdownMenuItem>
                             </AlertDialogTrigger>
                             <AlertDialogContent className="rounded-2xl border-destructive/20 shadow-2xl">
                               <AlertDialogHeader>
                                 <AlertDialogTitle className="flex items-center gap-2 text-destructive font-black uppercase tracking-tight">
                                   <Trash2 className="w-5 h-5" /> 
-                                  Move to Recycle Bin?
+                                  {t('move_to_bin')}
                                 </AlertDialogTitle>
                                 <AlertDialogDescription className="font-medium text-foreground/80">
-                                  <span className="font-bold text-foreground">"{listing.title}"</span> will be moved to the recycle bin. 
-                                  <br/><span className="text-xs text-muted-foreground mt-2 block">You can restore it anytime within 30 days.</span>
+                                  <span className="font-bold text-foreground">"{listing.title}"</span> {t('move_to_bin_desc')} 
+                                  <br/><span className="text-xs text-muted-foreground mt-2 block">{t('restore_within')}</span>
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter className="gap-2 sm:gap-0">
-                                <AlertDialogCancel className="rounded-xl font-bold border-border/50 bg-muted/50 hover:bg-muted">Cancel</AlertDialogCancel>
+                                <AlertDialogCancel className="rounded-xl font-bold border-border/50 bg-muted/50 hover:bg-muted">{t('cancel')}</AlertDialogCancel>
                                 <AlertDialogAction 
                                   onClick={() => handleDelete(listing._id)} 
                                   className="bg-destructive hover:bg-destructive/90 text-white rounded-xl font-bold shadow-lg shadow-destructive/20"
                                 >
-                                  Move to Bin
+                                  {t('move_to_bin_confirm')}
                                 </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>
@@ -320,14 +320,13 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
           </Table>
         </div>
         
-        {/* Footer / Status Bar within the fixed container */}
         <div className="bg-muted/40 border-t p-2 px-4 text-[10px] font-bold text-muted-foreground flex justify-between items-center shrink-0">
-            <span>Showing {listings.length} listings</span>
+            <span>{t('showing_listings', { count: listings.length })}</span>
             <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500/50"></span> Active
-                <span className="w-2 h-2 rounded-full bg-amber-500/50 ml-2"></span> Pending
+                <span className="w-2 h-2 rounded-full bg-emerald-500/50"></span> {t('status_active')}
+                <span className="w-2 h-2 rounded-full bg-amber-500/50 ml-2"></span> {t('status_pending')}
             </div>
         </div>
       </div>
-);
+  );
 }

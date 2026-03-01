@@ -1,12 +1,12 @@
 'use client';
 
-
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useMutation } from 'convex/react';
 import { Check, FileText, Loader2, Minus, Plus } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -15,6 +15,7 @@ import { api } from '../../../../convex/_generated/api';
 export default function TopUpPage() {
   const { data: session } = useSession();
   const router = useRouter();
+  const t = useTranslations('TopUp');
   const addCredits = useMutation(api.users.addCredits);
 
   const [amount, setAmount] = useState(0);
@@ -35,10 +36,10 @@ export default function TopUpPage() {
             externalId: session.user.id,
             amount: amount 
         });
-        toast.success(`Successfully added ${amount} MKD to wallet!`);
+        toast.success(t('success_msg', { amount }));
         router.push('/wallet');
     } catch (err) {
-        toast.error("Payment failed");
+        toast.error(t('failed'));
     } finally {
         setIsProcessing(false);
     }
@@ -51,7 +52,7 @@ export default function TopUpPage() {
         <AppBreadcrumbs />
 
         <div className="flex items-center gap-3 mb-5 md:mb-8">
-            <h1 className="text-lg md:text-2xl font-black tracking-tighter text-foreground">Top Up Account</h1>
+            <h1 className="text-lg md:text-2xl font-black tracking-tighter text-foreground">{t('title')}</h1>
         </div>
 
         <div className="bg-primary/5 border border-primary/10 p-3.5 md:p-5 rounded-xl md:rounded-2xl text-xs md:text-sm font-medium text-foreground mb-5 md:mb-8 flex gap-3 items-start">
@@ -59,11 +60,11 @@ export default function TopUpPage() {
                 <FileText className="w-4 h-4" />
             </div>
             <p className="leading-relaxed text-[11px] md:text-sm">
-               Save bank fees and time. Top up your account and use all our paid services instantly. Your funds never expire.
+               {t('info_text')}
             </p>
         </div>
 
-        <h2 className="text-sm md:text-base font-bold text-foreground mb-3 px-0.5">Payment Method</h2>
+        <h2 className="text-sm md:text-base font-bold text-foreground mb-3 px-0.5">{t('payment_method')}</h2>
         
         <div className="grid grid-cols-2 gap-2.5 md:gap-4 mb-5 md:mb-8">
             <div 
@@ -86,7 +87,7 @@ export default function TopUpPage() {
                          <div className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-current opacity-50" />
                     </div>
                 </div>
-                <span className={cn("font-bold text-[11px] md:text-sm", paymentMethod === 'card' ? "text-primary" : "text-muted-foreground")}>Credit / Debit Card</span>
+                <span className={cn("font-bold text-[11px] md:text-sm", paymentMethod === 'card' ? "text-primary" : "text-muted-foreground")}>{t('credit_card')}</span>
             </div>
 
             <div 
@@ -106,11 +107,11 @@ export default function TopUpPage() {
                 <div className={cn("w-9 h-9 md:w-11 md:h-11 rounded-lg md:rounded-xl flex items-center justify-center transition-colors", paymentMethod === 'invoice' ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground")}>
                     <FileText className="w-4 h-4 md:w-5 md:h-5" />
                 </div>
-                <span className={cn("font-bold text-[11px] md:text-sm", paymentMethod === 'invoice' ? "text-primary" : "text-muted-foreground")}>Bank Invoice</span>
+                <span className={cn("font-bold text-[11px] md:text-sm", paymentMethod === 'invoice' ? "text-primary" : "text-muted-foreground")}>{t('bank_invoice')}</span>
             </div>
         </div>
 
-        <h2 className="text-sm md:text-base font-bold text-foreground mb-3 px-0.5">Amount to Add</h2>
+        <h2 className="text-sm md:text-base font-bold text-foreground mb-3 px-0.5">{t('amount_to_add')}</h2>
 
         <div className="bg-card border border-border rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-sm mb-5 md:mb-8">
             <div className="flex items-center gap-4 md:gap-6">
@@ -124,12 +125,12 @@ export default function TopUpPage() {
                 </div>
 
                 <div className="flex-1 text-center border-l border-border pl-4 md:pl-6">
-                     <div className="text-[10px] md:text-xs font-medium text-muted-foreground uppercase tracking-wider mb-0.5">Total Amount</div>
+                     <div className="text-[10px] md:text-xs font-medium text-muted-foreground uppercase tracking-wider mb-0.5">{t('total_amount')}</div>
                      <div className="text-3xl md:text-5xl font-black text-foreground tracking-tight flex items-center justify-center gap-1.5">
                         {amount} <span className="text-xs md:text-base text-muted-foreground font-bold self-end mb-0.5 md:mb-1">MKD</span>
                      </div>
                      <div className="text-[10px] md:text-xs font-bold text-muted-foreground mt-1.5 bg-muted/50 inline-block px-2 py-0.5 rounded-full">
-                        + 18% VAT included
+                        {t('vat_included')}
                      </div>
                 </div>
             </div>
@@ -143,20 +144,18 @@ export default function TopUpPage() {
                 >
                     {isProcessing ? (
                         <>
-                            <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Processing...
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" /> {t('processing')}
                         </>
                     ) : (
-                        `Pay ${amount + vat} MKD Now`
+                        t('pay_now', { amount: total })
                     )}
                 </Button>
             </div>
         </div>
 
         <div className="text-[10px] md:text-xs text-muted-foreground text-center space-y-1.5 max-w-md mx-auto px-3">
-            <p className="font-medium">Secure payment processing provided by Stripe.</p>
-            <p className="opacity-70">
-                Payment with payment card is processed immediately. Bank transactions are processed in 1 - 2 working days. 
-            </p>
+            <p className="font-medium">{t('secure_payment')}</p>
+            <p className="opacity-70">{t('payment_note')}</p>
         </div>
       </div>
     </div>

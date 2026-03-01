@@ -36,6 +36,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery } from 'convex/react';
 import { ChevronDown, ChevronRight, Edit, Folder, FolderOpen, MoreHorizontal, Plus, Trash } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -103,6 +104,7 @@ type CategoryFormValues = z.infer<typeof categorySchema>;
 // ------------------------------------------------------------------
 
 export default function CategoriesClient() {
+  const t = useTranslations('AdminCategories');
   const rootCategories = useQuery(api.categories.getRoot);
 
   const [search, setSearch]     = useState('');
@@ -149,17 +151,17 @@ export default function CategoriesClient() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <h2 className="text-3xl font-bold tracking-tight flex items-center gap-3">
-            Categories
+            {t('title')}
             <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-lg bg-secondary text-foreground text-xs font-bold border border-border">
               {totalCount}
             </span>
           </h2>
           <p className="text-sm text-muted-foreground font-medium">
-            {activeCount} active · {featuredCount} featured
+            {activeCount} {t('active_label')} · {featuredCount} {t('featured_label')}
           </p>
         </div>
         <Button onClick={() => openCreate(null)} className="rounded-lg font-bold shadow-none shrink-0 border border-primary">
-          <Plus className="mr-2 h-4 w-4" /> New Root Category
+          <Plus className="mr-2 h-4 w-4" /> {t('new_root_btn')}
         </Button>
       </div>
 
@@ -168,11 +170,11 @@ export default function CategoriesClient() {
         <AdminFilterToolbar
           searchValue={search}
           onSearchChange={setSearch}
-          searchPlaceholder="Search categories by name..."
+          searchPlaceholder={t('search_placeholder')}
           showTimeRange={false}
         />
         <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-border/30">
-          <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Filter:</span>
+          <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">{t('filter_label')}</span>
           {(['all', 'active', 'inactive', 'featured'] as const).map(f => (
             <button
               key={f}
@@ -183,31 +185,31 @@ export default function CategoriesClient() {
                   : 'border-border/50 text-muted-foreground hover:bg-secondary/50'
               }`}
             >
-              {f.charAt(0).toUpperCase() + f.slice(1)}
+              {f === 'all' ? t('filter_all') : f === 'active' ? t('filter_active') : f === 'inactive' ? t('filter_inactive') : t('filter_featured')}
             </button>
           ))}
           <span className="ml-auto text-xs text-muted-foreground">
-            <span className="font-bold text-foreground">{filteredRoots.length}</span> of <span className="font-bold text-foreground">{totalCount}</span> root categories
+            {t('count_label', { shown: filteredRoots.length, total: totalCount })}
           </span>
         </div>
       </div>
 
       <Card className="rounded-lg overflow-hidden border border-border shadow-none">
         <CardHeader className="border-b border-border bg-muted">
-          <CardTitle>Category Tree</CardTitle>
-          <CardDescription>Expand folders to view subcategories.</CardDescription>
+          <CardTitle>{t('tree_title')}</CardTitle>
+          <CardDescription>{t('tree_desc')}</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <ScrollArea className="h-[600px] p-4">
             {rootCategories === undefined ? (
-              <div className="flex items-center justify-center p-8 text-muted-foreground">Loading...</div>
+              <div className="flex items-center justify-center p-8 text-muted-foreground">{t('loading')}</div>
             ) : filteredRoots.length === 0 ? (
               <div className="flex flex-col items-center justify-center p-8 text-muted-foreground gap-2">
                 <FolderOpen className="h-8 w-8 opacity-50" />
-                <p>{search ? `No categories matching "${search}"` : 'No categories found.'}</p>
+                <p>{search ? t('no_cats_search', { search }) : t('no_cats')}</p>
                 {!search && (
                   <Button variant="link" onClick={() => openCreate(null)}>
-                    Create the first one
+                    {t('create_first')}
                   </Button>
                 )}
               </div>
@@ -255,6 +257,7 @@ const CategoryTreeItem = memo(function CategoryTreeItem({
   onCreateSub,
   level = 0,
 }: TreeItemProps) {
+  const t = useTranslations('AdminCategories');
   const [isExpanded, setIsExpanded] = useState(false);
   const children = useQuery(
     api.categories.getChildren,
@@ -262,11 +265,11 @@ const CategoryTreeItem = memo(function CategoryTreeItem({
   );
 
   const handleDelete = useCallback(async () => {
-    if (confirm('Delete this category?')) {
+    if (confirm(t('delete_confirm'))) {
       await deleteCategory(category._id);
-      toast.success('Deleted');
+      toast.success(t('deleted'));
     }
-  }, [category._id]);
+  }, [category._id, t]);
 
   const handleEdit = useCallback(() => onEdit(category), [category, onEdit]);
   const handleCreateSub = useCallback(() => onCreateSub(category._id), [category._id, onCreateSub]);
@@ -302,7 +305,7 @@ const CategoryTreeItem = memo(function CategoryTreeItem({
           )}
           {!category.isActive && (
             <span className="text-[10px] font-bold bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 px-1.5 py-0.5 rounded-lg border border-red-200 dark:border-red-900">
-              Inactive
+              {t('inactive_badge')}
             </span>
           )}
         </div>
@@ -310,7 +313,7 @@ const CategoryTreeItem = memo(function CategoryTreeItem({
         <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={handleCreateSub}>
             <Plus className="h-3.5 w-3.5" />
-            <span className="sr-only">Add Subcategory</span>
+            <span className="sr-only">{t('add_subcategory')}</span>
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -319,19 +322,19 @@ const CategoryTreeItem = memo(function CategoryTreeItem({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuLabel>{t('actions')}</DropdownMenuLabel>
               <DropdownMenuItem onClick={handleEdit}>
-                <Edit className="mr-2 h-4 w-4" /> Edit
+                <Edit className="mr-2 h-4 w-4" /> {t('edit')}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleCreateSub}>
-                <Plus className="mr-2 h-4 w-4" /> Add Subcategory
+                <Plus className="mr-2 h-4 w-4" /> {t('add_subcategory')}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-destructive focus:text-destructive"
                 onClick={handleDelete}
               >
-                <Trash className="mr-2 h-4 w-4" /> Delete
+                <Trash className="mr-2 h-4 w-4" /> {t('delete')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -350,14 +353,14 @@ const CategoryTreeItem = memo(function CategoryTreeItem({
                 className="py-2 pl-8 text-xs text-muted-foreground"
                 style={{ marginLeft: paddingLeft }}
               >
-                Loading...
+                {t('loading')}
               </div>
             ) : children.length === 0 ? (
               <div
                 className="py-2 pl-8 text-xs text-muted-foreground italic"
                 style={{ marginLeft: paddingLeft }}
               >
-                No subcategories
+                {t('no_subcategories')}
               </div>
             ) : (
               <div>
@@ -398,6 +401,7 @@ function CategoryDialog({
   parentForNew,
   rootCategories,
 }: CategoryDialogProps) {
+  const t = useTranslations('AdminCategories');
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<CategoryFormValues>({
@@ -472,13 +476,13 @@ function CategoryDialog({
           : await createCategory(payload);
 
         if (result.success) {
-          toast.success(editingCategory ? 'Updated' : 'Created');
+          toast.success(editingCategory ? t('toast_updated') : t('toast_created'));
           onOpenChange(false);
         } else {
           toast.error(result.error);
         }
       } catch {
-        toast.error('Error saving category');
+        toast.error(t('toast_error'));
       }
     });
   };
@@ -488,10 +492,10 @@ function CategoryDialog({
       <DialogContent className="sm:max-w-xl rounded-lg border border-border shadow-none">
         <DialogHeader>
           <DialogTitle className="font-bold tracking-tight">
-            {editingCategory ? 'Edit Category' : 'Create Category'}
+            {editingCategory ? t('dialog_edit_title') : t('dialog_create_title')}
           </DialogTitle>
           <DialogDescription>
-            {editingCategory ? 'Modify category details.' : 'Add a new category to the hierarchy.'}
+            {editingCategory ? t('dialog_edit_desc') : t('dialog_create_desc')}
           </DialogDescription>
         </DialogHeader>
 
@@ -503,7 +507,7 @@ function CategoryDialog({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>{t('label_name')}</FormLabel>
                     <FormControl>
                       <Input placeholder="Electronics" {...field} />
                     </FormControl>
@@ -516,7 +520,7 @@ function CategoryDialog({
                 name="slug"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Slug</FormLabel>
+                    <FormLabel>{t('label_slug')}</FormLabel>
                     <FormControl>
                       <Input placeholder="electronics" {...field} />
                     </FormControl>
@@ -532,18 +536,18 @@ function CategoryDialog({
                 name="parentId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Parent Category</FormLabel>
+                    <FormLabel>{t('label_parent')}</FormLabel>
                     <Select
                       onValueChange={(val) => field.onChange(val === 'null' ? null : val)}
                       value={field.value ?? 'null'}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Root (None)" />
+                          <SelectValue placeholder={t('parent_none')} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="null">None (Root)</SelectItem>
+                        <SelectItem value="null">{t('parent_none')}</SelectItem>
                         {rootCategories?.map((c) => (
                           <SelectItem key={c._id} value={c._id}>
                             {c.name}
@@ -562,9 +566,9 @@ function CategoryDialog({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>{t('label_description')}</FormLabel>
                   <FormControl>
-                    <Textarea rows={3} placeholder="Optional description..." {...field} />
+                    <Textarea rows={3} placeholder={t('placeholder_description')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -580,7 +584,7 @@ function CategoryDialog({
                     <FormControl>
                       <Switch checked={field.value} onCheckedChange={field.onChange} />
                     </FormControl>
-                    <FormLabel className="text-sm">Active</FormLabel>
+                    <FormLabel className="text-sm">{t('label_active')}</FormLabel>
                   </FormItem>
                 )}
               />
@@ -592,7 +596,7 @@ function CategoryDialog({
                     <FormControl>
                       <Switch checked={field.value} onCheckedChange={field.onChange} />
                     </FormControl>
-                    <FormLabel className="text-sm">Featured</FormLabel>
+                    <FormLabel className="text-sm">{t('label_featured')}</FormLabel>
                   </FormItem>
                 )}
               />
@@ -603,7 +607,7 @@ function CategoryDialog({
               name="template"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Dynamic Template Fields</FormLabel>
+                  <FormLabel>{t('label_template')}</FormLabel>
                   <FormControl>
                     <CategoryTemplateBuilder value={field.value || ''} onChange={field.onChange} />
                   </FormControl>
@@ -614,10 +618,10 @@ function CategoryDialog({
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                Cancel
+                {t('cancel')}
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? 'Saving...' : 'Save'}
+                {isPending ? t('saving') : t('save')}
               </Button>
             </DialogFooter>
           </form>

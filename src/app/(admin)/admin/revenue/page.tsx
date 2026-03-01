@@ -16,11 +16,13 @@ import {
     TrendingUp,
     Zap
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { api } from '../../../../../convex/_generated/api';
 
 export default function RevenuePage() {
+  const t = useTranslations('AdminRevenue');
   const [filter, setFilter] = useState<TimeRange>('today');
   const [search, setSearch] = useState('');
   const [syncing, setSyncing] = useState(false);
@@ -61,10 +63,10 @@ export default function RevenuePage() {
           });
 
           if (result.success) {
-              toast.success(`Synced ${result.count} transactions from Stripe`);
+              toast.success(t('synced', { count: result.count }));
           }
       } catch (error) {
-          toast.error("Failed to sync transactions");
+          toast.error(t('sync_failed'));
           console.error(error);
       } finally {
           setSyncing(false);
@@ -73,12 +75,12 @@ export default function RevenuePage() {
 
   const clearData = useMutation(api.transactions.clear);
   const handleReset = async () => {
-    if (confirm("Are you sure? This will delete all revenue data. You can re-sync from Stripe afterwards.")) {
+    if (confirm(t('reset_confirm'))) {
         try {
             await clearData();
-            toast.success("All revenue data cleared");
+            toast.success(t('reset_success'));
         } catch (e) {
-            toast.error("Failed to clear data");
+            toast.error(t('reset_failed'));
         }
     }
   };
@@ -96,18 +98,18 @@ export default function RevenuePage() {
         <div className='flex flex-col gap-4 sm:flex-col justify-between animate-in fade-in slide-in-from-top-4 duration-500'>
         <div className='flex flex-col space-y-1 mb-6'>
            <h1 className='text-3xl font-bold tracking-tight flex items-center gap-3'>
-             Revenue Intelligence
+             {t('title')}
              <span className='inline-flex items-center justify-center px-2 py-1 rounded-lg bg-secondary text-foreground text-[10px] font-bold border border-border uppercase tracking-widest'>
-                Live
+                {t('live')}
              </span>
              {isTransitioning && <Loader2 className="w-4 h-4 text-muted-foreground animate-spin ml-2" />}
            </h1>
            <p className='text-sm text-muted-foreground font-medium'>
-               {filter === 'today' ? "Analyzing financial performance for today." : 
-                filter === 'week' ? "Financial breakdown for the last 7 days." : 
-                filter === 'month' ? "Financial breakdown for the last 30 days." :
-                filter === 'year' ? "Full-year financial overview." :
-                "Comprehensive all-time financial overview."}
+               {filter === 'today' ? t('desc_today') : 
+                filter === 'week' ? t('desc_week') : 
+                filter === 'month' ? t('desc_month') :
+                filter === 'year' ? t('desc_year') :
+                t('desc_all')}
            </p>
         </div>
 
@@ -117,7 +119,7 @@ export default function RevenuePage() {
                 onTimeRangeChange={(r) => setFilter(r)}
                 searchValue={search}
                 onSearchChange={setSearch}
-                searchPlaceholder="Search name, email, description, Stripe ID..."
+                searchPlaceholder={t('search_placeholder')}
                 showExport
                 onExport={() => {
                     const rows = recentTransactions.map((t: any) =>
@@ -138,7 +140,7 @@ export default function RevenuePage() {
                             className="h-8 px-3 rounded-lg text-[10px] uppercase tracking-wider font-bold text-destructive hover:bg-destructive/10"
                         >
                             <Trash2 className="w-3.5 h-3.5 mr-1.5" />
-                            Reset
+                            {t('reset')}
                         </Button>
                         <Button
                             onClick={handleSync}
@@ -147,7 +149,7 @@ export default function RevenuePage() {
                             variant="default"
                         >
                             {syncing ? <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5 mr-1.5" />}
-                            Sync Stripe
+                            {t('sync_stripe')}
                         </Button>
                     </div>
                 }
@@ -161,20 +163,20 @@ export default function RevenuePage() {
             <div className="md:col-span-1 lg:col-span-4 flex flex-col gap-6">
                 <div className="grid grid-cols-2 gap-3">
                     <CompactStat 
-                        title="Gross Revenue" 
+                        title={t('gross_revenue')} 
                         value={formatCurrency(stats.totalRevenue)} 
                         icon={DollarSign}
                         className="col-span-1 bg-card border-border shadow-none"
                         valueClassName="text-3xl text-primary"
                     />
                     <CompactStat 
-                        title="Net Revenue" 
+                        title={t('net_revenue')} 
                         value={formatCurrency(stats.netRevenue)} 
                         icon={TrendingUp}
                         className="bg-card col-span-1 border-border shadow-none"
                     />
                     <CompactStat 
-                        title="VAT (18%)" 
+                        title={t('vat')} 
                         value={formatCurrency(stats.vatRevenue)} 
                         icon={TrendingUp}
                         className="bg-card col-span-2 border-border shadow-none"
@@ -185,14 +187,14 @@ export default function RevenuePage() {
                     <div className="p-4 border-b border-border bg-muted/30">
                         <h2 className="text-[12px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                             <Zap className="w-4 h-4 text-amber-500" />
-                            Revenue Vectors
+                            {t('revenue_vectors')}
                         </h2>
                     </div>
                     <div className="p-4 flex-1 flex flex-col gap-3">
-                        <CategoryRow title="Top Positioning" amount={stats.revenueByTier.TOP_POSITIONING} color="amber" icon={Star} />
-                        <CategoryRow title="Premium Sector" amount={stats.revenueByTier.PREMIUM_SECTOR} color="blue" icon={Crown} />
-                        <CategoryRow title="Daily Refresh" amount={stats.revenueByTier.AUTO_DAILY_REFRESH} color="purple" icon={RefreshCw} />
-                        <CategoryRow title="Highlight" amount={stats.revenueByTier.LISTING_HIGHLIGHT} color="emerald" icon={Eye} />
+                        <CategoryRow title={t('top_positioning')} amount={stats.revenueByTier.TOP_POSITIONING} color="amber" icon={Star} />
+                        <CategoryRow title={t('premium_sector')} amount={stats.revenueByTier.PREMIUM_SECTOR} color="blue" icon={Crown} />
+                        <CategoryRow title={t('daily_refresh')} amount={stats.revenueByTier.AUTO_DAILY_REFRESH} color="purple" icon={RefreshCw} />
+                        <CategoryRow title={t('highlight')} amount={stats.revenueByTier.LISTING_HIGHLIGHT} color="emerald" icon={Eye} />
                     </div>
                 </Card>
             </div>
@@ -201,7 +203,7 @@ export default function RevenuePage() {
                 <Card className="rounded-lg border-border shadow-none bg-card flex flex-col h-full overflow-hidden">
                     <div className="p-4 border-b border-border bg-muted/30 flex items-center justify-between">
                         <h2 className="text-[13px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-                            Recent Transactions Ledger
+                            {t('transactions_ledger')}
                         </h2>
                     </div>
                     
@@ -209,10 +211,10 @@ export default function RevenuePage() {
                         <table className="w-full text-sm text-left whitespace-nowrap">
                             <thead className="bg-muted/30 text-muted-foreground font-bold text-xs uppercase tracking-wider">
                                 <tr>
-                                    <th className="px-4 py-3">Customer</th>
-                                    <th className="px-4 py-3">Purchase Details</th>
-                                    <th className="px-4 py-3 text-right">Amount</th>
-                                    <th className="px-4 py-3 text-right">Date</th>
+                                    <th className="px-4 py-3">{t('col_customer')}</th>
+                                    <th className="px-4 py-3">{t('col_purchase')}</th>
+                                    <th className="px-4 py-3 text-right">{t('col_amount')}</th>
+                                    <th className="px-4 py-3 text-right">{t('col_date')}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-border/40">
@@ -223,8 +225,8 @@ export default function RevenuePage() {
                                                 <div className="w-12 h-12 rounded-md bg-muted flex items-center justify-center mb-4">
                                                     <DollarSign className="w-6 h-6 text-muted-foreground/50" />
                                                 </div>
-                                                <p className="font-bold text-foreground">No transactions</p>
-                                                <p className="text-muted-foreground text-sm mt-1">Check your Stripe dashboard or adjust the date filter.</p>
+                                                <p className="font-bold text-foreground">{t('no_transactions')}</p>
+                                                <p className="text-muted-foreground text-sm mt-1">{t('no_transactions_desc')}</p>
                                             </div>
                                         </td>
                                     </tr>
@@ -299,7 +301,7 @@ export default function RevenuePage() {
                                 onClick={() => loadMore(10)}
                                 className="text-xs uppercase tracking-wider font-bold"
                             >
-                                Load More Transactions
+                                {t('load_more')}
                             </Button>
                         </div>
                     )}
@@ -380,16 +382,17 @@ function getPurchaseDetails(t: any): { label: string; sub?: string } {
 }
 
 function BadgeType({ type }: { type: string }) {
+    const t = useTranslations('AdminRevenue');
     const base = "inline-flex items-center px-1.5 py-0.5 mt-0.5 rounded-md text-[9px] font-bold border w-fit transition-colors";
     
     if (type === 'SUBSCRIPTION') {
-        return <span className={cn(base, "bg-secondary text-primary border-border hover:bg-muted")}>Subscription</span>;
+        return <span className={cn(base, "bg-secondary text-primary border-border hover:bg-muted")}>{t('badge_subscription')}</span>;
     }
     if (type === 'PROMOTION' || type === 'LISTING_PROMOTION') {
-        return <span className={cn(base, "bg-secondary text-foreground border-border hover:bg-muted")}>Promotion</span>;
+        return <span className={cn(base, "bg-secondary text-foreground border-border hover:bg-muted")}>{t('badge_promotion')}</span>;
     }
     if (type === 'TOPUP') {
-        return <span className={cn(base, "bg-secondary text-emerald-500 border-border hover:bg-muted")}>Top-Up</span>;
+        return <span className={cn(base, "bg-secondary text-emerald-500 border-border hover:bg-muted")}>{t('badge_topup')}</span>;
     }
     return <span className={cn(base, "bg-secondary text-muted-foreground border-border hover:bg-muted")}>{type}</span>;
 }

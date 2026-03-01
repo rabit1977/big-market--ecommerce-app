@@ -1,29 +1,33 @@
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { api, convex } from '@/lib/convex-server';
 import {
-  Anchor,
-  Bike,
-  Briefcase,
-  Car,
-  Globe,
-  GraduationCap,
-  Home,
-  PawPrint,
-  Shirt,
-  Smartphone,
-  Truck,
-  Wrench,
-  Zap
+    Anchor,
+    Bike,
+    Briefcase,
+    Car,
+    Globe,
+    GraduationCap,
+    Home,
+    PawPrint,
+    Shirt,
+    Smartphone,
+    Truck,
+    Wrench,
+    Zap
 } from 'lucide-react';
 import { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import Link from 'next/link';
 import { cache } from 'react';
 
-export const metadata: Metadata = {
-  title: 'Categories | Biggest Market',
-  description: 'Browse listings by category',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('Categories');
+  return {
+    title: `${t('title')} | Biggest Market`,
+    description: t('description'),
+  };
+}
 
 // Map category slugs to high-quality images (Unsplash)
 // Keys MUST match the exact 'slug' field from the seed data
@@ -206,6 +210,7 @@ const getCategories = cache(async () => {
 
 export default async function CategoriesPage() {
   let categories: any[] = [];
+  const t = await getTranslations('Categories');
   try {
     categories = await getCategories();
   } catch (err) {
@@ -271,7 +276,7 @@ export default async function CategoriesPage() {
                      {category.name}
                    </h3>
                    <p className="text-[10px] sm:text-xs text-muted-foreground font-medium">
-                      {category.totalCount > 0 ? `${category.totalCount.toLocaleString()} items` : 'No items yet'}
+                      {category.totalCount > 0 ? t('items_count', { count: category.totalCount.toLocaleString() }) : t('no_items')}
                    </p>
                 </div>
               </Link>
@@ -284,13 +289,13 @@ export default async function CategoriesPage() {
                  <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
                     <Globe className="w-8 h-8 text-muted-foreground/30" />
                  </div>
-                 <h2 className="text-xl font-bold mb-2">No categories found</h2>
+                 <h2 className="text-xl font-bold mb-2">{t('no_categories')}</h2>
                  <p className="text-muted-foreground mb-8 text-sm px-8">
-                     We couldn't load any categories. If this is a new environment, you may need to seed the database.
+                     {t('no_categories_desc')}
                  </p>
                  <div className="flex flex-col gap-2 px-12">
                      <Link href="/" className="text-primary font-bold text-sm hover:underline">
-                        Return Home
+                        {t('return_home')}
                      </Link>
                      <p className="text-[10px] text-muted-foreground mt-4">
                         Admin: Run `npx convex run seed:seedCategories` to populate data.
