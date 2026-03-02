@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
 import { Loader2, Shield, User as UserIcon, UserPlus, Users } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -15,6 +15,8 @@ const ITEMS_PER_PAGE = 15;
 export function UsersClientPage() {
   const usersRaw = useQuery(api.users.list);
   const t = useTranslations('AdminControls');
+  const locale = useLocale();
+  const isMk = locale === 'mk';
 
   const [timeRange, setTimeRange] = useState<TimeRange>('all');
   const [search, setSearch]       = useState('');
@@ -23,7 +25,14 @@ export function UsersClientPage() {
   const [roleFilter, setRole]     = useState<string>('ALL');
   const [page, setPage]           = useState(1);
 
-  const SORT_OPTIONS = [
+  const SORT_OPTIONS = isMk ? [
+    { label: 'Најнови прво', value: 'newest' },
+    { label: 'Најстари прво',  value: 'oldest' },
+    { label: 'Име А-Ш',      value: 'name_asc' },
+    { label: 'Име Ш-А',      value: 'name_desc' },
+    { label: 'Админи прво',  value: 'role' },
+    { label: 'Статус',        value: 'status' },
+  ] : [
     { label: t('users_title').includes('Admin') ? 'Newest First' : 'Newest First', value: 'newest' },
     { label: 'Oldest First',  value: 'oldest' },
     { label: 'Name A–Z',      value: 'name_asc' },
@@ -157,7 +166,7 @@ export function UsersClientPage() {
             onTimeRangeChange={(r) => { setTimeRange(r); setPage(1); }}
             searchValue={search}
             onSearchChange={(q) => { setSearch(q); setPage(1); }}
-            searchPlaceholder="Search name, email, or user ID..."
+            searchPlaceholder={isMk ? "Пребарај име, емаил, или ИД..." : "Search name, email, or user ID..."}
             showSort
             sortValue={sort}
             onSortChange={(s) => { setSort(s); setPage(1); }}
@@ -190,8 +199,8 @@ export function UsersClientPage() {
           </select>
 
           <span className="text-xs text-muted-foreground ml-auto shrink-0">
-            <span className="font-bold text-foreground">{sorted.length}</span> of <span className="font-bold text-foreground">{users.length}</span> users
-            {timeRange !== 'all' && <span className="text-primary ml-1">· {timeRange}</span>}
+            <span className="font-bold text-foreground">{sorted.length}</span> {isMk ? 'од' : 'of'} <span className="font-bold text-foreground">{users.length}</span> {isMk ? 'корисници' : 'users'}
+            {timeRange !== 'all' && <span className="text-primary ml-1">· {isMk ? ({'today': 'денес', 'week': '7 дена', 'month': '30 дена', 'year': 'година'}[timeRange] || timeRange) : timeRange}</span>}
           </span>
         </div>
       </div>

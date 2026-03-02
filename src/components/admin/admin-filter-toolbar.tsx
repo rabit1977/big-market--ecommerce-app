@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Calendar, Download, RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react';
+import { useLocale } from 'next-intl';
 import { useCallback, useRef, useState } from 'react';
 
 export type TimeRange = 'today' | 'week' | 'month' | 'year' | 'all';
@@ -85,6 +86,8 @@ export function AdminFilterToolbar({
 }: AdminFilterToolbarProps) {
     const [showFiltersPanel, setShowFiltersPanel] = useState(false);
     const searchRef = useRef<HTMLInputElement>(null);
+    const locale = useLocale();
+    const isMk = locale === 'mk';
 
     const clearSearch = useCallback(() => {
         onSearchChange?.('');
@@ -128,9 +131,17 @@ export function AdminFilterToolbar({
                             onChange={e => onTimeRangeChange(e.target.value as TimeRange)}
                             className="h-10 pl-9 pr-8 text-[10px] bg-card border-1 border-card-foreground/20 rounded-xl focus:outline-none focus:border-card-foreground/50 font-black uppercase tracking-widest appearance-none cursor-pointer text-foreground min-w-[110px] transition-all"
                         >
-                            {TIME_RANGES.map(r => (
-                                <option key={r.id} value={r.id}>{r.label}</option>
-                            ))}
+                            {TIME_RANGES.map(r => {
+                                let label = r.label;
+                                if (isMk) {
+                                    if (r.id === 'today') label = 'Денес';
+                                    if (r.id === 'week') label = '7 Дена';
+                                    if (r.id === 'month') label = '30 Дена';
+                                    if (r.id === 'year') label = 'Година';
+                                    if (r.id === 'all') label = 'За Секогаш';
+                                }
+                                return <option key={r.id} value={r.id}>{label}</option>
+                            })}
                         </select>
                         <svg className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -163,7 +174,7 @@ export function AdminFilterToolbar({
                         className="h-9 px-3 text-xs font-bold gap-1.5 shrink-0"
                     >
                         <Download className="w-3.5 h-3.5" />
-                        Export CSV
+                        {isMk ? 'Експортирај CSV' : 'Export CSV'}
                     </Button>
                 )}
 
@@ -187,7 +198,7 @@ export function AdminFilterToolbar({
                         onClick={() => { onSearchChange?.(''); }}
                         className="text-[10px] font-bold text-muted-foreground hover:text-foreground flex items-center gap-1"
                     >
-                        <RotateCcw className="w-2.5 h-2.5" /> Clear all
+                        <RotateCcw className="w-2.5 h-2.5" /> {isMk ? 'Исчисти сè' : 'Clear all'}
                     </button>
                 </div>
             )}
@@ -207,6 +218,9 @@ export function AdminPagination({
     onPageChange: (p: number) => void;
     className?: string;
 }) {
+    const locale = useLocale();
+    const isMk = locale === 'mk';
+
     if (totalPages <= 1) return null;
 
     const pages = Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
@@ -247,7 +261,7 @@ export function AdminPagination({
                 ›
             </button>
             <span className="text-xs text-muted-foreground ml-2">
-                Page {page} of {totalPages}
+                {isMk ? `Страница ${page} од ${totalPages}` : `Page ${page} of ${totalPages}`}
             </span>
         </div>
     );

@@ -18,7 +18,7 @@ import {
     Tag,
     Users
 } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useState } from 'react';
 import { DashboardCard } from './dashboard-card';
@@ -227,8 +227,24 @@ export function AdminDashboardClient() {
 }
 
 function ActivityLogs({ logs, noActivityLabel }: { logs: any[]; noActivityLabel: string }) {
+  const locale = useLocale();
+  const isMk = locale === 'mk';
+
   if (logs.length === 0) return <p className="text-center py-4 text-muted-foreground text-sm">{noActivityLabel}</p>;
   
+  const translateAction = (text: string) => {
+      if (!isMk) return text;
+      const dict: Record<string, string> = {
+          'APPROVE_LISTING': 'Одобрен оглас',
+          'REJECT_LISTING': 'Одбиен оглас',
+          'DELETE_LISTING': 'Избришан оглас',
+          'CREATE_USER': 'Креиран корисник',
+          'UPDATE_USER': 'Ажуриран корисник',
+          'DELETE_USER': 'Избришан корисник',
+      };
+      return dict[text] || text;
+  };
+
   return (
     <div className="space-y-4">
       {logs.map((log, i) => (
@@ -237,7 +253,7 @@ function ActivityLogs({ logs, noActivityLabel }: { logs: any[]; noActivityLabel:
              <ActivityIcon action={log.action} />
           </div>
           <div className="flex-1 min-w-0">
-             <p className="text-sm font-medium line-clamp-1">{log.details || log.action}</p>
+             <p className="text-sm font-medium line-clamp-1">{translateAction(log.details || log.action)}</p>
              <p className="text-[10px] text-muted-foreground mt-0.5">
                 {new Date(log.createdAt ?? Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
              </p>

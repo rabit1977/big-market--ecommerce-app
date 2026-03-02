@@ -23,6 +23,7 @@ import {
 import { User } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Ban, CheckCircle, Clock, Edit, Eye, MoreHorizontal, Shield, ShieldOff, Trash2, UserCog, User as UserIcon, XCircle } from 'lucide-react';
+import { useLocale } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -50,6 +51,8 @@ const getStatusColor = (status?: string) => {
 export function UsersDataTable({ users }: UsersDataTableProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const locale = useLocale();
+  const isMk = locale === 'mk';
 
   // ── Delete dialog state ───────────────────────────────────────────
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -79,7 +82,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
         const newRole = roleAction === 'promote' ? 'ADMIN' : 'USER';
         const result = await updateUserRoleAction(userForRole.id, newRole);
         if (result.success) {
-          toast.success(roleAction === 'promote' ? 'User promoted to Moderator' : 'Administrator access revoked');
+          toast.success(roleAction === 'promote' ? (isMk ? 'Корисникот е унапреден во Модератор' : 'User promoted to Moderator') : (isMk ? 'Администраторскиот пристап е одземен' : 'Administrator access revoked'));
           setShowRoleDialog(false);
           setUserForRole(null);
           router.refresh();
@@ -87,7 +90,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
           toast.error(result.error);
         }
       } catch (error) {
-        toast.error('An unexpected error occurred');
+        toast.error(isMk ? 'Се случи неочекувана грешка' : 'An unexpected error occurred');
       }
     });
   }, [userForRole, roleAction, roleConfirmation, router]);
@@ -109,17 +112,17 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
         const result = await deleteUserFromAdminAction(userToDelete.id);
 
         if (result.success) {
-          toast.success(result.message || `User "${userToDelete.name}" deleted successfully`);
+          toast.success(result.message || (isMk ? `Корисникот "${userToDelete.name}" е успешно избришан` : `User "${userToDelete.name}" deleted successfully`));
           setShowDeleteDialog(false);
           setUserToDelete(null);
           setDeleteConfirmation('');
           router.refresh();
         } else {
-          toast.error(result.error || 'Failed to delete user');
+          toast.error(result.error || (isMk ? 'Бришењето не успеа' : 'Failed to delete user'));
         }
       } catch (error) {
         console.error('Delete user error:', error);
-        toast.error(error instanceof Error ? error.message : 'Failed to delete user');
+        toast.error(error instanceof Error ? error.message : (isMk ? 'Бришењето не успеа' : 'Failed to delete user'));
       }
     });
   }, [userToDelete, router, deleteConfirmation]);
@@ -134,8 +137,8 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
     return (
       <div className='flex flex-col items-center justify-center py-12 text-center'>
         <UserIcon className='h-12 w-12 text-muted-foreground/30 mb-3' />
-        <p className='text-muted-foreground font-medium'>No users found</p>
-        <p className='text-sm text-muted-foreground/70'>Users will appear here when they register</p>
+        <p className='text-muted-foreground font-medium'>{isMk ? 'Нема пронајдени корисници' : 'No users found'}</p>
+        <p className='text-sm text-muted-foreground/70'>{isMk ? 'Корисниците ќе се појават тука кога ќе се регистрираат' : 'Users will appear here when they register'}</p>
       </div>
     );
   }
@@ -181,7 +184,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                     href={`/admin/users/${user.id}`}
                     className='font-semibold text-sm sm:text-base text-foreground hover:text-primary transition-colors truncate'
                   >
-                    {user.name || 'No name'}
+                    {user.name || (isMk ? 'Нема име' : 'No name')}
                   </Link>
                   <Badge 
                     variant={user.role?.toLowerCase() === 'admin' ? 'destructive' : 'secondary'}
@@ -190,9 +193,9 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                     {user.role?.toLowerCase() === 'admin' ? (
                       <Shield className='h-2.5 w-2.5 mr-0.5' />
                     ) : (
-                      <UserCog className='h-2.5 w-2.5 mr-0.5' />
+                       <UserCog className='h-2.5 w-2.5 mr-0.5' />
                     )}
-                    {(user.role || 'user').toUpperCase()}
+                    {isMk ? (user.role === 'ADMIN' ? 'АДМИН' : 'КОРИСНИК') : (user.role || 'user').toUpperCase()}
                   </Badge>
                   
                   <Badge 
@@ -202,7 +205,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                         {user.accountStatus === 'PENDING_APPROVAL' && <Clock className="h-2.5 w-2.5 mr-0.5" />}
                         {user.accountStatus === 'ACTIVE' && <CheckCircle className="h-2.5 w-2.5 mr-0.5" />}
                         {(user.accountStatus === 'SUSPENDED' || user.accountStatus === 'BANNED') && <Ban className="h-2.5 w-2.5 mr-0.5" />}
-                        {(user.accountStatus || 'ACTIVE').replace('_', ' ')}
+                        {isMk ? {'ACTIVE': 'АКТИВЕН', 'PENDING_APPROVAL': 'ЗА ОДОБРУВАЊЕ', 'SUSPENDED': 'СУСПЕНДИРАН', 'BANNED': 'БАНУРАН'}[user.accountStatus || 'ACTIVE'] : (user.accountStatus || 'ACTIVE').replace('_', ' ')}
                    </Badge>
                 </div>
 
@@ -214,7 +217,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                 {/* Date + Actions Row */}
                 <div className='flex items-center justify-between gap-2 mt-2'>
                   <span className='text-[10px] sm:text-xs text-muted-foreground'>
-                    Joined {user.createdAt 
+                    {isMk ? 'Придружен ' : 'Joined '}{user.createdAt 
                       ? new Date(user.createdAt).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
@@ -257,7 +260,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                             className='cursor-pointer'
                           >
                             <Eye className='h-4 w-4 mr-2' />
-                            View Details
+                            {isMk ? 'Прегледај детали' : 'View Details'}
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
@@ -266,7 +269,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                             className='cursor-pointer'
                           >
                             <Edit className='h-4 w-4 mr-2' />
-                            Edit User
+                            {isMk ? 'Уреди корисник' : 'Edit User'}
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
@@ -298,7 +301,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                                     }}
                                 >
                                     <CheckCircle className='h-4 w-4 mr-2' />
-                                    Approve User
+                                    {isMk ? 'Одобри корисник' : 'Approve User'}
                                     {user.membershipStatus !== 'ACTIVE' && (
                                         <span className="ml-2 text-[10px] bg-red-100 text-red-800 px-1 rounded">
                                             No Sub
@@ -318,7 +321,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                                     })}
                                 >
                                     <XCircle className='h-4 w-4 mr-2' />
-                                    Reject User
+                                    {isMk ? 'Одбиј корисник' : 'Reject User'}
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                             </>
@@ -338,7 +341,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                                 })}
                             >
                                 <Ban className='h-4 w-4 mr-2' />
-                                Suspend User
+                                {isMk ? 'Суспендирај корисник' : 'Suspend User'}
                             </DropdownMenuItem>
                         )}
 
@@ -356,7 +359,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                                 })}
                             >
                                 <CheckCircle className='h-4 w-4 mr-2' />
-                                Reactivate User
+                                {isMk ? 'Активирај корисник' : 'Reactivate User'}
                             </DropdownMenuItem>
                         )}
                         
@@ -368,7 +371,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                                 onSelect={() => handleRoleClick(user, 'promote')}
                             >
                                 <Shield className='h-4 w-4 mr-2' />
-                                Make Moderator
+                                {isMk ? 'Направи модератор' : 'Make Moderator'}
                             </DropdownMenuItem>
                         ) : (
                             <DropdownMenuItem
@@ -376,7 +379,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                                 onSelect={() => handleRoleClick(user, 'revoke')}
                             >
                                 <ShieldOff className='h-4 w-4 mr-2' />
-                                Revoke Moderator
+                                {isMk ? 'Одземи модератор' : 'Revoke Moderator'}
                             </DropdownMenuItem>
                         )}
 
@@ -386,7 +389,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                           onSelect={() => handleDeleteClick(user)}
                         >
                           <Trash2 className='h-4 w-4 mr-2' />
-                          Delete User
+                          {isMk ? 'Избриши корисник' : 'Delete User'}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -402,21 +405,21 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent className='max-w-[90vw] sm:max-w-lg rounded-2xl'>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete User?</AlertDialogTitle>
+            <AlertDialogTitle>{isMk ? 'Избриши корисник?' : 'Delete User?'}</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the user account for
+              {isMk ? 'Оваа акција не може да се врати. Ова трајно ќе ја избрише корисничката сметка за' : 'This action cannot be undone. This will permanently delete the user account for'}
               {' '}
               <span className='font-semibold text-foreground'>
-                {userToDelete?.name || 'this user'}
+                {userToDelete?.name || (isMk ? 'овој корисник' : 'this user')}
               </span>
               {' '}
-              ({userToDelete?.email}) and remove all their data from the system.
+              {isMk ? 'и ќе ги отстрани сите нивни податоци од системот.' : `(${userToDelete?.email}) and remove all their data from the system.`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           
           <div className="space-y-2">
               <label htmlFor="confirm-delete" className="block text-sm font-medium text-foreground">
-                  To confirm, type <span className="font-bold select-all">Delete {userToDelete?.name || 'User'}</span> below:
+                  {isMk ? 'За потврда, внесете ' : 'To confirm, type '} <span className="font-bold select-all">Delete {userToDelete?.name || 'User'}</span> {isMk ? 'подолу:' : 'below:'}
               </label>
               <input
                 id="confirm-delete"
@@ -434,7 +437,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
               disabled={isPending}
               className='w-full sm:w-auto'
             >
-              Cancel
+              {isMk ? 'Откажи' : 'Cancel'}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={(e) => {
@@ -450,12 +453,12 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
               {isPending ? (
                 <>
                   <span className='animate-spin mr-2'>⏳</span>
-                  Deleting...
+                  {isMk ? 'Бришење...' : 'Deleting...'}
                 </>
               ) : (
                 <>
                   <Trash2 className='h-4 w-4 mr-2' />
-                  Delete User
+                  {isMk ? 'Избриши корисник' : 'Delete User'}
                 </>
               )}
             </AlertDialogAction>
@@ -473,16 +476,16 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
               ) : (
                 <ShieldOff className="h-5 w-5 text-orange-500" />
               )}
-              {roleAction === 'promote' ? 'Make Moderator?' : 'Revoke Moderator?'}
+              {roleAction === 'promote' ? (isMk ? 'Направи модератор?' : 'Make Moderator?') : (isMk ? 'Одземи модератор?' : 'Revoke Moderator?')}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {roleAction === 'promote' ? (
                 <>
-                  You are about to grant <span className='font-semibold text-foreground'>{userForRole?.name || 'this user'}</span> full administrator (Moderator) access. They will be able to manage listings, users, and site settings.
+                  {isMk ? 'Ќе му дадете на ' : 'You are about to grant '} <span className='font-semibold text-foreground'>{userForRole?.name || (isMk ? 'овој корисник' : 'this user')}</span> {isMk ? 'целосен администраторски (Модератор) пристап. Тие ќе можат да управуваат со огласи, корисници и поставки.' : 'full administrator (Moderator) access. They will be able to manage listings, users, and site settings.'}
                 </>
               ) : (
                 <>
-                  You are about to revoke administrator access from <span className='font-semibold text-foreground'>{userForRole?.name || 'this user'}</span>. They will be demoted to a regular user.
+                  {isMk ? 'Ќе му го одземете администраторскиот пристап на ' : 'You are about to revoke administrator access from '} <span className='font-semibold text-foreground'>{userForRole?.name || (isMk ? 'овој корисник' : 'this user')}</span>. {isMk ? 'Тие ќе бидат деградирани во обичен корисник.' : 'They will be demoted to a regular user.'}
                 </>
               )}
             </AlertDialogDescription>
@@ -490,10 +493,10 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
 
           <div className="space-y-2">
             <label htmlFor="confirm-role" className="block text-sm font-medium text-foreground">
-              To confirm, type{' '}
+              {isMk ? 'За потврда, внесете ' : 'To confirm, type '}
               <span className="font-bold select-all">
                 {roleAction === 'promote' ? 'Promote' : 'Revoke'} {userForRole?.name || 'User'}
-              </span>{' '}below:
+              </span>{' '}{isMk ? 'подолу:' : 'below:'}
             </label>
             <input
               id="confirm-role"
@@ -512,7 +515,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
               disabled={isPending}
               className='w-full sm:w-auto'
             >
-              Cancel
+              {isMk ? 'Откажи' : 'Cancel'}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={(e) => {
@@ -528,11 +531,11 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
               }`}
             >
               {isPending ? (
-                <><span className='animate-spin mr-2'>⏳</span>Processing...</>
+                <><span className='animate-spin mr-2'>⏳</span>{isMk ? 'Се процесира...' : 'Processing...'}</>
               ) : roleAction === 'promote' ? (
-                <><Shield className='h-4 w-4 mr-2' />Yes, Make Moderator</>
+                <><Shield className='h-4 w-4 mr-2' />{isMk ? 'Да, направи модератор' : 'Yes, Make Moderator'}</>
               ) : (
-                <><ShieldOff className='h-4 w-4 mr-2' />Yes, Revoke Access</>
+                <><ShieldOff className='h-4 w-4 mr-2' />{isMk ? 'Да, одземи пристап' : 'Yes, Revoke Access'}</>
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

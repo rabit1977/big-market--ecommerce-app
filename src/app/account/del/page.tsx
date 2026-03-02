@@ -9,11 +9,14 @@ import { api } from '@/convex/_generated/api';
 import { useMutation } from 'convex/react';
 import { AlertTriangle, Loader2, Trash2 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
+import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function DeleteAccountPage() {
+    const locale = useLocale();
+    const isMk = locale === 'mk';
     const { data: session } = useSession();
     const deleteAccount = useMutation(api.users.deleteAccount);
     const router = useRouter();
@@ -28,10 +31,10 @@ export default function DeleteAccountPage() {
         setIsDeleting(true);
         try {
             await deleteAccount({ externalId: session.user.id });
-            toast.success("Account deleted successfully");
+            toast.success(isMk ? "Сметката е успешно избришана" : "Account deleted successfully");
             await signOut({ callbackUrl: '/' });
         } catch (err) {
-            toast.error("Failed to delete account");
+            toast.error(isMk ? "Неуспешно бришење на сметката" : "Failed to delete account");
             setIsDeleting(false);
         }
     };
@@ -45,19 +48,19 @@ export default function DeleteAccountPage() {
                              <div className="p-1.5 bg-destructive/10 rounded-lg">
                                 <AlertTriangle className="w-4 h-4 md:w-5 md:h-5" />
                              </div>
-                             Delete Account
+                             {isMk ? 'Избриши Сметка' : 'Delete Account'}
                         </CardTitle>
                         <CardDescription className="text-xs md:text-sm mt-1 leading-relaxed">
-                            This action is permanent and cannot be undone. All your data, including your listings and profile information, will be permanently removed.
+                            {isMk ? 'Оваа акција е трајна и не може да се врати. Сите ваши податоци, вклучувајќи ги вашите огласи и информации за профилот, ќе бидат трајно отстранети.' : 'This action is permanent and cannot be undone. All your data, including your listings and profile information, will be permanently removed.'}
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="p-4 md:p-6 pt-0 md:pt-0 space-y-4 md:space-y-5">
                         <div className="bg-destructive/5 dark:bg-destructive/10 p-3 rounded-lg text-destructive text-xs md:text-sm font-medium">
-                            ⚠️ Warning: You are about to delete your account. This action is irreversible.
+                            {isMk ? '⚠️ Предупредување: Се подготвувате да ја избришете вашата сметка. Оваа акција е неповратна.' : '⚠️ Warning: You are about to delete your account. This action is irreversible.'}
                         </div>
 
                         <div className="space-y-1.5">
-                             <Label className="text-xs md:text-sm font-semibold">Type &quot;DELETE&quot; to confirm</Label>
+                             <Label className="text-xs md:text-sm font-semibold">{isMk ? 'Внесете "DELETE" за потврда' : 'Type "DELETE" to confirm'}</Label>
                              <Input 
                                 value={confirmation}
                                 onChange={(e) => setConfirmation(e.target.value)}
@@ -75,12 +78,12 @@ export default function DeleteAccountPage() {
                             {isDeleting ? (
                                 <>
                                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                                    Deleting Account...
+                                    {isMk ? 'Бришење на Сметката...' : 'Deleting Account...'}
                                 </>
                             ) : (
                                 <>
                                     <Trash2 className="w-3.5 h-3.5 mr-2" />
-                                    Permanently Delete Account
+                                    {isMk ? 'Трајно Избриши Ја Сметката' : 'Permanently Delete Account'}
                                 </>
                             )}
                         </Button>
