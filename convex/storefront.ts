@@ -4,16 +4,22 @@ import { query } from "./_generated/server";
 export const getAllSellers = query({
   args: {},
   handler: async (ctx) => {
+    const THIRTY_DAYS_AGO = Date.now() - 30 * 24 * 60 * 60 * 1000;
+    const SEVEN_DAYS_AGO  = Date.now() -  7 * 24 * 60 * 60 * 1000;
+
     // Get all users who are verified or have a business/pro membership tier
     const allUsers = await ctx.db.query("users").collect();
 
+    // Include ALL admin-approved users (accountStatus ACTIVE) — admin approval is
+    // the platform's verification gate. Premium/verified badges are secondary signals.
     const sellerUsers = allUsers.filter((u) => {
       const tier = (u.membershipTier || "").toLowerCase();
       return (
-        u.isVerified === true ||
-        tier === "business" ||
-        tier === "pro" ||
-        tier === "premium" ||
+        u.accountStatus === "ACTIVE" ||
+        u.isVerified === true         ||
+        tier === "business"           ||
+        tier === "pro"                ||
+        tier === "premium"            ||
         u.role === "ADMIN"
       );
     });
@@ -30,9 +36,16 @@ export const getAllSellers = query({
         );
         const activeListingsCount = activeListings.length;
 
+        // Activity signals
+        const sortedByDate = [...activeListings].sort((a, b) => b.createdAt - a.createdAt);
+        const recentListingsCount = sortedByDate.filter(
+          (l) => l.createdAt >= THIRTY_DAYS_AGO
+        ).length;
+        const postedThisWeek = sortedByDate.some((l) => l.createdAt >= SEVEN_DAYS_AGO);
+        const lastPostedAt = sortedByDate[0]?.createdAt ?? null;
+
         // Latest 2 active listings for product preview strip — newest first
-        const featuredListings = [...activeListings]
-          .sort((a, b) => b.createdAt - a.createdAt)
+        const featuredListings = sortedByDate
           .slice(0, 2)
           .map((l) => ({
             _id: l._id as string,
@@ -91,6 +104,9 @@ export const getAllSellers = query({
           membershipTier: user.membershipTier || "FREE",
           createdAt: user.createdAt || user._creationTime,
           activeListingsCount,
+          recentListingsCount,   // listings posted in last 30 days
+          postedThisWeek,        // posted in last 7 days
+          lastPostedAt,          // timestamp of most recent active listing
           reviewCount: reviews.length,
           averageRating,
           hasPremiumStorefront,
@@ -99,19 +115,24 @@ export const getAllSellers = query({
       })
     );
 
-    // Sort: business first, then verified, then by listing count desc
-    return sellers.sort((a, b) => {
-      const aTierPriority =
-        a.accountType === "COMPANY" || a.hasPremiumStorefront ? 1 : 0;
-      const bTierPriority =
-        b.accountType === "COMPANY" || b.hasPremiumStorefront ? 1 : 0;
-      if (bTierPriority !== aTierPriority) return bTierPriority - aTierPriority;
-      return b.activeListingsCount - a.activeListingsCount;
-    });
+    // Sort: most active (recent 30d) first, then business, then verified
+    // Only show sellers who actually have at least 1 active listing
+    return sellers
+      .filter((s) => s.activeListingsCount > 0)
+      .sort((a, b) => {
+        if (b.recentListingsCount !== a.recentListingsCount)
+          return b.recentListingsCount - a.recentListingsCount;
+        const aTier = a.accountType === "COMPANY" || a.hasPremiumStorefront ? 1 : 0;
+        const bTier = b.accountType === "COMPANY" || b.hasPremiumStorefront ? 1 : 0;
+        if (bTier !== aTier) return bTier - aTier;
+        return b.activeListingsCount - a.activeListingsCount;
+      });
+
   },
 });
 
 export const getPublicProfile = query({
+
   args: { userId: v.string() },
   handler: async (ctx, args) => {
     // Attempt to find user by externalId or internal _id

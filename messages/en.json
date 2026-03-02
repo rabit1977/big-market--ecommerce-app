@@ -391,7 +391,15 @@
     "business": "Business",
     "listings_label": "listings",
     "visit_store": "Visit Store",
-    "no_products_yet": "No products yet"
+    "no_products_yet": "No products yet",
+    "trending_this_month": "Trending This Month",
+    "this_week": "This Week",
+    "new_this_month": "new this month",
+    "active_this_week": "Active",
+    "tab_all": "All",
+    "tab_active": "Most Active",
+    "tab_business": "Business",
+    "tab_verified": "Verified"
   },
   "Admin": {
     "overview": "Overview",

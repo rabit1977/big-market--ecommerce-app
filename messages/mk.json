@@ -378,10 +378,10 @@
     "no_active_listings": "Нема активни огласи",
     "contact_seller": "Контактирај Продавач",
     "found": "пронајдено",
-    "sellers": "Продавачи"
+    "sellers": "Продавници"
   },
   "Sellers": {
-    "page_title": "Директориум на Продавачи",
+    "page_title": "Продавници",
     "page_subtitle": "Разгледајте верифицирани продавачи и премиум продавници",
     "search_placeholder": "Пребарај продавачи, град...",
     "sellers_count": "{count} продавачи пронајдени",
@@ -391,7 +391,15 @@
     "business": "Бизнис",
     "listings_label": "огласи",
     "visit_store": "Посети Продавница",
-    "no_products_yet": "Сè уште нема производи"
+    "no_products_yet": "Сè уште нема производи",
+    "trending_this_month": "Трендинг Овој Месец",
+    "this_week": "Оваа Недела",
+    "new_this_month": "нови овој месец",
+    "active_this_week": "Активен",
+    "tab_all": "Сите",
+    "tab_active": "НајАктивни",
+    "tab_business": "Бизнис",
+    "tab_verified": "Верифицирани"
   },
   "Admin": {
     "overview": "Преглед",
@@ -452,7 +460,7 @@
     "success": "Успешно",
     "admin": "Контролна Табла",
     "dashboard": "Преглед",
-    "store": "Продавачи"
+    "store": "Продавници"
   },
   "AdminControls": {
     "dashboard_title": "Контролна Табла",
