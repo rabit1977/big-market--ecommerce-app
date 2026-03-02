@@ -7,11 +7,13 @@ import { api } from '@/convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
 import { Bell, BellOff, ExternalLink, Loader2, Search, Trash2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 
 export function SavedSearchesClient() {
+  const t = useTranslations('Favorites');
   const { data: session } = useSession();
   const searches = useQuery(api.savedSearches.list, session?.user?.id ? { userId: session.user.id } : 'skip');
   const removeSearch = useMutation(api.savedSearches.remove);
@@ -32,12 +34,12 @@ export function SavedSearchesClient() {
           <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
               <Search className="h-8 w-8 text-muted-foreground" />
           </div>
-          <h3 className='text-xl md:text-2xl font-black text-foreground uppercase tracking-tight mb-2'>No Saved Searches</h3>
+          <h3 className='text-xl md:text-2xl font-black text-foreground uppercase tracking-tight mb-2'>{t('no_saved_searches')}</h3>
           <p className='text-muted-foreground max-w-sm mx-auto mb-8 text-xs md:text-sm font-bold'>
-              You haven't saved any searches yet. Save a search from the listings page to get alerts.
+              {t('no_saved_searches_desc')}
           </p>
           <Button asChild size="lg" className="rounded-full font-black text-sm uppercase tracking-wider shadow-xl shadow-primary/20 h-12 px-8">
-              <Link href="/listings">Browse Listings</Link>
+              <Link href="/listings">{t('browse_listings')}</Link>
           </Button>
       </div>
     );

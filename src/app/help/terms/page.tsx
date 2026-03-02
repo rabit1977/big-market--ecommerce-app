@@ -40,7 +40,8 @@ export default function TermsPage() {
                         className="max-w-4xl"
                     >
                         <h1 className="text-4xl md:text-6xl font-black tracking-tight text-foreground mb-6">
-                            Terms &amp; <span className="text-primary">Conditions</span>
+                            Terms &amp; <span className="text-primary">Conditions</span><br/>
+                            <span className="text-2xl md:text-4xl text-muted-foreground">Услови и <span className="text-primary/80">Правила</span></span>
                         </h1>
                         <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
                             Read our updated policies on privacy, registration, and platform usage rules.
@@ -75,7 +76,7 @@ export default function TermsPage() {
                                                 <AlertCircle className="w-6 h-6 text-orange-600" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Marketplace Disclaimer</div>
+                                                <div className="font-black text-xl">Marketplace Disclaimer / Одрекување од одговорност</div>
                                                 <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Platform Role &amp; Seller Responsibility</div>
                                             </div>
                                         </div>
@@ -105,7 +106,7 @@ export default function TermsPage() {
                                                 <ShieldCheck className="w-6 h-6 text-blue-600" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Privacy Policy</div>
+                                                <div className="font-black text-xl">Privacy Policy / Политика за приватност</div>
                                                 <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Privacy &amp; Data Protection</div>
                                             </div>
                                         </div>
@@ -156,7 +157,7 @@ export default function TermsPage() {
                                                 <UserCircle className="w-6 h-6 text-emerald-600" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Registration &amp; Verification</div>
+                                                <div className="font-black text-xl">Registration &amp; Verification / Регистрација и верификација</div>
                                                 <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Registration &amp; Terms</div>
                                             </div>
                                         </div>
@@ -195,7 +196,7 @@ export default function TermsPage() {
                                                 <Globe className="w-6 h-6 text-purple-600" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Social Networks &amp; Technology</div>
+                                                <div className="font-black text-xl">Social Networks &amp; Technology / Социјални мрежи и технологија</div>
                                                 <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Social Login &amp; Tech Integration</div>
                                             </div>
                                         </div>
@@ -218,7 +219,7 @@ export default function TermsPage() {
                                                 <Lock className="w-6 h-6 text-amber-600" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Cookie Policy</div>
+                                                <div className="font-black text-xl">Cookie Policy / Политика за колачиња</div>
                                                 <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Tracking &amp; Browser Storage</div>
                                             </div>
                                         </div>
@@ -238,7 +239,7 @@ export default function TermsPage() {
                                                 <LayoutList className="w-6 h-6 text-blue-600" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Posting &amp; Managing Listings</div>
+                                                <div className="font-black text-xl">Posting &amp; Managing Listings / Објавување и управување со огласи</div>
                                                 <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Posting &amp; Managing Ads</div>
                                             </div>
                                         </div>
@@ -263,8 +264,8 @@ export default function TermsPage() {
                                                 <Ban className="w-6 h-6 text-red-600" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Prohibited Content &amp; Items</div>
-                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Prohibited Items &amp; Content</div>
+                                                <div className="font-black text-xl">Prohibited Content &amp; Actions / Забранета содржина и акции</div>
+                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Platform Restrictions</div>
                                             </div>
                                         </div>
                                     </AccordionTrigger>
@@ -353,7 +354,7 @@ export default function TermsPage() {
                                                 <AlertCircle className="w-6 h-6 text-slate-800" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Legal Notice &amp; Contact</div>
+                                                <div className="font-black text-xl">Legal Notice &amp; Contact / Правна напомена и контакт</div>
                                                 <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Company Details &amp; Jurisdiction</div>
                                             </div>
                                         </div>
@@ -391,40 +392,40 @@ export default function TermsPage() {
 
                         {/* Direct Contact Form */}
                         <section id="contact" className="p-8 md:p-12 rounded-[2.5rem] bg-background border border-border/50 shadow-2xl shadow-primary/5">
-                            <h2 className="text-3xl font-black mb-8">Contact Us</h2>
+                            <h2 className="text-3xl font-black mb-8">Contact Us / Контактирајте нè</h2>
                             <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label className="text-sm font-black px-1">Your Name</label>
+                                    <label className="text-sm font-black px-1">Your Name / Вашето Име</label>
                                     <input type="text" className="w-full rounded-2xl border border-border bg-muted/20 px-4 py-4 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-black px-1">Your Email</label>
+                                    <label className="text-sm font-black px-1">Your Email / Вашата Е-пошта</label>
                                     <input type="email" className="w-full rounded-2xl border border-border bg-muted/20 px-4 py-4 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-black px-1">Subject</label>
+                                    <label className="text-sm font-black px-1">Subject / Тема</label>
                                     <select className="w-full rounded-2xl border border-border bg-muted/20 px-4 py-4 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold appearance-none">
-                                        <option>General Enquiry</option>
-                                        <option>Technical Support</option>
-                                        <option>Report Abuse</option>
-                                        <option>Marketing</option>
+                                        <option>General Enquiry / Општо Прашање</option>
+                                        <option>Technical Support / Техничка Поддршка</option>
+                                        <option>Report Abuse / Пријави Злоупотреба</option>
+                                        <option>Marketing / Маркетинг</option>
                                     </select>
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-black px-1">Your Phone</label>
+                                    <label className="text-sm font-black px-1">Your Phone / Вашиот Телефон</label>
                                     <input type="tel" className="w-full rounded-2xl border border-border bg-muted/20 px-4 py-4 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold" />
                                 </div>
                                 <div className="md:col-span-2 space-y-2">
-                                    <label className="text-sm font-black px-1">Message</label>
+                                    <label className="text-sm font-black px-1">Message / Порака</label>
                                     <textarea rows={6} className="w-full rounded-2xl border border-border bg-muted/20 px-4 py-4 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none font-bold"></textarea>
                                 </div>
                                 <div className="md:col-span-2 space-y-8">
                                     <div className="flex items-center gap-4 p-6 rounded-2xl bg-primary/5 border border-primary/10 w-fit">
-                                        <span className="font-black text-base text-primary/80">Security Check: <span className="text-primary text-xl tracking-widest">15 + 7 = ?</span></span>
+                                        <span className="font-black text-base text-primary/80">Security Check / Безбедносна Проверка: <span className="text-primary text-xl tracking-widest">15 + 7 = ?</span></span>
                                         <input type="text" className="w-24 rounded-xl border border-border bg-background px-4 py-3 text-center font-black text-xl focus:outline-none focus:ring-2 focus:ring-primary/20" />
                                     </div>
                                     <Button className="w-full md:w-auto px-16 py-8 rounded-2xl font-black text-xl shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all bg-gradient-to-r from-primary to-blue-600">
-                                        Send Message
+                                        Send Message / Испрати Порака
                                     </Button>
                                 </div>
                             </form>

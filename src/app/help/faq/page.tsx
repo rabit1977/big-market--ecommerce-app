@@ -28,6 +28,7 @@ const faqs = [
         q: 'How do I establish contact with a seller?',
         mk_q: 'Како да воспоставам контакт со понудувачот?',
         a: "We provide a secure communication channel through our integrated email form, located adjacent to every listing. Once you initiate contact, the seller's direct email will be available in their response for further communication. Many sellers also choose to provide a direct telephone number for immediate inquiries.",
+        mk_a: "Обезбедуваме безбеден канал за комуникација преку нашата интегрирана форма за е-пошта, лоцирана веднаш до секој оглас. Откако ќе иницирате контакт, директната е-пошта на продавачот ќе биде достапна во нивниот одговор за понатамошна комуникација. Многу продавачи исто така избираат да дадат директен телефонски број за итни прашања."
     },
     {
         id: 'editing',
@@ -37,6 +38,7 @@ const faqs = [
         q: 'How can I modify or edit my listing?',
         mk_q: 'Како можам да го променам огласот?',
         a: "All listing attributes—including title, price, description, and imagery—are fully editable. Registered members can manage their ads directly via the 'My Listings' dashboard. For non-members, a unique modification link is included in the confirmation email sent upon publication.",
+        mk_a: "Сите атрибути на огласот — вклучително насловот, цената, описот и сликите — се целосно уредливи. Регистрираните членови можат директно да ги управуваат своите огласи преку контролната табла 'Мои огласи'. За нечленовите, вклучен е уникатен линк за модификација во е-поштата за потврда испратена при објавувањето."
     },
     {
         id: 'profile',
@@ -46,6 +48,7 @@ const faqs = [
         q: 'How do I update my profile details?',
         mk_q: 'Уредување на профилот',
         a: "You can manage your account credentials and personal details through the 'Profile Settings' section. To ensure platform integrity, please ensure your address information is complete and accurate, as the system may restrict access to accounts with incomplete logistics data.",
+        mk_a: "Можете да управувате со вашите акредитиви за сметката и лични податоци преку делот 'Поставки за профил'. За да ја осигурате интегритетот на платформата, ве молиме осигурајте се дека вашите информации за адреса се целосни и точни, бидејќи системот може да го ограничи пристапот до сметки со нецелосни логистички податоци."
     },
     {
         id: 'duration',
@@ -55,6 +58,7 @@ const faqs = [
         q: 'How long does a listing remain active?',
         mk_q: 'Колку долго огласот останува онлајн?',
         a: "Standard listings remain active for a 90-day cycle. Within this period, you have the option to extend the listing for another 90 days. You may also deactivate or permanently remove your ad at any time once the item is no longer available.",
+        mk_a: "Стандардните огласи остануваат активни за циклус од 90 дена. Во овој период, имате можност да го продолжите огласот за уште 90 дена. Исто така, можете да го деактивирате или трајно избришете вашиот оглас во секое време штом предметот повеќе не е достапен."
     },
     {
         id: 'bump',
@@ -64,6 +68,7 @@ const faqs = [
         q: 'How can I "bump" my ad to the top?',
         mk_q: 'Како мојот оглас да стои најгоре?',
         a: "The 'Daily Bump' feature allows you to update your listing to the current date. This repositioning ensures your ad appears at the top of search results, similar to a newly published listing, significantly increasing its visibility.",
+        mk_a: "Функцијата 'Дневно освежување' (Daily Bump) ви овозможува да го ажурирате вашиот оглас до тековниот датум. Ова репозиционирање осигурува дека вашиот оглас ќе се појави на врвот од резултатите од пребарувањето, слично на новообјавен оглас, значително зголемувајќи ја неговата видливост."
     },
     {
         id: 'password',
@@ -73,6 +78,7 @@ const faqs = [
         q: 'I forgot my password, what should I do?',
         mk_q: 'Ја заборавив мојата лозинка',
         a: "Utilize the 'Forgot Password' link on the login page. Enter your registered email address, and we will dispatch a secure reset link. For security reasons, we recommend updating your password to a complex string following recovery.",
+        mk_a: "Искористете ја врската 'Заборавена лозинка' на страницата за најава. Внесете ја вашата регистрирана адреса за е-пошта и ние ќе испратиме безбедна врска за ресетирање. Од безбедносни причини, препорачуваме да ја ажурирате вашата лозинка во сложена низа по враќањето на пристапот."
     },
     {
         id: 'missing',
@@ -82,6 +88,7 @@ const faqs = [
         q: 'Where is my ad? I cannot find it on the site.',
         mk_q: 'Каде е мојот оглас?',
         a: "If your ad is not visible, it may be undergoing mandatory administrative review (up to 24 hours). Alternatively, it may have been removed for policy violations (duplicates/prohibited content), categorized incorrectly by the system, or simply expired after the 90-day limit.",
+        mk_a: "Ако вашиот оглас не е видлив, можеби подлежи на задолжителен административен преглед (до 24 часа). Алтернативно, може да е отстранет поради прекршување на правилата (дупликати / забранета содржина), неправилно категоризиран од системот, или едноставно да е истечен по ограничувањето од 90 дена."
     }
 ];
 
@@ -146,6 +153,11 @@ export default function FAQHelpPage() {
                                             <p className="text-muted-foreground leading-relaxed text-[15px]">
                                                 {faq.a}
                                             </p>
+                                            <div className="mt-4 pt-4 border-t border-border/50">
+                                                <p className="text-muted-foreground/80 leading-relaxed text-[15px]">
+                                                    {faq.mk_a}
+                                                </p>
+                                            </div>
                                         </div>
                                     </CardContent>
                                 </Card>

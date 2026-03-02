@@ -59,7 +59,7 @@ type Seller = {
   featuredListings: FeaturedListing[];
 };
 
-type FilterTab = 'all' | 'business' | 'verified' | 'active';
+type FilterTab = 'all' | 'business' | 'active';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -107,7 +107,6 @@ export function SellersGrid() {
       if (!matchesSearch) return false;
 
       if (activeTab === 'business') return s.accountType === 'COMPANY' || s.hasPremiumStorefront;
-      if (activeTab === 'verified') return s.isVerified;
       if (activeTab === 'active')   return s.recentListingsCount > 0;
       return true;
     });
@@ -139,7 +138,6 @@ export function SellersGrid() {
     { id: 'all',      label: t('tab_all'),      icon: <Users className="w-3 h-3" /> },
     { id: 'active',   label: t('tab_active'),   icon: <Flame className="w-3 h-3" /> },
     { id: 'business', label: t('tab_business'), icon: <Building2 className="w-3 h-3" /> },
-    { id: 'verified', label: t('tab_verified'), icon: <ShieldCheck className="w-3 h-3" /> },
   ];
 
   return (

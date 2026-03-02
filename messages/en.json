@@ -161,6 +161,7 @@
   "NavActions": {
     "home": "Home",
     "browse_listings": "Browse Listings",
+    "sellers": "Stores",
     "messages": "Messages",
     "notifications": "Notifications",
     "favorites": "Favorites",

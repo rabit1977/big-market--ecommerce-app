@@ -15,7 +15,7 @@ import {
   Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
   Package, Pencil, Settings, ShieldCheck,
   Star, Store, Trash,
-  User,
+  User, Users,
   Wallet, X
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
@@ -188,9 +188,10 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   // ── Menu sections (stable — derived from user, after existence check) ──
   const isAdmin = user.role === 'ADMIN';
 
-  const mobileOnlyItems: MenuItem[] = [
+  const navigationItems: MenuItem[] = [
     { href: '/', icon: Home, label: t('home') },
     { href: '/listings', icon: Store, label: t('browse_listings') },
+    { href: '/store', icon: Users, label: t('sellers') },
     { href: '/account/notifications', icon: Star, label: t('notifications'), badge: unreadNotificationsCount, iconColor: 'text-primary' },
     { href: '/favorites', icon: Heart, label: t('favorites'), badge: initialWishlistCount, iconColor: 'text-primary' },
   ];
@@ -406,9 +407,9 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                   </div>
                   <div className="mx-3 my-1 h-px bg-border/30" />
 
-                  <div className="md:hidden">
+                  <div>
                     {renderSectionLabel(t('navigation_section'))}
-                    <div className="px-1.5">{mobileOnlyItems.map(renderMenuItem)}</div>
+                    <div className="px-1.5">{navigationItems.map(renderMenuItem)}</div>
                     <div className="mx-3 my-1 h-px bg-border/30" />
                   </div>
 

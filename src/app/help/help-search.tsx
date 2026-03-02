@@ -17,7 +17,7 @@ export function HelpSearch() {
     <div className="relative max-w-xl mx-auto group">
       <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
       <Input
-        placeholder="Search for helps, guides, or rules..."
+        placeholder="Search for helps, guides, or rules... / Пребарајте за помош, водичи или правила..."
         className="h-14 pl-12 pr-4 text-base rounded-2xl border-border/50 shadow-xl shadow-primary/5 focus-visible:ring-primary/20 group-hover:border-primary/30 transition-all"
       />
     </div>

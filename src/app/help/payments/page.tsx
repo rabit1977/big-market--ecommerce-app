@@ -77,10 +77,12 @@ export default function PaymentsBillingPage() {
                         className="max-w-3xl"
                     >
                         <h1 className="text-3xl md:text-5xl font-black tracking-tight text-foreground mb-4">
-                            Payments & <span className="text-primary">Business Solutions</span>
+                            Payments & <span className="text-primary">Business Solutions</span><br/>
+                            <span className="text-2xl md:text-4xl text-muted-foreground mt-2 block">Плаќања и <span className="text-primary/80">Деловни Решенија</span></span>
                         </h1>
                         <p className="text-lg text-muted-foreground">
-                            Professional tools designed to scale your business. Learn about Premium memberships, professional branding, and secure billing.
+                            Professional tools designed to scale your business. Learn about Premium memberships, professional branding, and secure billing.<br/>
+                            <span className="text-base text-muted-foreground/80 mt-1 block">Професионални алатки дизајнирани за скалирање на вашиот бизнис. Дознајте повеќе за Премиум членствата и безбедното плаќање.</span>
                         </p>
                     </motion.div>
                 </div>
@@ -93,66 +95,70 @@ export default function PaymentsBillingPage() {
                         
                         {/* Elite Business Solutions */}
                         <section id="premium-benefits">
-                            <h2 className="text-3xl font-black mb-6 flex items-center gap-3">
-                                <Briefcase className="w-8 h-8 text-primary" />
-                                Premium Business Membership
+                            <h2 className="text-3xl font-black mb-6 flex items-center gap-3 flex-wrap">
+                                <Briefcase className="w-8 h-8 text-primary shrink-0" />
+                                <span className="flex-1">
+                                    Premium Business Membership
+                                    <span className="block text-xl text-muted-foreground uppercase tracking-widest font-bold mt-1">Премиум Деловно Членство</span>
+                                </span>
                             </h2>
                             <p className="text-muted-foreground leading-relaxed mb-8">
-                                Transform your presence on Biggest Market. Move beyond standard listings and establish your brand as a market leader. Our Premium Membership provides a suite of professional tools designed to convert browsers into long-term loyal customers.
+                                Transform your presence on Biggest Market. Move beyond standard listings and establish your brand as a market leader. Our Premium Membership provides a suite of professional tools designed to convert browsers into long-term loyal customers. <br/><br/>
+                                <span className="text-sm opacity-80">Трансформирајте го вашето присуство на Biggest Market. Преминете надвор од стандардните огласи и позиционирајте го вашиот бренд како лидер на пазарот. Нашето Премиум Членство обезбедува пакет професионални алатки.</span>
                             </p>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <FeatureCard 
                                     icon={Store} 
-                                    title="Custom Shop URL" 
-                                    desc="Establish your home on Biggest Market with a personalized URL: bigmarket.com/your_company."
+                                    title={<>Custom Shop URL <br/><span className="text-sm opacity-80 text-muted-foreground">Сопствен линк</span></>} 
+                                    desc={<>Establish your home on Biggest Market with a personalized URL: bigmarket.com/your_company.<br/><br/><span className="text-xs opacity-70">Креирајте вашиот дом на Biggest Market со персонализиран линк.</span></>}
                                 />
                                 <FeatureCard 
                                     icon={BadgeCheck} 
-                                    title="Verified Branding" 
-                                    desc="Your company logo and brand name will be prominently displayed on every listing you post."
+                                    title={<>Verified Branding <br/><span className="text-sm opacity-80 text-muted-foreground">Верификуван Бренд</span></>} 
+                                    desc={<>Your company logo and brand name will be prominently displayed on every listing you post.<br/><br/><span className="text-xs opacity-70">Вашето лого и име ќе бидат видливо истакнати на секој ваш оглас.</span></>}
                                 />
                                 <FeatureCard 
                                     icon={LayoutDashboard} 
-                                    title="Elite Inventory Tools" 
-                                    desc="Manage a massive volume of up to 500 active listings simultaneously from a streamlined dashboard."
+                                    title={<>Elite Inventory Tools <br/><span className="text-sm opacity-80 text-muted-foreground">Елитни Алатки</span></>} 
+                                    desc={<>Manage a massive volume of up to 500 active listings simultaneously from a streamlined dashboard.<br/><br/><span className="text-xs opacity-70">Управувајте со голем обем до 500 активни огласи од една контролна табла.</span></>}
                                 />
                                 <FeatureCard 
                                     icon={PieChart} 
-                                    title="Exclusive Analytics" 
-                                    desc="Access detailed performance reports to understand customer interest and optimize your sales strategy."
+                                    title={<>Exclusive Analytics <br/><span className="text-sm opacity-80 text-muted-foreground">Ексклузивна Аналитика</span></>} 
+                                    desc={<>Access detailed performance reports to understand customer interest and optimize your sales strategy.<br/><br/><span className="text-xs opacity-70">Пристапете до детални извештаи за да ги оптимизирате продажбите.</span></>}
                                 />
                             </div>
                         </section>
 
                         {/* Integration Guide */}
                         <section id="activation" className="p-8 md:p-10 rounded-[2.5rem] bg-muted/30 border border-border/50">
-                            <h2 className="text-2xl font-black mb-8">Becoming a Premium Partner</h2>
+                            <h2 className="text-2xl font-black mb-8">Becoming a Premium Partner <br/><span className="text-lg text-muted-foreground block uppercase mt-1">Како да станете Премиум Партнер</span></h2>
                             <div className="space-y-6">
                                 <div className="flex gap-4">
                                     <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shrink-0 font-bold text-sm">1</div>
                                     <div>
-                                        <h4 className="font-bold mb-1">Standard Registration</h4>
-                                        <p className="text-sm text-muted-foreground">First, ensure you have a verified standard account. If you haven't registered yet, please complete the <Link href="/auth" className="text-primary font-semibold hover:underline">initial enrollment</Link>.</p>
+                                        <h4 className="font-bold mb-1">Standard Registration / Стандардна Регистрација</h4>
+                                        <p className="text-sm text-muted-foreground">First, ensure you have a verified standard account. If you haven't registered yet, please complete the <Link href="/auth" className="text-primary font-semibold hover:underline">initial enrollment</Link>.<br/><span className="text-xs opacity-80 block mt-1">Прво проверете дали имате верификувана стандардна сметка.</span></p>
                                     </div>
                                 </div>
                                 <div className="flex gap-4">
                                     <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shrink-0 font-bold text-sm">2</div>
                                     <div>
-                                        <h4 className="font-bold mb-1">Upgrade to Premium</h4>
-                                        <p className="text-sm text-muted-foreground">Navigate to your account dashboard and select <strong>"Upgrade to Premium"</strong>. Review the annual growth package and proceed to our secure checkout.</p>
+                                        <h4 className="font-bold mb-1">Upgrade to Premium / Надградба во Премиум</h4>
+                                        <p className="text-sm text-muted-foreground">Navigate to your account dashboard and select <strong>"Upgrade to Premium"</strong>. Review the annual growth package and proceed to our secure checkout.<br/><span className="text-xs opacity-80 block mt-1">Одете во вашата контролна табла и изберете "Надградба во Премиум".</span></p>
                                     </div>
                                 </div>
                                 <div className="flex gap-4">
                                     <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shrink-0 font-bold text-sm">3</div>
                                     <div>
-                                        <h4 className="font-bold mb-1">Brand Customization</h4>
-                                        <p className="text-sm text-muted-foreground">Once activated, enter your <strong>Business Field</strong> settings. Upload your logo, define your company biography, and secure your custom business URL.</p>
+                                        <h4 className="font-bold mb-1">Brand Customization / Прилагодување на Брендот</h4>
+                                        <p className="text-sm text-muted-foreground">Once activated, enter your <strong>Business Field</strong> settings. Upload your logo, define your company biography, and secure your custom business URL.<br/><span className="text-xs opacity-80 block mt-1">По активацијата, внесете ги деталите за бизнисот, логото и сопствениот линк.</span></p>
                                     </div>
                                 </div>
                             </div>
                             <Button asChild className="mt-10 rounded-2xl px-10 py-7 h-auto font-black text-lg bg-gradient-to-r from-primary to-blue-600 shadow-xl shadow-primary/20 hover:scale-[1.02] transition-transform">
-                                <Link href="/premium">Get Started Now</Link>
+                                <Link href="/premium">Get Started Now / Започнете сега</Link>
                             </Button>
                         </section>
 
@@ -345,32 +351,32 @@ export default function PaymentsBillingPage() {
                             </div>
                             <CardHeader className="pb-0">
                                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest mb-4">
-                                    Business Growth
+                                    Business Growth / Бизнис Раст
                                 </div>
-                                <CardTitle className="text-2xl font-black">Professional Plan</CardTitle>
+                                <CardTitle className="text-2xl font-black">Professional Plan <br/><span className="text-lg opacity-80 block text-muted-foreground mt-1">Професионален План</span></CardTitle>
                             </CardHeader>
                             <CardContent className="pt-6">
                                 <div className="flex items-baseline gap-1 mb-6">
                                     <span className="text-5xl font-black">{PRICING.MEMBERSHIP.PRO}</span>
-                                    <span className="text-lg font-bold text-muted-foreground">MKD/year</span>
-                                    <span className="text-xs text-muted-foreground ml-1 font-semibold underline underline-offset-4 decoration-primary/30">+ VAT</span>
+                                    <span className="text-lg font-bold text-muted-foreground">MKD/year <span className="text-xs opacity-80">(год)</span></span>
+                                    <span className="text-xs text-muted-foreground ml-1 font-semibold underline underline-offset-4 decoration-primary/30">+ VAT <span className="text-[10px] opacity-80">(ДДВ)</span></span>
                                 </div>
                                 <ul className="space-y-4 mb-8">
                                     <li className="flex gap-3 text-sm">
                                         <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
-                                        <span>Inventory: 500 active listings</span>
+                                        <span>Inventory: 500 active listings <br/><span className="text-xs text-muted-foreground">Вклучува: 500 активни огласи</span></span>
                                     </li>
                                     <li className="flex gap-3 text-sm">
                                         <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
-                                        <span>Search presence: 100% indexed</span>
+                                        <span>Search presence: 100% indexed <br/><span className="text-xs text-muted-foreground">Присуство во пребарувањето</span></span>
                                     </li>
                                     <li className="flex gap-3 text-sm">
                                         <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
-                                        <span>Custom Business Page/URL</span>
+                                        <span>Custom Business Page/URL <br/><span className="text-xs text-muted-foreground">Сопствена Деловна Страница</span></span>
                                     </li>
                                 </ul>
                                 <Button className="w-full rounded-xl font-bold h-12" asChild>
-                                    <Link href="/premium">Upgrade Now</Link>
+                                    <Link href="/premium">Upgrade Now / Надгради</Link>
                                 </Button>
                             </CardContent>
                         </Card>
@@ -378,7 +384,7 @@ export default function PaymentsBillingPage() {
                         {/* Payment Methods */}
                         <Card className="rounded-[2rem] border-border/50">
                             <CardHeader>
-                                <CardTitle className="text-lg font-bold">Secure Billing</CardTitle>
+                                <CardTitle className="text-lg font-bold">Secure Billing / Безбедно Плаќање</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div className="flex items-center gap-4">
@@ -386,8 +392,8 @@ export default function PaymentsBillingPage() {
                                         <CreditCard className="w-5 h-5 text-muted-foreground" />
                                     </div>
                                     <div>
-                                        <div className="text-sm font-bold">Credit/Debit Card</div>
-                                        <div className="text-[10px] text-muted-foreground uppercase font-black">Instant Activation</div>
+                                        <div className="text-sm font-bold">Credit/Debit Card (Картичка)</div>
+                                        <div className="text-[10px] text-muted-foreground uppercase font-black">Instant Activation / Инстант</div>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-4">
@@ -395,8 +401,8 @@ export default function PaymentsBillingPage() {
                                         <Globe className="w-5 h-5 text-muted-foreground" />
                                     </div>
                                     <div>
-                                        <div className="text-sm font-bold">Bank Transfer</div>
-                                        <div className="text-[10px] text-muted-foreground uppercase font-black">Pro-Forma Invoice</div>
+                                        <div className="text-sm font-bold">Bank Transfer (Банкарски)</div>
+                                        <div className="text-[10px] text-muted-foreground uppercase font-black">Pro-Forma Invoice / Про-Фактура</div>
                                     </div>
                                 </div>
                             </CardContent>
@@ -407,10 +413,10 @@ export default function PaymentsBillingPage() {
                             <div className="w-12 h-12 bg-background rounded-2xl flex items-center justify-center mx-auto mb-4 border border-border/50">
                                 <HelpCircle className="w-6 h-6 text-primary" />
                             </div>
-                            <h4 className="font-bold mb-2">Billing Support</h4>
-                            <p className="text-xs text-muted-foreground mb-6">Need a custom invoice or have questions about business plans?</p>
+                            <h4 className="font-bold mb-2">Billing Support / Поддршка</h4>
+                            <p className="text-xs text-muted-foreground mb-6">Need a custom invoice or have questions about business plans? <br/><br/><span className="opacity-80">Имате прашања околу деловните планови?</span></p>
                             <Button variant="outline" className="w-full rounded-xl font-bold bg-background" asChild>
-                                <Link href="/contact">Contact Support</Link>
+                                <Link href="/contact">Contact Support / Контакт</Link>
                             </Button>
                         </div>
                     </div>
@@ -420,7 +426,7 @@ export default function PaymentsBillingPage() {
     );
 }
 
-function FeatureCard({ icon: Icon, title, desc }: { icon: any, title: string, desc: string }) {
+export function FeatureCard({ icon: Icon, title, desc }: { icon: any, title: React.ReactNode, desc: React.ReactNode }) {
     return (
         <div className="p-6 rounded-3xl border border-border/50 bg-background hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all group">
             <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
