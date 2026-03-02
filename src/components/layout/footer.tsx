@@ -209,7 +209,7 @@ function AppStoreButton({ onClick }: { onClick: () => void }) {
         <path d="M18.71 19.5c-.31.96-.86 1.91-1.54 2.48-.68.56-1.45.83-2.31.83-1.09 0-2.02-.34-2.79-1.01-.77-.67-1.39-1.01-1.85-1.01-.46 0-1.08.34-1.85 1.01-.77.67-1.7 1.01-2.79 1.01-.86 0-1.63-.27-2.31-.83-.68-.57-1.23-1.52-1.54-2.48-.32-.96-.48-2.01-.48-3.15 0-1.06.26-2.09.77-3.09.51-.99 1.25-1.78 2.22-2.37.97-.57 2.05-.86 3.25-.86.97 0 1.83.25 2.58.74.75.49 1.34.74 1.77.74s1.02-.25 1.77-.74c.75-.49 1.61-.74 2.58-.74 1.2 0 2.28.29 3.25.86.97.58 1.71 1.37 2.22 2.37.51.99.77 2.03.77 3.09 0 1.14-.16 2.19-.48 3.15zM15.5 5.5c0 .76-.28 1.51-.83 2.26-.54.74-1.24 1.27-2.11 1.59-.86.32-1.74.32-2.63 0-.89-.32-1.59-.85-2.11-1.59-.55-.75-.83-1.5-.83-2.26 0-.76.28-1.51.83-2.26.55-.74 1.25-1.27 2.11-1.59.86-.32 1.74-.32 2.63 0 .87.32 1.57.85 2.11 1.59.55.75.83 1.5.83 2.26z" />
       </svg>
       <div className="text-left">
-        <div className="text-[8px] font-bold opacity-70 uppercase tracking-wider leading-none mb-0.5 text-background/80">Download on</div>
+        <div className="text-[7px] font-bold opacity-70 uppercase tracking-wider leading-none mb-0.5 text-background/80">Download on / Преземи на</div>
         <div className="text-[10px] font-black leading-none tracking-wide text-background">App Store</div>
       </div>
     </button>
@@ -226,7 +226,7 @@ function GooglePlayButton({ onClick }: { onClick: () => void }) {
         <path d="M3.609 1.814L13.792 12 3.610 22.186a.996.996 0 01-.1-.12c-.172-.257-.27-.565-.27-.899V2.833c0-.334.098-.642.27-.899.027-.04.062-.081.1-.12zM15.632 13.84l3.125-1.764c.594-.335.594-.881 0-1.216l-3.125-1.764-2.128 2.128 2.128 2.128zM14.246 12.454l1.832-1.832L12.016 8.35c-.443-.25-.852-.25-1.295 0L3.896 12l6.825 3.65c.443.25.852.25 1.295 0l2.23-1.259z" />
       </svg>
       <div className="text-left">
-        <div className="text-[8px] font-bold opacity-60 uppercase tracking-wider leading-none mb-0.5">Get it on</div>
+        <div className="text-[7px] font-bold opacity-60 uppercase tracking-wider leading-none mb-0.5">Get it on / Преземи на</div>
         <div className="text-[10px] font-black leading-none tracking-wide">Google Play</div>
       </div>
     </button>

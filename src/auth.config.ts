@@ -47,6 +47,7 @@ export const authConfig = {
               token.accountStatus = convexUser.accountStatus;
               token.registrationComplete = !!convexUser.registrationComplete;
               token.membershipStatus = convexUser.membershipStatus || 'INACTIVE';
+              token.createdAt = convexUser._creationTime || 0;
           } else if (user) {
               // Fallback for very first render if fetch fails or race condition (should be rare due to sync above)
               token.id = user.id;
@@ -54,6 +55,7 @@ export const authConfig = {
               token.accountStatus = 'PENDING_APPROVAL';
               token.registrationComplete = false;
               token.membershipStatus = 'INACTIVE';
+              token.createdAt = Date.now();
           }
       }
 
@@ -69,6 +71,7 @@ export const authConfig = {
         (session.user as any).accountStatus = token.accountStatus;
         (session.user as any).registrationComplete = token.registrationComplete;
         (session.user as any).membershipStatus = token.membershipStatus;
+        (session.user as any).createdAt = token.createdAt;
       }
       return session;
     },

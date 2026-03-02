@@ -1,0 +1,313 @@
+const fs = require('fs');
+const path = require('path');
+
+const enPath = path.join(__dirname, 'messages/en.json');
+const mkPath = path.join(__dirname, 'messages/mk.json');
+
+const enVars = JSON.parse(fs.readFileSync(enPath, 'utf8'));
+const mkVars = JSON.parse(fs.readFileSync(mkPath, 'utf8'));
+
+enVars.HelpTerms = {
+    title: "Terms & ",
+    title_highlight: "Conditions",
+    subtitle: "Read our updated policies on privacy, registration, and platform usage rules.",
+    updated: "Updated: 05.01.2026",
+    version: "Version 2.4",
+    accordions: {
+        disclaimer: {
+            title: "Marketplace Disclaimer",
+            subtitle: "Platform Role & Seller Responsibility",
+            c1: "Biggest Market is a classifieds hosting platform — not a party to any transaction.",
+            c2: "We provide the technology and infrastructure for individuals and businesses to publish, manage, and promote their listings. We do not own, sell, inspect, or ship any of the items or services advertised on this platform.",
+            c3_title: "Seller Responsibility:",
+            c3: "Each seller is solely and fully responsible for the accuracy, legality, condition, and safety of the items or services they list. Sellers must ensure their listings are truthful, not misleading, and comply with all applicable laws and these Terms of Service.",
+            c4_title: "Buyer Due Diligence:",
+            c4: "Buyers must exercise independent judgment before completing any transaction. We strongly recommend inspecting items in person, verifying the seller's identity and verified badge status, and meeting in a public place for exchanges. Biggest Market cannot guarantee the quality, safety, or authenticity of any item listed on this platform.",
+            c5_title: "No Liability for Transactions:",
+            c5: "Biggest Market is not liable for any loss, damage, fraud, or dispute arising from transactions between buyers and sellers. All communications via message, contact form, or email are solely between the respective parties.",
+            c6_title: "Dispute Resolution:",
+            c6: "If a dispute arises between a buyer and seller, Biggest Market may assist with information where possible, but cannot act as a mediator or enforce any outcome. Users are encouraged to resolve disputes directly or through appropriate legal channels."
+        },
+        privacy: {
+            title: "Privacy Policy",
+            subtitle: "Privacy & Data Protection",
+            c1: "The protection and security of your personal data is a top priority at Biggest Market. We dedicate special attention to the privacy and integrity of our users' information, applying the highest security standards.",
+            data_collect: "Data we collect:",
+            data_items: ["Full Name", "Email Address", "Contact Phone Number", "Location", "Listing Data", "IP Address"],
+            c2: "Your personal data is used exclusively to provide and improve our services. Personal data will not be disclosed to third parties without your consent. Processing your data for any other purpose may only occur based on your prior written consent.",
+            c3: "Payments made by card are transmitted over the internet using SSL (Secure Socket Layer) encryption to ensure security.",
+            c4: "In accordance with the Law on Personal Data Protection, this information will be archived in our company for no longer than one year after your account is closed, after which it will be permanently deleted.",
+            c5: "For more information, visit the website of the Directorate for Personal Data Protection at"
+        },
+        registration: {
+            title: "Registration & Verification",
+            subtitle: "Registration & Terms",
+            c1: "To access the full professional services of Biggest Market, a valid registration is required. Our platform guarantees 90% annual uptime, supported by continuous technical maintenance and system upgrades.",
+            verification_title: "Profile Verification",
+            verification_desc: "For security reasons, profile verification is mandatory. All unverified profiles will be deleted.",
+            li1: "You can post and edit listings for free for 1 year.",
+            li2: "Manage up to 50 listings per year.",
+            li3: "Price: 98 MKD + VAT (116 MKD) for 1 year.",
+            c2: "Payment can be made via bank transfer or debit/credit card. To use the service in full, clients must have a modern browser with JavaScript, Cookies, and Pop-ups enabled."
+        },
+        auth: {
+            title: "Social Networks & Technology",
+            subtitle: "Social Login & Tech Integration",
+            c1_title: "Social Login (Google, Facebook, Apple):",
+            c1: "Used for simplified and secure authentication. The transferred data (name, email, and UID) is used exclusively for login and identification purposes.",
+            c2_title: "Video Integration:",
+            c2: "By activating the consent checkbox, you allow content to be loaded from YouTube, TikTok, Facebook, and Instagram. Your IP address is transmitted to the respective providers.",
+            c3_title: "Maps:",
+            c3: "We use OpenStreetMap (Leaflet) and Google Maps. Your IP address may be transmitted to their servers for displaying map data. You can disable maps if you do not wish to transfer this data."
+        },
+        cookies: {
+            title: "Cookie Policy",
+            subtitle: "Tracking & Browser Storage",
+            c1: "We use cookies to optimize our services and ensure the platform functions correctly. Cookies are small text files stored on your computer.",
+            c2: "They are categorized by function: essential, performance, functional, advertising, and session cookies. The collected information is anonymous. You can disable them in your browser settings, but some features may become unavailable as a result."
+        },
+        ads: {
+            title: "Posting & Managing Listings",
+            subtitle: "Posting & Managing Ads",
+            c1_title: "Posting Listings:",
+            c1: "Biggest Market offers a professional environment for commercial and private listings. By posting, the user guarantees that all information (title, description, price) is accurate, truthful, and not misleading.",
+            c2_title: "Content Quality:",
+            c2: "To maintain our high standards, all listings must contain real, high-quality photographs. The platform reserves the right to remove content taken from third parties without permission or that is of poor quality.",
+            c3_title: "Duration & Renewal:",
+            c3: "Listings have a predefined expiry date. Users are responsible for timely updates to the availability of the item or service. Promoted listings receive priority status for a period of 14 days.",
+            c4_title: "Fair-Play Policy:",
+            c4: "Duplicate listings for the same item in different categories or locations are strictly prohibited. Systematic violation of this rule leads to automatic account suspension."
+        },
+        prohibited: {
+            title: "Prohibited Content & Actions",
+            subtitle: "Platform Restrictions",
+            prohibited_content_title: "Prohibited Content:",
+            contents: [
+                "Advertising other websites",
+                "Misleading job offers",
+                "Gambling and betting",
+                "Loans and securities",
+                "Offensive and racist content",
+                "Pornography and prostitution",
+                "Listings in a foreign language without a translation"
+            ],
+            prohibited_items_title: "Prohibited Items:",
+            items: [
+                "Stolen or counterfeit items",
+                "Prescription drugs and narcotics",
+                "Radioactive and explosive materials",
+                "Human organs and bodily fluids",
+                "Weapons and ammunition",
+                "Official uniforms and passports"
+            ],
+            warning: "Each listing may only be posted once in a single location. Duplicate listings and spamming will not be tolerated."
+        },
+        marketing: {
+            title: "Communication & Marketing",
+            subtitle: "Viber, WhatsApp & Marketing",
+            c1_title: "Direct Marketing:",
+            c1: "Biggest Market uses your data for marketing purposes only with your prior consent. Every communication (Email, SMS, Viber, WhatsApp) includes an opt-out option. After withdrawal, your data will be removed from our active database within 14 days.",
+            c2_title: "Viber & WhatsApp:",
+            c2: "Our platform enables direct connection with providers, but we have no access to your private content. To stop communications, simply send a message with the text \"STOP\".",
+            c3_title: "Anti-Spam Policy:",
+            c3: "Generating mass listings or irrelevant content is strictly forbidden. If you suspect any abuse, contact our center at support@bigmarket.mk."
+        },
+        security: {
+            title: "Security & Responsibility",
+            subtitle: "Passwords & Usage Terms",
+            c1_title: "Account Security:",
+            c1: "Responsibility for your password and access lies with you. Biggest Market recommends using complex passwords and changing them regularly for maximum protection.",
+            c2_title: "Age Regulation:",
+            c2: "The platform is intended exclusively for adults (18+ years old).",
+            c3_title: "Suspension:",
+            c3: "Biggest Market reserves the right to restrict or terminate access for any user who does not comply with the defined ethical and legal norms of the platform."
+        },
+        legal: {
+            title: "Legal Notice & Contact",
+            subtitle: "Company Details & Jurisdiction",
+            c1: "The privacy policy and general terms and conditions of Biggest Market are subject to periodic changes in order to improve our services. By using these services, the user confirms their agreement with the current version of this document.",
+            company: "Company:",
+            contact: "Contact:",
+            contact_form: "Contact via form"
+        }
+    },
+    contact: {
+        title: "Contact Us",
+        name: "Your Name",
+        email: "Your Email",
+        subject: "Subject",
+        phone: "Your Phone",
+        message: "Message",
+        subjects: [
+            "General Enquiry",
+            "Technical Support",
+            "Report Abuse",
+            "Marketing"
+        ],
+        security: "Security Check:",
+        send: "Send Message"
+    },
+    sidebar: {
+        title: "Quick Tools",
+        center: "Help Center",
+        payments: "Payments Info",
+        support: "Support Inquiry",
+        doc_title: "Documentation PDF",
+        doc_desc: "Download a copy of our terms for your records.",
+        doc_btn: "Coming Soon"
+    }
+};
+
+mkVars.HelpTerms = {
+    title: "Услови и ",
+    title_highlight: "Правила",
+    subtitle: "Прочитајте ги нашите ажурирани политики за приватност, регистрација и правила за користење на платформата.",
+    updated: "Ажурирано: 05.01.2026",
+    version: "Верзија 2.4",
+    accordions: {
+        disclaimer: {
+            title: "Одрекување од одговорност",
+            subtitle: "Улога на платформата и одговорност на продавачот",
+            c1: "Biggest Market е платформа за хостирање огласи — не е страна во ниту една трансакција.",
+            c2: "Обезбедуваме технологија и инфраструктура за поединци и бизниси за објавување, управување и промовирање на нивните огласи. Не поседуваме, продаваме, проверуваме или испорачуваме ниту еден од предметите или услугите огласени на оваа платформа.",
+            c3_title: "Одговорност на продавачот:",
+            c3: "Секој продавач е единствено и целосно одговорен за точноста, легалноста, состојбата и безбедноста на предметите или услугите што ги огласува. Продавачите мора да обезбедат нивните огласи да се вистинити, да не наведуваат во заблуда и да се во согласност со сите применливи закони и овие Услови за користење.",
+            c4_title: "Должно внимание на купувачот:",
+            c4: "Купувачите мора да донесуваат независна проценка пред да завршат која било трансакција. Силно препорачуваме проверка на предметите лично, потврда на идентитетот на продавачот и статусот на верификувана значка, и состанување на јавно место за размени. Biggest Market не може да гарантира за квалитетот, безбедноста или автентичноста на ниту еден предмет огласен на оваа платформа.",
+            c5_title: "Нема одговорност за трансакции:",
+            c5: "Biggest Market не е одговорен за каква било загуба, штета, измама или спор што произлегува од трансакции помеѓу купувачи и продавачи. Сите комуникации преку порака, контакт форма или е-пошта се исклучиво помеѓу соодветните страни.",
+            c6_title: "Решавање спорови:",
+            c6: "Ако настане спор помеѓу купувач и продавач, Biggest Market може да помогне со информации каде што е можно, но не може да дејствува како посредник или да наметне каков било исход. Корисниците се охрабруваат да ги решаваат споровите директно или преку соодветни правни канали."
+        },
+        privacy: {
+            title: "Политика за приватност",
+            subtitle: "Приватност и заштита на податоци",
+            c1: "Заштитата и безбедноста на вашите лични податоци е врвен приоритет во Biggest Market. Посветуваме посебно внимание на приватноста и интегритетот на информациите на нашите корисници, применувајќи ги највисоките безбедносни стандарди.",
+            data_collect: "Податоци што ги собираме:",
+            data_items: ["Полно име", "Е-пошта", "Телефон за контакт", "Локација", "Податоци за огласите", "IP адреса"],
+            c2: "Вашите лични податоци се користат исклучиво за да ги обезбедиме и подобриме нашите услуги. Личните податоци нема да бидат откриени на трети страни без ваша согласност.",
+            c3: "Плаќањата извршени со картичка се пренесуваат преку интернет со користење на SSL (Secure Socket Layer) криптирање за да се обезбеди сигурност.",
+            c4: "Во согласност со Законот за заштита на личните податоци, овие информации ќе се чуваат во нашата компанија не подолго од една година по затворањето на вашата сметка, по што тие трајно ќе се избришат.",
+            c5: "За повеќе информации, посетете ја веб-страницата на Дирекцијата за заштита на лични податоци на"
+        },
+        registration: {
+            title: "Регистрација и верификација",
+            subtitle: "Регистрација и услови",
+            c1: "За пристап до целосните професионални услуги на Biggest Market, потребна е валидна регистрација. Нашата платформа гарантира време на работа од 90% годишно, поддржано од континуирано техничко одржување.",
+            verification_title: "Преглед на профилот",
+            verification_desc: "Заради безбедност, верификацијата на профилот е задолжителна. Сите неверификувани профили ќе бидат избришани.",
+            li1: "Можете бесплатно да објавувате и уредувате огласи 1 година.",
+            li2: "Управувајте со најмногу 50 огласи годишно.",
+            li3: "Цена: 98 MKD + ДДВ (116 MKD) за 1 година.",
+            c2: "Плаќањето може да се изврши преку банкарски трансфер или платежна картичка."
+        },
+        auth: {
+            title: "Социјални мрежи и технологија",
+            subtitle: "Логирање преку социјални мрежи",
+            c1_title: "Најава преку социјални мрежи (Google, Facebook, Apple):",
+            c1: "Се користи за поедноставена и сигурна автентикација. Пренесените податоци (име, е-пошта и UID) се користат исклучиво за најава и идентификација.",
+            c2_title: "Видео интеграција:",
+            c2: "Со активирање на полето за согласност, дозволувате да се вчита содржина од YouTube, TikTok, Facebook и Instagram. Вашата IP адреса се пренесува до соодветните даватели.",
+            c3_title: "Мапи:",
+            c3: "Ние користиме OpenStreetMap (Leaflet) и Google Maps. Вашата IP адреса може да се пренесе на нивните сервери за прикажување податоци за мапата."
+        },
+        cookies: {
+            title: "Политика за колачиња",
+            subtitle: "Следење и складирање на прелистувачот",
+            c1: "Ние користиме колачиња за оптимизирање на нашите услуги и за осигурување на правилното функционирање на платформата.",
+            c2: "Тие се категоризирани по функција: неопходни, за перформанси, функционални, за рекламирање и колачиња за сесија. Собраните информации се анонимни."
+        },
+        ads: {
+            title: "Објавување и управување со огласи",
+            subtitle: "Објавување на огласи",
+            c1_title: "Објавување огласи:",
+            c1: "Biggest Market нуди професионална средина за комерцијални и приватни огласи. Со објавувањето, корисникот гарантира дека сите информации се точни.",
+            c2_title: "Квалитет на содржината:",
+            c2: "За да се одржат нашите високи стандарди, сите огласи мора да содржат вистински, висококвалитетни фотографии.",
+            c3_title: "Времетраење и обновување:",
+            c3: "Огласите имаат однапред дефиниран датум на истекување. Промовираните огласи добиваат приоритетен статус за период од 14 дена.",
+            c4_title: "Фер-плеј политика:",
+            c4: "Дуплирањето на огласите за ист предмет во различни категории е строго забрането."
+        },
+        prohibited: {
+            title: "Забранета содржина и акции",
+            subtitle: "Ограничувања на платформата",
+            prohibited_content_title: "Забранета содржина:",
+            contents: [
+                "Рекламирање на други веб-страници",
+                "Залажувачки понуди за работа",
+                "Коцкање и обложување",
+                "Заеми и хартии од вредност",
+                "Навредлива и расистичка содржина",
+                "Порнографија и проституција",
+                "Огласи на странски јазик без превод"
+            ],
+            prohibited_items_title: "Забранети предмети:",
+            items: [
+                "Украдени или кривотворени предмети",
+                "Лекови на рецепт и наркотици",
+                "Радиоактивни и експлозивни материјали",
+                "Човечки органи и телесни течности",
+                "Оружје и муниција",
+                "Официјални униформи и пасоши"
+            ],
+            warning: "Секој оглас може да биде објавен само еднаш на една локација. Дупликатните огласи нема да се толерираат."
+        },
+        marketing: {
+            title: "Комуникација и Маркетинг",
+            subtitle: "Viber, WhatsApp & Маркетинг",
+            c1_title: "Директен маркетинг:",
+            c1: "Biggest Market ги користи вашите податоци за маркетинг цели само со ваша претходна согласност.",
+            c2_title: "Viber & WhatsApp:",
+            c2: "Нашата платформа овозможува директно поврзување со продавачите, но немаме пристап до вашата приватна содржина.",
+            c3_title: "Анти-Спам Политика:",
+            c3: "Генерирањето масовни огласи или ирелевантна содржина е строго забрането."
+        },
+        security: {
+            title: "Безбедност и одговорност",
+            subtitle: "Лозинки и услови за користење",
+            c1_title: "Безбедност на сметката:",
+            c1: "Одговорноста за вашата лозинка лежи кај вас. Biggest Market препорачува користење сложени лозинки.",
+            c2_title: "Регулација на возраста:",
+            c2: "Платформата е наменета исклучиво за возрасни (18+ години).",
+            c3_title: "Суспензија:",
+            c3: "Biggest Market го задржува правото да го ограничи или прекине пристапот за секој корисник кој не ги почитува нормите."
+        },
+        legal: {
+            title: "Правна напомена и контакт",
+            subtitle: "Податоци за компанијата и надлежност",
+            c1: "Политиката за приватност и општите услови подлежат на периодични промени. Со користење ги потврдувате.",
+            company: "Компанија:",
+            contact: "Контакт:",
+            contact_form: "Контакт преку форма"
+        }
+    },
+    contact: {
+        title: "Контактирајте нè",
+        name: "Вашето Име",
+        email: "Вашата Е-пошта",
+        subject: "Тема",
+        phone: "Вашиот Телефон",
+        message: "Порака",
+        subjects: [
+            "Општо Прашање",
+            "Техничка Поддршка",
+            "Пријави Злоупотреба",
+            "Маркетинг"
+        ],
+        security: "Безбедносна Проверка:",
+        send: "Испрати Порака"
+    },
+    sidebar: {
+        title: "Брзи алатки",
+        center: "Центар за помош",
+        payments: "Информации за плаќање",
+        support: "Барање за поддршка",
+        doc_title: "ПДФ Документација",
+        doc_desc: "Преземете копија од нашите услови за ваша евиденција.",
+        doc_btn: "Наскоро"
+    }
+};
+
+fs.writeFileSync(enPath, JSON.stringify(enVars, null, 2) + '\\n');
+fs.writeFileSync(mkPath, JSON.stringify(mkVars, null, 2) + '\\n');

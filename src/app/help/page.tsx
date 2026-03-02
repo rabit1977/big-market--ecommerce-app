@@ -28,7 +28,7 @@ import {
     ShieldAlert,
     UserPlus
 } from 'lucide-react';
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { HelpSearch } from './help-search';
 
@@ -39,14 +39,16 @@ type SocialLink = {
   href: string;
 };
 
-const socialLinks: SocialLink[] = [
-  { label: 'Facebook', value: 'Biggest Market Official', icon: ExternalLink, href: '#' },
-  { label: 'Partner with us', value: 'Affiliate & Marketing', icon: Flag, href: '/services' },
-  { label: 'About Us', value: 'The Trusted Marketplace', icon: BadgeCheck, href: '/about' },
-];
-
 export default async function HelpPage() {
+  const locale = await getLocale();
+  const isMk = locale === 'mk';
   const t = await getTranslations('Help');
+
+  const socialLinks: SocialLink[] = [
+    { label: isMk ? 'Фејсбук' : 'Facebook', value: isMk ? 'Официјална Страна' : 'Biggest Market Official', icon: ExternalLink, href: '#' },
+    { label: isMk ? 'Партнери' : 'Partner with us', value: isMk ? 'Афилиејт и Маркетинг' : 'Affiliate & Marketing', icon: Flag, href: '/services' },
+    { label: isMk ? 'За нас' : 'About Us', value: isMk ? 'Доверлив Пазар' : 'The Trusted Marketplace', icon: BadgeCheck, href: '/about' },
+  ];
 
   // Build translated categories here so they re-render per locale
   const helpCategories = [

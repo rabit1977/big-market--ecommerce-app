@@ -56,6 +56,7 @@ interface EditProfileFormProps {
   user: any;
   onSubmit: (values: EditProfileFormValues) => void | Promise<void>;
   isSubmitting: boolean;
+  isMk?: boolean;
 }
 
 const genderOptions = [
@@ -69,6 +70,7 @@ export function EditProfileForm({
   user,
   onSubmit,
   isSubmitting,
+  isMk = false
 }: EditProfileFormProps) {
   const form = useForm<EditProfileFormValues>({
     resolver: zodResolver(editProfileSchema) as any,
@@ -144,11 +146,11 @@ export function EditProfileForm({
       const data = await uploadPromise;
       if (data.success && data.url) {
         form.setValue(fieldName, data.url, { shouldDirty: true });
-        toast.success(`${fieldName === 'banner' ? 'Banner' : 'Avatar'} uploaded`);
+        toast.success(isMk ? `${fieldName === 'banner' ? 'Банерот' : 'Аватарот'} е прикачен` : `${fieldName === 'banner' ? 'Banner' : 'Avatar'} uploaded`);
       }
     } catch (error) {
       console.error(error);
-      toast.error('Failed to upload image');
+      toast.error(isMk ? 'Неуспешно прикачување' : 'Failed to upload image');
     } finally {
       setProgress(null);
     }
@@ -258,7 +260,6 @@ export function EditProfileForm({
               </div>
         </div>
 
-        {/* Account Type Toggle */}
         <div className="flex p-0.5 bg-muted rounded-lg w-full max-w-xs mx-auto relative h-8 md:h-9">
             <div 
                 className={cn(
@@ -271,29 +272,28 @@ export function EditProfileForm({
                 className={cn("flex-1 relative z-10 text-[10px] md:text-xs font-bold transition-colors text-center", accountType === 'PERSON' ? "text-primary" : "text-muted-foreground")}
                 onClick={() => form.setValue('accountType', 'PERSON')}
             >
-                Person
+                {isMk ? 'Лице' : 'Person'}
             </button>
             <button
                 type="button"
                 className={cn("flex-1 relative z-10 text-[10px] md:text-xs font-bold transition-colors text-center", accountType === 'COMPANY' ? "text-primary" : "text-muted-foreground")}
                 onClick={() => form.setValue('accountType', 'COMPANY')}
             >
-                Company
+                {isMk ? 'Компанија' : 'Company'}
             </button>
         </div>
 
         {/* Form Fields */}
         <div className="space-y-3 md:space-y-4">
             
-            {/* Name */}
             <FormField
               control={form.control}
               name='name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-primary font-black uppercase text-[9px] md:text-[10px] tracking-wider">Your Name</FormLabel>
+                  <FormLabel className="text-primary font-black uppercase text-[9px] md:text-[10px] tracking-wider">{isMk ? 'Твое Име' : 'Your Name'}</FormLabel>
                   <FormControl>
-                    <Input placeholder={accountType === 'COMPANY' ? 'Company Name' : 'Full Name'} {...field} className="h-9 md:h-10 text-xs md:text-sm bg-muted border-border rounded-lg focus:ring-primary/20" />
+                    <Input placeholder={accountType === 'COMPANY' ? (isMk ? 'Име на компанија' : 'Company Name') : (isMk ? 'Целосно Име' : 'Full Name')} {...field} className="h-9 md:h-10 text-xs md:text-sm bg-muted border-border rounded-lg focus:ring-primary/20" />
                   </FormControl>
                   <FormMessage className="text-[10px]" />
                 </FormItem>
@@ -308,7 +308,7 @@ export function EditProfileForm({
                       name='phone'
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-primary font-black uppercase text-[9px] md:text-[10px] tracking-wider">Your Phone</FormLabel>
+                          <FormLabel className="text-primary font-black uppercase text-[9px] md:text-[10px] tracking-wider">{isMk ? 'Твој Телефон' : 'Your Phone'}</FormLabel>
                           <FormControl>
                             <Input placeholder='07x xxx xxx' {...field} className="h-9 md:h-10 text-xs md:text-sm bg-muted border-border rounded-lg" />
                           </FormControl>
@@ -359,13 +359,12 @@ export function EditProfileForm({
                 </div>
             </div>
 
-            {/* Email (Read Only) */}
             <FormField
               control={form.control}
               name='email'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-primary font-black uppercase text-[9px] md:text-[10px] tracking-wider">Your E-Mail</FormLabel>
+                  <FormLabel className="text-primary font-black uppercase text-[9px] md:text-[10px] tracking-wider">{isMk ? 'Твоја Е-пошта' : 'Your E-Mail'}</FormLabel>
                   <FormControl>
                     <Input {...field} disabled className="h-9 md:h-10 text-xs md:text-sm bg-muted/50 border-border rounded-lg text-muted-foreground opacity-70" />
                   </FormControl>
@@ -374,16 +373,15 @@ export function EditProfileForm({
               )}
             />
 
-            {/* Address & Postal Code - side by side on mobile */}
             <div className="grid grid-cols-2 gap-2 md:gap-3">
                 <FormField
                   control={form.control}
                   name='address'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-primary font-black uppercase text-[9px] md:text-[10px] tracking-wider">Address</FormLabel>
+                      <FormLabel className="text-primary font-black uppercase text-[9px] md:text-[10px] tracking-wider">{isMk ? 'Адреса' : 'Address'}</FormLabel>
                       <FormControl>
-                        <Input placeholder='Street address' {...field} className="h-9 md:h-10 text-xs md:text-sm bg-muted border-border rounded-lg" />
+                        <Input placeholder={isMk ? 'Адреса на улица' : 'Street address'} {...field} className="h-9 md:h-10 text-xs md:text-sm bg-muted border-border rounded-lg" />
                       </FormControl>
                       <FormMessage className="text-[10px]" />
                     </FormItem>
@@ -395,7 +393,7 @@ export function EditProfileForm({
                   name='postalCode'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-primary font-black uppercase text-[9px] md:text-[10px] tracking-wider">Postal Code</FormLabel>
+                      <FormLabel className="text-primary font-black uppercase text-[9px] md:text-[10px] tracking-wider">{isMk ? 'Поштенски Код' : 'Postal Code'}</FormLabel>
                       <FormControl>
                         <Input placeholder='1000' {...field} className="h-9 md:h-10 text-xs md:text-sm bg-muted border-border rounded-lg" />
                       </FormControl>
@@ -405,18 +403,17 @@ export function EditProfileForm({
                 />
             </div>
 
-            {/* Location & Municipality */}
             <div className="grid grid-cols-2 gap-2 md:gap-3">
                  <FormField
                   control={form.control}
                   name='city'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-primary font-black uppercase text-[9px] md:text-[10px] tracking-wider">City</FormLabel>
+                      <FormLabel className="text-primary font-black uppercase text-[9px] md:text-[10px] tracking-wider">{isMk ? 'Град' : 'City'}</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger className="h-9 md:h-10 text-xs md:text-sm bg-muted border-border rounded-lg">
-                            <SelectValue placeholder="Select City" />
+                            <SelectValue placeholder={isMk ? "Избери Град" : "Select City"} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="max-h-[250px]">
@@ -435,11 +432,11 @@ export function EditProfileForm({
                   name='municipality'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-primary font-black uppercase text-[9px] md:text-[10px] tracking-wider">Municipality</FormLabel>
+                      <FormLabel className="text-primary font-black uppercase text-[9px] md:text-[10px] tracking-wider">{isMk ? 'Општина' : 'Municipality'}</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger className="h-9 md:h-10 text-xs md:text-sm bg-muted border-border rounded-lg">
-                            <SelectValue placeholder="Select Municipality" />
+                            <SelectValue placeholder={isMk ? "Избери Општина" : "Select Municipality"} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="max-h-[250px]">
@@ -464,10 +461,10 @@ export function EditProfileForm({
             {isSubmitting ? (
               <>
                 <Loader2 className='h-3.5 w-3.5 mr-1.5 animate-spin' />
-                Saving...
+                {isMk ? 'Се зачувува...' : 'Saving...'}
               </>
             ) : (
-              'Save Profile'
+              isMk ? 'Зачувај Профил' : 'Save Profile'
             )}
         </Button>
       </form>

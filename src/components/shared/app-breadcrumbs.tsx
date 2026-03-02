@@ -39,6 +39,14 @@ const segmentToKey: Record<string, string> = {
   admin:                     'admin',
   dashboard:                 'dashboard',
   store:                     'store',
+  help:                      'help',
+  'getting-started':         'getting_started',
+  faq:                       'faq',
+  terms:                     'terms',
+  payments:                  'payments',
+  'posting-ads':             'posting_ads',
+  certification:             'certification',
+  safety:                    'safety',
 };
 
 interface BreadcrumbItemType {

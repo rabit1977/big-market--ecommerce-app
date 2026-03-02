@@ -18,9 +18,13 @@ import {
     Timer,
     Zap
 } from 'lucide-react';
+import { useLocale } from 'next-intl';
 import Link from 'next/link';
 
 export default function PostingAdsHelpPage() {
+    const locale = useLocale();
+    const isMk = locale === 'mk';
+
     return (
         <div className="min-h-screen bg-background pb-20">
             {/* Header */}
@@ -34,15 +38,15 @@ export default function PostingAdsHelpPage() {
                     >
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-black uppercase tracking-widest mb-6">
                             <Zap className="w-4 h-4" />
-                            Seller Guide
+                            {isMk ? 'Водич за продавачи' : 'Seller Guide'}
                         </div>
                         <h1 className="text-4xl md:text-6xl font-black tracking-tight text-foreground mb-6">
-                            Posting & <span className="text-primary">Managing</span> Ads<br/>
-                            <span className="text-2xl md:text-4xl text-muted-foreground mt-2 block">Објавување и <span className="text-primary/80">Управување</span> со огласи</span>
+                            {isMk ? 'Објавување и ' : 'Posting & '} <span className="text-primary">{isMk ? 'Управување ' : 'Managing '}</span> {isMk ? 'со огласи' : 'Ads'}
                         </h1>
                         <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                            Everything you need to know about creating professional listings, reaching more buyers, and managing your shop on Biggest Market.<br/>
-                            <span className="text-base text-muted-foreground/80 mt-1 block">Сè што треба да знаете за креирање професионални огласи, досегнување повеќе купувачи и управување со вашата продавница.</span>
+                            {isMk 
+                                ? 'Сè што треба да знаете за креирање професионални огласи, досегнување повеќе купувачи и управување со вашата продавница.'
+                                : 'Everything you need to know about creating professional listings, reaching more buyers, and managing your shop on Biggest Market.'}
                         </p>
                     </motion.div>
                 </div>
@@ -64,15 +68,14 @@ export default function PostingAdsHelpPage() {
                                     <ImagePlus className="w-6 h-6 text-primary" />
                                 </div>
                                 <h2 className="text-3xl font-black tracking-tight flex flex-col gap-1">
-                                    Creating Your Listing
-                                    <span className="text-xl text-muted-foreground uppercase tracking-widest font-bold">Креирање на вашиот оглас</span>
+                                    {isMk ? 'Креирање на вашиот оглас' : 'Creating Your Listing'}
                                 </h2>
                             </div>
                             
                             <div className="grid gap-6">
                                 <Card className="border-border/50 shadow-sm overflow-hidden hover:border-primary/30 transition-colors">
                                     <CardHeader className="bg-muted/30 border-b border-border/50">
-                                        <CardTitle className="text-xl">Content Strategy / Стратегија за содржина</CardTitle>
+                                        <CardTitle className="text-xl">{isMk ? 'Стратегија за содржина' : 'Content Strategy'}</CardTitle>
                                     </CardHeader>
                                     <CardContent className="p-8 space-y-6">
                                         <div className="flex gap-6 items-start">
@@ -80,10 +83,9 @@ export default function PostingAdsHelpPage() {
                                                 <Timer className="w-5 h-5 text-emerald-600" />
                                             </div>
                                             <div className="space-y-2">
-                                                <h4 className="font-bold">Effective Titles / Ефективни наслови</h4>
+                                                <h4 className="font-bold">{isMk ? 'Ефективни наслови' : 'Effective Titles'}</h4>
                                                 <p className="text-sm text-muted-foreground leading-relaxed">
-                                                    Use clear, concise titles that accurately describe the item. Include the brand, model, and key condition (e.g., "iPhone 15 Pro - 256GB - Perfect Condition"). Avoid excessive capitalization or "spammy" keywords.<br/><br/>
-                                                    <span className="opacity-80">Користете јасни, концизни наслови кои прецизно го опишуваат предметот. Вклучете го брендот, моделот и клучната состојба.</span>
+                                                    {isMk ? 'Користете јасни, концизни наслови кои прецизно го опишуваат предметот. Вклучете го брендот, моделот и клучната состојба.' : 'Use clear, concise titles that accurately describe the item. Include the brand, model, and key condition (e.g., "iPhone 15 Pro - 256GB - Perfect Condition"). Avoid excessive capitalization or "spammy" keywords.'}
                                                 </p>
                                             </div>
                                         </div>
@@ -93,10 +95,9 @@ export default function PostingAdsHelpPage() {
                                                 <PencilLine className="w-5 h-5 text-blue-600" />
                                             </div>
                                             <div className="space-y-2">
-                                                <h4 className="font-bold">Detailed Descriptions / Детални описи</h4>
+                                                <h4 className="font-bold">{isMk ? 'Детални описи' : 'Detailed Descriptions'}</h4>
                                                 <p className="text-sm text-muted-foreground leading-relaxed">
-                                                    Transparency builds trust. Outline technical specifications, usage history, and any existing defects. Well-formatted, bulleted descriptions lead to 40% higher conversion rates.<br/><br/>
-                                                    <span className="opacity-80">Транспарентноста гради доверба. Наведете технички спецификации, историја на користење и какви било постоечки дефекти.</span>
+                                                    {isMk ? 'Транспарентноста гради доверба. Наведете технички спецификации, историја на користење и какви било постоечки дефекти.' : 'Transparency builds trust. Outline technical specifications, usage history, and any existing defects. Well-formatted, bulleted descriptions lead to 40% higher conversion rates.'}
                                                 </p>
                                             </div>
                                         </div>
@@ -106,10 +107,9 @@ export default function PostingAdsHelpPage() {
                                                 <ImagePlus className="w-5 h-5 text-amber-600" />
                                             </div>
                                             <div className="space-y-2">
-                                                <h4 className="font-bold">Visual Excellence / Визуелна извонредност</h4>
+                                                <h4 className="font-bold">{isMk ? 'Визуелна извонредност' : 'Visual Excellence'}</h4>
                                                 <p className="text-sm text-muted-foreground leading-relaxed">
-                                                    High-resolution photography is mandatory. Use natural lighting and multiple angles. Stock photos are permitted only as secondary references; the primary image must be of the actual item.<br/><br/>
-                                                    <span className="opacity-80">Фотографијата со висока резолуција е задолжителна. Примарната слика мора да биде од вистинскиот предмет.</span>
+                                                    {isMk ? 'Фотографијата со висока резолуција е задолжителна. Примарната слика мора да биде од вистинскиот предмет.' : 'High-resolution photography is mandatory. Use natural lighting and multiple angles. Stock photos are permitted only as secondary references; the primary image must be of the actual item.'}
                                                 </p>
                                             </div>
                                         </div>
@@ -125,36 +125,40 @@ export default function PostingAdsHelpPage() {
                                     <LayoutList className="w-6 h-6 text-primary" />
                                 </div>
                                 <h2 className="text-3xl font-black tracking-tight flex flex-col gap-1">
-                                    Active Management
-                                    <span className="text-xl text-muted-foreground uppercase tracking-widest font-bold">Активно управување</span>
+                                    {isMk ? 'Активно управување' : 'Active Management'}
                                 </h2>
                             </div>
                             
                             <div className="bg-card border border-border/50 rounded-[2rem] p-8 md:p-12 shadow-sm">
                                 <div className="max-w-xl space-y-6">
                                     <p className="text-muted-foreground leading-relaxed">
-                                        Managing your inventory on Biggest Market is streamlined through your professional dashboard. Keeping your listings current ensures a better experience for buyers and higher rankings for you.<br/><br/>
-                                        <span className="opacity-80 text-sm">Управувањето со вашиот инвентар на Biggest Market е рационализирано преку вашата професионална контролна табла. Одржувањето на вашите огласи ажурирани обезбедува подобро искуство за купувачите и повисоко рангирање за вас.</span>
+                                        {isMk ? 'Управувањето со вашиот инвентар на Biggest Market е рационализирано преку вашата професионална контролна табла. Одржувањето на вашите огласи ажурирани обезбедува подобро искуство за купувачите и повисоко рангирање за вас.' : 'Managing your inventory on Biggest Market is streamlined through your professional dashboard. Keeping your listings current ensures a better experience for buyers and higher rankings for you.'}
                                     </p>
                                     
                                     <div className="space-y-4">
                                         <div className="flex items-center gap-4 p-4 rounded-2xl bg-muted/50 border border-border/50 group hover:border-primary/30 transition-all flex-col sm:flex-row sm:items-center items-start text-left">
                                             <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
-                                            <span className="font-bold text-sm">Real-time status updates (Sold, Reserved, Active) <br/><span className="text-xs text-muted-foreground font-semibold">Ажурирања на статусот во реално време (Продадено, Резервирано, Активно)</span></span>
+                                            <span className="font-bold text-sm">
+                                                {isMk ? 'Ажурирања на статусот во реално време (Продадено, Резервирано, Активно)' : 'Real-time status updates (Sold, Reserved, Active)'}
+                                            </span>
                                         </div>
                                         <div className="flex items-center gap-4 p-4 rounded-2xl bg-muted/50 border border-border/50 group hover:border-primary/30 transition-all flex-col sm:flex-row sm:items-center items-start text-left">
                                             <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
-                                            <span className="font-bold text-sm">Instant editing of pricing and specifications <br/><span className="text-xs text-muted-foreground font-semibold">Инстантно уредување на цените и спецификациите</span></span>
+                                            <span className="font-bold text-sm">
+                                                {isMk ? 'Инстантно уредување на цените и спецификациите' : 'Instant editing of pricing and specifications'}
+                                            </span>
                                         </div>
                                         <div className="flex items-center gap-4 p-4 rounded-2xl bg-muted/50 border border-border/50 group hover:border-primary/30 transition-all flex-col sm:flex-row sm:items-center items-start text-left">
                                             <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
-                                            <span className="font-bold text-sm">Automatic expiration alerts via email <br/><span className="text-xs text-muted-foreground font-semibold">Автоматски предупредувања за истекување преку е-пошта</span></span>
+                                            <span className="font-bold text-sm">
+                                                {isMk ? 'Автоматски предупредувања за истекување преку е-пошта' : 'Automatic expiration alerts via email'}
+                                            </span>
                                         </div>
                                     </div>
 
                                     <div className="pt-6">
                                         <Button className="rounded-full px-8 font-bold" asChild>
-                                            <Link href="/my-listings">Go to My Listings / Одете во Мои огласи</Link>
+                                            <Link href="/my-listings">{isMk ? 'Одете во Мои огласи' : 'Go to My Listings'}</Link>
                                         </Button>
                                     </div>
                                 </div>
@@ -168,8 +172,7 @@ export default function PostingAdsHelpPage() {
                                     <Rocket className="w-6 h-6 text-amber-600" />
                                 </div>
                                 <h2 className="text-3xl font-black tracking-tight flex flex-col gap-1">
-                                    Maximizing Visibility
-                                    <span className="text-xl text-muted-foreground uppercase tracking-widest font-bold">Зголемување на видливоста</span>
+                                    {isMk ? 'Зголемување на видливоста' : 'Maximizing Visibility'}
                                 </h2>
                             </div>
 
@@ -178,24 +181,22 @@ export default function PostingAdsHelpPage() {
                                     <CardHeader>
                                         <CardTitle className="flex items-center gap-2">
                                             <Zap className="w-5 h-5 text-primary" />
-                                            Promotions / Промоции
+                                            {isMk ? 'Промоции' : 'Promotions'}
                                         </CardTitle>
                                     </CardHeader>
                                     <CardContent className="text-sm text-muted-foreground leading-relaxed">
-                                        Promoted ads receive up to **10x more views**. Choose from Homepage placement, Top Positioning, or Category highlighting. All boosts are active for 14 days.<br/><br/>
-                                        <span className="opacity-80">Промовираните огласи добиваат до 10 пати повеќе прегледи. Изберете од поставување на почетната страница, врвно позиционирање или истакнување во категорија.</span>
+                                        {isMk ? 'Промовираните огласи добиваат до 10 пати повеќе прегледи. Изберете од поставување на почетната страница, врвно позиционирање или истакнување во категорија.' : 'Promoted ads receive up to **10x more views**. Choose from Homepage placement, Top Positioning, or Category highlighting. All boosts are active for 14 days.'}
                                     </CardContent>
                                 </Card>
                                 <Card className="border-blue-500/20 bg-blue-500/5 hover:border-blue-500/40 transition-colors">
                                     <CardHeader>
                                         <CardTitle className="flex items-center gap-2 text-blue-700 dark:text-blue-400">
                                             <ShieldCheck className="w-5 h-5" />
-                                            Account Status / Статус на профил
+                                            {isMk ? 'Статус на профил' : 'Account Status'}
                                         </CardTitle>
                                     </CardHeader>
                                     <CardContent className="text-sm text-muted-foreground leading-relaxed">
-                                        Verified users and Business accounts receive priority in search results. The **Verified Badge** significantly increases user confidence and response rates.<br/><br/>
-                                        <span className="opacity-80">Верификуваните корисници и деловните сметки добиваат приоритет во резултатите од пребарувањето.</span>
+                                        {isMk ? 'Верификуваните корисници и деловните сметки добиваат приоритет во резултатите од пребарувањето.' : 'Verified users and Business accounts receive priority in search results. The **Verified Badge** significantly increases user confidence and response rates.'}
                                     </CardContent>
                                 </Card>
                             </div>
@@ -210,30 +211,29 @@ export default function PostingAdsHelpPage() {
                             <Card className="border-red-500/20 shadow-lg shadow-red-500/5">
                                 <CardHeader>
                                     <CardTitle className="text-lg flex flex-col gap-1 text-red-600">
-                                        <div className="flex items-center gap-2"><AlertCircle className="w-5 h-5" /> Fair Play Rules</div>
-                                        <span className="text-xs uppercase tracking-widest text-red-600/60 font-black">Правила за фер игра</span>
+                                        <div className="flex items-center gap-2"><AlertCircle className="w-5 h-5" /> {isMk ? 'Правила за фер игра' : 'Fair Play Rules'}</div>
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <p className="text-sm text-muted-foreground">
-                                        To maintain a professional environment, many items and practices are restricted. <br/><span className="opacity-80 text-xs">За одржување на професионална средина, многу предмети и практики се ограничени.</span>
+                                        {isMk ? 'За одржување на професионална средина, многу предмети и практики се ограничени.' : 'To maintain a professional environment, many items and practices are restricted.'}
                                     </p>
                                     <ul className="text-xs space-y-2 font-bold text-muted-foreground">
                                         <li className="flex gap-2">
                                             <ArrowRight className="w-3 h-3 text-red-500 shrink-0 mt-0.5" />
-                                            <span>No duplicate listings / Без дупликат огласи</span>
+                                            <span>{isMk ? 'Без дупликат огласи' : 'No duplicate listings'}</span>
                                         </li>
                                         <li className="flex gap-2">
                                             <ArrowRight className="w-3 h-3 text-red-500 shrink-0 mt-0.5" />
-                                            <span>No prohibited items / Без забранети предмети</span>
+                                            <span>{isMk ? 'Без забранети предмети' : 'No prohibited items'}</span>
                                         </li>
                                         <li className="flex gap-2">
                                             <ArrowRight className="w-3 h-3 text-red-500 shrink-0 mt-0.5" />
-                                            <span>No external website links / Без надворешни линкови</span>
+                                            <span>{isMk ? 'Без надворешни линкови' : 'No external website links'}</span>
                                         </li>
                                     </ul>
                                     <Button variant="outline" className="w-full text-xs font-bold border-red-200 hover:bg-red-50 rounded-xl" asChild>
-                                        <Link href="/help/terms#prohibited">View All Rules / Види ги сите правила</Link>
+                                        <Link href="/help/terms#prohibited">{isMk ? 'Види ги сите правила' : 'View All Rules'}</Link>
                                     </Button>
                                 </CardContent>
                             </Card>
@@ -241,12 +241,12 @@ export default function PostingAdsHelpPage() {
                             {/* Verification Call to Action */}
                             <div className="p-8 rounded-[2rem] bg-slate-900 text-white relative overflow-hidden">
                                 <div className="relative z-10 space-y-4">
-                                    <h3 className="text-xl font-black italic">Get Certified. <span className="opacity-70">Сертифицирајте се.</span></h3>
+                                    <h3 className="text-xl font-black italic">{isMk ? 'Сертифицирајте се.' : 'Get Certified.'}</h3>
                                     <p className="text-sm text-slate-400 leading-relaxed">
-                                        Verification is required for listing management. Establish trust within the Biggest Market community today.<br/><br/><span className="opacity-80">Потребна е верификација за да управувате со вашите огласи. Изградете доверба во заедницата денес.</span>
+                                        {isMk ? 'Потребна е верификација за да управувате со вашите огласи. Изградете доверба во заедницата денес.' : 'Verification is required for listing management. Establish trust within the Biggest Market community today.'}
                                     </p>
                                     <Button variant="secondary" className="w-full font-bold rounded-xl" asChild>
-                                        <Link href="/account/verification">Apply Now / Аплицирајте сега</Link>
+                                        <Link href="/account/verification">{isMk ? 'Аплицирајте сега' : 'Apply Now'}</Link>
                                     </Button>
                                 </div>
                                 <ShieldCheck className="absolute -bottom-4 -right-4 w-24 h-24 text-white/10 rotate-12" />
@@ -257,12 +257,12 @@ export default function PostingAdsHelpPage() {
                                 <div className="w-12 h-12 rounded-full bg-background flex items-center justify-center mx-auto mb-4 border border-border/50">
                                     <MessageCircle className="w-5 h-5 text-primary" />
                                 </div>
-                                <h4 className="font-black mb-2">Still need help? / Ви треба помош?</h4>
+                                <h4 className="font-black mb-2">{isMk ? 'Ви треба помош?' : 'Still need help?'}</h4>
                                 <p className="text-xs text-muted-foreground mb-6">
-                                    Our shop specialists can assist with your listing strategy.<br/><br/><span className="opacity-80">Нашите специјалисти можат да ви помогнат.</span>
+                                    {isMk ? 'Нашите специјалисти можат да ви помогнат.' : 'Our shop specialists can assist with your listing strategy.'}
                                 </p>
                                 <Link href="/contact" className="text-xs font-bold text-primary hover:underline">
-                                    Contact Specialist / Контактирајте нè
+                                    {isMk ? 'Контактирајте нè' : 'Contact Specialist'}
                                 </Link>
                             </div>
                         </div>

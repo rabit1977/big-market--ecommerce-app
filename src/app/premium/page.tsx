@@ -19,7 +19,7 @@ import {
     User
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -29,10 +29,29 @@ export default function PremiumPage() {
   const { data: session } = useSession();
   const router = useRouter();
   const t = useTranslations('Premium');
+  const locale = useLocale();
+  const isMk = locale === 'mk';
   const [isProcessing, setIsProcessing] = useState<string | null>(null);
 
   // FAQs are translated inline
-  const faqs = [
+  const faqs = isMk ? [
+    {
+      q: 'Како да ја активирам мојата промоција?',
+      a: 'Активирањето на промоција е беспрекорно. Ако веќе сте го поднеле вашиот оглас, едноставно отворете го и кликнете на линкот "Промовирај" до иконата ѕвезда за да го изберете вашето засилување. Регистрираните корисници можат да управуваат со активациите директно од нивната контролна табла за максимална ефикасност.',
+    },
+    {
+      q: 'Колку долго остануваат огласите промовирани?',
+      a: 'Сите професионални промоции остануваат активни за цел 14-дневен циклус. Откако овој период ќе истече, вашиот оглас автоматски се враќа во стандарден бесплатен оглас, осигурувајќи дека ќе остане објавен без прекин.',
+    },
+    {
+      q: "Зошто мојот премиум оглас не се појавува на самиот врв?",
+      a: 'За да се обезбеди максимална правичност и разновидност, сите промовирани огласи се прикажуваат на страницата за пребарување во динамична ротација. Огласите се појавуваат врз основа на релевантни критериуми за гледачите: регионот, категоријата и специфичните клучни зборови содржани во вашиот наслов.',
+    },
+    {
+      q: 'Кои начини на плаќање се поддржани?',
+      a: 'Препорачуваме плаќање со дебитна или кредитна картичка за инстант активација и безбедно процесирање. Алтернативно, поддржуваме и банкарски трансфери преку про-фактура за ваша погодност.',
+    },
+  ] : [
     {
       q: 'How can I activate my ad promotion?',
       a: 'Activating a promotion is seamless. If you have already submitted your ad, simply open it and click the "Promote" link next to the star icon to choose your boost. Registered users can also manage activations directly from their account dashboard for maximum efficiency.',
@@ -53,13 +72,13 @@ export default function PremiumPage() {
 
   const handleSubscribe = async (planId: string, price: number) => {
     if (!session?.user?.id || !session?.user?.email) {
-      toast.error('Please sign in to subscribe');
+      toast.error(isMk ? 'Ве молиме најавете се за претплата' : 'Please sign in to subscribe');
       router.push('/auth');
       return;
     }
 
     setIsProcessing(planId);
-    const toastId = toast.loading('Setting up secure checkout...');
+    const toastId = toast.loading(isMk ? 'Подготовка на безбедно плаќање...' : 'Setting up secure checkout...');
 
     try {
       const { url } = await createStripeCheckoutSession(
@@ -79,7 +98,7 @@ export default function PremiumPage() {
       }
     } catch (error) {
       toast.dismiss(toastId);
-      toast.error('Something went wrong. Please try again.');
+      toast.error(isMk ? 'Нешто тргна наопаку. Ве молиме обидете се повторно.' : 'Something went wrong. Please try again.');
       console.error(error);
       setIsProcessing(null);
     }
@@ -133,8 +152,8 @@ export default function PremiumPage() {
                     <CardContent className="space-y-4">
                         <div className="flex items-baseline gap-1 mb-4">
                              <span className="text-4xl font-black text-foreground">98</span>
-                             <span className="text-sm text-muted-foreground">MKD/year</span>
-                             <span className="text-xs text-muted-foreground ml-1">+ VAT</span>
+                             <span className="text-sm text-muted-foreground">MKD/{isMk ? 'год' : 'year'}</span>
+                             <span className="text-xs text-muted-foreground ml-1">+ {isMk ? 'ДДВ' : 'VAT'}</span>
                         </div>
                         <ul className="space-y-3 text-sm">
                             <li className="flex gap-2 items-start">
@@ -188,8 +207,8 @@ export default function PremiumPage() {
                     <CardContent className="space-y-4">
                         <div className="flex items-baseline gap-1 mb-4">
                              <span className="text-4xl font-black text-foreground">450</span>
-                             <span className="text-sm text-muted-foreground">MKD/year</span>
-                             <span className="text-xs text-muted-foreground ml-1">+ VAT</span>
+                             <span className="text-sm text-muted-foreground">MKD/{isMk ? 'год' : 'year'}</span>
+                             <span className="text-xs text-muted-foreground ml-1">+ {isMk ? 'ДДВ' : 'VAT'}</span>
                         </div>
                         <ul className="space-y-3 text-sm">
                             <li className="flex gap-2 items-start">
@@ -240,7 +259,20 @@ export default function PremiumPage() {
              </div>
 
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-                {PROMOTIONS.map((promo, i) => (
+                {PROMOTIONS.map((promo, i) => {
+                    const title = isMk && promo.id === 'HOMEPAGE' ? 'Истакнато на Почетна' :
+                                  isMk && promo.id === 'PREMIUM_SECTOR' ? 'Премиум Странична Лента' :
+                                  isMk && promo.id === 'TOP_POSITION' ? 'Елитна Топ Позиција' :
+                                  isMk && promo.id === 'DAILY_BUMP' ? 'Автоматско Дневно Освежување' : promo.title;
+                                  
+                    const description = isMk && promo.id === 'HOMEPAGE' ? 'Елитно поставување на нашата главна почетна страница. Обезбедете максимална видливост со илјадници дневни импресии од моментот кога корисниците ќе пристигнат.' :
+                                        isMk && promo.id === 'PREMIUM_SECTOR' ? 'Добијте постојано присуство во нашиот ексклузивен премиум сектор. Овие посветени слотови на страничната лента за резултати од пребарување гарантираат дека вашиот оглас ќе биде виден од сите.' :
+                                        isMk && promo.id === 'TOP_POSITION' ? 'Останете над конкуренцијата. Вашиот оглас ќе биде закочен на врвот од неговата категорија и резултатите од пребарувањето, осигурувајќи дека ќе биде првото нешто што купувачите ќе го видат.' :
+                                        isMk && promo.id === 'DAILY_BUMP' ? 'Одржувајте го вашиот оглас свеж. Секој ден, вашиот оглас автоматски се поставува на врвот на најновите резултати, токму како штотуку повторно да сте го објавиле.' : promo.description;
+                                        
+                    const days = isMk ? '14 Дена' : '14 days';
+
+                    return (
                     <motion.div
                         key={promo.id}
                         initial={{ opacity: 0, y: 20 }}
@@ -261,25 +293,25 @@ export default function PremiumPage() {
                                 <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center mb-3", promo.bgColor)}>
                                     <PromotionIcon iconName={promo.icon} className={cn("w-6 h-6", promo.color)} />
                                 </div>
-                                <CardTitle className="text-lg font-bold">{promo.title}</CardTitle>
+                                <CardTitle className="text-lg font-bold">{title}</CardTitle>
                                 <CardDescription className="font-bold text-xs uppercase tracking-wider text-primary">
-                                    {promo.days}
+                                    {days}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <p className="text-sm text-muted-foreground leading-relaxed min-h-[80px]">
-                                    {promo.description}
+                                    {description}
                                 </p>
                             </CardContent>
                             <CardFooter className="pt-4 border-t border-border/50">
                                 <div className="flex items-baseline justify-between w-full">
                                     <span className="font-black text-xl">{promo.price} <span className="text-xs font-medium text-muted-foreground">MKD</span></span>
-                                    <span className="text-[10px] uppercase font-bold text-muted-foreground">+ VAT</span>
+                                    <span className="text-[10px] uppercase font-bold text-muted-foreground">+ {isMk ? 'ДДВ' : 'VAT'}</span>
                                 </div>
                             </CardFooter>
                         </Card>
                     </motion.div>
-                ))}
+                )})}
              </div>
 
              <div className="text-center mt-8">
@@ -318,11 +350,11 @@ export default function PremiumPage() {
             <div className="flex flex-wrap justify-center gap-4 sm:gap-8 items-center opacity-70 grayscale hover:grayscale-0 transition-all">
                 <div className="flex items-center gap-2 bg-background border border-border/50 px-4 py-2 rounded-lg">
                     <CreditCard className="w-5 h-5" />
-                    <span className="font-bold text-sm">Credit/Debit Card</span>
+                    <span className="font-bold text-sm">{isMk ? 'Кредитна/Дебитна Картичка' : 'Credit/Debit Card'}</span>
                 </div>
                  <div className="flex items-center gap-2 bg-background border border-border/50 px-4 py-2 rounded-lg">
                     <Activity className="w-5 h-5" />
-                    <span className="font-bold text-sm">Bank Transfer</span>
+                    <span className="font-bold text-sm">{isMk ? 'Банкарски Трансфер' : 'Bank Transfer'}</span>
                 </div>
             </div>
         </div>

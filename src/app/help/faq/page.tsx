@@ -17,6 +17,7 @@ import {
     Slack,
     Timer
 } from 'lucide-react';
+import { useLocale } from 'next-intl';
 import Link from 'next/link';
 
 const faqs = [
@@ -93,6 +94,9 @@ const faqs = [
 ];
 
 export default function FAQHelpPage() {
+    const locale = useLocale();
+    const isMk = locale === 'mk';
+
     return (
         <div className="min-h-screen bg-background pb-20">
             {/* Header */}
@@ -106,13 +110,15 @@ export default function FAQHelpPage() {
                     >
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-widest mb-6">
                             <HelpCircle className="w-4 h-4" />
-                            Knowledge Base
+                            {isMk ? 'Центар за знаење' : 'Knowledge Base'}
                         </div>
                         <h1 className="text-4xl md:text-6xl font-black tracking-tight text-foreground mb-6">
-                            Questions & <span className="text-primary">Answers</span>
+                            {isMk ? 'Прашања &' : 'Questions &'} <span className="text-primary">{isMk ? 'Одговори' : 'Answers'}</span>
                         </h1>
                         <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                            Find answers to the most common inquiries regarding listing management, security, and account operations on Biggest Market.
+                            {isMk 
+                                ? 'Најдете одговори за најчестите прашања поврзани со управувањето на огласи, безбедноста и операциите со сметки на Biggest Market.'
+                                : 'Find answers to the most common inquiries regarding listing management, security, and account operations on Biggest Market.'}
                         </p>
                     </motion.div>
                 </div>
@@ -142,22 +148,14 @@ export default function FAQHelpPage() {
                                             <faq.icon className={`w-6 h-6 ${faq.color}`} />
                                         </div>
                                         <div>
-                                            <h3 className="text-xl font-black tracking-tight leading-tight">{faq.q}</h3>
-                                            <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest mt-1 opacity-70">
-                                                {faq.mk_q}
-                                            </p>
+                                            <h3 className="text-xl font-black tracking-tight leading-tight">{isMk ? faq.mk_q : faq.q}</h3>
                                         </div>
                                     </CardHeader>
                                     <CardContent className="px-6 pb-8 md:px-8 md:pb-10 pt-0">
                                         <div className="pl-0 md:pl-[68px]">
                                             <p className="text-muted-foreground leading-relaxed text-[15px]">
-                                                {faq.a}
+                                                {isMk ? faq.mk_a : faq.a}
                                             </p>
-                                            <div className="mt-4 pt-4 border-t border-border/50">
-                                                <p className="text-muted-foreground/80 leading-relaxed text-[15px]">
-                                                    {faq.mk_a}
-                                                </p>
-                                            </div>
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -172,7 +170,7 @@ export default function FAQHelpPage() {
                             {/* Navigation Card */}
                             <Card className="border-border/50">
                                 <CardHeader>
-                                    <CardTitle className="text-lg font-bold">In This Category</CardTitle>
+                                    <CardTitle className="text-lg font-bold">{isMk ? 'Во оваа категорија' : 'In This Category'}</CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-1">
                                     {faqs.map((faq) => (
@@ -181,8 +179,8 @@ export default function FAQHelpPage() {
                                             href={`#${faq.id}`}
                                             className="flex items-center justify-between py-2 text-sm text-muted-foreground hover:text-primary transition-colors group/link"
                                         >
-                                            <span className="truncate">{faq.q}</span>
-                                            <ChevronRight className="w-4 h-4 opacity-0 group-hover/link:opacity-100 transition-all font-black" />
+                                            <span className="truncate">{isMk ? faq.mk_q : faq.q}</span>
+                                            <ChevronRight className="w-4 h-4 opacity-0 group-hover/link:opacity-100 transition-all font-black shrink-0" />
                                         </a>
                                     ))}
                                 </CardContent>
@@ -194,12 +192,12 @@ export default function FAQHelpPage() {
                                     <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
                                         <ShieldCheck className="w-5 h-5 text-white" />
                                     </div>
-                                    <h3 className="text-xl font-black italic">Verified Profiles.</h3>
+                                    <h3 className="text-xl font-black italic">{isMk ? 'Верификувани Профили.' : 'Verified Profiles.'}</h3>
                                     <p className="text-sm text-slate-400 leading-relaxed">
-                                        Verified users receive priority support and higher listing quotas.
+                                        {isMk ? 'Верификуваните корисници добиваат приоритетна поддршка и поголеми квоти.' : 'Verified users receive priority support and higher listing quotas.'}
                                     </p>
                                     <Button variant="secondary" className="w-full font-bold rounded-xl" asChild>
-                                        <Link href="/help/certification">Learn About Certification</Link>
+                                        <Link href="/help/certification">{isMk ? 'Научи повеќе' : 'Learn About Certification'}</Link>
                                     </Button>
                                 </div>
                             </div>
@@ -209,12 +207,12 @@ export default function FAQHelpPage() {
                                 <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center mx-auto mb-4">
                                     <MessageCircle className="w-5 h-5 text-white" />
                                 </div>
-                                <h4 className="font-black mb-2">Still need help?</h4>
+                                <h4 className="font-black mb-2">{isMk ? 'Сè уште ви треба помош?' : 'Still need help?'}</h4>
                                 <p className="text-xs text-muted-foreground mb-6">
-                                    Can't find what you're looking for? Reach out to our specialist team.
+                                    {isMk ? 'Не можете да го најдете тоа што го барате? Контактирајте го нашиот специјализиран тим.' : 'Can\'t find what you\'re looking for? Reach out to our specialist team.'}
                                 </p>
                                 <Button size="sm" variant="default" className="rounded-full px-6 font-black" asChild>
-                                    <Link href="/contact">Message Support</Link>
+                                    <Link href="/contact">{isMk ? 'Испрати Порака' : 'Message Support'}</Link>
                                 </Button>
                             </div>
 

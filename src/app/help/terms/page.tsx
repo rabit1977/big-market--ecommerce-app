@@ -25,9 +25,13 @@ import {
     ShieldCheck,
     UserCircle
 } from 'lucide-react';
+import { useLocale } from 'next-intl';
 import Link from 'next/link';
 
 export default function TermsPage() {
+    const locale = useLocale();
+    const isMk = locale === 'mk';
+
     return (
         <div className="min-h-screen bg-background pb-20">
             {/* Header */}
@@ -40,18 +44,20 @@ export default function TermsPage() {
                         className="max-w-4xl"
                     >
                         <h1 className="text-4xl md:text-6xl font-black tracking-tight text-foreground mb-6">
-                            Terms &amp; <span className="text-primary">Conditions</span><br/>
-                            <span className="text-2xl md:text-4xl text-muted-foreground">Услови и <span className="text-primary/80">Правила</span></span>
+                            {isMk ? 'Услови и ' : 'Terms & '}
+                            <span className="text-primary">{isMk ? 'Правила' : 'Conditions'}</span>
                         </h1>
                         <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
-                            Read our updated policies on privacy, registration, and platform usage rules.
+                            {isMk 
+                                ? 'Прочитајте ги нашите ажурирани политики за приватност, регистрација и правила за користење на платформата.'
+                                : 'Read our updated policies on privacy, registration, and platform usage rules.'}
                         </p>
                         <div className="flex gap-4 mt-8">
                             <div className="px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-bold">
-                                Updated: 05.01.2026
+                                {isMk ? 'Ажурирано: 05.01.2026' : 'Updated: 05.01.2026'}
                             </div>
                             <div className="px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-sm font-bold">
-                                Version 2.4
+                                {isMk ? 'Верзија 2.4' : 'Version 2.4'}
                             </div>
                         </div>
                     </motion.div>
@@ -76,25 +82,25 @@ export default function TermsPage() {
                                                 <AlertCircle className="w-6 h-6 text-orange-600" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Marketplace Disclaimer / Одрекување од одговорност</div>
-                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Platform Role &amp; Seller Responsibility</div>
+                                                <div className="font-black text-xl">{isMk ? 'Одрекување од одговорност' : 'Marketplace Disclaimer'}</div>
+                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">{isMk ? 'Улога на платформата и одговорност на продавачот' : 'Platform Role & Seller Responsibility'}</div>
                                             </div>
                                         </div>
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
                                         <div className="space-y-6">
                                             <div className="p-6 rounded-2xl bg-orange-500/5 border border-orange-500/20">
-                                                <p className="font-bold text-orange-700 dark:text-orange-400 mb-3">Biggest Market is a classifieds hosting platform — not a party to any transaction.</p>
-                                                <p className="text-sm">We provide the technology and infrastructure for individuals and businesses to publish, manage, and promote their listings. We do not own, sell, inspect, or ship any of the items or services advertised on this platform.</p>
+                                                <p className="font-bold text-orange-700 dark:text-orange-400 mb-3">{isMk ? 'Biggest Market е платформа за хостирање огласи — не е страна во ниту една трансакција.' : 'Biggest Market is a classifieds hosting platform — not a party to any transaction.'}</p>
+                                                <p className="text-sm">{isMk ? 'Обезбедуваме технологија и инфраструктура за поединци и бизниси за објавување, управување и промовирање на нивните огласи. Не поседуваме, продаваме, проверуваме или испорачуваме ниту еден од предметите или услугите огласени на оваа платформа.' : 'We provide the technology and infrastructure for individuals and businesses to publish, manage, and promote their listings. We do not own, sell, inspect, or ship any of the items or services advertised on this platform.'}</p>
                                             </div>
 
-                                            <p><strong>Seller Responsibility:</strong> Each seller is solely and fully responsible for the accuracy, legality, condition, and safety of the items or services they list. Sellers must ensure their listings are truthful, not misleading, and comply with all applicable laws and these Terms of Service.</p>
+                                            <p><strong>{isMk ? 'Одговорност на продавачот:' : 'Seller Responsibility:'}</strong> {isMk ? 'Секој продавач е единствено и целосно одговорен за точноста, легалноста, состојбата и безбедноста на предметите или услугите што ги огласува. Продавачите мора да обезбедат нивните огласи да се вистинити, да не наведуваат во заблуда и да се во согласност со сите применливи закони и овие Услови за користење.' : 'Each seller is solely and fully responsible for the accuracy, legality, condition, and safety of the items or services they list. Sellers must ensure their listings are truthful, not misleading, and comply with all applicable laws and these Terms of Service.'}</p>
 
-                                            <p><strong>Buyer Due Diligence:</strong> Buyers must exercise independent judgment before completing any transaction. We strongly recommend inspecting items in person, verifying the seller's identity and verified badge status, and meeting in a public place for exchanges. Biggest Market cannot guarantee the quality, safety, or authenticity of any item listed on this platform.</p>
+                                            <p><strong>{isMk ? 'Должно внимание на купувачот:' : 'Buyer Due Diligence:'}</strong> {isMk ? 'Купувачите мора да донесуваат независна проценка пред да завршат која било трансакција. Силно препорачуваме проверка на предметите лично, потврда на идентитетот на продавачот и статусот на верификувана значка, и состанување на јавно место за размени. Biggest Market не може да гарантира за квалитетот, безбедноста или автентичноста на ниту еден предмет огласен на оваа платформа.' : 'Buyers must exercise independent judgment before completing any transaction. We strongly recommend inspecting items in person, verifying the seller\'s identity and verified badge status, and meeting in a public place for exchanges. Biggest Market cannot guarantee the quality, safety, or authenticity of any item listed on this platform.'}</p>
 
-                                            <p><strong>No Liability for Transactions:</strong> Biggest Market is not liable for any loss, damage, fraud, or dispute arising from transactions between buyers and sellers. All communications via message, contact form, or email are solely between the respective parties.</p>
+                                            <p><strong>{isMk ? 'Нема одговорност за трансакции:' : 'No Liability for Transactions:'}</strong> {isMk ? 'Biggest Market не е одговорен за каква било загуба, штета, измама или спор што произлегува од трансакции помеѓу купувачи и продавачи. Сите комуникации преку порака, контакт форма или е-пошта се исклучиво помеѓу соодветните страни.' : 'Biggest Market is not liable for any loss, damage, fraud, or dispute arising from transactions between buyers and sellers. All communications via message, contact form, or email are solely between the respective parties.'}</p>
 
-                                            <p><strong>Dispute Resolution:</strong> If a dispute arises between a buyer and seller, Biggest Market may assist with information where possible, but cannot act as a mediator or enforce any outcome. Users are encouraged to resolve disputes directly or through appropriate legal channels.</p>
+                                            <p><strong>{isMk ? 'Решавање спорови:' : 'Dispute Resolution:'}</strong> {isMk ? 'Ако настане спор помеѓу купувач и продавач, Biggest Market може да помогне со информации каде што е можно, но не може да дејствува како посредник или да наметне каков било исход. Корисниците се охрабруваат да ги решаваат споровите директно или преку соодветни правни канали.' : 'If a dispute arises between a buyer and seller, Biggest Market may assist with information where possible, but cannot act as a mediator or enforce any outcome. Users are encouraged to resolve disputes directly or through appropriate legal channels.'}</p>
                                         </div>
                                     </AccordionContent>
                                 </AccordionItem>
@@ -106,46 +112,34 @@ export default function TermsPage() {
                                                 <ShieldCheck className="w-6 h-6 text-blue-600" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Privacy Policy / Политика за приватност</div>
-                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Privacy &amp; Data Protection</div>
+                                                <div className="font-black text-xl">{isMk ? 'Политика за приватност' : 'Privacy Policy'}</div>
+                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">{isMk ? 'Приватност и заштита на податоци' : 'Privacy & Data Protection'}</div>
                                             </div>
                                         </div>
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
                                         <div className="space-y-6">
-                                            <p>The protection and security of your personal data is a top priority at Biggest Market. We dedicate special attention to the privacy and integrity of our users' information, applying the highest security standards.</p>
+                                            <p>{isMk ? 'Заштитата и безбедноста на вашите лични податоци е врвен приоритет во Biggest Market. Посветуваме посебно внимание на приватноста и интегритетот на информациите на нашите корисници, применувајќи ги највисоките безбедносни стандарди.' : 'The protection and security of your personal data is a top priority at Biggest Market. We dedicate special attention to the privacy and integrity of our users\' information, applying the highest security standards.'}</p>
                                             
                                             <div className="p-6 rounded-2xl bg-muted/30 border border-border/50">
-                                                <p className="font-bold text-foreground mb-3 text-sm uppercase tracking-wide">Data we collect:</p>
+                                                <p className="font-bold text-foreground mb-3 text-sm uppercase tracking-wide">{isMk ? 'Податоци што ги собираме:' : 'Data we collect:'}</p>
                                                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                                                    <li className="flex items-center gap-2">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Full Name
-                                                    </li>
-                                                    <li className="flex items-center gap-2">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Email Address
-                                                    </li>
-                                                    <li className="flex items-center gap-2">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Contact Phone Number
-                                                    </li>
-                                                    <li className="flex items-center gap-2">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Location
-                                                    </li>
-                                                    <li className="flex items-center gap-2">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-primary" /> Listing Data
-                                                    </li>
-                                                    <li className="flex items-center gap-2">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-primary" /> IP Address
-                                                    </li>
+                                                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary" /> {isMk ? 'Полно име' : 'Full Name'}</li>
+                                                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary" /> {isMk ? 'Е-пошта' : 'Email Address'}</li>
+                                                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary" /> {isMk ? 'Телефон за контакт' : 'Contact Phone Number'}</li>
+                                                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary" /> {isMk ? 'Локација' : 'Location'}</li>
+                                                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary" /> {isMk ? 'Податоци за огласите' : 'Listing Data'}</li>
+                                                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary" /> {isMk ? 'IP адреса' : 'IP Address'}</li>
                                                 </ul>
                                             </div>
 
-                                            <p>Your personal data is used exclusively to provide and improve our services. Personal data will not be disclosed to third parties without your consent. Processing your data for any other purpose may only occur based on your prior written consent.</p>
+                                            <p>{isMk ? 'Вашите лични податоци се користат исклучиво за да ги обезбедиме и подобриме нашите услуги. Личните податоци нема да бидат откриени на трети страни без ваша согласност.' : 'Your personal data is used exclusively to provide and improve our services. Personal data will not be disclosed to third parties without your consent. Processing your data for any other purpose may only occur based on your prior written consent.'}</p>
                                             
-                                            <p>Payments made by card are transmitted over the internet using SSL (Secure Socket Layer) encryption to ensure security.</p>
+                                            <p>{isMk ? 'Плаќањата извршени со картичка се пренесуваат преку интернет со користење на SSL (Secure Socket Layer) криптирање за да се обезбеди сигурност.' : 'Payments made by card are transmitted over the internet using SSL (Secure Socket Layer) encryption to ensure security.'}</p>
                                             
-                                            <p>In accordance with the Law on Personal Data Protection, this information will be archived in our company for no longer than one year after your account is closed, after which it will be permanently deleted.</p>
+                                            <p>{isMk ? 'Во согласност со Законот за заштита на личните податоци, овие информации ќе се чуваат во нашата компанија не подолго од една година по затворањето на вашата сметка, по што тие трајно ќе се избришат.' : 'In accordance with the Law on Personal Data Protection, this information will be archived in our company for no longer than one year after your account is closed, after which it will be permanently deleted.'}</p>
                                             
-                                            <p className="text-sm italic">For more information, visit the website of the Directorate for Personal Data Protection at <a href="https://dzlp.mk" target="_blank" className="text-primary hover:underline">dzlp.mk</a>.</p>
+                                            <p className="text-sm italic">{isMk ? 'За повеќе информации, посетете ја веб-страницата на Дирекцијата за заштита на лични податоци на' : 'For more information, visit the website of the Directorate for Personal Data Protection at'} <a href="https://dzlp.mk" target="_blank" className="text-primary hover:underline">dzlp.mk</a>.</p>
                                         </div>
                                     </AccordionContent>
                                 </AccordionItem>
@@ -157,34 +151,34 @@ export default function TermsPage() {
                                                 <UserCircle className="w-6 h-6 text-emerald-600" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Registration &amp; Verification / Регистрација и верификација</div>
-                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Registration &amp; Terms</div>
+                                                <div className="font-black text-xl">{isMk ? 'Регистрација и верификација' : 'Registration & Verification'}</div>
+                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">{isMk ? 'Регистрација и услови' : 'Registration & Terms'}</div>
                                             </div>
                                         </div>
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
                                         <div className="space-y-6">
-                                            <p>To access the full professional services of Biggest Market, a valid registration is required. Our platform guarantees 90% annual uptime, supported by continuous technical maintenance and system upgrades.</p>
+                                            <p>{isMk ? 'За пристап до целосните професионални услуги на Biggest Market, потребна е валидна регистрација. Нашата платформа гарантира време на работа од 90% годишно, поддржано од континуирано техничко одржување.' : 'To access the full professional services of Biggest Market, a valid registration is required. Our platform guarantees 90% annual uptime, supported by continuous technical maintenance and system upgrades.'}</p>
                                             
                                             <div className="p-8 rounded-[2rem] bg-emerald-500/5 border border-emerald-500/10">
                                                 <h4 className="font-black text-emerald-700 dark:text-emerald-400 mb-4 flex items-center gap-2">
-                                                    <Info className="w-5 h-5" /> Profile Verification
+                                                    <Info className="w-5 h-5" /> {isMk ? 'Преглед на профилот' : 'Profile Verification'}
                                                 </h4>
-                                                <p className="mb-4">For security reasons, profile verification is mandatory. All unverified profiles will be deleted.</p>
+                                                <p className="mb-4">{isMk ? 'Заради безбедност, верификацијата на профилот е задолжителна. Сите неверификувани профили ќе бидат избришани.' : 'For security reasons, profile verification is mandatory. All unverified profiles will be deleted.'}</p>
                                                 <ul className="space-y-3 font-bold text-emerald-800 dark:text-emerald-300">
                                                     <li className="flex gap-2">
-                                                        <ArrowRight className="w-4 h-4 shrink-0 mt-1" /> You can post and edit listings for free for 1 year.
+                                                        <ArrowRight className="w-4 h-4 shrink-0 mt-1" /> {isMk ? 'Можете бесплатно да објавувате и уредувате огласи 1 година.' : 'You can post and edit listings for free for 1 year.'}
                                                     </li>
                                                     <li className="flex gap-2">
-                                                        <ArrowRight className="w-4 h-4 shrink-0 mt-1" /> Manage up to 50 listings per year.
+                                                        <ArrowRight className="w-4 h-4 shrink-0 mt-1" /> {isMk ? 'Управувајте со најмногу 50 огласи годишно.' : 'Manage up to 50 listings per year.'}
                                                     </li>
                                                     <li className="flex gap-2 text-primary">
-                                                        <ArrowRight className="w-4 h-4 shrink-0 mt-1" /> Price: 98 MKD + VAT (116 MKD) for 1 year.
+                                                        <ArrowRight className="w-4 h-4 shrink-0 mt-1" /> {isMk ? 'Цена: 98 MKD + ДДВ (116 MKD) за 1 година.' : 'Price: 98 MKD + VAT (116 MKD) for 1 year.'}
                                                     </li>
                                                 </ul>
                                             </div>
                                             
-                                            <p>Payment can be made via bank transfer or debit/credit card. To use the service in full, clients must have a modern browser with JavaScript, Cookies, and Pop-ups enabled.</p>
+                                            <p>{isMk ? 'Плаќањето може да се изврши преку банкарски трансфер или платежна картичка.' : 'Payment can be made via bank transfer or debit/credit card. To use the service in full, clients must have a modern browser with JavaScript, Cookies, and Pop-ups enabled.'}</p>
                                         </div>
                                     </AccordionContent>
                                 </AccordionItem>
@@ -196,18 +190,18 @@ export default function TermsPage() {
                                                 <Globe className="w-6 h-6 text-purple-600" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Social Networks &amp; Technology / Социјални мрежи и технологија</div>
-                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Social Login &amp; Tech Integration</div>
+                                                <div className="font-black text-xl">{isMk ? 'Социјални мрежи и технологија' : 'Social Networks & Technology'}</div>
+                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">{isMk ? 'Логирање преку социјални мрежи' : 'Social Login & Tech Integration'}</div>
                                             </div>
                                         </div>
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
                                         <div className="space-y-6">
-                                            <p><strong>Social Login (Google, Facebook, Apple):</strong> Used for simplified and secure authentication. The transferred data (name, email, and UID) is used exclusively for login and identification purposes.</p>
+                                            <p><strong>{isMk ? 'Најава преку социјални мрежи (Google, Facebook, Apple):' : 'Social Login (Google, Facebook, Apple):'}</strong> {isMk ? 'Се користи за поедноставена и сигурна автентикација. Пренесените податоци (име, е-пошта и UID) се користат исклучиво за најава и идентификација.' : 'Used for simplified and secure authentication. The transferred data (name, email, and UID) is used exclusively for login and identification purposes.'}</p>
                                             
-                                            <p><strong>Video Integration:</strong> By activating the consent checkbox, you allow content to be loaded from YouTube, TikTok, Facebook, and Instagram. Your IP address is transmitted to the respective providers.</p>
+                                            <p><strong>{isMk ? 'Видео интеграција:' : 'Video Integration:'}</strong> {isMk ? 'Со активирање на полето за согласност, дозволувате да се вчита содржина од YouTube, TikTok, Facebook и Instagram. Вашата IP адреса се пренесува до соодветните даватели.' : 'By activating the consent checkbox, you allow content to be loaded from YouTube, TikTok, Facebook, and Instagram. Your IP address is transmitted to the respective providers.'}</p>
                                             
-                                            <p><strong>Maps:</strong> We use OpenStreetMap (Leaflet) and Google Maps. Your IP address may be transmitted to their servers for displaying map data. You can disable maps if you do not wish to transfer this data.</p>
+                                            <p><strong>{isMk ? 'Мапи:' : 'Maps:'}</strong> {isMk ? 'Ние користиме OpenStreetMap (Leaflet) и Google Maps. Вашата IP адреса може да се пренесе на нивните сервери за прикажување податоци за мапата.' : 'We use OpenStreetMap (Leaflet) and Google Maps. Your IP address may be transmitted to their servers for displaying map data. You can disable maps if you do not wish to transfer this data.'}</p>
                                         </div>
                                     </AccordionContent>
                                 </AccordionItem>
@@ -219,15 +213,15 @@ export default function TermsPage() {
                                                 <Lock className="w-6 h-6 text-amber-600" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Cookie Policy / Политика за колачиња</div>
-                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Tracking &amp; Browser Storage</div>
+                                                <div className="font-black text-xl">{isMk ? 'Политика за колачиња' : 'Cookie Policy'}</div>
+                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">{isMk ? 'Следење и складирање на прелистувачот' : 'Tracking & Browser Storage'}</div>
                                             </div>
                                         </div>
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
                                         <div className="space-y-6">
-                                            <p>We use cookies to optimize our services and ensure the platform functions correctly. Cookies are small text files stored on your computer.</p>
-                                            <p>They are categorized by function: essential, performance, functional, advertising, and session cookies. The collected information is anonymous. You can disable them in your browser settings, but some features may become unavailable as a result.</p>
+                                            <p>{isMk ? 'Ние користиме колачиња за оптимизирање на нашите услуги и за осигурување на правилното функционирање на платформата.' : 'We use cookies to optimize our services and ensure the platform functions correctly. Cookies are small text files stored on your computer.'}</p>
+                                            <p>{isMk ? 'Тие се категоризирани по функција: неопходни, за перформанси, функционални, за рекламирање и колачиња за сесија. Собраните информации се анонимни.' : 'They are categorized by function: essential, performance, functional, advertising, and session cookies. The collected information is anonymous. You can disable them in your browser settings, but some features may become unavailable as a result.'}</p>
                                         </div>
                                     </AccordionContent>
                                 </AccordionItem>
@@ -239,20 +233,20 @@ export default function TermsPage() {
                                                 <LayoutList className="w-6 h-6 text-blue-600" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Posting &amp; Managing Listings / Објавување и управување со огласи</div>
-                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Posting &amp; Managing Ads</div>
+                                                <div className="font-black text-xl">{isMk ? 'Објавување и управување со огласи' : 'Posting & Managing Listings'}</div>
+                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">{isMk ? 'Објавување на огласи' : 'Posting & Managing Ads'}</div>
                                             </div>
                                         </div>
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
                                         <div className="space-y-6">
-                                            <p><strong>Posting Listings:</strong> Biggest Market offers a professional environment for commercial and private listings. By posting, the user guarantees that all information (title, description, price) is accurate, truthful, and not misleading.</p>
+                                            <p><strong>{isMk ? 'Објавување огласи:' : 'Posting Listings:'}</strong> {isMk ? 'Biggest Market нуди професионална средина за комерцијални и приватни огласи. Со објавувањето, корисникот гарантира дека сите информации се точни.' : 'Biggest Market offers a professional environment for commercial and private listings. By posting, the user guarantees that all information (title, description, price) is accurate, truthful, and not misleading.'}</p>
                                             
-                                            <p><strong>Content Quality:</strong> To maintain our high standards, all listings must contain real, high-quality photographs. The platform reserves the right to remove content taken from third parties without permission or that is of poor quality.</p>
+                                            <p><strong>{isMk ? 'Квалитет на содржината:' : 'Content Quality:'}</strong> {isMk ? 'За да се одржат нашите високи стандарди, сите огласи мора да содржат вистински, висококвалитетни фотографии.' : 'To maintain our high standards, all listings must contain real, high-quality photographs. The platform reserves the right to remove content taken from third parties without permission or that is of poor quality.'}</p>
                                             
-                                            <p><strong>Duration &amp; Renewal:</strong> Listings have a predefined expiry date. Users are responsible for timely updates to the availability of the item or service. Promoted listings receive priority status for a period of <strong>14 days</strong>.</p>
+                                            <p><strong>{isMk ? 'Времетраење и обновување:' : 'Duration & Renewal:'}</strong> {isMk ? 'Огласите имаат однапред дефиниран датум на истекување. Промовираните огласи добиваат приоритетен статус за период од 14 дена.' : 'Listings have a predefined expiry date. Users are responsible for timely updates to the availability of the item or service. Promoted listings receive priority status for a period of 14 days.'}</p>
                                             
-                                            <p><strong>Fair-Play Policy:</strong> Duplicate listings for the same item in different categories or locations are strictly prohibited. Systematic violation of this rule leads to automatic account suspension.</p>
+                                            <p><strong>{isMk ? 'Фер-плеј политика:' : 'Fair-Play Policy:'}</strong> {isMk ? 'Дуплирањето на огласите за ист предмет во различни категории е строго забрането.' : 'Duplicate listings for the same item in different categories or locations are strictly prohibited. Systematic violation of this rule leads to automatic account suspension.'}</p>
                                         </div>
                                     </AccordionContent>
                                 </AccordionItem>
@@ -264,8 +258,8 @@ export default function TermsPage() {
                                                 <Ban className="w-6 h-6 text-red-600" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Prohibited Content &amp; Actions / Забранета содржина и акции</div>
-                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Platform Restrictions</div>
+                                                <div className="font-black text-xl">{isMk ? 'Забранета содржина и акции' : 'Prohibited Content & Actions'}</div>
+                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">{isMk ? 'Ограничувања на платформата' : 'Platform Restrictions'}</div>
                                             </div>
                                         </div>
                                     </AccordionTrigger>
@@ -273,31 +267,31 @@ export default function TermsPage() {
                                         <div className="space-y-8">
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                                 <div className="space-y-4">
-                                                    <h4 className="font-black text-red-600 uppercase text-xs tracking-widest">Prohibited Content:</h4>
+                                                    <h4 className="font-black text-red-600 uppercase text-xs tracking-widest">{isMk ? 'Забранета содржина:' : 'Prohibited Content:'}</h4>
                                                     <ul className="space-y-2 text-sm">
-                                                        <li>• Advertising other websites</li>
-                                                        <li>• Misleading job offers</li>
-                                                        <li>• Gambling and betting</li>
-                                                        <li>• Loans and securities</li>
-                                                        <li>• Offensive and racist content</li>
-                                                        <li>• Pornography and prostitution</li>
-                                                        <li>• Listings in a foreign language without a translation</li>
+                                                        <li>• {isMk ? 'Рекламирање на други веб-страници' : 'Advertising other websites'}</li>
+                                                        <li>• {isMk ? 'Залажувачки понуди за работа' : 'Misleading job offers'}</li>
+                                                        <li>• {isMk ? 'Коцкање и обложување' : 'Gambling and betting'}</li>
+                                                        <li>• {isMk ? 'Заеми и хартии од вредност' : 'Loans and securities'}</li>
+                                                        <li>• {isMk ? 'Навредлива и расистичка содржина' : 'Offensive and racist content'}</li>
+                                                        <li>• {isMk ? 'Порнографија и проституција' : 'Pornography and prostitution'}</li>
+                                                        <li>• {isMk ? 'Огласи на странски јазик без превод' : 'Listings in a foreign language without a translation'}</li>
                                                     </ul>
                                                 </div>
                                                 <div className="space-y-4">
-                                                    <h4 className="font-black text-red-600 uppercase text-xs tracking-widest">Prohibited Items:</h4>
+                                                    <h4 className="font-black text-red-600 uppercase text-xs tracking-widest">{isMk ? 'Забранети предмети:' : 'Prohibited Items:'}</h4>
                                                     <ul className="space-y-2 text-sm">
-                                                        <li>• Stolen or counterfeit items</li>
-                                                        <li>• Prescription drugs and narcotics</li>
-                                                        <li>• Radioactive and explosive materials</li>
-                                                        <li>• Human organs and bodily fluids</li>
-                                                        <li>• Weapons and ammunition</li>
-                                                        <li>• Official uniforms and passports</li>
+                                                        <li>• {isMk ? 'Украдени или кривотворени предмети' : 'Stolen or counterfeit items'}</li>
+                                                        <li>• {isMk ? 'Лекови на рецепт и наркотици' : 'Prescription drugs and narcotics'}</li>
+                                                        <li>• {isMk ? 'Радиоактивни и експлозивни материјали' : 'Radioactive and explosive materials'}</li>
+                                                        <li>• {isMk ? 'Човечки органи и телесни течности' : 'Human organs and bodily fluids'}</li>
+                                                        <li>• {isMk ? 'Оружје и муниција' : 'Weapons and ammunition'}</li>
+                                                        <li>• {isMk ? 'Официјални униформи и пасоши' : 'Official uniforms and passports'}</li>
                                                     </ul>
                                                 </div>
                                             </div>
                                             <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/10 text-sm font-bold text-red-700">
-                                                Each listing may only be posted once in a single location. Duplicate listings and spamming will not be tolerated.
+                                                {isMk ? 'Секој оглас може да биде објавен само еднаш на една локација. Дупликатните огласи нема да се толерираат.' : 'Each listing may only be posted once in a single location. Duplicate listings and spamming will not be tolerated.'}
                                             </div>
                                         </div>
                                     </AccordionContent>
@@ -310,18 +304,18 @@ export default function TermsPage() {
                                                 <MessageSquare className="w-6 h-6 text-indigo-600" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Communication &amp; Marketing</div>
-                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Viber, WhatsApp &amp; Marketing</div>
+                                                <div className="font-black text-xl">{isMk ? 'Комуникација и Маркетинг' : 'Communication & Marketing'}</div>
+                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">{isMk ? 'Viber, WhatsApp & Маркетинг' : 'Viber, WhatsApp & Marketing'}</div>
                                             </div>
                                         </div>
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
                                         <div className="space-y-6">
-                                            <p><strong>Direct Marketing:</strong> Biggest Market uses your data for marketing purposes only with your prior consent. Every communication (Email, SMS, Viber, WhatsApp) includes an opt-out option. After withdrawal, your data will be removed from our active database within <strong>14 days</strong>.</p>
+                                            <p><strong>{isMk ? 'Директен маркетинг:' : 'Direct Marketing:'}</strong> {isMk ? 'Biggest Market ги користи вашите податоци за маркетинг цели само со ваша претходна согласност.' : 'Biggest Market uses your data for marketing purposes only with your prior consent. Every communication (Email, SMS, Viber, WhatsApp) includes an opt-out option. After withdrawal, your data will be removed from our active database within 14 days.'}</p>
                                             
-                                            <p><strong>Viber &amp; WhatsApp:</strong> Our platform enables direct connection with providers, but we have no access to your private content. To stop communications, simply send a message with the text <strong>"STOP"</strong>.</p>
+                                            <p><strong>{isMk ? 'Viber & WhatsApp:' : 'Viber & WhatsApp:'}</strong> {isMk ? 'Нашата платформа овозможува директно поврзување со продавачите, но немаме пристап до вашата приватна содржина.' : 'Our platform enables direct connection with providers, but we have no access to your private content. To stop communications, simply send a message with the text "STOP".'}</p>
                                             
-                                            <p><strong>Anti-Spam Policy:</strong> Generating mass listings or irrelevant content is strictly forbidden. If you suspect any abuse, contact our center at support@bigmarket.mk.</p>
+                                            <p><strong>{isMk ? 'Анти-Спам Политика:' : 'Anti-Spam Policy:'}</strong> {isMk ? 'Генерирањето масовни огласи или ирелевантна содржина е строго забрането.' : 'Generating mass listings or irrelevant content is strictly forbidden. If you suspect any abuse, contact our center at support@bigmarket.mk.'}</p>
                                         </div>
                                     </AccordionContent>
                                 </AccordionItem>
@@ -329,20 +323,20 @@ export default function TermsPage() {
                                 <AccordionItem value="security" id="security" className="border-b border-border/50 px-6 md:px-10">
                                     <AccordionTrigger className="hover:no-underline py-8 text-left group">
                                         <div className="flex items-center gap-5">
-                                            <div className="w-12 h-12 rounded-2xl bg-popover0/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <div className="w-12 h-12 rounded-2xl bg-popover/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                                                 <Key className="w-6 h-6 text-slate-600" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Security &amp; Responsibility</div>
-                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Passwords &amp; Usage Terms</div>
+                                                <div className="font-black text-xl">{isMk ? 'Безбедност и одговорност' : 'Security & Responsibility'}</div>
+                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">{isMk ? 'Лозинки и услови за користење' : 'Passwords & Usage Terms'}</div>
                                             </div>
                                         </div>
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
                                         <div className="space-y-6">
-                                            <p><strong>Account Security:</strong> Responsibility for your password and access lies with you. Biggest Market recommends using complex passwords and changing them regularly for maximum protection.</p>
-                                            <p><strong>Age Regulation:</strong> The platform is intended exclusively for adults (18+ years old).</p>
-                                            <p><strong>Suspension:</strong> Biggest Market reserves the right to restrict or terminate access for any user who does not comply with the defined ethical and legal norms of the platform.</p>
+                                            <p><strong>{isMk ? 'Безбедност на сметката:' : 'Account Security:'}</strong> {isMk ? 'Одговорноста за вашата лозинка лежи кај вас. Biggest Market препорачува користење сложени лозинки.' : 'Responsibility for your password and access lies with you. Biggest Market recommends using complex passwords and changing them regularly for maximum protection.'}</p>
+                                            <p><strong>{isMk ? 'Регулација на возраста:' : 'Age Regulation:'}</strong> {isMk ? 'Платформата е наменета исклучиво за возрасни (18+ години).' : 'The platform is intended exclusively for adults (18+ years old).'}</p>
+                                            <p><strong>{isMk ? 'Суспензија:' : 'Suspension:'}</strong> {isMk ? 'Biggest Market го задржува правото да го ограничи или прекине пристапот за секој корисник кој не ги почитува нормите.' : 'Biggest Market reserves the right to restrict or terminate access for any user who does not comply with the defined ethical and legal norms of the platform.'}</p>
                                         </div>
                                     </AccordionContent>
                                 </AccordionItem>
@@ -351,21 +345,21 @@ export default function TermsPage() {
                                     <AccordionTrigger className="hover:no-underline py-8 text-left group">
                                         <div className="flex items-center gap-5">
                                             <div className="w-12 h-12 rounded-2xl bg-slate-800/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                                <AlertCircle className="w-6 h-6 text-slate-800" />
+                                                <AlertCircle className="w-6 h-6 text-slate-800 dark:text-slate-300" />
                                             </div>
                                             <div>
-                                                <div className="font-black text-xl">Legal Notice &amp; Contact / Правна напомена и контакт</div>
-                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Company Details &amp; Jurisdiction</div>
+                                                <div className="font-black text-xl">{isMk ? 'Правна напомена и контакт' : 'Legal Notice & Contact'}</div>
+                                                <div className="text-xs text-muted-foreground uppercase tracking-wider font-bold">{isMk ? 'Податоци за компанијата и надлежност' : 'Company Details & Jurisdiction'}</div>
                                             </div>
                                         </div>
                                     </AccordionTrigger>
                                     <AccordionContent className="pb-10 text-muted-foreground leading-relaxed whitespace-pre-wrap text-[15px]">
                                         <div className="space-y-8">
-                                            <p>The privacy policy and general terms and conditions of Biggest Market are subject to periodic changes in order to improve our services. By using these services, the user confirms their agreement with the current version of this document.</p>
+                                            <p>{isMk ? 'Политиката за приватност и општите услови подлежат на периодични промени. Со користење ги потврдувате.' : 'The privacy policy and general terms and conditions of Biggest Market are subject to periodic changes in order to improve our services. By using these services, the user confirms their agreement with the current version of this document.'}</p>
                                             
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-border/50">
                                                 <div className="space-y-4">
-                                                    <h5 className="font-black text-xs uppercase tracking-widest text-primary">Company:</h5>
+                                                    <h5 className="font-black text-xs uppercase tracking-widest text-primary">{isMk ? 'Компанија:' : 'Company:'}</h5>
                                                     <p className="font-bold">Biggest Market</p>
                                                     <div className="flex gap-2 text-sm">
                                                         <MapPin className="w-4 h-4 text-muted-foreground shrink-0" />
@@ -373,14 +367,14 @@ export default function TermsPage() {
                                                     </div>
                                                 </div>
                                                 <div className="space-y-4">
-                                                    <h5 className="font-black text-xs uppercase tracking-widest text-primary">Contact:</h5>
+                                                    <h5 className="font-black text-xs uppercase tracking-widest text-primary">{isMk ? 'Контакт:' : 'Contact:'}</h5>
                                                     <div className="flex gap-2 text-sm">
                                                         <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
                                                         <span>support@bigmarket.mk</span>
                                                     </div>
                                                     <div className="flex gap-2 text-sm">
                                                         <Phone className="w-4 h-4 text-muted-foreground shrink-0" />
-                                                        <span>Contact via form</span>
+                                                        <span>{isMk ? 'Контакт преку форма' : 'Contact via form'}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -392,40 +386,40 @@ export default function TermsPage() {
 
                         {/* Direct Contact Form */}
                         <section id="contact" className="p-8 md:p-12 rounded-[2.5rem] bg-background border border-border/50 shadow-2xl shadow-primary/5">
-                            <h2 className="text-3xl font-black mb-8">Contact Us / Контактирајте нè</h2>
+                            <h2 className="text-3xl font-black mb-8">{isMk ? 'Контактирајте нè' : 'Contact Us'}</h2>
                             <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label className="text-sm font-black px-1">Your Name / Вашето Име</label>
+                                    <label className="text-sm font-black px-1">{isMk ? 'Вашето Име' : 'Your Name'}</label>
                                     <input type="text" className="w-full rounded-2xl border border-border bg-muted/20 px-4 py-4 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-black px-1">Your Email / Вашата Е-пошта</label>
+                                    <label className="text-sm font-black px-1">{isMk ? 'Вашата Е-пошта' : 'Your Email'}</label>
                                     <input type="email" className="w-full rounded-2xl border border-border bg-muted/20 px-4 py-4 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-black px-1">Subject / Тема</label>
+                                    <label className="text-sm font-black px-1">{isMk ? 'Тема' : 'Subject'}</label>
                                     <select className="w-full rounded-2xl border border-border bg-muted/20 px-4 py-4 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold appearance-none">
-                                        <option>General Enquiry / Општо Прашање</option>
-                                        <option>Technical Support / Техничка Поддршка</option>
-                                        <option>Report Abuse / Пријави Злоупотреба</option>
-                                        <option>Marketing / Маркетинг</option>
+                                        <option>{isMk ? 'Општо Прашање' : 'General Enquiry'}</option>
+                                        <option>{isMk ? 'Техничка Поддршка' : 'Technical Support'}</option>
+                                        <option>{isMk ? 'Пријави Злоупотреба' : 'Report Abuse'}</option>
+                                        <option>{isMk ? 'Маркетинг' : 'Marketing'}</option>
                                     </select>
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-black px-1">Your Phone / Вашиот Телефон</label>
+                                    <label className="text-sm font-black px-1">{isMk ? 'Вашиот Телефон' : 'Your Phone'}</label>
                                     <input type="tel" className="w-full rounded-2xl border border-border bg-muted/20 px-4 py-4 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold" />
                                 </div>
                                 <div className="md:col-span-2 space-y-2">
-                                    <label className="text-sm font-black px-1">Message / Порака</label>
+                                    <label className="text-sm font-black px-1">{isMk ? 'Порака' : 'Message'}</label>
                                     <textarea rows={6} className="w-full rounded-2xl border border-border bg-muted/20 px-4 py-4 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none font-bold"></textarea>
                                 </div>
                                 <div className="md:col-span-2 space-y-8">
                                     <div className="flex items-center gap-4 p-6 rounded-2xl bg-primary/5 border border-primary/10 w-fit">
-                                        <span className="font-black text-base text-primary/80">Security Check / Безбедносна Проверка: <span className="text-primary text-xl tracking-widest">15 + 7 = ?</span></span>
+                                        <span className="font-black text-base text-primary/80">{isMk ? 'Безбедносна Проверка:' : 'Security Check:'} <span className="text-primary text-xl tracking-widest">15 + 7 = ?</span></span>
                                         <input type="text" className="w-24 rounded-xl border border-border bg-background px-4 py-3 text-center font-black text-xl focus:outline-none focus:ring-2 focus:ring-primary/20" />
                                     </div>
                                     <Button className="w-full md:w-auto px-16 py-8 rounded-2xl font-black text-xl shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all bg-gradient-to-r from-primary to-blue-600">
-                                        Send Message / Испрати Порака
+                                        {isMk ? 'Испрати Порака' : 'Send Message'}
                                     </Button>
                                 </div>
                             </form>
@@ -436,34 +430,34 @@ export default function TermsPage() {
                     <div className="space-y-8">
                         <div className="sticky top-24">
                             <div className="p-8 rounded-[2rem] bg-slate-900 text-white shadow-2xl">
-                                <h3 className="text-2xl font-black mb-6">Quick Tools</h3>
+                                <h3 className="text-2xl font-black mb-6">{isMk ? 'Брзи алатки' : 'Quick Tools'}</h3>
                                 <div className="space-y-4">
                                     <Button className="w-full justify-start h-14 rounded-xl font-bold bg-white/10 hover:bg-white/20 border-white/10" asChild>
                                         <Link href="/help">
                                             <Info className="w-5 h-5 mr-3" />
-                                            Help Center
+                                            {isMk ? 'Центар за помош' : 'Help Center'}
                                         </Link>
                                     </Button>
                                     <Button className="w-full justify-start h-14 rounded-xl font-bold bg-white/10 hover:bg-white/20 border-white/10" asChild>
                                         <Link href="/help/payments">
                                             <ArrowRight className="w-5 h-5 mr-3" />
-                                            Payments Info
+                                            {isMk ? 'Информации за плаќање' : 'Payments Info'}
                                         </Link>
                                     </Button>
                                     <Button variant="outline" className="w-full justify-start h-14 rounded-xl font-bold border-white/20 text-white hover:bg-white/5" asChild>
                                         <Link href="#contact">
                                             <Mail className="w-5 h-5 mr-3" />
-                                            Support Inquiry
+                                            {isMk ? 'Барање за поддршка' : 'Support Inquiry'}
                                         </Link>
                                     </Button>
                                 </div>
                             </div>
                             
                             <div className="mt-8 p-8 rounded-[2rem] bg-muted/30 border border-border/50 text-center">
-                                <h4 className="font-black text-lg mb-2">Documentation PDF</h4>
-                                <p className="text-xs text-muted-foreground mb-6">Download a copy of our terms for your records.</p>
+                                <h4 className="font-black text-lg mb-2">{isMk ? 'ПДФ Документација' : 'Documentation PDF'}</h4>
+                                <p className="text-xs text-muted-foreground mb-6">{isMk ? 'Преземете копија од нашите услови за ваша евиденција.' : 'Download a copy of our terms for your records.'}</p>
                                 <Button variant="outline" className="w-full rounded-xl font-bold bg-background h-12" disabled>
-                                    Coming Soon
+                                    {isMk ? 'Наскоро' : 'Coming Soon'}
                                 </Button>
                             </div>
                         </div>

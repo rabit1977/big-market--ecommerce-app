@@ -18,13 +18,14 @@ import {
     ShieldCheck,
     Wallet
 } from 'lucide-react';
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
 const AccountPage = async () => {
   const session = await auth();
   const user = session?.user;
   const t = await getTranslations('Account');
+  const locale = await getLocale();
 
   const [wishlistResult, listingsResult] = await Promise.all([
       getWishlistAction(),
@@ -41,12 +42,12 @@ const AccountPage = async () => {
   };
 
   const memberSince = user?.createdAt
-    ? new Date(user.createdAt).toLocaleDateString('en-US', {
+    ? new Date(user.createdAt).toLocaleDateString(locale === 'mk' ? 'mk-MK' : 'en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
       })
-    : 'N/A';
+    : t('not_set');
 
   const userInitials = user?.name
     ? user.name

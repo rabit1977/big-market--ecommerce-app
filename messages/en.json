@@ -355,7 +355,10 @@
     "saved_favorites": "Saved Favorites",
     "create_new_ad": "Create New Ad",
     "account_balance": "Account Balance",
-    "top_up_balance": "Top up balance"
+    "top_up_balance": "Top up balance",
+    "total_listings": "Total Listings",
+    "active_ads": "Active Ads",
+    "favorites": "Favorites"
   },
   "Categories": {
     "title": "Categories",
@@ -461,7 +464,15 @@
     "success": "Success",
     "admin": "Admin Panel",
     "dashboard": "Dashboard",
-    "store": "Sellers"
+    "store": "Sellers",
+    "help": "Help Center",
+    "getting_started": "Getting Started",
+    "faq": "FAQ",
+    "terms": "Terms & Conditions",
+    "payments": "Payments",
+    "posting_ads": "Posting Ads",
+    "certification": "Certification",
+    "safety": "Safety"
   },
   "AdminControls": {
     "dashboard_title": "Dashboard",

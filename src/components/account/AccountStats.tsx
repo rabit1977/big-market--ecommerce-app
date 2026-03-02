@@ -1,6 +1,7 @@
 'use client';
 
 import { Heart, Package, Zap } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
 interface AccountStatsProps {
@@ -15,6 +16,7 @@ export function AccountStats({
   wishlistItems,
 }: AccountStatsProps) {
   const router = useRouter();
+  const t = useTranslations('Account');
 
   const handleNavigate = (path: string) => {
     router.push(path);
@@ -22,7 +24,7 @@ export function AccountStats({
 
   const statItems = [
     {
-        label: 'Total Listings',
+        label: t('total_listings'),
         value: totalListings,
         icon: Package,
         color: 'text-primary',
@@ -30,7 +32,7 @@ export function AccountStats({
         path: '/my-listings'
     },
     {
-        label: 'Active Ads',
+        label: t('active_ads'),
         value: activeListings,
         icon: Zap,
         color: 'text-primary',
@@ -38,7 +40,7 @@ export function AccountStats({
         path: '/my-listings'
     },
     {
-        label: 'Favorites',
+        label: t('favorites'),
         value: wishlistItems,
         icon: Heart,
         color: 'text-primary',

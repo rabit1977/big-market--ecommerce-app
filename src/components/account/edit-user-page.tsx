@@ -3,18 +3,19 @@
 
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
 } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useMutation, useQuery } from 'convex/react';
 import {
-    ArrowLeft
+  ArrowLeft,
+  Link
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
+import { useLocale } from 'next-intl';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { api } from '../../../convex/_generated/api';
@@ -40,6 +41,8 @@ function ProfileSkeleton() {
  * Edit Profile Page Component
  */
 export default function EditProfilePage() {
+  const locale = useLocale();
+  const isMk = locale === 'mk';
   const { data: session, update: updateSession } = useSession();
   
   const user = useQuery(api.users.getByExternalId, { 
@@ -74,7 +77,7 @@ export default function EditProfilePage() {
             gender: values.gender || undefined,
         });
 
-        toast.success('Profile updated successfully');
+        toast.success(isMk ? 'Профилот е успешно ажуриран' : 'Profile updated successfully');
           
         await updateSession({
             ...session,
@@ -87,7 +90,7 @@ export default function EditProfilePage() {
           
     } catch (error) {
         console.error('Profile update error:', error);
-        toast.error('Failed to update profile');
+        toast.error(isMk ? 'Неуспешно ажурирање на профилот' : 'Failed to update profile');
     } finally {
         setIsSubmitting(false);
     }
@@ -104,7 +107,7 @@ export default function EditProfilePage() {
   }
 
   if (user === null) {
-      return <div className="p-20 text-center">User not found</div>;
+      return <div className="p-20 text-center">{isMk ? 'Корисникот не е пронајден' : 'User not found'}</div>;
   }
 
   return (
@@ -114,13 +117,13 @@ export default function EditProfilePage() {
         {/* Header */}
         <div className='mb-5 md:mb-8'>
               <Link href='/account' className="text-xs md:text-sm text-muted-foreground flex items-center gap-1 hover:text-foreground mb-2 transition-colors">
-                 <ArrowLeft className='h-3.5 w-3.5' /> Back to Account
+                 <ArrowLeft className='h-3.5 w-3.5' /> {isMk ? 'Назад' : 'Back to Account'}
               </Link>
               <h1 className='text-lg md:text-2xl font-black tracking-tighter text-foreground'>
-                Edit Profile
+                {isMk ? 'Уреди Профил' : 'Edit Profile'}
               </h1>
               <p className='text-muted-foreground text-xs md:text-sm font-medium'>
-                Manage your public profile and preferences
+                {isMk ? 'Управувајте со вашиот јавен профил и преференции' : 'Manage your public profile and preferences'}
               </p>
         </div>
 
@@ -133,6 +136,7 @@ export default function EditProfilePage() {
                   user={user as any}
                   onSubmit={handleUpdateProfile}
                   isSubmitting={isSubmitting}
+                  isMk={isMk}
                 />
             </CardContent>
         </Card>
