@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { MapPin, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -64,28 +65,6 @@ const CITIES = [
   'Štip', 'Strumica', 'Kavadarci', 'Kočani', 'Kičevo', 'Struga', 'Radoviš', 'Gevgelija',
 ];
 
-const CONDITIONS = [
-  { value: 'new',      label: 'New' },
-  { value: 'like-new', label: 'Like New' },
-  { value: 'good',     label: 'Good' },
-  { value: 'fair',     label: 'Fair' },
-  { value: 'used',     label: 'Used' },
-];
-
-const SORT_OPTIONS = [
-  { value: 'newest',     label: 'Newest First' },
-  { value: 'oldest',     label: 'Oldest First' },
-  { value: 'price-low',  label: 'Price: Low to High' },
-  { value: 'price-high', label: 'Price: High to Low' },
-  { value: 'popular',    label: 'Most Popular' },
-];
-
-const DATE_RANGE_LABELS: Record<string, string> = {
-  today:  'Today',
-  '3days': 'Last 3 Days',
-  '7days': 'Last 7 Days',
-};
-
 const DEFAULT_FILTERS: FilterState = { sortBy: 'newest' };
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -97,6 +76,31 @@ export function FilterPanel({
   idPrefix = 'filter',
   template,
 }: FilterPanelProps) {
+  const t = useTranslations('FilterPanel');
+
+  // ── Translated option lists (must be inside component for hook) ──────────
+  const CONDITIONS = useMemo(() => [
+    { value: 'new',      label: t('cond_new') },
+    { value: 'like-new', label: t('cond_like_new') },
+    { value: 'good',     label: t('cond_good') },
+    { value: 'fair',     label: t('cond_fair') },
+    { value: 'used',     label: t('cond_used') },
+  ], [t]);
+
+  const SORT_OPTIONS = useMemo(() => [
+    { value: 'newest',     label: t('newest') },
+    { value: 'oldest',     label: t('oldest') },
+    { value: 'price-low',  label: t('price_low_high') },
+    { value: 'price-high', label: t('price_high_low') },
+    { value: 'popular',    label: t('popular') },
+  ], [t]);
+
+  const DATE_RANGE_LABELS = useMemo((): Record<string, string> => ({
+    today:   t('today'),
+    '3days': t('last_3_days'),
+    '7days': t('last_7_days'),
+  }), [t]);
+
   const [filters, setFilters] = useState<FilterState>(initialFilters ?? DEFAULT_FILTERS);
   const [priceRange, setPriceRange] = useState<[number, number]>([
     initialFilters?.priceMin ?? PRICE_MIN_DEFAULT,
@@ -305,7 +309,7 @@ export function FilterPanel({
       <Card className="p-3 space-y-3 rounded-lg border-none shadow-none bg-card bm-interactive">
         {/* Header */}
         <div className="flex items-center justify-between pb-2 border-b border-border">
-          <h3 className="font-bold text-sm">Filters</h3>
+          <h3 className="font-bold text-sm">{t('title')}</h3>
           {activeFilterCount > 0 && (
             <Button
               variant="ghost"
@@ -313,7 +317,7 @@ export function FilterPanel({
               onClick={clearFilters}
               className="text-primary hover:text-primary/80 h-7 px-2 text-xs font-medium rounded-md"
             >
-              Clear All
+              {t('clear_all')}
             </Button>
           )}
         </div>
@@ -321,7 +325,7 @@ export function FilterPanel({
         {/* Listing ID Search */}
         <div className="space-y-1 border-b border-border pb-2">
           <Label htmlFor={`${idPrefix}-listingNumber`} className="text-[10px] uppercase text-muted-foreground font-medium">
-            Find Specific Item
+            {t('find_item')}
           </Label>
           <ListingSearchInput
             idPrefix={idPrefix}
@@ -335,14 +339,14 @@ export function FilterPanel({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div className="space-y-1">
               <Label htmlFor={`${idPrefix}-category`} className="text-[10px] uppercase text-muted-foreground font-medium">
-                Category
+                {t('category')}
               </Label>
               <Select value={filters.category || 'all'} onValueChange={handleMainCategoryChange}>
                 <SelectTrigger id={`${idPrefix}-category`} className="h-8 text-xs rounded-md bm-interactive">
-                  <SelectValue placeholder="All Categories" />
+                  <SelectValue placeholder={t('all_categories')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="all">{t('all_categories')}</SelectItem>
                   {mainCategories.map((cat) => (
                     <SelectItem key={cat._id} value={cat.slug}>{cat.name}</SelectItem>
                   ))}
@@ -355,7 +359,7 @@ export function FilterPanel({
                 htmlFor={`${idPrefix}-subcategory`}
                 className={`text-[10px] uppercase font-medium ${!filters.category ? 'text-muted-foreground/50' : 'text-muted-foreground'}`}
               >
-                Subcategory
+                {t('subcategory')}
               </Label>
               <Select
                 value={selectedSubCategory?.slug || 'all'}
@@ -363,10 +367,10 @@ export function FilterPanel({
                 disabled={!filters.category || subCategories.length === 0}
               >
                 <SelectTrigger id={`${idPrefix}-subcategory`} className="h-8 text-xs rounded-md bm-interactive">
-                  <SelectValue placeholder={!filters.category ? 'Select Category' : 'All'} />
+                  <SelectValue placeholder={!filters.category ? t('select_category_first') : t('all_subcategories')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Subcategories</SelectItem>
+                  <SelectItem value="all">{t('all_subcategories')}</SelectItem>
                   {subCategories.map((cat) => (
                     <SelectItem key={cat._id} value={cat.slug}>{cat.name}</SelectItem>
                   ))}
@@ -378,7 +382,7 @@ export function FilterPanel({
           {subSubCategories.length > 0 && (
             <div className="space-y-1">
               <Label htmlFor={`${idPrefix}-subsubcategory`} className="text-[10px] uppercase text-muted-foreground font-medium">
-                Type
+                {t('type')}
               </Label>
               <Select
                 value={
@@ -389,10 +393,10 @@ export function FilterPanel({
                 onValueChange={handleSubSubCategoryChange}
               >
                 <SelectTrigger id={`${idPrefix}-subsubcategory`} className="h-8 text-xs rounded-md bm-interactive">
-                  <SelectValue placeholder="All Types" />
+                  <SelectValue placeholder={t('all_types')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="all">{t('all_types')}</SelectItem>
                   {subSubCategories.map((cat) => (
                     <SelectItem key={cat._id} value={cat.slug}>{cat.name}</SelectItem>
                   ))}
@@ -405,7 +409,7 @@ export function FilterPanel({
         {/* Dynamic Template Fields */}
         {filterableTemplateFields.length > 0 && (
           <div className="space-y-2 pb-2 border-b border-border">
-            <h4 className="font-semibold text-[10px] text-primary uppercase tracking-wider">Specifics</h4>
+            <h4 className="font-semibold text-[10px] text-primary uppercase tracking-wider">{t('specifics')}</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {filterableTemplateFields.map((field: any) => (
                 <div key={field.key} className="space-y-1">
@@ -436,10 +440,10 @@ export function FilterPanel({
                       onValueChange={(val) => updateDynamicFilter(field.key, val === 'all' ? undefined : val)}
                     >
                       <SelectTrigger id={`${idPrefix}-${field.key}`} className="h-8 text-xs rounded-md bm-interactive">
-                        <SelectValue placeholder="All" />
+                        <SelectValue placeholder={t('all')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All</SelectItem>
+                        <SelectItem value="all">{t('all')}</SelectItem>
                         {field.options.map((opt: string) => (
                           <SelectItem key={opt} value={opt}>{opt}</SelectItem>
                         ))}
@@ -455,10 +459,10 @@ export function FilterPanel({
         {/* Sort & Location */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pb-2 border-b border-border ">
           <div className="space-y-1">
-            <Label htmlFor={`${idPrefix}-sort`} className="text-[10px] uppercase text-muted-foreground  font-medium">Sort By</Label>
+            <Label htmlFor={`${idPrefix}-sort`} className="text-[10px] uppercase text-muted-foreground  font-medium">{t('sort_by')}</Label>
             <Select value={filters.sortBy} onValueChange={(val) => updateFilter('sortBy', val)}>
               <SelectTrigger id={`${idPrefix}-sort`} className="h-8 text-xs rounded-md bm-interactive">
-                <SelectValue placeholder="Newest" />
+                <SelectValue placeholder={t('newest')} />
               </SelectTrigger>
               <SelectContent>
                 {SORT_OPTIONS.map((o) => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
@@ -468,14 +472,14 @@ export function FilterPanel({
 
           <div className="space-y-1">
             <Label htmlFor={`${idPrefix}-city`} className="flex items-center gap-1 text-[10px] uppercase text-muted-foreground font-medium">
-              <MapPin className="h-2.5 w-2.5" /> Location
+              <MapPin className="h-2.5 w-2.5" /> {t('location')}
             </Label>
             <Select value={filters.city} onValueChange={(val) => updateFilter('city', val)}>
               <SelectTrigger id={`${idPrefix}-city`} className="h-8 text-xs rounded-md bm-interactive">
-                <SelectValue placeholder="All Cities" />
+                <SelectValue placeholder={t('all_cities')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Cities</SelectItem>
+                <SelectItem value="all">{t('all_cities')}</SelectItem>
                 {CITIES.map((city) => (
                   <SelectItem key={city} value={city.toLowerCase()}>{city}</SelectItem>
                 ))}
@@ -486,7 +490,7 @@ export function FilterPanel({
 
         {/* Price Range */}
         <div className="space-y-1.5 pb-2 border-b border-border">
-          <Label className="text-[10px] uppercase text-muted-foreground font-medium">Price Range (€)</Label>
+          <Label className="text-[10px] uppercase text-muted-foreground font-medium">{t('price_range')}</Label>
           <div className="space-y-3 pt-2">
             <Slider
               value={priceRange}
@@ -502,7 +506,7 @@ export function FilterPanel({
                 value={priceRange[0]}
                 onChange={handlePriceMinInput}
                 className="h-8 text-xs rounded-md bg-background bm-interactive"
-                placeholder="Min"
+                placeholder={t('min')}
               />
               <span className="text-muted-foreground text-xs font-bold">-</span>
               <Input
@@ -511,7 +515,7 @@ export function FilterPanel({
                 value={priceRange[1]}
                 onChange={handlePriceMaxInput}
                 className="h-8 text-xs rounded-md bg-background bm-interactive"
-                placeholder="Max"
+                placeholder={t('max')}
               />
             </div>
             <div className="text-[10px] font-medium text-muted-foreground text-center tabular-nums">
@@ -522,29 +526,29 @@ export function FilterPanel({
 
         {/* Date Posted */}
         <div className="space-y-1.5 pb-2 border-b border-border">
-          <Label htmlFor={`${idPrefix}-date`} className="text-[10px] uppercase text-muted-foreground font-medium">Date Posted</Label>
+          <Label htmlFor={`${idPrefix}-date`} className="text-[10px] uppercase text-muted-foreground font-medium">{t('date_posted')}</Label>
           <Select value={filters.dateRange || 'all'} onValueChange={(val) => updateFilter('dateRange', val)}>
             <SelectTrigger id={`${idPrefix}-date`} className="h-8 text-xs rounded-md bm-interactive">
-              <SelectValue placeholder="Anytime" />
+              <SelectValue placeholder={t('anytime')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Anytime</SelectItem>
-              <SelectItem value="today">Today</SelectItem>
-              <SelectItem value="3days">Last 3 Days</SelectItem>
-              <SelectItem value="7days">Last 7 Days</SelectItem>
+              <SelectItem value="all">{t('anytime')}</SelectItem>
+              <SelectItem value="today">{t('today')}</SelectItem>
+              <SelectItem value="3days">{t('last_3_days')}</SelectItem>
+              <SelectItem value="7days">{t('last_7_days')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         {/* Condition */}
         <div className="space-y-1.5">
-          <Label htmlFor={`${idPrefix}-condition`} className="text-[10px] uppercase text-muted-foreground font-medium">Condition</Label>
+          <Label htmlFor={`${idPrefix}-condition`} className="text-[10px] uppercase text-muted-foreground font-medium">{t('condition')}</Label>
           <Select value={filters.condition} onValueChange={(val) => updateFilter('condition', val)}>
             <SelectTrigger id={`${idPrefix}-condition`} className="h-8 text-xs rounded-md bm-interactive">
-              <SelectValue placeholder="Any Condition" />
+              <SelectValue placeholder={t('any_condition')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Any Condition</SelectItem>
+              <SelectItem value="all">{t('any_condition')}</SelectItem>
               {CONDITIONS.map((c) => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}
             </SelectContent>
           </Select>
@@ -553,7 +557,7 @@ export function FilterPanel({
         {/* Active Filter Badges */}
         {activeFilterCount > 0 && (
           <div className="pt-3 border-t border-border space-y-2">
-            <Label className="text-[10px] text-muted-foreground uppercase tracking-widest">Active Controls</Label>
+            <Label className="text-[10px] text-muted-foreground uppercase tracking-widest">{t('active_controls')}</Label>
             <div className="flex flex-wrap gap-1.5">
               {filters.category && filters.category !== 'all' && (
                 <FilterBadge label={categories.find((c) => c.slug === filters.category)?.name} onRemove={() => handleMainCategoryChange('all')} />

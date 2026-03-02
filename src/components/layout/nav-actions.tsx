@@ -27,6 +27,7 @@ import { createPortal } from 'react-dom';
 import { LanguageSwitcher } from './language-switcher';
 import { PaletteSwitcher } from './palette-switcher';
 
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface NavActionsProps {
@@ -275,8 +276,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
           </Tooltip>
         </TooltipProvider>
 
-
-        {/* Language Switcher */}
+        {/* Language Switcher — always visible on all screen sizes */}
         <LanguageSwitcher />
 
         {/* Help */}
@@ -347,7 +347,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                 aria-modal="true"
                 aria-label="Account menu"
               >
-                {/* Header */}
+                {/* Panel Header */}
                 <div className="px-4 pt-4 pb-3 border-b shrink-0">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -400,7 +400,10 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                   )}
 
                   {renderSectionLabel(t('app_style'))}
-                  <div className="px-1.5 mb-2"><PaletteSwitcher /></div>
+                  <div className="px-1.5 mb-1 flex items-center gap-2">
+                    <div className="flex-1"><PaletteSwitcher /></div>
+                    <LanguageSwitcher />
+                  </div>
                   <div className="mx-3 my-1 h-px bg-border/30" />
 
                   <div className="md:hidden">

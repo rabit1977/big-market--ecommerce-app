@@ -53,25 +53,21 @@ export default function RevenuePage() {
   };
 
   const handleSync = async () => {
-      setSyncing(true);
-      try {
-          const syncSince = since ? Math.floor(since / 1000) : undefined;
-          
-          const result = await syncTransactions({ 
-              limit: 100, 
-              since: syncSince 
-          });
-
-          if (result.success) {
-              toast.success(t('synced', { count: result.count }));
-          }
-      } catch (error) {
-          toast.error(t('sync_failed'));
-          console.error(error);
-      } finally {
-          setSyncing(false);
+    setSyncing(true);
+    try {
+      const syncSince = since ? Math.floor(since / 1000) : undefined;
+      const result = await syncTransactions({ limit: 100, since: syncSince });
+      if (result.success) {
+        toast.success(t('synced', { count: result.count ?? 0 }));
       }
+    } catch (error) {
+      toast.error(t('sync_failed'));
+      console.error(error);
+    } finally {
+      setSyncing(false);
+    }
   };
+
 
   const clearData = useMutation(api.transactions.clear);
   const handleReset = async () => {

@@ -38,6 +38,7 @@ const segmentToKey: Record<string, string> = {
   success:                   'success',
   admin:                     'admin',
   dashboard:                 'dashboard',
+  store:                     'store',
 };
 
 interface BreadcrumbItemType {

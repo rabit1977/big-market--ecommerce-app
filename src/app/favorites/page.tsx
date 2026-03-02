@@ -159,23 +159,14 @@ function FavoritesTabs({
 
   return (
     <Tabs defaultValue={defaultTab} className="w-full">
-      <TabsList className="w-full grid grid-cols-3 mb-4 md:mb-6 h-10 md:h-12 p-0.5 rounded-lg md:rounded-xl bm-interactive bg-card">
-        <TabsTrigger
-          value="listings"
-          className="rounded-lg md:rounded-xl text-xs md:text-sm font-bold"
-        >
+      <TabsList className="w-full grid grid-cols-3 mb-4 md:mb-6 p-1 rounded-lg bg-muted/60 bm-interactive">
+        <TabsTrigger value="listings">
           {t('favorites_tab', { count: listingFavorites?.length ?? 0 })}
         </TabsTrigger>
-        <TabsTrigger
-          value="searches"
-          className="rounded-lg md:rounded-xl text-xs md:text-sm font-bold"
-        >
+        <TabsTrigger value="searches">
           {t('searches_tab', { count: optimisticSearches.length })}
         </TabsTrigger>
-        <TabsTrigger
-          value="visited"
-          className="rounded-lg md:rounded-xl text-xs md:text-sm font-bold"
-        >
+        <TabsTrigger value="visited">
           {t('history_tab')}
         </TabsTrigger>
       </TabsList>

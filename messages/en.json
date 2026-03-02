@@ -104,6 +104,44 @@
     "new": "New",
     "vat": "With VAT"
   },
+  "FilterPanel": {
+    "title": "Filters",
+    "clear_all": "Clear All",
+    "find_item": "Find Specific Item",
+    "category": "Category",
+    "all_categories": "All Categories",
+    "subcategory": "Subcategory",
+    "all_subcategories": "All Subcategories",
+    "select_category_first": "Select Category",
+    "type": "Type",
+    "all_types": "All Types",
+    "specifics": "Specifics",
+    "all": "All",
+    "sort_by": "Sort By",
+    "newest": "Newest First",
+    "oldest": "Oldest First",
+    "price_low_high": "Price: Low to High",
+    "price_high_low": "Price: High to Low",
+    "popular": "Most Popular",
+    "location": "Location",
+    "all_cities": "All Cities",
+    "price_range": "Price Range (MKD)",
+    "min": "Min",
+    "max": "Max",
+    "date_posted": "Date Posted",
+    "anytime": "Anytime",
+    "today": "Today",
+    "last_3_days": "Last 3 Days",
+    "last_7_days": "Last 7 Days",
+    "condition": "Condition",
+    "any_condition": "Any Condition",
+    "cond_new": "New",
+    "cond_like_new": "Like New",
+    "cond_good": "Good",
+    "cond_fair": "Fair",
+    "cond_used": "Used",
+    "active_controls": "Active Controls"
+  },
   "Common": {
     "mkd": "MKD",
     "search": "Search",
@@ -117,7 +155,8 @@
     "results_found": "{count} result found",
     "results_found_plural": "{count} results found",
     "result": "result",
-    "results": "results"
+    "results": "results",
+    "no_cities_found": "No cities found for \"{query}\""
   },
   "NavActions": {
     "home": "Home",
@@ -341,6 +380,19 @@
     "found": "found",
     "sellers": "Sellers"
   },
+  "Sellers": {
+    "page_title": "Sellers Directory",
+    "page_subtitle": "Browse verified sellers and premium storefronts",
+    "search_placeholder": "Search sellers, city...",
+    "sellers_count": "{count} sellers found",
+    "no_sellers": "No sellers found",
+    "no_sellers_desc": "No sellers match your search. Try a different keyword.",
+    "verified": "Verified",
+    "business": "Business",
+    "listings_label": "listings",
+    "visit_store": "Visit Store",
+    "no_products_yet": "No products yet"
+  },
   "Admin": {
     "overview": "Overview",
     "analytics": "Analytics",
@@ -399,7 +451,8 @@
     "premium": "Premium Plans",
     "success": "Success",
     "admin": "Admin Panel",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "store": "Sellers"
   },
   "AdminControls": {
     "dashboard_title": "Dashboard",

@@ -104,6 +104,44 @@
     "new": "Нов",
     "vat": "Со ДДВ"
   },
+  "FilterPanel": {
+    "title": "Филтри",
+    "clear_all": "Исчисти Се",
+    "find_item": "Најди Специфичен Оглас",
+    "category": "Категорија",
+    "all_categories": "Сите Категории",
+    "subcategory": "Поткатегорија",
+    "all_subcategories": "Сите Поткатегории",
+    "select_category_first": "Избери Категорија",
+    "type": "Тип",
+    "all_types": "Сите Типови",
+    "specifics": "Специфики",
+    "all": "Сите",
+    "sort_by": "Сортирај",
+    "newest": "Најнови",
+    "oldest": "Најстари",
+    "price_low_high": "Цена: Ниска кон Висока",
+    "price_high_low": "Цена: Висока кон Ниска",
+    "popular": "Најпопуларни",
+    "location": "Локација",
+    "all_cities": "Сите Градови",
+    "price_range": "Опсег на Цени (МКД)",
+    "min": "Мин",
+    "max": "Макс",
+    "date_posted": "Датум на Објавување",
+    "anytime": "Било Кога",
+    "today": "Денес",
+    "last_3_days": "Последните 3 Дена",
+    "last_7_days": "Последните 7 Дена",
+    "condition": "Состојба",
+    "any_condition": "Било Која Состојба",
+    "cond_new": "Нов",
+    "cond_like_new": "Како Нов",
+    "cond_good": "Добра",
+    "cond_fair": "Прифатлива",
+    "cond_used": "Половен",
+    "active_controls": "Активни Контроли"
+  },
   "Common": {
     "mkd": "МКД",
     "search": "Барај",
@@ -117,7 +155,8 @@
     "results_found": "{count} резултат пронајден",
     "results_found_plural": "{count} резултати пронајдени",
     "result": "резултат",
-    "results": "резултати"
+    "results": "резултати",
+    "no_cities_found": "Нема пронајдено градови за \"{query}\""
   },
   "NavActions": {
     "home": "Почетна",
@@ -164,8 +203,8 @@
     "sign_in": "Најави Се",
     "saved_items": "Зачувани Ставки",
     "favorites_searches_history": "Вашите омилени, пребарувања и историја",
-    "favorites_tab": "Омилени ({count})",
-    "searches_tab": "Пребарувања ({count})",
+    "favorites_tab": "Омилени",
+    "searches_tab": "Пребарувања",
     "history_tab": "Историја",
     "no_favorites": "Сè уште нема омилени",
     "no_favorites_desc": "Зачувајте огласи кои ви се допаѓаат за да ги видите подоцна.",
@@ -341,6 +380,19 @@
     "found": "пронајдено",
     "sellers": "Продавачи"
   },
+  "Sellers": {
+    "page_title": "Директориум на Продавачи",
+    "page_subtitle": "Разгледајте верифицирани продавачи и премиум продавници",
+    "search_placeholder": "Пребарај продавачи, град...",
+    "sellers_count": "{count} продавачи пронајдени",
+    "no_sellers": "Нема пронајдени продавачи",
+    "no_sellers_desc": "Нема продавачи кои одговараат на вашето пребарување. Обидете се со различен термин.",
+    "verified": "Верифициран",
+    "business": "Бизнис",
+    "listings_label": "огласи",
+    "visit_store": "Посети Продавница",
+    "no_products_yet": "Сè уште нема производи"
+  },
   "Admin": {
     "overview": "Преглед",
     "analytics": "Аналитика",
@@ -399,7 +451,8 @@
     "premium": "Премиум Планови",
     "success": "Успешно",
     "admin": "Контролна Табла",
-    "dashboard": "Преглед"
+    "dashboard": "Преглед",
+    "store": "Продавачи"
   },
   "AdminControls": {
     "dashboard_title": "Контролна Табла",

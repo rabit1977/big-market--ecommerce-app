@@ -26,7 +26,7 @@ function TabsList({
     <TabsPrimitive.List
       data-slot="tabs-list"
       className={cn(
-        "bg-muted text-muted-foreground inline-flex h-9 w-fit items-center justify-center rounded-lg p-[3px]",
+        "text-muted-foreground inline-flex h-9 w-fit items-center justify-center rounded-lg p-[3px]",
         className
       )}
       {...props}
@@ -42,7 +42,20 @@ function TabsTrigger({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        "data-[state=active]:bg-primary/5 data-[state=active]:text-primary data-[state=active]:border-primary/20 focus-visible:border-primary focus-visible:ring-primary/20 focus-visible:outline-none text-[10px] font-black uppercase tracking-widest inline-flex h-full flex-1 items-center justify-center gap-1.5 rounded-lg border border-transparent px-3 py-1.5 transition-all focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-3.5",
+        // Layout & base
+        "inline-flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-1.5",
+        "text-[10px] min-[380px]:text-[11px] font-bold uppercase tracking-wider",
+        "transition-all duration-150",
+        // Inactive state
+        "text-muted-foreground hover:text-foreground",
+        // Active state — standard tab pattern: white/card background, foreground text, subtle shadow
+        "data-[state=active]:bg-secondary data-[state=active]:text-foreground data-[state=active]:shadow-sm",
+        // Focus
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30",
+        // Disabled
+        "disabled:pointer-events-none disabled:opacity-50",
+        // SVG
+        "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-3.5",
         className
       )}
       {...props}
