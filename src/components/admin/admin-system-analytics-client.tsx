@@ -5,11 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
 import { BarChart3, Clock, CreditCard, Loader2, ShieldCheck, TrendingDown, TrendingUp, Users } from 'lucide-react';
+import { useLocale } from 'next-intl';
 import { useState } from 'react';
 
 export function AdminSystemAnalyticsClient() {
   const [timeRange, setTimeRange] = useState<TimeRange>('all');
   const since = getSinceFromRange(timeRange);
+  const locale = useLocale();
+  const isMk = locale === 'mk';
 
   const stats    = useQuery(api.admin.getStats, {});
   const deltas   = useQuery(api.admin.getDailyDeltas);
@@ -25,36 +28,36 @@ export function AdminSystemAnalyticsClient() {
 
   const statItems = [
     {
-      label: 'Total Users', value: stats.users, icon: Users, color: 'text-primary',
+      label: isMk ? 'Вкупно Корисници' : 'Total Users', value: stats.users, icon: Users, color: 'text-primary',
       bg: 'bg-secondary', border: 'border-border',
       delta: deltas?.newUsers,
-      description: 'Registered platform users',
+      description: isMk ? 'Регистрирани корисници на платформата' : 'Registered platform users',
     },
     {
-      label: 'Total Listings', value: stats.listings, icon: BarChart3, color: 'text-primary',
+      label: isMk ? 'Вкупно Огласи' : 'Total Listings', value: stats.listings, icon: BarChart3, color: 'text-primary',
       bg: 'bg-secondary', border: 'border-border',
       delta: deltas?.newListings,
-      description: 'All active and inactive listings',
+      description: isMk ? 'Сите активни и неактивни огласи' : 'All active and inactive listings',
     },
     {
-      label: 'Promoted Listings', value: stats.promotedListings, icon: CreditCard, color: 'text-primary',
+      label: isMk ? 'Промовирани Огласи' : 'Promoted Listings', value: stats.promotedListings, icon: CreditCard, color: 'text-primary',
       bg: 'bg-secondary', border: 'border-border',
       delta: undefined,
-      description: 'Listings with active promotions',
+      description: isMk ? 'Огласи со активни промоции' : 'Listings with active promotions',
     },
     {
-      label: 'Pending Verifications', value: stats.pendingVerifications, icon: ShieldCheck, color: 'text-primary',
+      label: isMk ? 'Проверки на Чекање' : 'Pending Verifications', value: stats.pendingVerifications, icon: ShieldCheck, color: 'text-primary',
       bg: 'bg-secondary', border: 'border-border',
       delta: undefined,
-      description: 'Users awaiting ID verification',
+      description: isMk ? 'Корисници кои чекаат верификација на ИД' : 'Users awaiting ID verification',
     },
   ];
 
   const revenueItems = revenue ? [
-    { label: 'Gross Revenue',       value: `${revenue.totalRevenue?.toFixed(0) ?? '0'} MKD` },
-    { label: 'Net Revenue (ex VAT)', value: `${revenue.netRevenue?.toFixed(0) ?? '0'} MKD` },
-    { label: 'Promotion Revenue',   value: `${revenue.promotionRevenue?.toFixed(0) ?? '0'} MKD` },
-    { label: 'Subscription Revenue', value: `${revenue.verificationRevenue?.toFixed(0) ?? '0'} MKD` },
+    { label: isMk ? 'Вкупен Приход' : 'Gross Revenue',       value: `${revenue.totalRevenue?.toFixed(0) ?? '0'} MKD` },
+    { label: isMk ? 'Нето Приход (без ДДВ)' : 'Net Revenue (ex VAT)', value: `${revenue.netRevenue?.toFixed(0) ?? '0'} MKD` },
+    { label: isMk ? 'Приход од Промоции' : 'Promotion Revenue',   value: `${revenue.promotionRevenue?.toFixed(0) ?? '0'} MKD` },
+    { label: isMk ? 'Приход од Претплати' : 'Subscription Revenue', value: `${revenue.verificationRevenue?.toFixed(0) ?? '0'} MKD` },
   ] : [];
 
 
@@ -64,13 +67,13 @@ export function AdminSystemAnalyticsClient() {
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center justify-between animate-in fade-in slide-in-from-top-4 duration-500'>
         <div className='flex flex-col space-y-1 mb-6'>
            <h1 className='text-3xl font-bold tracking-tight text-foreground flex items-center gap-3'>
-             System Analytics
+             {isMk ? 'Системска Аналитика' : 'System Analytics'}
              <span className='inline-flex items-center justify-center px-2 py-1 rounded-lg bg-secondary text-foreground text-[10px] font-bold border border-border uppercase tracking-widest'>
-                Live
+                {isMk ? 'Во Живо' : 'Live'}
              </span>
            </h1>
            <p className='text-sm text-muted-foreground font-medium'>
-               Real-time platform statistics and activity metrics.
+               {isMk ? 'Статистика на платформата и метрика на активност во реално време.' : 'Real-time platform statistics and activity metrics.'}
            </p>
         </div>
         {/* Time filter for revenue section */}
@@ -87,7 +90,7 @@ export function AdminSystemAnalyticsClient() {
         <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
             <CreditCard className="w-4 h-4" />
-            Revenue — <span className="text-primary capitalize">{timeRange === 'all' ? 'All Time' : timeRange}</span>
+            {isMk ? 'Приход — ' : 'Revenue — '} <span className="text-primary capitalize">{timeRange === 'all' ? (isMk ? 'За Секогаш' : 'All Time') : (isMk ? {'today': 'денес', 'week': '7 дена', 'month': '30 дена', 'year': 'година'}[timeRange] || timeRange : timeRange)}</span>
           </h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {revenueItems.map(r => (
@@ -103,7 +106,7 @@ export function AdminSystemAnalyticsClient() {
       {/* Platform Stats (all-time) */}
       <div className='space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100'>
         <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-          <Users className="w-4 h-4" /> Platform Stats — All Time
+          <Users className="w-4 h-4" /> {isMk ? 'Статистика на Платформата — За Секогаш' : 'Platform Stats — All Time'}
         </h2>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4'>
           {statItems.map((stat, idx) => (
@@ -122,7 +125,7 @@ export function AdminSystemAnalyticsClient() {
                     stat.delta > 0 ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' : 'bg-secondary text-muted-foreground border border-border'
                   }`}>
                     {stat.delta > 0 ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
-                    +{stat.delta} today
+                    +{stat.delta} {isMk ? 'денес' : 'today'}
                   </div>
                 )}
               </div>
@@ -141,18 +144,18 @@ export function AdminSystemAnalyticsClient() {
         <CardHeader className="p-6 md:p-8 border-b border-border/40 bg-muted/20">
           <CardTitle className="text-xl font-bold flex items-center gap-3 tracking-tight">
             <Clock className="h-5 w-5 text-primary" />
-            Historical Trends
+            {isMk ? 'Историски Трендови' : 'Historical Trends'}
           </CardTitle>
-          <p className="text-sm text-muted-foreground mt-1">Activity charts and trajectory analysis over time.</p>
+          <p className="text-sm text-muted-foreground mt-1">{isMk ? 'Графикони на активност и анализа на траекторија со текот на времето.' : 'Activity charts and trajectory analysis over time.'}</p>
         </CardHeader>
         <CardContent className="p-6 md:p-8">
           <div className="flex flex-col items-center justify-center py-12 text-center bg-muted/30 rounded-lg border border-dashed border-border/60">
              <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                 <BarChart3 className="w-8 h-8 text-primary/60" />
              </div>
-             <h3 className="font-bold text-lg text-foreground mb-2">Charts Coming Soon</h3>
+             <h3 className="font-bold text-lg text-foreground mb-2">{isMk ? 'Графиконите Наскоро Доаѓаат' : 'Charts Coming Soon'}</h3>
              <p className="text-sm text-muted-foreground max-w-md mx-auto">
-               Visual charts for users, listings, revenue, and traffic over time are being compiled. More data points collect every day.
+               {isMk ? 'Визуелните графикони за корисници, огласи, приходи и сообраќај со текот на времето се компајлираат. Се собираат повеќе податоци секој ден.' : 'Visual charts for users, listings, revenue, and traffic over time are being compiled. More data points collect every day.'}
              </p>
           </div>
         </CardContent>

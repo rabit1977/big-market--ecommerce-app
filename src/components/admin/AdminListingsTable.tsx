@@ -31,7 +31,7 @@ import {
 } from '@/components/ui/table';
 import { cn, formatCurrency } from '@/lib/utils';
 import { Check, CheckCircle, Clock, Eye, MoreHorizontal, Pencil, Trash2, XCircle } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -45,6 +45,7 @@ interface AdminListingsTableProps {
 
 export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTableProps) {
   const router = useRouter();
+  const locale = useLocale();
   const t = useTranslations('AdminControls');
   const [isPending, startTransition] = useTransition();
 
@@ -112,7 +113,7 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
           case 'PENDING_APPROVAL':
               return <Badge className="bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 border-amber-500/20 gap-1"><Clock className="w-3 h-3" /> {t('status_pending')}</Badge>;
           case 'REJECTED':
-              return <Badge variant="destructive" className="gap-1"><XCircle className="w-3 h-3" /> Rejected</Badge>;
+              return <Badge variant="destructive" className="gap-1"><XCircle className="w-3 h-3" /> {t('status_rejected')}</Badge>;
           default:
               return <Badge variant="outline">{status}</Badge>;
       }
@@ -162,7 +163,7 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                                 className="object-cover" 
                             />
                         ) : (
-                            <div className="flex bg-muted h-full w-full items-center justify-center text-[10px] text-muted-foreground">No Img</div>
+                            <div className="flex bg-muted h-full w-full items-center justify-center text-[10px] text-muted-foreground">{t('no_image_placeholder')}</div>
                         )}
                     </div>
                   </TableCell>
@@ -192,13 +193,23 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                     <>
                         <TableCell>
                             <Badge variant="outline" className="border-primary/20 bg-primary/5 text-primary text-[10px] font-bold uppercase tracking-wider">
-                                {(listing.promotionTier || 'Standard').replace(/_/g, ' ')}
+                                {(() => {
+                                    const tier = listing.promotionTier || 'Standard';
+                                    switch (tier) {
+                                        case 'HOMEPAGE_SPOTLIGHT': return t('tier_homepage_spotlight');
+                                        case 'PREMIUM_SIDEBAR_BOOST': return t('tier_sidebar_boost');
+                                        case 'ELITE_PRIORITY_PLACEMENT': return t('tier_priority_placement');
+                                        case 'DAILY_REFRESH': return t('tier_daily_refresh');
+                                        case 'Standard': return t('tier_standard');
+                                        default: return tier.replace(/_/g, ' ');
+                                    }
+                                })()}
                             </Badge>
                         </TableCell>
                         <TableCell className="text-xs font-medium">
                              {listing.promotionExpiresAt ? (
                                 <div className={cn("flex flex-col", isExpired ? "text-destructive font-bold" : "text-emerald-600 font-bold")}>
-                                    <span>{new Date(listing.promotionExpiresAt).toLocaleDateString()}</span>
+                                    <span>{new Date(listing.promotionExpiresAt).toLocaleDateString(locale === 'mk' ? 'mk-MK' : 'en-US')}</span>
                                     <span className="text-[10px] opacity-80 font-normal">
                                         {isExpired ? t('expired') : t('days_left', { count: daysLeft })}
                                     </span>
@@ -211,13 +222,13 @@ export function AdminListingsTable({ listings, isPromotedView }: AdminListingsTa
                   )}
 
                   <TableCell className="text-xs font-medium text-muted-foreground whitespace-nowrap">
-                    {new Date(listing._creationTime).toLocaleDateString(undefined, {
+                    {new Date(listing._creationTime).toLocaleDateString(locale === 'mk' ? 'mk-MK' : 'en-US', {
                         year: 'numeric',
                         month: 'short',
                         day: 'numeric',
                     })}
                     <span className="block text-[10px] opacity-70">
-                        {new Date(listing._creationTime).toLocaleTimeString(undefined, {
+                        {new Date(listing._creationTime).toLocaleTimeString(locale === 'mk' ? 'mk-MK' : 'en-US', {
                             hour: '2-digit',
                             minute: '2-digit'
                         })}
