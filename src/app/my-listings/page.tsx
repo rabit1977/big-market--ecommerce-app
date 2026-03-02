@@ -1,7 +1,7 @@
 
 import { getMyListingsAction } from '@/actions/listing-actions';
 import { MyListingsDashboardHeader } from '@/components/listing/dashboard-header';
-import { MyListingListItem } from '@/components/listing/my-listing-list-item';
+import { MyListingCard } from '@/components/listing/my-listing-card';
 import { MyListingsSearch } from '@/components/listing/my-listings-search';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
@@ -46,6 +46,16 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
       return <div className="p-8 text-center text-destructive font-bold text-sm uppercase tracking-wide">Error loading listings: {error}</div>;
   }
 
+  // Sort listings: Promoted first, then by creation date
+  const sortedListings = listings?.sort((a, b) => {
+      const aPromoted = a.isPromoted && a.promotionExpiresAt && a.promotionExpiresAt > Date.now();
+      const bPromoted = b.isPromoted && b.promotionExpiresAt && b.promotionExpiresAt > Date.now();
+      
+      if (aPromoted && !bPromoted) return -1;
+      if (!aPromoted && bPromoted) return 1;
+      return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+  });
+
   return (
     <div className='min-h-screen pt-12 md:pt-20 pb-32 bg-background'>
       <div className='container max-w-6xl mx-auto px-4'>
@@ -79,10 +89,10 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
               </div>
             </div>
 
-            {listings && listings.length > 0 ? (
-                <div className='grid grid-cols-1 gap-6 md:gap-8'>
-                    {listings.map((listing: ListingWithRelations) => (
-                        <MyListingListItem key={listing.id} listing={listing} />
+            {sortedListings && sortedListings.length > 0 ? (
+                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8'>
+                    {sortedListings.map((listing: ListingWithRelations) => (
+                        <MyListingCard key={listing.id} listing={listing} />
                     ))}
                 </div>
             ) : (
