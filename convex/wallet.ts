@@ -12,6 +12,31 @@ export const getTransactions = query({
   },
 });
 
+/**
+ * Returns all promotion transactions for a specific listing owned by userId.
+ * Used to generate single-listing payment receipts on "My Listings".
+ */
+export const getTransactionsForListing = query({
+  args: { userId: v.string(), listingId: v.string() },
+  handler: async (ctx, args) => {
+    const all = await ctx.db
+      .query("transactions")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .order("desc")
+      .collect();
+
+    // Filter to promotion transactions that reference this listing in metadata
+    return all.filter((t) => {
+      const meta = (t.metadata as any) ?? {};
+      return (
+        (t.type === 'PROMOTION' || t.type === 'LISTING_PROMOTION') &&
+        meta.listingId === args.listingId
+      );
+    });
+  },
+});
+
+
 export const topUp = mutation({
   args: {
     userId: v.string(),

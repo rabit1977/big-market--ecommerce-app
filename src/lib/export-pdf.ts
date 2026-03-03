@@ -154,6 +154,15 @@ export function exportToPdf(opts: PdfOptions): void {
     },
   });
 
-  // ── Download ───────────────────────────────────────────────────────────
-  doc.save(`${filename}.pdf`);
+  // ── Download — arraybuffer + explicit PDF MIME guarantees .pdf, not .tmp ──
+  const buffer  = doc.output('arraybuffer');
+  const pdfBlob = new Blob([buffer], { type: 'application/pdf' });
+  const url     = URL.createObjectURL(pdfBlob);
+  const a       = document.createElement('a');
+  a.href        = url;
+  a.download    = `${filename}.pdf`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 10_000);
 }

@@ -20,13 +20,17 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { api } from '@/convex/_generated/api';
 import { PRICING } from '@/lib/constants/pricing';
 import { getPromotionConfig } from '@/lib/constants/promotions';
+import { exportReceiptPdf } from '@/lib/export-receipt-pdf';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn, formatCurrency } from '@/lib/utils';
+import { useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
 import { AlertTriangle, BarChart2, Clock, Edit, ExternalLink, MoreVertical, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -43,6 +47,15 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
     const [renewalStats, setRenewalStats] = useState<any>(null);
     const [isStatsLoading, setIsStatsLoading] = useState(false);
     const [isRenewDialogOpen, setIsRenewDialogOpen] = useState(false);
+    const { data: session } = useSession();
+    const userId = session?.user?.id ?? '';
+
+    // Fetch promotion transactions for this listing (only runs when userId is available)
+    const listingTransactions = useQuery(
+        api.wallet.getTransactionsForListing,
+        userId ? { userId, listingId: listing.id! } : 'skip'
+    );
+    const hasReceipt = (listingTransactions?.length ?? 0) > 0;
 
     const handleDelete = async () => {
         startTransition(async () => {
@@ -83,6 +96,40 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
              } else {
                  toast.error(res.error || t('failed_to_renew'));
              }
+        });
+    };
+
+    const handleDownloadReceipt = () => {
+        const tx = listingTransactions?.[0];
+        if (!tx) {
+            toast.error('No payment record found for this listing.');
+            return;
+        }
+        const meta = (tx.metadata as any) ?? {};
+        const receiptNum = `RCP-${new Date(tx.createdAt).getFullYear()}${String(new Date(tx.createdAt).getMonth() + 1).padStart(2, '0')}${String(new Date(tx.createdAt).getDate()).padStart(2, '0')}-${tx._id.slice(-6).toUpperCase()}`;
+        exportReceiptPdf({
+            platformName:     'Pazar.mk',
+            platformEmail:    'info@pazar.mk',
+            receiptNumber:    receiptNum,
+            generatedAt:      Date.now(),
+            customerName:     session?.user?.name ?? meta.customer_name ?? 'Customer',
+            customerEmail:    session?.user?.email ?? meta.customer_email ?? '',
+            customerId:       userId,
+            listingId:        listing.id!,
+            listingTitle:     listing.title,
+            listingCategory:  (listing as any).category,
+            listingCity:      (listing as any).city,
+            listingNumber:    (listing as any).listingNumber,
+            packageName:      meta.packageName ?? meta.tier ?? listing.promotionTier ?? '—',
+            promotionTier:    listing.promotionTier ?? undefined,
+            durationDays:     meta.durationDays,
+            promotionStart:   listing.promotionExpiresAt ? listing.promotionExpiresAt - ((meta.durationDays ?? 30) * 86400000) : undefined,
+            promotionEnd:     listing.promotionExpiresAt ?? undefined,
+            amountPaid:       Math.abs(tx.amount),
+            currency:         'MKD',
+            stripeId:         tx.stripeId,
+            paymentStatus:    tx.status ?? 'COMPLETED',
+            paymentMethod:    'Card (Stripe)',
         });
     };
 
@@ -150,6 +197,7 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
                         </Link>
                     </DropdownMenuItem>
                     
+
                     <div className="h-px bg-card-foreground/5 my-2 mx-1" />
 
                     <AlertDialog>
@@ -278,6 +326,18 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
                         </AlertDialogFooter>
                     </AlertDialogContent>
                  </AlertDialog>
+
+                 {/* Receipt download — only visible when a promotion payment exists */}
+                 {hasReceipt && (
+                     <Button
+                         variant="outline"
+                         className="w-full border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-black h-12 text-xs uppercase tracking-[0.2em] rounded-2xl transition-all active:scale-95 shadow-none"
+                         onClick={handleDownloadReceipt}
+                     >
+                         <Download className="w-4 h-4 mr-3" />
+                         Download Receipt
+                     </Button>
+                 )}
             </div>
         </div>
       </motion.div>
