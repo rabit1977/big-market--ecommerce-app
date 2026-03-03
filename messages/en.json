@@ -281,7 +281,8 @@
     "renew_for_days": "Renew this listing for another 30 days for {price} MKD.",
     "renew_now": "Renew Now",
     "cancel": "Cancel",
-    "will_be_moved_to_bin": "will be moved to the recycle bin."
+    "will_be_moved_to_bin": "will be moved to the recycle bin.",
+    "view_live": "View Live"
   },
   "Dashboard": {
     "available_balance": "Available Balance",
