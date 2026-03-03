@@ -21,6 +21,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { api } from '@/convex/_generated/api';
+import { Id } from '@/convex/_generated/dataModel';
 import { PRICING } from '@/lib/constants/pricing';
 import { getPromotionConfig } from '@/lib/constants/promotions';
 import { exportReceiptPdf } from '@/lib/export-receipt-pdf';
@@ -29,7 +30,7 @@ import { cn, formatCurrency } from '@/lib/utils';
 import { useQuery } from 'convex/react';
 import { formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
-import { AlertTriangle, BarChart2, Clock, Edit, ExternalLink, MoreVertical, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
+import { AlertTriangle, BarChart2, Clock, Download, Edit, ExternalLink, Eye, Heart, MessageSquare, MoreVertical, MousePointerClick, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -56,6 +57,12 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
         userId ? { userId, listingId: listing.id! } : 'skip'
     );
     const hasReceipt = (listingTransactions?.length ?? 0) > 0;
+
+    // Per-listing quick stats — live, real-time from Convex
+    const quickStats = useQuery(
+        api.analytics.getListingQuickStats,
+        listing.id ? { listingId: listing.id as Id<'listings'> } : 'skip'
+    );
 
     const handleDelete = async () => {
         startTransition(async () => {
@@ -261,6 +268,58 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
                     <Clock className="w-3.5 h-3.5" />
                     {formatDistanceToNow(new Date(listing.createdAt || 0), { addSuffix: true })}
                 </div>
+            </div>
+            {/* ── Live Analytics Strip ─────────────────────────────── */}
+            <div className="mb-4 bg-muted/40 border border-card-foreground/5 rounded-2xl p-3">
+                <div className="grid grid-cols-4 gap-1 text-center">
+                    {/* Views */}
+                    <div className="flex flex-col items-center gap-0.5">
+                        <div className="flex items-center gap-1 text-orange-500">
+                            <Eye className="w-3 h-3" />
+                        </div>
+                        <span className="font-black text-sm text-foreground leading-none">
+                            {quickStats === undefined ? '—' : (quickStats.viewCount ?? 0)}
+                        </span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Views</span>
+                    </div>
+                    {/* Saved */}
+                    <div className="flex flex-col items-center gap-0.5 border-l border-card-foreground/5">
+                        <div className="flex items-center gap-1 text-rose-500">
+                            <Heart className="w-3 h-3" />
+                        </div>
+                        <span className="font-black text-sm text-foreground leading-none">
+                            {quickStats === undefined ? '—' : quickStats.favorites}
+                        </span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Saved</span>
+                    </div>
+                    {/* Contact Clicks */}
+                    <div className="flex flex-col items-center gap-0.5 border-l border-card-foreground/5">
+                        <div className="flex items-center gap-1 text-blue-500">
+                            <MousePointerClick className="w-3 h-3" />
+                        </div>
+                        <span className="font-black text-sm text-foreground leading-none">
+                            {quickStats === undefined ? '—' : quickStats.contactClicks}
+                        </span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Leads</span>
+                    </div>
+                    {/* Inquiries */}
+                    <div className="flex flex-col items-center gap-0.5 border-l border-card-foreground/5">
+                        <div className="flex items-center gap-1 text-emerald-500">
+                            <MessageSquare className="w-3 h-3" />
+                        </div>
+                        <span className="font-black text-sm text-foreground leading-none">
+                            {quickStats === undefined ? '—' : quickStats.inquiries}
+                        </span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Msgs</span>
+                    </div>
+                </div>
+                <Link
+                    href={`/my-listings/stats/${listing.id}`}
+                    className="flex items-center justify-center gap-1.5 mt-2.5 pt-2 border-t border-card-foreground/5 text-[9px] font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
+                >
+                    <BarChart2 className="w-3 h-3" />
+                    Full Analytics
+                </Link>
             </div>
 
             {/* Main Action Buttons */}

@@ -201,3 +201,46 @@ export const getDetailedListingStats = query({
     };
   },
 });
+
+/**
+ * Lightweight query returning the key numbers for a single listing card.
+ * Used by the inline stats strip on My Listings page.
+ */
+export const getListingQuickStats = query({
+  args: { listingId: v.id("listings") },
+  handler: async (ctx, args) => {
+    // Favorites saved by other users
+    const favorites = await ctx.db
+      .query("favorites")
+      .withIndex("by_listing", (q) => q.eq("listingId", args.listingId))
+      .collect();
+
+    // Total contact/call clicks from analytics
+    const allEvents = await ctx.db
+      .query("analytics")
+      .withIndex("by_listing", (q) => q.eq("listingId", args.listingId))
+      .collect();
+
+    const contactClicks = allEvents.filter(
+      (e) => e.eventType === "click_contact" || e.eventType === "click_call"
+    ).length;
+
+    // Listing inquiries (messages from buyers)
+    const inquiries = await ctx.db
+      .query("listingInquiries")
+      .withIndex("by_listing", (q) => q.eq("listingId", args.listingId))
+      .collect();
+
+    // viewCount is stored directly on the listing
+    const listing = await ctx.db.get(args.listingId);
+    const viewCount = (listing as any)?.viewCount ?? 0;
+
+    return {
+      viewCount,
+      favorites: favorites.length,
+      contactClicks,
+      inquiries: inquiries.length,
+    };
+  },
+});
+
