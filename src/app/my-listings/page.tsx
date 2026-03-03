@@ -2,6 +2,7 @@
 import { getMyListingsAction } from '@/actions/listing-actions';
 import { MyListingsDashboardHeader } from '@/components/listing/dashboard-header';
 import { MyListingCard } from '@/components/listing/my-listing-card';
+import { MyListingsExportButton } from '@/components/listing/my-listings-export-button';
 import { MyListingsSearch } from '@/components/listing/my-listings-search';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
@@ -80,6 +81,9 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
                         <MyListingsSearch />
                       </div>
                   </Suspense>
+                  {sortedListings && sortedListings.length > 0 && (
+                      <MyListingsExportButton listings={sortedListings} />
+                  )}
                   <Button asChild size="lg" className="w-full sm:w-auto gap-3 rounded-2xl font-black bg-primary hover:bg-primary/95 shrink-0 h-14 text-xs px-10 uppercase tracking-[0.2em] transition-all shadow-xl shadow-primary/10 active:scale-95 border border-primary/20">
                       <Link href="/sell">
                           <Plus className="h-5 w-5" />
