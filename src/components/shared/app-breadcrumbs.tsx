@@ -38,6 +38,8 @@ const segmentToKey: Record<string, string> = {
   success:                   'success',
   admin:                     'admin',
   dashboard:                 'dashboard',
+  users:                     'users',
+  create:                    'create',
   store:                     'store',
   help:                      'help',
   'getting-started':         'getting_started',

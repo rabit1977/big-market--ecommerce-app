@@ -3,6 +3,7 @@
 import { AdminFilterToolbar, AdminPagination, getSinceFromRange, TimeRange } from '@/components/admin/admin-filter-toolbar';
 import { UsersDataTable } from '@/components/admin/users-data-table';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { api } from '@/convex/_generated/api';
 import { useQuery } from 'convex/react';
 import { Loader2, Shield, User as UserIcon, UserPlus, Users } from 'lucide-react';
@@ -178,25 +179,29 @@ export function UsersClientPage() {
         {/* Row 2: status + role + result count — always in its own wrapping row */}
         <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-border/30">
           <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">{t('filter_by')}</span>
-          <select
-              value={statusFilter}
-              onChange={e => { setStatus(e.target.value); setPage(1); }}
-              className="h-8 px-2 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:border-primary/50 font-bold cursor-pointer"
-          >
-              <option value="ALL">{t('all_statuses')}</option>
-              <option value="ACTIVE">{t('status_active')}</option>
-              <option value="PENDING_APPROVAL">{t('status_pending')}</option>
-              <option value="SUSPENDED">{t('suspended')}</option>
-          </select>
-          <select
-              value={roleFilter}
-              onChange={e => { setRole(e.target.value); setPage(1); }}
-              className="h-8 px-2 text-xs bg-muted/40 border border-border/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 font-medium cursor-pointer"
-          >
-              <option value="ALL">{t('all_roles')}</option>
-              <option value="ADMIN">{t('admins_only')}</option>
-              <option value="USER">{t('users_only')}</option>
-          </select>
+
+          <Select value={statusFilter} onValueChange={(v) => { setStatus(v); setPage(1); }}>
+            <SelectTrigger className="h-8 w-auto min-w-[130px] text-xs font-bold bg-muted/40 border-border/50 rounded-lg shadow-none">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">{t('all_statuses')}</SelectItem>
+              <SelectItem value="ACTIVE">{t('status_active')}</SelectItem>
+              <SelectItem value="PENDING_APPROVAL">{t('status_pending')}</SelectItem>
+              <SelectItem value="SUSPENDED">{t('suspended')}</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={roleFilter} onValueChange={(v) => { setRole(v); setPage(1); }}>
+            <SelectTrigger className="h-8 w-auto min-w-[130px] text-xs font-bold bg-muted/40 border-border/50 rounded-lg shadow-none">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">{t('all_roles')}</SelectItem>
+              <SelectItem value="ADMIN">{t('admins_only')}</SelectItem>
+              <SelectItem value="USER">{t('users_only')}</SelectItem>
+            </SelectContent>
+          </Select>
 
           <span className="text-xs text-muted-foreground ml-auto shrink-0">
             <span className="font-bold text-foreground">{sorted.length}</span> {isMk ? 'од' : 'of'} <span className="font-bold text-foreground">{users.length}</span> {isMk ? 'корисници' : 'users'}

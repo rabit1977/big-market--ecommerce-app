@@ -4,6 +4,7 @@ import { createUserAction } from '@/actions/user-actions';
 import { UserForm } from '@/components/admin/user-form';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Info, UserPlus } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useTransition } from 'react';
@@ -18,6 +19,7 @@ interface CreateUserFormValues {
 }
 
 export default function CreateUserPage() {
+  const t = useTranslations('AdminUsers');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -26,17 +28,17 @@ export default function CreateUserPage() {
       try {
         const result = await createUserAction(values);
         if (result.success) {
-          toast.success(result.message ?? 'User created successfully');
+          toast.success(result.message ?? t('toast_created'));
           router.push('/admin/users');
           router.refresh();
         } else {
-          toast.error(result.error ?? 'Failed to create user');
+          toast.error(result.error ?? t('toast_create_failed'));
         }
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : 'An unexpected error occurred');
+        toast.error(error instanceof Error ? error.message : t('toast_unexpected'));
       }
     });
-  }, [router]);
+  }, [router, t]);
 
   return (
     <div className='max-w-4xl mx-auto pb-20'>
@@ -44,7 +46,7 @@ export default function CreateUserPage() {
         <Button variant='ghost' asChild className='hover:bg-secondary rounded-lg mb-6 -ml-3'>
           <Link href='/admin/users'>
             <ArrowLeft className='h-4 w-4 mr-2' />
-            Back to Users
+            {t('back_to_users')}
           </Link>
         </Button>
         <div className='flex items-center gap-4'>
@@ -53,10 +55,10 @@ export default function CreateUserPage() {
           </div>
           <div>
             <h1 className='text-3xl sm:text-4xl font-black tracking-tight text-foreground'>
-              Create New User
+              {t('create_page_title')}
             </h1>
             <p className='text-lg text-muted-foreground font-medium mt-1'>
-              Add a new user account to the system
+              {t('create_page_desc')}
             </p>
           </div>
         </div>
@@ -70,12 +72,12 @@ export default function CreateUserPage() {
         <div className='p-6 rounded-lg border border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-950/20 max-w-2xl animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200'>
           <h3 className='text-base font-bold flex items-center gap-2 mb-3 text-blue-800 dark:text-blue-300'>
             <Info className="h-4 w-4" />
-            Password Requirements
+            {t('password_req_title')}
           </h3>
           <ul className='list-disc list-inside space-y-1 text-sm text-blue-700/80 dark:text-blue-300/80'>
-            <li>Minimum 6 characters long</li>
-            <li>Users will be able to change their password after first login</li>
-            <li>Admin accounts have elevated privileges</li>
+            <li>{t('password_req_min')}</li>
+            <li>{t('password_req_change')}</li>
+            <li>{t('password_req_admin')}</li>
           </ul>
         </div>
       </div>

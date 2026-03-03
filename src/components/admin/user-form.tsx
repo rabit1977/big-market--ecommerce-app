@@ -21,21 +21,17 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Save } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-/**
- * Form validation schema
- */
-const userFormSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  role: z.enum(['USER', 'ADMIN']),
-  bio: z.string().optional(),
-});
-
-type UserFormValues = z.infer<typeof userFormSchema>;
+type UserFormValues = {
+  name: string;
+  email: string;
+  password: string;
+  role: 'USER' | 'ADMIN';
+  bio?: string;
+};
 
 interface UserFormProps {
   onSubmit: (values: UserFormValues) => void | Promise<void>;
@@ -44,10 +40,20 @@ interface UserFormProps {
 
 /**
  * User Form Component
- * 
+ *
  * Form for creating new users with validation
  */
 export function UserForm({ onSubmit, isSubmitting }: UserFormProps) {
+  const t = useTranslations('AdminUsers');
+
+  const userFormSchema = z.object({
+    name: z.string().min(2, t('zod_name_min')),
+    email: z.string().email(t('zod_email_invalid')),
+    password: z.string().min(6, t('zod_password_min')),
+    role: z.enum(['USER', 'ADMIN']),
+    bio: z.string().optional(),
+  });
+
   const form = useForm<UserFormValues>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(userFormSchema) as any,
@@ -69,16 +75,16 @@ export function UserForm({ onSubmit, isSubmitting }: UserFormProps) {
           name='name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full Name</FormLabel>
+              <FormLabel>{t('field_name_label')}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder='John Doe'
+                  placeholder={t('field_name_placeholder')}
                   {...field}
                   disabled={isSubmitting}
                 />
               </FormControl>
               <FormDescription>
-                The user&apos;s full name as it will appear in the system
+                {t('field_name_desc')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -91,17 +97,17 @@ export function UserForm({ onSubmit, isSubmitting }: UserFormProps) {
           name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email Address</FormLabel>
+              <FormLabel>{t('field_email_label')}</FormLabel>
               <FormControl>
                 <Input
                   type='email'
-                  placeholder='john@example.com'
+                  placeholder={t('field_email_placeholder')}
                   {...field}
                   disabled={isSubmitting}
                 />
               </FormControl>
               <FormDescription>
-                Must be a valid email address for account verification
+                {t('field_email_desc_create')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -114,7 +120,7 @@ export function UserForm({ onSubmit, isSubmitting }: UserFormProps) {
           name='password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t('field_password_label')}</FormLabel>
               <FormControl>
                 <Input
                   type='password'
@@ -124,7 +130,7 @@ export function UserForm({ onSubmit, isSubmitting }: UserFormProps) {
                 />
               </FormControl>
               <FormDescription>
-                Minimum 6 characters. User can change this later.
+                {t('field_password_desc')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -137,7 +143,7 @@ export function UserForm({ onSubmit, isSubmitting }: UserFormProps) {
           name='role'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Account Role</FormLabel>
+              <FormLabel>{t('field_role_label')}</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
@@ -145,16 +151,16 @@ export function UserForm({ onSubmit, isSubmitting }: UserFormProps) {
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder='Select a role' />
+                    <SelectValue placeholder={t('field_role_placeholder')} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value='USER'>User (Standard Access)</SelectItem>
-                  <SelectItem value='ADMIN'>Admin (Full Access)</SelectItem>
+                  <SelectItem value='USER'>{t('role_user')}</SelectItem>
+                  <SelectItem value='ADMIN'>{t('role_admin')}</SelectItem>
                 </SelectContent>
               </Select>
               <FormDescription>
-                Admin users have full access to all features
+                {t('field_role_desc')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -167,10 +173,10 @@ export function UserForm({ onSubmit, isSubmitting }: UserFormProps) {
           name='bio'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Biography (Optional)</FormLabel>
+              <FormLabel>{t('field_bio_label')}</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder='Tell us a bit about this user...'
+                  placeholder={t('field_bio_placeholder')}
                   className='resize-none'
                   rows={4}
                   {...field}
@@ -178,7 +184,7 @@ export function UserForm({ onSubmit, isSubmitting }: UserFormProps) {
                 />
               </FormControl>
               <FormDescription>
-                Optional biography or notes about the user
+                {t('field_bio_desc')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -193,18 +199,18 @@ export function UserForm({ onSubmit, isSubmitting }: UserFormProps) {
             onClick={() => form.reset()}
             disabled={isSubmitting}
           >
-            Reset Form
+            {t('btn_reset')}
           </Button>
           <Button type='submit' disabled={isSubmitting}>
             {isSubmitting ? (
               <>
                 <Loader2 className='h-4 w-4 mr-2 animate-spin' />
-                Creating User...
+                {t('btn_creating')}
               </>
             ) : (
               <>
                 <Save className='h-4 w-4 mr-2' />
-                Create User
+                {t('btn_create')}
               </>
             )}
           </Button>

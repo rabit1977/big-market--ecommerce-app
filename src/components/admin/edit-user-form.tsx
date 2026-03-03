@@ -23,23 +23,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { User } from '@/lib/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Save } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
 
-/**
- * Form validation schema
- */
-const editUserFormSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  role: z.enum(['USER', 'ADMIN']),
-  bio: z.string().optional(),
-});
-
-type EditUserFormValues = z.infer<typeof editUserFormSchema>;
+type EditUserFormValues = {
+  name: string;
+  email: string;
+  role: 'USER' | 'ADMIN';
+  bio?: string;
+};
 
 interface EditUserFormProps {
   user: User;
@@ -50,8 +46,16 @@ export function EditUserForm({
   user,
   isEditingSelf = false,
 }: EditUserFormProps) {
+  const t = useTranslations('AdminUsers');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+
+  const editUserFormSchema = z.object({
+    name: z.string().min(2, t('zod_name_min')),
+    email: z.string().email(t('zod_email_invalid')),
+    role: z.enum(['USER', 'ADMIN']),
+    bio: z.string().optional(),
+  });
 
   const form = useForm<EditUserFormValues>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -59,7 +63,7 @@ export function EditUserForm({
     defaultValues: {
       name: user.name || '',
       email: user.email || '',
-      role: user.role || 'USER', 
+      role: user.role || 'USER',
       bio: user.bio || '',
     },
   });
@@ -75,15 +79,15 @@ export function EditUserForm({
         });
 
         if (result.success) {
-          toast.success(result.message || 'User updated successfully');
+          toast.success(result.message || t('toast_updated'));
           router.push('/admin/users');
           router.refresh();
         } else {
-          toast.error(result.error || 'Failed to update user');
+          toast.error(result.error || t('toast_update_failed'));
         }
       } catch (error) {
         console.error('Update user error:', error);
-        toast.error('An unexpected error occurred');
+        toast.error(t('toast_unexpected'));
       }
     });
   };
@@ -97,12 +101,12 @@ export function EditUserForm({
           name='name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full Name</FormLabel>
+              <FormLabel>{t('field_name_label')}</FormLabel>
               <FormControl>
-                <Input placeholder='John Doe' {...field} disabled={isPending} />
+                <Input placeholder={t('field_name_placeholder')} {...field} disabled={isPending} />
               </FormControl>
               <FormDescription>
-                The user&apos;s full name as it appears in the system
+                {t('field_name_desc')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -115,17 +119,17 @@ export function EditUserForm({
           name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email Address</FormLabel>
+              <FormLabel>{t('field_email_label')}</FormLabel>
               <FormControl>
                 <Input
                   type='email'
-                  placeholder='john@example.com'
+                  placeholder={t('field_email_placeholder')}
                   {...field}
                   disabled={isPending}
                 />
               </FormControl>
               <FormDescription>
-                Changing email will require re-verification
+                {t('field_email_desc_edit')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -138,7 +142,7 @@ export function EditUserForm({
           name='role'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Account Role</FormLabel>
+              <FormLabel>{t('field_role_label')}</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
@@ -146,21 +150,16 @@ export function EditUserForm({
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder='Select a role' />
+                    <SelectValue placeholder={t('field_role_placeholder')} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {['USER', 'ADMIN'].map((role) => (
-                    <SelectItem key={role} value={role}>
-                      {role.charAt(0) + role.slice(1).toLowerCase()}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value='USER'>{t('role_user')}</SelectItem>
+                  <SelectItem value='ADMIN'>{t('role_admin')}</SelectItem>
                 </SelectContent>
               </Select>
               <FormDescription>
-                {isEditingSelf
-                  ? 'You cannot change your own role'
-                  : 'Admin users have full access to all features'}
+                {isEditingSelf ? t('field_role_desc_self') : t('field_role_desc')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -173,10 +172,10 @@ export function EditUserForm({
           name='bio'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Biography (Optional)</FormLabel>
+              <FormLabel>{t('field_bio_label')}</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder='Tell us a bit about this user...'
+                  placeholder={t('field_bio_placeholder')}
                   className='resize-none'
                   rows={4}
                   {...field}
@@ -197,18 +196,18 @@ export function EditUserForm({
             onClick={() => router.push('/admin/users')}
             disabled={isPending}
           >
-            Cancel
+            {t('btn_cancel')}
           </Button>
           <Button type='submit' disabled={isPending}>
             {isPending ? (
               <>
                 <Loader2 className='h-4 w-4 mr-2 animate-spin' />
-                Saving Changes...
+                {t('btn_saving')}
               </>
             ) : (
               <>
                 <Save className='h-4 w-4 mr-2' />
-                Save Changes
+                {t('btn_save')}
               </>
             )}
           </Button>

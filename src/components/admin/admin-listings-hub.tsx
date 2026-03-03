@@ -14,6 +14,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { api } from '@/convex/_generated/api';
 import { cn } from '@/lib/utils';
 import { useQuery } from 'convex/react';
@@ -196,7 +197,7 @@ export function AdminListingsHub() {
                     </p>
                 </div>
                 <Button asChild className="rounded-xl font-black uppercase tracking-widest shadow-none shrink-0 h-12 px-6 border border-primary">
-                    <Link href="/admin/listings/create">
+                    <Link href="/admin/listings/new">
                         <Package className="h-4 w-4 mr-2" />
                         {isMk ? 'Додај Оглас' : 'Add New Ad'}
                     </Link>
@@ -239,37 +240,29 @@ export function AdminListingsHub() {
                 {/* Row 2 */}
                 <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-border/30">
                     {/* Status dropdown */}
-                    <div className="relative flex items-center shrink-0">
-                        <select
-                            value={statusFilter}
-                            onChange={e => { setStatus(e.target.value); setPage(1); }}
-                            className="h-9 pl-4 pr-8 text-[10px] bg-muted/40 border-1 border-card-foreground/10 rounded-xl focus:outline-none focus:border-card-foreground/30 font-black uppercase tracking-widest appearance-none cursor-pointer text-foreground transition-all"
-                        >
-                            <option value="ALL">{isMk ? 'Сите Статуси' : 'All Statuses'}</option>
-                            <option value="ACTIVE">{isMk ? 'Активни' : 'Active'}</option>
-                            <option value="PENDING_APPROVAL">{isMk ? 'За Одобрување' : 'Pending'}</option>
-                            <option value="REJECTED">{isMk ? 'Одбиени' : 'Rejected'}</option>
-                            <option value="INACTIVE">{isMk ? 'Неактивни' : 'Inactive'}</option>
-                        </select>
-                        <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </div>
+                    <Select value={statusFilter} onValueChange={(v) => { setStatus(v); setPage(1); }}>
+                        <SelectTrigger className="h-9 w-auto min-w-[150px] text-[10px] font-black uppercase tracking-widest bg-muted/40 border-card-foreground/10 rounded-xl shadow-none">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="ALL">{isMk ? 'Сите Статуси' : 'All Statuses'}</SelectItem>
+                            <SelectItem value="ACTIVE">{isMk ? 'Активни' : 'Active'}</SelectItem>
+                            <SelectItem value="PENDING_APPROVAL">{isMk ? 'За Одобрување' : 'Pending'}</SelectItem>
+                            <SelectItem value="REJECTED">{isMk ? 'Одбиени' : 'Rejected'}</SelectItem>
+                            <SelectItem value="INACTIVE">{isMk ? 'Неактивни' : 'Inactive'}</SelectItem>
+                        </SelectContent>
+                    </Select>
 
                     {/* Promoted dropdown */}
-                    <div className="relative flex items-center shrink-0">
-                        <select
-                            value={promotedOnly ? 'promoted' : 'all'}
-                            onChange={e => { setPromoted(e.target.value === 'promoted'); setPage(1); }}
-                            className="h-9 pl-4 pr-8 text-[10px] bg-muted/40 border-1 border-card-foreground/10 rounded-xl focus:outline-none focus:border-card-foreground/30 font-black uppercase tracking-widest appearance-none cursor-pointer text-foreground transition-all"
-                        >
-                            <option value="all">{isMk ? 'Сите огласи' : 'All Listings'}</option>
-                            <option value="promoted">⭐ {isMk ? 'Само Промовирани' : 'Promoted Only'}</option>
-                        </select>
-                        <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </div>
+                    <Select value={promotedOnly ? 'promoted' : 'all'} onValueChange={(v) => { setPromoted(v === 'promoted'); setPage(1); }}>
+                        <SelectTrigger className="h-9 w-auto min-w-[150px] text-[10px] font-black uppercase tracking-widest bg-muted/40 border-card-foreground/10 rounded-xl shadow-none">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">{isMk ? 'Сите огласи' : 'All Listings'}</SelectItem>
+                            <SelectItem value="promoted">⭐ {isMk ? 'Само Промовирани' : 'Promoted Only'}</SelectItem>
+                        </SelectContent>
+                    </Select>
 
                     <span className="ml-auto text-[10px] font-black uppercase tracking-widest text-muted-foreground shrink-0">
                         <span className="text-foreground">{filtered.length}</span> / <span className="text-foreground">{total}</span>

@@ -5,11 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Listing, ListingWithRelations } from '@/lib/types/listing';
@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
 import { Loader2, Save } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react';
+import { useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { ListingImageUpload } from './listing-image-upload';
 
@@ -55,46 +55,97 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
 
   // ── Category init ─────────────────────────────────────────────────────────
 
-  // Find the initial category once on mount — stable ref avoids re-running on every render
-  const initialCatRef = useRef<Category | null>(null);
+  // Helper: find a category in the list by slug, name, or id
+  function findCatByVal(val: string | undefined): Category | null {
+    if (!val) return null;
+    const normalised = val.toLowerCase().trim();
+    return categories.find((c) => {
+      const id = getCategoryId(c).toLowerCase();
+      const name = c.name.toLowerCase();
+      const slug = (c.slug ?? '').toLowerCase();
+      return (
+        id === normalised ||
+        name === normalised ||
+        slug === normalised ||
+        name.replace('&', 'and').replace(/\s+/g, '-') === normalised.replace(/\s+/g, '-')
+      );
+    }) ?? null;
+  }
 
-  if (!initialCatRef.current && initialData) {
-    const findCat = (val: string | undefined) => {
-      if (!val) return null;
-      const normalised = String(val).toLowerCase().trim();
-      return categories.find((c) => {
-        const id = getCategoryId(c).toLowerCase();
-        const name = c.name.toLowerCase();
-        const slug = (c.slug ?? '').toLowerCase();
-        return (
-          id === normalised ||
-          name === normalised ||
-          slug === normalised ||
-          name.replace('&', 'and').replace(/\s+/g, '-') === normalised.replace(/\s+/g, '-')
-        );
-      }) ?? null;
+  // Compute initial category IDs. This function is stable because it is only
+  // called once by useState (lazy initializer pattern).
+  function computeInitCatIds() {
+    const subCat = findCatByVal(initialData?.subCategory ?? undefined);
+    const mainCat = findCatByVal(initialData?.category ?? undefined);
+
+    if (!mainCat && !subCat) return { mainId: '', subId: '', selId: '' };
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+
+    // Walk up the tree recursively to find the true root (no parentId)
+    function findRootAncestor(cat: Category): Category {
+      const pid = cat.parentId;
+      if (!pid || pid === 'null' || pid === 'undefined') return cat;
+      const parent = categories.find(
+        (c) => getCategoryId(c) === pid || c.slug === pid,
+      );
+      if (!parent) return cat;
+      return findRootAncestor(parent);
+    }
+
+    // Walk from `cat` upward and return the direct child of `rootId`
+    function findDirectChildOfRoot(cat: Category, rootId: string): Category {
+      const pid = cat.parentId;
+      if (!pid || pid === 'null' || pid === 'undefined') return cat;
+      const parent = categories.find(
+        (c) => getCategoryId(c) === pid || c.slug === pid,
+      );
+      if (!parent) return cat;
+      if (getCategoryId(parent) === rootId) return cat; // `cat` is the direct child
+      return findDirectChildOfRoot(parent, rootId);
+    }
+
+    // ── Logic ─────────────────────────────────────────────────────────────────
+
+    // Use the stored `category` field as the primary reference; fall back to subCat
+    const refCat = mainCat ?? subCat!;
+    const root = findRootAncestor(refCat);
+    const rootId = getCategoryId(root);
+
+    if (getCategoryId(refCat) === rootId) {
+      // refCat IS already the root (top-level selection, e.g. "real-estate")
+      // The stored subCategory is its direct child
+      const subId = subCat ? getCategoryId(subCat) : '';
+      return { mainId: rootId, subId, selId: subId || rootId };
+    }
+
+    // refCat is a child/grandchild of root.
+    // Find the direct child of root along the ancestor path.
+    const directChild = findDirectChildOfRoot(refCat, rootId);
+
+    // selId: use the most specific item available for template loading
+    const selId = subCat ? getCategoryId(subCat) : getCategoryId(directChild);
+
+    return {
+      mainId: rootId,
+      subId: getCategoryId(directChild),
+      selId,
     };
-    initialCatRef.current = findCat(initialData.subCategory) ?? findCat(initialData.category);
   }
 
-  const initCat = initialCatRef.current;
-  const initCatId = initCat ? getCategoryId(initCat) : '';
-  
-  // Robustly resolve parent category, in case the database contains a slug instead of an ID
-  let rawParentRef = initCat?.parentId || '';
-  let parentCat = null;
-  if (rawParentRef) {
-      parentCat = categories.find(c => getCategoryId(c) === rawParentRef || c.slug === rawParentRef);
-  }
-  
-  // If it has a parent, the main ID is the parent's ID, and sub ID is the category's ID.
-  // Otherwise, the category itself is the main ID, and sub ID is empty.
-  const initMainId = parentCat ? getCategoryId(parentCat) : (initCat ? getCategoryId(initCat) : '');
-  const initSubId = parentCat ? initCatId : '';
+  const [mainCatId, setMainCatId] = useState(() => computeInitCatIds().mainId);
+  const [subCatId, setSubCatId] = useState(() => computeInitCatIds().subId);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(() => computeInitCatIds().selId);
 
-  const [mainCatId, setMainCatId] = useState(initMainId);
-  const [subCatId, setSubCatId] = useState(initSubId);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(initCatId);
+  // Keep category state in sync if categories load asynchronously (edge case)
+  useEffect(() => {
+    if (!initialData) return;
+    const { mainId, subId, selId } = computeInitCatIds();
+    if (mainId && !mainCatId) setMainCatId(mainId);
+    if (subId && !subCatId) setSubCatId(subId);
+    if (selId && !selectedCategoryId) setSelectedCategoryId(selId);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categories.length]);
 
   const [templateFields, setTemplateFields] = useState<any[]>([]);
   const [titlePlaceholder, setTitlePlaceholder] = useState(DEFAULT_TITLE_PLACEHOLDER);
@@ -140,13 +191,20 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
 
   // Load template for initial category on mount
   useEffect(() => {
-    if (initCatId) loadTemplate(initCatId);
+    if (selectedCategoryId) loadTemplate(selectedCategoryId);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // intentionally run once on mount
 
   // ── Derived category data ─────────────────────────────────────────────────
 
-  const mainCategories = useMemo(() => categories.filter((c) => !c.parentId), [categories]);
+  const mainCategories = useMemo(() => {
+    // A main category is one that has no parent, or its parentId was mistakenly saved as 'null'.
+    // We also make sure the currently resolved parentCat is included if it somehow has a parentId.
+    return categories.filter((c) => {
+      const isRoot = !c.parentId || c.parentId === 'null' || c.parentId === 'undefined';
+      return isRoot || getCategoryId(c) === mainCatId;
+    });
+  }, [categories, mainCatId]);
   const subCategories = useMemo(() => {
     const parent = categories.find((c) => getCategoryId(c) === mainCatId || c.slug === mainCatId);
     if (!parent) return [];

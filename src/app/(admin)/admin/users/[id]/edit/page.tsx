@@ -14,6 +14,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { ArrowLeft, Shield } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 
@@ -23,7 +24,7 @@ interface EditUserPageProps {
 
 /**
  * Edit User Page - Server Component
- * 
+ *
  * Admin interface for editing user details
  */
 export default async function EditUserPage({ params }: EditUserPageProps) {
@@ -36,8 +37,11 @@ export default async function EditUserPage({ params }: EditUserPageProps) {
   // Await params in Next.js 15
   const { id } = await params;
 
-  // Fetch user data
-  const result = await getUserByIdAction(id);
+  // Fetch user data & translations in parallel
+  const [result, t] = await Promise.all([
+    getUserByIdAction(id),
+    getTranslations('AdminUsers'),
+  ]);
 
   if (!result.success || !result.data) {
     notFound();
@@ -54,26 +58,26 @@ export default async function EditUserPage({ params }: EditUserPageProps) {
           <Button variant='ghost' asChild>
             <Link href='/admin/users'>
               <ArrowLeft className='h-4 w-4 mr-2' />
-              Back to Users
+              {t('back_to_users')}
             </Link>
           </Button>
 
           <div className='flex items-start gap-4'>
-            <UserAvatar 
-              user={user} 
-              className='h-16 w-16' 
+            <UserAvatar
+              user={user}
+              className='h-16 w-16'
               fallbackClassName="text-xl"
             />
             <div className='flex-1'>
               <div className='flex items-center gap-3'>
-                <h1 className='text-3xl font-bold tracking-tight'>Edit User</h1>
+                <h1 className='text-3xl font-bold tracking-tight'>{t('edit_page_title')}</h1>
                 <Badge variant={user.role === 'ADMIN' ? 'destructive' : 'secondary'}>
                   <Shield className='h-3 w-3 mr-1' />
                   {user.role}
                 </Badge>
               </div>
               <p className='text-muted-foreground mt-1'>
-                Update account information for {user.name || user.email}
+                {t('edit_page_desc', { name: user.name || user.email })}
               </p>
             </div>
           </div>
@@ -85,12 +89,11 @@ export default async function EditUserPage({ params }: EditUserPageProps) {
             <CardHeader>
               <CardTitle className='text-base flex items-center gap-2'>
                 <Shield className='h-4 w-4' />
-                Editing Your Own Account
+                {t('editing_self_title')}
               </CardTitle>
             </CardHeader>
             <CardContent className='text-sm text-muted-foreground'>
-              You are editing your own account. Be careful when changing your role or email,
-              as this may affect your access to admin features.
+              {t('editing_self_desc')}
             </CardContent>
           </Card>
         )}
@@ -98,9 +101,9 @@ export default async function EditUserPage({ params }: EditUserPageProps) {
         {/* Edit Form Card */}
         <Card>
           <CardHeader>
-            <CardTitle>User Information</CardTitle>
+            <CardTitle>{t('card_title')}</CardTitle>
             <CardDescription>
-              Update the user&apos;s account details
+              {t('card_desc')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -111,14 +114,14 @@ export default async function EditUserPage({ params }: EditUserPageProps) {
         {/* Info Card */}
         <Card className='border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-950/20'>
           <CardHeader>
-            <CardTitle className='text-base'>Important Notes</CardTitle>
+            <CardTitle className='text-base'>{t('notes_title')}</CardTitle>
           </CardHeader>
           <CardContent className='text-sm text-muted-foreground space-y-2'>
             <ul className='list-disc list-inside space-y-1'>
-              <li>Email changes will require the user to verify their new email address</li>
-              <li>Role changes take effect immediately</li>
-              <li>You cannot change your own role to prevent accidental lockout</li>
-              <li>Password can only be changed by the user for security reasons</li>
+              <li>{t('note_email')}</li>
+              <li>{t('note_role')}</li>
+              <li>{t('note_own_role')}</li>
+              <li>{t('note_password')}</li>
             </ul>
           </CardContent>
         </Card>

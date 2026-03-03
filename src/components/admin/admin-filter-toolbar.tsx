@@ -1,8 +1,9 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { Calendar, Download, RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react';
+import { Download, RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import { useCallback, useRef, useState } from 'react';
 
@@ -124,13 +125,11 @@ export function AdminFilterToolbar({
 
                 {/* Time range — compact dropdown */}
                 {showTimeRange && onTimeRangeChange && (
-                    <div className="relative flex items-center gap-1.5 shrink-0">
-                        <Calendar className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none z-10" />
-                        <select
-                            value={timeRange}
-                            onChange={e => onTimeRangeChange(e.target.value as TimeRange)}
-                            className="h-10 pl-9 pr-8 text-[10px] bg-card border-1 border-card-foreground/20 rounded-xl focus:outline-none focus:border-card-foreground/50 font-black uppercase tracking-widest appearance-none cursor-pointer text-foreground min-w-[110px] transition-all"
-                        >
+                    <Select value={timeRange} onValueChange={(v) => onTimeRangeChange(v as TimeRange)}>
+                        <SelectTrigger className="h-10 w-auto min-w-[120px] text-[10px] font-black uppercase tracking-widest bg-card border-card-foreground/20 rounded-xl shadow-none">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
                             {TIME_RANGES.map(r => {
                                 let label = r.label;
                                 if (isMk) {
@@ -140,28 +139,26 @@ export function AdminFilterToolbar({
                                     if (r.id === 'year') label = 'Година';
                                     if (r.id === 'all') label = 'За Секогаш';
                                 }
-                                return <option key={r.id} value={r.id}>{label}</option>
+                                return <SelectItem key={r.id} value={r.id}>{label}</SelectItem>;
                             })}
-                        </select>
-                        <svg className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </div>
+                        </SelectContent>
+                    </Select>
                 )}
 
                 {/* Sort */}
                 {showSort && sortOptions.length > 0 && (
                     <div className="flex items-center gap-1.5">
                         <SlidersHorizontal className="w-4 h-4 text-muted-foreground shrink-0" />
-                        <select
-                            value={sortValue}
-                            onChange={e => onSortChange?.(e.target.value)}
-                            className="h-10 pl-4 pr-9 text-[10px] bg-card border-1 border-card-foreground/20 rounded-xl focus:outline-none focus:border-card-foreground/50 font-black uppercase tracking-widest appearance-none cursor-pointer transition-all"
-                        >
-                            {sortOptions.map(opt => (
-                                <option key={opt.value} value={opt.value}>{opt.label}</option>
-                            ))}
-                        </select>
+                        <Select value={sortValue} onValueChange={(v) => onSortChange?.(v)}>
+                            <SelectTrigger className="h-10 w-auto min-w-[140px] text-[10px] font-black uppercase tracking-widest bg-card border-card-foreground/20 rounded-xl shadow-none">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {sortOptions.map(opt => (
+                                    <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
                 )}
 
