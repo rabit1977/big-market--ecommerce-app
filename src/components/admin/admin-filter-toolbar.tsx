@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { Download, RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react';
+import { FileText, RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import { useCallback, useRef, useState } from 'react';
 
@@ -170,8 +170,8 @@ export function AdminFilterToolbar({
                         onClick={onExport}
                         className="h-9 px-3 text-xs font-bold gap-1.5 shrink-0"
                     >
-                        <Download className="w-3.5 h-3.5" />
-                        {isMk ? 'Експортирај CSV' : 'Export CSV'}
+                        <FileText className="w-3.5 h-3.5" />
+                        {isMk ? 'Извези PDF' : 'Export PDF'}
                     </Button>
                 )}
 

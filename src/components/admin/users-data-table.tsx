@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { User } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { Ban, CheckCircle, Clock, Edit, Eye, MoreHorizontal, Shield, ShieldOff, Trash2, UserCog, User as UserIcon, XCircle } from 'lucide-react';
+import { Ban, CheckCircle, Clock, Edit, MoreHorizontal, Shield, ShieldOff, Trash2, UserCog, User as UserIcon, XCircle } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -229,15 +229,17 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
 
                   {/* Actions */}
                   <div className='flex items-center gap-1'>
+                    {/* Direct Edit button — always visible */}
                     <Button
                       variant='ghost'
                       size='sm'
                       asChild
                       className='h-8 w-8 p-0 rounded-lg'
+                      title={isMk ? 'Уреди корисник' : 'Edit User'}
                     >
-                      <Link href={`/admin/users/${user.id}`}>
-                        <Eye className='h-4 w-4' />
-                        <span className='sr-only'>View user</span>
+                      <Link href={`/admin/users/${user.id}/edit`}>
+                        <Edit className='h-4 w-4' />
+                        <span className='sr-only'>{isMk ? 'Уреди корисник' : 'Edit user'}</span>
                       </Link>
                     </Button>
                     
@@ -254,25 +256,6 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align='end' className='w-48'>
-                        <DropdownMenuItem asChild>
-                          <Link 
-                            href={`/admin/users/${user.id}`}
-                            className='cursor-pointer'
-                          >
-                            <Eye className='h-4 w-4 mr-2' />
-                            {isMk ? 'Прегледај детали' : 'View Details'}
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link 
-                            href={`/admin/users/${user.id}/edit`}
-                            className='cursor-pointer'
-                          >
-                            <Edit className='h-4 w-4 mr-2' />
-                            {isMk ? 'Уреди корисник' : 'Edit User'}
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
                         
                         {user.accountStatus === 'PENDING_APPROVAL' && (
                             <>
