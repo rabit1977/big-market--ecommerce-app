@@ -2,6 +2,7 @@
 
 import { ListingForm } from '@/components/sell/listing-form';
 import { ListingWithRelations } from '@/lib/types/listing';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -17,10 +18,11 @@ interface EditListingFormProps {
 }
 
 export function EditListingForm({ listing, categories }: EditListingFormProps) {
+  const t = useTranslations('Sell');
   const router = useRouter();
 
   const handleSuccess = () => {
-      toast.success('Listing updated');
+      toast.success(t('toast_updated'));
       router.push('/admin/listings');
       router.refresh();
   };

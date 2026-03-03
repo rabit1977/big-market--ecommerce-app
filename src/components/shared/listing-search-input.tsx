@@ -2,10 +2,13 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { api } from '@/convex/_generated/api';
 import { cn } from '@/lib/utils';
+import { useConvex } from 'convex/react';
 import { Loader2, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 interface ListingSearchInputProps {
   idPrefix?: string;
@@ -19,7 +22,8 @@ export function ListingSearchInput({
   className 
 }: ListingSearchInputProps) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const convex = useConvex();
+  const [isPending, setIsPending] = useState(false);
   const [value, setValue] = useState(initialValue);
 
   // Sync state if prop changes (External control)
@@ -27,17 +31,37 @@ export function ListingSearchInput({
   if (initialValue !== value) setValue(initialValue);
 }, [initialValue]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Basic validation: ensure it's a number
     const listingId = parseInt(value);
-    if (!listingId || isNaN(listingId)) return;
+    if (!listingId || isNaN(listingId)) {
+      toast.error("Please enter a valid numeric listing ID.");
+      return;
+    }
 
-    // React 19 / Next.js 15: Wrap navigation in transition
-    startTransition(() => {
-      router.push(`/listings?listingNumber=${listingId}`);
-    });
+    setIsPending(true);
+    try {
+      // Direct lookup from client
+      const directListing = await convex.query(api.listings.getByListingNumber, { 
+        listingNumber: listingId 
+      });
+
+      if (directListing) {
+        router.push(`/listings/${directListing._id}`);
+      } else {
+        // Fallback to the listings page which shows "Not Found" state
+        toast.info(`Listing ID #${listingId} not found.`);
+        router.push(`/listings?listingNumber=${listingId}`, { scroll: false });
+      }
+    } catch (error) {
+      console.error("Lookup error:", error);
+      toast.error("An error occurred while searching for the listing.");
+      router.push(`/listings?listingNumber=${listingId}`, { scroll: false });
+    } finally {
+      setIsPending(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

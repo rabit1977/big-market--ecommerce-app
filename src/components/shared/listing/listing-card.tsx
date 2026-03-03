@@ -1,12 +1,13 @@
 'use client';
 
 import { PromotionIcon } from '@/components/shared/listing/promotion-icon';
+import { SellerBadge } from '@/components/shared/seller-badge';
 import { getPromotionConfig } from '@/lib/constants/promotions';
 import { useFavorites } from '@/lib/context/favorites-context';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils/formatters';
-import { BadgeCheck, Heart, MapPin } from 'lucide-react';
+import { Heart, MapPin } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -60,8 +61,8 @@ export const ListingCard = memo(
 
         {/* Image Section - The container for the 'card' look */}
         <div className={cn(
-          "relative shrink-0 overflow-hidden z-20 bg-muted transition-all duration-150 pointer-events-none",
-          isGrid ? "aspect-square w-full rounded-t-xl" : isCard ? "aspect-video w-full rounded-t-xl" : "w-36 sm:w-40 md:w-56 h-full rounded-l-xl"
+          "relative overflow-hidden z-20 bg-muted transition-all duration-150 pointer-events-none",
+          isGrid ? "aspect-square w-full rounded-t-xl shrink-0" : isCard ? "aspect-video w-full rounded-t-xl shrink-0" : "flex-grow flex-shrink basis-10 min-w-10 max-w-54 h-full rounded-l-xl"
         )}>
 
           <Image
@@ -88,8 +89,8 @@ export const ListingCard = memo(
 
         {/* Content Section */}
         <div className={cn(
-          "flex flex-1 flex-col justify-between relative z-20 pointer-events-none min-w-0",
-          (isGrid || isCard) ? "space-y-1 p-2.5" : "px-3 py-2 md:px-4 md:py-3",
+          "flex flex-[2] flex-col justify-between relative z-20 pointer-events-none min-w-0 transition-all duration-300",
+          (isGrid || isCard) ? "space-y-1 p-2.5" : "px-3 py-2.5 sm:px-4 sm:py-3.5 md:px-5",
         )}>
            
            {(isGrid || isCard) ? (
@@ -103,7 +104,7 @@ export const ListingCard = memo(
                            {listing.title}
                         </h3>
                     <div className="flex items-center gap-1.5 flex-wrap">
-                        <SellerBadge tier={tier} isVerified={isVerified} />
+                        <SellerBadge seller={listing.user} size="sm" showLabel />
                     </div>
                     </div>
                 </div>
@@ -156,31 +157,30 @@ export const ListingCard = memo(
                 </div>
              </>
            ) : (
-             // List View Content
+             // List View Content - Redesigned for Responsive Excellence
              <>
-                <div className="space-y-1.5">
-                    <div className="flex justify-between items-start gap-2">
-                        <div className="flex flex-row items-center gap-1 min-w-0">
-                          <div className="flex items-center gap-1 shrink-0 ">
-                              <SellerBadge tier={tier} isVerified={isVerified} />
-                          </div>
-                          <h3 className="font-bold text-sm sm:text-base md:text-lg leading-tight line-clamp-2 group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground">
-
-                             {listing.title}
-                          </h3> 
+                <div className="space-y-1.5 min-w-0">
+                    <div className="flex items-center justify-between mb-0.5">
+                        <div className="flex items-center gap-1.5">
+                           <SellerBadge seller={listing.user} size="sm" />
+                           {listing.user?.membershipTier === 'BUSINESS' && <span className="text-[10px] font-bold text-blue-500/80 uppercase tracking-tighter hidden xs:inline">Store</span>}
                         </div>
-                        <span className="text-[10px] sm:text-[11px] text-foreground font-medium uppercase tracking-wider whitespace-nowrap shrink-0 opacity-60" suppressHydrationWarning>
+                        <span className="text-[10px] sm:text-[11px] text-muted-foreground font-medium uppercase tracking-wider opacity-60" suppressHydrationWarning>
                             {listing.createdAt ? new Date(listing.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Now'}
                         </span>
                     </div>
 
-                    <div className="hidden sm:block text-[11px] md:text-sm text-muted-foreground/80 line-clamp-2 opacity-70 font-medium">
+                    <h3 className="font-bold text-sm sm:text-base md:text-lg leading-tight line-clamp-2 group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground">
+                        {listing.title}
+                    </h3> 
+
+                    <div className="hidden sm:block text-[11px] md:text-sm text-muted-foreground/80 line-clamp-2 opacity-70 font-medium mt-1">
                         {listing.description}
                     </div>
                 </div>
 
-                <div className="flex items-center justify-between mt-auto">
-                    <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between mt-auto pt-2">
+                    <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4">
                         <div className="flex items-baseline gap-2">
                             <span className="text-base sm:text-lg md:text-xl font-bold text-foreground" suppressHydrationWarning>
                                 {listing.price > 0 ? formatCurrency(listing.price, (listing as any).currency) : 'Price on request'}
@@ -192,7 +192,7 @@ export const ListingCard = memo(
                             )}
                         </div>
                         <div className="flex items-center gap-1 text-[11px] sm:text-xs text-muted-foreground/80 font-semibold uppercase tracking-tight">
-                            <MapPin className="w-3 h-3 text-primary" />
+                            <MapPin className="w-3.5 h-3.5 text-primary/80" />
                             {listing.city || 'Skopje'}
                         </div>
                     </div>
@@ -216,20 +216,3 @@ export const ListingCard = memo(
 
 ListingCard.displayName = 'ListingCard';
 
-const SellerBadge = ({ tier, isVerified, className }: { tier?: string; isVerified?: boolean; className?: string }) => {
-  if (tier === 'BUSINESS') {
-    return (
-      <div className={cn("flex items-center justify-center w-6 h-6 rounded-full bg-blue-400/10 backdrop-blur-xs shadow-[0_0_8px_rgba(251,191,36,0.1)] transition-all duration-300", className)} title="Verified Store">
-        <BadgeCheck className="w-4 h-4 text-blue-500 fill-blue-500/20" />
-      </div>
-    );
-  }
-  if (isVerified) {
-    return (
-      <div className={cn("flex items-center justify-center w-5 h-5 rounded-full bg-blue-400/10 backdrop-blur-xs shadow-[0_0_8px_rgba(59,130,246,0.1)] transition-all duration-300", className)} title="Verified User">
-        <BadgeCheck className="w-3.5 h-3.5 text-blue-500 fill-blue-500/20" />
-      </div>
-    );
-  }
-  return null;
-};

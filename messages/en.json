@@ -318,6 +318,7 @@
     "contact_options": "Contact Options",
     "visit_storefront": "Visit Storefront",
     "member_since": "Member since",
+    "verified_since": "Verified since",
     "recently": "Recently",
     "active_ads": "Active Ads",
     "seller_rating": "Seller Rating",
@@ -893,6 +894,13 @@
     "range_year": "Year",
     "range_all": "All Time"
   },
+  "AdminEditListing": {
+    "back_to_listings": "Back to Listings Management",
+    "edit": "Edit",
+    "listing": "Listing",
+    "admin_mode": "Admin Mode",
+    "updating_id": "Updating ID:"
+  },
   "Sell": {
     "page_title": "Post a Listing",
     "step_of": "Step {current} of {total}",
@@ -972,6 +980,25 @@
     "what_next1": "• Your listing will be published immediately",
     "what_next2": "• It will appear in search results within minutes",
     "what_next3": "• You'll receive notifications when users contact you",
-    "what_next4": "• You can edit or delete your listing anytime"
+    "what_next4": "• You can edit or delete your listing anytime",
+    "status_label": "Status",
+    "status_pending": "Pending",
+    "status_active": "Active",
+    "status_rejected": "Rejected",
+    "status_sold": "Sold",
+    "label_category": "Category",
+    "label_subcategory": "Subcategory",
+    "cat_select_main_first": "Select main category first",
+    "general": "General",
+    "price_type": "Price Type",
+    "region_placeholder": "e.g. Centar",
+    "label_region": "Region / Municipality",
+    "approve_save": "Approve & Save",
+    "toast_created": "Listing created successfully!",
+    "toast_updated": "Listing updated successfully!",
+    "cancel": "Cancel",
+    "processing": "Processing...",
+    "update_listing": "Update Listing",
+    "publish_listing": "Publish Listing"
   }
 }

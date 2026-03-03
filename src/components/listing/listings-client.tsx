@@ -4,10 +4,11 @@ import { FilterPanel, FilterState } from '@/components/listing/filter-panel';
 import { ListingGrid } from '@/components/listing/listing-grid';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState, useTransition } from 'react';
 import { ListingRowCarousel } from './listing-row-carousel';
 import { SaveSearchButton } from './save-search-button';
 
@@ -45,6 +46,7 @@ export function ListingsClient({
   const router = useRouter();
   const searchParams = useSearchParams();
   
+  const [isPending, startTransition] = useTransition();
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const [showHub, setShowHub] = useState(!!hubData);
 
@@ -54,7 +56,8 @@ export function ListingsClient({
            searchParams.has('category') || 
            searchParams.has('city') || 
            searchParams.has('minPrice') || 
-           searchParams.has('maxPrice');
+           searchParams.has('maxPrice') ||
+           searchParams.has('listingNumber');
   }, [searchParams]);
 
   // Sync hub visibility with filters
@@ -129,13 +132,18 @@ export function ListingsClient({
     else params.delete('listingNumber');
 
     params.delete('page');
-    router.push(`/listings?${params.toString()}`);
+
+    startTransition(() => {
+      router.push(`/listings?${params.toString()}`, { scroll: false });
+    });
   };
 
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', page.toString());
-    router.push(`/listings?${params.toString()}`);
+    startTransition(() => {
+      router.push(`/listings?${params.toString()}`);
+    });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -154,7 +162,7 @@ export function ListingsClient({
         <FilterPanel onFilterChange={handleFilterChange} categories={categories} initialFilters={initialFilters} idPrefix="desktop-filter" template={template} />
       </aside>
 
-      <div className="space-y-6">
+      <div className={cn("space-y-6 min-h-[800px] transition-opacity duration-300", isPending && "opacity-60 pointer-events-none")}>
         <div className="lg:hidden flex items-center w-full gap-2">
           <Button
             onClick={() => setIsMobileFiltersOpen(true)}

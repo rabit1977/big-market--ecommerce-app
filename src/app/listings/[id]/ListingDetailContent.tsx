@@ -5,18 +5,19 @@ import { SaveAdButton } from '@/components/listing/save-ad-button';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { ContactSellerButton } from '@/components/shared/listing/contact-button';
 import { ReportModal } from '@/components/shared/report-modal';
+import { SellerBadge } from '@/components/shared/seller-badge';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import { LeaveReviewModal } from '@/components/store/leave-review-modal';
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
@@ -27,18 +28,17 @@ import { cn, formatCurrency } from '@/lib/utils';
 import { rgbDataURL } from '@/lib/utils/utils';
 import { useQuery as useConvexQuery, useMutation } from 'convex/react';
 import {
-    BadgeCheck,
-    ChevronDown,
-    ChevronLeft,
-    ChevronRight,
-    ChevronUp,
-    Edit,
-    MapPin,
-    MessageSquare,
-    MoreVertical,
-    Share2,
-    ShieldAlert,
-    Trash2
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  Edit,
+  MapPin,
+  MessageSquare,
+  MoreVertical,
+  Share2,
+  ShieldAlert,
+  Trash2
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -364,7 +364,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 </div>
                 <div className="flex items-start justify-between gap-2">
                   <h1 className="text-xl font-bold text-foreground leading-tight flex-1">{listing.title}</h1>
-                  <SellerBadge tier={(seller as any)?.membershipTier} isVerified={seller?.isVerified} />
+                  <SellerBadge seller={seller} />
                 </div>
                 <div className="flex flex-col">
                   {listing.previousPrice && listing.previousPrice > listing.price && (
@@ -446,12 +446,12 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 <UserAvatar user={seller} className="w-10 h-10 border-2 border-border" />
               </Link>
               <div className="flex-1 min-w-0">
-                <Link href={`/store/${listing.userId}`} className="group flex items-center gap-1 w-fit">
+                <Link href={`/store/${listing.userId}`} className="group flex items-center gap-1.5 w-fit">
                   <span className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">{seller?.name ?? 'Seller'}</span>
-                  {seller?.isVerified && <BadgeCheck className="w-4 h-4 text-primary" />}
+                  <SellerBadge seller={seller} size="sm" />
                 </Link>
-                <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider" suppressHydrationWarning>
-                  {t('member_since')} {seller?.createdAt || (seller as any)?._creationTime 
+                <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                  {(seller?.isVerified || seller?.accountStatus === 'ACTIVE') ? t('verified_since') : t('member_since')} {seller?.createdAt || (seller as any)?._creationTime 
                     ? new Date(seller.createdAt || (seller as any)._creationTime).toLocaleDateString('mk-MK', {day: '2-digit', month: '2-digit', year: 'numeric'}) 
                     : t('recently')}
                 </p>
@@ -519,7 +519,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     <h1 className="text-xl font-bold text-muted-foreground tracking-tight leading-tight uppercase flex-1">
                       {listing.title}
                     </h1>
-                    <SellerBadge tier={(seller as any)?.membershipTier} isVerified={seller?.isVerified} />
+                    <SellerBadge seller={seller} showLabel />
                     {listing.price > 0 && (
                       <span className="text-[10px] font-black text-primary uppercase tracking-tighter bg-primary/5 px-2 py-0.5 rounded">
                         {listing.isPriceNegotiable ? t('negotiable') : t('fixed')}
@@ -562,12 +562,13 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                      <UserAvatar user={seller} className="w-16 h-16 border-4 border-muted shadow-md" />
                   </Link>
                   <div>
-                    <Link href={`/store/${listing.userId}`} className="group flex items-center gap-1.5 mb-0.5 w-fit">
-                      <h4 className="font-black text-foreground text-lg group-hover:text-primary transition-colors">{seller?.name ?? 'Loading...'}</h4>
-                      {seller?.isVerified && <BadgeCheck className="w-5 h-5 text-primary" />}
+                    <Link href={`/store/${listing.userId}`} className="group flex items-center gap-1.5 mb-1 w-fit">
+                      <h4 className="font-black text-foreground text-lg group-hover:text-primary transition-colors">{seller?.name ?? (seller === undefined ? 'Loading...' : 'Seller')}</h4>
+                      <SellerBadge seller={seller} />
                     </Link>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest" suppressHydrationWarning>
-                      {seller?.isVerified ? t('verified') : t('member')}{' since - '}
+                      {(seller?.isVerified || seller?.accountStatus === 'ACTIVE') ? t('verified_since') : t('member_since')}
+                      {' '}
                       {seller?.createdAt || (seller as any)?._creationTime 
                         ? new Date(seller.createdAt || (seller as any)._creationTime).toLocaleDateString('mk-MK', {day: 'numeric', month: 'short', year: 'numeric'}) 
                         : t('recently')}
@@ -788,21 +789,3 @@ function DeleteListingButton({ listingId, compact }: { listingId: string; compac
     </AlertDialog>
   );
 }
-
-const SellerBadge = ({ tier, isVerified, className }: { tier?: string; isVerified?: boolean; className?: string }) => {
-  if (tier === 'BUSINESS') {
-    return (
-      <div className={cn("flex items-center justify-center w-5 h-5 rounded-full bg-amber-400/10 backdrop-blur-xs shadow-[0_0_8px_rgba(251,191,36,0.1)] transition-all duration-300 shrink-0", className)} title="Verified Store">
-        <BadgeCheck className="w-3.5 h-3.5 text-amber-500 fill-amber-500/20" />
-      </div>
-    );
-  }
-  if (isVerified) {
-    return (
-      <div className={cn("flex items-center justify-center w-5 h-5 rounded-full bg-blue-400/10 backdrop-blur-xs shadow-[0_0_8px_rgba(59,130,246,0.1)] transition-all duration-300 shrink-0", className)} title="Verified User">
-        <BadgeCheck className="w-3.5 h-3.5 text-blue-500 fill-blue-500/20" />
-      </div>
-    );
-  }
-  return null;
-};

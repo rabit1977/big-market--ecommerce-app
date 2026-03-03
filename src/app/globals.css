@@ -70,6 +70,7 @@
   --bm-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --bm-border-width: 1px;
   --border-1: 1px;
+  --spacing-54: 13.5rem;
 }
 
 
@@ -85,16 +86,16 @@
   --card: #ffffff; /* Slate 50 - Card/Surface Background */
   --card-foreground: #0f0f0f;
   
-  --popover: #f1f5f9; /* Slate 50 */
+  --popover: #ffffff; 
   --popover-foreground: #0f0f0f;
   
   --primary: #ff0000; /* BM Red */
   --primary-foreground: #f1f5f9;
   
-  --secondary: #f1f5f9; /* Slate 50 */
+  --secondary: #f1f5f9; /* Slate 100 */
   --secondary-foreground: #0f0f0f;  
   
-  --muted: #f1f5f9; /* Slate 100 */
+  --muted: #e2e8f0; /* Slate 200 */
   --muted-foreground: #606060;
   
   --accent: #f8fafc; /* Slate 50 */

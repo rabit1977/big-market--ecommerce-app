@@ -4,6 +4,7 @@ import { EditListingForm } from '@/components/admin/edit-listing-form';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowLeft, Settings } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
@@ -26,6 +27,7 @@ function EditListingSkeleton() {
 }
 
 async function EditListingContent({ listingId }: { listingId: string }) {
+  const t = await getTranslations('AdminEditListing');
   const [listingResult, categoriesResult] = await Promise.all([
      getListingByIdAction(listingId),
      getPublicCategoriesAction()
@@ -41,7 +43,7 @@ async function EditListingContent({ listingId }: { listingId: string }) {
             <Button variant='ghost' asChild className='hover:bg-primary/5 dark:hover:bg-primary/10 rounded-full mb-8 -ml-3 text-muted-foreground hover:text-primary transition-all group'>
                 <Link href='/admin/listings'>
                     <ArrowLeft className='h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform' />
-                    Back to Listings Management
+                    {t('back_to_listings')}
                 </Link>
             </Button>
             
@@ -52,12 +54,12 @@ async function EditListingContent({ listingId }: { listingId: string }) {
                    </div>
                    <div className="space-y-1">
                       <h1 className='text-4xl md:text-5xl font-black tracking-tighter text-foreground uppercase'>
-                        Edit <span className="text-primary">Listing</span>
+                        {t('edit')} <span className="text-primary">{t('listing')}</span>
                       </h1>
                       <div className="flex items-center gap-2">
-                          <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-black uppercase rounded-md">Admin Mode</span>
+                          <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-black uppercase rounded-md">{t('admin_mode')}</span>
                           <p className='text-muted-foreground font-bold text-sm tracking-tight'>
-                             Updating ID: <span className="font-mono text-foreground/80">{listing._id.slice(-8)}</span>
+                             {t('updating_id')} <span className="font-mono text-foreground/80">{listing._id.slice(-8)}</span>
                           </p>
                       </div>
                    </div>

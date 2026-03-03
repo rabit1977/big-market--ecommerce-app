@@ -15,6 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Listing, ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { Loader2, Save } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { toast } from 'sonner';
@@ -48,6 +49,7 @@ function getCategoryId(c: Category) {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function ListingForm({ categories, initialData, onSuccess, isAdmin = false }: ListingFormProps) {
+  const t = useTranslations('Sell');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -56,11 +58,11 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
   // Find the initial category once on mount — stable ref avoids re-running on every render
   const initialCatRef = useRef<Category | null>(null);
 
-  if (!initialCatRef.current) {
-    const target = initialData?.subCategory ?? initialData?.category;
-    if (target) {
-      const normalised = String(target).toLowerCase().trim();
-      initialCatRef.current = categories.find((c) => {
+  if (!initialCatRef.current && initialData) {
+    const findCat = (val: string | undefined) => {
+      if (!val) return null;
+      const normalised = String(val).toLowerCase().trim();
+      return categories.find((c) => {
         const id = getCategoryId(c).toLowerCase();
         const name = c.name.toLowerCase();
         const slug = (c.slug ?? '').toLowerCase();
@@ -71,13 +73,24 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
           name.replace('&', 'and').replace(/\s+/g, '-') === normalised.replace(/\s+/g, '-')
         );
       }) ?? null;
-    }
+    };
+    initialCatRef.current = findCat(initialData.subCategory) ?? findCat(initialData.category);
   }
 
   const initCat = initialCatRef.current;
   const initCatId = initCat ? getCategoryId(initCat) : '';
-  const initMainId = initCat?.parentId ?? (initCat ? getCategoryId(initCat) : '');
-  const initSubId = initCat?.parentId ? initCatId : '';
+  
+  // Robustly resolve parent category, in case the database contains a slug instead of an ID
+  let rawParentRef = initCat?.parentId || '';
+  let parentCat = null;
+  if (rawParentRef) {
+      parentCat = categories.find(c => getCategoryId(c) === rawParentRef || c.slug === rawParentRef);
+  }
+  
+  // If it has a parent, the main ID is the parent's ID, and sub ID is the category's ID.
+  // Otherwise, the category itself is the main ID, and sub ID is empty.
+  const initMainId = parentCat ? getCategoryId(parentCat) : (initCat ? getCategoryId(initCat) : '');
+  const initSubId = parentCat ? initCatId : '';
 
   const [mainCatId, setMainCatId] = useState(initMainId);
   const [subCatId, setSubCatId] = useState(initSubId);
@@ -134,10 +147,13 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
   // ── Derived category data ─────────────────────────────────────────────────
 
   const mainCategories = useMemo(() => categories.filter((c) => !c.parentId), [categories]);
-  const subCategories = useMemo(
-    () => categories.filter((c) => c.parentId === mainCatId),
-    [categories, mainCatId]
-  );
+  const subCategories = useMemo(() => {
+    const parent = categories.find((c) => getCategoryId(c) === mainCatId || c.slug === mainCatId);
+    if (!parent) return [];
+    const pId = getCategoryId(parent);
+    const pSlug = parent.slug;
+    return categories.filter((c) => c.parentId === pId || (pSlug && c.parentId === pSlug));
+  }, [categories, mainCatId]);
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
@@ -170,10 +186,10 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
   const handleSubmit = async (e?: React.FormEvent, statusOverride?: string) => {
     if (e) e.preventDefault();
 
-    if (!selectedCategoryId) return void toast.error('Please select a category');
-    if (!formData.title.trim()) return void toast.error('Title is required');
-    if (!formData.price || parseFloat(formData.price) < 0) return void toast.error('Valid price is required');
-    if (images.length === 0) return void toast.error('Please upload at least one image');
+    if (!selectedCategoryId) return void toast.error(t('fill_field', { field: t('step_category') }));
+    if (!formData.title.trim()) return void toast.error(t('fill_field', { field: t('label_title') }));
+    if (!formData.price || parseFloat(formData.price) < 0) return void toast.error(t('fill_field', { field: t('label_price') }));
+    if (images.length === 0) return void toast.error(t('check_images'));
 
     startTransition(async () => {
       const currentCategory = categories.find((c) => getCategoryId(c) === selectedCategoryId);
@@ -215,14 +231,14 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
         if (listingId) {
           const res = await updateListingAction(listingId, listingData);
           if (!res.success) throw new Error(res.error);
-          toast.success(finalStatus === 'ACTIVE' && statusOverride ? 'Listing updated & approved!' : 'Listing updated successfully');
+          toast.success(t('toast_updated'));
           if (onSuccess && initialData) onSuccess(initialData as any);
           else router.push(`/listings/${listingId}`);
         } else {
           const res = await createListingAction(listingData);
           if (!res.success) throw new Error('error' in res ? res.error : 'Failed');
           if ('listing' in res && res.listing) {
-            toast.success('Listing created successfully!');
+            toast.success(t('toast_created'));
             if (onSuccess) onSuccess(res.listing as any);
             else router.push(`/listings/${res.listing.id}/success`);
           }
@@ -241,10 +257,10 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
       {/* Basic Information */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-            <SectionHeader title="Basic Information" />
+            <SectionHeader title={t('details_title')} />
             {isAdmin && (
                 <div className="flex items-center gap-2 bg-secondary px-3 py-1 rounded-lg border border-border transition-colors">
-                    <Label htmlFor="status" className="text-[10px] uppercase font-bold text-muted-foreground">Status</Label>
+                    <Label htmlFor="status" className="text-[10px] uppercase font-bold text-muted-foreground">{t('status_label')}</Label>
                     <Select 
                         value={(formData as any).status} 
                         onValueChange={(val) => setFormData(prev => ({ ...prev, status: val }))}
@@ -253,10 +269,10 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent align="end">
-                            <SelectItem value="PENDING_APPROVAL">Pending</SelectItem>
-                            <SelectItem value="ACTIVE">Active</SelectItem>
-                            <SelectItem value="REJECTED">Rejected</SelectItem>
-                            <SelectItem value="SOLD">Sold</SelectItem>
+                            <SelectItem value="PENDING_APPROVAL">{t('status_pending')}</SelectItem>
+                            <SelectItem value="ACTIVE">{t('status_active')}</SelectItem>
+                            <SelectItem value="REJECTED">{t('status_rejected')}</SelectItem>
+                            <SelectItem value="SOLD">{t('status_sold')}</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -267,10 +283,10 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
           {/* Categories */}
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Category</Label>
+              <Label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">{t('label_category')}</Label>
               <Select value={mainCatId} onValueChange={handleMainCatChange}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select Category" />
+                  <SelectValue placeholder={t('cat_select_title')} />
                 </SelectTrigger>
                 <SelectContent>
                   {mainCategories.map((c) => (
@@ -281,7 +297,7 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Subcategory</Label>
+              <Label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">{t('label_subcategory')}</Label>
               <Select
                 value={subCatId}
                 onValueChange={handleSubCatChange}
@@ -289,9 +305,9 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
               >
                 <SelectTrigger>
                   <SelectValue placeholder={
-                    !mainCatId ? 'Select main category first'
-                    : subCategories.length === 0 ? 'General'
-                    : 'Select Subcategory'
+                    !mainCatId ? t('cat_select_main_first')
+                    : subCategories.length === 0 ? t('general')
+                    : t('cat_select_sub')
                   } />
                 </SelectTrigger>
                 <SelectContent>
@@ -305,7 +321,7 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
 
           {/* Title */}
           <div className="space-y-1.5">
-            <Label htmlFor="title" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Listing Title</Label>
+            <Label htmlFor="title" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">{t('label_title')}</Label>
             <Input
               id="title" name="title"
               placeholder={titlePlaceholder}
@@ -317,7 +333,7 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
           {/* Price & Currency */}
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label htmlFor="price" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Price</Label>
+              <Label htmlFor="price" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">{t('label_price')}</Label>
               <div className="flex gap-2">
                 <div className="relative flex-1">
                   <Input
@@ -350,18 +366,18 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
                   onValueChange={(val) => setFormData((prev) => ({ ...prev, isPriceNegotiable: val === 'negotiable' }))}
                 >
                   <SelectTrigger className="w-full font-bold">
-                    <SelectValue placeholder="Price Type" />
+                    <SelectValue placeholder={t('price_type')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="fixed">Fixed Price</SelectItem>
-                    <SelectItem value="negotiable">Po dogovor</SelectItem>
+                    <SelectItem value="fixed">{t('price_fixed')}</SelectItem>
+                    <SelectItem value="negotiable">{t('price_negotiable')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="phone" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Phone Number</Label>
+              <Label htmlFor="phone" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">{t('label_contact_phone')}</Label>
               <Input
                 id="phone" name="phone"
                 placeholder="+389 70 123 456"
@@ -372,10 +388,10 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
 
           {/* Description */}
           <div className="space-y-1.5">
-            <Label htmlFor="description" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Description</Label>
+            <Label htmlFor="description" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">{t('label_description')}</Label>
             <Textarea
               id="description" name="description"
-              placeholder="Describe your item in detail..."
+              placeholder={t('desc_placeholder')}
               className="h-32 resize-none leading-relaxed"
               value={formData.description} onChange={handleInputChange}
               required
@@ -386,11 +402,11 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
 
       {/* Media */}
       <div className="space-y-4">
-        <SectionHeader title="Media Gallery" />
+        <SectionHeader title={t('images_title')} />
         <div className="bg-secondary/20 p-4 rounded-lg border border-border/40 hover:border-border/60 transition-colors">
           <ListingImageUpload value={images} onChange={setImages} />
           <p className="text-[10px] text-muted-foreground mt-2 text-center font-medium">
-            Upload up to 10 images. Drag and drop to reorder. First image will be the thumbnail.
+            {t('images_desc')}
           </p>
         </div>
       </div>
@@ -398,7 +414,7 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
       {/* Dynamic Specifications */}
       {templateFields.length > 0 && (
         <div className="space-y-4 animate-in slide-in-from-top-4 duration-300">
-          <SectionHeader title="Specifications" />
+          <SectionHeader title={t('specs_header', { name: '' })} />
           <div className="grid sm:grid-cols-2 gap-4 p-5 bg-secondary/20 rounded-xl border border-secondary/40">
             {templateFields.map((field: any) => {
               const key = field.key ?? field.name;
@@ -413,7 +429,7 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
                       onValueChange={(val) => handleSpecChange(key, val)}
                     >
                       <SelectTrigger className="bg-background/80">
-                        <SelectValue placeholder="Select..." />
+                        <SelectValue placeholder={t('select_placeholder', { label: '' })} />
                       </SelectTrigger>
                       <SelectContent>
                         {field.options?.map((opt: string) => (
@@ -439,15 +455,15 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
 
       {/* Location */}
       <div className="space-y-4">
-        <SectionHeader title="Location" />
+        <SectionHeader title={t('label_location_contact')} />
         <div className="grid sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <Label htmlFor="city" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">City</Label>
-            <Input id="city" name="city" placeholder="e.g. Skopje" value={formData.city} onChange={handleInputChange} required />
+            <Label htmlFor="city" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">{t('label_city')}</Label>
+            <Input id="city" name="city" placeholder={t('city_placeholder')} value={formData.city} onChange={handleInputChange} required />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="state" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Region / Municipality</Label>
-            <Input id="state" name="state" placeholder="e.g. Centar" value={formData.state} onChange={handleInputChange} />
+            <Label htmlFor="state" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">{t('label_region')}</Label>
+            <Input id="state" name="state" placeholder={t('region_placeholder')} value={formData.state} onChange={handleInputChange} />
           </div>
         </div>
       </div>
@@ -455,7 +471,7 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
       {/* Actions */}
       <div className="flex items-center justify-end gap-3 pt-4 border-t border-border/40">
         <Button type="button" variant="ghost" onClick={() => router.back()} className="text-muted-foreground hover:text-foreground">
-          Cancel
+          {t('cancel')}
         </Button>
 
         {isAdmin && (initialData?.status === 'PENDING_APPROVAL' || (formData as any).status === 'PENDING_APPROVAL') && (
@@ -467,18 +483,18 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
                 onClick={() => handleSubmit(undefined, 'ACTIVE')}
             >
                 {isPending ? (
-                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Processing...</>
+                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" />{t('processing')}</>
                 ) : (
-                    <><Save className="mr-2 h-4 w-4" />Approve & Save</>
+                    <><Save className="mr-2 h-4 w-4" />{t('approve_save')}</>
                 )}
             </Button>
         )}
 
         <Button type="submit" disabled={isPending} className="min-w-[140px] font-bold tracking-wide rounded-lg shadow-none">
           {isPending ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</>
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" />{t('submitting')}</>
           ) : (
-            <><Save className="mr-2 h-4 w-4" />{initialData ? 'Update Listing' : 'Publish Listing'}</>
+            <><Save className="mr-2 h-4 w-4" />{initialData ? t('update_listing') : t('publish_listing')}</>
           )}
         </Button>
       </div>
