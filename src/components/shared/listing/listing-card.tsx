@@ -106,7 +106,7 @@ export const ListingCard = memo(
         {/* Content Section */}
         <div className={cn(
           "flex flex-[2] flex-col justify-between relative z-20 pointer-events-none min-w-0 transition-all duration-300",
-          (isGrid || isCard) ? "space-y-1 p-2.5" : "px-3 py-2.5 sm:px-4 sm:py-3.5 md:px-5",
+          (isGrid || isCard) ? "space-y-0.5 p-2" : "px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4",
         )}>
            
            {(isGrid || isCard) ? (
@@ -125,7 +125,7 @@ export const ListingCard = memo(
                     </div>
                 </div>
                 
-                <div className="mt-auto space-y-1.5">
+                <div className="mt-auto space-y-1">
                     <div className="flex items-baseline gap-1.5 flex-wrap">
                         <span className={cn(
                             "font-bold text-foreground",

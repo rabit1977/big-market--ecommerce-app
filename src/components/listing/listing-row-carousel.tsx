@@ -33,17 +33,17 @@ export const ListingRowCarousel = ({ title, listings, viewAllHref }: ListingRowC
         }}
         className="w-full"
       >
-        <CarouselContent className="-ml-2 md:-ml-3">
+        <CarouselContent className="-ml-1 sm:-ml-2 md:-ml-3">
           {listings.map((listing) => (
             <CarouselItem 
               key={listing._id} 
-              className="pl-2 md:pl-3 basis-[45%] xs:basis-1/3 sm:basis-1/4 md:basis-1/5 lg:basis-1/6"
+              className="pl-1 sm:pl-2 md:pl-3 basis-[45%] xs:basis-1/3 sm:basis-1/4 md:basis-1/5 lg:basis-1/6"
             >
               <ListingCard listing={listing} viewMode="grid" />
             </CarouselItem>
           ))}
           {/* Last Item: Peek to View All */}
-          <CarouselItem className="pl-2 md:pl-3 basis-[45%] xs:basis-1/3 sm:basis-1/4 md:basis-1/5 lg:basis-1/6">
+          <CarouselItem className="pl-1 sm:pl-2 md:pl-3 basis-[45%] xs:basis-1/3 sm:basis-1/4 md:basis-1/5 lg:basis-1/6">
               <Link 
                 href={viewAllHref}
                 className="flex flex-col items-center justify-center h-full aspect-square rounded-2xl border-2 border-dashed border-border hover:border-muted-foreground/30 hover:bg-muted/30 transition-all group"

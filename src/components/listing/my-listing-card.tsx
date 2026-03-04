@@ -259,9 +259,9 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
         </div>
 
         {/* Meta Info */}
-        <div className="p-6 sm:p-8 flex flex-col flex-1">
-            <div className="flex items-center justify-between mb-8">
-                <div className="text-3xl font-black text-foreground tracking-tighter uppercase">
+        <div className="p-4 sm:p-5 flex flex-col flex-1">
+            <div className="flex items-center justify-between mb-6">
+                <div className="text-2xl sm:text-3xl font-black text-foreground tracking-tighter uppercase">
                     {formatCurrency(listing.price, (listing as any).currency)}
                 </div>
                 <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-black uppercase tracking-widest">

@@ -3,11 +3,11 @@
 import { ListingCard } from '@/components/shared/listing/listing-card';
 import { Button } from '@/components/ui/button';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
 import { api } from '@/convex/_generated/api';
 import { ListingWithRelations } from '@/lib/types';
@@ -201,7 +201,7 @@ export function ListingGrid({
         />
       ) : (
         <div className={cn(
-          'grid gap-4',
+          'grid gap-2 sm:gap-4',
           viewMode === 'grid' && 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
           viewMode === 'list' && 'grid-cols-1',
           viewMode === 'card' && 'grid-cols-1 max-w-2xl mx-auto',
