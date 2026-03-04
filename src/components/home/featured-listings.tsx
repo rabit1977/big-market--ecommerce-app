@@ -123,7 +123,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
 
                                           {/* Price Tag Overlay - Bottom Right */}
                                           <div className="absolute bottom-2 right-2 z-10">
-                                              <div className="bg-background/90 backdrop-blur text-foreground px-2 py-1 rounded-lg border border-border/50 shadow-none">
+                                              <div className="bg-background/90 backdrop-blur text-foreground px-2 py-1 rounded-lg border border-border/50">
                                                   <span className="text-xs font-bold">
                                                       {formatCurrency(listing.price, listing.currency)}
                                                   </span>
@@ -237,12 +237,12 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                 <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-20 pointer-events-none flex flex-col gap-1 sm:gap-2">
                                     {(listing as any).isPromoted && (
                                         <div className={cn(
-                                            "flex items-center justify-center w-5 h-5 sm:w-7 sm:h-7 rounded-full shadow-lg border border-white/20 backdrop-blur-md transition-all duration-300", 
+                                            "flex items-center justify-center w-5 h-5 sm:w-7 sm:h-7 rounded-full border border-white/20 backdrop-blur-md transition-all duration-300", 
                                             getPromotionConfig((listing as any).promotionTier)?.badgeColor || "bg-foreground"
                                         )}>
                                             <PromotionIcon 
                                                 iconName={getPromotionConfig((listing as any).promotionTier)?.icon || 'sparkles'} 
-                                                className="h-3 w-3 sm:h-4 sm:w-4 text-white fill-current" 
+                                                className="h-3 w-3 sm:h-4 sm:w-4 text-current fill-current" 
                                             />
                                         </div>
                                     )}
@@ -256,7 +256,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                 {/* Discount Badge - eBay style */}
                                 {hasDiscount && (
                                     <div className="absolute bottom-2 left-2 z-20">
-                                        <div className="bg-[#E53238] text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                                        <div className="bg-[#E53238] text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full">
                                             {discountPercent}% OFF
                                         </div>
                                     </div>

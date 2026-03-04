@@ -89,14 +89,14 @@ export const ListingCard = memo(
             sizes={isCard ? "(max-width: 768px) 100vw, 80vw" : isGrid ? "(max-width: 768px) 50vw, 25vw " : "(max-width: 768px) 33vw, 20vw"}
           />
            {isPromoted && promoConfig && (
-                <div className={cn("flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full absolute top-2 left-2 z-30 bg-white/90 dark:bg-black/70 backdrop-blur-xs opacity-90 border border-white/20 shadow-lg", promoConfig.badgeColor.replace('bg-', 'text-'))} title="Promoted">
-                    <PromotionIcon iconName={promoConfig.icon} className="h-3.5 w-3.5 fill-current" />
+                <div className={cn("flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full absolute top-2 left-2 z-30 bg-white/90 dark:bg-black/70 backdrop-blur-xs opacity-90 border border-white/20", promoConfig.badgeColor.replace('bg-', 'text-'))} title="Promoted">
+                    <PromotionIcon iconName={promoConfig.icon} className="h-3.5 w-3.5 fill-current text-current" />
                 </div>
             )}
           
           {listing.previousPrice && listing.previousPrice > listing.price && (
             <div className="absolute bottom-2 left-2 z-20 pointer-events-none">
-                <div className="bg-[#E53238] text-white text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-sm">
+                <div className="bg-[#E53238] text-white text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded-full">
                     {Math.round(((listing.previousPrice - listing.price) / listing.previousPrice) * 100)}% OFF
                 </div>
             </div>
