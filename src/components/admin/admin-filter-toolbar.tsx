@@ -171,7 +171,7 @@ export function AdminFilterToolbar({
                         className="h-9 px-3 text-xs font-bold gap-1.5 shrink-0"
                     >
                         <FileText className="w-3.5 h-3.5" />
-                        {isMk ? 'Извези PDF' : 'Export PDF'}
+                        {isMk ? 'Преземи PDF' : 'Download PDF'}
                     </Button>
                 )}
 

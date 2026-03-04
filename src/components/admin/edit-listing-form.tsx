@@ -2,9 +2,7 @@
 
 import { ListingForm } from '@/components/sell/listing-form';
 import { ListingWithRelations } from '@/lib/types/listing';
-import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 
 interface Category {
   id: string;
@@ -18,11 +16,11 @@ interface EditListingFormProps {
 }
 
 export function EditListingForm({ listing, categories }: EditListingFormProps) {
-  const t = useTranslations('Sell');
   const router = useRouter();
 
+  // NOTE: ListingForm already fires toast.success('toast_updated') before calling onSuccess.
+  // Do NOT add another toast here — it would show two success notifications.
   const handleSuccess = () => {
-      toast.success(t('toast_updated'));
       router.push('/admin/listings');
       router.refresh();
   };

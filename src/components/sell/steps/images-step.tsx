@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Image as ImageIcon, Star, Upload, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -286,29 +287,47 @@ export function ImagesStep({ formData, updateFormData }: ImagesStepProps) {
                   
                   {/* Overlay */}
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      className="h-8 w-8"
-                      onClick={() => setThumbnail(imageUrl)}
-                    >
-                      <Star
-                        className={`w-4 h-4 ${
-                          formData.thumbnail === imageUrl
-                            ? 'fill-yellow-400 text-yellow-400'
-                            : ''
-                        }`}
-                      />
-                    </Button>
+                    <TooltipProvider delayDuration={100}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="secondary"
+                            className="h-8 w-8"
+                            onClick={() => setThumbnail(imageUrl)}
+                          >
+                            <Star
+                              className={`w-4 h-4 ${
+                                formData.thumbnail === imageUrl
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : ''
+                              }`}
+                            />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom" className="text-[11px] font-bold">
+                          {formData.thumbnail === imageUrl ? t('is_cover') : t('set_cover')}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                     
-                    <Button
-                      size="icon"
-                      variant="destructive"
-                      className="h-8 w-8"
-                      onClick={() => removeImage(index)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
+                    <TooltipProvider delayDuration={100}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="destructive"
+                            className="h-8 w-8"
+                            onClick={() => removeImage(index)}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom" className="text-[11px] font-bold">
+                          {t('remove_image')}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
 
                   {/* Cover Badge */}

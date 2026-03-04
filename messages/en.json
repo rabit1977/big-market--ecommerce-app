@@ -3,6 +3,7 @@
     "home": "Home",
     "listings": "Listings",
     "stores": "Stores",
+    "my_store": "My Store",
     "premium": "Premium",
     "about": "About",
     "contact": "Contact",
@@ -140,6 +141,8 @@
     "cond_good": "Good",
     "cond_fair": "Fair",
     "cond_used": "Used",
+    "cond_new_construction": "New Construction",
+    "cond_old_construction": "Old Construction",
     "active_controls": "Active Controls"
   },
   "Common": {
@@ -323,6 +326,9 @@
     "recently": "Recently",
     "active_ads": "Active Ads",
     "seller_rating": "Seller Rating",
+    "new_seller": "New",
+    "seller": "Seller",
+    "loading": "Loading…",
     "reviews": "reviews",
     "verified": "Verified",
     "member": "Member",
@@ -959,6 +965,9 @@
     "uploaded_count": "Uploaded Images ({count})",
     "click_star": "Click star to set as cover",
     "cover": "Cover",
+    "set_cover": "Set as cover photo",
+    "is_cover": "Cover photo ✓",
+    "remove_image": "Remove image",
     "photo_tips_title": "📸 Photo Tips",
     "photo_tip1": "• Use good lighting and clear backgrounds",
     "photo_tip2": "• Show the item from multiple angles",
@@ -1055,5 +1064,22 @@
     "zod_name_min": "Name must be at least 2 characters",
     "zod_email_invalid": "Invalid email address",
     "zod_password_min": "Password must be at least 6 characters"
+  },
+  "SellerBadge": {
+    "store": "Store",
+    "verified_store": "Verified Store",
+    "verified_user": "Verified User"
+  },
+  "ListingSuccess": {
+    "title": "Listing Submitted!",
+    "desc": "Your listing \"<title>\" has been successfully created and is waiting for admin approval.",
+    "view_listing": "View Listing",
+    "manage_listings": "Manage My Listings",
+    "boost_title": "Boost Your Sales",
+    "boost_desc": "Available to Verified Users. Choose these powerful add-ons to reach more buyers and sell faster.",
+    "popular": "Popular",
+    "vat": "+ VAT",
+    "promote_later": "You can also promote your listing later from your dashboard.",
+    "skip_for_now": "Skip for now"
   }
 }

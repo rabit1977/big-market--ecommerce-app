@@ -96,11 +96,28 @@ interface ListingDetailContentProps {
 export function ListingDetailContent({ listing, initialQuestions = [] }: ListingDetailContentProps) {
   const router = useRouter();
   const t = useTranslations('ListingDetail');
+  const tCommon = useTranslations('Common');
+  const tFilter = useTranslations('FilterPanel');
   const [selectedImage, setSelectedImage] = useState(0);
   const { isFavorite: isFavCheck } = useFavorites();
   const isFavorite = isFavCheck(listing._id);
   const { data: session } = useSession();
   const [isDescExpanded, setIsDescExpanded] = useState(false);
+
+  // condition label helper (same mapping as listing cards)
+  const getConditionLabel = (condition?: string | null): string => {
+    if (!condition) return '';
+    switch (condition.toLowerCase()) {
+      case 'new':            return tCommon('brand_new');
+      case 'like-new':       return tFilter('cond_like_new');
+      case 'good':           return tFilter('cond_good');
+      case 'fair':           return tFilter('cond_fair');
+      case 'used':           return tCommon('pre_owned');
+      case 'new construction': return tFilter('cond_new_construction');
+      case 'old construction': return tFilter('cond_old_construction');
+      default:               return condition;
+    }
+  };
 
   const recordVisit = useMutation(api.history.recordVisit);
   const trackEvent = useMutation(api.analytics.trackEvent);
@@ -110,6 +127,18 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
   const seller = useConvexQuery(api.users.getByExternalId, { externalId: listing.userId });
   const sellerReviewStats = useConvexQuery(api.reviews.getSellerReviewStats, { sellerId: listing.userId });
   const sellerProfile = useConvexQuery(api.storefront.getPublicProfile, { userId: listing.userId });
+
+  // ── Category template (for field labels) ─────────────────────────────────
+  const categoryTemplate = useConvexQuery(
+    api.categories.getBySlug,
+    listing.category ? { slug: listing.category } : 'skip'
+  );
+  // Build key → label map from the template fields
+  const fieldLabelMap = useMemo<Record<string, string>>(() => {
+    const fields = (categoryTemplate as any)?.template?.fields;
+    if (!Array.isArray(fields)) return {};
+    return Object.fromEntries(fields.map((f: any) => [f.key, f.label]));
+  }, [categoryTemplate]);
 
   useEffect(() => {
     // Safety check for browser environment + React Strict Mode guard
@@ -346,7 +375,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   {/* SellerBadge will be next to title now */}
                   {!!condition && (
                     <span className="text-[10px] font-bold uppercase text-muted-foreground py-0.5 rounded tracking-wider">
-                      {t('condition')}: {String(condition)}
+                      {t('condition')}: {getConditionLabel(String(condition))}
                     </span>
                   )}
                   {listing.status !== 'ACTIVE' && (
@@ -398,8 +427,8 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   </h3>
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-0.5 px-1">
-                  <SpecsColumn specs={specsLeft} />
-                  <SpecsColumn specs={specsRight} />
+                  <SpecsColumn specs={specsLeft} fieldLabelMap={fieldLabelMap} />
+                  <SpecsColumn specs={specsRight} fieldLabelMap={fieldLabelMap} />
                 </div>
               </div>
             )}
@@ -447,7 +476,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
               </Link>
               <div className="flex-1 min-w-0">
                 <Link href={`/store/${listing.userId}`} className="group flex items-center gap-1.5 w-fit">
-                  <span className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">{seller?.name ?? 'Seller'}</span>
+                  <span className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">{seller?.name ?? t('seller')}</span>
                   <SellerBadge seller={seller} size="sm" />
                 </Link>
                 <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
@@ -520,11 +549,6 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                       {listing.title}
                     </h1>
                     <SellerBadge seller={seller} showLabel />
-                    {listing.price > 0 && (
-                      <span className="text-[10px] font-black text-primary uppercase tracking-tighter bg-primary/5 px-2 py-0.5 rounded">
-                        {listing.isPriceNegotiable ? t('negotiable') : t('fixed')}
-                      </span>
-                    )}
                   </div>
                   <div className="flex items-center gap-2 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
                     <MapPin className="w-3.5 h-3.5 text-primary" />
@@ -532,6 +556,11 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   </div>
                    <div suppressHydrationWarning className="text-5xl font-black text-foreground tracking-tighter leading-none">
                     {listing.price > 0 ? formatCurrency(listing.price, listing.currency) : t('call_for_price')}
+                    {listing.price > 0 && (
+                      <span className="text-[10px] font-black text-primary uppercase tracking-tighter bg-primary/5 px-2 py-0.5 rounded">
+                        {listing.isPriceNegotiable ? t('negotiable') : t('fixed')}
+                      </span>
+                    )}
                   </div>
                 </div>
                 {!isListingOwner && (
@@ -563,7 +592,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   </Link>
                   <div>
                     <Link href={`/store/${listing.userId}`} className="group flex items-center gap-1.5 mb-1 w-fit">
-                      <h4 className="font-black text-foreground text-lg group-hover:text-primary transition-colors">{seller?.name ?? (seller === undefined ? 'Loading...' : 'Seller')}</h4>
+                      <h4 className="font-black text-foreground text-lg group-hover:text-primary transition-colors">{seller?.name ?? (seller === undefined ? t('loading') : t('seller'))}</h4>
                       <SellerBadge seller={seller} />
                     </Link>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest" suppressHydrationWarning>
@@ -591,7 +620,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     <div className="text-base font-black text-foreground">
                       {sellerReviewStats && sellerReviewStats.totalReviews > 0
                         ? sellerReviewStats.averageRating.toFixed(1)
-                        : 'NEW'}
+                        : t('new_seller')}
                     </div>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">
                       {sellerReviewStats && sellerReviewStats.totalReviews > 0
@@ -676,15 +705,24 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
 /** Renders one column of the specs grid — memoized to skip re-renders */
 const SpecsColumn = memo(function SpecsColumn({
   specs,
+  fieldLabelMap = {},
 }: {
   specs: [string, unknown][];
+  fieldLabelMap?: Record<string, string>;
 }) {
+  /** Convert a camelCase/snake_case key into a human-readable fallback */
+  const humanize = (key: string) =>
+    key
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/_/g, ' ')
+      .trim();
+
   return (
     <div className="flex flex-col">
       {specs.map(([key, value]) => (
         <div key={key} className="flex justify-between items-baseline py-2 md:py-3 border-b border-border/40 last:border-0 group transition-colors">
           <span className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-wider pr-2">
-            {key.replace(/([A-Z])/g, ' $1').trim()}
+            {fieldLabelMap[key] ?? humanize(key)}
           </span>
           <span className="font-bold text-foreground text-xs md:text-sm text-right shrink-0">{String(value)}</span>
         </div>

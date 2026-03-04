@@ -33,7 +33,7 @@ export function LanguageSwitcher() {
           </span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[140px]">
+      <DropdownMenuContent align="start" className="w-[140px] z-[70]">
         <DropdownMenuItem
           onClick={() => handleLanguageChange('mk')}
           className={locale === 'mk' ? 'bg-primary/10 text-primary font-bold' : ''}

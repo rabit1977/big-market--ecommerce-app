@@ -18,6 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { api } from '@/convex/_generated/api';
 import { exportToPdf } from '@/lib/export-pdf';
 import { cn } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils/formatters';
 import { useQuery } from 'convex/react';
 import {
     Ban,
@@ -394,7 +395,7 @@ export function AdminListingsHub() {
                                         </td>
                                         <td className="px-4 py-3">
                                             <span className="font-bold text-xs text-foreground">
-                                                {listing.price?.toLocaleString('mk-MK')} MKD
+                                                {formatCurrency(listing.price ?? 0, listing.currency || 'MKD')}
                                             </span>
                                         </td>
                                         <td className="px-4 py-3 hidden md:table-cell">

@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils/formatters';
 import { Heart, MapPin } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { memo, useCallback } from 'react';
@@ -21,8 +22,23 @@ interface ListingCardProps {
 
 export const ListingCard = memo(
   ({ listing, viewMode = 'list' }: ListingCardProps) => {
+    const t = useTranslations('Common');
+    const tBadge = useTranslations('SellerBadge');
+    const tFilter = useTranslations('FilterPanel');
     const { data: session } = useSession();
     const isOwner = session?.user?.id === listing.userId;
+
+    const getConditionLabel = (condition?: string | null) => {
+      if (!condition) return null;
+      switch (condition.toLowerCase()) {
+        case 'new':      return t('brand_new');
+        case 'like-new': return tFilter('cond_like_new');
+        case 'good':     return tFilter('cond_good');
+        case 'fair':     return tFilter('cond_fair');
+        case 'used':     return t('pre_owned');
+        default:         return condition;
+      }
+    };
     const { isFavorite, toggleFavorite } = useFavorites();
     const isWished = isFavorite(listing.id || listing._id);
 
@@ -148,7 +164,7 @@ export const ListingCard = memo(
 
                     <div className="flex items-center justify-between pt-2 border-t-1 border-border/40 mt-2">
                         <div className="text-xs text-foreground/70 font-medium uppercase tracking-tight">
-                            {listing.condition === 'NEW' ? 'Brand New' : 'Pre-owned'}
+                            {getConditionLabel(listing.condition)}
                         </div>
                         <div className="text-xs text-foreground/70 font-medium" suppressHydrationWarning>
                            {new Date(listing.createdAt).toLocaleDateString()}
@@ -163,7 +179,7 @@ export const ListingCard = memo(
                     <div className="flex items-center justify-between mb-0.5">
                         <div className="flex items-center gap-1.5">
                            <SellerBadge seller={listing.user} size="sm" />
-                           {listing.user?.membershipTier === 'BUSINESS' && <span className="text-[10px] font-bold text-blue-500/80 uppercase tracking-tighter hidden xs:inline">Store</span>}
+                           {listing.user?.membershipTier === 'BUSINESS' && <span className="text-[10px] font-bold text-amber-500/80 uppercase tracking-tighter hidden xs:inline">{tBadge('store')}</span>}
                         </div>
                         <span className="text-[10px] sm:text-[11px] text-muted-foreground font-medium uppercase tracking-wider opacity-60" suppressHydrationWarning>
                             {listing.createdAt ? new Date(listing.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Now'}

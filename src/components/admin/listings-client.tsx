@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Listing } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils/formatters';
 import { Check, Edit, MapPin, Package, Trash2, X } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -125,7 +126,9 @@ export function ListingsClient({ listings }: ListingsClientProps) {
                     <h3 className='font-semibold text-sm sm:text-base truncate'>{listing.title}</h3>
                 </Link>
                 <div className='flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground mt-1'>
-                    <span className="font-medium text-foreground">${listing.price}</span>
+                    <span className="font-medium text-foreground">
+                      {formatCurrency(listing.price, (listing as any).currency || 'MKD')}
+                    </span>
                     <span>•</span>
                     <span>{listing.category}</span>
                     {listing.city && (

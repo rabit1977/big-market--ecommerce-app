@@ -81,7 +81,7 @@ export default async function HomePage({ searchParams }: PageProps) {
   }));
 
   return (
-    <div className='min-h-screen bg-background dark:bg-background'>
+    <div className='min-h-screen bg-background dark:bg-background '>
       {/* 1. Hero Section with Search (Absolute Top) */}
       <Hero />
 

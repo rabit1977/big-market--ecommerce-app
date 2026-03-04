@@ -59,12 +59,10 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
 
   return (
     <div className='min-h-screen pt-12 md:pt-20 pb-32 bg-background'>
-      <div className='container max-w-6xl mx-auto px-4'>
+      <div className='container-wide'>
         <div className="animate-fade-in-up">
             <AppBreadcrumbs className="mb-8 md:mb-12 text-muted-foreground/60 font-bold uppercase tracking-[0.2em] text-[10px]" />
             
-            <MyListingsDashboardHeader />
-
             {/* Listings Section Header */}
             <div className='flex flex-col lg:flex-row lg:items-end justify-between gap-10 mb-12 md:mb-20 pb-12 border-b border-card-foreground/10'>
               <div className="space-y-4">
@@ -113,6 +111,8 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
                     </Button>
                 </div>
             )}
+            <MyListingsDashboardHeader />
+
         </div>
       </div>
     </div>

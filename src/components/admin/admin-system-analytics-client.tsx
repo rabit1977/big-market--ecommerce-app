@@ -7,6 +7,7 @@ import { useQuery } from 'convex/react';
 import { BarChart3, Clock, CreditCard, Loader2, ShieldCheck, TrendingDown, TrendingUp, Users } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import { useState } from 'react';
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 export function AdminSystemAnalyticsClient() {
   const [timeRange, setTimeRange] = useState<TimeRange>('all');
@@ -17,6 +18,7 @@ export function AdminSystemAnalyticsClient() {
   const stats    = useQuery(api.admin.getStats, {});
   const deltas   = useQuery(api.admin.getDailyDeltas);
   const revenue  = useQuery(api.transactions.getRevenueStats, { since });
+  const historicalData = useQuery(api.admin.getHistoricalTrends, {});
 
   if (stats === undefined) {
     return (
@@ -149,15 +151,85 @@ export function AdminSystemAnalyticsClient() {
           <p className="text-sm text-muted-foreground mt-1">{isMk ? 'Графикони на активност и анализа на траекторија со текот на времето.' : 'Activity charts and trajectory analysis over time.'}</p>
         </CardHeader>
         <CardContent className="p-6 md:p-8">
-          <div className="flex flex-col items-center justify-center py-12 text-center bg-muted/30 rounded-lg border border-dashed border-border/60">
-             <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <BarChart3 className="w-8 h-8 text-primary/60" />
+           {!historicalData ? (
+             <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-muted-foreground" /></div>
+           ) : historicalData.length === 0 ? (
+             <div className="flex flex-col items-center justify-center py-12 text-center bg-muted/30 rounded-lg border border-dashed border-border/60">
+                 <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                    <BarChart3 className="w-8 h-8 text-primary/60" />
+                 </div>
+                 <h3 className="font-bold text-lg text-foreground mb-2">{isMk ? 'Нема доволно податоци' : 'Not Enough Data'}</h3>
+                 <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                   {isMk ? 'Сè уште нема податоци за прикажување на историски трендови.' : 'There is not enough data to display historical trends yet.'}
+                 </p>
              </div>
-             <h3 className="font-bold text-lg text-foreground mb-2">{isMk ? 'Графиконите Наскоро Доаѓаат' : 'Charts Coming Soon'}</h3>
-             <p className="text-sm text-muted-foreground max-w-md mx-auto">
-               {isMk ? 'Визуелните графикони за корисници, огласи, приходи и сообраќај со текот на времето се компајлираат. Се собираат повеќе податоци секој ден.' : 'Visual charts for users, listings, revenue, and traffic over time are being compiled. More data points collect every day.'}
-             </p>
-          </div>
+           ) : (
+             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Users and Listings Chart */}
+                <div className="space-y-4">
+                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+                        {isMk ? 'Корисници и Огласи (30 дена)' : 'Users & Listings (30 days)'}
+                    </h3>
+                    <div className="h-[300px] w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={historicalData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                <defs>
+                                    <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+                                      <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
+                                      <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                                    </linearGradient>
+                                    <linearGradient id="colorListings" x1="0" y1="0" x2="0" y2="1">
+                                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.5} />
+                                <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} tickFormatter={(val) => new Date(val).toLocaleDateString(isMk ? 'mk-MK' : 'en-US', { month: 'short', day: 'numeric' })} />
+                                <YAxis tickLine={false} axisLine={false} tickMargin={8} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} allowDecimals={false} />
+                                <Tooltip 
+                                    contentStyle={{ backgroundColor: "var(--card)", borderColor: "var(--border)", borderRadius: "8px", fontSize: "12px", fontWeight: "bold", color: "var(--foreground)" }}
+                                    itemStyle={{ color: "var(--foreground)" }}
+                                    labelStyle={{ color: "var(--foreground)" }}
+                                    labelFormatter={(val) => new Date(val).toLocaleDateString(isMk ? 'mk-MK' : 'en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                                />
+                                <Area type="monotone" name={isMk ? 'Корисници' : 'Users'} dataKey="users" stroke="#8b5cf6" strokeWidth={2} fillOpacity={1} fill="url(#colorUsers)" />
+                                <Area type="monotone" name={isMk ? 'Огласи' : 'Listings'} dataKey="listings" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorListings)" />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                {/* Revenue Chart */}
+                <div className="space-y-4">
+                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+                        {isMk ? 'Приход (30 дена)' : 'Revenue (30 days)'}
+                    </h3>
+                    <div className="h-[300px] w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={historicalData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                                <defs>
+                                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                                      <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3}/>
+                                      <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.5} />
+                                <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} tickFormatter={(val) => new Date(val).toLocaleDateString(isMk ? 'mk-MK' : 'en-US', { month: 'short', day: 'numeric' })} />
+                                <YAxis yAxisId="left" tickLine={false} axisLine={false} tickMargin={8} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} tickFormatter={(val) => `${val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val}`} />
+                                <Tooltip 
+                                    contentStyle={{ backgroundColor: "var(--card)", borderColor: "var(--border)", borderRadius: "8px", fontSize: "12px", fontWeight: "bold", color: 'var(--foreground)' }}
+                                    itemStyle={{ color: "var(--foreground)" }}
+                                    labelStyle={{ color: "var(--foreground)" }}
+                                    labelFormatter={(val) => new Date(val).toLocaleDateString(isMk ? 'mk-MK' : 'en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                                    formatter={(value: any) => [`${(value || 0).toLocaleString()} MKD`, isMk ? 'Приход' : 'Revenue']}
+                                />
+                                <Area yAxisId="left" type="monotone" name={isMk ? 'Приход' : 'Revenue'} dataKey="revenue" stroke="#f59e0b" strokeWidth={2} fillOpacity={1} fill="url(#colorRevenue)" />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+             </div>
+           )}
         </CardContent>
       </Card>
     </div>

@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { BadgeCheck } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface SellerBadgeProps {
   seller?: {
@@ -16,6 +17,8 @@ interface SellerBadgeProps {
 }
 
 export function SellerBadge({ seller, className, size = 'md', showLabel = false }: SellerBadgeProps) {
+  const t = useTranslations('SellerBadge');
+
   if (!seller) return null;
 
   // Logic: User is "Verified" if explicitly verified OR if they are ACTIVE (approved by admin)
@@ -45,12 +48,12 @@ export function SellerBadge({ seller, className, size = 'md', showLabel = false 
             containerSizes[size],
             className
           )} 
-          title="Verified Store"
+          title={t('verified_store')}
         >
           <BadgeCheck className={cn("text-amber-500 fill-amber-500/20", iconSizes[size])} />
         </div>
         {showLabel && (
-          <span className="text-[10px] font-bold text-amber-500/80 uppercase tracking-tighter">Store</span>
+          <span className="text-[10px] font-bold text-amber-500/80 uppercase tracking-tighter">{t('store')}</span>
         )}
       </div>
     );
@@ -63,7 +66,7 @@ export function SellerBadge({ seller, className, size = 'md', showLabel = false 
         containerSizes[size],
         className
       )} 
-      title="Verified User"
+      title={t('verified_user')}
     >
       <BadgeCheck className={cn("text-blue-500 fill-blue-500/20", iconSizes[size])} />
     </div>

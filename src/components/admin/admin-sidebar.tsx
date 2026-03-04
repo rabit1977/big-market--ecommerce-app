@@ -10,13 +10,16 @@ import {
     LayoutDashboard,
     LogOut,
     Menu,
+    Moon,
     Sparkles,
+    Sun,
     Tag,
     Trash2,
     Users
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
+import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
@@ -37,6 +40,7 @@ export const AdminSidebar = () => {
   const t = useTranslations('Admin');
   const { data: session } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const { theme, setTheme } = useTheme();
 
   const navItems: NavItem[] = [
     { href: '/admin/dashboard',          label: t('overview'),           icon: LayoutDashboard },
@@ -119,6 +123,16 @@ export const AdminSidebar = () => {
                 </Link>
             </div>
             <div className='flex items-center gap-2'>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="h-8 w-8 rounded-full"
+                  aria-label="Toggle theme"
+                >
+                  <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                </Button>
                 <AdminNotifications user={session?.user} />
                 <Button variant="ghost" size="sm" asChild className="h-8 w-8 p-0 rounded-full">
                      <Link href="/">

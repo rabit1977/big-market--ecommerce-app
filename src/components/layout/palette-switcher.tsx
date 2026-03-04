@@ -1,8 +1,9 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
+import { Check, Palette } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const PALETTE_KEY = 'app-palette';
@@ -22,10 +23,8 @@ function applyPalette(id: string) {
 }
 
 export function PaletteSwitcher() {
-  // Initialize with stable default to match server
   const [currentPalette, setCurrentPalette] = useState('default');
 
-  // Load palette and apply effects on mount only
   useEffect(() => {
     const saved = localStorage.getItem(PALETTE_KEY) ?? 'default';
     setCurrentPalette(saved);
@@ -37,36 +36,43 @@ export function PaletteSwitcher() {
     applyPalette(id);
   };
 
+  const currentSettings = PALETTES.find(p => p.id === currentPalette) || PALETTES[0];
+
   return (
-    <div className="space-y-3 px-1">
-      <div className="flex flex-nowrap gap-1.5 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide no-scrollbar md:justify-center">
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative h-9 w-9 flex rounded-full text-muted-foreground bm-interactive transition-all"
+          aria-label="Theme Color Palette"
+        >
+          <Palette className="h-4 w-4" />
+          <span 
+            className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full ring-2 ring-background border border-border"
+            style={{ backgroundColor: currentSettings.color }}
+          />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-[180px] z-[70]">
         {PALETTES.map((p) => (
-          <button
+          <DropdownMenuItem
             key={p.id}
             onClick={() => handlePaletteChange(p.id)}
-            aria-label={`Switch to ${p.name} palette`}
-            aria-pressed={currentPalette === p.id}
             className={cn(
-              'relative flex flex-col items-center gap-1 p-1 rounded-xl transition-all hover:bg-muted group shrink-0 min-w-[44px]',
-              currentPalette === p.id ? 'bg-muted shadow-sm' : 'opacity-70 hover:opacity-100'
+               "flex items-center gap-2",
+               currentPalette === p.id ? "bg-primary/10 font-bold" : ""
             )}
           >
             <div
-              className="w-7 h-7 rounded-full border-2 border-background shadow-inner flex items-center justify-center transition-transform group-hover:scale-110 shrink-0"
+              className="w-4 h-4 rounded-full border border-border shadow-inner shrink-0"
               style={{ backgroundColor: p.color }}
-            >
-              {currentPalette === p.id && (
-                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
-                  <Check className="w-3.5 h-3.5 text-white drop-shadow-md" strokeWidth={3} />
-                </motion.div>
-              )}
-            </div>
-            <span className="text-[8px] font-bold uppercase tracking-tight truncate w-full text-center leading-tight">
-              {p.name}
-            </span>
-          </button>
+            />
+            <span className="flex-1">{p.name}</span>
+            {currentPalette === p.id && <Check className="w-4 h-4 text-primary" />}
+          </DropdownMenuItem>
         ))}
-      </div>
-    </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

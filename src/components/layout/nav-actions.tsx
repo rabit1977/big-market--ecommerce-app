@@ -13,13 +13,17 @@ import {
   BadgeCheck, BarChart, Bell,
   ChevronRight, CreditCard, Crown,
   Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
+  Moon,
   Package, Pencil, Settings, ShieldCheck,
-  Star, Store, Trash,
+  Star, Store,
+  Sun,
+  Trash,
   User, Users,
   Wallet, X
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
+import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -64,9 +68,14 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   const user = session?.user;
   const t = useTranslations('NavActions');
   const tNav = useTranslations('Navigation');
+  const { theme, setTheme } = useTheme();
 
   const unreadNotificationsCount =
     useQuery(api.notifications.getUnreadCount, user?.id ? { userId: user.id } : 'skip') ?? 0;
+
+  // Fetch the current user's Convex profile to detect BUSINESS/COMPANY tier
+  const convexUser = useQuery(api.users.getByExternalId, user?.id ? { externalId: user.id } : 'skip');
+  const isBusiness = (convexUser as any)?.membershipTier === 'BUSINESS' || (convexUser as any)?.accountType === 'COMPANY';
 
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -87,7 +96,13 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   useEffect(() => {
     if (!isPanelOpen) return;
     const handleClick = (e: MouseEvent) => {
-      if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
+      const target = e.target as HTMLElement;
+      // Do not close if clicking inside a Radix UI portal (like dropdown menus)
+      if (target.closest('[data-radix-portal]') || target.closest('[role="menu"]')) {
+        return;
+      }
+
+      if (panelRef.current && !panelRef.current.contains(target)) {
         setIsPanelOpen(false);
       }
     };
@@ -198,7 +213,8 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
 
   const accountItems: MenuItem[] = [
     { href: '/my-listings', icon: Package, label: t('my_listings') },
-    { href: `/store/${user.id}`, icon: Store, label: tNav('stores'), highlight: true },
+    // Only show personal storefront link for BUSINESS/COMPANY sellers
+    ...(isBusiness && user?.id ? [{ href: `/store/${user.id}`, icon: Store, label: tNav('my_store'), highlight: true }] : []),
     { href: '/my-listings/stats', icon: BarChart, label: t('ad_statistics') },
     { href: '/my-listings/saved-searches', icon: Bell, label: t('saved_searches_alerts') },
     { href: '/wallet', icon: CreditCard, label: t('account_overview') },
@@ -343,7 +359,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', stiffness: 350, damping: 35 }}
-                className="fixed top-0 bottom-0 right-0 z-[60] w-[80%] max-w-[280px] bg-background shadow-2xl flex flex-col overflow-hidden border-l border-border"
+                className="fixed top-0 bottom-0 right-0 z-[60] w-[80%] max-w-[320px] bg-background shadow-2xl flex flex-col overflow-hidden border-l border-border"
                 role="dialog"
                 aria-modal="true"
                 aria-label="Account menu"
@@ -392,6 +408,24 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
 
                 {/* Menu */}
                 <div className="flex-1 overflow-y-auto overscroll-contain py-1">
+                  <div className="flex items-center px-4 pt-2 pb-2">
+                      <div className="flex items-center justify-around gap-2 mr-auto w-full">
+                        <LanguageSwitcher />
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                          className="h-9 w-9 shrink-0 rounded-full bm-interactive text-muted-foreground hover:text-foreground"
+                          aria-label="Toggle theme"
+                        >
+                          <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                          <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                        </Button>
+                        <PaletteSwitcher />
+                      </div>
+                  </div>
+                  <div className="mx-3 my-1 h-px bg-border/30" />
+
                   {adminItems.length > 0 && (
                     <>
                       {renderSectionLabel(t('administration'))}
@@ -400,12 +434,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                     </>
                   )}
 
-                  {renderSectionLabel(t('app_style'))}
-                  <div className="px-1.5 mb-1 flex items-center gap-2">
-                    <div className="flex-1"><PaletteSwitcher /></div>
-                    <LanguageSwitcher />
-                  </div>
-                  <div className="mx-3 my-1 h-px bg-border/30" />
+
 
                   <div>
                     {renderSectionLabel(t('navigation_section'))}

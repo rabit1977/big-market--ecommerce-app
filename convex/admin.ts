@@ -156,3 +156,60 @@ export const getListingsDetailed = query({
     });
   },
 });
+
+export const getHistoricalTrends = query({
+  args: {},
+  handler: async (ctx) => {
+    // Collect data for the last 30 days
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).getTime();
+
+    const users = await ctx.db
+      .query("users")
+      .withIndex("by_createdAt", (q) => q.gte("createdAt", thirtyDaysAgo))
+      .collect();
+
+    const listings = await ctx.db
+      .query("listings")
+      .withIndex("by_createdAt", (q) => q.gte("createdAt", thirtyDaysAgo))
+      .collect();
+
+    const transactions = await ctx.db
+      .query("transactions")
+      .withIndex("by_createdAt", (q) => q.gte("createdAt", thirtyDaysAgo))
+      .collect();
+
+    const daysMap = new Map<string, { date: string; users: number; listings: number; revenue: number }>();
+
+    // Initialize the map with all dates from the last 30 days to ensure continuous charts
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      const dateStr = d.toISOString().split('T')[0]; 
+      daysMap.set(dateStr, { date: dateStr, users: 0, listings: 0, revenue: 0 });
+    }
+
+    users.forEach(u => {
+      if (u.createdAt) {
+          const dateStr = new Date(u.createdAt).toISOString().split('T')[0];
+          if (daysMap.has(dateStr)) daysMap.get(dateStr)!.users += 1;
+      }
+    });
+
+    listings.forEach(l => {
+      const ts = l.createdAt || l._creationTime;
+      if (ts) {
+        const dateStr = new Date(ts).toISOString().split('T')[0];
+        if (daysMap.has(dateStr)) daysMap.get(dateStr)!.listings += 1;
+      }
+    });
+
+    transactions.forEach(t => {
+      if (t.status === "COMPLETED" && (t.type === "TOPUP" || t.type === "SUBSCRIPTION" || t.type === "PROMOTION" || t.type === "LISTING_PROMOTION")) {
+        const dateStr = new Date(t.createdAt).toISOString().split('T')[0];
+        if (daysMap.has(dateStr)) daysMap.get(dateStr)!.revenue += (t.amount || 0);
+      }
+    });
+
+    return Array.from(daysMap.values());
+  },
+});

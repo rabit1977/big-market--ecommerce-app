@@ -52,27 +52,39 @@ export async function POST(req: NextRequest) {
 
     // Upload to Cloudinary with optimizations and watermark
     const uploadResponse = await cloudinary.uploader.upload(fileUri, {
-      folder: 'classifieds-platform/uploads', // Organize in a folder
+      folder: 'classifieds-platform/uploads',
       resource_type: 'auto',
-      quality: 'auto', // Smart compression
-      fetch_format: 'auto', // Automatic format selection (WebP, AVIF)
+      quality: 'auto',
+      fetch_format: 'auto',
       transformation: [
-        // Optimize maximum dimensions for performance
+        // Step 1 — cap dimensions (portrait & landscape safe)
         { width: 1600, height: 1600, crop: 'limit' },
-        // Apply "Biggest Market" Anti-Scraping Watermark
+        // Step 2 — draw watermark text at a safe small size, anchored to bottom-right corner.
+        // Using fl_relative + small % width so text always fits regardless of image size.
         {
           color: '#FFFFFF',
           overlay: {
             font_family: 'Arial',
-            font_size: 40,
+            font_size: 18,
             font_weight: 'bold',
-            text: 'BIGGEST MARKET'
-          }
+            letter_spacing: 2,
+            text: 'BIGGEST MARKET',
+          },
+          // Constrain text width to 40% of the image width (shrink if needed)
+          width: 0.40,
+          crop: 'fit',
+          flags: 'relative',
         },
-        { flags: 'layer_apply', gravity: 'south_east', x: 20, y: 20, opacity: 60 },
-        // Add a subtle drop shadow to make it readable on light backgrounds
-        { effect: 'shadow:50', color: '#000000' }
-      ]
+        // Step 3 — position the rendered text layer inside the image (safe % inset)
+        {
+          flags: 'layer_apply.relative',
+          gravity: 'south_east',
+          // 3% inset from each edge — scales with image size, never clips
+          x: 0.03,
+          y: 0.03,
+          opacity: 60,
+        },
+      ],
     });
 
     console.log(`File uploaded to Cloudinary: ${uploadResponse.secure_url}`);

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '@/convex/_generated/api';
+import { formatCurrency } from '@/lib/utils/formatters';
 import { useQuery } from 'convex/react';
 import {
     ArrowRight,
@@ -165,7 +166,9 @@ export function AdminDashboardClient() {
                        </div>
                     </div>
                     <div className="flex items-center gap-4">
-                       <p className="text-sm sm:text-lg font-black tracking-tighter uppercase whitespace-nowrap">{listing.price} MKD</p>
+                       <p className="text-sm sm:text-lg font-black tracking-tighter uppercase whitespace-nowrap">
+                          {formatCurrency(listing.price, listing.currency || 'MKD')}
+                       </p>
                        <Button size="sm" variant="ghost" className="h-10 w-10 p-0 rounded-xl bm-interactive" asChild>
                           <Link href={`/admin/listings`}>
                             <ArrowUpRight className="w-5 h-5" />

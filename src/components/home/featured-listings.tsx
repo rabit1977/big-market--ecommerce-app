@@ -43,7 +43,20 @@ interface FeaturedListingsProps {
 export function FeaturedListings({ listings, variant = 'horizontal', title }: FeaturedListingsProps) {
   const tHome = useTranslations('Home');
   const tCommon = useTranslations('Common');
+  const tFilter = useTranslations('FilterPanel');
   const { isFavorite, toggleFavorite } = useFavorites();
+
+  const getConditionLabel = (condition?: string | null) => {
+    if (!condition) return null;
+    switch (condition.toLowerCase()) {
+      case 'new':      return tCommon('brand_new');
+      case 'like-new': return tFilter('cond_like_new');
+      case 'good':     return tFilter('cond_good');
+      case 'fair':     return tFilter('cond_fair');
+      case 'used':     return tCommon('pre_owned');
+      default:         return condition;
+    }
+  };
 
   if (!listings || !Array.isArray(listings)) return null;
 
@@ -292,7 +305,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
 
                                     {listing.condition && (
                                         <div className="text-[10px] text-muted-foreground/60 font-semibold uppercase tracking-tight mt-1">
-                                            {listing.condition === 'NEW' ? tCommon('brand_new') : tCommon('pre_owned')}
+                                            {getConditionLabel(listing.condition)}
                                         </div>
                                     )}
                                 </div>
