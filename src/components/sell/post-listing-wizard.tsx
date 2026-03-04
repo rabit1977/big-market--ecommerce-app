@@ -93,6 +93,7 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
           formData.description &&
           formData.price &&
           formData.city &&
+          formData.condition &&
           formData.contactPhone &&
           formData.contactEmail
         );
@@ -134,6 +135,7 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
         isPriceNegotiable: formData.isPriceNegotiable,
         category: formData.category,
         subCategory: formData.subCategory,
+        condition: formData.condition,
         city: formData.city,
         region: formData.region,
         images: sanitizedImages,

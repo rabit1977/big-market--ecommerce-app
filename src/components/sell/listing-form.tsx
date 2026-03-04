@@ -5,11 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Listing, ListingWithRelations } from '@/lib/types/listing';
@@ -164,6 +164,7 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
     state:       (initialData as any)?.region ?? '',
     phone:       initialData?.contactPhone ?? '',
     email:       (initialData as any)?.contactEmail ?? '',
+    condition:   (initialData as any)?.condition ?? 'new',
     currency:    (initialData as any)?.currency ?? 'MKD',
     isPriceNegotiable: (initialData as any)?.isPriceNegotiable ?? false,
     status:      initialData?.status ?? 'PENDING_APPROVAL',
@@ -274,6 +275,7 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
         isPriceNegotiable: formData.isPriceNegotiable,
         category: categorySlug,
         subCategory: subCategorySlug || undefined,
+        condition: (formData as any).condition || undefined,
         region: state || undefined,
         contactPhone: phone || undefined,
         contactEmail: email || undefined,
@@ -514,7 +516,7 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
       {/* Location */}
       <div className="space-y-4">
         <SectionHeader title={t('label_location_contact')} />
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-3 gap-4">
           <div className="space-y-1.5">
             <Label htmlFor="city" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">{t('label_city')}</Label>
             <Input id="city" name="city" placeholder={t('city_placeholder')} value={formData.city} onChange={handleInputChange} required />
@@ -522,6 +524,21 @@ export function ListingForm({ categories, initialData, onSuccess, isAdmin = fals
           <div className="space-y-1.5">
             <Label htmlFor="state" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">{t('label_region')}</Label>
             <Input id="state" name="state" placeholder={t('region_placeholder')} value={formData.state} onChange={handleInputChange} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="condition" className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">{t('tip_condition')}</Label>
+            <Select value={(formData as any).condition} onValueChange={(val) => setFormData(prev => ({ ...prev, condition: val }))}>
+              <SelectTrigger id="condition" className="bg-background">
+                <SelectValue placeholder={t('tip_condition')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="new">New</SelectItem>
+                <SelectItem value="like-new">Like New</SelectItem>
+                <SelectItem value="good">Good</SelectItem>
+                <SelectItem value="fair">Fair</SelectItem>
+                <SelectItem value="used">Used</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>

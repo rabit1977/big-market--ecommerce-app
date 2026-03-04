@@ -212,7 +212,7 @@ export function DetailsStep({
               value={formData.city}
               onValueChange={(value) => updateFormData({ city: value })}
             >
-              <SelectTrigger className="h-11 bg-background border-2 focus:border-primary">
+              <SelectTrigger id="city" className="h-11 bg-background border-2 focus:border-primary">
                 <SelectValue placeholder={t('city_placeholder')} />
               </SelectTrigger>
               <SelectContent>
@@ -221,6 +221,27 @@ export function DetailsStep({
                     {city}
                   </SelectItem>
                 ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="condition" className="text-sm font-semibold">
+              {t('label_condition')} <span className="text-destructive">*</span>
+            </Label>
+            <Select
+              value={formData.condition}
+              onValueChange={(value) => updateFormData({ condition: value })}
+            >
+              <SelectTrigger id="condition" className="h-11 bg-background border-2 focus:border-primary">
+                <SelectValue placeholder={t('label_condition')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="new">New</SelectItem>
+                <SelectItem value="like-new">Like New</SelectItem>
+                <SelectItem value="good">Good</SelectItem>
+                <SelectItem value="fair">Fair</SelectItem>
+                <SelectItem value="used">Used</SelectItem>
               </SelectContent>
             </Select>
           </div>

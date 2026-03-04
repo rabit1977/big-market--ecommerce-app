@@ -938,6 +938,7 @@
     "cat_select": "Изберете {name}",
     "details_title": "Детали за Оглас",
     "label_title": "Наслов",
+    "label_condition": "Состојба",
     "label_price": "Цена",
     "label_city": "Град",
     "label_description": "Опис",

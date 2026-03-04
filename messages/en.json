@@ -938,6 +938,7 @@
     "cat_select": "Select {name}",
     "details_title": "Listing Details",
     "label_title": "Title",
+    "label_condition": "Condition",
     "label_price": "Price",
     "label_city": "City",
     "label_description": "Description",
