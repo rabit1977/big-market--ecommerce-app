@@ -46,7 +46,7 @@ export default async function StorePage({ params }: StorePageProps) {
 
   return (
     <>
-      <div className="container max-w-6xl mx-auto px-4 sm:px-6 py-4">
+      <div className="container-wide py-4">
         <AppBreadcrumbs items={[
             { label: t('sellers'), href: '/store' },
             { label: (profile.accountType === 'COMPANY' && profile.companyName ? profile.companyName : profile.name) || 'Seller' }

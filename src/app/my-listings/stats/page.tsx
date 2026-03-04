@@ -48,7 +48,7 @@ export default function ListingStatsPage() {
 
     return (
         <div className="min-h-screen pt-4 md:pt-8 pb-8 bg-background">
-            <div className="container max-w-5xl mx-auto px-4">
+            <div className="container-wide">
                 
                 <AppBreadcrumbs className="mb-6" />
 

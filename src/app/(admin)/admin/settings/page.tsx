@@ -13,7 +13,7 @@ export default async function SettingsPage() {
   const { data: settings } = await getStoreSettings();
 
   return (
-    <div className='flex-1 space-y-4 p-8 pt-6'>
+    <div className='flex-1 space-y-4 pt-6'>
       <SettingsClient initialData={settings} />
     </div>
   );

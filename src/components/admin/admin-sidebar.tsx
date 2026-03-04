@@ -151,12 +151,12 @@ export const AdminSidebar = () => {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                        'flex flex-col items-center justify-center w-full h-full gap-1 transition-colors',
+                        'flex flex-col items-center justify-center w-full h-full gap-1 transition-colors px-1',
                         isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
                     )}
                 >
-                    <item.icon className={cn("w-5 h-5 transition-colors", isActive ? "text-primary fill-primary/10" : "text-muted-foreground")} />
-                    <span className={cn("text-[10px] font-bold uppercase tracking-widest", isActive ? "text-primary" : "text-muted-foreground")}>{item.label}</span>
+                    <item.icon className={cn("w-[22px] h-[22px] transition-colors", isActive ? "text-primary fill-primary/10" : "text-muted-foreground")} />
+                    <span className={cn("text-[9px] font-bold uppercase tracking-tight w-full text-center truncate leading-tight", isActive ? "text-primary" : "text-muted-foreground")}>{item.label}</span>
                 </Link>
             );
         })}
@@ -166,12 +166,12 @@ export const AdminSidebar = () => {
             <SheetTrigger asChild>
                 <button
                     className={cn(
-                        'flex flex-col items-center justify-center w-full h-full gap-1 text-muted-foreground hover:text-foreground transition-colors',
+                        'flex flex-col items-center justify-center w-full h-full gap-1 px-1 text-muted-foreground hover:text-foreground transition-colors',
                         isMobileMenuOpen && 'text-primary'
                     )}
                 >
-                    <Menu className="w-5 h-5" />
-                    <span className="text-[10px] font-medium">{t('menu')}</span>
+                    <Menu className="w-[22px] h-[22px]" />
+                    <span className="text-[9px] font-bold uppercase tracking-tight w-full text-center truncate leading-tight">{t('menu')}</span>
                 </button>
             </SheetTrigger>
             <SheetContent side="bottom" className='h-[85vh] rounded-t-lg p-0 flex flex-col border-t border-border shadow-none'>

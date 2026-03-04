@@ -9,7 +9,7 @@ export const metadata = {
 export default async function SavedSearchesPage() {
   const t = await getTranslations('SavedSearches');
   return (
-    <div className='container max-w-5xl mx-auto pt-4 md:pt-8 min-h-screen pb-20 bg-background px-4'>
+    <div className='container-wide pt-4 md:pt-8 min-h-screen pb-20 bg-background'>
       <AppBreadcrumbs className="mb-6 md:mb-8" items={[
         { label: t('dashboard_label'), href: '/my-listings' },
         { label: t('title') }

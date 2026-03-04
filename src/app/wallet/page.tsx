@@ -42,7 +42,7 @@ export default function WalletPage() {
 
     return (
         <div className="min-h-screen pt-4 md:pt-6 pb-8 bg-muted/20">
-            <div className="container max-w-3xl mx-auto px-3 md:px-4">
+            <div className="container-wide max-w-5xl mx-auto">
                 <AppBreadcrumbs />
                 
                 {/* Header */}

@@ -72,8 +72,8 @@ export function MobileBottomNav({ wishlistCount = 0 }: MobileBottomNavProps) {
               )}
             >
               {item.primary ? (
-                <div className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/25 border-[4px] border-background group-hover:scale-105 transition-transform">
-                  <item.icon className="w-7 h-7" />
+                <div className="w-12 h-12 mt-1 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/25 border-[3px] border-background group-hover:scale-105 transition-transform">
+                  <item.icon className="w-6 h-6" />
                 </div>
               ) : (
                 <div className={cn(
@@ -81,14 +81,14 @@ export function MobileBottomNav({ wishlistCount = 0 }: MobileBottomNavProps) {
                   active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                 )}>
                   <div className="relative">
-                    <item.icon className={cn('w-6 h-6 transition-all', active ? 'fill-current' : 'stroke-[1.5]')} />
+                    <item.icon className={cn('w-5 h-5 transition-all', active ? 'fill-current' : 'stroke-[1.5]')} />
                     {badgeCount > 0 && (
-                      <span className="absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center border border-background">
+                      <span className="absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full bg-primary text-primary-foreground text-[8px] font-bold flex items-center justify-center border border-background">
                         {badgeCount > 9 ? '9+' : badgeCount}
                       </span>
                     )}
                   </div>
-                  <span className="text-[10px] font-medium">{item.label}</span>
+                  <span className="text-[9px] font-medium w-full text-center truncate px-0.5 leading-tight tracking-tight">{item.label}</span>
                 </div>
               )}
             </Link>
