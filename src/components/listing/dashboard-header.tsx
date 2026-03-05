@@ -49,7 +49,7 @@ export function MyListingsDashboardHeader() {
   const listingsUsed = user.listingsPostedCount || 0;
 
   return (
-    <div className="space-y-4 md:space-y-6 mb-8 md:mb-12">
+    <div className="space-y-4 md:space-y-6 my-4 md:mb-12">
       {/* 1. Header Card: Identity & Wallet */}
       <div className="bg-card/40 backdrop-blur-sm rounded-[2rem] p-5 lg:p-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative overflow-hidden transition-all bm-interactive shadow-none">
           

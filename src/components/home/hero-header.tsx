@@ -9,7 +9,6 @@ import { useQuery as useConvexQuery } from 'convex/react';
 import { Heart, LayoutGrid, List } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { useState } from 'react';
 
 
 // Filter definitions with Macedonian labels
@@ -33,18 +32,6 @@ export const HeroHeader = () => {
   
   const users = useConvexQuery(api.users.list) || [];
   const stores = users.filter((u: any) => u.accountType === 'BUSINESS' || u.isVerified || u.role === 'ADMIN').slice(0, 15);
-  
-  const [filters, setFilters] = useState<Record<string, boolean>>(() => {
-    const initial: Record<string, boolean> = {};
-    QUICK_FILTERS.forEach(f => {
-      initial[f.id] = f.defaultChecked;
-    });
-    return initial;
-  });
-
-  const toggleFilter = (id: string) => {
-    setFilters(prev => ({ ...prev, [id]: !prev[id] }));
-  };
 
   return (
     <div className=''>
@@ -59,12 +46,12 @@ export const HeroHeader = () => {
               <CarouselContent className="ml-0 p-1 items-center">
                 
                 {/* Categories Button */}
-                <CarouselItem className="basis-auto pl-2 first:pl-0">
+                <CarouselItem className="basis-auto pl-1 sm:pl-2 first:pl-0">
                   <Link 
                     href="/categories"
-                    className="group flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-card bm-interactive transition-all duration-200 shrink-0 shadow-none"
+                    className="group flex items-center justify-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-card bm-interactive transition-all duration-200 shrink-0 shadow-none"
                   >
-                    <div className="w-5 h-5 rounded-lg bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-200">
+                    <div className="w-5 h-5 rounded-full bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-200">
                       <LayoutGrid className="w-3 h-3" />
                     </div>
                     <span className="text-[10px] md:text-[11px] font-bold tracking-widest text-foreground uppercase whitespace-nowrap">{tHome('categories')}</span>
@@ -72,12 +59,12 @@ export const HeroHeader = () => {
                 </CarouselItem>
 
                 {/* Browse All Button */}
-                <CarouselItem className="basis-auto pl-2">
+                <CarouselItem className="basis-auto pl-1 sm:pl-2">
                   <Link 
                     href="/listings"
-                    className="group flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-card bm-interactive transition-all duration-200 shrink-0 shadow-none"
+                    className="group flex items-center justify-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-card bm-interactive transition-all duration-200 shrink-0 shadow-none"
                   >
-                    <div className="w-5 h-5 rounded-lg bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-200">
+                    <div className="w-5 h-5 rounded-full bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-200">
                       <List className="w-3 h-3" />
                     </div>  
                     <span className="text-[10px] md:text-[11px] font-bold tracking-widest text-foreground uppercase whitespace-nowrap">{tHome('browse_all')}</span>
@@ -85,17 +72,17 @@ export const HeroHeader = () => {
                 </CarouselItem>
 
                 {/* Favorites Button */}
-                <CarouselItem className="basis-auto pl-2">
+                <CarouselItem className="basis-auto pl-1 sm:pl-2">
                   <Link 
                     href="/favorites"
-                    className="group flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-card bm-interactive transition-all duration-200 shrink-0 shadow-none"
+                    className="group flex items-center justify-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-card bm-interactive transition-all duration-200 shrink-0 shadow-none"
                   >
-                    <div className="relative w-5 h-5 rounded-lg bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-200">
+                    <div className="relative w-5 h-5 rounded-full bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-200">
                       <Heart className={cn("w-3 h-3", favCount > 0 && "fill-current")} />
                     </div>
                     <span className="text-[10px] md:text-[11px] font-bold tracking-widest text-foreground uppercase whitespace-nowrap">{tNav('favorites')}</span>
                     {favCount > 0 && (
-                      <span className="bg-primary text-white text-[8px] ml-[-6px] mb-[-6px] font-bold rounded-lg min-w-4 h-4 px-1 flex items-center justify-center shadow-none border-2 border-background z-10 transition-transform group-hover:scale-110">
+                      <span className="bg-primary text-white text-[8px] ml-[-6px] mb-[-6px] font-bold rounded-full min-w-4 h-4 px-1 flex items-center justify-center shadow-none border-2 border-background z-10 transition-transform group-hover:scale-110">
                         {favCount}
                       </span>
                     )}
@@ -106,12 +93,12 @@ export const HeroHeader = () => {
 
                 {/* Storefronts Array */}
                 {stores.map(store => (
-                  <CarouselItem key={store._id} className="basis-auto pl-2">
+                  <CarouselItem key={store._id} className="basis-auto pl-1 sm:pl-2">
                     <Link 
                       href={`/store/${store.externalId}`}
-                      className="group flex items-center justify-center gap-2 pr-4 pl-2 py-2 rounded-lg bg-card bm-interactive transition-all duration-200 shrink-0 shadow-none"
+                      className="group flex items-center justify-center gap-2 pr-3 sm:pr-4 pl-1.5 sm:pl-2 py-1.5 sm:py-2 rounded-full bg-card bm-interactive transition-all duration-200 shrink-0 shadow-none"
                     >
-                      <UserAvatar user={store as any} className="w-5 h-5 border-none rounded-lg group-hover:border-primary transition-all duration-200" />
+                      <UserAvatar user={store as any} className="w-5 h-5 border-none rounded-full group-hover:border-primary transition-all duration-200" />
                       <span className="text-[10px] md:text-[11px] font-bold tracking-widest text-foreground uppercase whitespace-nowrap">
                         {store.companyName || store.name || 'Store'}
                       </span>
@@ -122,32 +109,27 @@ export const HeroHeader = () => {
                 <div className="mx-2 w-px h-6 bg-border/60 shrink-0 self-center" />
 
                 {/* Quick Filters Array */}
-                {QUICK_FILTERS.map((filter) => (
-                  <CarouselItem key={filter.id} className="basis-auto pl-2">
-                    <button
-                      type="button"
-                      onClick={() => toggleFilter(filter.id)}
-                      className={cn(
-                        "inline-flex items-center gap-2 px-4 py-2 rounded-lg text-[10px] md:text-[11px] font-bold tracking-widest uppercase transition-all duration-200 active:scale-95 whitespace-nowrap shrink-0 shadow-none bg-card bm-interactive",
-                        filters[filter.id] ? "text-foreground" : "text-muted-foreground/70"
-                      )}
-                    >
-                      <div className={cn(
-                        "w-4 h-4 rounded-md border flex items-center justify-center transition-all shrink-0",
-                        filters[filter.id] 
-                          ? "bg-primary text-white border-primary" 
-                          : "border-muted-foreground/30 bg-muted/10"
-                      )}>
-                        {filters[filter.id] && (
-                          <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 12 12" fill="none">
-                            <path d="M2 6L5 9L10 3" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                        )}
-                      </div>
-                      {tFilters(filter.id)}
-                    </button>
-                  </CarouselItem>
-                ))}
+                {QUICK_FILTERS.map((filter) => {
+                  let href = '/listings';
+                  if (filter.id === 'new') href = '/listings?condition=new';
+                  else if (filter.id === 'used') href = '/listings?condition=used';
+                  else if (filter.id === 'trade') href = '/listings?trade=true';
+                  else if (filter.id === 'forSale') href = '/listings?adType=sell';
+                  else if (filter.id === 'wanted') href = '/listings?adType=buy';
+                  else if (filter.id === 'forRent') href = '/listings?adType=rent';
+                  else if (filter.id === 'rentWanted') href = '/listings?adType=rent-wanted';
+
+                  return (
+                    <CarouselItem key={filter.id} className="basis-auto pl-1 sm:pl-2">
+                      <Link
+                        href={href}
+                        className="inline-flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] md:text-[11px] font-bold tracking-widest uppercase transition-all duration-200 active:scale-95 whitespace-nowrap shrink-0 shadow-none bg-card bm-interactive text-foreground hover:bg-primary hover:text-white"
+                      >
+                        {tFilters(filter.id)}
+                      </Link>
+                    </CarouselItem>
+                  );
+                })}
               </CarouselContent>
             </Carousel>
           </div>

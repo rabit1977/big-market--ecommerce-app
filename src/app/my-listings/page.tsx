@@ -64,8 +64,8 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
             <AppBreadcrumbs className="mb-6 md:mb-10 text-muted-foreground/60 font-bold uppercase text-[10px]" />
             
             {/* Listings Section Header */}
-            <div className='flex flex-col lg:flex-row lg:items-end justify-between gap-10 mb-12 md:mb-20 py-8 md:py-12 border-b border-card-foreground/10'>
-              <div className="space-y-4">
+            <div className='flex flex-col lg:flex-row lg:items-end justify-between gap-5 mb-6 md:mb-20 py-2 md:py-6 pb-6 border-b border-card-foreground/10'>
+              <div className="">
                 <h2 className='text-2xl md:text-5xl font-black tracking-tighter uppercase leading-tight text-foreground'>
                   {t('page_title').split(' ')[0]} <br className="hidden md:block" /> <span className="text-primary">{t('page_title').split(' ').slice(1).join(' ') || t('page_title')}</span>
                </h2>
@@ -96,7 +96,7 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
             </div>
 
             {sortedListings && sortedListings.length > 0 ? (
-                <div className='grid grid-cols-1 lg:grid-cols-3 gap-2 md:gap-8'>
+                <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8'>
                     {sortedListings.map((listing: ListingWithRelations) => (
                         <MyListingCard key={listing.id} listing={listing} />
                     ))}
