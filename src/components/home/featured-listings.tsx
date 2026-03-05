@@ -121,15 +121,22 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                             )}
                                          </div>
 
-                                          {/* Price Tag Overlay - Bottom Right */}
-                                          <div className="absolute bottom-2 right-2 z-10">
-                                              <div className="bg-background/90 backdrop-blur text-foreground px-2 py-1 rounded-lg border border-border/50">
-                                                  <span className="text-xs font-bold">
-                                                      {formatCurrency(listing.price, listing.currency)}
-                                                  </span>
-                                              </div>
+                                          {/* Date Badge */}
+                                          <div className="absolute top-2 right-2 z-10 pointer-events-none" suppressHydrationWarning>
+                                              <span className="text-[9px] font-bold text-white/80 bg-black/40 backdrop-blur-sm px-1.5 py-0.5 rounded-md border border-white/10">
+                                                  {listing.createdAt ? new Date(listing.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : ''}
+                                              </span>
                                           </div>
-                                     </div>
+
+                                           {/* Price Tag Overlay - Bottom Right */}
+                                           <div className="absolute bottom-2 right-2 z-10">
+                                               <div className="bg-background/90 backdrop-blur text-foreground px-2 py-1 rounded-lg border border-border/50">
+                                                   <span className="text-xs font-bold">
+                                                       {formatCurrency(listing.price, listing.currency)}
+                                                   </span>
+                                               </div>
+                                           </div>
+                                      </div>
 
                                       {/* Simple Content */}
                                       <div className="p-3 bg-card flex-1">
@@ -261,6 +268,13 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                                         </div>
                                     </div>
                                 )}
+
+                                {/* Date Badge */}
+                                <div className="absolute top-2 right-2 z-20 pointer-events-none" suppressHydrationWarning>
+                                    <span className="text-[9px] font-bold text-white/80 bg-black/40 backdrop-blur-sm px-1.5 py-0.5 rounded-md border border-white/10">
+                                        {listing.createdAt ? new Date(listing.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : ''}
+                                    </span>
+                                </div>
                             </div>
 
                             {/* eBay Style Content Section */}

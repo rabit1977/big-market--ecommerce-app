@@ -238,7 +238,7 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
         </div>
 
         {/* Thumbnail Section */}
-        <div className="relative aspect-[4/3] w-full bg-muted overflow-hidden">
+        <div className="relative aspect-[5/4] w-full bg-muted overflow-hidden">
              <Image
                 src={activeImage}
                 alt={listing.title}
@@ -246,9 +246,17 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 sizes="(max-width: 768px) 50vw, 33vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
             
-            <div className="absolute bottom-3 left-4 right-4 flex flex-col">
+            {/* Date Badge — bottom-right corner */}
+            <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-black/50 backdrop-blur-sm border border-white/10 px-2 py-1 rounded-lg">
+                <Clock className="w-2.5 h-2.5 text-white/60 shrink-0" />
+                <span className="text-[8px] font-black uppercase tracking-widest text-white/70 leading-none">
+                    {formatDistanceToNow(new Date(listing.createdAt || 0), { addSuffix: true })}
+                </span>
+            </div>
+
+            <div className="absolute bottom-3 left-3 right-16 flex flex-col">
                 <h3 className="font-black text-white text-sm sm:text-base leading-tight tracking-tight uppercase line-clamp-2 drop-shadow-md">
                     {listing.title}
                 </h3>
@@ -263,12 +271,8 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
                         {formatCurrency(listing.price, (listing as any).currency)}
                     </div>
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center">
                     <span className="text-[8px] font-black text-primary uppercase tracking-widest bg-primary/5 px-2 py-0.5 rounded-md border border-primary/10">ID: {listing.id?.slice(-8)}</span>
-                    <div className="flex items-center gap-1.5 text-[8px] text-muted-foreground font-black uppercase tracking-widest">
-                        <Clock className="w-3 h-3" />
-                        {formatDistanceToNow(new Date(listing.createdAt || 0), { addSuffix: true })}
-                    </div>
                 </div>
             </div>
 

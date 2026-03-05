@@ -78,7 +78,7 @@ export const ListingCard = memo(
         {/* Image Section - The container for the 'card' look */}
         <div className={cn(
           "relative overflow-hidden z-20 bg-muted transition-all duration-150 pointer-events-none",
-          isGrid ? "aspect-square w-full rounded-t-xl shrink-0" : isCard ? "aspect-video w-full rounded-t-xl shrink-0" : "flex-grow flex-shrink basis-10 min-w-10 max-w-54 h-full rounded-l-xl"
+          isGrid ? "aspect-[4/3] w-full rounded-t-xl shrink-0" : isCard ? "aspect-video w-full rounded-t-xl shrink-0" : "flex-grow flex-shrink basis-10 min-w-10 max-w-54 h-full rounded-l-xl"
         )}>
 
           <Image
@@ -101,6 +101,13 @@ export const ListingCard = memo(
                 </div>
             </div>
           )}
+          {(isGrid || isCard) && (
+            <div className="absolute top-2 right-2 z-30 pointer-events-none">
+              <span className="text-[9px] font-bold text-white/80 bg-black/40 backdrop-blur-sm px-1.5 py-0.5 rounded-md border border-white/10" suppressHydrationWarning>
+                {listing.createdAt ? new Date(listing.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : ''}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Content Section */}
@@ -114,10 +121,15 @@ export const ListingCard = memo(
                 <div className="space-y-1">
                     <div className="flex items-start justify-between gap-1.5">
                         <h3 className={cn(
-                            "font-bold text-sm sm:text-base leading-snug line-clamp-2 text-foreground/90 group-hover:underline decoration-foreground/30 underline-offset-2 transition-all",
+                            "font-bold text-sm sm:text-base leading-snug line-clamp-2 text-foreground/90",
                             isCard && "text-base sm:text-lg"
                         )}>
-                           {listing.title}
+                           <span className='group-hover:underline decoration-foreground/30 underline-offset-2 transition-all'>{listing.title}</span>
+                           <span className="flex items-center justify-between border-border/40 mt-2">
+                            <span className="text-xs text-foreground/70 font-medium uppercase tracking-tight">
+                                {getConditionLabel(listing.condition)}
+                            </span>
+                        </span>
                         </h3>
                         <div className="flex items-center gap-1.5 flex-wrap">
                             <SellerBadge seller={listing.user} size="sm" showLabel />
@@ -136,7 +148,7 @@ export const ListingCard = memo(
                         {listing.previousPrice && listing.previousPrice > listing.price && (
                             <span className="text-xs sm:text-sm text-muted-foreground line-through opacity-70" suppressHydrationWarning>
                                 {formatCurrency(listing.previousPrice as number, (listing as any).currency)}
-                            </span>
+                            </span>  
                         )}
                     </div>
                     
@@ -161,15 +173,6 @@ export const ListingCard = memo(
                             {listing.description}
                         </p>
                     )}
-
-                    <div className="flex items-center justify-between pt-2 border-t-1 border-border/40 mt-2">
-                        <div className="text-xs text-foreground/70 font-medium uppercase tracking-tight">
-                            {getConditionLabel(listing.condition)}
-                        </div>
-                        <div className="text-xs text-foreground/70 font-medium" suppressHydrationWarning>
-                           {new Date(listing.createdAt).toLocaleDateString()}
-                        </div>
-                    </div>
                 </div>
              </>
            ) : (

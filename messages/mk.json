@@ -80,6 +80,8 @@
     "saving_search": "Се зачувува...",
     "search_saved_success": "Пребарувањето е успешно зачувано!",
     "failed_to_save": "Грешка при зачувување на пребарувањето",
+    "save_label": "Зачувај",
+    "alerts_label": "Известувања",
     "showing": "Прикажани",
     "results": "резултати",
     "sort_option": "Сортирај",

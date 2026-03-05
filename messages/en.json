@@ -80,6 +80,8 @@
     "saving_search": "Saving search...",
     "search_saved_success": "Search saved successfully!",
     "failed_to_save": "Failed to save search",
+    "save_label": "Save",
+    "alerts_label": "Alerts",
     "showing": "Showing",
     "results": "results",
     "sort_option": "Sort option",

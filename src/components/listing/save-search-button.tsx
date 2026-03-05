@@ -6,12 +6,14 @@ import { cn } from '@/lib/utils';
 import { useMutation, useQuery } from 'convex/react';
 import { Bell, Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 
 export function SaveSearchButton() {
   const { data: session } = useSession();
+  const t = useTranslations('ListingGrid');
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -92,7 +94,7 @@ export function SaveSearchButton() {
       variant={isSaved ? "secondary" : "outline"}
       size="sm"
       className={cn(
-        "gap-2 rounded-xl font-bold transition-all h-10",
+        "gap-2 rounded-xl font-bold transition-all h-9",
         isSaved 
           ? 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20' 
           : 'bg-background border-border hover:bg-muted/50'
@@ -107,7 +109,7 @@ export function SaveSearchButton() {
       ) : (
          <Bell className="w-4 h-4" />
       )}
-      <span className="hidden sm:inline">{isSaved ? 'Alerts' : 'Save'}</span>
+      <span className="hidden sm:inline">{isSaved ? t('alerts_label') : t('save_label')}</span>
     </Button>
   );
 }

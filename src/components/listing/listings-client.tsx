@@ -8,9 +8,8 @@ import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useEffect, useMemo, useState, useTransition } from 'react';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 import { ListingRowCarousel } from './listing-row-carousel';
-import { SaveSearchButton } from './save-search-button';
 
 interface ListingsClientProps {
   initialListings: any[];
@@ -163,20 +162,6 @@ export function ListingsClient({
       </aside>
 
       <div className={cn("space-y-6 min-h-[800px] transition-opacity duration-300", isPending && "opacity-60 pointer-events-none")}>
-        <div className="lg:hidden flex items-center w-full gap-2">
-          <Button
-            onClick={() => setIsMobileFiltersOpen(true)}
-            variant="outline"
-            className="flex-1 h-10 font-medium tracking-tight border border-border bg-card text-foreground hover:bg-secondary flex items-center justify-center gap-2 rounded-lg active:scale-95 transition-all"
-          >
-            <SlidersHorizontal className="h-4 w-4" />
-            {t('filters_sort')}
-          </Button>
-          <Suspense fallback={<div className="w-10 h-10 bg-muted rounded-lg animate-pulse" />}>
-             <SaveSearchButton />
-          </Suspense>
-        </div>
-
         {showHub && hubData ? (
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
              <ListingRowCarousel title={t('hub_latest')} listings={hubData.all} viewAllHref="/listings?sort=newest" />
@@ -207,12 +192,8 @@ export function ListingsClient({
                sortBy={initialFilters.sortBy}
                onSortChange={(val) => handleFilterChange({ ...initialFilters, sortBy: val })}
                onQuickFilter={(extraFilters) => handleFilterChange({ ...initialFilters, ...extraFilters })}
+               onOpenFilters={() => setIsMobileFiltersOpen(true)}
             />
-            <div className="hidden lg:block absolute -top-12 right-0">
-               <Suspense fallback={<div className="w-24 h-10 bg-muted rounded-lg animate-pulse" />}>
-                  <SaveSearchButton />
-               </Suspense>
-            </div>
           </div>
         ) : (
           <div className="text-center py-20 bg-background rounded-lg border border-border">

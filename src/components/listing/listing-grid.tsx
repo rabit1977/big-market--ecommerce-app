@@ -3,22 +3,20 @@
 import { ListingCard } from '@/components/shared/listing/listing-card';
 import { Button } from '@/components/ui/button';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from '@/components/ui/select';
-import { api } from '@/convex/_generated/api';
 import { ListingWithRelations } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { useMutation } from 'convex/react';
-import { ArrowUpDown, LayoutGrid, List, RectangleVertical, Save, SlidersHorizontal } from 'lucide-react';
+import { ArrowUpDown, LayoutGrid, List, RectangleVertical, SlidersHorizontal } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
-import { toast } from 'sonner';
+import { SaveSearchButton } from './save-search-button';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -88,8 +86,6 @@ export function ListingGrid({
     }
   }, []);
 
-  const saveSearchMutation = useMutation(api.searches.saveSearch);
-
   const handleViewChange = (mode: ViewMode) => {
     setViewMode(mode);
     localStorage.setItem(VIEW_MODE_KEY, mode);
@@ -99,38 +95,10 @@ export function ListingGrid({
     if (onSortChange) startTransition(() => onSortChange(value));
   };
 
-  const handleSaveSearch = async () => {
-    if (!session?.user?.id) {
-      toast.error(tListings('login_to_save'));
-      return;
-    }
-
-    const query = searchParams.get('search') || '';
-    const filters = Object.fromEntries(searchParams.entries());
-    ['search', 'sort', 'page', 'filters'].forEach((key) => delete filters[key]);
-
-    toast.promise(
-      saveSearchMutation({
-        userId: session.user.id,
-        name: query || tListings('saved_search'),
-        query,
-        url: `${pathname}?${searchParams.toString()}`,
-        filters: JSON.stringify(filters),
-        isEmailAlert: true,
-        frequency: 'daily',
-      }),
-      {
-        loading: tListings('saving_search'),
-        success: tListings('search_saved_success'),
-        error: tListings('failed_to_save'),
-      }
-    );
-  };
-
   return (
-    <div className={className}>
+    <div className={cn("space-y-6", className)}>
       {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 
         {/* Results Count */}
         <div className="hidden md:block text-sm text-muted-foreground mr-auto">
@@ -152,7 +120,7 @@ export function ListingGrid({
               </Button>
             )}
             <Select value={sortBy} onValueChange={handleSortChange} disabled={isPending}>
-              <SelectTrigger className="h-9 w-full sm:w-[180px] text-xs bg-card bm-interactive">
+              <SelectTrigger className="h-9 flex-1 sm:w-[180px] text-xs bg-card bm-interactive">
                 <div className="flex items-center gap-2">
                   <ArrowUpDown className="h-3.5 w-3.5 text-foreground" />
                   <SelectValue placeholder={tListings('sort_option')} />
@@ -166,18 +134,8 @@ export function ListingGrid({
                 ))}
               </SelectContent>
             </Select>
+            {showSaveSearch && <SaveSearchButton />}
           </div>
-          {showSaveSearch && (
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-9 w-9 shrink-0 bm-interactive"
-              aria-label={tListings('save_this_search')}
-              onClick={handleSaveSearch}
-            >
-              <Save className="h-4 w-4" />
-            </Button>
-          )}
 
           <div className="bg-muted/10 flex items-center bm-interactive rounded-lg p-1 h-9 shrink-0" role="group" aria-label="View mode">
             {viewModes.map(({ mode, icon, label }) => (
