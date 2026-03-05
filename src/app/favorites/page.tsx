@@ -9,6 +9,7 @@
 
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { ListingCard } from '@/components/shared/listing/listing-card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useMutation, useQuery } from 'convex/react';
@@ -18,11 +19,13 @@ import {
   History as HistoryIcon,
   Loader2,
   Search,
-  Trash2,
+  Store,
+  Trash2
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+
 import { memo, use, useOptimistic, useTransition } from 'react';
 import { toast } from 'sonner';
 import { api } from '../../../convex/_generated/api';
@@ -47,7 +50,7 @@ export default function FavoritesPage({ searchParams }: PageProps) {
   const { tab } = use(searchParams);
   const t = useTranslations('Favorites');
   const activeTab =
-    tab === 'searches' || tab === 'listings' || tab === 'visited'
+    tab === 'searches' || tab === 'listings' || tab === 'visited' || tab === 'stores'
       ? tab
       : 'listings';
 
@@ -117,6 +120,7 @@ function FavoritesTabs({
   const listingFavorites = useQuery(api.favorites.getPopulated, { userId });
   const savedSearches = useQuery(api.searches.getSavedSearches, { userId });
   const visitedHistory = useQuery(api.history.getMyHistory, { userId });
+  const followedStores = useQuery(api.followedSellers.getFollowedSellers, { followerId: userId });
 
   const deleteSearchMutation = useMutation(api.searches.deleteSavedSearch);
 
@@ -159,12 +163,15 @@ function FavoritesTabs({
 
   return (
     <Tabs defaultValue={defaultTab} className="w-full">
-      <TabsList className="w-full grid grid-cols-3 mb-4 md:mb-6 p-1 rounded-lg bg-muted/60 bm-interactive">
+      <TabsList className="w-full grid grid-cols-4 mb-4 md:mb-6 p-1 rounded-lg bg-muted/60 bm-interactive">
         <TabsTrigger value="listings">
           {t('favorites_tab', { count: listingFavorites?.length ?? 0 })}
         </TabsTrigger>
-        <TabsTrigger value="searches">
+        <TabsTrigger value="searches" className="hidden sm:inline-flex">
           {t('searches_tab', { count: optimisticSearches.length })}
+        </TabsTrigger>
+        <TabsTrigger value="stores">
+          Stores ({followedStores?.length ?? 0})
         </TabsTrigger>
         <TabsTrigger value="visited">
           {t('history_tab')}
@@ -225,6 +232,45 @@ function FavoritesTabs({
                 onDelete={handleDeleteSearch}
                 isPending={isPending}
               />
+            ))}
+          </div>
+        )}
+      </TabsContent>
+
+      {/* ── Followed Stores ── */}
+      <TabsContent value="stores">
+        {!followedStores ? (
+          <CenteredSpinner />
+        ) : followedStores.length === 0 ? (
+          <EmptyState
+            icon={<Store className="w-8 h-8 md:w-10 md:h-10 text-muted-foreground/40" />}
+            title="No followed stores"
+            description="Follow sellers to easily find their listings later."
+            action={{ label: t('browse_listings'), href: '/listings' }}
+          />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            {followedStores.map((store) => store && (
+               <Link 
+                 key={store._id} 
+                 href={`/store/${store.externalId}`}
+                 className="group flex flex-col gap-3 bg-card p-4 rounded-2xl border border-border/50 hover:border-primary/30 hover:shadow-sm transition-all text-center items-center justify-center"
+               >
+                  <Avatar className="h-16 w-16 md:h-20 md:w-20 rounded-xl mb-1 shadow-sm border border-border group-hover:scale-105 transition-transform">
+                    <AvatarImage src={store.image || ''} alt={store.name || 'Store'} className="object-cover" />
+                    <AvatarFallback className="text-xl bg-muted text-muted-foreground font-bold">
+                      {store.name?.charAt(0).toUpperCase() || 'S'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <h3 className="font-bold text-sm md:text-base text-foreground group-hover:text-primary transition-colors mb-0.5 line-clamp-1 px-4">
+                      {store.accountType === 'COMPANY' && store.companyName ? store.companyName : store.name}
+                    </h3>
+                    <p className="text-[10px] md:text-xs text-muted-foreground font-medium uppercase tracking-wider">
+                      Followed {formatDistanceToNow(store.followedAt)} ago
+                    </p>
+                  </div>
+               </Link>
             ))}
           </div>
         )}

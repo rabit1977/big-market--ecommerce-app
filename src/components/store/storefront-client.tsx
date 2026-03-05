@@ -1,5 +1,6 @@
 'use client';
 
+import { FollowSellerButton } from '@/components/shared/follow-seller-button';
 import { ContactSellerButton } from '@/components/shared/listing/contact-button';
 import { ListingCard } from '@/components/shared/listing/listing-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -57,21 +58,34 @@ export function StorefrontClient({
           )}
 
           {/* Basic User Info */}
-          <div className="flex items-center gap-4 mb-8 pb-8 border-b border-border">
-            <Avatar className="h-16 w-16 rounded-lg">
-              <AvatarImage src={profile.image || ''} alt={profile.name || 'User'} className="object-cover" />
-              <AvatarFallback className="text-xl bg-muted text-muted-foreground font-bold">
-                {profile.name?.charAt(0).toUpperCase() || 'U'}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight text-foreground">
-                {profile.name}
-              </h1>
-              <div className="text-sm text-muted-foreground mt-1">
-                 {t('member_since')} {new Date(profile.createdAt).getFullYear()}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8 pb-8 border-b border-border">
+            <div className="flex items-center gap-4">
+              <Avatar className="h-16 w-16 rounded-lg">
+                <AvatarImage src={profile.image || ''} alt={profile.name || 'User'} className="object-cover" />
+                <AvatarFallback className="text-xl bg-muted text-muted-foreground font-bold">
+                  {profile.name?.charAt(0).toUpperCase() || 'U'}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <h1 className="text-2xl font-bold tracking-tight text-foreground">
+                  {profile.name}
+                </h1>
+                <div className="text-sm text-muted-foreground mt-1">
+                   {t('member_since')} {new Date(profile.createdAt).getFullYear()}
+                </div>
               </div>
             </div>
+            
+            {!isOwner && (
+              <div className="shrink-0">
+                <FollowSellerButton 
+                  sellerId={profile.externalId} 
+                  sellerName={profile.name} 
+                  showCount 
+                  className="w-full sm:w-auto h-10 px-6" 
+                />
+              </div>
+            )}
           </div>
 
           {/* Simple Listings Grid */}
@@ -143,22 +157,29 @@ export function StorefrontClient({
              </div>
           </div>
 
-          <div className="flex flex-col gap-3 w-full md:w-auto shrink-0 mt-6 md:mt-0">
-             <div className="grid grid-cols-1 md:flex md:flex-row gap-2">
-                <ContactSellerButton 
-                    sellerId={profile.externalId} 
-                    sellerName={profile.name === 'User' ? 'Andi Ebibi' : (profile.accountType === 'COMPANY' && profile.companyName ? profile.companyName : profile.name)} 
-                    contactPhone={profile.phone}
-                    contactEmail={profile.email}
-                    className="rounded-lg shadow-none font-medium tracking-tight h-12 md:h-12 px-8 border border-primary bg-primary hover:bg-primary/95 text-primary-foreground transition-all active:scale-95"
-                    label={
-                        <span className="flex items-center justify-center">
-                            <Phone className="w-5 h-5 mr-3 animate-pulse" />
-                            {t('contact_seller')}
-                        </span>
-                    }
-                />
-             </div>
+          <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto shrink-0 mt-6 md:mt-0">
+             <ContactSellerButton 
+                 sellerId={profile.externalId} 
+                 sellerName={profile.name === 'User' ? 'Andi Ebibi' : (profile.accountType === 'COMPANY' && profile.companyName ? profile.companyName : profile.name)} 
+                 contactPhone={profile.phone}
+                 contactEmail={profile.email}
+                 className="rounded-lg shadow-none font-medium tracking-tight h-12 px-6 sm:px-8 border border-primary bg-primary hover:bg-primary/95 text-primary-foreground transition-all active:scale-95 flex-1 md:flex-none"
+                 label={
+                     <span className="flex items-center justify-center">
+                         <Phone className="w-5 h-5 mr-3 animate-pulse" />
+                         {t('contact_seller')}
+                     </span>
+                 }
+             />
+             {!isOwner && (
+               <FollowSellerButton 
+                 sellerId={profile.externalId} 
+                 sellerName={profile.name === 'User' ? 'Andi Ebibi' : (profile.accountType === 'COMPANY' && profile.companyName ? profile.companyName : profile.name)} 
+                 showCount 
+                 size="lg"
+                 className="h-12 border-2 px-6 sm:px-8 rounded-lg font-bold tracking-tight uppercase flex-1 md:flex-none" 
+               />
+             )}
           </div>
         </div>
 

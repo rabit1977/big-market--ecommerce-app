@@ -132,7 +132,7 @@ export const ListingCard = memo(
                         </span>
                         </h3>
                         <div className="flex items-center gap-1.5 flex-wrap">
-                            <SellerBadge seller={listing.user} size="sm" showLabel />
+                            <SellerBadge seller={listing.user} size="sm" />
                         </div>
                     </div>
                 </div>
@@ -182,7 +182,6 @@ export const ListingCard = memo(
                     <div className="flex items-center justify-between mb-0.5">
                         <div className="flex items-center gap-1.5">
                            <SellerBadge seller={listing.user} size="sm" />
-                           {listing.user?.membershipTier === 'BUSINESS' && <span className="text-[10px] font-bold text-amber-500/80 uppercase tracking-tighter hidden xs:inline">{tBadge('store')}</span>}
                         </div>
                         <span className="text-[10px] sm:text-[11px] text-muted-foreground font-medium uppercase tracking-wider opacity-60" suppressHydrationWarning>
                             {listing.createdAt ? new Date(listing.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Now'}

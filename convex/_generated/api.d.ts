@@ -16,6 +16,7 @@ import type * as categories from "../categories.js";
 import type * as contact from "../contact.js";
 import type * as crons from "../crons.js";
 import type * as favorites from "../favorites.js";
+import type * as followedSellers from "../followedSellers.js";
 import type * as history from "../history.js";
 import type * as inquiries from "../inquiries.js";
 import type * as listingBumps from "../listingBumps.js";
@@ -59,6 +60,7 @@ declare const fullApi: ApiFromModules<{
   contact: typeof contact;
   crons: typeof crons;
   favorites: typeof favorites;
+  followedSellers: typeof followedSellers;
   history: typeof history;
   inquiries: typeof inquiries;
   listingBumps: typeof listingBumps;

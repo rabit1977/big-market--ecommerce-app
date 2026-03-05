@@ -435,4 +435,14 @@ export default defineSchema({
     .index("by_listing", ["listingId"])
     .index("by_user_listing", ["userId", "listingId"]),
 
+  // ─── FOLLOWED SELLERS ────────────────────────────────────────────────────────
+  // Users can follow sellers/stores to quickly revisit them
+  followedSellers: defineTable({
+    followerId: v.string(),   // externalId of the follower
+    sellerId: v.string(),     // externalId of the seller being followed
+    createdAt: v.number(),
+  }).index("by_follower", ["followerId"])
+    .index("by_seller", ["sellerId"])
+    .index("by_follower_seller", ["followerId", "sellerId"]),
+
 });

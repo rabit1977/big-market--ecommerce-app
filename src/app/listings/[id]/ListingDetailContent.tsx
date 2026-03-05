@@ -3,6 +3,7 @@
 import { ListingQA } from '@/components/listing/listing-qa';
 import { SaveAdButton } from '@/components/listing/save-ad-button';
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
+import { FollowSellerButton } from '@/components/shared/follow-seller-button';
 import { ContactSellerButton } from '@/components/shared/listing/contact-button';
 import { ReportModal } from '@/components/shared/report-modal';
 import { SellerBadge } from '@/components/shared/seller-badge';
@@ -282,6 +283,21 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 </Link>
               </DropdownMenuItem>
 
+              {/* Follow seller */}
+              {!isListingOwner && (
+                <DropdownMenuItem
+                  className="p-0 rounded-xl cursor-pointer focus:bg-transparent"
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  <FollowSellerButton
+                    sellerId={listing.userId}
+                    sellerName={seller?.name}
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start px-2 py-2.5 h-auto font-semibold text-sm rounded-xl"
+                  />
+                </DropdownMenuItem>
+              )}
               {/* Report */}
               <DropdownMenuSeparator className="my-1 bg-border" />
               <DropdownMenuItem asChild className="rounded-xl">
@@ -481,7 +497,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 </div>
                 <div className="flex items-start justify-between gap-2">
                   <h1 className="text-xl font-bold text-foreground leading-tight flex-1">{listing.title}</h1>
-                  <SellerBadge seller={seller} />
+                  <SellerBadge seller={seller} showLabel />
                 </div>
                 <div className="flex flex-col">
                   {listing.previousPrice && listing.previousPrice > listing.price && (
@@ -565,7 +581,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
               <div className="flex-1 min-w-0">
                 <Link href={`/store/${listing.userId}`} className="group flex items-center gap-1.5 w-fit">
                   <span className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">{seller?.name ?? t('seller')}</span>
-                  <SellerBadge seller={seller} size="sm" />
+                  <SellerBadge seller={seller} size="sm" showLabel />
                 </Link>
                 <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
                   {(seller?.isVerified || seller?.accountStatus === 'ACTIVE') ? t('verified_since') : t('member_since')} {seller?.createdAt || (seller as any)?._creationTime 
@@ -602,9 +618,19 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   />
                 </div>
               )}
-              <Button asChild variant="outline" className="w-full h-10 border rounded-lg text-muted-foreground border-border bg-background font-medium text-sm uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95">
-                <Link href={`/store/${listing.userId}`}>{t('visit_storefront')}</Link>
-              </Button>
+              <div className="grid grid-cols-2 gap-2 w-full">
+                <Button asChild variant="outline" className="w-full h-10 border rounded-lg text-muted-foreground border-border bg-background font-medium text-sm uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95">
+                  <Link href={`/store/${listing.userId}`}>{t('visit_storefront')}</Link>
+                </Button>
+                {!isListingOwner && (
+                  <FollowSellerButton
+                    sellerId={listing.userId}
+                    sellerName={seller?.name}
+                    variant="outline"
+                    className="w-full h-10 rounded-lg text-muted-foreground border-border bg-background font-medium text-sm uppercase tracking-tight active:scale-95"
+                  />
+                )}
+              </div>
             </div>
             <div className="mt-4 flex flex-col gap-2 cursor-pointer md:hidden">
               <LeaveReviewModal listingId={listing._id} sellerId={listing.userId} />
@@ -674,7 +700,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   <div>
                     <Link href={`/store/${listing.userId}`} className="group flex items-center gap-1.5 mb-1 w-fit">
                       <h4 className="font-black text-foreground text-lg group-hover:text-primary transition-colors">{seller?.name ?? (seller === undefined ? t('loading') : t('seller'))}</h4>
-                      <SellerBadge seller={seller} />
+                      <SellerBadge seller={seller} showLabel />
                     </Link>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest" suppressHydrationWarning>
                       {(seller?.isVerified || seller?.accountStatus === 'ACTIVE') ? t('verified_since') : t('member_since')}
@@ -715,6 +741,15 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                    <Button asChild variant="secondary" className="w-full h-10 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium text-sm uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95">
                      <Link href={`/store/${listing.userId}`}>{t('visit_storefront')}</Link>
                    </Button>
+                   {!isListingOwner && (
+                     <FollowSellerButton
+                       sellerId={listing.userId}
+                       sellerName={seller?.name}
+                       variant="outline"
+                       showCount
+                       className="w-full h-10"
+                     />
+                   )}
                    <LeaveReviewModal listingId={listing._id} sellerId={listing.userId} />
                 </div>
               </div>
