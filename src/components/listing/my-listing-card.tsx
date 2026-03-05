@@ -322,12 +322,12 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
             </div>
 
             {/* Main Action Buttons */}
-            <div className="flex flex-col gap-2 mt-auto">
+            <div className="flex flex-row gap-2 mt-auto">
                  <Button 
                     asChild
                     size="sm"
                     className={cn(
-                        "w-full bg-primary hover:bg-primary/95 text-white font-black h-10 text-[9px] uppercase tracking-[0.15em] rounded-xl transition-all shadow-lg shadow-primary/10 active:scale-95",
+                    "flex-1 bg-primary hover:bg-primary/95 text-white font-black h-10 text-[9px] uppercase tracking-[0.15em] rounded-xl transition-all shadow-lg shadow-primary/10 active:scale-95",
                         listing.status === 'PENDING_APPROVAL' && "opacity-50 pointer-events-none"
                     )}
                  >
@@ -337,7 +337,7 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
                     </Link>
                  </Button>
 
-                 <div className="flex gap-2">
+                 <div className="flex flex-1 gap-2">
                     <AlertDialog open={isRenewDialogOpen} onOpenChange={setIsRenewDialogOpen}>
                         <Button 
                             variant="secondary"

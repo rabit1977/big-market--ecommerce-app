@@ -91,7 +91,7 @@ export function StorefrontClient({
           {/* Simple Listings Grid */}
           <h2 className="text-lg font-bold uppercase tracking-tight mb-4">{t('sellers_items', { count: activeListings.length })}</h2>
           {activeListings.length > 0 ? (
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
               {injectedListings.map(listing => (
                 <ListingCard key={listing._id} listing={listing as any} viewMode="grid" />
               ))}
@@ -191,7 +191,7 @@ export function StorefrontClient({
            </div>
 
            {activeListings.length > 0 ? (
-             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
                 {injectedListings.map(listing => (
                   <ListingCard key={listing._id} listing={listing as any} viewMode="grid" />
                 ))}

@@ -65,7 +65,7 @@ export const ListingCard = memo(
         className={cn(
           "group relative bg-card rounded-xl flex bm-interactive overflow-hidden transition-all duration-200",
           (isGrid || isCard) ? "flex-col h-full" : "flex-row h-40 sm:h-44 md:h-48", 
-          isCard && "mb-4",
+          isCard && "mb-2 sm:mb-4",
         )}
       >
         {/* Main Card Link - Higher Z-Index but below heart button */}

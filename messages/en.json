@@ -161,7 +161,9 @@
     "results_found_plural": "{count} results found",
     "result": "result",
     "results": "results",
-    "no_cities_found": "No cities found for \"{query}\""
+    "no_cities_found": "No cities found for \"{query}\"",
+    "save_ad": "Save Ad",
+    "saved": "Saved"
   },
   "NavActions": {
     "home": "Home",
@@ -343,7 +345,17 @@
     "delete_confirm_desc": "This action is permanent and cannot be undone. Are you sure you want to remove this ad?",
     "keep_listing": "Keep Listing",
     "delete_permanently": "Delete Permanently",
-    "deleting": "Deleting…"
+    "deleting": "Deleting…",
+    "copy_link": "Copy Link",
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "following": "Following",
+    "store_followed": "Store followed!",
+    "store_unfollowed": "Store unfollowed!",
+    "unfollowed_name": "Unfollowed {name}",
+    "following_name": "Following {name}! You'll see their new listings.",
+    "save_ad": "Save Ad",
+    "saved": "Saved"
   },
   "Account": {
     "joined": "Joined",

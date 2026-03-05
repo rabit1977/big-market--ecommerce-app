@@ -79,20 +79,24 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
                         <MyListingsSearch />
                       </div>
                   </Suspense>
-                  {sortedListings && sortedListings.length > 0 && (
-                      <MyListingsExportButton listings={sortedListings} />
-                  )}
-                  <Button asChild size="lg" className="w-full sm:w-auto gap-3 rounded-2xl font-black bg-primary hover:bg-primary/95 shrink-0 h-12 text-xs px-10 uppercase tracking-[0.2em] transition-all shadow-xl shadow-primary/10 active:scale-95 border border-primary/20 group">
-                      <Link href="/sell">
-                          <Plus className="h-5 w-5 group:hover:text-primary group:hover:scale-110 transition-all duration-300 ease-in-out opacity-60 group:hover:opacity-100" />
-                          {t('post_ad')}
-                      </Link>
-                  </Button>
+                  <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
+                    {sortedListings && sortedListings.length > 0 && (
+                        <div className="flex-1">
+                            <MyListingsExportButton listings={sortedListings} />
+                        </div>
+                    )}
+                    <Button asChild size="lg" className="flex-1 sm:flex-none sm:w-auto gap-2 rounded-2xl font-black bg-primary hover:bg-primary/95 shrink-0 h-12 text-[10px] sm:text-xs px-4 sm:px-10 uppercase tracking-[0.1em] sm:tracking-[0.2em] transition-all shadow-xl shadow-primary/10 active:scale-95 border border-primary/20 group">
+                        <Link href="/sell">
+                            <Plus className="h-4 w-4 sm:h-5 sm:w-5 group:hover:text-primary group:hover:scale-110 transition-all duration-300 ease-in-out opacity-60 group:hover:opacity-100" />
+                            {t('post_ad')}
+                        </Link>
+                    </Button>
+                  </div>
               </div>
             </div>
 
             {sortedListings && sortedListings.length > 0 ? (
-                <div className='grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-8'>
+                <div className='grid grid-cols-1 lg:grid-cols-3 gap-2 md:gap-8'>
                     {sortedListings.map((listing: ListingWithRelations) => (
                         <MyListingCard key={listing.id} listing={listing} />
                     ))}

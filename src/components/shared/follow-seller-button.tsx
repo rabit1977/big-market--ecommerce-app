@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { useMutation, useQuery } from 'convex/react';
 import { Bell, BellOff, Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
@@ -27,16 +28,19 @@ export function FollowSellerButton({
   showCount = false,
   variant = 'outline',
 }: FollowSellerButtonProps) {
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations('ListingDetail');
 
   const followerId = session?.user?.id ?? '';
 
-  const isFollowing = useQuery(
+  const isFollowingRaw = useQuery(
     api.followedSellers.isFollowing,
     followerId && sellerId ? { followerId, sellerId } : 'skip'
   );
+
+  const isFollowing = isFollowingRaw ?? false;
 
   const followerCount = useQuery(
     api.followedSellers.getFollowerCount,
@@ -57,14 +61,14 @@ export function FollowSellerButton({
         if (isFollowing) {
           await unfollow({ sellerId, followerId: session.user.id });
           toast.success(
-            sellerName ? `Unfollowed ${sellerName}` : 'Store unfollowed'
+            sellerName ? t('unfollowed_name', { name: sellerName }) : t('store_unfollowed')
           );
         } else {
           await follow({ sellerId, followerId: session.user.id });
           toast.success(
             sellerName
-              ? `Following ${sellerName}! You'll see their new listings.`
-              : 'Store followed!'
+              ? t('following_name', { name: sellerName })
+              : t('store_followed')
           );
         }
       } catch {
@@ -73,7 +77,7 @@ export function FollowSellerButton({
     });
   };
 
-  const isLoading = isPending || isFollowing === undefined;
+  const isLoading = sessionStatus === 'loading' || isPending || (Boolean(followerId && sellerId) && isFollowingRaw === undefined);
 
   return (
     <Button
@@ -94,7 +98,7 @@ export function FollowSellerButton({
       ) : (
         <Bell className="h-4 w-4" />
       )}
-      {isFollowing ? 'Following' : 'Follow'}
+      {isFollowing ? t('following') : t('follow')}
       {showCount && followerCount !== undefined && followerCount > 0 && (
         <span className="ml-1 text-xs font-bold opacity-60">
           {followerCount}

@@ -198,7 +198,7 @@ function FavoritesTabs({
                        {folder} <span className="text-muted-foreground text-sm font-normal">({groupedFavorites[folder].length})</span>
                     </h3>
                  </div>
-                 <div className="grid lg:grid-cols-2 2xl:grid-cols-3 gap-2.5 md:gap-4">
+                 <div className="grid lg:grid-cols-2 2xl:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
                    {groupedFavorites[folder].map(
                      (listing: any) =>
                        listing && (
@@ -288,7 +288,7 @@ function FavoritesTabs({
             action={{ label: t('browse_listings'), href: '/listings' }}
           />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-2.5 md:gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
             {visitedHistory.map(
               (listing) =>
                 listing && (

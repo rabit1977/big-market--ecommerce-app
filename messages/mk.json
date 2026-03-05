@@ -161,7 +161,9 @@
     "results_found_plural": "{count} резултати пронајдени",
     "result": "резултат",
     "results": "резултати",
-    "no_cities_found": "Нема пронајдено градови за \"{query}\""
+    "no_cities_found": "Нема пронајдено градови за \"{query}\"",
+    "save_ad": "Зачувај",
+    "saved": "Зачуван"
   },
   "NavActions": {
     "home": "Почетна",
@@ -343,7 +345,17 @@
     "delete_confirm_desc": "Оваа акција е трајна и не може да се врати. Дали сте сигурни дека сакате да го отстраните овој оглас?",
     "keep_listing": "Задржи Оглас",
     "delete_permanently": "Избриши Трајно",
-    "deleting": "Бришење…"
+    "deleting": "Бришење…",
+    "copy_link": "Копирај Линк",
+    "follow": "Заследи",
+    "unfollow": "Отследи",
+    "following": "Следиш",
+    "store_followed": "Продавницата е заследена!",
+    "store_unfollowed": "Продавницата е отследена!",
+    "unfollowed_name": "Го отследивте {name}",
+    "following_name": "Го следите {name}! Ќе ги гледате неговите нови огласи.",
+    "save_ad": "Зачувај",
+    "saved": "Зачуван"
   },
   "Account": {
     "joined": "Придружен",

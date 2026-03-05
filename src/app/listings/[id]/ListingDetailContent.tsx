@@ -263,7 +263,6 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 </DropdownMenuItem>
               )}
 
-              {/* Copy link */}
               <DropdownMenuItem
                 className="flex items-center gap-2.5 py-2.5 rounded-xl cursor-pointer"
                 onClick={() => {
@@ -272,7 +271,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 }}
               >
                 <Copy className="h-4 w-4 text-muted-foreground" />
-                <span className="font-semibold text-sm">Copy Link</span>
+                <span className="font-semibold text-sm">{t('copy_link')}</span>
               </DropdownMenuItem>
 
               {/* Visit store */}
@@ -298,16 +297,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   />
                 </DropdownMenuItem>
               )}
-              {/* Report */}
-              <DropdownMenuSeparator className="my-1 bg-border" />
-              <DropdownMenuItem asChild className="rounded-xl">
-                <ReportModal targetId={listing._id} targetType="listing">
-                  <button className="flex items-center gap-2.5 py-2.5 px-2 w-full rounded-xl cursor-pointer text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition-colors">
-                    <ShieldAlert className="h-4 w-4" />
-                    <span className="font-semibold text-sm">{t('report_suspicious')}</span>
-                  </button>
-                </ReportModal>
-              </DropdownMenuItem>
+
 
               {/* Owner-only actions */}
               {canManage && (
@@ -320,7 +310,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    className="flex items-center gap-2.5 py-2.5 rounded-xl cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
+                    className="p-0 rounded-xl cursor-pointer focus:bg-transparent"
                     onSelect={(e) => { e.preventDefault(); }}
                   >
                     <DeleteListingButton listingId={listing._id} compact />
@@ -619,7 +609,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                 </div>
               )}
               <div className="grid grid-cols-2 gap-2 w-full">
-                <Button asChild variant="outline" className="w-full h-10 border rounded-lg text-muted-foreground border-border bg-background font-medium text-sm uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95">
+                <Button asChild variant="outline" className="w-full h-10 border rounded-lg text-muted-foreground border-border bg-background font-medium text-xs uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95">
                   <Link href={`/store/${listing.userId}`}>{t('visit_storefront')}</Link>
                 </Button>
                 {!isListingOwner && (
@@ -837,10 +827,10 @@ const SpecsColumn = memo(function SpecsColumn({
     <div className="flex flex-col">
       {specs.map(([key, value]) => (
         <div key={key} className="flex justify-between items-baseline py-2 md:py-3 border-b border-border/40 last:border-0 group transition-colors">
-          <span className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-wider pr-2">
+          <span className="flex-2 text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-wider pr-2">
             {fieldLabelMap[key] ?? humanize(key)}
           </span>
-          <span className="font-bold text-foreground text-xs md:text-sm text-right shrink-0">{String(value)}</span>
+          <span className="flex-1 font-bold text-foreground text-xs md:text-sm text-left shrink-0">{String(value)}</span>
         </div>
       ))}
     </div>
@@ -904,13 +894,13 @@ function DeleteListingButton({ listingId, compact }: { listingId: string; compac
           variant={compact ? 'ghost' : 'destructive'}
           className={
             compact
-              ? 'h-9 px-4 rounded-lg border text-muted-foreground  hover:text-foreground font-medium text-sm transition-all'
+              ? 'w-full justify-start px-2 py-2.5 h-auto font-semibold text-sm rounded-xl text-foreground hover:bg-accent focus:bg-accent'
               : 'h-10 sm:h-11 md:h-12 bg-red-600 rounded-lg hover:bg-red-700 text-white font-medium text-xs sm:text-sm sm:col-span-2 md:col-span-1 min-w-0'
           }
           disabled={isPending}
         >
-          <div className="flex items-center justify-center gap-1.5 sm:gap-2 min-w-0 w-full">
-            <Trash2 className="w-4 h-4 shrink-0 hover:text-red-700" />
+          <div className={cn("flex items-center gap-1.5 sm:gap-2 min-w-0 w-full", compact ? "justify-start pl-0.5" : "justify-center")}>
+            <Trash2 className={compact ? "w-4 h-4 text-muted-foreground shrink-0" : "w-4 h-4 shrink-0 hover:text-red-700"} />
             {isPending ? '...' : compact ? t('delete') : <span className="truncate">{t('delete_listing').replace('?', '')}</span>}
           </div>
         </Button>

@@ -4,6 +4,7 @@ import type { Id } from '@/convex/_generated/dataModel';
 import { useFavorites } from '@/lib/context/favorites-context';
 import { cn } from '@/lib/utils';
 import { Heart } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface SaveAdButtonProps {
   listingId: Id<'listings'> | string;
@@ -22,6 +23,7 @@ export function SaveAdButton({
 }: SaveAdButtonProps) {
   const { isFavorite: checkFavorite, toggleFavorite } = useFavorites();
   const isFavorite = checkFavorite(listingId);
+  const t = useTranslations('Common');
 
   return (
     <button
@@ -41,7 +43,7 @@ export function SaveAdButton({
       )}
     >
       <Heart className={cn(showText ? "w-4 h-4" : "w-6 h-6", isFavorite && "fill-current", iconClassName)} />
-      {showText && (isFavorite ? "Saved" : "Save Ad")}
+      {showText && (isFavorite ? t('saved') : t('save_ad'))}
     </button>
   );
 }

@@ -168,18 +168,18 @@ export function ListingsClient({
             <Button
               onClick={() => setIsMobileFiltersOpen(true)}
               variant="outline"
-              className="flex-1 h-10 font-medium tracking-tight border border-border bg-card text-foreground hover:bg-secondary flex items-center justify-center gap-2 rounded-lg active:scale-95 transition-all"
+              className="flex-1 h-9 sm:h-10 text-[10px] sm:text-sm font-medium tracking-tight border border-border bg-card text-foreground hover:bg-secondary flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg active:scale-95 transition-all overflow-hidden"
             >
-              <SlidersHorizontal className="h-4 w-4" />
-              {t('filters_sort')}
+              <SlidersHorizontal className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+              <span className="truncate">{t('filters_sort')}</span>
             </Button>
             <Button
               onClick={() => setShowHub(false)}
               variant="outline"
-              className="flex-1 h-10 font-medium tracking-tight border border-border bg-card text-foreground hover:bg-secondary flex items-center justify-center gap-2 rounded-lg active:scale-95 transition-all"
+              className="flex-1 h-9 sm:h-10 text-[10px] sm:text-sm font-medium tracking-tight border border-border bg-card text-foreground hover:bg-secondary flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg active:scale-95 transition-all overflow-hidden"
             >
-              <LayoutGrid className="h-4 w-4" />
-              {t('view_all_grid')}
+              <LayoutGrid className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+              <span className="truncate">{t('view_all_grid')}</span>
             </Button>
           </div>
         )}
