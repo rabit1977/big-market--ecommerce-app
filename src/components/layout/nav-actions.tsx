@@ -11,10 +11,10 @@ import { useQuery } from 'convex/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   BadgeCheck, BarChart, Bell,
-  ChevronRight, CreditCard, Crown,
+  ChevronRight, CircleUser, CreditCard, Crown,
   Heart, HelpCircle, Home, LayoutDashboard, Lock, LogOut,
   Moon,
-  Package, Pencil, Settings, ShieldCheck,
+  Pencil, Settings, ShieldCheck,
   Star, Store,
   Sun,
   Trash,
@@ -212,7 +212,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
   ];
 
   const accountItems: MenuItem[] = [
-    { href: '/my-listings', icon: Package, label: t('my_listings') },
+    { href: '/my-listings', icon: CircleUser, label: t('my_listings') },
     // Only show personal storefront link for BUSINESS/COMPANY sellers
     ...(isBusiness && user?.id ? [{ href: `/store/${user.id}`, icon: Store, label: tNav('my_store'), highlight: true }] : []),
     { href: '/my-listings/stats', icon: BarChart, label: t('ad_statistics') },
