@@ -5,7 +5,7 @@ import { ListingGrid } from '@/components/listing/listing-grid';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
+import { ChevronLeft, ChevronRight, LayoutGrid, SlidersHorizontal } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState, useTransition } from 'react';
@@ -161,7 +161,29 @@ export function ListingsClient({
         <FilterPanel onFilterChange={handleFilterChange} categories={categories} initialFilters={initialFilters} idPrefix="desktop-filter" template={template} />
       </aside>
 
-      <div className={cn("space-y-6 min-h-[800px] transition-opacity duration-300", isPending && "opacity-60 pointer-events-none")}>
+      <div className={cn(" min-h-[800px] transition-opacity duration-300", isPending && "opacity-60 pointer-events-none")}>
+        {/* Mobile top bar — only shown in hub mode; grid mode has its own filter button inside ListingGrid */}
+        {showHub && hubData && (
+          <div className="lg:hidden flex items-center w-full gap-2 mb-2">
+            <Button
+              onClick={() => setIsMobileFiltersOpen(true)}
+              variant="outline"
+              className="flex-1 h-10 font-medium tracking-tight border border-border bg-card text-foreground hover:bg-secondary flex items-center justify-center gap-2 rounded-lg active:scale-95 transition-all"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+              {t('filters_sort')}
+            </Button>
+            <Button
+              onClick={() => setShowHub(false)}
+              variant="outline"
+              className="flex-1 h-10 font-medium tracking-tight border border-border bg-card text-foreground hover:bg-secondary flex items-center justify-center gap-2 rounded-lg active:scale-95 transition-all"
+            >
+              <LayoutGrid className="h-4 w-4" />
+              {t('view_all_grid')}
+            </Button>
+          </div>
+        )}
+
         {showHub && hubData ? (
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
              <ListingRowCarousel title={t('hub_latest')} listings={hubData.all} viewAllHref="/listings?sort=newest" />
@@ -175,10 +197,11 @@ export function ListingsClient({
              <ListingRowCarousel title={t('hub_diy')} listings={hubData.diy} viewAllHref="/listings?category=home-services" />
              <ListingRowCarousel title={t('hub_home_garden')} listings={hubData.homeAndGarden} viewAllHref="/listings?category=home-garden" />
              
-             <div className="pt-8 pb-12 text-center">
-                <Button 
+             {/* Desktop-only bottom button */}
+             <div className="hidden lg:flex pt-8 pb-12 justify-center">
+                <Button
                   onClick={() => setShowHub(false)}
-                  variant="outline" 
+                  variant="outline"
                   className="rounded-lg px-8 h-12 font-medium border border-border hover:bg-secondary transition-all"
                 >
                     {t('view_all_grid')}
