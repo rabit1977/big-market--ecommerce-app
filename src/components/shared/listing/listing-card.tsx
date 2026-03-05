@@ -96,7 +96,7 @@ export const ListingCard = memo(
           
           {listing.previousPrice && listing.previousPrice > listing.price && (
             <div className="absolute bottom-2 left-2 z-20 pointer-events-none">
-                <div className="bg-[#E53238] text-white text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded-full">
+                <div className="bg-[#E53238] text-white text-[10px] sm:text-[12px] font-bold px-1.5 py-0.5 rounded-full">
                     {Math.round(((listing.previousPrice - listing.price) / listing.previousPrice) * 100)}% OFF
                 </div>
             </div>
@@ -119,9 +119,9 @@ export const ListingCard = memo(
                         )}>
                            {listing.title}
                         </h3>
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                        <SellerBadge seller={listing.user} size="sm" showLabel />
-                    </div>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                            <SellerBadge seller={listing.user} size="sm" showLabel />
+                        </div>
                     </div>
                 </div>
                 

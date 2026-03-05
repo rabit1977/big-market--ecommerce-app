@@ -1,19 +1,19 @@
 import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { api, convex } from '@/lib/convex-server';
 import {
-    Anchor,
-    Bike,
-    Briefcase,
-    Car,
-    Globe,
-    GraduationCap,
-    Home,
-    PawPrint,
-    Shirt,
-    Smartphone,
-    Truck,
-    Wrench,
-    Zap
+  Anchor,
+  Bike,
+  Briefcase,
+  Car,
+  Globe,
+  GraduationCap,
+  Home,
+  PawPrint,
+  Shirt,
+  Smartphone,
+  Truck,
+  Wrench,
+  Zap
 } from 'lucide-react';
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
@@ -222,14 +222,14 @@ export default async function CategoriesPage() {
       {/* Hero Section */}
       <div className='relative overflow-hidden'>
          <div className="absolute inset-0 bg-grid-black/[0.02] dark:bg-grid-white/[0.02]" />
-         <div className='container-wide py-1 sm:py-3 relative'>
+         <div className='container-wide pt-3 sm:pt-5 relative'>
             <div className='max-w-7xl mx-auto'>
-                <AppBreadcrumbs className="mb-3" />
+                <AppBreadcrumbs/>
             </div>
          </div>
       </div>
 
-      <div className='container-wide py-8 sm:py-12'>
+      <div className='container-wide'>
         {/* Categories Grid - Mobile: 3 cols, Desktop: Adaptive */}
         <div className='grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-6'>
           {categories.map((category, index) => {

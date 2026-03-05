@@ -82,7 +82,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                   </div>
              </div>
 
-             <div className="flex flex-col gap-4">
+             <div className="flex flex-col lg:gap-4">
                  {featuredListings.map((listing) => {
                     const imageUrl = listing.thumbnail || (listing.images && listing.images[0]) || '/placeholder-listing.jpg';
                     const promoConfig = (listing as any).isPromoted ? getPromotionConfig((listing as any).promotionTier) : null;
@@ -177,8 +177,8 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
   // Horizontal (Default) Layout - Repurposed to look like eBay
   return (
     <div className="w-full overflow-hidden ">
-      <div className="container-wide py-6 sm:py-10">
-        <div className="flex flex-col gap-6 mb-6">
+      <div className="container-wide py2 sm:py-10">
+        <div className="flex flex-col mb-6">
           <div className="flex items-center justify-between">
             <h2 className="text-xl uppercase sm:text-2xl font-bold tracking-tight text-foreground">
               {title || tHome('top_deals_boosted')}
@@ -186,7 +186,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
 
              <Link 
                href="/listings?featured=true" 
-               className="flex items-center gap-1 bg-card text-sm font-semibold text-foreground/80 underline-offset-4 capitalize rounded-lg transition-all bm-interactive p-2"
+               className="flex items-center bg-card text-sm font-semibold text-foreground/80 underline-offset-4 capitalize rounded-lg transition-all bm-interactive p-2"
              >
                {tHome('explore_all')}
                <ArrowRight className="w-4 h-4 ml-1" />
@@ -202,7 +202,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
             }}
             className="w-full"
           >
-            <CarouselContent className="-ml-3 sm:-ml-5">
+            <CarouselContent className="-ml-2">
               {featuredListings.map((listing) => {
                 const imageUrl = listing.thumbnail || (listing.images && listing.images[0]) || '/placeholder-listing.jpg';
                 const isWished = isFavorite(listing._id);
@@ -219,7 +219,7 @@ export function FeaturedListings({ listings, variant = 'horizontal', title }: Fe
                 return (
                    <CarouselItem 
                      key={listing._id} 
-                     className="pl-3 sm:pl-5 basis-[60%] xs:basis-[48%] sm:basis-[40%] md:basis-[32%] lg:basis-[25%]"
+                     className="basis-[70%] xs:basis-[48%] pl-2.5 sm:basis-[40%] md:basis-[32%] lg:basis-[25%]"
                    >
                      <Link href={`/listings/${listing._id}`} className="group block h-full bm-interactive rounded-2xl bg-card transition-all duration-200 ">
                          <div className="relative flex flex-col h-full">
