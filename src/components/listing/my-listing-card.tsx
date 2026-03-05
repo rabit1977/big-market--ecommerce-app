@@ -150,86 +150,86 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
         layout
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="group relative flex flex-col h-full bg-card/40 backdrop-blur-md rounded-[2.5rem] overflow-hidden border border-card-foreground/5 shadow-none transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 bm-interactive"
+        className="group relative flex flex-col h-full bg-card/40 backdrop-blur-md rounded-3xl overflow-hidden border border-card-foreground/5 shadow-none transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 bm-interactive"
       >
         {/* Status Badges Overlay */}
-        <div className="absolute top-4 left-4 z-20 flex flex-wrap gap-2 pointer-events-none">
+        <div className="absolute top-2.5 left-2.5 z-20 flex flex-wrap gap-1.5 pointer-events-none">
             {listing.status === 'ACTIVE' && (
-                <div className="bg-emerald-500 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center shadow-lg shadow-emerald-500/20">
-                   <div className="w-1.5 h-1.5 rounded-full bg-white mr-2 animate-pulse" />
+                <div className="bg-emerald-500 text-white px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest flex items-center shadow-lg shadow-emerald-500/20">
+                   <div className="w-1 h-1 rounded-full bg-white mr-1.5 animate-pulse" />
                    {t('status_active')}
                 </div>
             )}
             {listing.status === 'PENDING_APPROVAL' && (
-                <div className="bg-amber-500 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center shadow-lg shadow-amber-500/20">
-                   <Clock className="w-3 h-3 mr-2" />
+                <div className="bg-amber-500 text-white px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest flex items-center shadow-lg shadow-amber-500/20">
+                   <Clock className="w-2.5 h-2.5 mr-1.5" />
                    {t('status_pending')}
                 </div>
             )}
             {isPromoted && promoConfig && (
-                <div className="bg-primary text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center shadow-lg shadow-primary/20">
-                   <PromotionIcon iconName={promoConfig.icon} className="w-3 h-3 mr-2" />
+                <div className="bg-primary text-white px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest flex items-center shadow-lg shadow-primary/20">
+                   <PromotionIcon iconName={promoConfig.icon} className="w-2.5 h-2.5 mr-1.5" />
                    {t('days_pro', { days: daysLeft })}
                 </div>
             )}
         </div>
 
         {/* Action Dropdown Overlay */}
-        <div className="absolute top-4 right-4 z-20">
+        <div className="absolute top-2.5 right-2.5 z-20">
              <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="secondary" size="icon" className="h-10 w-10 rounded-2xl bg-background/80 backdrop-blur-md border-1 border-card-foreground/10 hover:bg-background shadow-xl">
-                        <MoreVertical className="h-5 w-5" />
+                    <Button variant="secondary" size="icon" className="h-8 w-8 rounded-xl bg-background/80 backdrop-blur-md border border-card-foreground/10 hover:bg-background shadow-xl">
+                        <MoreVertical className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 rounded-2xl border-1 border-card-foreground/10 bg-card/95 backdrop-blur-xl p-2 shadow-2xl">
+                <DropdownMenuContent align="end" className="w-48 rounded-2xl border border-card-foreground/10 bg-card/95 backdrop-blur-xl p-1.5 shadow-2xl">
                     <DropdownMenuItem asChild>
-                        <Link href={`/my-listings/${listing.id}/edit`} className="flex items-center gap-3 py-3 rounded-xl cursor-pointer">
-                            <Edit className="h-4 w-4" />
-                            <span className="font-bold text-[10px] uppercase tracking-widest">{t('edit')}</span>
+                        <Link href={`/my-listings/${listing.id}/edit`} className="flex items-center gap-2.5 py-2.5 rounded-lg cursor-pointer">
+                            <Edit className="h-3.5 h-3.5" />
+                            <span className="font-bold text-[9px] uppercase tracking-widest">{t('edit')}</span>
                         </Link>
                     </DropdownMenuItem>
 
                     <DropdownMenuItem asChild>
-                        <Link href={`/my-listings/stats/${listing.id}`} className="flex items-center gap-3 py-3 rounded-xl cursor-pointer">
-                            <BarChart2 className="h-4 w-4" />
-                            <span className="font-bold text-[10px] uppercase tracking-widest">{t('stats')}</span>
+                        <Link href={`/my-listings/stats/${listing.id}`} className="flex items-center gap-2.5 py-2.5 rounded-lg cursor-pointer">
+                            <BarChart2 className="h-3.5 h-3.5" />
+                            <span className="font-bold text-[9px] uppercase tracking-widest">{t('stats')}</span>
                         </Link>
                     </DropdownMenuItem>
 
                     <DropdownMenuItem asChild>
-                        <Link href={`/listings/${listing.id}`} target="_blank" className="flex items-center gap-3 py-3 rounded-xl cursor-pointer">
-                            <ExternalLink className="h-4 w-4" />
-                            <span className="font-bold text-[10px] uppercase tracking-widest">{t('view_live')}</span>
+                        <Link href={`/listings/${listing.id}`} target="_blank" className="flex items-center gap-2.5 py-2.5 rounded-lg cursor-pointer">
+                            <ExternalLink className="h-3.5 h-3.5" />
+                            <span className="font-bold text-[9px] uppercase tracking-widest">{t('view_live')}</span>
                         </Link>
                     </DropdownMenuItem>
                     
 
-                    <div className="h-px bg-card-foreground/5 my-2 mx-1" />
+                    <div className="h-px bg-card-foreground/5 my-1.5 mx-1" />
 
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
-                            <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="flex items-center gap-3 py-3 rounded-xl cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive">
-                                <Trash2 className="h-4 w-4" />
-                                <span className="font-bold text-[10px] uppercase tracking-widest">{t('delete')}</span>
+                            <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="flex items-center gap-2.5 py-2.5 rounded-lg cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive">
+                                <Trash2 className="h-3.5 h-3.5" />
+                                <span className="font-bold text-[9px] uppercase tracking-widest">{t('delete')}</span>
                             </DropdownMenuItem>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="rounded-[2.5rem] max-w-sm border-1 border-card-foreground/10 bg-card shadow-2xl">
+                        <AlertDialogContent className="rounded-[2rem] max-w-sm border border-card-foreground/10 bg-card shadow-2xl">
                              <AlertDialogHeader>
-                                <AlertDialogTitle className="flex items-center gap-3 font-black uppercase tracking-tight text-xl">
-                                    <Trash2 className="w-6 h-6 text-destructive" />
+                                <AlertDialogTitle className="flex items-center gap-3 font-black uppercase tracking-tight text-lg">
+                                    <Trash2 className="w-5 h-5 text-destructive" />
                                     {t('delete')}
                                 </AlertDialogTitle>
-                                <AlertDialogDescription className="pt-2 font-bold text-foreground/70">
+                                <AlertDialogDescription className="pt-2 font-bold text-foreground/70 text-sm">
                                     &quot;{listing.title}&quot; {t('will_be_moved_to_bin')}
-                                    <span className="block text-[10px] text-muted-foreground uppercase tracking-widest mt-4">
+                                    <span className="block text-[9px] text-muted-foreground uppercase tracking-widest mt-3">
                                         {t('restore_within')}
                                     </span>
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
-                            <AlertDialogFooter className="gap-3 sm:gap-0 mt-6">
-                                <AlertDialogCancel className="rounded-2xl font-black uppercase tracking-widest text-[10px] h-14 shadow-none border-1 border-card-foreground/10 bm-interactive">{t('cancel')}</AlertDialogCancel>
-                                <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/95 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] h-14 shadow-none active:scale-95">{t('move_to_bin_confirm')}</AlertDialogAction>
+                            <AlertDialogFooter className="gap-2 mt-6">
+                                <AlertDialogCancel className="flex-1 rounded-xl font-black uppercase tracking-widest text-[9px] h-12 shadow-none border border-card-foreground/10 bm-interactive">{t('cancel')}</AlertDialogCancel>
+                                <AlertDialogAction onClick={handleDelete} className="flex-1 bg-destructive hover:bg-destructive/95 text-white rounded-xl font-black uppercase tracking-widest text-[9px] h-12 shadow-none active:scale-95">{t('move_to_bin_confirm')}</AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
@@ -238,165 +238,163 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
         </div>
 
         {/* Thumbnail Section */}
-        <div className="relative aspect-video w-full bg-muted overflow-hidden">
+        <div className="relative aspect-[4/3] w-full bg-muted overflow-hidden">
              <Image
                 src={activeImage}
                 alt={listing.title}
                 fill
-                className="object-cover transition-transform duration-700 group-hover:scale-110"
-                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                sizes="(max-width: 768px) 50vw, 33vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
             
-            <div className="absolute bottom-4 left-6 right-6 flex items-end justify-between gap-4">
-                <div className="flex flex-col">
-                    <span className="text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">ID: {listing.id?.slice(-8)}</span>
-                    <h3 className="font-black text-white text-lg sm:text-xl lg:text-2xl leading-none tracking-tighter uppercase line-clamp-1">
-                        {listing.title}
-                    </h3>
-                </div>
+            <div className="absolute bottom-3 left-4 right-4 flex flex-col">
+                <h3 className="font-black text-white text-sm sm:text-base leading-tight tracking-tight uppercase line-clamp-2 drop-shadow-md">
+                    {listing.title}
+                </h3>
             </div>
         </div>
 
         {/* Meta Info */}
-        <div className="p-4 sm:p-5 flex flex-col flex-1">
-            <div className="flex items-center justify-between mb-6">
-                <div className="text-2xl sm:text-3xl font-black text-foreground tracking-tighter uppercase">
-                    {formatCurrency(listing.price, (listing as any).currency)}
+        <div className="p-3.5 flex flex-col flex-1">
+            <div className="flex flex-col gap-1 mb-4">
+                <div className="flex items-center justify-between">
+                    <div className="text-xl font-black text-foreground tracking-tighter uppercase">
+                        {formatCurrency(listing.price, (listing as any).currency)}
+                    </div>
                 </div>
-                <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-black uppercase tracking-widest">
-                    <Clock className="w-3.5 h-3.5" />
-                    {formatDistanceToNow(new Date(listing.createdAt || 0), { addSuffix: true })}
+                <div className="flex items-center justify-between">
+                    <span className="text-[8px] font-black text-primary uppercase tracking-widest bg-primary/5 px-2 py-0.5 rounded-md border border-primary/10">ID: {listing.id?.slice(-8)}</span>
+                    <div className="flex items-center gap-1.5 text-[8px] text-muted-foreground font-black uppercase tracking-widest">
+                        <Clock className="w-3 h-3" />
+                        {formatDistanceToNow(new Date(listing.createdAt || 0), { addSuffix: true })}
+                    </div>
                 </div>
             </div>
+
             {/* ── Live Analytics Strip ─────────────────────────────── */}
-            <div className="mb-4 bg-muted/40 border border-card-foreground/5 rounded-2xl p-3">
+            <div className="mb-4 bg-muted/30 border border-card-foreground/5 rounded-2xl p-2.5">
                 <div className="grid grid-cols-4 gap-1 text-center">
                     {/* Views */}
                     <div className="flex flex-col items-center gap-0.5">
-                        <div className="flex items-center gap-1 text-orange-500">
-                            <Eye className="w-3 h-3" />
-                        </div>
-                        <span className="font-black text-sm text-foreground leading-none">
+                        <Eye className="w-3 h-3 text-orange-500 opacity-70" />
+                        <span className="font-black text-xs text-foreground leading-none">
                             {quickStats === undefined ? '—' : (quickStats.viewCount ?? 0)}
                         </span>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Views</span>
+                        <span className="text-[7px] font-black uppercase tracking-tight text-muted-foreground">Views</span>
                     </div>
                     {/* Saved */}
                     <div className="flex flex-col items-center gap-0.5 border-l border-card-foreground/5">
-                        <div className="flex items-center gap-1 text-rose-500">
-                            <Heart className="w-3 h-3" />
-                        </div>
-                        <span className="font-black text-sm text-foreground leading-none">
+                        <Heart className="w-3 h-3 text-rose-500 opacity-70" />
+                        <span className="font-black text-xs text-foreground leading-none">
                             {quickStats === undefined ? '—' : quickStats.favorites}
                         </span>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Saved</span>
+                        <span className="text-[7px] font-black uppercase tracking-tight text-muted-foreground">Saved</span>
                     </div>
-                    {/* Contact Clicks */}
+                    {/* Leads */}
                     <div className="flex flex-col items-center gap-0.5 border-l border-card-foreground/5">
-                        <div className="flex items-center gap-1 text-blue-500">
-                            <MousePointerClick className="w-3 h-3" />
-                        </div>
-                        <span className="font-black text-sm text-foreground leading-none">
+                        <MousePointerClick className="w-3 h-3 text-blue-500 opacity-70" />
+                        <span className="font-black text-xs text-foreground leading-none">
                             {quickStats === undefined ? '—' : quickStats.contactClicks}
                         </span>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Leads</span>
+                        <span className="text-[7px] font-black uppercase tracking-tight text-muted-foreground">Leads</span>
                     </div>
                     {/* Inquiries */}
                     <div className="flex flex-col items-center gap-0.5 border-l border-card-foreground/5">
-                        <div className="flex items-center gap-1 text-emerald-500">
-                            <MessageSquare className="w-3 h-3" />
-                        </div>
-                        <span className="font-black text-sm text-foreground leading-none">
+                        <MessageSquare className="w-3 h-3 text-emerald-500 opacity-70" />
+                        <span className="font-black text-xs text-foreground leading-none">
                             {quickStats === undefined ? '—' : quickStats.inquiries}
                         </span>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Msgs</span>
+                        <span className="text-[7px] font-black uppercase tracking-tight text-muted-foreground">Msgs</span>
                     </div>
                 </div>
                 <Link
                     href={`/my-listings/stats/${listing.id}`}
-                    className="flex items-center justify-center gap-1.5 mt-2.5 pt-2 border-t border-card-foreground/5 text-[9px] font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
+                    className="flex items-center justify-center gap-1.5 mt-2 pt-2 border-t border-card-foreground/5 text-[8px] font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
                 >
-                    <BarChart2 className="w-3 h-3" />
-                    Full Analytics
+                    <BarChart2 className="w-2.5 h-2.5" />
+                    Analytics
                 </Link>
             </div>
 
             {/* Main Action Buttons */}
-            <div className="flex flex-col gap-3 mt-auto">
+            <div className="flex flex-col gap-2 mt-auto">
                  <Button 
                     asChild
+                    size="sm"
                     className={cn(
-                        "w-full bg-primary hover:bg-primary/95 text-white font-black h-14 text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-xl shadow-primary/10 active:scale-95",
+                        "w-full bg-primary hover:bg-primary/95 text-white font-black h-10 text-[9px] uppercase tracking-[0.15em] rounded-xl transition-all shadow-lg shadow-primary/10 active:scale-95",
                         listing.status === 'PENDING_APPROVAL' && "opacity-50 pointer-events-none"
                     )}
                  >
                     <Link href={`/my-listings/promote/${listing.id}`}>
-                        <Sparkles className="w-4 h-4 mr-3" />
+                        <Sparkles className="w-3 h-3 mr-2" />
                         {t('promote')}
                     </Link>
                  </Button>
 
-                 <AlertDialog open={isRenewDialogOpen} onOpenChange={setIsRenewDialogOpen}>
-                    <Button 
-                        variant="secondary"
-                        className={cn(
-                            "w-full bg-muted border-1 border-card-foreground/5 hover:bg-muted/80 text-foreground font-black h-14 text-xs uppercase tracking-[0.2em] rounded-2xl transition-all active:scale-95",
-                            (listing.status === 'PENDING_APPROVAL' || isStatsLoading) && "opacity-50 pointer-events-none"
-                        )}
-                        onClick={handleRenewClick}
-                        disabled={isPending || isStatsLoading}
-                    >
-                        <RefreshCw className={cn("w-4 h-4 mr-3 opacity-60", (isPending || isStatsLoading) && "animate-spin")} />
-                        {isStatsLoading ? '...' : t('renew')}
-                    </Button>
-                    <AlertDialogContent className="rounded-[2.5rem] max-w-sm border-1 border-card-foreground/10 bg-card shadow-2xl">
-                         <AlertDialogHeader>
-                            <AlertDialogTitle className="flex items-center gap-3 font-black uppercase tracking-tight text-xl">
-                                <RefreshCw className="w-6 h-6 text-primary" />
-                                {t('renew_listing')}
-                            </AlertDialogTitle>
-                            <AlertDialogDescription className="pt-2 font-bold text-foreground/70">
-                                {renewalStats?.canRenewNow ? (
-                                    <>
-                                        <div className="bg-primary/5 p-4 rounded-2xl border-1 border-primary/20 text-primary text-xs mb-4">
-                                            {t('renewals_remaining', { count: renewalStats?.remainingMonthly })}
-                                        </div>
-                                        <p>{t('renew_for_days', { price: PRICING.RENEWAL })}</p>
-                                    </>
-                                ) : (
-                                    <div className="bg-amber-500/10 p-4 rounded-2xl border-1 border-amber-500/20 text-amber-700 text-xs flex gap-3">
-                                        <AlertTriangle className="w-5 h-5 shrink-0" />
-                                        <p>{renewalStats?.hoursUntilRenew === 1 
-                                            ? t('renew_limit_warning', { hours: renewalStats?.hoursUntilRenew })
-                                            : t('renew_limit_warning_plural', { hours: renewalStats?.hoursUntilRenew })
-                                        }</p>
-                                    </div>
-                                )}
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter className="gap-3 sm:gap-0 mt-6">
-                            <AlertDialogCancel className="rounded-2xl font-black uppercase tracking-widest text-[10px] h-14 border-1 border-card-foreground/10 bm-interactive">{t('cancel')}</AlertDialogCancel>
-                            {renewalStats?.canRenewNow && (
-                                <AlertDialogAction onClick={handleConfirmRenew} className="bg-primary hover:bg-primary/95 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] h-14 shadow-none">
-                                    {t('renew_now')}
-                                </AlertDialogAction>
+                 <div className="flex gap-2">
+                    <AlertDialog open={isRenewDialogOpen} onOpenChange={setIsRenewDialogOpen}>
+                        <Button 
+                            variant="secondary"
+                            size="sm"
+                            className={cn(
+                                "flex-1 bg-muted border border-card-foreground/5 hover:bg-muted/80 text-foreground font-black h-10 text-[9px] uppercase tracking-[0.15em] rounded-xl transition-all active:scale-95",
+                                (listing.status === 'PENDING_APPROVAL' || isStatsLoading) && "opacity-50 pointer-events-none"
                             )}
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                 </AlertDialog>
+                            onClick={handleRenewClick}
+                            disabled={isPending || isStatsLoading}
+                        >
+                            <RefreshCw className={cn("w-3 h-3 mr-2 opacity-60", (isPending || isStatsLoading) && "animate-spin")} />
+                            {isStatsLoading ? '...' : t('renew')}
+                        </Button>
+                        <AlertDialogContent className="rounded-[2rem] max-w-sm border border-card-foreground/10 bg-card shadow-2xl">
+                            <AlertDialogHeader>
+                                <AlertDialogTitle className="flex items-center gap-3 font-black uppercase tracking-tight text-lg">
+                                    <RefreshCw className="w-5 h-5 text-primary" />
+                                    {t('renew_listing')}
+                                </AlertDialogTitle>
+                                <AlertDialogDescription className="pt-2 font-bold text-foreground/70 text-sm">
+                                    {renewalStats?.canRenewNow ? (
+                                        <>
+                                            <div className="bg-primary/5 p-3 rounded-xl border border-primary/20 text-primary text-[10px] mb-3 uppercase tracking-widest font-black">
+                                                {t('renewals_remaining', { count: renewalStats?.remainingMonthly })}
+                                            </div>
+                                            <p>{t('renew_for_days', { price: PRICING.RENEWAL })}</p>
+                                        </>
+                                    ) : (
+                                        <div className="bg-amber-500/10 p-3 rounded-xl border border-amber-500/20 text-amber-700 text-[10px] flex gap-2 font-bold">
+                                            <AlertTriangle className="w-4 h-4 shrink-0" />
+                                            <p>{renewalStats?.hoursUntilRenew === 1 
+                                                ? t('renew_limit_warning', { hours: renewalStats?.hoursUntilRenew })
+                                                : t('renew_limit_warning_plural', { hours: renewalStats?.hoursUntilRenew })
+                                            }</p>
+                                        </div>
+                                    )}
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter className="gap-2 mt-6">
+                                <AlertDialogCancel className="flex-1 rounded-xl font-black uppercase tracking-widest text-[9px] h-12 border border-card-foreground/10 bm-interactive">{t('cancel')}</AlertDialogCancel>
+                                {renewalStats?.canRenewNow && (
+                                    <AlertDialogAction onClick={handleConfirmRenew} className="flex-1 bg-primary hover:bg-primary/95 text-white rounded-xl font-black uppercase tracking-widest text-[9px] h-12 shadow-none">
+                                        {t('renew_now')}
+                                    </AlertDialogAction>
+                                )}
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
 
-                 {/* Receipt download — only visible when a promotion payment exists */}
-                 {hasReceipt && (
-                     <Button
-                         variant="outline"
-                         className="w-full border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-black h-12 text-xs uppercase tracking-[0.2em] rounded-2xl transition-all active:scale-95 shadow-none"
-                         onClick={handleDownloadReceipt}
-                     >
-                         <Download className="w-4 h-4 mr-3" />
-                         Download Receipt
-                     </Button>
-                 )}
+                    {hasReceipt && (
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-10 w-10 shrink-0 border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 rounded-xl transition-all active:scale-95 shadow-none"
+                            onClick={handleDownloadReceipt}
+                        >
+                            <Download className="w-4 h-4" />
+                        </Button>
+                    )}
+                 </div>
             </div>
         </div>
       </motion.div>

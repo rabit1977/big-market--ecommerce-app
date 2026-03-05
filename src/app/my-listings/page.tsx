@@ -66,7 +66,7 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
             {/* Listings Section Header */}
             <div className='flex flex-col lg:flex-row lg:items-end justify-between gap-10 mb-12 md:mb-20 py-8 md:py-12 border-b border-card-foreground/10'>
               <div className="space-y-4">
-                 <h2 className='text-2xl md:text-5xl font-black tracking-tighter uppercase leading-[0.85] text-foreground'>
+                <h2 className='text-2xl md:text-5xl font-black tracking-tighter uppercase leading-tight text-foreground'>
                   {t('page_title').split(' ')[0]} <br className="hidden md:block" /> <span className="text-primary">{t('page_title').split(' ').slice(1).join(' ') || t('page_title')}</span>
                </h2>
                <p className='text-xs md:text-sm font-black opacity-60 max-w-md '>
@@ -92,7 +92,7 @@ export default async function MyListingsPage({ searchParams }: MyListingsPagePro
             </div>
 
             {sortedListings && sortedListings.length > 0 ? (
-                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-6 md:mb-10'>
+                <div className='grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-8'>
                     {sortedListings.map((listing: ListingWithRelations) => (
                         <MyListingCard key={listing.id} listing={listing} />
                     ))}

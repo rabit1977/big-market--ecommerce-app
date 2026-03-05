@@ -80,10 +80,10 @@ export function MyListingsDashboardHeader() {
 
              <div className="min-w-0 space-y-3">
                   <div className="flex flex-wrap items-center gap-3">
-                      <h1 className="text-3xl md:text-5xl font-black text-foreground truncate uppercase tracking-tighter leading-none">
+                      <h1 className="text-3xl md:text-5xl font-black text-foreground truncate uppercase tracking-tight leading-tight">
                           {displayName}
-                      </h1>
-                      <div className="flex items-center gap-2">
+                       </h1>
+                       <div className="flex items-center gap-3">
                         {user.isVerified && (
                             <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500/20 font-black px-3 py-1 rounded-xl text-[10px] uppercase tracking-[0.15em] shrink-0">
                                 <CheckCircle2 className="w-3 h-3 mr-1.5" />
@@ -114,10 +114,10 @@ export function MyListingsDashboardHeader() {
              </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-6 relative z-10 w-full lg:w-auto bg-muted/40 backdrop-blur-md p-6 md:p-8 rounded-3xl border-1 border-card-foreground/10 transition-all hover:bg-muted/60 lg:min-w-[400px]">
+          <div className="flex flex-col sm:flex-row items-center gap-6 relative z-10 w-full lg:w-auto bg-muted/40 backdrop-blur-md p-6 md:p-8 rounded-3xl border border-card-foreground/10 transition-all hover:bg-muted/60 lg:min-w-[400px]">
               <div className="text-center sm:text-left flex-1">
                   <div className="text-[10px] md:text-[11px] font-black text-muted-foreground uppercase tracking-[0.25em] mb-2 opacity-60">{t('available_balance')}</div>
-                  <div className="text-3xl md:text-5xl font-black text-foreground leading-none tracking-tighter uppercase flex items-baseline gap-2">
+                  <div className="text-3xl md:text-5xl font-black text-foreground leading-tight tracking-tight uppercase flex items-baseline gap-2">
                     {Math.round(user.credits)} 
                     <span className="text-xs md:text-sm font-black text-muted-foreground opacity-60">MKD</span>
                   </div>
@@ -134,7 +134,7 @@ export function MyListingsDashboardHeader() {
       {/* 2. Stats Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {/* Money Spent Total */}
-          <Card className="rounded-3xl border-1 border-card-foreground/10 shadow-none hover:bg-muted/40 transition-all bg-card/40 backdrop-blur-sm group cursor-default bm-interactive">
+          <Card className="rounded-3xl border border-card-foreground/10 shadow-none hover:bg-muted/40 transition-all bg-card/40 backdrop-blur-sm group cursor-default bm-interactive">
               <CardContent className="p-6 md:p-8 flex flex-col justify-between h-full">
                   <div className="flex items-center justify-between mb-6">
                       <div className="w-12 h-12 rounded-2xl bg-foreground/5 flex items-center justify-center text-foreground transition-transform group-hover:scale-110">
@@ -144,10 +144,11 @@ export function MyListingsDashboardHeader() {
                   </div>
                   <div className="space-y-1">
                       <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] opacity-60">{t('total_investment')}</p>
-                      <h3 className="text-2xl md:text-3xl font-black text-foreground tracking-tighter uppercase group-hover:text-primary transition-colors">
+                      <h3 className="text-2xl md:text-3xl font-black text-foreground tracking-tight uppercase group-hover:text-primary transition-colors">
                           {Math.round(stats.totalSpend || 0)} <span className="text-xs font-black text-muted-foreground">MKD</span>
                       </h3>
                   </div>
+
               </CardContent>
           </Card>
 
@@ -195,7 +196,7 @@ export function MyListingsDashboardHeader() {
                   </div>
                   <div className="space-y-1">
                     <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] opacity-60">{t('reach_visibility')}</p>
-                    <h3 className="text-2xl md:text-3xl font-black text-foreground tracking-tighter uppercase group-hover:text-amber-500 transition-colors">
+                    <h3 className="text-2xl md:text-3xl font-black text-foreground tracking-tight uppercase group-hover:text-amber-500 transition-colors">
                         {(stats?.totalViews ?? 0).toLocaleString()} <span className="text-xs font-black text-muted-foreground ml-1">{t('views')}</span>
                     </h3>
                   </div>
