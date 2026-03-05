@@ -100,10 +100,6 @@ export function ListingGrid({
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 
-        {/* Results Count */}
-        <div className="hidden md:block text-sm text-muted-foreground mr-auto">
-          {tListings('showing')} <span className="font-medium text-foreground">{listings.length}</span> {tListings('results')}
-        </div>
 
         {/* Desktop Controls */}
         <div className="flex flex-1 items-center gap-2 w-full sm:w-auto justify-between">
