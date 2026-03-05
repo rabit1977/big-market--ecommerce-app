@@ -21,6 +21,13 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { api } from '@/convex/_generated/api';
 import type { Id } from '@/convex/_generated/dataModel';
 import { useFavorites } from '@/lib/context/favorites-context';
@@ -32,12 +39,14 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronUp,
+  Copy,
   Edit,
   MapPin,
   MessageSquare,
   MoreVertical,
   Share2,
   ShieldAlert,
+  Store,
   Trash2
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
@@ -228,13 +237,82 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground" onClick={handleShare} aria-label="Share">
             <Share2 className="w-5 h-5" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground" aria-label="More options">
-            <MoreVertical className="w-5 h-5" />
-          </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground" aria-label="More options">
+                <MoreVertical className="w-5 h-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 rounded-2xl border border-border bg-card/95 backdrop-blur-xl p-1.5 shadow-2xl">
+
+              {/* Save listing */}
+              {!isListingOwner && (
+                <DropdownMenuItem
+                  className="flex items-center gap-2.5 py-2.5 rounded-xl cursor-pointer"
+                  onSelect={(e) => { e.preventDefault(); }}
+                >
+                  <div className="pointer-events-auto w-full">
+                    <SaveAdButton listingId={listing._id} />
+                  </div>
+                </DropdownMenuItem>
+              )}
+
+              {/* Copy link */}
+              <DropdownMenuItem
+                className="flex items-center gap-2.5 py-2.5 rounded-xl cursor-pointer"
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  toast.success(t('link_copied'));
+                }}
+              >
+                <Copy className="h-4 w-4 text-muted-foreground" />
+                <span className="font-semibold text-sm">Copy Link</span>
+              </DropdownMenuItem>
+
+              {/* Visit store */}
+              <DropdownMenuItem asChild>
+                <Link href={`/store/${listing.userId}`} className="flex items-center gap-2.5 py-2.5 rounded-xl cursor-pointer">
+                  <Store className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-semibold text-sm">{t('visit_storefront')}</span>
+                </Link>
+              </DropdownMenuItem>
+
+              {/* Report */}
+              <DropdownMenuSeparator className="my-1 bg-border" />
+              <DropdownMenuItem asChild className="rounded-xl">
+                <ReportModal targetId={listing._id} targetType="listing">
+                  <button className="flex items-center gap-2.5 py-2.5 px-2 w-full rounded-xl cursor-pointer text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition-colors">
+                    <ShieldAlert className="h-4 w-4" />
+                    <span className="font-semibold text-sm">{t('report_suspicious')}</span>
+                  </button>
+                </ReportModal>
+              </DropdownMenuItem>
+
+              {/* Owner-only actions */}
+              {canManage && (
+                <>
+                  <DropdownMenuSeparator className="my-1 bg-border" />
+                  <DropdownMenuItem asChild>
+                    <Link href={`/my-listings/${listing._id}/edit`} className="flex items-center gap-2.5 py-2.5 rounded-xl cursor-pointer">
+                      <Edit className="h-4 w-4 text-muted-foreground" />
+                      <span className="font-semibold text-sm">{t('edit_ad')}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="flex items-center gap-2.5 py-2.5 rounded-xl cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
+                    onSelect={(e) => { e.preventDefault(); }}
+                  >
+                    <DeleteListingButton listingId={listing._id} compact />
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
@@ -288,7 +366,17 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   blurDataURL={rgbDataURL(241, 245, 249)}
                   className="object-cover" 
                   priority 
-                />  
+                />
+                <div className="absolute top-3 right-3">  
+                   {!isListingOwner && (
+                <SaveAdButton 
+                  listingId={listing._id} 
+                  showText={false}
+                  className="p-2 sm:p-2.5" 
+                  iconClassName="w-4 h-4 sm:w-6 sm:h-6" 
+                />
+              )}
+              </div>
                 <div className="hidden md:flex absolute top-3 right-3 text-white bg-black/60 backdrop-blur-md p-2.5 rounded-lg border border-white/10 flex-col">
                   <span className="text-sm font-black tracking-tight leading-none text-white uppercase">
                     {t('item_ref')}: {listingRef}
@@ -340,7 +428,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                       key={idx}
                       onClick={() => setSelectedImage(idx)}
                       className={cn(
-                        'pl-2 basis-[5rem] md:basis-[6rem] cursor-pointer'
+                        'basis-[5rem] md:basis-[6rem] cursor-pointer'
                       )}
                     >
                       <div
@@ -490,14 +578,7 @@ export function ListingDetailContent({ listing, initialQuestions = [] }: Listing
                   </p>
                 )}
               </div>
-              {!isListingOwner && (
-                <SaveAdButton 
-                  listingId={listing._id} 
-                  showText={false}
-                  className="p-2.5" 
-                  iconClassName="w-6 h-6" 
-                />
-              )}
+           
             </div>
 
             {/* RESTORED: Mobile Action Buttons */}
@@ -788,13 +869,13 @@ function DeleteListingButton({ listingId, compact }: { listingId: string; compac
           variant={compact ? 'ghost' : 'destructive'}
           className={
             compact
-              ? 'h-9 px-4 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 font-medium text-sm transition-all'
+              ? 'h-9 px-4 rounded-lg border text-muted-foreground  hover:text-foreground font-medium text-sm transition-all'
               : 'h-10 sm:h-11 md:h-12 bg-red-600 rounded-lg hover:bg-red-700 text-white font-medium text-xs sm:text-sm sm:col-span-2 md:col-span-1 min-w-0'
           }
           disabled={isPending}
         >
           <div className="flex items-center justify-center gap-1.5 sm:gap-2 min-w-0 w-full">
-            <Trash2 className="w-4 h-4 shrink-0" />
+            <Trash2 className="w-4 h-4 shrink-0 hover:text-red-700" />
             {isPending ? '...' : compact ? t('delete') : <span className="truncate">{t('delete_listing').replace('?', '')}</span>}
           </div>
         </Button>
