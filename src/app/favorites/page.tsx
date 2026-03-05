@@ -163,17 +163,17 @@ function FavoritesTabs({
 
   return (
     <Tabs defaultValue={defaultTab} className="w-full">
-      <TabsList className="w-full grid grid-cols-4 mb-4 md:mb-6 p-1 rounded-lg bg-muted/60 bm-interactive">
-        <TabsTrigger value="listings">
+      <TabsList className="w-full grid grid-cols-2 md:grid-cols-4 gap-1.5 md:gap-2 mb-6 md:mb-8 p-1.5 h-auto bg-card/40 border border-card-foreground/10 backdrop-blur-sm rounded-2xl bm-interactive shadow-none">
+        <TabsTrigger value="listings" className="text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md">
           {t('favorites_tab', { count: listingFavorites?.length ?? 0 })}
         </TabsTrigger>
-        <TabsTrigger value="searches" className="hidden sm:inline-flex">
+        <TabsTrigger value="searches" className="text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md">
           {t('searches_tab', { count: optimisticSearches.length })}
         </TabsTrigger>
-        <TabsTrigger value="stores">
+        <TabsTrigger value="stores" className="text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md">
           Stores ({followedStores?.length ?? 0})
         </TabsTrigger>
-        <TabsTrigger value="visited">
+        <TabsTrigger value="visited" className="text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md">
           {t('history_tab')}
         </TabsTrigger>
       </TabsList>
