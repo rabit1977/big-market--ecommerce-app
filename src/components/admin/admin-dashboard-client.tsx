@@ -71,13 +71,13 @@ export function AdminDashboardClient() {
             {t('welcome_back')}
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between gap-3">
            <AdminFilterToolbar
                timeRange={timeRange}
                onTimeRangeChange={setTimeRange}
                showSearch={false}
            />
-           <Button variant="outline" size="sm" asChild className="hidden sm:flex rounded-xl font-black uppercase tracking-widest px-6 h-10 border-1 border-card-foreground/20 bm-interactive shadow-none transition-all">
+           <Button variant="outline" size="sm" asChild className="hidden sm:flex justify-between rounded-xl font-black uppercase tracking-widest px-6 h-10 border-1 border-card-foreground/20 bm-interactive shadow-none transition-all">
               <Link href="/admin/analytics">
                 <BarChart3 className="w-4 h-4 mr-2" />
                 {t('view_reports')}
@@ -208,14 +208,14 @@ export function AdminDashboardClient() {
                <Badge className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 px-4 py-1.5 font-black text-[10px] uppercase tracking-[0.2em] rounded-xl">
                   {t('action_required')}
                </Badge>
-               <h2 className="text-3xl sm:text-6xl font-black tracking-tighter text-foreground uppercase leading-tight">
+               <h2 className="text-xl sm:text-3xl font-black tracking-tighter text-foreground uppercase leading-tight">
                   {t('pending_verifications', { count: stats?.pendingVerifications ?? 0 })}
                </h2>
-               <p className="text-muted-foreground font-black text-xs sm:text-sm uppercase tracking-widest opacity-60 max-w-lg">
+               <p className="text-muted-foreground font-black text-xs sm:text-sm tracking-widest opacity-60 max-w-lg">
                   {t('verifications_desc')}
                </p>
             </div>
-            <Button size="lg" asChild className="rounded-xl px-12 font-black uppercase tracking-widest h-16 shadow-none border border-primary active:scale-95 transition-all">
+            <Button size="lg" asChild className="rounded-xl px-4 font-black uppercase text-xs sm:text-base tracking-wide h-16 shadow-none border border-primary active:scale-95 transition-all">
                <Link href="/admin/users?tab=verifications">
                   {t('go_to_verifications')}
                   <ArrowRight className="ml-3 w-6 h-6 text-white" />
