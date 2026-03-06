@@ -114,7 +114,7 @@ export function AdminFilterToolbar({
       <div className='flex flex-wrap gap-2 items-center'>
         {/* Search */}
         {showSearch && (
-          <div className='relative min-w-[180px] flex-1 max-w-sm'>
+          <div className='relative min-w-[180px] flex-1 max-w-sm bm-interactive'>
             <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none' />
             <input
               ref={searchRef}
@@ -141,7 +141,7 @@ export function AdminFilterToolbar({
             value={timeRange}
             onValueChange={(v) => onTimeRangeChange(v as TimeRange)}
           >
-            <SelectTrigger className='flex-1 sm:flex-none h-9 w-full sm:w-auto min-w-[110px] text-[10px] px-3 text-foreground font-black uppercase tracking-widest bg-muted/40 border-border rounded-xl shadow-none'>
+            <SelectTrigger className='flex-1 sm:flex-none h-9 w-full sm:w-auto min-w-[110px] text-[10px] px-3 text-foreground font-black uppercase tracking-widest bg-muted/40 border-border rounded-xl shadow-none bm-interactive'>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -168,7 +168,7 @@ export function AdminFilterToolbar({
         {showSort && sortOptions.length > 0 && (
           <div className='flex-1 sm:flex-none flex items-center gap-1.5'>
             <Select value={sortValue} onValueChange={(v) => onSortChange?.(v)}>
-              <SelectTrigger className='h-9 w-full sm:w-auto min-w-[130px] text-[10px] font-black uppercase tracking-widest bg-muted/40 border-border rounded-xl shadow-none'>
+              <SelectTrigger className='h-9 w-full sm:w-auto min-w-[130px] text-[10px] font-black uppercase tracking-widest bg-muted/40 border-border rounded-xl shadow-none bm-interactive'>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -188,7 +188,7 @@ export function AdminFilterToolbar({
             variant='ghost'
             size='sm'
             onClick={onExport}
-            className='h-9 px-3 text-[10px] font-black uppercase tracking-widest gap-1.5 shrink-0 bg-primary/5 hover:bg-primary/10 text-primary rounded-xl'
+            className='h-9 px-3 text-[10px] font-black uppercase tracking-widest gap-1.5 shrink-0 bg-primary/5 hover:bg-primary/10 text-primary rounded-xl bm-interactive'
           >
             <FileText className='w-3.5 h-3.5' />
             {isMk ? 'PDF' : 'PDF'}

@@ -218,7 +218,7 @@ export function UsersClientPage() {
       </div>
 
       {/* Minimalist Inline Stats */}
-      <div className='flex flex-wrap items-center gap-x-6 gap-y-2 bg-card border border-border rounded-xl p-3 px-5'>
+      <div className='flex flex-wrap items-center gap-x-6 gap-y-2 bg-card border border-border rounded-xl p-3 px-5 bm-interactive'>
         <div className='flex items-center gap-2'>
           <Users className='w-4 h-4 text-primary' />
           <span className='text-[10px] font-black uppercase tracking-widest text-muted-foreground'>
@@ -288,7 +288,7 @@ export function UsersClientPage() {
               setPage(1);
             }}
           >
-            <SelectTrigger className='h-9 flex-1 sm:flex-none sm:min-w-[140px] text-[10px] font-black uppercase tracking-widest bg-muted/40 border-border rounded-xl shadow-none'>
+            <SelectTrigger className='h-9 flex-1 sm:flex-none sm:min-w-[140px] text-[10px] font-black uppercase tracking-widest bg-muted/40 border-border rounded-xl shadow-none bm-interactive'>
               <SelectValue />
             </SelectTrigger>
             <SelectContent className='rounded-xl border-border'>
@@ -308,7 +308,7 @@ export function UsersClientPage() {
               setPage(1);
             }}
           >
-            <SelectTrigger className='h-9 flex-1 sm:flex-none sm:min-w-[140px] text-[10px] font-black uppercase tracking-widest bg-muted/40 border-border rounded-xl shadow-none'>
+            <SelectTrigger className='h-9 flex-1 sm:flex-none sm:min-w-[140px] text-[10px] font-black uppercase tracking-widest bg-muted/40 border-border rounded-xl shadow-none bm-interactive'>
               <SelectValue />
             </SelectTrigger>
             <SelectContent className='rounded-xl border-border'>
@@ -321,7 +321,7 @@ export function UsersClientPage() {
       </div>
 
       {/* Users Table */}
-      <div className='bg-card rounded-lg overflow-hidden border border-border mt-6 shadow-none'>
+      <div className='bg-card rounded-lg overflow-hidden border border-border mt-6 shadow-none bm-interactive'>
         <div className='p-4 border-b border-border/50 bg-muted/10'>
           <h2 className='text-[10px] font-black uppercase tracking-widest flex items-center gap-2 text-foreground/80'>
             <Users className='h-4 w-4 text-primary' />

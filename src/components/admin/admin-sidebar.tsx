@@ -110,14 +110,14 @@ export const AdminSidebar = () => {
             href='/admin/dashboard'
             className='flex items-center gap-3 shrink-0 group'
           >
-            <div className='w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground flex items-center justify-center shadow-md shadow-primary/20 group-hover:scale-105 transition-transform'>
+            <div className='w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground flex items-center justify-center shadow-md shadow-primary/20 group-hover:scale-105 transition-transform bm-interactive'>
               <LayoutDashboard className='w-4.5 h-4.5' />
             </div>
             <span className='font-bold text-lg tracking-tight'>Admin</span>
           </Link>
 
           {/* Center: Navigation Pill */}
-          <nav className='absolute left-1/2 -translate-x-1/2 flex items-center bg-muted/40 backdrop-blur-md border border-border/50 p-1 rounded-full'>
+          <nav className='absolute left-1/2 -translate-x-1/2 flex items-center bg-muted/40 backdrop-blur-md border border-border/50 p-1 rounded-full bm-interactive'>
             {primaryNavItems.map((item) => {
               const isActive =
                 item.href === '/admin/listings'
@@ -165,7 +165,7 @@ export const AdminSidebar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align='end'
-                className='w-56 rounded-xl p-2 shadow-xl border-border/50'
+                className='w-56 rounded-xl p-2 shadow-xl border-border/50 bm-interactive'
               >
                 <DropdownMenuLabel className='text-xs uppercase text-muted-foreground/70 tracking-wider mb-1'>
                   Tools & Analytics
@@ -215,7 +215,7 @@ export const AdminSidebar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align='end'
-                className='w-60 rounded-xl p-2 shadow-xl border-border/50'
+                className='w-60 rounded-xl p-2 shadow-xl border-border/50 bm-interactive'
               >
                 <div className='flex flex-col space-y-1 p-2 border-b border-border/50 mb-2'>
                   <p className='text-sm font-semibold leading-none'>
@@ -261,7 +261,7 @@ export const AdminSidebar = () => {
         )}
       >
         <Link href='/admin/dashboard' className='flex items-center gap-2 group'>
-          <div className='w-8 h-8 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-sm'>
+          <div className='w-8 h-8 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-sm bm-interactive'>
             <LayoutDashboard className='w-4 h-4' />
           </div>
           <span className='font-extrabold text-lg tracking-tight'>Admin</span>
@@ -282,7 +282,7 @@ export const AdminSidebar = () => {
 
       {/* Mobile Bottom Dock (Floating Pill) */}
       <div className='lg:hidden fixed bottom-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none pb-safe'>
-        <nav className='pointer-events-auto bg-background/80 backdrop-blur-2xl border border-border/80 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] h-16 rounded-full px-2 flex items-center gap-1 min-w-[300px] justify-between'>
+        <nav className='pointer-events-auto bg-background/80 backdrop-blur-2xl border border-border/80 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] h-16 rounded-full px-2 flex items-center gap-1 min-w-[300px] justify-between bm-interactive'>
           {mobileDockItems.map((item) => {
             const isActive =
               item.href === '/admin/dashboard'
@@ -382,7 +382,7 @@ export const AdminSidebar = () => {
                         href={item.href}
                         onClick={() => setIsMobileMenuOpen(false)}
                         className={cn(
-                          'flex items-center gap-3 py-3.5 px-4 rounded-2xl border transition-all duration-200 active:scale-95 group shadow-sm',
+                          'flex items-center gap-3 py-3.5 px-4 rounded-2xl border transition-all duration-200 active:scale-95 group shadow-sm bm-interactive',
                           isActive
                             ? 'bg-primary/5 border-primary/20 text-primary'
                             : 'bg-card border-border/60 text-muted-foreground hover:text-foreground hover:border-border',
@@ -406,7 +406,7 @@ export const AdminSidebar = () => {
                   })}
                 </div>
 
-                <div className='rounded-3xl border border-border/60 bg-gradient-to-br from-card to-muted/20 p-5 shadow-sm mb-6'>
+                <div className='rounded-3xl border border-border/60 bg-gradient-to-br from-card to-muted/20 p-5 shadow-sm mb-6 bm-interactive'>
                   <div className='flex items-center gap-4 mb-5'>
                     <Avatar className='w-12 h-12 shadow-sm border border-border'>
                       <AvatarImage src={session?.user?.image || ''} />

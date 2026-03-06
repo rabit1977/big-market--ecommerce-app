@@ -204,7 +204,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
         {users.map((user) => (
           <div
             key={user.id}
-            className='group relative flex items-center justify-between gap-3 p-3 sm:p-4 hover:bg-muted/30 transition-colors'
+            className='group relative flex items-center justify-between gap-3 p-3 sm:p-4 hover:bg-muted/30 transition-colors bm-interactive'
           >
             <div className='flex items-center gap-3 min-w-0 flex-1'>
               {/* Avatar */}
