@@ -285,19 +285,17 @@ export const ListingCard = memo(
                     {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
                   </div>
 
-                  {!isOwner && (
-                    <button
-                      onClick={handleToggleWishlist}
-                      className='w-7 h-7 p-1 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 shadow-sm flex items-center justify-center text-foreground hover:text-white transition-all hover:scale-110 active:scale-95 pointer-events-auto'
-                    >
-                      <Heart
-                        className={cn(
-                          'w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors',
-                          isWished && 'fill-red-500 text-red-500',
-                        )}
-                      />
-                    </button>
-                  )}
+                  <button
+                    onClick={handleToggleWishlist}
+                    className='w-7 h-7 p-1 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 shadow-sm flex items-center justify-center text-foreground hover:text-red-500 transition-all hover:scale-110 active:scale-95 pointer-events-auto'
+                  >
+                    <Heart
+                      className={cn(
+                        'w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors',
+                        isWished && 'fill-red-500 text-red-500',
+                      )}
+                    />
+                  </button>
                 </div>
 
                 {isCard && listing.description && (
@@ -370,19 +368,17 @@ export const ListingCard = memo(
                   </div>
                 </div>
 
-                {!isOwner && (
-                  <button
-                    onClick={handleToggleWishlist}
-                    className='w-8 h-8 p-1.5 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 shadow-sm flex items-center justify-center text-foreground hover:text-white transition-all hover:scale-110 active:scale-95 pointer-events-auto'
-                  >
-                    <Heart
-                      className={cn(
-                        'w-4 h-4 transition-colors',
-                        isWished && 'fill-red-500 text-red-500',
-                      )}
-                    />
-                  </button>
-                )}
+                <button
+                  onClick={handleToggleWishlist}
+                  className='w-8 h-8 p-1 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 shadow-sm flex items-center justify-center text-foreground hover:text-red-500 transition-all hover:scale-110 active:scale-95 pointer-events-auto'
+                >
+                  <Heart
+                    className={cn(
+                      'w-4 h-4 transition-colors',
+                      isWished && 'fill-red-500 text-red-500',
+                    )}
+                  />
+                </button>
               </div>
             </>
           )}

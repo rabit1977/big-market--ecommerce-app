@@ -28,6 +28,7 @@ import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
 import { PRICING } from '@/lib/constants/pricing';
 import { getPromotionConfig } from '@/lib/constants/promotions';
+import { useFavorites } from '@/lib/context/favorites-context';
 import { exportReceiptPdf } from '@/lib/export-receipt-pdf';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn, formatCurrency } from '@/lib/utils';
@@ -187,6 +188,15 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
         )
       : 0;
 
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const isWished = isFavorite(listing.id || listing._id || '');
+
+  const handleToggleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFavorite(listing.id || listing._id || '');
+  };
+
   return (
     <motion.div
       layout
@@ -219,8 +229,22 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
         )}
       </div>
 
-      {/* Action Dropdown Overlay */}
-      <div className='absolute top-2.5 right-2.5 z-20'>
+      {/* Action Buttons Overlay (Heart + Dropdown) */}
+      <div className='absolute top-2.5 right-2.5 z-20 flex items-center gap-2'>
+        {/* Heart Save Button */}
+        <button
+          onClick={handleToggleWishlist}
+          className='w-7 h-7 p-1 rounded-full bg-background/80 hover:bg-background backdrop-blur-md border border-card-foreground/10 shadow-xl flex items-center justify-center text-foreground hover:text-red-500 transition-all hover:scale-110 active:scale-95'
+        >
+          <Heart
+            className={cn(
+              'w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors text-white drop-shadow-md',
+              isWished && 'fill-red-500 text-red-500',
+            )}
+          />
+        </button>
+
+        {/* Action Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button

@@ -9,6 +9,9 @@ interface StorePageProps {
   params: Promise<{ id: string }>;
 }
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function generateMetadata({ params }: StorePageProps) {
   const { id } = await params;
   let profile;
@@ -46,11 +49,18 @@ export default async function StorePage({ params }: StorePageProps) {
 
   return (
     <>
-      <div className="container-wide py-4">
-        <AppBreadcrumbs items={[
+      <div className='container-wide py-4'>
+        <AppBreadcrumbs
+          items={[
             { label: t('sellers'), href: '/store' },
-            { label: (profile.accountType === 'COMPANY' && profile.companyName ? profile.companyName : profile.name) || 'Seller' }
-        ]} />
+            {
+              label:
+                (profile.accountType === 'COMPANY' && profile.companyName
+                  ? profile.companyName
+                  : profile.name) || 'Seller',
+            },
+          ]}
+        />
       </div>
       <StorefrontClient profile={profile} listings={listings} />
     </>

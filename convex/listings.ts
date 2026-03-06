@@ -1,16 +1,16 @@
-import { v } from "convex/values";
-import { mutation, MutationCtx, query } from "./_generated/server";
+import { v } from 'convex/values';
+import { mutation, MutationCtx, query } from './_generated/server';
 
 // Helper to manage listing numbers
 async function getNextListingNumber(ctx: MutationCtx): Promise<number> {
   let counter = await ctx.db
-    .query("counters")
-    .withIndex("by_name", (q) => q.eq("name", "listings"))
+    .query('counters')
+    .withIndex('by_name', (q) => q.eq('name', 'listings'))
     .unique();
 
   if (!counter) {
-    const id = await ctx.db.insert("counters", {
-      name: "listings",
+    const id = await ctx.db.insert('counters', {
+      name: 'listings',
       nextId: 2,
       reusableIds: [],
     });
@@ -23,11 +23,11 @@ async function getNextListingNumber(ctx: MutationCtx): Promise<number> {
     // Sort to use lowest first
     const sortedIds = [...counter.reusableIds].sort((a, b) => a - b);
     const idToUse = sortedIds.shift(); // Reading file.
-    
+
     await ctx.db.patch(counter._id, {
       reusableIds: sortedIds,
     });
-    
+
     return idToUse!;
   }
 
@@ -42,16 +42,16 @@ async function getNextListingNumber(ctx: MutationCtx): Promise<number> {
 
 async function releaseListingNumber(ctx: MutationCtx, number: number) {
   const counter = await ctx.db
-    .query("counters")
-    .withIndex("by_name", (q) => q.eq("name", "listings"))
+    .query('counters')
+    .withIndex('by_name', (q) => q.eq('name', 'listings'))
     .unique();
-    
+
   if (counter) {
     const reusableIds = counter.reusableIds || [];
     if (!reusableIds.includes(number)) {
-        reusableIds.push(number);
-        reusableIds.sort((a, b) => a - b);
-        await ctx.db.patch(counter._id, { reusableIds });
+      reusableIds.push(number);
+      reusableIds.sort((a, b) => a - b);
+      await ctx.db.patch(counter._id, { reusableIds });
     }
   }
 }
@@ -60,8 +60,10 @@ export const getByListingNumber = query({
   args: { listingNumber: v.number() },
   handler: async (ctx, args) => {
     return await ctx.db
-      .query("listings")
-      .withIndex("by_listingNumber", (q) => q.eq("listingNumber", args.listingNumber))
+      .query('listings')
+      .withIndex('by_listingNumber', (q) =>
+        q.eq('listingNumber', args.listingNumber),
+      )
       .unique();
   },
 });
@@ -70,29 +72,43 @@ export const get = query({
   args: {},
   handler: async (ctx) => {
     const listings = await ctx.db
-      .query("listings")
-      .withIndex("by_status", (q) => q.eq("status", "ACTIVE"))
-      .order("desc")
+      .query('listings')
+      .withIndex('by_status', (q) => q.eq('status', 'ACTIVE'))
+      .order('desc')
       .collect();
 
     const now = Date.now();
     return listings.sort((a, b) => {
-        const isTopA = a.isPromoted && a.promotionTier === 'TOP_POSITIONING' && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
-        const isTopB = b.isPromoted && b.promotionTier === 'TOP_POSITIONING' && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
-        
-        if (isTopA && !isTopB) return -1;
-        if (!isTopA && isTopB) return 1;
+      const isTopA =
+        a.isPromoted &&
+        a.promotionTier === 'TOP_POSITIONING' &&
+        (!a.promotionExpiresAt || a.promotionExpiresAt > now);
+      const isTopB =
+        b.isPromoted &&
+        b.promotionTier === 'TOP_POSITIONING' &&
+        (!b.promotionExpiresAt || b.promotionExpiresAt > now);
 
-        // General promoted (any tier) next, EXCEPT AUTO_DAILY_REFRESH and LISTING_HIGHLIGHT
-        // These tiers don't benefit from sticky/featured positioning
-        const featuredTiers = ['AUTO_DAILY_REFRESH', 'LISTING_HIGHLIGHT'];
-        const isPromotedA = a.isPromoted && !featuredTiers.includes(a.promotionTier || '') && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
-        const isPromotedB = b.isPromoted && !featuredTiers.includes(b.promotionTier || '') && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
-        
-        if (isPromotedA && !isPromotedB) return -1;
-        if (!isPromotedA && isPromotedB) return 1;
+      if (isTopA && !isTopB) return -1;
+      if (!isTopA && isTopB) return 1;
 
-        return (b.createdAt || b._creationTime) - (a.createdAt || a._creationTime);
+      // General promoted (any tier) next, EXCEPT AUTO_DAILY_REFRESH and LISTING_HIGHLIGHT
+      // These tiers don't benefit from sticky/featured positioning
+      const featuredTiers = ['AUTO_DAILY_REFRESH', 'LISTING_HIGHLIGHT'];
+      const isPromotedA =
+        a.isPromoted &&
+        !featuredTiers.includes(a.promotionTier || '') &&
+        (!a.promotionExpiresAt || a.promotionExpiresAt > now);
+      const isPromotedB =
+        b.isPromoted &&
+        !featuredTiers.includes(b.promotionTier || '') &&
+        (!b.promotionExpiresAt || b.promotionExpiresAt > now);
+
+      if (isPromotedA && !isPromotedB) return -1;
+      if (!isPromotedA && isPromotedB) return 1;
+
+      return (
+        (b.createdAt || b._creationTime) - (a.createdAt || a._creationTime)
+      );
     });
   },
 });
@@ -102,24 +118,25 @@ export const getFeatured = query({
   handler: async (ctx) => {
     const now = Date.now();
     const listings = await ctx.db
-      .query("listings")
-      .withIndex("by_status", (q) => q.eq("status", "ACTIVE"))
-      .order("desc")
+      .query('listings')
+      .withIndex('by_status', (q) => q.eq('status', 'ACTIVE'))
+      .order('desc')
       .collect();
-      
+
     // Filter for ACTIVE promoted listings (Excluding non-featured tiers)
     const featuredTiers = ['AUTO_DAILY_REFRESH', 'LISTING_HIGHLIGHT'];
-    return listings.filter(l => 
-        l.isPromoted === true && 
+    return listings.filter(
+      (l) =>
+        l.isPromoted === true &&
         !featuredTiers.includes(l.promotionTier || '') &&
-        (!l.promotionExpiresAt || l.promotionExpiresAt > now)
+        (!l.promotionExpiresAt || l.promotionExpiresAt > now),
     );
   },
 });
 
 export const list = query({
-  args: { 
-    category: v.optional(v.string()), 
+  args: {
+    category: v.optional(v.string()),
     subCategory: v.optional(v.string()),
     status: v.optional(v.string()),
     city: v.optional(v.string()),
@@ -140,132 +157,158 @@ export const list = query({
     userId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    console.log("API list called with args:", args);
+    console.log('API list called with args:', args);
 
     // 1. Fetch data based on status (default to ACTIVE)
-    const statusFilter = args.status || "ACTIVE";
+    const statusFilter = args.status || 'ACTIVE';
     let results;
-    if (statusFilter === "ALL") {
+    if (statusFilter === 'ALL') {
       results = await ctx.db
-        .query("listings")
-        .withIndex("by_createdAt")
-        .order("desc")
+        .query('listings')
+        .withIndex('by_createdAt')
+        .order('desc')
         .collect();
     } else {
       results = await ctx.db
-        .query("listings")
-        .withIndex("by_status_createdAt", (q) => q.eq("status", statusFilter))
-        .order("desc")
+        .query('listings')
+        .withIndex('by_status_createdAt', (q) => q.eq('status', statusFilter))
+        .order('desc')
         .collect();
     }
-    
+
     // 2. Filter Loops
-    
+
     // Category - exact match or hierarchical match (case-insensitive)
     if (args.category && args.category !== 'all') {
       const filterCategory = args.category.toLowerCase();
-      results = results.filter(r => {
+      results = results.filter((r) => {
         if (!r.category) return false;
         const listingCat = r.category.toLowerCase();
-        
+
         // Exact match on category (case-insensitive)
         if (listingCat === filterCategory) return true;
-        
+
         // If subCategory contains the category slug, it's a child category
-        if (r.subCategory && r.subCategory.toLowerCase().includes(filterCategory)) return true;
-        
+        if (
+          r.subCategory &&
+          r.subCategory.toLowerCase().includes(filterCategory)
+        )
+          return true;
+
         return false;
       });
     }
-    
+
     // SubCategory - exact match or hierarchical match (case-insensitive)
-    if (args.subCategory && args.subCategory !== '' && args.subCategory !== 'all') {
+    if (
+      args.subCategory &&
+      args.subCategory !== '' &&
+      args.subCategory !== 'all'
+    ) {
       const filterSub = args.subCategory.toLowerCase();
       console.log('Filtering by subCategory:', filterSub);
-      
+
       // Get all categories to check hierarchy
-      const allCategories = await ctx.db.query("categories").collect();
-      const categoryMap = new Map(allCategories.map(c => [c.slug.toLowerCase(), c]));
-      
+      const allCategories = await ctx.db.query('categories').collect();
+      const categoryMap = new Map(
+        allCategories.map((c) => [c.slug.toLowerCase(), c]),
+      );
+
       // Helper function to check if a category is an ancestor of another
-      const isAncestor = (potentialAncestorSlug: string, childSlug: string): boolean => {
+      const isAncestor = (
+        potentialAncestorSlug: string,
+        childSlug: string,
+      ): boolean => {
         const child = categoryMap.get(childSlug);
         if (!child || !child.parentId) return false;
-        
-        const parent = allCategories.find(c => c._id === child.parentId);
+
+        const parent = allCategories.find((c) => c._id === child.parentId);
         if (!parent) return false;
-        
+
         // Check if parent matches
         if (parent.slug.toLowerCase() === potentialAncestorSlug) return true;
-        
+
         // Recursively check grandparents
         return isAncestor(potentialAncestorSlug, parent.slug.toLowerCase());
       };
-      
-      results = results.filter(r => {
+
+      results = results.filter((r) => {
         if (!r.subCategory) return false;
         const listingSub = r.subCategory.toLowerCase();
-        console.log(`  Comparing filter "${filterSub}" with listing "${listingSub}"`);
-        
+        console.log(
+          `  Comparing filter "${filterSub}" with listing "${listingSub}"`,
+        );
+
         // Exact match (case-insensitive)
         if (listingSub === filterSub) {
           console.log('    ✓ Exact match!');
           return true;
         }
-        
+
         // Check if filter is an ancestor of the listing's subcategory
         if (isAncestor(filterSub, listingSub)) {
           console.log('    ✓ Ancestor match!');
           return true;
         }
-        
+
         // Check path-based matching for deeper hierarchies (fallback)
         if (listingSub.startsWith(filterSub + '/')) {
           console.log('    ✓ Path match!');
           return true;
         }
-        
+
         // Check if filter is more specific and listing matches the parent
         if (filterSub.startsWith(listingSub + '/')) {
           console.log('    ✓ Parent match!');
           return true;
         }
-        
+
         console.log('    ✗ No match');
         return false;
       });
     }
-    
+
     // Location
     if (args.city && args.city !== 'all') {
-        const searchCity = args.city.toLowerCase();
-        results = results.filter(r => r.city?.toLowerCase() === searchCity);
+      const searchCity = args.city.toLowerCase();
+      results = results.filter((r) => r.city?.toLowerCase() === searchCity);
     }
 
     // Price
-    if (args.minPrice !== undefined) results = results.filter(r => r.price >= args.minPrice!);
-    if (args.maxPrice !== undefined) results = results.filter(r => r.price <= args.maxPrice!);
+    if (args.minPrice !== undefined)
+      results = results.filter((r) => r.price >= args.minPrice!);
+    if (args.maxPrice !== undefined)
+      results = results.filter((r) => r.price <= args.maxPrice!);
 
     // Other filters
-    if (args.userType) results = results.filter(r => r.userType === args.userType);
-    
+    if (args.userType)
+      results = results.filter((r) => r.userType === args.userType);
+
     // Multi-value adType filter (comma-separated)
     if (args.adType) {
-      const types = args.adType.split(',').map(t => t.trim());
-      results = results.filter(r => r.adType && types.includes(r.adType));
+      const types = args.adType.split(',').map((t) => t.trim());
+      results = results.filter((r) => r.adType && types.includes(r.adType));
     }
-    
+
     // Multi-value condition filter (comma-separated)
     if (args.condition && args.condition !== 'all') {
-      const conditions = args.condition.split(',').map(c => c.trim());
-      results = results.filter(r => r.condition && conditions.includes(r.condition));
+      const conditions = args.condition.split(',').map((c) => c.trim());
+      results = results.filter(
+        (r) => r.condition && conditions.includes(r.condition),
+      );
     }
-    
-    if (args.isTradePossible !== undefined) results = results.filter(r => r.isTradePossible === args.isTradePossible);
-    if (args.hasShipping !== undefined) results = results.filter(r => r.hasShipping === args.hasShipping);
-    if (args.isVatIncluded !== undefined) results = results.filter(r => r.isVatIncluded === args.isVatIncluded);
-    if (args.isAffordable !== undefined) results = results.filter(r => r.isAffordable === args.isAffordable);
-    
+
+    if (args.isTradePossible !== undefined)
+      results = results.filter(
+        (r) => r.isTradePossible === args.isTradePossible,
+      );
+    if (args.hasShipping !== undefined)
+      results = results.filter((r) => r.hasShipping === args.hasShipping);
+    if (args.isVatIncluded !== undefined)
+      results = results.filter((r) => r.isVatIncluded === args.isVatIncluded);
+    if (args.isAffordable !== undefined)
+      results = results.filter((r) => r.isAffordable === args.isAffordable);
+
     // Date Range
     if (args.dateRange && args.dateRange !== 'all') {
       const now = Date.now();
@@ -273,9 +316,9 @@ export const list = query({
       if (args.dateRange === 'today') threshold = now - 24 * 60 * 60 * 1000;
       if (args.dateRange === '3days') threshold = now - 3 * 24 * 60 * 60 * 1000;
       if (args.dateRange === '7days') threshold = now - 7 * 24 * 60 * 60 * 1000;
-      
+
       if (threshold > 0) {
-        results = results.filter(r => r._creationTime >= threshold);
+        results = results.filter((r) => r._creationTime >= threshold);
       }
     }
 
@@ -283,30 +326,34 @@ export const list = query({
     if (args.dynamicFilters) {
       try {
         const filters = JSON.parse(args.dynamicFilters);
-        results = results.filter(r => {
+        results = results.filter((r) => {
           if (!r.specifications) return false;
-          
+
           return Object.entries(filters).every(([key, value]) => {
             const itemValue = r.specifications[key];
             if (itemValue === undefined) return false;
-            
+
             // Handle different types of comparisons
             if (Array.isArray(value)) {
-               // Range [min, max]
-               if (typeof itemValue === 'number' && value.length === 2 && typeof value[0] === 'number') {
-                   const [min, max] = value as [number, number];
-                   return itemValue >= min && itemValue <= max;
-               }
-               // Multi-select (OR logic)
-               return (value as any[]).includes(itemValue);
+              // Range [min, max]
+              if (
+                typeof itemValue === 'number' &&
+                value.length === 2 &&
+                typeof value[0] === 'number'
+              ) {
+                const [min, max] = value as [number, number];
+                return itemValue >= min && itemValue <= max;
+              }
+              // Multi-select (OR logic)
+              return (value as any[]).includes(itemValue);
             }
-            
+
             // Exact match (string, boolean, number)
             return itemValue == value; // Loose equality for string/number mix
           });
         });
       } catch (e) {
-        console.error("Failed to parse dynamic filters", e);
+        console.error('Failed to parse dynamic filters', e);
       }
     }
 
@@ -314,40 +361,54 @@ export const list = query({
 
     // 3. User Filter
     if (args.userId) {
-      results = results.filter(r => r.userId === args.userId);
+      results = results.filter((r) => r.userId === args.userId);
     }
 
     // 4. Final sorting: Promoted (Top Positioning) first, then by user choice
     const now = Date.now();
     const sortedResults = results.sort((a, b) => {
-        // Helper to check if a listing has an active TOP_POSITIONING promotion
-        const isTopA = a.isPromoted && a.promotionTier === 'TOP_POSITIONING' && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
-        const isTopB = b.isPromoted && b.promotionTier === 'TOP_POSITIONING' && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
+      // Helper to check if a listing has an active TOP_POSITIONING promotion
+      const isTopA =
+        a.isPromoted &&
+        a.promotionTier === 'TOP_POSITIONING' &&
+        (!a.promotionExpiresAt || a.promotionExpiresAt > now);
+      const isTopB =
+        b.isPromoted &&
+        b.promotionTier === 'TOP_POSITIONING' &&
+        (!b.promotionExpiresAt || b.promotionExpiresAt > now);
 
-        if (isTopA && !isTopB) return -1;
-        if (!isTopA && isTopB) return 1;
+      if (isTopA && !isTopB) return -1;
+      if (!isTopA && isTopB) return 1;
 
-        // General promoted (any tier) next, EXCEPT non-featured tiers
-        const featuredTiers = ['AUTO_DAILY_REFRESH', 'LISTING_HIGHLIGHT'];
-        const isPromotedA = a.isPromoted && !featuredTiers.includes(a.promotionTier || '') && (!a.promotionExpiresAt || a.promotionExpiresAt > now);
-        const isPromotedB = b.isPromoted && !featuredTiers.includes(b.promotionTier || '') && (!b.promotionExpiresAt || b.promotionExpiresAt > now);
-        
-        if (isPromotedA && !isPromotedB) return -1;
-        if (!isPromotedA && isPromotedB) return 1;
+      // General promoted (any tier) next, EXCEPT non-featured tiers
+      const featuredTiers = ['AUTO_DAILY_REFRESH', 'LISTING_HIGHLIGHT'];
+      const isPromotedA =
+        a.isPromoted &&
+        !featuredTiers.includes(a.promotionTier || '') &&
+        (!a.promotionExpiresAt || a.promotionExpiresAt > now);
+      const isPromotedB =
+        b.isPromoted &&
+        !featuredTiers.includes(b.promotionTier || '') &&
+        (!b.promotionExpiresAt || b.promotionExpiresAt > now);
 
-        // Standard sorting
-        switch (args.sort) {
-            case 'price-asc': // Low to High
-                return a.price - b.price;
-            case 'price-desc': // High to Low
-                return b.price - a.price;
-            case 'oldest':
-                return (a.createdAt || 0) - (b.createdAt || 0);
-            case 'newest':
-            default:
-                // Fallback to Date
-                return (b.createdAt || b._creationTime) - (a.createdAt || a._creationTime);
-        }
+      if (isPromotedA && !isPromotedB) return -1;
+      if (!isPromotedA && isPromotedB) return 1;
+
+      // Standard sorting
+      switch (args.sort) {
+        case 'price-asc': // Low to High
+          return a.price - b.price;
+        case 'price-desc': // High to Low
+          return b.price - a.price;
+        case 'oldest':
+          return (a.createdAt || 0) - (b.createdAt || 0);
+        case 'newest':
+        default:
+          // Fallback to Date
+          return (
+            (b.createdAt || b._creationTime) - (a.createdAt || a._creationTime)
+          );
+      }
     });
 
     // 5. Apply limit
@@ -360,17 +421,17 @@ export const list = query({
 });
 
 export const getById = query({
-  args: { id: v.id("listings") },
+  args: { id: v.id('listings') },
   handler: async (ctx, args) => {
     return await ctx.db.get(args.id);
   },
 });
 
 export const getByIds = query({
-  args: { ids: v.array(v.id("listings")) },
+  args: { ids: v.array(v.id('listings')) },
   handler: async (ctx, args) => {
-    const results = await Promise.all(args.ids.map(id => ctx.db.get(id)));
-    return results.filter(r => r !== null);
+    const results = await Promise.all(args.ids.map((id) => ctx.db.get(id)));
+    return results.filter((r) => r !== null);
   },
 });
 
@@ -379,25 +440,25 @@ export const getByUser = query({
   handler: async (ctx, args) => {
     // 1. Get the user robustly (by externalId or internal _id)
     let user = await ctx.db
-        .query("users")
-        .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
-        .unique();
+      .query('users')
+      .withIndex('by_externalId', (q) => q.eq('externalId', args.userId))
+      .unique();
 
     if (!user) {
-        try {
-            const potentialUser = await ctx.db.get(args.userId as any) as any;
-            if (potentialUser && 'externalId' in potentialUser) {
-                user = potentialUser;
-            }
-        } catch (e) {}
+      try {
+        const potentialUser = (await ctx.db.get(args.userId as any)) as any;
+        if (potentialUser && 'externalId' in potentialUser) {
+          user = potentialUser;
+        }
+      } catch (e) {}
     }
 
     if (!user) {
-        // If still no user, just try querying by the provided ID anyway
-        return await ctx.db
-          .query("listings")
-          .withIndex("by_userId", (q) => q.eq("userId", args.userId))
-          .collect();
+      // If still no user, just try querying by the provided ID anyway
+      return await ctx.db
+        .query('listings')
+        .withIndex('by_userId', (q) => q.eq('userId', args.userId))
+        .collect();
     }
 
     const externalId = user.externalId;
@@ -405,25 +466,31 @@ export const getByUser = query({
 
     // 2. Fetch listings for both IDs
     const listingsByExternal = await ctx.db
-      .query("listings")
-      .withIndex("by_userId", (q) => q.eq("userId", externalId))
+      .query('listings')
+      .withIndex('by_userId', (q) => q.eq('userId', externalId))
       .collect();
 
     const listingsByInternal = await ctx.db
-      .query("listings")
-      .withIndex("by_userId", (q) => q.eq("userId", internalId))
+      .query('listings')
+      .withIndex('by_userId', (q) => q.eq('userId', internalId))
       .collect();
 
     // Merge and deduplicate
-    const existingIds = new Set(listingsByExternal.map(l => l._id));
-    let listings = [...listingsByExternal, ...listingsByInternal.filter(l => !existingIds.has(l._id))];
+    const existingIds = new Set(listingsByExternal.map((l) => l._id));
+    let listings = [
+      ...listingsByExternal,
+      ...listingsByInternal.filter((l) => !existingIds.has(l._id)),
+    ];
 
     // Final sort by creation time (descending)
-    listings.sort((a, b) => (b.createdAt || b._creationTime) - (a.createdAt || a._creationTime));
+    listings.sort(
+      (a, b) =>
+        (b.createdAt || b._creationTime) - (a.createdAt || a._creationTime),
+    );
 
     if (args.search) {
-        const queryStr = args.search.toLowerCase();
-        return listings.filter(l => l.title.toLowerCase().includes(queryStr));
+      const queryStr = args.search.toLowerCase();
+      return listings.filter((l) => l.title.toLowerCase().includes(queryStr));
     }
 
     return listings;
@@ -463,70 +530,80 @@ export const create = mutation({
     // 1. Idempotency Check
     if (args.clientNonce) {
       const existing = await ctx.db
-        .query("listings")
-        .withIndex("by_clientNonce", (q) => 
-          q.eq("userId", args.userId).eq("clientNonce", args.clientNonce!)
+        .query('listings')
+        .withIndex('by_clientNonce', (q) =>
+          q.eq('userId', args.userId).eq('clientNonce', args.clientNonce!),
         )
         .unique();
-      
+
       if (existing) {
-        console.log("Duplicate listing submission detected, returning existing ID:", existing._id);
+        console.log(
+          'Duplicate listing submission detected, returning existing ID:',
+          existing._id,
+        );
         return existing._id;
       }
     }
 
     // 2. Check Listing Limit
     const user = await ctx.db
-      .query("users")
-      .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
+      .query('users')
+      .withIndex('by_externalId', (q) => q.eq('externalId', args.userId))
       .unique();
 
-    if (!user) throw new Error("User not found");
+    if (!user) throw new Error('User not found');
 
     // 2. Check Listing Limit based on Membership Tier
     const tier = (user.membershipTier || '').toLowerCase();
     let limit = user.listingLimit;
-    
+
     if (limit === undefined) {
-        if (tier === 'business' || tier === 'pro') limit = 999999;
-        else if (tier === 'verified') limit = 50;
-        else limit = 0; // FREE users must verify to post
+      if (tier === 'business' || tier === 'pro') limit = 999999;
+      else if (tier === 'verified') limit = 50;
+      else limit = 0; // FREE users must verify to post
     }
 
     const currentCount = user.listingsPostedCount ?? 0;
 
     if (currentCount >= limit && user.role !== 'ADMIN') {
-        if (limit === 0) throw new Error("Verification required: You must be a Verified User to post listings. Please upgrade in the Premium section.");
-        throw new Error(`Limit reached: Your tier allows up to ${limit === 999999 ? 'unlimited' : limit} active listings. Upgrade for more.`);
+      if (limit === 0)
+        throw new Error(
+          'Verification required: You must be a Verified User to post listings. Please upgrade in the Premium section.',
+        );
+      throw new Error(
+        `Limit reached: Your tier allows up to ${limit === 999999 ? 'unlimited' : limit} active listings. Upgrade for more.`,
+      );
     }
 
     if (user.role !== 'ADMIN') {
-        const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
-        const recentListings = await ctx.db
-          .query("listings")
-          .withIndex("by_userId", (q) => q.eq("userId", args.userId))
-          .filter((q) => q.gt(q.field("createdAt"), oneDayAgo))
-          .collect();
+      const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+      const recentListings = await ctx.db
+        .query('listings')
+        .withIndex('by_userId', (q) => q.eq('userId', args.userId))
+        .filter((q) => q.gt(q.field('createdAt'), oneDayAgo))
+        .collect();
 
-        if (recentListings.length >= 15) {
-            throw new Error("Daily limit reached: Due to anti-spam measures, you can only post up to 15 new listings per day.");
-        }
+      if (recentListings.length >= 15) {
+        throw new Error(
+          'Daily limit reached: Due to anti-spam measures, you can only post up to 15 new listings per day.',
+        );
+      }
     }
 
     const listingNumber = await getNextListingNumber(ctx);
 
-    const listingId = await ctx.db.insert("listings", {
+    const listingId = await ctx.db.insert('listings', {
       ...args,
-      status: "PENDING_APPROVAL", 
+      status: 'PENDING_APPROVAL',
       createdAt: Date.now(),
       viewCount: 0,
-      currency: args.currency || "MKD", // Default for legacy/omitted
+      currency: args.currency || 'MKD', // Default for legacy/omitted
       listingNumber,
     });
 
     // Increment count
     await ctx.db.patch(user._id, {
-        listingsPostedCount: currentCount + 1
+      listingsPostedCount: currentCount + 1,
     });
 
     return listingId;
@@ -534,120 +611,127 @@ export const create = mutation({
 });
 
 export const renewListing = mutation({
-  args: { 
-    id: v.id("listings"),
-    userId: v.string() 
+  args: {
+    id: v.id('listings'),
+    userId: v.string(),
   },
   handler: async (ctx, args) => {
     const listing = await ctx.db.get(args.id);
-    if (!listing) throw new Error("Listing not found");
-    if (listing.userId !== args.userId) throw new Error("Unauthorized");
+    if (!listing) throw new Error('Listing not found');
+    if (listing.userId !== args.userId) throw new Error('Unauthorized');
 
     const user = await ctx.db
-      .query("users")
-      .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
+      .query('users')
+      .withIndex('by_externalId', (q) => q.eq('externalId', args.userId))
       .unique();
 
-    if (!user) throw new Error("User not found");
+    if (!user) throw new Error('User not found');
 
     const now = Date.now();
     const currentMonth = new Date(now).getMonth();
-    
+
     // 1. Reset Monthly Quota if Month Changed
     let monthlyUsed = user.monthlyRenewalsUsed ?? 0;
     if (user.lastRenewalMonth !== currentMonth) {
-        monthlyUsed = 0;
+      monthlyUsed = 0;
     }
 
     // 2. Enforce 24-hour cooldown (admins bypass)
     if (user.role !== 'ADMIN' && user.lastRenewalTimestamp) {
-        const hoursSinceLast = (now - user.lastRenewalTimestamp) / (1000 * 60 * 60);
-        if (hoursSinceLast < 24) {
-            const hoursLeft = Math.ceil(24 - hoursSinceLast);
-            throw new Error(`You can renew again in ${hoursLeft} hour${hoursLeft !== 1 ? 's' : ''}. Renewals are allowed once every 24 hours.`);
-        }
+      const hoursSinceLast =
+        (now - user.lastRenewalTimestamp) / (1000 * 60 * 60);
+      if (hoursSinceLast < 24) {
+        const hoursLeft = Math.ceil(24 - hoursSinceLast);
+        throw new Error(
+          `You can renew again in ${hoursLeft} hour${hoursLeft !== 1 ? 's' : ''}. Renewals are allowed once every 24 hours.`,
+        );
+      }
     }
 
     // 3. Block for 'Verified' tier (Only Business/Pro can renew)
     const tier = (user.membershipTier || '').toLowerCase();
     if (user.role !== 'ADMIN' && tier === 'verified') {
-        throw new Error("Renewal is not included in the Verified plan. Upgrade to Business Premium to refresh your listings.");
+      throw new Error(
+        'Renewal is not included in the Verified plan. Upgrade to Business Premium to refresh your listings.',
+      );
     }
 
     // 4. Check Monthly Limit (15)
     if (monthlyUsed >= 15 && user.role !== 'ADMIN') {
-        throw new Error("Monthly renewal limit (15) reached.");
+      throw new Error('Monthly renewal limit (15) reached.');
     }
 
     // 4. Perform Renewal (Update createdAt to move to top)
     await ctx.db.patch(args.id, {
-        createdAt: now,
-        status: listing.status === 'PENDING_APPROVAL' ? 'PENDING_APPROVAL' : 'ACTIVE'
+      createdAt: now,
+      status:
+        listing.status === 'PENDING_APPROVAL' ? 'PENDING_APPROVAL' : 'ACTIVE',
     });
 
     // 5. Update User Stats
     await ctx.db.patch(user._id, {
-        monthlyRenewalsUsed: monthlyUsed + 1,
-        lastRenewalTimestamp: now,
-        lastRenewalMonth: currentMonth
+      monthlyRenewalsUsed: monthlyUsed + 1,
+      lastRenewalTimestamp: now,
+      lastRenewalMonth: currentMonth,
     });
 
     return { success: true, remainingMonthly: 15 - (monthlyUsed + 1) };
-  }
+  },
 });
 
 export const getRenewalStats = query({
-    args: { userId: v.string() },
-    handler: async (ctx, args) => {
-        const user = await ctx.db
-            .query("users")
-            .withIndex("by_externalId", (q) => q.eq("externalId", args.userId))
-            .unique();
-        
-        if (!user) return null;
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query('users')
+      .withIndex('by_externalId', (q) => q.eq('externalId', args.userId))
+      .unique();
 
-        const now = Date.now();
-        const currentMonth = new Date(now).getMonth();
-        
-        let monthlyUsed = user.monthlyRenewalsUsed ?? 0;
-        if (user.lastRenewalMonth !== currentMonth) {
-            monthlyUsed = 0;
-        }
+    if (!user) return null;
 
-        // Calculate 24-hour cooldown
-        let canRenewNow = true;
-        let hoursUntilRenew = 0;
-        let nextRenewAt: number | null = null;
+    const now = Date.now();
+    const currentMonth = new Date(now).getMonth();
 
-        if (user.lastRenewalTimestamp) {
-            const hoursSinceLast = (now - user.lastRenewalTimestamp) / (1000 * 60 * 60);
-            if (hoursSinceLast < 24) {
-                canRenewNow = false;
-                hoursUntilRenew = Math.ceil(24 - hoursSinceLast);
-                nextRenewAt = user.lastRenewalTimestamp + (24 * 60 * 60 * 1000);
-            }
-        }
-
-        return {
-            usedThisMonth: monthlyUsed,
-            limitMonthly: 15,
-            remainingMonthly: 15 - monthlyUsed,
-            canRenewNow,
-            hoursUntilRenew,
-            nextRenewAt,
-            totalLimit: user.listingLimit ?? 50,
-            totalPosted: user.listingsPostedCount ?? 0
-        };
+    let monthlyUsed = user.monthlyRenewalsUsed ?? 0;
+    if (user.lastRenewalMonth !== currentMonth) {
+      monthlyUsed = 0;
     }
+
+    // Calculate 24-hour cooldown
+    let canRenewNow = true;
+    let hoursUntilRenew = 0;
+    let nextRenewAt: number | null = null;
+
+    if (user.lastRenewalTimestamp) {
+      const hoursSinceLast =
+        (now - user.lastRenewalTimestamp) / (1000 * 60 * 60);
+      if (hoursSinceLast < 24) {
+        canRenewNow = false;
+        hoursUntilRenew = Math.ceil(24 - hoursSinceLast);
+        nextRenewAt = user.lastRenewalTimestamp + 24 * 60 * 60 * 1000;
+      }
+    }
+
+    return {
+      usedThisMonth: monthlyUsed,
+      limitMonthly: 15,
+      remainingMonthly: 15 - monthlyUsed,
+      canRenewNow,
+      hoursUntilRenew,
+      nextRenewAt,
+      totalLimit: user.listingLimit ?? 50,
+      totalPosted: user.listingsPostedCount ?? 0,
+    };
+  },
 });
 
 export const search = query({
   args: { query: v.string() },
   handler: async (ctx, args) => {
     return await ctx.db
-      .query("listings")
-      .withSearchIndex("search_title", (q) => 
-        q.search("title", args.query).eq("status", "ACTIVE")
+      .query('listings')
+      .withSearchIndex('search_title', (q) =>
+        q.search('title', args.query).eq('status', 'ACTIVE'),
       )
       .collect();
   },
@@ -655,17 +739,17 @@ export const search = query({
 
 // Admin: Approve Listing
 export const approveListing = mutation({
-  args: { id: v.id("listings") },
+  args: { id: v.id('listings') },
   handler: async (ctx, args) => {
-    await ctx.db.patch(args.id, { status: "ACTIVE" });
+    await ctx.db.patch(args.id, { status: 'ACTIVE' });
 
     const listing = await ctx.db.get(args.id);
     if (listing) {
-      await ctx.db.insert("activityLogs", {
+      await ctx.db.insert('activityLogs', {
         userId: listing.userId,
-        action: "APPROVE_LISTING",
+        action: 'APPROVE_LISTING',
         targetId: args.id,
-        targetType: "listing",
+        targetType: 'listing',
         createdAt: Date.now(),
       });
     }
@@ -674,17 +758,17 @@ export const approveListing = mutation({
 
 // Admin: Reject Listing
 export const rejectListing = mutation({
-  args: { id: v.id("listings") },
+  args: { id: v.id('listings') },
   handler: async (ctx, args) => {
-    await ctx.db.patch(args.id, { status: "REJECTED" });
+    await ctx.db.patch(args.id, { status: 'REJECTED' });
 
     const listing = await ctx.db.get(args.id);
     if (listing) {
-      await ctx.db.insert("activityLogs", {
+      await ctx.db.insert('activityLogs', {
         userId: listing.userId,
-        action: "REJECT_LISTING",
+        action: 'REJECT_LISTING',
         targetId: args.id,
-        targetType: "listing",
+        targetType: 'listing',
         createdAt: Date.now(),
       });
     }
@@ -696,16 +780,16 @@ export const getPendingListings = query({
   args: {},
   handler: async (ctx) => {
     return await ctx.db
-      .query("listings")
-      .withIndex("by_status", (q) => q.eq("status", "PENDING_APPROVAL"))
-      .order("desc")
+      .query('listings')
+      .withIndex('by_status', (q) => q.eq('status', 'PENDING_APPROVAL'))
+      .order('desc')
       .collect();
   },
 });
 
 export const update = mutation({
   args: {
-    id: v.id("listings"),
+    id: v.id('listings'),
     title: v.optional(v.string()),
     description: v.optional(v.string()),
     price: v.optional(v.number()),
@@ -731,13 +815,13 @@ export const update = mutation({
     isPromoted: v.optional(v.boolean()),
     promotionTier: v.optional(v.string()),
     currency: v.optional(v.string()),
-    
+
     // System Fields
     createdAt: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const { id, ...patch } = args;
-    
+
     // Track price history if price is changing
     if (patch.price !== undefined) {
       const existingListing = await ctx.db.get(id);
@@ -751,7 +835,7 @@ export const update = mutation({
 });
 
 export const remove = mutation({
-  args: { id: v.id("listings") },
+  args: { id: v.id('listings') },
   handler: async (ctx, args) => {
     // 1. Find the listing to get the owner
     const listing = await ctx.db.get(args.id);
@@ -759,20 +843,20 @@ export const remove = mutation({
 
     // 2. Find the user
     const user = await ctx.db
-        .query("users")
-        .withIndex("by_externalId", (q) => q.eq("externalId", listing.userId))
-        .unique();
+      .query('users')
+      .withIndex('by_externalId', (q) => q.eq('externalId', listing.userId))
+      .unique();
 
     // 3. Decrement count if user exists and count > 0
     if (user && (user.listingsPostedCount || 0) > 0) {
-        await ctx.db.patch(user._id, {
-            listingsPostedCount: (user.listingsPostedCount || 1) - 1
-        });
+      await ctx.db.patch(user._id, {
+        listingsPostedCount: (user.listingsPostedCount || 1) - 1,
+      });
     }
 
     // 4. Release ID
     if (listing.listingNumber !== undefined) {
-        await releaseListingNumber(ctx, listing.listingNumber);
+      await releaseListingNumber(ctx, listing.listingNumber);
     }
 
     // 5. Delete the listing
@@ -790,33 +874,77 @@ export const checkExpiringListings = mutation({
 
     // Find active listings older than 30 days
     const expiringListings = await ctx.db
-      .query("listings")
-      .withIndex("by_status", (q) => q.eq("status", "ACTIVE"))
-      .filter((q) => q.lt(q.field("createdAt"), expiryThreshold))
+      .query('listings')
+      .withIndex('by_status', (q) => q.eq('status', 'ACTIVE'))
+      .filter((q) => q.lt(q.field('createdAt'), expiryThreshold))
       .collect();
 
     let expiredCount = 0;
-    
+
     for (const listing of expiringListings) {
-      await ctx.db.patch(listing._id, { status: "EXPIRED" });
-      
+      await ctx.db.patch(listing._id, { status: 'EXPIRED' });
+
       // Notify the user via the notifications table
-      await ctx.db.insert("notifications", {
+      await ctx.db.insert('notifications', {
         userId: listing.userId,
-        type: "SYSTEM",
-        title: "Listing Expired",
+        type: 'SYSTEM',
+        title: 'Listing Expired',
         message: `Your listing "${listing.title}" has been active for 30 days and has automatically expired. You can renew it from your dashboard.`,
         isRead: false,
         createdAt: now,
         link: `/my-listings`,
       });
-      
+
       expiredCount++;
     }
 
     console.log(`Cron: Expired ${expiredCount} listings older than 30 days.`);
     return { success: true, count: expiredCount };
-  }
+  },
+});
+
+// CRON JOB: Warn users 3 days before their listing expires
+export const notifyApproachingExpiry = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const TWENTY_SEVEN_DAYS_MS = 27 * 24 * 60 * 60 * 1000;
+    const TWENTY_EIGHT_DAYS_MS = 28 * 24 * 60 * 60 * 1000;
+    const now = Date.now();
+    const thresholdStart = now - TWENTY_EIGHT_DAYS_MS;
+    const thresholdEnd = now - TWENTY_SEVEN_DAYS_MS;
+
+    // Find active listings that are exactly between 27 and 28 days old
+    const approachingListings = await ctx.db
+      .query('listings')
+      .withIndex('by_status', (q) => q.eq('status', 'ACTIVE'))
+      .filter((q) =>
+        q.and(
+          q.gt(q.field('createdAt'), thresholdStart),
+          q.lte(q.field('createdAt'), thresholdEnd),
+        ),
+      )
+      .collect();
+
+    let notifyCount = 0;
+
+    for (const listing of approachingListings) {
+      await ctx.db.insert('notifications', {
+        userId: listing.userId,
+        type: 'SYSTEM',
+        title: 'Listing Expiring Soon',
+        message: `Your listing "${listing.title}" will expire in 3 days. Renew it now from your dashboard to keep it active.`,
+        isRead: false,
+        createdAt: now,
+        link: `/my-listings`,
+      });
+      notifyCount++;
+    }
+
+    console.log(
+      `Cron: Warned ${notifyCount} users about approaching listings expiry (3 days left).`,
+    );
+    return { success: true, count: notifyCount };
+  },
 });
 
 // SEO: Fetch minimal listing data for sitemap generation
@@ -824,14 +952,14 @@ export const getSeoSitemapListings = query({
   args: {},
   handler: async (ctx) => {
     const listings = await ctx.db
-      .query("listings")
-      .withIndex("by_status", (q) => q.eq("status", "ACTIVE"))
-      .order("desc")
+      .query('listings')
+      .withIndex('by_status', (q) => q.eq('status', 'ACTIVE'))
+      .order('desc')
       .take(10000); // chunking to 10k max for Vercel functions memory limits
-      
-    return listings.map(l => ({
+
+    return listings.map((l) => ({
       _id: l._id,
       createdAt: l.createdAt,
     }));
-  }
+  },
 });

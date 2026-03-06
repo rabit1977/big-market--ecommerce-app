@@ -9,16 +9,42 @@ export const follow = mutation({
     const existing = await ctx.db
       .query('followedSellers')
       .withIndex('by_follower_seller', (q) =>
-        q.eq('followerId', followerId).eq('sellerId', sellerId)
+        q.eq('followerId', followerId).eq('sellerId', sellerId),
       )
       .unique();
     if (existing) return existing._id;
 
-    return await ctx.db.insert('followedSellers', {
+    const followId = await ctx.db.insert('followedSellers', {
       followerId,
       sellerId,
       createdAt: Date.now(),
     });
+
+    // Notify the seller
+    if (sellerId !== followerId) {
+      const follower = await ctx.db
+        .query('users')
+        .withIndex('by_externalId', (q) => q.eq('externalId', followerId))
+        .first();
+
+      const followerName = follower?.name || 'Someone';
+
+      await ctx.db.insert('notifications', {
+        userId: sellerId,
+        type: 'SYSTEM',
+        title: 'New Store Follower',
+        message: `${followerName} started following your store.`,
+        isRead: false,
+        createdAt: Date.now(),
+        metadata: {
+          followerId,
+          followerName,
+          followerImage: follower?.image,
+        },
+      });
+    }
+
+    return followId;
   },
 });
 
@@ -29,7 +55,7 @@ export const unfollow = mutation({
     const existing = await ctx.db
       .query('followedSellers')
       .withIndex('by_follower_seller', (q) =>
-        q.eq('followerId', followerId).eq('sellerId', sellerId)
+        q.eq('followerId', followerId).eq('sellerId', sellerId),
       )
       .unique();
     if (existing) await ctx.db.delete(existing._id);
@@ -43,7 +69,7 @@ export const isFollowing = query({
     const existing = await ctx.db
       .query('followedSellers')
       .withIndex('by_follower_seller', (q) =>
-        q.eq('followerId', followerId).eq('sellerId', sellerId)
+        q.eq('followerId', followerId).eq('sellerId', sellerId),
       )
       .unique();
     return !!existing;
@@ -65,13 +91,55 @@ export const getFollowedSellers = query({
       follows.map(async (follow) => {
         const seller = await ctx.db
           .query('users')
-          .withIndex('by_externalId', (q) => q.eq('externalId', follow.sellerId))
+          .withIndex('by_externalId', (q) =>
+            q.eq('externalId', follow.sellerId),
+          )
           .unique();
         return seller ? { ...seller, followedAt: follow.createdAt } : null;
-      })
+      }),
     );
 
     return sellers.filter(Boolean);
+  },
+});
+
+/** Get all users who follow a seller (Store Followers) */
+export const getStoreFollowers = query({
+  args: { sellerId: v.string() },
+  handler: async (ctx, { sellerId }) => {
+    // 1. Resolve sellerId to internal vs external
+    let resolvedSellerId = sellerId;
+    const user = await ctx.db
+      .query('users')
+      .withIndex('by_externalId', (q) => q.eq('externalId', sellerId))
+      .unique();
+
+    if (user) {
+      resolvedSellerId = user.externalId;
+    }
+
+    const followers = await ctx.db
+      .query('followedSellers')
+      .withIndex('by_seller', (q) => q.eq('sellerId', resolvedSellerId))
+      .order('desc')
+      .collect();
+
+    // Fetch user data for each follower
+    const followerUsers = await Promise.all(
+      followers.map(async (follow) => {
+        const followerUser = await ctx.db
+          .query('users')
+          .withIndex('by_externalId', (q) =>
+            q.eq('externalId', follow.followerId),
+          )
+          .unique();
+        return followerUser
+          ? { ...followerUser, followedAt: follow.createdAt }
+          : null;
+      }),
+    );
+
+    return followerUsers.filter(Boolean);
   },
 });
 
