@@ -380,7 +380,7 @@ export const AdminSidebar = () => {
             </SheetTrigger>
             <SheetContent
               side='bottom'
-              className='h-[85vh] rounded-t-3xl p-0 flex flex-col shadow-[0_-20px_50px_rgba(0,0,0,0.1)] border-b-0'
+              className='h-[95vh] rounded-t-3xl p-0 flex flex-col shadow-[0_-20px_50px_rgba(0,0,0,0.1)] border-b-0'
             >
               <div
                 className='flex justify-center pt-3 pb-3 -mb-2 cursor-grab active:cursor-grabbing z-10'

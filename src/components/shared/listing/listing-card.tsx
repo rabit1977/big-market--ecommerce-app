@@ -1,7 +1,7 @@
 'use client';
 
 import { PromotionIcon } from '@/components/shared/listing/promotion-icon';
-import { SellerBadge } from '@/components/shared/seller-badge';
+
 import { getPromotionConfig } from '@/lib/constants/promotions';
 import { useFavorites } from '@/lib/context/favorites-context';
 import { ListingWithRelations } from '@/lib/types/listing';
@@ -12,7 +12,7 @@ import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
-import { memo, useCallback } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 
 interface ListingCardProps {
   listing: ListingWithRelations;
@@ -58,8 +58,21 @@ export const ListingCard = memo(
       [listing.id, listing._id, toggleFavorite],
     );
 
-    const activeImage =
-      listing.images?.[0]?.url || listing.thumbnail || '/placeholder.png';
+    const imagesArray = listing.images?.length
+      ? (listing.images as (string | { url: string })[])
+      : ['/placeholder.png'];
+    const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+    const handleScroll = useCallback(
+      (e: React.UIEvent<HTMLDivElement>) => {
+        const container = e.currentTarget;
+        const index = Math.round(container.scrollLeft / container.clientWidth);
+        if (index !== activeImageIndex) {
+          setActiveImageIndex(index);
+        }
+      },
+      [activeImageIndex],
+    );
     const isGrid = viewMode === 'grid';
     const isCard = viewMode === 'card';
 
@@ -92,7 +105,10 @@ export const ListingCard = memo(
         {/* Image Section - The container for the 'card' look */}
         <div
           className={cn(
-            'relative overflow-hidden z-20 bg-muted transition-all duration-150 pointer-events-none',
+            'relative overflow-hidden z-20 bg-muted transition-all duration-150',
+            imagesArray.length > 1
+              ? 'pointer-events-auto'
+              : 'pointer-events-none',
             isGrid
               ? 'aspect-[4/3] w-full rounded-t-xl shrink-0'
               : isCard
@@ -100,19 +116,52 @@ export const ListingCard = memo(
                 : 'flex-grow flex-shrink basis-10 min-w-10 max-w-54 h-full rounded-l-xl',
           )}
         >
-          <Image
-            src={activeImage}
-            alt={listing.title}
-            fill
-            className='object-cover transition-transform duration-700 ease-out group-hover:scale-105 pointer-events-none'
-            sizes={
-              isCard
-                ? '(max-width: 768px) 100vw, 80vw'
-                : isGrid
-                  ? '(max-width: 768px) 50vw, 25vw '
-                  : '(max-width: 768px) 33vw, 20vw'
-            }
-          />
+          <div
+            className='flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar'
+            onScroll={imagesArray.length > 1 ? handleScroll : undefined}
+          >
+            {imagesArray.map((img, i) => {
+              const imgSrc = typeof img === 'string' ? img : img.url;
+              return (
+                <Link
+                  key={i}
+                  href={`/listings/${listing.id || listing._id}`}
+                  className='relative w-full h-full flex-shrink-0 snap-center pointer-events-auto'
+                  aria-label={`View ${listing.title}`}
+                >
+                  <Image
+                    src={imgSrc}
+                    alt={`${listing.title} - Image ${i + 1}`}
+                    fill
+                    className='object-cover transition-transform duration-700 ease-out group-hover:scale-105 pointer-events-none'
+                    sizes={
+                      isCard
+                        ? '(max-width: 768px) 100vw, 80vw'
+                        : isGrid
+                          ? '(max-width: 768px) 50vw, 25vw '
+                          : '(max-width: 768px) 33vw, 20vw'
+                    }
+                  />
+                </Link>
+              );
+            })}
+          </div>
+
+          {imagesArray.length > 1 && (
+            <div className='absolute bottom-1.5 left-0 right-0 z-30 flex justify-center gap-1.5 pointer-events-none'>
+              {imagesArray.map((_, i) => (
+                <div
+                  key={i}
+                  className={cn(
+                    'w-1.5 h-1.5 rounded-full transition-all duration-300',
+                    i === activeImageIndex
+                      ? 'bg-white scale-110 shadow-sm'
+                      : 'bg-white/50 scale-90',
+                  )}
+                />
+              ))}
+            </div>
+          )}
           {isPromoted && promoConfig && (
             <div
               className={cn(
@@ -141,9 +190,9 @@ export const ListingCard = memo(
             </div>
           )}
           {(isGrid || isCard) && (
-            <div className='absolute top-2 right-2 z-30 pointer-events-none'>
+            <div className='absolute top-1 right-1 sm:top-1.5 sm:right-1.5 z-30 pointer-events-none'>
               <span
-                className='text-[9px] font-bold text-white/80 bg-black/40 backdrop-blur-sm px-1.5 py-0.5 rounded-md border border-white/10'
+                className='text-[9px] font-bold text-white/90 bg-black/60 backdrop-blur-sm px-1.5 py-0.5 rounded-md border border-white/20'
                 suppressHydrationWarning
               >
                 {listing.createdAt
@@ -186,7 +235,7 @@ export const ListingCard = memo(
                     </span>
                   </h3>
                   <div className='flex items-center gap-1.5 flex-wrap'>
-                    <SellerBadge seller={listing.user} size='sm' />
+                    {/* Badge removed per user request */}
                   </div>
                 </div>
               </div>
@@ -252,7 +301,7 @@ export const ListingCard = memo(
               <div className='space-y-1.5 min-w-0'>
                 <div className='flex items-center justify-between mb-0.5'>
                   <div className='flex items-center gap-1.5'>
-                    <SellerBadge seller={listing.user} size='sm' />
+                    {/* Badge removed per user request */}
                   </div>
                   <span
                     className='text-[10px] sm:text-[11px] text-muted-foreground font-medium uppercase tracking-wider opacity-60'
