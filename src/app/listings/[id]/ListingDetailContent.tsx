@@ -415,7 +415,7 @@ export function ListingDetailContent({
             {/* Image Gallery */}
             <div className='relative group overflow-hidden md:rounded-lg border border-border bg-muted'>
               <div
-                className='flex w-full aspect-[4/3] md:aspect-video overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar pointer-events-auto'
+                className='flex w-full aspect-[4/3] md:aspect-video overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar pointer-events-auto touch-pan-x touch-pan-y'
                 onScroll={(e) => {
                   const container = e.currentTarget;
                   const index = Math.round(

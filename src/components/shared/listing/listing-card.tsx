@@ -117,7 +117,7 @@ export const ListingCard = memo(
           )}
         >
           <div
-            className='flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar'
+            className='flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar touch-pan-x touch-pan-y'
             onScroll={imagesArray.length > 1 ? handleScroll : undefined}
           >
             {imagesArray.map((img, i) => {
