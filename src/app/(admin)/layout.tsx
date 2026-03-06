@@ -14,10 +14,7 @@ export default function AdminLayout({
         <AdminSidebar />
         
         <div className="lg:pl-64 flex flex-col min-h-screen transition-all duration-300 ease-in-out">
-            <main className="flex-1 py-20 lg:py-8 px-2 sm:px-3 md:px-4 lg:px-6 2xl:px-8 max-w-[1920px] mx-auto w-full">
-                <div className="mb-6">
-                    <AppBreadcrumbs />
-                </div>
+            <main className="flex-1 py-20 lg:py-8 px-1 sm:px-2 md:px-4 lg:px-6 2xl:px-8 max-w-[1920px] mx-auto w-full">
                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                     {children}
                 </div>

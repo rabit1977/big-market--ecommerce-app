@@ -25,7 +25,7 @@ export function AdminActivityClientPage() {
   }));
 
   return (
-    <div className='flex-1 space-y-4 p-8 pt-6'>
+    <div className='flex-1 space-y-4'>
       <div className='flex flex-col space-y-1 mb-6'>
         <h2 className='text-3xl font-bold tracking-tight text-foreground'>Activity Logs</h2>
         <p className='text-sm text-muted-foreground font-medium'>
@@ -33,7 +33,7 @@ export function AdminActivityClientPage() {
         </p>
       </div>
       <div className='grid gap-4 md:grid-cols-1 lg:grid-cols-1'>
-          <div className="rounded-lg border bg-card text-card-foreground p-6">
+          <div className="rounded-lg border bg-card text-card-foreground p-2">
              <ActivityLogs logs={formattedLogs as any} />
           </div>
       </div>

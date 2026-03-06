@@ -1,16 +1,15 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import {
-    Package,
-    PencilLine,
-    Plus,
-    Settings,
-    ShoppingCart,
-    Tag,
-    Trash2,
-    User,
-    XCircle
+  Package,
+  PencilLine,
+  Plus,
+  Settings,
+  ShoppingCart,
+  Tag,
+  Trash2,
+  User,
+  XCircle
 } from 'lucide-react';
 
 interface ActivityLog {
@@ -71,13 +70,7 @@ export function ActivityLogs({ logs }: ActivityLogsProps) {
         const { icon: Icon, color } = getActivityIcon(log.action);
         
         return (
-          <motion.div
-            key={log.id}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.05 }}
-            className='flex items-start gap-4 p-3 rounded-lg hover:bg-secondary/40 transition-colors group'
-          >
+          <div key={log.id} className='flex items-start gap-4 py-2 rounded-lg hover:bg-secondary/40 transition-colors group'>
             <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 bg-secondary border border-border/50 ${color}`}>
               <Icon className='h-4 w-4' />
             </div>
@@ -95,7 +88,7 @@ export function ActivityLogs({ logs }: ActivityLogsProps) {
                 </span>
               </div>
             </div>
-          </motion.div>
+          </div>
         );
       })}
     </div>

@@ -174,26 +174,26 @@ export const AdminSidebar = () => {
                     <span className="text-[9px] font-bold uppercase tracking-tight w-full text-center truncate leading-tight">{t('menu')}</span>
                 </button>
             </SheetTrigger>
-            <SheetContent side="bottom" className='h-[85vh] rounded-t-lg p-0 flex flex-col border-t border-border shadow-none'>
-                 <div className="p-4 border-b flex items-center justify-between">
-                     <SheetTitle>{t('admin_menu')}</SheetTitle>
+            <SheetContent side="bottom" className='h-[55vh] rounded-t-lg p-0 flex flex-col border-t border-border shadow-none'>
+                 <div className="p-2 border-b flex items-center justify-between">
+                     <SheetTitle className='text-base'>{t('admin_menu')}</SheetTitle>
                  </div>
-                 <ScrollArea className="flex-1 p-4">
-                     <div className="grid grid-cols-3 gap-4 mb-8">
+                 <ScrollArea className="flex-1 p-1">
+                     <div className="grid grid-cols-3 gap-2 mb-4">
                          {navItems.map((item) => (
                               <Link
                                  key={item.href}
                                  href={item.href}
                                  onClick={() => setIsMobileMenuOpen(false)}
                                  className={cn(
-                                     "flex flex-col items-center justify-center gap-2 p-3 rounded-lg border transition-all",
+                                     "flex flex-col items-center justify-center gap-2 py-3 px-1 rounded-lg border transition-all",
                                      (pathname === item.href || pathname.startsWith(item.href + '/')) 
                                          ? "bg-secondary border-border text-foreground" 
                                          : "bg-card border-border text-muted-foreground"
                                  )}
                               >
                                   <item.icon className={cn("w-5 h-5", (pathname === item.href || pathname.startsWith(item.href + '/')) ? "text-primary" : "text-muted-foreground")} />
-                                  <span className="text-[10px] text-center font-bold line-clamp-1 uppercase tracking-widest">{item.label}</span>
+                                  <span className="text-[8px] text-center font-bold line-clamp-1 uppercase tracking-widest">{item.label}</span>
                               </Link>
                          ))}
                      </div>
