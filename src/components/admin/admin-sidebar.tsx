@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetTitle,
   SheetTrigger,
@@ -32,6 +33,7 @@ import {
   Tag,
   Trash2,
   Users,
+  X,
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -383,21 +385,27 @@ export const AdminSidebar = () => {
               className='h-[85vh] rounded-t-3xl p-0 flex flex-col shadow-[0_-20px_50px_rgba(0,0,0,0.1)] border-b-0 [&>button]:hidden'
             >
               <div
-                className='flex justify-center pt-3 pb-3 -mb-2 cursor-grab active:cursor-grabbing z-10'
+                className='flex flex-col cursor-grab active:cursor-grabbing z-10 touch-pan-y'
                 onTouchStart={onTouchStart}
                 onTouchMove={onTouchMove}
                 onTouchEnd={onTouchEnd}
               >
-                <div className='w-10 h-1 rounded-full bg-muted-foreground/30 pointer-events-none' />
+                <div className='flex justify-center pt-3 pb-2'>
+                  <div className='w-12 h-1.5 rounded-full bg-muted-foreground/30 pointer-events-none' />
+                </div>
+                <div className='px-6 pb-4 pt-1 border-b flex items-center justify-between'>
+                  <SheetTitle className='text-lg font-bold tracking-tight flex items-center gap-2'>
+                    <div className='w-6 h-6 rounded bg-primary/20 text-primary flex items-center justify-center'>
+                      <LayoutDashboard className='w-3.5 h-3.5' />
+                    </div>
+                    {t('admin_menu') || 'Navigation'}
+                  </SheetTitle>
+                  <SheetClose className='p-2 -mr-2 rounded-full hover:bg-muted text-muted-foreground transition-all flex items-center justify-center'>
+                    <X className='w-5 h-5' />
+                  </SheetClose>
+                </div>
               </div>
-              <div className='px-6 pb-2 pt-1 border-b flex items-center justify-between'>
-                <SheetTitle className='text-lg font-bold tracking-tight flex items-center gap-2'>
-                  <div className='w-6 h-6 rounded bg-primary/20 text-primary flex items-center justify-center'>
-                    <LayoutDashboard className='w-3.5 h-3.5' />
-                  </div>
-                  {t('admin_menu') || 'Navigation'}
-                </SheetTitle>
-              </div>
+
               <ScrollArea className='flex-1 px-4 py-4'>
                 <div className='grid grid-cols-2 gap-3 mb-6'>
                   {allNavItems.map((item) => {
