@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import {
     BarChart3,
     CreditCard,
+    History,
     Home,
     Layers,
     LayoutDashboard,
@@ -50,6 +51,7 @@ export const AdminSidebar = () => {
     { href: '/admin/listings/promoted',  label: t('promoted_listings'),  icon: Sparkles },
     { href: '/admin/categories',         label: t('categories'),         icon: Layers },
     { href: '/admin/users',              label: t('users'),              icon: Users },
+    { href: '/admin/activity',           label: t('activity_logs'),      icon: History },
     { href: '/admin/recycle-bin',        label: t('recycle_bin'),        icon: Trash2 },
   ];
 

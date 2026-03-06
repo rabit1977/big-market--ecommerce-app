@@ -4,20 +4,19 @@ import { AdminFilterToolbar, getSinceFromRange, TimeRange } from '@/components/a
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '@/convex/_generated/api';
 import { formatCurrency } from '@/lib/utils/formatters';
 import { useQuery } from 'convex/react';
 import {
-    ArrowRight,
-    ArrowUpRight,
-    BarChart3,
-    Clock,
-    CreditCard,
-    Plus,
-    ShieldCheck,
-    Tag,
-    Users
+  ArrowRight,
+  ArrowUpRight,
+  BarChart3,
+  Clock,
+  CreditCard,
+  Plus,
+  ShieldCheck,
+  Tag,
+  Users
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
@@ -50,15 +49,7 @@ export function AdminDashboardClient() {
   if (isLoading) {
     return (
       <div className="space-y-8 animate-pulse">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-32 w-full rounded-lg" />
-          ))}
-        </div>
-        <div className="grid gap-6 lg:grid-cols-3">
-          <Skeleton className="lg:col-span-2 h-[400px] rounded-lg" />
-          <Skeleton className="h-[400px] rounded-lg" />
-        </div>
+         Loading...
       </div>
     );
   }
@@ -68,17 +59,19 @@ export function AdminDashboardClient() {
       {/* Header with quick actions */}
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
         <div className='flex flex-col space-y-1'>
-          <h1 className='text-3xl sm:text-5xl font-black tracking-tighter text-foreground flex items-center gap-4 uppercase'>
-            {t('dashboard_title')}
+          <h1 className='text-xl sm:text-3xl md:text-5xl font-black tracking-tighter text-foreground flex items-center justify-between gap-4 uppercase'>
+            <span className='text-foreground tracking-tight'>
+              {t('dashboard_title')}
+            </span>
             <span className='inline-flex items-center justify-center px-2 py-1 rounded-xl bg-primary/10 text-primary text-[10px] font-black border border-primary/20 uppercase tracking-widest'>
               {t('live')}
             </span>
           </h1>
-          <p className='text-[10px] sm:text-xs text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60'>
+          <p className='text-[10px] sm:text-xs text-muted-foreground font-black tracking-[0.1em] opacity-60'>
             {t('welcome_back')}
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex items-center gap-3">
            <AdminFilterToolbar
                timeRange={timeRange}
                onTimeRangeChange={setTimeRange}
@@ -90,9 +83,9 @@ export function AdminDashboardClient() {
                 {t('view_reports')}
               </Link>
            </Button>
-           <Button size="sm" asChild className="rounded-xl font-black uppercase tracking-widest px-6 h-10 shadow-none border border-primary transition-all active:scale-95">
+           <Button size="sm" asChild className="rounded-xl font-black uppercase tracking-widest px-4 h-10 shadow-none border border-primary transition-all active:scale-95">
               <Link href="/admin/users/create">
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className="w-4 h-4" />
                 {t('create_user')}
               </Link>
            </Button>
@@ -184,14 +177,19 @@ export function AdminDashboardClient() {
 
         {/* Recent Activity */}
         <Card className="rounded-lg border-border shadow-none overflow-hidden bg-card transition-colors hover:bg-secondary/40">
-          <CardHeader className="bg-muted/30 border-b border-border">
-            <CardTitle className="text-lg font-bold flex items-center gap-2">
-              <Clock className="w-5 h-5 text-primary" />
-              {t('recent_activity')}
-            </CardTitle>
-            <CardDescription className="text-sm font-medium">
-              {t('platform_logs')}
-            </CardDescription>
+          <CardHeader className="bg-muted/30 border-b border-border flex flex-row items-center justify-between space-y-0">
+            <div className="space-y-1">
+              <CardTitle className="text-lg font-bold flex items-center gap-2">
+                <Clock className="w-5 h-5 text-primary" />
+                {t('recent_activity')}
+              </CardTitle>
+              <CardDescription className="text-sm font-medium">
+                {t('platform_logs')}
+              </CardDescription>
+            </div>
+            <Link href="/admin/activity" className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline flex items-center gap-1.5">
+              {t('view_all')} <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </CardHeader>
           <CardContent className="px-2">
             <ActivityLogs logs={recentLogs || []} noActivityLabel={t('no_activity')} />

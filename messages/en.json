@@ -443,7 +443,8 @@
     "admin_menu": "Admin Menu",
     "store": "Store",
     "logout": "Logout",
-    "sign_out": "Sign Out"
+    "sign_out": "Sign Out",
+    "activity_logs": "Activity Logs"
   },
   "QA": {
     "title": "Questions & Answers",
