@@ -316,7 +316,7 @@ export const AdminSidebar = () => {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'relative flex flex-col items-center justify-center w-[92px] h-full gap-1 transition-all duration-200 group rounded-full',
+                  'relative flex flex-col items-center justify-center w-[72px] h-full gap-1 transition-all duration-200 group rounded-full',
                   isActive
                     ? 'text-primary'
                     : 'text-muted-foreground hover:text-foreground',
@@ -380,7 +380,7 @@ export const AdminSidebar = () => {
             </SheetTrigger>
             <SheetContent
               side='bottom'
-              className='h-[75vh] rounded-t-3xl p-0 flex flex-col shadow-[0_-20px_50px_rgba(0,0,0,0.1)] border-b-0'
+              className='h-[85vh] rounded-t-3xl p-0 flex flex-col shadow-[0_-20px_50px_rgba(0,0,0,0.1)] border-b-0'
             >
               <div
                 className='flex justify-center pt-3 pb-3 -mb-2 cursor-grab active:cursor-grabbing z-10'
