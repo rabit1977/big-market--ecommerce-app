@@ -148,16 +148,28 @@ export const ListingCard = memo(
           </div>
 
           {imagesArray.length > 1 && (
-            <div className='absolute bottom-1.5 left-0 right-0 z-30 flex justify-center gap-1.5 pointer-events-none'>
+            <div className='absolute bottom-1.5 left-0 right-0 z-30 flex justify-center gap-1.5 pointer-events-auto'>
               {imagesArray.map((_, i) => (
-                <div
+                <button
                   key={i}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const container = e.currentTarget.parentElement
+                      ?.previousElementSibling as HTMLElement;
+                    if (container)
+                      container.scrollTo({
+                        left: container.clientWidth * i,
+                        behavior: 'smooth',
+                      });
+                  }}
                   className={cn(
-                    'w-1.5 h-1.5 rounded-full transition-all duration-300',
+                    'w-2 h-2 rounded-full transition-all duration-300',
                     i === activeImageIndex
                       ? 'bg-white scale-110 shadow-sm'
                       : 'bg-white/50 scale-90',
                   )}
+                  aria-label={`Go to image ${i + 1}`}
                 />
               ))}
             </div>
