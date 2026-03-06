@@ -60,6 +60,29 @@ export const AdminSidebar = () => {
   const { theme, setTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
 
+  // Swipe-to-close logic for mobile menu
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientY);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientY);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchEnd - touchStart;
+    const isDownSwipe = distance > minSwipeDistance;
+    if (isDownSwipe) {
+      setIsMobileMenuOpen(false);
+    }
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -293,7 +316,7 @@ export const AdminSidebar = () => {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'relative flex flex-col items-center justify-center w-[72px] h-full gap-1 transition-all duration-200 group rounded-full',
+                  'relative flex flex-col items-center justify-center w-[92px] h-full gap-1 transition-all duration-200 group rounded-full',
                   isActive
                     ? 'text-primary'
                     : 'text-muted-foreground hover:text-foreground',
@@ -359,7 +382,12 @@ export const AdminSidebar = () => {
               side='bottom'
               className='h-[75vh] rounded-t-3xl p-0 flex flex-col shadow-[0_-20px_50px_rgba(0,0,0,0.1)] border-b-0'
             >
-              <div className='flex justify-center pt-3 pb-1'>
+              <div
+                className='flex justify-center pt-3 pb-3 -mb-2 cursor-grab active:cursor-grabbing z-10'
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
+              >
                 <div className='w-12 h-1.5 rounded-full bg-muted-foreground/20' />
               </div>
               <div className='px-6 pb-2 pt-1 border-b flex items-center justify-between'>

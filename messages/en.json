@@ -444,7 +444,8 @@
     "store": "Store",
     "logout": "Logout",
     "sign_out": "Sign Out",
-    "activity_logs": "Activity"
+    "activity_logs": "Activity",
+    "more": "More"
   },
   "QA": {
     "title": "Questions & Answers",
