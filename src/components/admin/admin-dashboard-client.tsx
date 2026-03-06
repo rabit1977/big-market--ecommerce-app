@@ -57,9 +57,9 @@ export function AdminDashboardClient() {
   return (
     <div className='space-y-8 pb-20'>
       {/* Header with quick actions */}
-      <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
-        <div className='flex flex-col space-y-1'>
-          <h1 className='text-xl sm:text-3xl md:text-5xl font-black tracking-tighter text-foreground flex items-center justify-between gap-4 uppercase'>
+      <div className='flex flex-col gap-4 sm:items-center sm:justify-between'>
+        <div className='flex flex-col space-y-1 items-center'>
+          <h1 className='text-xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-foreground flex items-center justify-center gap-4 uppercase'>
             <span className='text-foreground tracking-tight'>
               {t('dashboard_title')}
             </span>
@@ -77,7 +77,7 @@ export function AdminDashboardClient() {
                onTimeRangeChange={setTimeRange}
                showSearch={false}
            />
-           <Button variant="outline" size="sm" asChild className="hidden sm:flex justify-between rounded-xl font-black uppercase tracking-widest px-6 h-10 border-1 border-card-foreground/20 bm-interactive shadow-none transition-all">
+           <Button variant="outline" size="sm" asChild className="hidden sm:flex justify-between rounded-xl font-black uppercase tracking-widest px-4 h-10 border-1 border-card-foreground/20 bm-interactive shadow-none transition-all">
               <Link href="/admin/analytics">
                 <BarChart3 className="w-4 h-4 mr-2" />
                 {t('view_reports')}
