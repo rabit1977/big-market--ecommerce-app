@@ -125,7 +125,7 @@ export function AdminFilterToolbar({
                 {/* Time range — compact dropdown */}
                 {showTimeRange && onTimeRangeChange && (
                     <Select value={timeRange} onValueChange={(v) => onTimeRangeChange(v as TimeRange)}>
-                        <SelectTrigger className="h-10 w-auto min-w-[120px] text-[10px] text-muted-foreground font-black uppercase tracking-widest bg-card border-card-foreground/20 rounded-xl shadow-none">
+                        <SelectTrigger className="flex h-10 w-auto min-w-[120px] text-[10px] px-4 text-muted-foreground font-black uppercase tracking-widest bg-card border-card-foreground/20 rounded-xl shadow-none">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>

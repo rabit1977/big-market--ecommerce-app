@@ -59,7 +59,7 @@ export function AdminDashboardClient() {
       {/* Header with quick actions */}
       <div className='flex flex-col gap-4 sm:items-center sm:justify-between'>
         <div className='flex flex-col space-y-1 items-center'>
-          <h1 className='text-xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-foreground flex items-center justify-center gap-4 uppercase'>
+          <h1 className='text-2xl sm:text-4xl md:text-5xl font-black tracking-tighter text-foreground flex items-center  gap-4 uppercase'>
             <span className='text-foreground tracking-tight'>
               {t('dashboard_title')}
             </span>
@@ -67,26 +67,28 @@ export function AdminDashboardClient() {
               {t('live')}
             </span>
           </h1>
-          <p className='text-[10px] sm:text-xs text-muted-foreground font-black tracking-[0.1em] opacity-60'>
+          <p className='text- sm:text-xs text-muted-foreground text-center font-black tracking-[0.1em] opacity-60'>
             {t('welcome_back')}
           </p>
         </div>
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex-col space-y-3">
+          <div className='flex justify-center gap-2'>
            <AdminFilterToolbar
                timeRange={timeRange}
                onTimeRangeChange={setTimeRange}
                showSearch={false}
-           />
-           <Button variant="outline" size="sm" asChild className="hidden sm:flex justify-between rounded-xl font-black uppercase tracking-widest px-4 h-10 border-1 border-card-foreground/20 bm-interactive shadow-none transition-all">
+               />
+               <Button size="sm" asChild className="flex-1 rounded-xl font-black uppercase tracking-widest px-6 h-10 shadow-none border border-primary transition-all active:scale-95">
+              <Link href="/admin/users/create">
+                <Plus className="w-4 h-4 mr-2" />
+                {t('create_user')}
+              </Link>
+           </Button>
+        </div>
+           <Button variant="outline" size="sm" asChild className="w-full sm:flex rounded-xl font-black uppercase tracking-widest px-4 h-10 border-1 border-card-foreground/20 bm-interactive shadow-none transition-all">
               <Link href="/admin/analytics">
                 <BarChart3 className="w-4 h-4 mr-2" />
                 {t('view_reports')}
-              </Link>
-           </Button>
-           <Button size="sm" asChild className="rounded-xl font-black uppercase tracking-widest px-4 h-10 shadow-none border border-primary transition-all active:scale-95">
-              <Link href="/admin/users/create">
-                <Plus className="w-4 h-4" />
-                {t('create_user')}
               </Link>
            </Button>
         </div>
