@@ -431,11 +431,11 @@
     "overview": "Преглед",
     "analytics": "Аналитика",
     "revenue": "Приходи",
-    "all_listings": "Сите Огласи",
-    "promoted_listings": "Промовирани Огласи",
+    "all_listings": "Огласи",
+    "promoted_listings": "Промовирани",
     "categories": "Категории",
     "users": "Корисници",
-    "recycle_bin": "Корпа за отпадоци",
+    "recycle_bin": "Корпа",
     "home_label": "Дома",
     "listings_label": "Огласи",
     "bin_label": "Корпа",
@@ -444,7 +444,7 @@
     "store": "Продавница",
     "logout": "Одјави",
     "sign_out": "Одјави Се",
-    "activity_logs": "Дневник на активности"
+    "activity_logs": "Активности"
   },
   "QA": {
     "title": "Прашања и Одговори",

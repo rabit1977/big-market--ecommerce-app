@@ -431,11 +431,11 @@
     "overview": "Overview",
     "analytics": "Analytics",
     "revenue": "Revenue",
-    "all_listings": "All Listings",
-    "promoted_listings": "Promoted Listings",
+    "all_listings": "Listings",
+    "promoted_listings": "Promoted",
     "categories": "Categories",
     "users": "Users",
-    "recycle_bin": "Recycle Bin",
+    "recycle_bin": "Bin",
     "home_label": "Home",
     "listings_label": "Listings",
     "bin_label": "Bin",
@@ -444,7 +444,7 @@
     "store": "Store",
     "logout": "Logout",
     "sign_out": "Sign Out",
-    "activity_logs": "Activity Logs"
+    "activity_logs": "Activity"
   },
   "QA": {
     "title": "Questions & Answers",
