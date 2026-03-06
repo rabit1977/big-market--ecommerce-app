@@ -176,7 +176,7 @@ export const AdminSidebar = () => {
                     <span className="text-[9px] font-bold uppercase tracking-tight w-full text-center truncate leading-tight">{t('menu')}</span>
                 </button>
             </SheetTrigger>
-            <SheetContent side="bottom" className='h-[55vh] rounded-t-lg p-0 flex flex-col border-t border-border shadow-none'>
+            <SheetContent side="bottom" className='h-[60vh] rounded-t-lg p-0 flex flex-col border-t border-border shadow-none'>
                  <div className="p-2 border-b flex items-center justify-between">
                      <SheetTitle className='text-base'>{t('admin_menu')}</SheetTitle>
                  </div>

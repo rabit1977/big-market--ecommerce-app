@@ -1,28 +1,45 @@
 'use client';
 
-import { approveUserAction, deleteUserFromAdminAction, rejectUserAction, updateUserRoleAction } from '@/actions/user-actions';
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
+  approveUserAction,
+  deleteUserFromAdminAction,
+  rejectUserAction,
+  updateUserRoleAction,
+} from '@/actions/user-actions';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { User } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { Ban, CheckCircle, Clock, Edit, MoreHorizontal, Shield, ShieldOff, Trash2, UserCog, User as UserIcon, XCircle } from 'lucide-react';
+import {
+  Ban,
+  CheckCircle,
+  Clock,
+  Edit,
+  MoreHorizontal,
+  Shield,
+  ShieldOff,
+  Trash2,
+  UserCog,
+  User as UserIcon,
+  XCircle,
+} from 'lucide-react';
 import { useLocale } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -35,13 +52,18 @@ interface UsersDataTableProps {
 }
 
 const getStatusColor = (status?: string) => {
-    switch (status) {
-        case 'ACTIVE': return 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20';
-        case 'PENDING_APPROVAL': return 'bg-amber-500/10 text-amber-500 border-amber-500/20';
-        case 'SUSPENDED': return 'bg-red-500/10 text-red-500 border-red-500/20';
-        case 'BANNED': return 'bg-destructive/10 text-destructive border-destructive/20';
-        default: return 'bg-secondary text-secondary-foreground border-border';
-    }
+  switch (status) {
+    case 'ACTIVE':
+      return 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20';
+    case 'PENDING_APPROVAL':
+      return 'bg-amber-500/10 text-amber-500 border-amber-500/20';
+    case 'SUSPENDED':
+      return 'bg-red-500/10 text-red-500 border-red-500/20';
+    case 'BANNED':
+      return 'bg-destructive/10 text-destructive border-destructive/20';
+    default:
+      return 'bg-secondary text-secondary-foreground border-border';
+  }
 };
 
 /**
@@ -65,12 +87,15 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
   const [roleAction, setRoleAction] = useState<'promote' | 'revoke'>('promote');
   const [roleConfirmation, setRoleConfirmation] = useState('');
 
-  const handleRoleClick = useCallback((user: User, action: 'promote' | 'revoke') => {
-    setUserForRole(user);
-    setRoleAction(action);
-    setRoleConfirmation('');
-    setShowRoleDialog(true);
-  }, []);
+  const handleRoleClick = useCallback(
+    (user: User, action: 'promote' | 'revoke') => {
+      setUserForRole(user);
+      setRoleAction(action);
+      setRoleConfirmation('');
+      setShowRoleDialog(true);
+    },
+    [],
+  );
 
   const handleConfirmRole = useCallback(async () => {
     if (!userForRole) return;
@@ -82,7 +107,15 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
         const newRole = roleAction === 'promote' ? 'ADMIN' : 'USER';
         const result = await updateUserRoleAction(userForRole.id, newRole);
         if (result.success) {
-          toast.success(roleAction === 'promote' ? (isMk ? 'Корисникот е унапреден во Модератор' : 'User promoted to Moderator') : (isMk ? 'Администраторскиот пристап е одземен' : 'Administrator access revoked'));
+          toast.success(
+            roleAction === 'promote'
+              ? isMk
+                ? 'Корисникот е унапреден во Модератор'
+                : 'User promoted to Moderator'
+              : isMk
+                ? 'Администраторскиот пристап е одземен'
+                : 'Administrator access revoked',
+          );
           setShowRoleDialog(false);
           setUserForRole(null);
           router.refresh();
@@ -90,7 +123,9 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
           toast.error(result.error);
         }
       } catch (error) {
-        toast.error(isMk ? 'Се случи неочекувана грешка' : 'An unexpected error occurred');
+        toast.error(
+          isMk ? 'Се случи неочекувана грешка' : 'An unexpected error occurred',
+        );
       }
     });
   }, [userForRole, roleAction, roleConfirmation, router]);
@@ -103,7 +138,7 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
 
   const handleConfirmDelete = useCallback(async () => {
     if (!userToDelete) return;
-    
+
     // extra safety check
     if (deleteConfirmation !== `Delete ${userToDelete.name || 'User'}`) return;
 
@@ -112,17 +147,31 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
         const result = await deleteUserFromAdminAction(userToDelete.id);
 
         if (result.success) {
-          toast.success(result.message || (isMk ? `Корисникот "${userToDelete.name}" е успешно избришан` : `User "${userToDelete.name}" deleted successfully`));
+          toast.success(
+            result.message ||
+              (isMk
+                ? `Корисникот "${userToDelete.name}" е успешно избришан`
+                : `User "${userToDelete.name}" deleted successfully`),
+          );
           setShowDeleteDialog(false);
           setUserToDelete(null);
           setDeleteConfirmation('');
           router.refresh();
         } else {
-          toast.error(result.error || (isMk ? 'Бришењето не успеа' : 'Failed to delete user'));
+          toast.error(
+            result.error ||
+              (isMk ? 'Бришењето не успеа' : 'Failed to delete user'),
+          );
         }
       } catch (error) {
         console.error('Delete user error:', error);
-        toast.error(error instanceof Error ? error.message : (isMk ? 'Бришењето не успеа' : 'Failed to delete user'));
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : isMk
+              ? 'Бришењето не успеа'
+              : 'Failed to delete user',
+        );
       }
     });
   }, [userToDelete, router, deleteConfirmation]);
@@ -137,39 +186,46 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
     return (
       <div className='flex flex-col items-center justify-center py-12 text-center'>
         <UserIcon className='h-12 w-12 text-muted-foreground/30 mb-3' />
-        <p className='text-muted-foreground font-medium'>{isMk ? 'Нема пронајдени корисници' : 'No users found'}</p>
-        <p className='text-sm text-muted-foreground/70'>{isMk ? 'Корисниците ќе се појават тука кога ќе се регистрираат' : 'Users will appear here when they register'}</p>
+        <p className='text-muted-foreground font-medium'>
+          {isMk ? 'Нема пронајдени корисници' : 'No users found'}
+        </p>
+        <p className='text-sm text-muted-foreground/70'>
+          {isMk
+            ? 'Корисниците ќе се појават тука кога ќе се регистрираат'
+            : 'Users will appear here when they register'}
+        </p>
       </div>
     );
   }
 
   return (
     <>
-      <div className='space-y-2 sm:space-y-3'>
+      <div className='divide-y divide-border/40'>
         {users.map((user) => (
           <div
             key={user.id}
-            className={cn(
-              'group relative bg-card border border-border/50 rounded-xl',
-              'p-3 sm:p-4',
-              'hover:bg-muted/30 hover:border-primary/20 transition-all duration-200'
-            )}
+            className='group relative flex items-center justify-between gap-3 p-3 sm:p-4 hover:bg-muted/30 transition-colors'
           >
-            <div className='flex items-start gap-3'>
+            <div className='flex items-center gap-3 min-w-0 flex-1'>
               {/* Avatar */}
               <div className='shrink-0'>
                 {user.image ? (
-                  <div className='relative h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden ring-2 ring-border'>
-                    <Image 
-                      src={user.image.startsWith('http') || user.image.startsWith('/') ? user.image : `/${user.image}`} 
-                      alt={user.name || 'User'} 
+                  <div className='relative h-8 w-8 sm:h-10 sm:w-10 rounded-full overflow-hidden ring-1 ring-border shadow-sm'>
+                    <Image
+                      src={
+                        user.image.startsWith('http') ||
+                        user.image.startsWith('/')
+                          ? user.image
+                          : `/${user.image}`
+                      }
+                      alt={user.name || 'User'}
                       fill
                       className='object-cover'
                     />
                   </div>
                 ) : (
-                  <div className='h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-primary/20 flex items-center justify-center ring-2 ring-border'>
-                    <span className='text-sm sm:text-base font-bold text-primary'>
+                  <div className='h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-primary/10 flex items-center justify-center ring-1 ring-border shadow-sm'>
+                    <span className='text-xs sm:text-sm font-black text-primary'>
                       {user.name?.charAt(0).toUpperCase() || 'U'}
                     </span>
                   </div>
@@ -177,208 +233,235 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
               </div>
 
               {/* User Info */}
-              <div className='flex-1 min-w-0 space-y-1'>
-                {/* Name + Role */}
+              <div className='flex flex-col min-w-0 flex-1 grid'>
                 <div className='flex items-center gap-2 flex-wrap'>
-                  <Link 
+                  <Link
                     href={`/admin/users/${user.id}`}
-                    className='font-semibold text-sm sm:text-base text-foreground hover:text-primary transition-colors truncate'
+                    className='font-bold text-xs sm:text-sm text-foreground hover:text-primary transition-colors truncate max-w-[120px] sm:max-w-[200px]'
                   >
                     {user.name || (isMk ? 'Нема име' : 'No name')}
                   </Link>
-                  <Badge 
-                    variant={user.role?.toLowerCase() === 'admin' ? 'destructive' : 'secondary'}
-                    className='text-[9px] sm:text-[10px] px-1.5 py-0 h-5'
+                  <Badge
+                    variant={
+                      user.role?.toLowerCase() === 'admin'
+                        ? 'default'
+                        : 'secondary'
+                    }
+                    className='text-[8px] sm:text-[9px] px-1.5 h-4 sm:h-4.5 rounded uppercase tracking-wider font-black'
                   >
                     {user.role?.toLowerCase() === 'admin' ? (
-                      <Shield className='h-2.5 w-2.5 mr-0.5' />
+                      <Shield className='h-2 w-2 mr-0.5' />
                     ) : (
-                       <UserCog className='h-2.5 w-2.5 mr-0.5' />
+                      <UserCog className='h-2 w-2 mr-0.5' />
                     )}
-                    {isMk ? (user.role === 'ADMIN' ? 'АДМИН' : 'КОРИСНИК') : (user.role || 'user').toUpperCase()}
+                    {isMk
+                      ? user.role === 'ADMIN'
+                        ? 'АДМИН'
+                        : 'КОРИСНИК'
+                      : user.role || 'user'}
                   </Badge>
-                  
-                  <Badge 
-                        variant="outline" 
-                        className={cn('text-[9px] sm:text-[10px] px-1.5 py-0 h-5 ml-2', getStatusColor(user.accountStatus || 'ACTIVE'))}
-                    >
-                        {user.accountStatus === 'PENDING_APPROVAL' && <Clock className="h-2.5 w-2.5 mr-0.5" />}
-                        {user.accountStatus === 'ACTIVE' && <CheckCircle className="h-2.5 w-2.5 mr-0.5" />}
-                        {(user.accountStatus === 'SUSPENDED' || user.accountStatus === 'BANNED') && <Ban className="h-2.5 w-2.5 mr-0.5" />}
-                        {isMk ? {'ACTIVE': 'АКТИВЕН', 'PENDING_APPROVAL': 'ЗА ОДОБРУВАЊЕ', 'SUSPENDED': 'СУСПЕНДИРАН', 'BANNED': 'БАНУРАН'}[user.accountStatus || 'ACTIVE'] : (user.accountStatus || 'ACTIVE').replace('_', ' ')}
-                   </Badge>
+
+                  <Badge
+                    variant='outline'
+                    className={cn(
+                      'text-[8px] sm:text-[9px] px-1.5 h-4 sm:h-4.5 rounded uppercase tracking-wider font-bold shrink-0',
+                      getStatusColor(user.accountStatus || 'ACTIVE'),
+                    )}
+                  >
+                    {user.accountStatus === 'PENDING_APPROVAL' && (
+                      <Clock className='h-2 w-2 mr-0.5' />
+                    )}
+                    {user.accountStatus === 'ACTIVE' && (
+                      <CheckCircle className='h-2 w-2 mr-0.5' />
+                    )}
+                    {(user.accountStatus === 'SUSPENDED' ||
+                      user.accountStatus === 'BANNED') && (
+                      <Ban className='h-2 w-2 mr-0.5' />
+                    )}
+                    {isMk
+                      ? {
+                          ACTIVE: 'АКТИВЕН',
+                          PENDING_APPROVAL: 'ЧЕКА',
+                          SUSPENDED: 'СУСПЕНДИРАН',
+                          BANNED: 'БАНУРАН',
+                        }[user.accountStatus || 'ACTIVE']
+                      : (user.accountStatus || 'ACTIVE').replace('_', ' ')}
+                  </Badge>
                 </div>
-
-                {/* Email */}
-                <p className='text-xs sm:text-sm text-muted-foreground truncate'>
-                  {user.email}
-                </p>
-
-                {/* Date + Actions Row */}
-                <div className='flex items-center justify-between gap-2 mt-2'>
-                  <span className='text-[10px] sm:text-xs text-muted-foreground'>
-                    {isMk ? 'Придружен ' : 'Joined '}{user.createdAt 
-                      ? new Date(user.createdAt).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })
-                      : 'N/A'
-                    }
+                <div className='flex items-center justify-between gap-2 mt-0.5'>
+                  <p className='text-[10px] sm:text-xs text-muted-foreground truncate'>
+                    {user.email}
+                  </p>
+                  <span className='text-[9px] sm:text-[10px] uppercase font-black tracking-widest text-muted-foreground opacity-60 shrink-0 hidden sm:block'>
+                    {isMk ? 'ПРИДРУЖЕН ' : 'JOINED '}
+                    {user.createdAt
+                      ? new Date(user.createdAt).toLocaleDateString()
+                      : 'N/A'}
                   </span>
-
-                  {/* Actions */}
-                  <div className='flex items-center gap-1'>
-                    {/* Direct Edit button — always visible */}
-                    <Button
-                      variant='ghost'
-                      size='sm'
-                      asChild
-                      className='h-8 w-8 p-0 rounded-lg'
-                      title={isMk ? 'Уреди корисник' : 'Edit User'}
-                    >
-                      <Link href={`/admin/users/${user.id}/edit`}>
-                        <Edit className='h-4 w-4' />
-                        <span className='sr-only'>{isMk ? 'Уреди корисник' : 'Edit user'}</span>
-                      </Link>
-                    </Button>
-                    
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button 
-                          aria-haspopup='true' 
-                          size='sm' 
-                          variant='ghost'
-                          className='h-8 w-8 p-0 rounded-lg'
-                        >
-                          <MoreHorizontal className='h-4 w-4' />
-                          <span className='sr-only'>Open menu for {user.name}</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align='end' className='w-48'>
-                        
-                        {user.accountStatus === 'PENDING_APPROVAL' && (
-                            <>
-                                <DropdownMenuItem
-                                    className={cn(
-                                        'cursor-pointer focus:text-emerald-500', 
-                                        user.membershipStatus !== 'ACTIVE' ? 'opacity-50 cursor-not-allowed' : 'text-emerald-500'
-                                    )}
-                                    // Prevent action if not subscribed
-                                    onSelect={(e) => {
-                                        if (user.membershipStatus !== 'ACTIVE') {
-                                            e.preventDefault();
-                                            toast.error('User must have an active subscription to be approved.');
-                                            return;
-                                        }
-                                        
-                                        startTransition(async () => {
-                                            const result = await approveUserAction(user.id);
-                                            if (result.success) {
-                                                toast.success('User approved');
-                                                router.refresh();
-                                            } else {
-                                                toast.error(result.error);
-                                            }
-                                        });
-                                    }}
-                                >
-                                    <CheckCircle className='h-4 w-4 mr-2' />
-                                    {isMk ? 'Одобри корисник' : 'Approve User'}
-                                    {user.membershipStatus !== 'ACTIVE' && (
-                                        <span className="ml-2 text-[10px] bg-red-100 text-red-800 px-1 rounded">
-                                            No Sub
-                                        </span>
-                                    )}
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    className='cursor-pointer text-destructive focus:text-destructive'
-                                    onSelect={() => startTransition(async () => {
-                                        const result = await rejectUserAction(user.id);
-                                        if (result.success) {
-                                            toast.success('User rejected/suspended');
-                                            router.refresh();
-                                        } else {
-                                            toast.error(result.error);
-                                        }
-                                    })}
-                                >
-                                    <XCircle className='h-4 w-4 mr-2' />
-                                    {isMk ? 'Одбиј корисник' : 'Reject User'}
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                            </>
-                        )}
-                        
-                        {(user.accountStatus === 'ACTIVE' || !user.accountStatus) && (
-                            <DropdownMenuItem
-                                className='cursor-pointer text-orange-500 focus:text-orange-500'
-                                onSelect={() => startTransition(async () => {
-                                    const result = await rejectUserAction(user.id);
-                                    if (result.success) {
-                                        toast.success('User suspended');
-                                        router.refresh();
-                                    } else {
-                                        toast.error(result.error);
-                                    }
-                                })}
-                            >
-                                <Ban className='h-4 w-4 mr-2' />
-                                {isMk ? 'Суспендирај корисник' : 'Suspend User'}
-                            </DropdownMenuItem>
-                        )}
-
-                        {user.accountStatus === 'SUSPENDED' && (
-                              <DropdownMenuItem
-                                className='cursor-pointer text-emerald-500 focus:text-emerald-500'
-                                onSelect={() => startTransition(async () => {
-                                    const result = await approveUserAction(user.id);
-                                    if (result.success) {
-                                        toast.success('User reactivated');
-                                        router.refresh();
-                                    } else {
-                                        toast.error(result.error);
-                                    }
-                                })}
-                            >
-                                <CheckCircle className='h-4 w-4 mr-2' />
-                                {isMk ? 'Активирај корисник' : 'Reactivate User'}
-                            </DropdownMenuItem>
-                        )}
-                        
-                        <DropdownMenuSeparator />
-
-                        {(user.role !== 'ADMIN') ? (
-                            <DropdownMenuItem
-                                className='cursor-pointer text-indigo-500 focus:text-indigo-500'
-                                onSelect={() => handleRoleClick(user, 'promote')}
-                            >
-                                <Shield className='h-4 w-4 mr-2' />
-                                {isMk ? 'Направи модератор' : 'Make Moderator'}
-                            </DropdownMenuItem>
-                        ) : (
-                            <DropdownMenuItem
-                                className='cursor-pointer text-orange-500 focus:text-orange-500'
-                                onSelect={() => handleRoleClick(user, 'revoke')}
-                            >
-                                <ShieldOff className='h-4 w-4 mr-2' />
-                                {isMk ? 'Одземи модератор' : 'Revoke Moderator'}
-                            </DropdownMenuItem>
-                        )}
-
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          className='text-destructive focus:text-destructive cursor-pointer'
-                          onSelect={() => handleDeleteClick(user)}
-                        >
-                          <Trash2 className='h-4 w-4 mr-2' />
-                          {isMk ? 'Избриши корисник' : 'Delete User'}
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
                 </div>
               </div>
+            </div>
+
+            {/* Actions */}
+            <div className='flex items-center gap-1 shrink-0'>
+              {/* Direct Edit button — always visible */}
+              <Button
+                variant='ghost'
+                size='sm'
+                asChild
+                className='h-8 w-8 p-0 rounded-lg'
+                title={isMk ? 'Уреди корисник' : 'Edit User'}
+              >
+                <Link href={`/admin/users/${user.id}/edit`}>
+                  <Edit className='h-4 w-4' />
+                  <span className='sr-only'>
+                    {isMk ? 'Уреди корисник' : 'Edit user'}
+                  </span>
+                </Link>
+              </Button>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    aria-haspopup='true'
+                    size='sm'
+                    variant='ghost'
+                    className='h-8 w-8 p-0 rounded-lg'
+                  >
+                    <MoreHorizontal className='h-4 w-4' />
+                    <span className='sr-only'>Open menu for {user.name}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align='end' className='w-48'>
+                  {user.accountStatus === 'PENDING_APPROVAL' && (
+                    <>
+                      <DropdownMenuItem
+                        className={cn(
+                          'cursor-pointer focus:text-emerald-500',
+                          user.membershipStatus !== 'ACTIVE'
+                            ? 'opacity-50 cursor-not-allowed'
+                            : 'text-emerald-500',
+                        )}
+                        // Prevent action if not subscribed
+                        onSelect={(e) => {
+                          if (user.membershipStatus !== 'ACTIVE') {
+                            e.preventDefault();
+                            toast.error(
+                              'User must have an active subscription to be approved.',
+                            );
+                            return;
+                          }
+
+                          startTransition(async () => {
+                            const result = await approveUserAction(user.id);
+                            if (result.success) {
+                              toast.success('User approved');
+                              router.refresh();
+                            } else {
+                              toast.error(result.error);
+                            }
+                          });
+                        }}
+                      >
+                        <CheckCircle className='h-4 w-4 mr-2' />
+                        {isMk ? 'Одобри корисник' : 'Approve User'}
+                        {user.membershipStatus !== 'ACTIVE' && (
+                          <span className='ml-2 text-[10px] bg-red-100 text-red-800 px-1 rounded'>
+                            No Sub
+                          </span>
+                        )}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className='cursor-pointer text-destructive focus:text-destructive'
+                        onSelect={() =>
+                          startTransition(async () => {
+                            const result = await rejectUserAction(user.id);
+                            if (result.success) {
+                              toast.success('User rejected/suspended');
+                              router.refresh();
+                            } else {
+                              toast.error(result.error);
+                            }
+                          })
+                        }
+                      >
+                        <XCircle className='h-4 w-4 mr-2' />
+                        {isMk ? 'Одбиј корисник' : 'Reject User'}
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
+
+                  {(user.accountStatus === 'ACTIVE' || !user.accountStatus) && (
+                    <DropdownMenuItem
+                      className='cursor-pointer text-orange-500 focus:text-orange-500'
+                      onSelect={() =>
+                        startTransition(async () => {
+                          const result = await rejectUserAction(user.id);
+                          if (result.success) {
+                            toast.success('User suspended');
+                            router.refresh();
+                          } else {
+                            toast.error(result.error);
+                          }
+                        })
+                      }
+                    >
+                      <Ban className='h-4 w-4 mr-2' />
+                      {isMk ? 'Суспендирај корисник' : 'Suspend User'}
+                    </DropdownMenuItem>
+                  )}
+
+                  {user.accountStatus === 'SUSPENDED' && (
+                    <DropdownMenuItem
+                      className='cursor-pointer text-emerald-500 focus:text-emerald-500'
+                      onSelect={() =>
+                        startTransition(async () => {
+                          const result = await approveUserAction(user.id);
+                          if (result.success) {
+                            toast.success('User reactivated');
+                            router.refresh();
+                          } else {
+                            toast.error(result.error);
+                          }
+                        })
+                      }
+                    >
+                      <CheckCircle className='h-4 w-4 mr-2' />
+                      {isMk ? 'Активирај корисник' : 'Reactivate User'}
+                    </DropdownMenuItem>
+                  )}
+
+                  <DropdownMenuSeparator />
+
+                  {user.role !== 'ADMIN' ? (
+                    <DropdownMenuItem
+                      className='cursor-pointer text-indigo-500 focus:text-indigo-500'
+                      onSelect={() => handleRoleClick(user, 'promote')}
+                    >
+                      <Shield className='h-4 w-4 mr-2' />
+                      {isMk ? 'Направи модератор' : 'Make Moderator'}
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem
+                      className='cursor-pointer text-orange-500 focus:text-orange-500'
+                      onSelect={() => handleRoleClick(user, 'revoke')}
+                    >
+                      <ShieldOff className='h-4 w-4 mr-2' />
+                      {isMk ? 'Одземи модератор' : 'Revoke Moderator'}
+                    </DropdownMenuItem>
+                  )}
+
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className='text-destructive focus:text-destructive cursor-pointer'
+                    onSelect={() => handleDeleteClick(user)}
+                  >
+                    <Trash2 className='h-4 w-4 mr-2' />
+                    {isMk ? 'Избриши корисник' : 'Delete User'}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         ))}
@@ -388,34 +471,45 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent className='max-w-[90vw] sm:max-w-lg rounded-2xl'>
           <AlertDialogHeader>
-            <AlertDialogTitle>{isMk ? 'Избриши корисник?' : 'Delete User?'}</AlertDialogTitle>
+            <AlertDialogTitle>
+              {isMk ? 'Избриши корисник?' : 'Delete User?'}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              {isMk ? 'Оваа акција не може да се врати. Ова трајно ќе ја избрише корисничката сметка за' : 'This action cannot be undone. This will permanently delete the user account for'}
-              {' '}
+              {isMk
+                ? 'Оваа акција не може да се врати. Ова трајно ќе ја избрише корисничката сметка за'
+                : 'This action cannot be undone. This will permanently delete the user account for'}{' '}
               <span className='font-semibold text-foreground'>
                 {userToDelete?.name || (isMk ? 'овој корисник' : 'this user')}
-              </span>
-              {' '}
-              {isMk ? 'и ќе ги отстрани сите нивни податоци од системот.' : `(${userToDelete?.email}) and remove all their data from the system.`}
+              </span>{' '}
+              {isMk
+                ? 'и ќе ги отстрани сите нивни податоци од системот.'
+                : `(${userToDelete?.email}) and remove all their data from the system.`}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          
-          <div className="space-y-2">
-              <label htmlFor="confirm-delete" className="block text-sm font-medium text-foreground">
-                  {isMk ? 'За потврда, внесете ' : 'To confirm, type '} <span className="font-bold select-all">Delete {userToDelete?.name || 'User'}</span> {isMk ? 'подолу:' : 'below:'}
-              </label>
-              <input
-                id="confirm-delete"
-                type="text"
-                className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                placeholder={`Delete ${userToDelete?.name || 'User'}`}
-                value={deleteConfirmation}
-                onChange={(e) => setDeleteConfirmation(e.target.value)}
-                autoComplete="off"
-              />
+
+          <div className='space-y-2'>
+            <label
+              htmlFor='confirm-delete'
+              className='block text-sm font-medium text-foreground'
+            >
+              {isMk ? 'За потврда, внесете ' : 'To confirm, type '}{' '}
+              <span className='font-bold select-all'>
+                Delete {userToDelete?.name || 'User'}
+              </span>{' '}
+              {isMk ? 'подолу:' : 'below:'}
+            </label>
+            <input
+              id='confirm-delete'
+              type='text'
+              className='flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
+              placeholder={`Delete ${userToDelete?.name || 'User'}`}
+              value={deleteConfirmation}
+              onChange={(e) => setDeleteConfirmation(e.target.value)}
+              autoComplete='off'
+            />
           </div>
           <AlertDialogFooter className='flex-col sm:flex-row gap-2'>
-            <AlertDialogCancel 
+            <AlertDialogCancel
               onClick={handleCancelDelete}
               disabled={isPending}
               className='w-full sm:w-auto'
@@ -424,13 +518,19 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={(e) => {
-                if (deleteConfirmation !== `Delete ${userToDelete?.name || 'User'}`) {
-                    e.preventDefault();
-                    return;
+                if (
+                  deleteConfirmation !==
+                  `Delete ${userToDelete?.name || 'User'}`
+                ) {
+                  e.preventDefault();
+                  return;
                 }
                 handleConfirmDelete();
               }}
-              disabled={isPending || deleteConfirmation !== `Delete ${userToDelete?.name || 'User'}`}
+              disabled={
+                isPending ||
+                deleteConfirmation !== `Delete ${userToDelete?.name || 'User'}`
+              }
               className='w-full sm:w-auto bg-destructive text-destructive-foreground hover:bg-destructive/90'
             >
               {isPending ? (
@@ -453,48 +553,80 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
       <AlertDialog open={showRoleDialog} onOpenChange={setShowRoleDialog}>
         <AlertDialogContent className='max-w-[90vw] sm:max-w-lg rounded-2xl'>
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
+            <AlertDialogTitle className='flex items-center gap-2'>
               {roleAction === 'promote' ? (
-                <Shield className="h-5 w-5 text-indigo-500" />
+                <Shield className='h-5 w-5 text-indigo-500' />
               ) : (
-                <ShieldOff className="h-5 w-5 text-orange-500" />
+                <ShieldOff className='h-5 w-5 text-orange-500' />
               )}
-              {roleAction === 'promote' ? (isMk ? 'Направи модератор?' : 'Make Moderator?') : (isMk ? 'Одземи модератор?' : 'Revoke Moderator?')}
+              {roleAction === 'promote'
+                ? isMk
+                  ? 'Направи модератор?'
+                  : 'Make Moderator?'
+                : isMk
+                  ? 'Одземи модератор?'
+                  : 'Revoke Moderator?'}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {roleAction === 'promote' ? (
                 <>
-                  {isMk ? 'Ќе му дадете на ' : 'You are about to grant '} <span className='font-semibold text-foreground'>{userForRole?.name || (isMk ? 'овој корисник' : 'this user')}</span> {isMk ? 'целосен администраторски (Модератор) пристап. Тие ќе можат да управуваат со огласи, корисници и поставки.' : 'full administrator (Moderator) access. They will be able to manage listings, users, and site settings.'}
+                  {isMk ? 'Ќе му дадете на ' : 'You are about to grant '}{' '}
+                  <span className='font-semibold text-foreground'>
+                    {userForRole?.name ||
+                      (isMk ? 'овој корисник' : 'this user')}
+                  </span>{' '}
+                  {isMk
+                    ? 'целосен администраторски (Модератор) пристап. Тие ќе можат да управуваат со огласи, корисници и поставки.'
+                    : 'full administrator (Moderator) access. They will be able to manage listings, users, and site settings.'}
                 </>
               ) : (
                 <>
-                  {isMk ? 'Ќе му го одземете администраторскиот пристап на ' : 'You are about to revoke administrator access from '} <span className='font-semibold text-foreground'>{userForRole?.name || (isMk ? 'овој корисник' : 'this user')}</span>. {isMk ? 'Тие ќе бидат деградирани во обичен корисник.' : 'They will be demoted to a regular user.'}
+                  {isMk
+                    ? 'Ќе му го одземете администраторскиот пристап на '
+                    : 'You are about to revoke administrator access from '}{' '}
+                  <span className='font-semibold text-foreground'>
+                    {userForRole?.name ||
+                      (isMk ? 'овој корисник' : 'this user')}
+                  </span>
+                  .{' '}
+                  {isMk
+                    ? 'Тие ќе бидат деградирани во обичен корисник.'
+                    : 'They will be demoted to a regular user.'}
                 </>
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
-          <div className="space-y-2">
-            <label htmlFor="confirm-role" className="block text-sm font-medium text-foreground">
+          <div className='space-y-2'>
+            <label
+              htmlFor='confirm-role'
+              className='block text-sm font-medium text-foreground'
+            >
               {isMk ? 'За потврда, внесете ' : 'To confirm, type '}
-              <span className="font-bold select-all">
-                {roleAction === 'promote' ? 'Promote' : 'Revoke'} {userForRole?.name || 'User'}
-              </span>{' '}{isMk ? 'подолу:' : 'below:'}
+              <span className='font-bold select-all'>
+                {roleAction === 'promote' ? 'Promote' : 'Revoke'}{' '}
+                {userForRole?.name || 'User'}
+              </span>{' '}
+              {isMk ? 'подолу:' : 'below:'}
             </label>
             <input
-              id="confirm-role"
-              type="text"
-              className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              id='confirm-role'
+              type='text'
+              className='flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
               placeholder={`${roleAction === 'promote' ? 'Promote' : 'Revoke'} ${userForRole?.name || 'User'}`}
               value={roleConfirmation}
               onChange={(e) => setRoleConfirmation(e.target.value)}
-              autoComplete="off"
+              autoComplete='off'
             />
           </div>
 
           <AlertDialogFooter className='flex-col sm:flex-row gap-2'>
             <AlertDialogCancel
-              onClick={() => { setShowRoleDialog(false); setUserForRole(null); setRoleConfirmation(''); }}
+              onClick={() => {
+                setShowRoleDialog(false);
+                setUserForRole(null);
+                setRoleConfirmation('');
+              }}
               disabled={isPending}
               className='w-full sm:w-auto'
             >
@@ -503,10 +635,17 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
             <AlertDialogAction
               onClick={(e) => {
                 const expected = `${roleAction === 'promote' ? 'Promote' : 'Revoke'} ${userForRole?.name || 'User'}`;
-                if (roleConfirmation !== expected) { e.preventDefault(); return; }
+                if (roleConfirmation !== expected) {
+                  e.preventDefault();
+                  return;
+                }
                 handleConfirmRole();
               }}
-              disabled={isPending || roleConfirmation !== `${roleAction === 'promote' ? 'Promote' : 'Revoke'} ${userForRole?.name || 'User'}`}
+              disabled={
+                isPending ||
+                roleConfirmation !==
+                  `${roleAction === 'promote' ? 'Promote' : 'Revoke'} ${userForRole?.name || 'User'}`
+              }
               className={`w-full sm:w-auto ${
                 roleAction === 'promote'
                   ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
@@ -514,11 +653,20 @@ export function UsersDataTable({ users }: UsersDataTableProps) {
               }`}
             >
               {isPending ? (
-                <><span className='animate-spin mr-2'>⏳</span>{isMk ? 'Се процесира...' : 'Processing...'}</>
+                <>
+                  <span className='animate-spin mr-2'>⏳</span>
+                  {isMk ? 'Се процесира...' : 'Processing...'}
+                </>
               ) : roleAction === 'promote' ? (
-                <><Shield className='h-4 w-4 mr-2' />{isMk ? 'Да, направи модератор' : 'Yes, Make Moderator'}</>
+                <>
+                  <Shield className='h-4 w-4 mr-2' />
+                  {isMk ? 'Да, направи модератор' : 'Yes, Make Moderator'}
+                </>
               ) : (
-                <><ShieldOff className='h-4 w-4 mr-2' />{isMk ? 'Да, одземи пристап' : 'Yes, Revoke Access'}</>
+                <>
+                  <ShieldOff className='h-4 w-4 mr-2' />
+                  {isMk ? 'Да, одземи пристап' : 'Yes, Revoke Access'}
+                </>
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

@@ -1,264 +1,292 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { FileText, RotateCcw, Search, SlidersHorizontal, X } from 'lucide-react';
+import { FileText, RotateCcw, Search, X } from 'lucide-react';
 import { useLocale } from 'next-intl';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef } from 'react';
 
 export type TimeRange = 'today' | 'week' | 'month' | 'year' | 'all';
 
 export interface SortOption {
-    label: string;
-    value: string;
+  label: string;
+  value: string;
 }
 
 export interface AdminFilterToolbarProps {
-    // Time range
-    timeRange?: TimeRange;
-    onTimeRangeChange?: (range: TimeRange) => void;
-    showTimeRange?: boolean;
+  // Time range
+  timeRange?: TimeRange;
+  onTimeRangeChange?: (range: TimeRange) => void;
+  showTimeRange?: boolean;
 
-    // Search
-    searchValue?: string;
-    onSearchChange?: (query: string) => void;
-    searchPlaceholder?: string;
-    showSearch?: boolean;
+  // Search
+  searchValue?: string;
+  onSearchChange?: (query: string) => void;
+  searchPlaceholder?: string;
+  showSearch?: boolean;
 
-    // Sort
-    sortValue?: string;
-    onSortChange?: (sort: string) => void;
-    sortOptions?: SortOption[];
-    showSort?: boolean;
+  // Sort
+  sortValue?: string;
+  onSortChange?: (sort: string) => void;
+  sortOptions?: SortOption[];
+  showSort?: boolean;
 
-    // Export
-    onExport?: () => void;
-    showExport?: boolean;
+  // Export
+  onExport?: () => void;
+  showExport?: boolean;
 
-    // Extra actions slot
-    actions?: React.ReactNode;
+  // Extra actions slot
+  actions?: React.ReactNode;
 
-    className?: string;
+  className?: string;
 }
 
 const TIME_RANGES: { id: TimeRange; label: string }[] = [
-    { id: 'today',  label: 'Today' },
-    { id: 'week',   label: '7 Days' },
-    { id: 'month',  label: '30 Days' },
-    { id: 'year',   label: 'Year' },
-    { id: 'all',    label: 'All Time' },
+  { id: 'today', label: 'Today' },
+  { id: 'week', label: '7 Days' },
+  { id: 'month', label: '30 Days' },
+  { id: 'year', label: 'Year' },
+  { id: 'all', label: 'All Time' },
 ];
 
 /** Returns the Unix-ms timestamp for the start of the given range, or undefined for "all". */
 export function getSinceFromRange(range: TimeRange): number | undefined {
-    const now = new Date();
-    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const now = new Date();
+  const d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-    switch (range) {
-        case 'today':  return d.getTime();
-        case 'week':   d.setDate(d.getDate() - 7);  return d.getTime();
-        case 'month':  d.setDate(d.getDate() - 30); return d.getTime();
-        case 'year':   d.setFullYear(d.getFullYear() - 1); return d.getTime();
-        case 'all':    return undefined;
-    }
+  switch (range) {
+    case 'today':
+      return d.getTime();
+    case 'week':
+      d.setDate(d.getDate() - 7);
+      return d.getTime();
+    case 'month':
+      d.setDate(d.getDate() - 30);
+      return d.getTime();
+    case 'year':
+      d.setFullYear(d.getFullYear() - 1);
+      return d.getTime();
+    case 'all':
+      return undefined;
+  }
 }
 
 export function AdminFilterToolbar({
-    timeRange = 'today',
-    onTimeRangeChange,
-    showTimeRange = true,
+  timeRange = 'today',
+  onTimeRangeChange,
+  showTimeRange = true,
 
-    searchValue = '',
-    onSearchChange,
-    searchPlaceholder = 'Search...',
-    showSearch = true,
+  searchValue = '',
+  onSearchChange,
+  searchPlaceholder = 'Search...',
+  showSearch = true,
 
-    sortValue,
-    onSortChange,
-    sortOptions = [],
-    showSort = false,
+  sortValue,
+  onSortChange,
+  sortOptions = [],
+  showSort = false,
 
-    onExport,
-    showExport = false,
+  onExport,
+  showExport = false,
 
-    actions,
-    className,
+  actions,
+  className,
 }: AdminFilterToolbarProps) {
-    const searchRef = useRef<HTMLInputElement>(null);
-    const locale = useLocale();
-    const isMk = locale === 'mk';
+  const searchRef = useRef<HTMLInputElement>(null);
+  const locale = useLocale();
+  const isMk = locale === 'mk';
 
-    const clearSearch = useCallback(() => {
-        onSearchChange?.('');
-        searchRef.current?.focus();
-    }, [onSearchChange]);
+  const clearSearch = useCallback(() => {
+    onSearchChange?.('');
+    searchRef.current?.focus();
+  }, [onSearchChange]);
 
-    return (
-        <div className={cn('flex flex-col gap-2', className)}>
-            {/* Main toolbar row — wraps on small screens */}
-            <div className="flex flex-wrap gap-2 items-center">
-
-                {/* Search */}
-                {showSearch && (
-                    <div className="relative min-w-[180px] flex-1 max-w-sm">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-                        <input
-                            ref={searchRef}
-                            type="text"
-                            value={searchValue}
-                            onChange={e => onSearchChange?.(e.target.value)}
-                            placeholder={searchPlaceholder}
-                            className="w-full h-10 pl-10 pr-8 text-sm bg-card border-1 border-card-foreground/20 rounded-xl focus:outline-none focus:border-card-foreground/50 transition-all placeholder:text-muted-foreground font-medium"
-                        />
-                        {searchValue && (
-                            <button
-                                onClick={clearSearch}
-                                className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center bg-muted-foreground/20 hover:bg-muted-foreground/30 transition-colors"
-                            >
-                                <X className="w-3 h-3" />
-                            </button>
-                        )}
-                    </div>
-                )}
-
-                {/* Time range — compact dropdown */}
-                {showTimeRange && onTimeRangeChange && (
-                    <Select value={timeRange} onValueChange={(v) => onTimeRangeChange(v as TimeRange)}>
-                        <SelectTrigger className="flex h-10 w-auto min-w-[120px] text-[10px] px-4 text-muted-foreground font-black uppercase tracking-widest bg-card border-card-foreground/20 rounded-xl shadow-none">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {TIME_RANGES.map(r => {
-                                let label = r.label;
-                                if (isMk) {
-                                    if (r.id === 'today') label = 'Денес';
-                                    if (r.id === 'week') label = '7 Дена';
-                                    if (r.id === 'month') label = '30 Дена';
-                                    if (r.id === 'year') label = 'Година';
-                                    if (r.id === 'all') label = 'За Секогаш';
-                                }
-                                return <SelectItem key={r.id} value={r.id}>{label}</SelectItem>;
-                            })}
-                        </SelectContent>
-                    </Select>
-                )}
-
-                {/* Sort */}
-                {showSort && sortOptions.length > 0 && (
-                    <div className="flex items-center gap-1.5">
-                        <SlidersHorizontal className="w-4 h-4 text-muted-foreground shrink-0" />
-                        <Select value={sortValue} onValueChange={(v) => onSortChange?.(v)}>
-                            <SelectTrigger className="h-10 w-auto min-w-[140px] text-[10px] font-black uppercase tracking-widest bg-card border-card-foreground/20 rounded-xl shadow-none">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {sortOptions.map(opt => (
-                                    <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                )}
-
-                {/* Export */}
-                {showExport && onExport && (
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={onExport}
-                        className="h-9 px-3 text-xs font-bold gap-1.5 shrink-0"
-                    >
-                        <FileText className="w-3.5 h-3.5" />
-                        {isMk ? 'Преземи PDF' : 'Download PDF'}
-                    </Button>
-                )}
-
-                {/* custom actions */}
-                {actions}
-            </div>
-
-            {/* Active filters summary */}
-            {(searchValue) && (
-                <div className="flex items-center gap-2 flex-wrap">
-                    {searchValue && (
-                        <span className="inline-flex items-center gap-1.5 text-xs font-bold bg-secondary text-primary border border-border px-2 py-1 rounded-md">
-                            <Search className="w-2.5 h-2.5" />
-                            &ldquo;{searchValue}&rdquo;
-                            <button onClick={clearSearch} className="ml-0.5 hover:opacity-70">
-                                <X className="w-2.5 h-2.5" />
-                            </button>
-                        </span>
-                    )}
-                    <button
-                        onClick={() => { onSearchChange?.(''); }}
-                        className="text-[10px] font-bold text-muted-foreground hover:text-foreground flex items-center gap-1"
-                    >
-                        <RotateCcw className="w-2.5 h-2.5" /> {isMk ? 'Исчисти сè' : 'Clear all'}
-                    </button>
-                </div>
+  return (
+    <div className={cn('flex flex-col gap-2', className)}>
+      {/* Main toolbar row — wraps on small screens */}
+      <div className='flex flex-wrap gap-2 items-center'>
+        {/* Search */}
+        {showSearch && (
+          <div className='relative min-w-[180px] flex-1 max-w-sm'>
+            <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none' />
+            <input
+              ref={searchRef}
+              type='text'
+              value={searchValue}
+              onChange={(e) => onSearchChange?.(e.target.value)}
+              placeholder={searchPlaceholder}
+              className='w-full h-10 pl-10 pr-8 text-sm bg-card border-1 border-card-foreground/20 rounded-xl focus:outline-none focus:border-card-foreground/50 transition-all placeholder:text-muted-foreground font-medium'
+            />
+            {searchValue && (
+              <button
+                onClick={clearSearch}
+                className='absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center bg-muted-foreground/20 hover:bg-muted-foreground/30 transition-colors'
+              >
+                <X className='w-3 h-3' />
+              </button>
             )}
+          </div>
+        )}
+
+        {/* Time range — compact dropdown */}
+        {showTimeRange && onTimeRangeChange && (
+          <Select
+            value={timeRange}
+            onValueChange={(v) => onTimeRangeChange(v as TimeRange)}
+          >
+            <SelectTrigger className='flex-1 sm:flex-none h-9 w-full sm:w-auto min-w-[110px] text-[10px] px-3 text-foreground font-black uppercase tracking-widest bg-muted/40 border-border rounded-xl shadow-none'>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {TIME_RANGES.map((r) => {
+                let label = r.label;
+                if (isMk) {
+                  if (r.id === 'today') label = 'Денес';
+                  if (r.id === 'week') label = '7 Дена';
+                  if (r.id === 'month') label = '30 Дена';
+                  if (r.id === 'year') label = 'Година';
+                  if (r.id === 'all') label = 'За Секогаш';
+                }
+                return (
+                  <SelectItem key={r.id} value={r.id}>
+                    {label}
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
+        )}
+
+        {/* Sort */}
+        {showSort && sortOptions.length > 0 && (
+          <div className='flex-1 sm:flex-none flex items-center gap-1.5'>
+            <Select value={sortValue} onValueChange={(v) => onSortChange?.(v)}>
+              <SelectTrigger className='h-9 w-full sm:w-auto min-w-[130px] text-[10px] font-black uppercase tracking-widest bg-muted/40 border-border rounded-xl shadow-none'>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {sortOptions.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
+        {/* Export */}
+        {showExport && onExport && (
+          <Button
+            variant='ghost'
+            size='sm'
+            onClick={onExport}
+            className='h-9 px-3 text-[10px] font-black uppercase tracking-widest gap-1.5 shrink-0 bg-primary/5 hover:bg-primary/10 text-primary rounded-xl'
+          >
+            <FileText className='w-3.5 h-3.5' />
+            {isMk ? 'PDF' : 'PDF'}
+          </Button>
+        )}
+
+        {/* custom actions */}
+        {actions}
+      </div>
+
+      {/* Active filters summary */}
+      {searchValue && (
+        <div className='flex items-center gap-2 flex-wrap'>
+          {searchValue && (
+            <span className='inline-flex items-center gap-1.5 text-xs font-bold bg-secondary text-primary border border-border px-2 py-1 rounded-md'>
+              <Search className='w-2.5 h-2.5' />
+              &ldquo;{searchValue}&rdquo;
+              <button onClick={clearSearch} className='ml-0.5 hover:opacity-70'>
+                <X className='w-2.5 h-2.5' />
+              </button>
+            </span>
+          )}
+          <button
+            onClick={() => {
+              onSearchChange?.('');
+            }}
+            className='text-[10px] font-bold text-muted-foreground hover:text-foreground flex items-center gap-1'
+          >
+            <RotateCcw className='w-2.5 h-2.5' />{' '}
+            {isMk ? 'Исчисти сè' : 'Clear all'}
+          </button>
         </div>
-    );
+      )}
+    </div>
+  );
 }
 
 /** Simple pill pagination component */
 export function AdminPagination({
-    page,
-    totalPages,
-    onPageChange,
-    className,
+  page,
+  totalPages,
+  onPageChange,
+  className,
 }: {
-    page: number;
-    totalPages: number;
-    onPageChange: (p: number) => void;
-    className?: string;
+  page: number;
+  totalPages: number;
+  onPageChange: (p: number) => void;
+  className?: string;
 }) {
-    const locale = useLocale();
-    const isMk = locale === 'mk';
+  const locale = useLocale();
+  const isMk = locale === 'mk';
 
-    if (totalPages <= 1) return null;
+  if (totalPages <= 1) return null;
 
-    const pages = Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
-        if (totalPages <= 7) return i + 1;
-        if (page <= 4) return i + 1;
-        if (page >= totalPages - 3) return totalPages - 6 + i;
-        return page - 3 + i;
-    });
+  const pages = Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
+    if (totalPages <= 7) return i + 1;
+    if (page <= 4) return i + 1;
+    if (page >= totalPages - 3) return totalPages - 6 + i;
+    return page - 3 + i;
+  });
 
-    return (
-        <div className={cn('flex items-center justify-center gap-1 py-4', className)}>
-            <button
-                disabled={page === 1}
-                onClick={() => onPageChange(page - 1)}
-                className="h-8 w-8 rounded-lg flex items-center justify-center text-sm font-bold disabled:opacity-30 hover:bg-muted/60 transition-colors"
-            >
-                ‹
-            </button>
-            {pages.map(p => (
-                <button
-                    key={p}
-                    onClick={() => onPageChange(p)}
-                    className={cn(
-                        'h-8 w-8 rounded-lg flex items-center justify-center text-xs font-bold transition-all',
-                        p === page
-                            ? 'bg-secondary text-primary border border-primary/30 shadow-none'
-                            : 'hover:bg-muted/60 text-foreground/70'
-                    )}
-                >
-                    {p}
-                </button>
-            ))}
-            <button
-                disabled={page === totalPages}
-                onClick={() => onPageChange(page + 1)}
-                className="h-8 w-8 rounded-lg flex items-center justify-center text-sm font-bold disabled:opacity-30 hover:bg-muted/60 transition-colors"
-            >
-                ›
-            </button>
-            <span className="text-xs text-muted-foreground ml-2">
-                {isMk ? `Страница ${page} од ${totalPages}` : `Page ${page} of ${totalPages}`}
-            </span>
-        </div>
-    );
+  return (
+    <div
+      className={cn('flex items-center justify-center gap-1 py-4', className)}
+    >
+      <button
+        disabled={page === 1}
+        onClick={() => onPageChange(page - 1)}
+        className='h-8 w-8 rounded-lg flex items-center justify-center text-sm font-bold disabled:opacity-30 hover:bg-muted/60 transition-colors'
+      >
+        ‹
+      </button>
+      {pages.map((p) => (
+        <button
+          key={p}
+          onClick={() => onPageChange(p)}
+          className={cn(
+            'h-8 w-8 rounded-lg flex items-center justify-center text-xs font-bold transition-all',
+            p === page
+              ? 'bg-secondary text-primary border border-primary/30 shadow-none'
+              : 'hover:bg-muted/60 text-foreground/70',
+          )}
+        >
+          {p}
+        </button>
+      ))}
+      <button
+        disabled={page === totalPages}
+        onClick={() => onPageChange(page + 1)}
+        className='h-8 w-8 rounded-lg flex items-center justify-center text-sm font-bold disabled:opacity-30 hover:bg-muted/60 transition-colors'
+      >
+        ›
+      </button>
+      <span className='text-xs text-muted-foreground ml-2'>
+        {isMk
+          ? `Страница ${page} од ${totalPages}`
+          : `Page ${page} of ${totalPages}`}
+      </span>
+    </div>
+  );
 }
