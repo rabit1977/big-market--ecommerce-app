@@ -40,10 +40,10 @@ export function SaveAdButton({
         isFavorite
           ? showText
             ? 'bg-primary/10 border-primary/30 text-primary'
-            : 'bg-red-500/20 text-red-500 shadow-md shadow-red-500/5'
+            : 'bg-slate-500/40 text-red-500 shadow-md shadow-red-500/5'
           : showText
             ? 'bg-card border-border text-foreground hover:bg-accent'
-            : 'bg-white/80 hover:bg-white/100 dark:bg-black/50 dark:hover:bg-black/70 text-slate-900 dark:text-white',
+            : 'bg-white/80 hover:bg-white/100 dark:bg-black/10 dark:hover:bg-black/40 text-slate-900 dark:text-white',
         className,
         buttonClassName,
       )}

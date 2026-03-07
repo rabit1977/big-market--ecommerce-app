@@ -217,14 +217,14 @@ export const ListingCard = memo(
                 <div className='flex items-start justify-between gap-1.5'>
                   <h3
                     className={cn(
-                      'font-bold text-sm sm:text-base leading-snug line-clamp-2 text-foreground/90',
+                      'font-semibold text-xs sm:text-sm leading-snug line-clamp-2 text-foreground/70',
                       isCard && 'text-base sm:text-lg',
                     )}
                   >
                     <span className='group-hover:underline decoration-foreground/30 underline-offset-2 transition-all'>
                       {listing.title}
                     </span>
-                    <span className='flex items-center justify-between border-border/40 mt-2'>
+                    <span className='flex items-center justify-between border-border/40 mt-1'>
                       <span className='text-xs text-foreground/70 font-medium uppercase tracking-tight'>
                         {getConditionLabel(listing.condition)}
                       </span>
