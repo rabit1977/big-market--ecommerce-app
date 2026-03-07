@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Heart, Home, LayoutGrid, PlusCircle, User } from 'lucide-react';
+import { Heart, Home, LayoutGrid, List, PlusCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -22,7 +22,7 @@ export function MobileBottomNav({ wishlistCount = 0 }: MobileBottomNavProps) {
     { label: t('categories'), icon: LayoutGrid, href: '/categories' },
     { label: t('post_ad'), icon: PlusCircle, href: '/sell', primary: true },
     { label: t('favorites'), icon: Heart, href: '/favorites', showBadge: true },
-    { label: t('my_listings'), icon: User, href: '/my-listings' },
+    { label: t('browse_listings'), icon: List, href: '/listings' },
   ];
 
   useEffect(() => {
