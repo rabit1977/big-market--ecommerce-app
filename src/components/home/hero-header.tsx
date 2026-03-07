@@ -1,15 +1,11 @@
 'use client';
 
-import { UserAvatar } from '@/components/shared/user-avatar';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel';
-import { api } from '@/convex/_generated/api';
-import { useFavorites } from '@/lib/context/favorites-context';
-import { useQuery as useConvexQuery } from 'convex/react';
-import { User } from 'lucide-react';
+import { User, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
@@ -25,20 +21,8 @@ const QUICK_FILTERS = [
 ];
 
 export const HeroHeader = () => {
-  const tHome = useTranslations('Home');
   const tFilters = useTranslations('QuickFilters');
   const tNav = useTranslations('NavActions');
-
-  const { favorites } = useFavorites();
-  const favCount = favorites.size;
-
-  const users = useConvexQuery(api.users.list) || [];
-  const stores = users
-    .filter(
-      (u: any) =>
-        u.accountType === 'BUSINESS' || u.isVerified || u.role === 'ADMIN',
-    )
-    .slice(0, 15);
 
   return (
     <div className=''>
@@ -67,28 +51,20 @@ export const HeroHeader = () => {
                   </Link>
                 </CarouselItem>
 
-                <div className='mx-2 w-px h-6 bg-border/60 shrink-0 self-center' />
-
-                {/* Storefronts Array */}
-                {stores.map((store) => (
-                  <CarouselItem
-                    key={store._id}
-                    className='basis-auto pl-1 sm:pl-2'
+                {/* All Stores (Prodavnici) Button */}
+                <CarouselItem className='basis-auto pl-1 sm:pl-2'>
+                  <Link
+                    href='/store'
+                    className='group flex items-center justify-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-card bm-interactive transition-all duration-200 shrink-0 shadow-none'
                   >
-                    <Link
-                      href={`/store/${store.externalId}`}
-                      className='group flex items-center justify-center gap-2 pr-3 sm:pr-4 pl-1.5 sm:pl-2 py-1.5 sm:py-2 rounded-full bg-card bm-interactive transition-all duration-200 shrink-0 shadow-none'
-                    >
-                      <UserAvatar
-                        user={store as any}
-                        className='w-5 h-5 border-none rounded-full group-hover:border-primary transition-all duration-200'
-                      />
-                      <span className='text-[10px] md:text-[11px] font-bold tracking-widest text-foreground uppercase whitespace-nowrap'>
-                        {store.companyName || store.name || 'Store'}
-                      </span>
-                    </Link>
-                  </CarouselItem>
-                ))}
+                    <div className='w-5 h-5 rounded-full bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-200'>
+                      <Users className='w-3 h-3' />
+                    </div>
+                    <span className='text-[10px] md:text-[11px] font-bold tracking-widest text-foreground uppercase whitespace-nowrap'>
+                      {tNav('sellers')}
+                    </span>
+                  </Link>
+                </CarouselItem>
 
                 <div className='mx-2 w-px h-6 bg-border/60 shrink-0 self-center' />
 
