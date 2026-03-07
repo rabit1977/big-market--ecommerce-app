@@ -50,23 +50,6 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
 
   return (
     <div className="space-y-4 bg-background dark:bg-background">
-      <div className="flex md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h2 className='text-xl md:text-2xl font-black tracking-tight mb-2'>
-            {tHome('latest_listings')}
-          </h2>
-        </div>
-
-        {/* Desktop View All Link */}
-        <Link 
-          href="/listings" 
-          className="group flex items-center justify-center gap-1.5 px-3.5 py-1.5 md:py-2 rounded-lg bg-card bm-interactive transition-all duration-200 shrink-0 shadow-none"
-        >
-          <span className="text-xs font-bold uppercase tracking-widest">{tHome('view_all')}</span>
-          <ArrowRight className="w-3.5 h-3.5 ml-1 transition-transform group-hover:translate-x-1" />
-        </Link>
-      </div>
-
       <ListingGrid 
         listings={sortedListings as any} 
         onOpenFilters={() => setIsFiltersOpen(true)}
