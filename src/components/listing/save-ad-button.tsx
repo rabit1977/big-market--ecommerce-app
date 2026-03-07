@@ -14,12 +14,12 @@ interface SaveAdButtonProps {
   showText?: boolean;
 }
 
-export function SaveAdButton({ 
-  listingId, 
+export function SaveAdButton({
+  listingId,
   className,
   iconClassName,
   buttonClassName,
-  showText = true
+  showText = true,
 }: SaveAdButtonProps) {
   const { isFavorite: checkFavorite, toggleFavorite } = useFavorites();
   const isFavorite = checkFavorite(listingId);
@@ -33,16 +33,29 @@ export function SaveAdButton({
         toggleFavorite(listingId);
       }}
       className={cn(
-        "flex items-center justify-center transition-all",
-        showText ? "gap-2 px-4 py-2 border rounded-full text-sm font-bold shadow-sm" : "p-2.5 rounded-full",
+        'flex items-center justify-center transition-all duration-200 group/heart active:scale-95',
+        showText
+          ? 'gap-2 px-4 py-2 border rounded-full text-sm font-bold shadow-sm'
+          : 'p-1.5 rounded-full shadow-lg backdrop-blur-md border border-white/20',
         isFavorite
-          ? (showText ? "bg-primary/5 border-primary/20 text-primary" : "bg-primary/10 text-primary")
-          : (showText ? "bg-card border-border text-foreground hover:bg-accent" : "bg-muted text-muted-foreground hover:bg-muted/80"),
+          ? showText
+            ? 'bg-primary/10 border-primary/30 text-primary'
+            : 'bg-red-500/20 text-red-500 shadow-md shadow-red-500/5'
+          : showText
+            ? 'bg-card border-border text-foreground hover:bg-accent'
+            : 'bg-white/80 hover:bg-white/100 dark:bg-black/50 dark:hover:bg-black/70 text-slate-900 dark:text-white',
         className,
-        buttonClassName
+        buttonClassName,
       )}
     >
-      <Heart className={cn(showText ? "w-4 h-4" : "w-6 h-6", isFavorite && "fill-current", iconClassName)} />
+      <Heart
+        className={cn(
+          showText ? 'w-3.5 h-3.5' : 'w-3.5 h-3.5 sm:w-[18px] sm:h-[18px]',
+          'transition-transform duration-200 group-hover/heart:scale-110',
+          isFavorite && 'fill-current',
+          iconClassName,
+        )}
+      />
       {showText && (isFavorite ? t('saved') : t('save_ad'))}
     </button>
   );

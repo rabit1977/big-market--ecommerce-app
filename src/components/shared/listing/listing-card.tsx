@@ -2,12 +2,12 @@
 
 import { PromotionIcon } from '@/components/shared/listing/promotion-icon';
 
+import { SaveAdButton } from '@/components/listing/save-ad-button';
 import { getPromotionConfig } from '@/lib/constants/promotions';
-import { useFavorites } from '@/lib/context/favorites-context';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils/formatters';
-import { Heart, MapPin } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -45,18 +45,7 @@ export const ListingCard = memo(
           return condition;
       }
     };
-    const { isFavorite, toggleFavorite } = useFavorites();
-    const isWished = isFavorite(listing.id || listing._id);
-
-    // Wishlist toggle handler
-    const handleToggleWishlist = useCallback(
-      (e: React.MouseEvent) => {
-        e.preventDefault(); // Prevent navigation
-        e.stopPropagation();
-        toggleFavorite(listing.id || listing._id);
-      },
-      [listing.id, listing._id, toggleFavorite],
-    );
+    // Removed local heart toggle logic
 
     const imagesArray = listing.images?.length
       ? (listing.images as (string | { url: string })[])
@@ -201,21 +190,16 @@ export const ListingCard = memo(
               </div>
             </div>
           )}
-          {(isGrid || isCard) && (
-            <div className='absolute top-1 right-1 sm:top-1.5 sm:right-1.5 z-30 pointer-events-none'>
-              <span
-                className='text-[9px] font-bold text-white/90 bg-black/60 backdrop-blur-sm px-1.5 py-0.5 rounded-md border border-white/20'
-                suppressHydrationWarning
-              >
-                {listing.createdAt
-                  ? new Date(listing.createdAt).toLocaleDateString('en-GB', {
-                      day: 'numeric',
-                      month: 'short',
-                    })
-                  : ''}
-              </span>
-            </div>
-          )}
+
+          {/* Heart Button Overlay - Top Right */}
+          <div className='absolute top-1.5 right-1.5 z-30 pointer-events-auto'>
+            {!isOwner && (
+              <SaveAdButton
+                listingId={listing.id || listing._id}
+                showText={false}
+              />
+            )}
+          </div>
         </div>
 
         {/* Content Section */}
@@ -284,18 +268,6 @@ export const ListingCard = memo(
                     <MapPin className='w-4 h-4 text-primary' />
                     {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
                   </div>
-
-                  <button
-                    onClick={handleToggleWishlist}
-                    className='w-7 h-7 p-1 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 shadow-sm flex items-center justify-center text-foreground hover:text-red-500 transition-all hover:scale-110 active:scale-95 pointer-events-auto'
-                  >
-                    <Heart
-                      className={cn(
-                        'w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors',
-                        isWished && 'fill-red-500 text-red-500',
-                      )}
-                    />
-                  </button>
                 </div>
 
                 {isCard && listing.description && (
@@ -367,18 +339,6 @@ export const ListingCard = memo(
                     {listing.city || 'Skopje'}
                   </div>
                 </div>
-
-                <button
-                  onClick={handleToggleWishlist}
-                  className='w-8 h-8 p-1 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 shadow-sm flex items-center justify-center text-foreground hover:text-red-500 transition-all hover:scale-110 active:scale-95 pointer-events-auto'
-                >
-                  <Heart
-                    className={cn(
-                      'w-4 h-4 transition-colors',
-                      isWished && 'fill-red-500 text-red-500',
-                    )}
-                  />
-                </button>
               </div>
             </>
           )}

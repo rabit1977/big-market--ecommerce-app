@@ -2,9 +2,9 @@
 
 import { ListingQA } from '@/components/listing/listing-qa';
 import { SaveAdButton } from '@/components/listing/save-ad-button';
-import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { FollowSellerButton } from '@/components/shared/follow-seller-button';
 import { ContactSellerButton } from '@/components/shared/listing/contact-button';
+import { PromotionIcon } from '@/components/shared/listing/promotion-icon';
 import { ReportModal } from '@/components/shared/report-modal';
 import { SellerBadge } from '@/components/shared/seller-badge';
 import { UserAvatar } from '@/components/shared/user-avatar';
@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { api } from '@/convex/_generated/api';
 import type { Id } from '@/convex/_generated/dataModel';
+import { getPromotionConfig } from '@/lib/constants/promotions';
 import { useFavorites } from '@/lib/context/favorites-context';
 import { cn, formatCurrency } from '@/lib/utils';
 import { rgbDataURL } from '@/lib/utils/utils';
@@ -98,6 +99,10 @@ interface Listing {
   previousPrice?: number;
   listingNumber?: number;
   isPriceNegotiable?: boolean;
+  isPromoted?: boolean;
+  promotionTier?: string;
+  promotionExpiresAt?: number;
+  isVerified?: boolean;
 }
 
 interface ListingDetailContentProps {
@@ -203,6 +208,10 @@ export function ListingDetailContent({
   const isListingOwner = session?.user?.id === listing.userId;
   const isAdmin = (session?.user as any)?.role === 'ADMIN';
   const canManage = isListingOwner || isAdmin;
+
+  const promoConfig = listing.isPromoted
+    ? getPromotionConfig(listing.promotionTier)
+    : null;
 
   const publishDate = listing.createdAt
     ? new Date(listing.createdAt).toLocaleDateString('mk-MK', {
@@ -382,9 +391,6 @@ export function ListingDetailContent({
       <div className='container-wide px-4 md:pt-3'>
         {/* ── Desktop Actions ───────────────────────────────────────────── */}
         <div className='hidden md:flex items-center justify-between mb-8 border-b border-border'>
-          <div className='pt-6'>
-            <AppBreadcrumbs />
-          </div>
           <div className='flex items-center justify-between gap-3'>
             <button
               onClick={handleShare}
@@ -440,6 +446,36 @@ export function ListingDetailContent({
                         className='object-cover pointer-events-none'
                         priority={i === 0}
                       />
+                      {/* Floating Badges */}
+                      <div className='absolute top-1.5 left-1.5 z-30 flex flex-col gap-2 pointer-events-none'>
+                        {promoConfig && (
+                          <div
+                            className={cn(
+                              'w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 transition-all duration-300',
+                              promoConfig.badgeColor,
+                            )}
+                          >
+                            <PromotionIcon
+                              iconName={promoConfig.icon}
+                              className='h-3 w-3 sm:h-4 sm:w-4 text-white fill-white'
+                            />
+                          </div>
+                        )}
+                      </div>
+                      {/* Date Badge */}
+                      <div
+                        className='absolute top-1 right-1 z-30 pointer-events-none'
+                        suppressHydrationWarning
+                      >
+                        <span className='text-[9px] font-bold text-white/80 bg-black/40 backdrop-blur-sm px-1.5 py-0.5 rounded-md border border-white/10'>
+                          {listing.createdAt
+                            ? new Date(listing.createdAt).toLocaleDateString(
+                                'en-GB',
+                                { day: 'numeric', month: 'short' },
+                              )
+                            : ''}
+                        </span>
+                      </div>
                     </div>
                   ))
                 ) : (
@@ -451,19 +487,23 @@ export function ListingDetailContent({
                       className='object-cover pointer-events-none'
                       priority
                     />
+                    {/* Floating Badges */}
+                    <div className='absolute top-1.5 left-1.5 z-30 flex flex-col gap-2 pointer-events-none'>
+                      {promoConfig && (
+                        <div
+                          className={cn(
+                            'w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 transition-all duration-300',
+                            promoConfig.badgeColor,
+                          )}
+                        >
+                          <PromotionIcon
+                            iconName={promoConfig.icon}
+                            className='h-3 w-3 sm:h-4 sm:w-4 text-white fill-white'
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
-                )}
-              </div>
-
-              {/* Floating Meta Items */}
-              <div className='absolute top-3 right-3 z-30 pointer-events-auto'>
-                {!isListingOwner && (
-                  <SaveAdButton
-                    listingId={listing._id}
-                    showText={false}
-                    className='p-2 sm:p-2.5'
-                    iconClassName='w-4 h-4 sm:w-6 sm:h-6'
-                  />
                 )}
               </div>
 
@@ -479,7 +519,7 @@ export function ListingDetailContent({
                 </span>
               </div>
 
-              {/* Clickable Dots mapped directly here under the image */}
+              {/* Clickable Dots */}
               {images.length > 1 && (
                 <div className='absolute bottom-4 left-0 right-0 z-30 flex justify-center gap-2 pointer-events-auto'>
                   {images.map((_, i) => (
@@ -507,6 +547,13 @@ export function ListingDetailContent({
                   ))}
                 </div>
               )}
+
+              {/* Bottom Right Heart Button (Premium Styles inherited from global component) */}
+              <div className='absolute bottom-2 right-2 z-30 pointer-events-auto'>
+                {!isListingOwner && (
+                  <SaveAdButton listingId={listing._id} showText={false} />
+                )}
+              </div>
             </div>
 
             {/* Mobile Info Block */}
