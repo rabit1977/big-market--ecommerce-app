@@ -72,7 +72,7 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
             <Link
               href="/"
               className="shrink-0 flex items-center group"
-              aria-label="Biggest Market home page"
+              aria-label="PazarPlus home page"
             >
               <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center group-hover:bg-primary/90 transition-all duration-150">
                 <Zap className="h-4 w-4 text-white" fill="currentColor" />
@@ -95,13 +95,13 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
           <Link
             href="/"
             className="flex shrink-0 items-center gap-2.5 group mr-1"
-            aria-label="Biggest Market home page"
+            aria-label="PazarPlus page"
           >
             <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center group-hover:bg-primary/90 transition-all duration-150">
               <Zap className="h-5 w-5 text-white" fill="currentColor" />
             </div>
             <span className="text-xl font-bold tracking-tight text-foreground leading-none whitespace-nowrap">
-              Biggest Market<span className="text-primary">.</span>
+              PazarPlus<span className="text-primary">.</span>
             </span>
           </Link>
           <div className="flex-1 max-w-xl mx-auto">

@@ -17,7 +17,7 @@ import { Suspense } from 'react';
 import './globals.css';
 import { Providers } from './providers';
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   display: 'swap',
@@ -26,8 +26,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Biggest Market',
-    default: 'Biggest Market - Classifieds Platform',
+    template: '%s | PazarPlus',
+    default: 'PazarPlusassifieds Platform',
   },
   description: 'Buy and sell anything in your local community.',
 };
@@ -63,7 +63,9 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className={`bg-background dark:bg-background min-h-screen ${inter.className}`}>
+      <body
+        className={`bg-background dark:bg-background min-h-screen ${inter.className}`}
+      >
         <NextIntlClientProvider messages={messages} locale={locale}>
           <Providers initialFavorites={wishlist}>
             <ThemeApplier />
@@ -75,12 +77,12 @@ export default async function RootLayout({
             <div className='min-h-screen text-foreground relative'>
               <Watermark />
               <div className='relative z-10'>
-                <Suspense fallback={<div className="h-16 w-full" />}>
+                <Suspense fallback={<div className='h-16 w-full' />}>
                   <MobileSidebarWrapper
                     initialWishlistCount={initialWishlistCount}
                   />
                 </Suspense>
-                <main className='min-h-auto pb-20 lg:pb-0'>{children}</main>
+                <main className='min-h-auto'>{children}</main>
                 <FooterWrapper />
                 <CompareWidget />
                 <Toast />

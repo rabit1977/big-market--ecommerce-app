@@ -38,7 +38,6 @@ import {
     User,
     Wallet
 } from 'lucide-react';
-import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -59,7 +58,6 @@ const SPENDING_LABELS: Record<SpendingPeriod, string> = {
 };
 
 export function UserDashboardClient({ userId }: UserDashboardClientProps) {
-    const { data: session } = useSession();
     const stats = useQuery(api.users.getUserDashboardStats, { externalId: userId });
     const [spendingPeriod, setSpendingPeriod] = useState<SpendingPeriod>('monthly');
 

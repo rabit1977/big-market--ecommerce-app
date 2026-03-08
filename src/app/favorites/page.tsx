@@ -7,7 +7,6 @@
  * - Performance: removed useEffect for tab sync, optimistic deletes, no redundant state
  */
 
-import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { ListingCard } from '@/components/shared/listing/listing-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -20,7 +19,7 @@ import {
   Loader2,
   Search,
   Store,
-  Trash2
+  Trash2,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -50,7 +49,10 @@ export default function FavoritesPage({ searchParams }: PageProps) {
   const { tab } = use(searchParams);
   const t = useTranslations('Favorites');
   const activeTab =
-    tab === 'searches' || tab === 'listings' || tab === 'visited' || tab === 'stores'
+    tab === 'searches' ||
+    tab === 'listings' ||
+    tab === 'visited' ||
+    tab === 'stores'
       ? tab
       : 'listings';
 
@@ -58,21 +60,21 @@ export default function FavoritesPage({ searchParams }: PageProps) {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen pt-4 md:pt-6 flex items-center justify-center">
-        <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+      <div className='min-h-screen pt-4 md:pt-6 flex items-center justify-center'>
+        <Loader2 className='w-5 h-5 animate-spin text-muted-foreground' />
       </div>
     );
   }
 
   if (status === 'unauthenticated') {
     return (
-      <div className="min-h-screen pt-4 md:pt-6 flex flex-col items-center justify-center gap-3 px-4">
-        <h1 className="text-lg font-bold text-foreground">{t('please_sign_in')}</h1>
-        <p className="text-xs text-muted-foreground">
-          {t('sign_in_to_view')}
-        </p>
-        <Link href="/auth">
-          <Button size="sm" className="rounded-lg font-bold text-xs">
+      <div className='min-h-screen pt-4 md:pt-6 flex flex-col items-center justify-center gap-3 px-4'>
+        <h1 className='text-lg font-bold text-foreground'>
+          {t('please_sign_in')}
+        </h1>
+        <p className='text-xs text-muted-foreground'>{t('sign_in_to_view')}</p>
+        <Link href='/auth'>
+          <Button size='sm' className='rounded-lg font-bold text-xs'>
             {t('sign_in')}
           </Button>
         </Link>
@@ -81,27 +83,28 @@ export default function FavoritesPage({ searchParams }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen pt-4 md:pt-6 pb-8 bg-muted/10">
-      <div className="container-wide mx-auto px-3 md:px-4">
-        <AppBreadcrumbs />
-
+    <div className='min-h-screen pt-4 md:pt-6 pb-8 bg-muted/10'>
+      <div className='container-wide mx-auto px-3 md:px-4'>
         {/* Header */}
-        <div className="flex items-center gap-2.5 mb-4 md:mb-5">
-          <div className="p-1.5 md:p-2 bg-primary/10 rounded-lg md:rounded-xl">
-            <Heart className="h-4 w-4 md:h-5 md:w-5 text-primary fill-primary/20" />
+        <div className='flex items-center gap-2.5 mb-4 md:mb-5'>
+          <div className='p-1.5 md:p-2 bg-primary/10 rounded-lg md:rounded-xl'>
+            <Heart className='h-4 w-4 md:h-5 md:w-5 text-primary fill-primary/20' />
           </div>
           <div>
-            <h1 className="text-base md:text-xl font-black tracking-tight text-foreground">
+            <h1 className='text-base md:text-xl font-black tracking-tight text-foreground'>
               {t('saved_items')}
             </h1>
-            <p className="text-xs md:text-sm text-muted-foreground font-medium">
+            <p className='text-xs md:text-sm text-muted-foreground font-medium'>
               {t('favorites_searches_history')}
             </p>
           </div>
         </div>
 
         {/* Pass userId down — avoids re-reading session in every child */}
-        <FavoritesTabs userId={session?.user?.id ?? ""} defaultTab={activeTab} />
+        <FavoritesTabs
+          userId={session?.user?.id ?? ''}
+          defaultTab={activeTab}
+        />
       </div>
     </div>
   );
@@ -120,7 +123,9 @@ function FavoritesTabs({
   const listingFavorites = useQuery(api.favorites.getPopulated, { userId });
   const savedSearches = useQuery(api.searches.getSavedSearches, { userId });
   const visitedHistory = useQuery(api.history.getMyHistory, { userId });
-  const followedStores = useQuery(api.followedSellers.getFollowedSellers, { followerId: userId });
+  const followedStores = useQuery(api.followedSellers.getFollowedSellers, {
+    followerId: userId,
+  });
 
   const deleteSearchMutation = useMutation(api.searches.deleteSavedSearch);
 
@@ -147,84 +152,106 @@ function FavoritesTabs({
     });
   };
 
-  const groupedFavorites = (listingFavorites || []).reduce((acc: Record<string, any[]>, item: any) => {
-     if (!item) return acc;
-     const listName = item.listName || 'Default';
-     if (!acc[listName]) acc[listName] = [];
-     acc[listName].push(item);
-     return acc;
-  }, {});
+  const groupedFavorites = (listingFavorites || []).reduce(
+    (acc: Record<string, any[]>, item: any) => {
+      if (!item) return acc;
+      const listName = item.listName || 'Default';
+      if (!acc[listName]) acc[listName] = [];
+      acc[listName].push(item);
+      return acc;
+    },
+    {},
+  );
 
   const listNames = Object.keys(groupedFavorites).sort((a, b) => {
-     if (a === 'Default') return -1;
-     if (b === 'Default') return 1;
-     return a.localeCompare(b);
+    if (a === 'Default') return -1;
+    if (b === 'Default') return 1;
+    return a.localeCompare(b);
   });
 
   return (
-    <Tabs defaultValue={defaultTab} className="w-full">
-      <TabsList className="w-full grid grid-cols-2 md:grid-cols-4 gap-1.5 md:gap-2 mb-6 md:mb-8 p-1.5 h-auto bg-card/40 border border-card-foreground/10 backdrop-blur-sm rounded-2xl bm-interactive shadow-none">
-        <TabsTrigger value="listings" className="text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md">
+    <Tabs defaultValue={defaultTab} className='w-full'>
+      <TabsList className='w-full grid grid-cols-2 md:grid-cols-4 gap-1.5 md:gap-2 mb-6 md:mb-8 p-1.5 h-auto bg-card/40 border border-card-foreground/10 backdrop-blur-sm rounded-2xl bm-interactive shadow-none'>
+        <TabsTrigger
+          value='listings'
+          className='text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md'
+        >
           {t('favorites_tab', { count: listingFavorites?.length ?? 0 })}
         </TabsTrigger>
-        <TabsTrigger value="searches" className="text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md">
+        <TabsTrigger
+          value='searches'
+          className='text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md'
+        >
           {t('searches_tab', { count: optimisticSearches.length })}
         </TabsTrigger>
-        <TabsTrigger value="stores" className="text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md">
+        <TabsTrigger
+          value='stores'
+          className='text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md'
+        >
           Stores ({followedStores?.length ?? 0})
         </TabsTrigger>
-        <TabsTrigger value="visited" className="text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md">
+        <TabsTrigger
+          value='visited'
+          className='text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md'
+        >
           {t('history_tab')}
         </TabsTrigger>
       </TabsList>
 
       {/* ── Favorites ── */}
-      <TabsContent value="listings">
+      <TabsContent value='listings'>
         {!listingFavorites ? (
           <CenteredSpinner />
         ) : listingFavorites.length === 0 ? (
           <EmptyState
-            icon={<Heart className="w-8 h-8 md:w-10 md:h-10 text-muted-foreground/40" />}
+            icon={
+              <Heart className='w-8 h-8 md:w-10 md:h-10 text-muted-foreground/40' />
+            }
             title={t('no_favorites')}
             description={t('no_favorites_desc')}
             action={{ label: t('browse_listings'), href: '/listings' }}
           />
         ) : (
-          <div className="space-y-8">
+          <div className='space-y-8'>
             {listNames.map((folder) => (
-               <div key={folder} className="space-y-3">
-                 <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                    <h3 className="font-bold text-lg md:text-xl text-foreground">
-                       {folder} <span className="text-muted-foreground text-sm font-normal">({groupedFavorites[folder].length})</span>
-                    </h3>
-                 </div>
-                 <div className="grid lg:grid-cols-2 2xl:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
-                   {groupedFavorites[folder].map(
-                     (listing: any) =>
-                       listing && (
-                         <ListingCard key={listing._id} listing={listing} />
-                       ),
-                   )}
-                 </div>
-               </div>
+              <div key={folder} className='space-y-3'>
+                <div className='flex items-center justify-between border-b border-border/50 pb-2'>
+                  <h3 className='font-bold text-lg md:text-xl text-foreground'>
+                    {folder}{' '}
+                    <span className='text-muted-foreground text-sm font-normal'>
+                      ({groupedFavorites[folder].length})
+                    </span>
+                  </h3>
+                </div>
+                <div className='grid lg:grid-cols-2 2xl:grid-cols-3 gap-2 sm:gap-3 md:gap-4'>
+                  {groupedFavorites[folder].map(
+                    (listing: any) =>
+                      listing && (
+                        <ListingCard key={listing._id} listing={listing} />
+                      ),
+                  )}
+                </div>
+              </div>
             ))}
           </div>
         )}
       </TabsContent>
 
       {/* ── Saved Searches ── */}
-      <TabsContent value="searches">
+      <TabsContent value='searches'>
         {!savedSearches ? (
           <CenteredSpinner />
         ) : optimisticSearches.length === 0 ? (
           <EmptyState
-            icon={<Search className="w-8 h-8 md:w-10 md:h-10 text-muted-foreground/40" />}
+            icon={
+              <Search className='w-8 h-8 md:w-10 md:h-10 text-muted-foreground/40' />
+            }
             title={t('no_saved_searches')}
             description={t('no_saved_searches_desc')}
             action={{ label: t('start_searching'), href: '/listings' }}
           />
         ) : (
-          <div className="flex flex-col gap-2">
+          <div className='flex flex-col gap-2'>
             {optimisticSearches.map((search) => (
               <SavedSearchRow
                 key={search._id}
@@ -238,57 +265,70 @@ function FavoritesTabs({
       </TabsContent>
 
       {/* ── Followed Stores ── */}
-      <TabsContent value="stores">
+      <TabsContent value='stores'>
         {!followedStores ? (
           <CenteredSpinner />
         ) : followedStores.length === 0 ? (
           <EmptyState
-            icon={<Store className="w-8 h-8 md:w-10 md:h-10 text-muted-foreground/40" />}
-            title="No followed stores"
-            description="Follow sellers to easily find their listings later."
+            icon={
+              <Store className='w-8 h-8 md:w-10 md:h-10 text-muted-foreground/40' />
+            }
+            title='No followed stores'
+            description='Follow sellers to easily find their listings later.'
             action={{ label: t('browse_listings'), href: '/listings' }}
           />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-            {followedStores.map((store) => store && (
-               <Link 
-                 key={store._id} 
-                 href={`/store/${store.externalId}`}
-                 className="group flex flex-col gap-3 bg-card p-4 rounded-2xl border border-border/50 hover:border-primary/30 hover:shadow-sm transition-all text-center items-center justify-center"
-               >
-                  <Avatar className="h-16 w-16 md:h-20 md:w-20 rounded-xl mb-1 shadow-sm border border-border group-hover:scale-105 transition-transform">
-                    <AvatarImage src={store.image || ''} alt={store.name || 'Store'} className="object-cover" />
-                    <AvatarFallback className="text-xl bg-muted text-muted-foreground font-bold">
-                      {store.name?.charAt(0).toUpperCase() || 'S'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="font-bold text-sm md:text-base text-foreground group-hover:text-primary transition-colors mb-0.5 line-clamp-1 px-4">
-                      {store.accountType === 'COMPANY' && store.companyName ? store.companyName : store.name}
-                    </h3>
-                    <p className="text-[10px] md:text-xs text-muted-foreground font-medium uppercase tracking-wider">
-                      Followed {formatDistanceToNow(store.followedAt)} ago
-                    </p>
-                  </div>
-               </Link>
-            ))}
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3'>
+            {followedStores.map(
+              (store) =>
+                store && (
+                  <Link
+                    key={store._id}
+                    href={`/store/${store.externalId}`}
+                    className='group flex flex-col gap-3 bg-card p-4 rounded-2xl border border-border/50 hover:border-primary/30 hover:shadow-sm transition-all text-center items-center justify-center'
+                  >
+                    <Avatar className='h-16 w-16 md:h-20 md:w-20 rounded-xl mb-1 shadow-sm border border-border group-hover:scale-105 transition-transform'>
+                      <AvatarImage
+                        src={store.image || ''}
+                        alt={store.name || 'Store'}
+                        className='object-cover'
+                      />
+                      <AvatarFallback className='text-xl bg-muted text-muted-foreground font-bold'>
+                        {store.name?.charAt(0).toUpperCase() || 'S'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h3 className='font-bold text-sm md:text-base text-foreground group-hover:text-primary transition-colors mb-0.5 line-clamp-1 px-4'>
+                        {store.accountType === 'COMPANY' && store.companyName
+                          ? store.companyName
+                          : store.name}
+                      </h3>
+                      <p className='text-[10px] md:text-xs text-muted-foreground font-medium uppercase tracking-wider'>
+                        Followed {formatDistanceToNow(store.followedAt)} ago
+                      </p>
+                    </div>
+                  </Link>
+                ),
+            )}
           </div>
         )}
       </TabsContent>
 
       {/* ── History ── */}
-      <TabsContent value="visited">
+      <TabsContent value='visited'>
         {!visitedHistory ? (
           <CenteredSpinner />
         ) : visitedHistory.length === 0 ? (
           <EmptyState
-            icon={<HistoryIcon className="w-8 h-8 md:w-10 md:h-10 text-muted-foreground/40" />}
+            icon={
+              <HistoryIcon className='w-8 h-8 md:w-10 md:h-10 text-muted-foreground/40' />
+            }
             title={t('no_history')}
             description={t('no_history_desc')}
             action={{ label: t('browse_listings'), href: '/listings' }}
           />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
+          <div className='grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-2 sm:gap-3 md:gap-4'>
             {visitedHistory.map(
               (listing) =>
                 listing && (
@@ -323,31 +363,31 @@ const SavedSearchRow = memo(function SavedSearchRow({
 }) {
   const t = useTranslations('Favorites');
   return (
-    <div className="group flex items-center gap-2.5 md:gap-3 bg-card p-2.5 md:p-3 rounded-xl border border-border/50 hover:border-border hover:shadow-sm transition-all">
-      <div className="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-muted flex items-center justify-center shrink-0">
-        <Search className="w-3.5 h-3.5 md:w-4 md:h-4 text-muted-foreground" />
+    <div className='group flex items-center gap-2.5 md:gap-3 bg-card p-2.5 md:p-3 rounded-xl border border-border/50 hover:border-border hover:shadow-sm transition-all'>
+      <div className='w-8 h-8 md:w-9 md:h-9 rounded-lg bg-muted flex items-center justify-center shrink-0'>
+        <Search className='w-3.5 h-3.5 md:w-4 md:h-4 text-muted-foreground' />
       </div>
 
-      <Link href={search.url} className="flex-1 min-w-0">
-        <h3 className="font-bold text-xs md:text-sm truncate text-foreground group-hover:text-primary transition-colors">
+      <Link href={search.url} className='flex-1 min-w-0'>
+        <h3 className='font-bold text-xs md:text-sm truncate text-foreground group-hover:text-primary transition-colors'>
           {search.name || search.query}
         </h3>
-        <p className="text-[9px] md:text-[10px] text-muted-foreground truncate font-medium">
+        <p className='text-[9px] md:text-[10px] text-muted-foreground truncate font-medium'>
           {t('saved_ago', { time: formatDistanceToNow(search._creationTime) })}
         </p>
       </Link>
 
       <Button
-        variant="ghost"
-        size="icon"
+        variant='ghost'
+        size='icon'
         disabled={isPending}
-        className="h-7 w-7 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive shrink-0 disabled:opacity-50"
+        className='h-7 w-7 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive shrink-0 disabled:opacity-50'
         onClick={(e) => {
           e.preventDefault();
           onDelete(search._id);
         }}
       >
-        <Trash2 className="w-3.5 h-3.5" />
+        <Trash2 className='w-3.5 h-3.5' />
       </Button>
     </div>
   );
@@ -368,14 +408,19 @@ const EmptyState = memo(function EmptyState({
   action: { label: string; href: string };
 }) {
   return (
-    <div className="text-center py-12 md:py-16 px-4 bg-card border border-dashed border-border rounded-2xl">
-      <div className="mx-auto mb-3">{icon}</div>
-      <h3 className="text-sm md:text-base font-bold text-foreground mb-1">{title}</h3>
-      <p className="text-[11px] md:text-xs text-muted-foreground mb-4 max-w-xs mx-auto">
+    <div className='text-center py-12 md:py-16 px-4 bg-card border border-dashed border-border rounded-2xl'>
+      <div className='mx-auto mb-3'>{icon}</div>
+      <h3 className='text-sm md:text-base font-bold text-foreground mb-1'>
+        {title}
+      </h3>
+      <p className='text-[11px] md:text-xs text-muted-foreground mb-4 max-w-xs mx-auto'>
         {description}
       </p>
       <Link href={action.href}>
-        <Button size="sm" className="rounded-lg font-bold text-xs md:text-sm h-8 md:h-9 px-4">
+        <Button
+          size='sm'
+          className='rounded-lg font-bold text-xs md:text-sm h-8 md:h-9 px-4'
+        >
           {action.label}
         </Button>
       </Link>
@@ -385,8 +430,8 @@ const EmptyState = memo(function EmptyState({
 
 function CenteredSpinner() {
   return (
-    <div className="flex justify-center py-12">
-      <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+    <div className='flex justify-center py-12'>
+      <Loader2 className='w-5 h-5 animate-spin text-muted-foreground' />
     </div>
   );
 }

@@ -106,7 +106,7 @@ export function Footer() {
       <div className="container mx-auto px-4 max-w-7xl">
         
         {/* Top Section: Brand & App */}
-        <div className="flex flex-col lg:flex-row justify-between gap-8 py-12">
+        <div className="flex flex-col lg:flex-row justify-between gap-8 lg:py-12">
           
           {/* Brand */}
           <div className="lg:w-1/3 space-y-4">
@@ -115,7 +115,7 @@ export function Footer() {
                 <Zap className="h-5 w-5 text-primary scale-100 group-hover:scale-110 transition-transform duration-300" />
               </div>
               <span className="text-lg font-black tracking-tighter text-foreground italic uppercase">
-                BIG <span className="text-primary not-italic font-bold">MARKET</span>
+                Pazar <span className="text-primary not-italic font-bold">Plus</span>
               </span>
             </Link>
             <p className="text-muted-foreground text-xs leading-relaxed max-w-xs">
@@ -170,7 +170,7 @@ export function Footer() {
         <div className="border-t border-border/40 pt-6 flex flex-col-reverse md:flex-row justify-between items-center gap-4">
           <div className="flex flex-col md:flex-row items-center gap-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
             {/* suppressHydrationWarning is safe here for dates */}
-            <p suppressHydrationWarning>&copy; {currentYear} Biggest Market. {tFooter('all_rights_reserved')}</p>
+            <p suppressHydrationWarning>&copy; {currentYear} PazarPlus. {tFooter('all_rights_reserved')}</p>
             <div className="hidden md:block w-0.5 h-0.5 rounded-full bg-border" />
             <div className="flex gap-4">
               <Link href="/help/terms#privacy" className="hover:text-foreground transition-colors">{tFooter('privacy')}</Link>

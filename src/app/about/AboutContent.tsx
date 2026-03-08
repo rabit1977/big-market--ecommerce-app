@@ -15,22 +15,28 @@ interface ValueCardProps {
 
 const values = [
   {
-    icon: <Zap className='h-8 w-8 text-primary group-hover:text-white transition-colors duration-300' />,
+    icon: (
+      <Zap className='h-8 w-8 text-primary group-hover:text-white transition-colors duration-300' />
+    ),
     title: 'Modern Platform',
     description:
       'We build and maintain a high-performance digital environment where users can connect and trade with ultimate efficiency.',
   },
   {
-    icon: <ShieldCheck className='h-8 w-8 text-primary group-hover:text-white transition-colors duration-300' />,
+    icon: (
+      <ShieldCheck className='h-8 w-8 text-primary group-hover:text-white transition-colors duration-300' />
+    ),
     title: 'Trust & Safety',
     description:
       'Our priority is maintaining the integrity of our community through rigorous verification and proactive platform moderation.',
   },
   {
-    icon: <Heart className='h-8 w-8 text-primary group-hover:text-white transition-colors duration-300' />,
+    icon: (
+      <Heart className='h-8 w-8 text-primary group-hover:text-white transition-colors duration-300' />
+    ),
     title: 'Community First',
     description:
-      "We provide the tools and support for our users to grow their personal or business reach in a professional marketplace.",
+      'We provide the tools and support for our users to grow their personal or business reach in a professional marketplace.',
   },
 ];
 
@@ -73,14 +79,10 @@ const TeamMemberCard = ({ member }: TeamMemberProps) => (
         className='object-cover transition-transform duration-500 group-hover:scale-105 filter grayscale group-hover:grayscale-0'
       />
       <div className='absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity' />
-      
+
       <div className='absolute bottom-0 left-0 right-0 p-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-300'>
-        <h3 className='text-xl font-bold text-white'>
-          {member.name}
-        </h3>
-        <p className='text-white/80 text-sm font-medium mt-1'>
-          {member.role}
-        </p>
+        <h3 className='text-xl font-bold text-white'>{member.name}</h3>
+        <p className='text-white/80 text-sm font-medium mt-1'>{member.role}</p>
       </div>
     </div>
   </div>
@@ -103,7 +105,9 @@ export const AboutContent = () => {
       >
         <div className='space-y-8'>
           <div className='space-y-2'>
-            <span className='text-primary font-semibold tracking-wider uppercase text-sm'>Who We Are</span>
+            <span className='text-primary font-semibold tracking-wider uppercase text-sm'>
+              Who We Are
+            </span>
             <h1
               id='story-heading'
               className='text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-tight'
@@ -113,10 +117,18 @@ export const AboutContent = () => {
           </div>
           <div className='space-y-6 text-lg leading-relaxed text-muted-foreground'>
             <p>
-              Founded with a vision to redefine the digital classifieds landscape, Biggest Market was established to provide a sophisticated, high-tech infrastructure where individuals and businesses can host their listings. We are the administrators and maintainers of this professional ecosystem, committed to ensuring a secure and efficient connection between buyers and sellers.
+              Founded with a vision to redefine the digital classifieds
+              landscape, PazarPlus was established to provide a sophisticated,
+              high-tech infrastructure where individuals and businesses can host
+              their listings. We are the administrators and maintainers of this
+              professional ecosystem, committed to ensuring a secure and
+              efficient connection between buyers and sellers.
             </p>
             <p>
-              Our role is to provide the cutting-edge tools, verification systems, and moderation standards that make commerce possible. We don't sell the items—we empower our community to do so with confidence and reach.
+              Our role is to provide the cutting-edge tools, verification
+              systems, and moderation standards that make commerce possible. We
+              don't sell the items—we empower our community to do so with
+              confidence and reach.
             </p>
           </div>
         </div>
@@ -124,7 +136,7 @@ export const AboutContent = () => {
         <div className='relative h-[400px] sm:h-[500px] lg:h-[600px] rounded-[2rem] overflow-hidden shadow-2xl rotate-1 hover:rotate-0 transition-transform duration-500 border-8 border-background'>
           <Image
             src={aboutContent.storyImage}
-            alt='Biggest Market office workspace with team collaboration'
+            alt='PazarPlusce workspace with team collaboration'
             fill
             sizes='(max-width: 768px) 100vw, 50vw'
             className='object-cover hover:scale-110 transition-transform duration-700'
@@ -188,7 +200,7 @@ export const AboutContent = () => {
             Meet The Minds
           </h2>
           <p className='text-lg text-muted-foreground max-w-2xl mx-auto'>
-            The passionate team driving innovation at Biggest Market
+            The passionate team driving innovation at PazarPlus
           </p>
         </div>
 

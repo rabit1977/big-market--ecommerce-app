@@ -2,8 +2,8 @@ import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Biggest Market - Classifieds Platform',
-    short_name: 'Biggest Market',
+    name: 'PazarPlus - Classifieds Platform',
+    short_name: 'PazarPlus',
     description: 'Buy and sell anything in your local community. The best place for classifieds.',
     start_url: '/',
     display: 'standalone',

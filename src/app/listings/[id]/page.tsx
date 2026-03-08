@@ -17,7 +17,7 @@ function isValidConvexId(id: string): boolean {
   return Boolean(id && id !== 'undefined' && id !== 'null' && id.length > 0);
 }
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({
   params,
@@ -27,7 +27,7 @@ export async function generateMetadata({
   // Validate ID
   if (!isValidConvexId(id)) {
     return {
-      title: 'Listing Not Found | Biggest Market',
+      title: 'Listing Not Found | PazarPlus',
     };
   }
 
@@ -38,12 +38,12 @@ export async function generateMetadata({
 
     if (!listing) {
       return {
-        title: 'Listing Not Found | Biggest Market',
+        title: 'Listing Not Found | PazarPlus'
       };
     }
 
     return {
-      title: `${listing.title} | Biggest Market`,
+      title: `${listing.title} | PazarPlus`,
       description: listing.description.slice(0, 160),
       openGraph: {
         images: listing.images?.[0] ? [listing.images[0]] : [],
@@ -51,7 +51,7 @@ export async function generateMetadata({
     };
   } catch {
     return {
-      title: 'Listing Not Found | Biggest Market',
+      title: 'Listing Not Found | PazarPlus' 
     };
   }
 }
@@ -86,12 +86,15 @@ const ListingDetailPage = async ({ params }: ListingDetailPageProps) => {
     description: listing.description.substring(0, 160),
     offers: {
       '@type': 'Offer',
-      url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://biggestmarket.com'}/listings/${id}`,
+      url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://PazarPlus.com'}/listings/${id}`,
       priceCurrency: listing.currency || 'EUR',
       price: listing.price,
-      itemCondition: listing.condition === 'NEW' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition',
+      itemCondition:
+        listing.condition === 'NEW'
+          ? 'https://schema.org/NewCondition'
+          : 'https://schema.org/UsedCondition',
       availability: 'https://schema.org/InStock',
-    }
+    },
   };
 
   let questions: any[] = [];
@@ -107,15 +110,17 @@ const ListingDetailPage = async ({ params }: ListingDetailPageProps) => {
   return (
     <>
       <script
-        type="application/ld+json"
+        type='application/ld+json'
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Suspense fallback={<ListingDetailSkeleton />}>
-        <ListingDetailContent 
-          listing={{
-            ...listing,
-            listingNumber: (listing as any).listingNumber
-          } as any}
+        <ListingDetailContent
+          listing={
+            {
+              ...listing,
+              listingNumber: (listing as any).listingNumber,
+            } as any
+          }
           initialQuestions={questions}
         />
       </Suspense>

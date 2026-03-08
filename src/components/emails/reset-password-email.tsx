@@ -1,14 +1,14 @@
 import {
-    Body,
-    Button,
-    Container,
-    Head,
-    Heading,
-    Hr,
-    Html,
-    Section,
-    Tailwind,
-    Text,
+  Body,
+  Button,
+  Container,
+  Head,
+  Heading,
+  Hr,
+  Html,
+  Section,
+  Tailwind,
+  Text,
 } from '@react-email/components';
 
 interface ResetPasswordEmailProps {
@@ -33,18 +33,18 @@ export const ResetPasswordEmail = ({
           {/* Icon */}
           <Section className='text-center pt-10 pb-5'>
             <div className='inline-block p-4 rounded-full bg-indigo-50'>
-              <svg 
-                className="w-10 h-10 text-indigo-600"
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24" 
-                xmlns="http://www.w3.org/2000/svg"
+              <svg
+                className='w-10 h-10 text-indigo-600'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+                xmlns='http://www.w3.org/2000/svg'
               >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth="2" 
-                  d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11.536 16.293a1 1 0 01-.175.75l-1.636 1.636a1 1 0 01-.707.293h-1.414A1 1 0 016.293 17.586l-1.636-1.636a1 1 0 01-.293-.707l-1.636-1.636a1 1 0 010-1.414l5.742-5.742A6 6 0 0121.536 8.464z" 
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11.536 16.293a1 1 0 01-.175.75l-1.636 1.636a1 1 0 01-.707.293h-1.414A1 1 0 016.293 17.586l-1.636-1.636a1 1 0 01-.293-.707l-1.636-1.636a1 1 0 010-1.414l5.742-5.742A6 6 0 0121.536 8.464z'
                 />
               </svg>
             </div>
@@ -56,14 +56,15 @@ export const ResetPasswordEmail = ({
           </Heading>
 
           <Text className='text-gray-600 text-base leading-relaxed m-0 mb-8 px-10 text-center'>
-            We received a request to reset the password for your account associated with <strong>{email}</strong>. 
-            No changes have been made to your account yet.
+            We received a request to reset the password for your account
+            associated with <strong>{email}</strong>. No changes have been made
+            to your account yet.
           </Text>
 
           {/* CTA Button */}
-          <Section className="text-center pb-8 px-10">
+          <Section className='text-center pb-8 px-10'>
             <Button
-              className="bg-indigo-600 text-white rounded-xl px-12 py-3.5 font-semibold text-base no-underline block w-full"
+              className='bg-indigo-600 text-white rounded-xl px-12 py-3.5 font-semibold text-base no-underline block w-full'
               href={resetUrl}
             >
               Reset Password
@@ -71,7 +72,8 @@ export const ResetPasswordEmail = ({
           </Section>
 
           <Text className='text-gray-500 text-sm leading-relaxed mb-8 px-10 text-center'>
-            You can skip this email if you didn&apos;t make this request. The link is valid for 1 hour.
+            You can skip this email if you didn&apos;t make this request. The
+            link is valid for 1 hour.
           </Text>
 
           <Hr className='border-gray-200 mx-10 my-8' />
@@ -79,7 +81,7 @@ export const ResetPasswordEmail = ({
           {/* Footer */}
           <Section className='bg-gray-50 py-6 px-10 text-center'>
             <Text className='text-gray-500 text-xs leading-normal m-1'>
-              © {new Date().getFullYear()} Biggest Market. All rights reserved.
+              © {new Date().getFullYear()} PazarPlus. All rights reserved.
             </Text>
           </Section>
         </Container>

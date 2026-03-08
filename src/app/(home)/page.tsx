@@ -6,8 +6,8 @@ import { api } from '../../../convex/_generated/api';
 
 /**
  * Home Page Component
- * 
- * Biggest Market-inspired classifieds homepage with:
+ *
+ * PazarPlus-inspired classifieds homepage with:
  * - Hero section with search
  * - Platform statistics
  * - Featured listings
@@ -29,7 +29,7 @@ export default async function HomePage({ searchParams }: PageProps) {
     try {
       await verifyStripePayment(sessionId);
     } catch (e) {
-      console.error("Failed to verify promotion on homepage:", e);
+      console.error('Failed to verify promotion on homepage:', e);
     }
   }
 
@@ -40,20 +40,26 @@ export default async function HomePage({ searchParams }: PageProps) {
   try {
     // Fetch categories and listings in parallel
     [categories, allListings] = await Promise.all([
-        fetchQuery(api.categories.list),
-        fetchQuery(api.listings.get),
+      fetchQuery(api.categories.list),
+      fetchQuery(api.listings.get),
     ]);
   } catch (e) {
-    console.error("Error fetching homepage data:", e);
+    console.error('Error fetching homepage data:', e);
     error = e;
   }
-  
+
   const now = Date.now();
 
   // 1. Get raw listings
   const featuredTiers = ['HOMEPAGE', 'TOP_POSITIONING'];
   const rawFeatured = allListings
-    .filter((l: any) => l.status === 'ACTIVE' && l.isPromoted && featuredTiers.includes(l.promotionTier || '') && (!l.promotionExpiresAt || l.promotionExpiresAt > now))
+    .filter(
+      (l: any) =>
+        l.status === 'ACTIVE' &&
+        l.isPromoted &&
+        featuredTiers.includes(l.promotionTier || '') &&
+        (!l.promotionExpiresAt || l.promotionExpiresAt > now),
+    )
     .slice(0, 15);
 
   const rawLatest = allListings
@@ -61,10 +67,12 @@ export default async function HomePage({ searchParams }: PageProps) {
     .slice(0, 12);
 
   // 2. Batch fetch users for all listings to be displayed
-  const userIds = Array.from(new Set([
-    ...rawFeatured.map((l: any) => l.userId),
-    ...rawLatest.map((l: any) => l.userId)
-  ]));
+  const userIds = Array.from(
+    new Set([
+      ...rawFeatured.map((l: any) => l.userId),
+      ...rawLatest.map((l: any) => l.userId),
+    ]),
+  );
 
   const users = await fetchQuery(api.users.getByExternalIds, { ids: userIds });
   const userMap = new Map(users.map((u: any) => [u.externalId, u]));
@@ -72,12 +80,12 @@ export default async function HomePage({ searchParams }: PageProps) {
   // 3. Attach users to listings
   const featuredListings = rawFeatured.map((l: any) => ({
     ...l,
-    user: userMap.get(l.userId)
+    user: userMap.get(l.userId),
   }));
 
   const latestListings = rawLatest.map((l: any) => ({
     ...l,
-    user: userMap.get(l.userId)
+    user: userMap.get(l.userId),
   }));
 
   return (
@@ -86,31 +94,35 @@ export default async function HomePage({ searchParams }: PageProps) {
       <Hero />
 
       {/* 2. Featured Listings Carousel (Hot Deals) - Mobile/Tablet Only */}
-      <div className="lg:hidden">
+      <div className='lg:hidden'>
         {featuredListings.length > 0 && (
-          <FeaturedListings listings={featuredListings as any} variant="horizontal" />
+          <FeaturedListings
+            listings={featuredListings as any}
+            variant='horizontal'
+          />
         )}
       </div>
 
       {/* 3. Main Content Grid */}
-      <div className="container-wide py-5">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-            
-            {/* Latest Listings - Left Column */}
-            <div className="lg:col-span-3 bg-background dark:bg-background">
-                <LatestListingsClient 
-                  initialListings={latestListings as any} 
-                  categories={categories} 
-                />
-            </div>
+      <div className='container-wide py-5'>
+        <div className='grid grid-cols-1 lg:grid-cols-4 gap-8 items-start'>
+          {/* Latest Listings - Left Column */}
+          <div className='lg:col-span-3 bg-background dark:bg-background'>
+            <LatestListingsClient
+              initialListings={latestListings as any}
+              categories={categories}
+            />
+          </div>
 
-            {/* Featured Sidebar - Desktop Only */}
-            <div className="hidden lg:block lg:col-span-1">
-                {featuredListings.length > 0 && (
-                  <FeaturedListings listings={featuredListings as any} variant="vertical" />
-                )}
-            </div>
-
+          {/* Featured Sidebar - Desktop Only */}
+          <div className='hidden lg:block lg:col-span-1'>
+            {featuredListings.length > 0 && (
+              <FeaturedListings
+                listings={featuredListings as any}
+                variant='vertical'
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>

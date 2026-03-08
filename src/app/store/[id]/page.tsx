@@ -1,4 +1,3 @@
-import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { StorefrontClient } from '@/components/store/storefront-client';
 import { fetchQuery } from 'convex/nextjs';
 import { getTranslations } from 'next-intl/server';
@@ -18,14 +17,14 @@ export async function generateMetadata({ params }: StorePageProps) {
   try {
     profile = await fetchQuery(api.storefront.getPublicProfile, { userId: id });
   } catch (e) {
-    return { title: 'Store Not Found | Biggest Market' };
+    return { title: 'Store Not Found | PazarPlus' };
   }
 
-  if (!profile) return { title: 'Store Not Found | Biggest Market' };
+  if (!profile) return { title: 'Store Not Found | PazarPlus' };
 
   return {
-    title: `${profile.accountType === 'COMPANY' && profile.companyName ? profile.companyName : profile.name} | Biggest Market`,
-    description: `View seller profile, ratings, and active listings on Biggest Market.`,
+    title: `${profile.accountType === 'COMPANY' && profile.companyName ? profile.companyName : profile.name} | PazarPlus`,
+    description: `View seller profile, ratings, and active listings on PazarPlus`,
   };
 }
 
@@ -49,19 +48,6 @@ export default async function StorePage({ params }: StorePageProps) {
 
   return (
     <>
-      <div className='container-wide py-4'>
-        <AppBreadcrumbs
-          items={[
-            { label: t('sellers'), href: '/store' },
-            {
-              label:
-                (profile.accountType === 'COMPANY' && profile.companyName
-                  ? profile.companyName
-                  : profile.name) || 'Seller',
-            },
-          ]}
-        />
-      </div>
       <StorefrontClient profile={profile} listings={listings} />
     </>
   );

@@ -69,7 +69,7 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(storeSettingsSchema) as any,
     defaultValues: {
-      storeName: initialData?.siteName || 'Biggest Market',
+      storeName: initialData?.siteName || 'PazarPlus',
       storeEmail: initialData?.siteEmail || '',
       storePhone: initialData?.sitePhone || '',
       currency: initialData?.currency || 'MKD',
@@ -135,7 +135,7 @@ export function SettingsClient({ initialData }: SettingsClientProps) {
                       <FormItem>
                         <FormLabel className='text-xs md:text-sm'>Site Name</FormLabel>
                         <FormControl>
-                          <Input className='h-10 px-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground' placeholder='Biggest Market' {...field} />
+                          <Input className='h-10 px-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground' placeholder='PazarPlus.field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

@@ -17,17 +17,30 @@ export async function POST(req: NextRequest) {
   try {
     const session = await auth();
     if (!session || !session.user) {
-      return NextResponse.json({ success: false, error: 'Unauthorized: You must be logged in to upload images.' }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Unauthorized: You must be logged in to upload images.',
+        },
+        { status: 401 },
+      );
     }
 
     const userId = session.user.id;
     if (userId) {
       const now = Date.now();
       const userRate = uploadRates.get(userId);
-      
+
       if (userRate && now < userRate.resetAt) {
         if (userRate.count >= 100) {
-          return NextResponse.json({ success: false, error: 'Upload rate limit exceeded. Please wait before uploading more images.' }, { status: 429 });
+          return NextResponse.json(
+            {
+              success: false,
+              error:
+                'Upload rate limit exceeded. Please wait before uploading more images.',
+            },
+            { status: 429 },
+          );
         }
         userRate.count++;
       } else {
@@ -68,10 +81,10 @@ export async function POST(req: NextRequest) {
             font_size: 18,
             font_weight: 'bold',
             letter_spacing: 2,
-            text: 'BIGGEST MARKET',
+            text: 'PazarPlus',
           },
           // Constrain text width to 40% of the image width (shrink if needed)
-          width: 0.40,
+          width: 0.4,
           crop: 'fit',
           flags: 'relative',
         },
@@ -88,17 +101,16 @@ export async function POST(req: NextRequest) {
     });
 
     console.log(`File uploaded to Cloudinary: ${uploadResponse.secure_url}`);
-    
-    return NextResponse.json({ 
-      success: true, 
-      url: uploadResponse.secure_url 
-    });
 
+    return NextResponse.json({
+      success: true,
+      url: uploadResponse.secure_url,
+    });
   } catch (error) {
     console.error('Cloudinary upload error:', error);
-    return NextResponse.json({ 
-      success: false, 
-      error: 'Failed to upload to Cloudinary' 
+    return NextResponse.json({
+      success: false,
+      error: 'Failed to upload to Cloudinary',
     });
   }
 }

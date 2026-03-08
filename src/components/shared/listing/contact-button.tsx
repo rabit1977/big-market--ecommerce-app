@@ -119,7 +119,7 @@ export function ContactSellerButton({
           {/* WhatsApp */}
           {hasPhone && (
             <a
-              href={`https://wa.me/${contactPhone?.replace(/\D/g, '')}?text=${encodeURIComponent(`Hello, I'm interested in ${listingTitle ? `your listing: ${listingTitle}` : 'one of your items'} on Biggest Market.`)}`}
+              href={`https://wa.me/${contactPhone?.replace(/\D/g, '')}?text=${encodeURIComponent(`Hello, I'm interested in ${listingTitle ? `your listing: ${listingTitle}` : 'one of your items'} on PazarPlus.`)}`}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setOpen(false)}
@@ -157,7 +157,7 @@ export function ContactSellerButton({
           {/* Email */}
           {hasEmail && (
             <a
-              href={`mailto:${contactEmail}?subject=${encodeURIComponent(listingTitle ? `Inquiry about: ${listingTitle}` : 'Inquiry from Biggest Market')}`}
+              href={`mailto:${contactEmail}?subject=${encodeURIComponent(listingTitle ? `Inquiry about: ${listingTitle}` : 'Inquiry from PazarPlus')}`}
               onClick={() => setOpen(false)}
               className="flex items-center gap-4 p-4 rounded-2xl border-2 border-border hover:border-orange-500/50 hover:bg-orange-500/5 transition-all group"
             >
@@ -170,7 +170,7 @@ export function ContactSellerButton({
               </div>
               <ChevronRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-orange-500 transition-colors" />
             </a>
-          )}
+          )} 
 
           {!hasPhone && !hasEmail && (
             <p className="text-sm text-muted-foreground text-center py-4 font-bold uppercase tracking-tighter">No direct contact details available</p>

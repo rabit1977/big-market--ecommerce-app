@@ -1,6 +1,6 @@
-# Biggest Market Classifieds Platform
+# PazarPlus Classifieds Platform
 
-This is a modern, high-performance classifieds marketplace built with Next.js 15, Convex, and Tailwind CSS. It is inspired by platforms like ebay, temu, aliexpress and Biggest Market, tailored for the Macedonian market.
+This is a modern, high-performance classifieds marketplace built with Next.js 15, Convex, and Tailwind CSS. It is inspired by platforms like ebay, temu, aliexpress and PazarPluslored for the Macedonian market.
 
 ## Features
 
@@ -27,11 +27,13 @@ This is a modern, high-performance classifieds marketplace built with Next.js 15
    Copy `.env.example` to `.env.local` and fill in your Convex and Next-Auth credentials.
 
 2. **Install Dependencies**:
+
    ```bash
    pnpm install
    ```
 
 3. **Start Development Server**:
+
    ```bash
    pnpm dev
    ```
@@ -45,6 +47,7 @@ This is a modern, high-performance classifieds marketplace built with Next.js 15
 ## Seeding Data
 
 To seed the platform with initial categories and listings:
+
 ```bash
 npx convex run seed
 ```

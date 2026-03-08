@@ -8,7 +8,7 @@ import { AboutSkeleton } from './AboutSkeleton';
 export const metadata: Metadata = {
   title: 'About Us',
   description:
-    "Learn about Biggest Market's story, our values, and the mission to build Macedonia's leading digital marketplace.",
+    "Learn about PazarPlus's story, our values, and the mission to build Macedonia's leading digital marketplace.",
 };
 
 const AboutPage = () => {

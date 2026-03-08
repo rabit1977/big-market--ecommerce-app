@@ -1,6 +1,5 @@
 'use client';
 
-import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -103,8 +102,6 @@ export default function WalletPage() {
   return (
     <div className='min-h-screen pt-4 md:pt-6 pb-8 bg-muted/20'>
       <div className='container-wide max-w-5xl mx-auto'>
-        <AppBreadcrumbs />
-
         {/* Header */}
         <div className='flex items-center gap-2.5 mb-5 md:mb-8'>
           <div className='p-1.5 md:p-2 bg-primary/10 rounded-lg md:rounded-xl'>
