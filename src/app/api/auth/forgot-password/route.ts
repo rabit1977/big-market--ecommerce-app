@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     await resend.emails.send({
       from: 'PazarPlus <onboarding@resend.dev>', // Should use verified domain in production
       to: email,
-      subject: 'Reset your password - PazarPlus
+      subject: 'Reset your password - PazarPlus',
       react: ResetPasswordEmail({ email, resetUrl }),
     });
 

@@ -776,7 +776,7 @@ export default function TermsPage() {
                           <h5 className='font-black text-xs uppercase tracking-widest text-primary'>
                             {isMk ? 'Компанија:' : 'Company:'}
                           </h5>
-                          <p className='font-bold'>PazarPlus
+                          <p className='font-bold'>PazarPlus</p>
                           <div className='flex gap-2 text-sm'>
                             <MapPin className='w-4 h-4 text-muted-foreground shrink-0' />
                             <span>6333 Radolishta, Struga, Macedonia</span>
