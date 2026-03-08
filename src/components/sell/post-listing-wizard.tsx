@@ -29,7 +29,7 @@ export interface ListingFormData {
   // Step 1: Category
   category?: string;
   subCategory?: string;
-  
+
   // Step 2: Details
   title?: string;
   description?: string;
@@ -37,23 +37,37 @@ export interface ListingFormData {
   currency?: string;
   isPriceNegotiable?: boolean;
   condition?: string;
+  isNew?: boolean;
   city?: string;
   region?: string;
   specifications?: Record<string, any>;
   contactPhone?: string;
   contactEmail?: string;
-  
+
+  // Price flags
+  acceptsPriceOffers?: boolean;
+
+  // Shipping
+  shippingAvailable?: boolean;
+
   // Step 3: Images
   images?: string[];
   thumbnail?: string;
 }
 
-export function PostListingWizard({ categories, userId }: PostListingWizardProps) {
+export function PostListingWizard({
+  categories,
+  userId,
+}: PostListingWizardProps) {
   const t = useTranslations('Sell');
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<ListingFormData>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [clientNonce] = useState(() => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15));
+  const [clientNonce] = useState(
+    () =>
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15),
+  );
 
   const createListing = useMutation(api.listings.create);
   const router = useRouter();
@@ -98,10 +112,13 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
           formData.contactEmail
         );
         if (!hasBasicFields) return false;
-        const selectedCategory = categories.find((c) => c.slug === formData.subCategory) || 
-                                categories.find((c) => c.slug === formData.category);
+        const selectedCategory =
+          categories.find((c) => c.slug === formData.subCategory) ||
+          categories.find((c) => c.slug === formData.category);
         if (selectedCategory?.template?.fields) {
-          const requiredFields = selectedCategory.template.fields.filter((f: any) => f.required);
+          const requiredFields = selectedCategory.template.fields.filter(
+            (f: any) => f.required,
+          );
           const hasAllSpecs = requiredFields.every((field: any) => {
             const val = formData.specifications?.[field.key];
             return val !== undefined && val !== null && val !== '';
@@ -119,14 +136,20 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
   };
 
   const handleSubmit = async () => {
-    if (!formData.title || !formData.price || !formData.category || !formData.city) return;
+    if (
+      !formData.title ||
+      !formData.price ||
+      !formData.category ||
+      !formData.city
+    )
+      return;
 
     setIsSubmitting(true);
-    
+
     try {
       const sanitizedImages = formData.images || [];
       const thumbnail = sanitizedImages[0] || undefined;
-      
+
       const listingData = {
         title: formData.title,
         description: formData.description || '',
@@ -138,6 +161,8 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
         condition: formData.condition,
         city: formData.city,
         region: formData.region,
+        hasShipping: formData.shippingAvailable,
+        acceptsPriceOffers: formData.acceptsPriceOffers,
         images: sanitizedImages,
         thumbnail: thumbnail,
         userId,
@@ -152,7 +177,11 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
       router.push(`/listings/${listingId}/success`);
     } catch (error: any) {
       console.error('Error creating listing:', error);
-      import('sonner').then(({ toast }) => toast.error(t('submit_failed', { message: error.message || 'Unknown error' })));
+      import('sonner').then(({ toast }) =>
+        toast.error(
+          t('submit_failed', { message: error.message || 'Unknown error' }),
+        ),
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -161,25 +190,25 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
   const progress = (currentStep / steps.length) * 100;
 
   return (
-    <div className="min-h-screen bg-background py-8">
-      <div className="container-wide max-w-4xl">
+    <div className='min-h-screen bg-background py-8'>
+      <div className='container-wide max-w-4xl'>
         {/* Progress Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-bold">{t('page_title')}</h1>
-            <span className="text-sm text-muted-foreground">
+        <div className='mb-8'>
+          <div className='flex items-center justify-between mb-4'>
+            <h1 className='text-3xl font-bold'>{t('page_title')}</h1>
+            <span className='text-sm text-muted-foreground'>
               {t('step_of', { current: currentStep, total: steps.length })}
             </span>
           </div>
-          
+
           {/* Progress Bar */}
-          <Progress value={progress} className="h-2 mb-6" />
-          
+          <Progress value={progress} className='h-2 mb-6' />
+
           {/* Step Indicators */}
-          <div className="flex items-center justify-between">
+          <div className='flex items-center justify-between'>
             {steps.map((step, index) => (
-              <div key={step.id} className="flex items-center flex-1">
-                <div className="flex flex-col items-center flex-1">
+              <div key={step.id} className='flex items-center flex-1'>
+                <div className='flex flex-col items-center flex-1'>
                   <div
                     className={`
                       w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all
@@ -187,20 +216,20 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
                         currentStep > step.id
                           ? 'bg-primary text-primary-foreground'
                           : currentStep === step.id
-                          ? 'bg-primary text-primary-foreground ring-4 ring-primary/20'
-                          : 'bg-muted text-muted-foreground'
+                            ? 'bg-primary text-primary-foreground ring-4 ring-primary/20'
+                            : 'bg-muted text-muted-foreground'
                       }
                     `}
                   >
                     {currentStep > step.id ? (
-                      <Check className="w-5 h-5" />
+                      <Check className='w-5 h-5' />
                     ) : (
                       step.id
                     )}
                   </div>
-                  <div className="mt-2 text-center hidden sm:block">
-                    <p className="text-sm font-medium">{step.name}</p>
-                    <p className="text-xs text-muted-foreground">
+                  <div className='mt-2 text-center hidden sm:block'>
+                    <p className='text-sm font-medium'>{step.name}</p>
+                    <p className='text-xs text-muted-foreground'>
                       {step.description}
                     </p>
                   </div>
@@ -209,11 +238,7 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
                   <div
                     className={`
                       h-1 flex-1 mx-2 rounded transition-colors
-                      ${
-                        currentStep > step.id
-                          ? 'bg-primary'
-                          : 'bg-muted'
-                      }
+                      ${currentStep > step.id ? 'bg-primary' : 'bg-muted'}
                     `}
                   />
                 )}
@@ -223,8 +248,8 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
         </div>
 
         {/* Step Content */}
-        <Card className="p-6 md:p-8 bg-background">
-          <AnimatePresence mode="wait">
+        <Card className='p-6 md:p-8 bg-background'>
+          <AnimatePresence mode='wait'>
             <motion.div
               key={currentStep}
               initial={{ opacity: 0, x: 20 }}
@@ -255,86 +280,110 @@ export function PostListingWizard({ categories, userId }: PostListingWizardProps
                 />
               )}
               {currentStep === 4 && (
-                <ReviewStep
-                  formData={formData}
-                  categories={categories}
-                />
+                <ReviewStep formData={formData} categories={categories} />
               )}
             </motion.div>
           </AnimatePresence>
         </Card>
 
         {/* Navigation Buttons */}
-        <div className="flex items-center justify-between mt-8">
+        <div className='flex items-center justify-between mt-8'>
           <Button
-            variant="outline"
+            variant='outline'
             onClick={prevStep}
             disabled={currentStep === 1}
-            className="gap-2"
+            className='gap-2'
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className='w-4 h-4' />
             {t('prev')}
           </Button>
 
-          <div className="flex flex-col items-end gap-2">
+          <div className='flex flex-col items-end gap-2'>
             {currentStep < steps.length ? (
               <Button
                 onClick={() => {
-                   if (currentStep === 2 && !canProceed()) {
-                     const basicRequired = ['title', 'price', 'city', 'condition', 'contactPhone', 'contactEmail'];
-                     for (const field of basicRequired) {
-                       // @ts-ignore
-                       if (!formData[field]) {
-                         const element = document.getElementById(field);
-                         if (element) {
-                           element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                           element.focus();
-                           import('sonner').then(({ toast }) => toast.error(t('fill_field', { field })));
-                           return;
-                         }
-                       }
-                     }
-                     const selectedCategory = categories.find((c) => c.slug === formData.subCategory) || 
-                                             categories.find((c) => c.slug === formData.category);
-                     if (selectedCategory?.template?.fields) {
-                        const requiredFields = selectedCategory.template.fields.filter((f: any) => f.required);
-                        for (const field of requiredFields) {
-                            const val = formData.specifications?.[field.key];
-                            if (val === undefined || val === null || val === '') {
-                                const element = document.getElementById(`spec-${field.key}`);
-                                if (element) {
-                                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                    import('sonner').then(({ toast }) => toast.error(t('fill_field', { field: field.label })));
-                                    return;
-                                }
-                            }
+                  if (currentStep === 2 && !canProceed()) {
+                    const basicRequired = [
+                      'title',
+                      'price',
+                      'city',
+                      'condition',
+                      'contactPhone',
+                      'contactEmail',
+                    ];
+                    for (const field of basicRequired) {
+                      // @ts-ignore
+                      if (!formData[field]) {
+                        const element = document.getElementById(field);
+                        if (element) {
+                          element.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center',
+                          });
+                          element.focus();
+                          import('sonner').then(({ toast }) =>
+                            toast.error(t('fill_field', { field })),
+                          );
+                          return;
                         }
-                     }
-                     import('sonner').then(({ toast }) => toast.error(t('fill_required')));
-                     return;
-                   }
-                   nextStep();
+                      }
+                    }
+                    const selectedCategory =
+                      categories.find((c) => c.slug === formData.subCategory) ||
+                      categories.find((c) => c.slug === formData.category);
+                    if (selectedCategory?.template?.fields) {
+                      const requiredFields =
+                        selectedCategory.template.fields.filter(
+                          (f: any) => f.required,
+                        );
+                      for (const field of requiredFields) {
+                        const val = formData.specifications?.[field.key];
+                        if (val === undefined || val === null || val === '') {
+                          const element = document.getElementById(
+                            `spec-${field.key}`,
+                          );
+                          if (element) {
+                            element.scrollIntoView({
+                              behavior: 'smooth',
+                              block: 'center',
+                            });
+                            import('sonner').then(({ toast }) =>
+                              toast.error(
+                                t('fill_field', { field: field.label }),
+                              ),
+                            );
+                            return;
+                          }
+                        }
+                      }
+                    }
+                    import('sonner').then(({ toast }) =>
+                      toast.error(t('fill_required')),
+                    );
+                    return;
+                  }
+                  nextStep();
                 }}
                 disabled={currentStep !== 2 && !canProceed()}
-                className="gap-2"
+                className='gap-2'
               >
                 {t('next')}
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className='w-4 h-4' />
               </Button>
             ) : (
               <Button
                 onClick={handleSubmit}
                 disabled={!canProceed() || isSubmitting}
-                className="gap-2 bg-green-600 hover:bg-green-700"
+                className='gap-2 bg-green-600 hover:bg-green-700'
               >
                 {isSubmitting ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin' />
                     {t('submitting')}
                   </>
                 ) : (
                   <>
-                    <Check className="w-4 h-4" />
+                    <Check className='w-4 h-4' />
                     {t('submit_for_review')}
                   </>
                 )}

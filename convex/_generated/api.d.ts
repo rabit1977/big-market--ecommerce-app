@@ -35,6 +35,7 @@ import type * as reset from "../reset.js";
 import type * as reviews from "../reviews.js";
 import type * as savedSearches from "../savedSearches.js";
 import type * as searches from "../searches.js";
+import type * as seed from "../seed.js";
 import type * as settings from "../settings.js";
 import type * as sitemap from "../sitemap.js";
 import type * as storefront from "../storefront.js";
@@ -79,6 +80,7 @@ declare const fullApi: ApiFromModules<{
   reviews: typeof reviews;
   savedSearches: typeof savedSearches;
   searches: typeof searches;
+  seed: typeof seed;
   settings: typeof settings;
   sitemap: typeof sitemap;
   storefront: typeof storefront;
