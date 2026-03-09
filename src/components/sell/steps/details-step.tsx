@@ -539,9 +539,19 @@ const CAR_BRANDS: Record<string, string[]> = {
 };
 
 const BRAND_NAMES = Object.keys(CAR_BRANDS).sort();
-const VEHICLE_SLUGS = ['cars', 'motorcycles', 'trucks', 'vehicles', 'auto'];
+const VEHICLE_SLUGS = [
+  'cars',
+  'motorcycles',
+  'trucks',
+  'vehicles',
+  'vechicles',
+  'auto',
+  'vozila',
+  'avtomobili',
+];
 const MANUAL_KEYS = new Set([
   'brand',
+  'make',
   'model',
   'year',
   'reg_month',
@@ -797,6 +807,7 @@ export function DetailsStep({
                         specifications: {
                           ...(formData.specifications || {}),
                           brand: val,
+                          make: val,
                           model: '',
                         },
                       });
