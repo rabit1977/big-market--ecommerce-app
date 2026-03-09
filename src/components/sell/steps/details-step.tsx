@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { Check, ChevronLeft, Package, Tag, TrendingDown } from 'lucide-react';
+import { Check, ChevronLeft, Package, Tag } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ListingFormData } from '../post-listing-wizard';
 
@@ -94,11 +94,8 @@ const MK_LOCATIONS: Record<string, string[]> = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const CONDITIONS = [
-  { value: 'new', label: 'Ново' },
-  { value: 'like-new', label: 'Како ново' },
-  { value: 'good', label: 'Добро' },
-  { value: 'fair', label: 'Прифатливо' },
-  { value: 'used', label: 'Половно' },
+  { value: 'new', label: 'New' },
+  { value: 'used', label: 'Used' },
 ];
 
 const BODY_TYPES = [
@@ -133,18 +130,18 @@ const MILEAGE_OPTIONS = [
 ];
 
 const MONTHS = [
-  'Јануари',
-  'Февруари',
-  'Март',
-  'Април',
-  'Мај',
-  'Јуни',
-  'Јули',
-  'Август',
-  'Септември',
-  'Октомври',
-  'Ноември',
-  'Декември',
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 const currentYear = new Date().getFullYear();
@@ -561,9 +558,9 @@ const MANUAL_KEYS = new Set([
 // Style tokens
 // ─────────────────────────────────────────────────────────────────────────────
 const ghostSelect =
-  'h-9 border-0 shadow-none focus:ring-0 bg-transparent px-0 font-medium text-sm [&>svg]:opacity-40';
+  'h-9 border-0 shadow-none focus:ring-0 bg-transparent px-3 font-medium text-sm [&>svg]:opacity-40';
 const ghostInput =
-  'h-9 border-0 shadow-none focus-visible:ring-0 bg-transparent px-0 font-medium text-sm';
+  'h-9 border-0 shadow-none focus-visible:ring-0 bg-transparent px-3 font-medium text-sm';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Sub-components
@@ -584,8 +581,8 @@ function FieldRow({
       className={cn(
         'flex gap-3 px-4',
         tall
-          ? 'flex-col py-3 sm:flex-row sm:items-start'
-          : 'items-center min-h-[48px]',
+          ? 'flex-col py-2 sm:flex-row sm:items-start'
+          : 'items-center min-h-[40px]',
       )}
     >
       <span className='hidden sm:block text-sm text-muted-foreground w-28 shrink-0 pt-px truncate'>
@@ -599,7 +596,7 @@ function FieldRow({
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div className='px-4 pt-3 pb-1 bg-muted/30'>
+    <div className='px-4 pt-2 pb-1 bg-muted/30'>
       <span className='text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60'>
         {children}
       </span>
@@ -792,7 +789,7 @@ export function DetailsStep({
                 <SectionLabel>Возило</SectionLabel>
 
                 {/* Brand */}
-                <FieldRow label='Марка' required>
+                <FieldRow label='Brand' required>
                   <Select
                     value={selectedBrand}
                     onValueChange={(val) => {
@@ -806,7 +803,7 @@ export function DetailsStep({
                     }}
                   >
                     <SelectTrigger className={ghostSelect}>
-                      <SelectValue placeholder='Избери марка' />
+                      <SelectValue placeholder='Select Brand' />
                     </SelectTrigger>
                     <SelectContent className='max-h-64'>
                       {BRAND_NAMES.map((b) => (
@@ -820,13 +817,13 @@ export function DetailsStep({
 
                 {/* Model — appears after brand */}
                 {selectedBrand && (
-                  <FieldRow label='Модел' required>
+                  <FieldRow label='Model' required>
                     <Select
                       value={formData.specifications?.model || ''}
                       onValueChange={(val) => handleSpec('model', val)}
                     >
                       <SelectTrigger className={ghostSelect}>
-                        <SelectValue placeholder={`${selectedBrand} модел`} />
+                        <SelectValue placeholder={`${selectedBrand} model`} />
                       </SelectTrigger>
                       <SelectContent className='max-h-64'>
                         {availableModels.map((m) => (
@@ -842,7 +839,7 @@ export function DetailsStep({
                 {/* Body type */}
                 <div className='px-4 py-3 space-y-2'>
                   <span className='hidden sm:block text-sm text-muted-foreground'>
-                    Тип
+                    Body Type
                   </span>
                   <div className='grid grid-cols-4 sm:grid-cols-8 gap-1.5'>
                     {BODY_TYPES.map((bt) => (
@@ -865,16 +862,16 @@ export function DetailsStep({
                 </div>
 
                 {/* ── Registration ── */}
-                <SectionLabel>Регистрација</SectionLabel>
+                <SectionLabel>Registration</SectionLabel>
 
                 {/* Year of manufacture */}
-                <FieldRow label='Год. производство' required>
+                <FieldRow label='Year of Manufacture' required>
                   <Select
                     value={formData.specifications?.year || ''}
                     onValueChange={(val) => handleSpec('year', val)}
                   >
                     <SelectTrigger className={ghostSelect}>
-                      <SelectValue placeholder='Година на производство' />
+                      <SelectValue placeholder='Year of manufacture' />
                     </SelectTrigger>
                     <SelectContent className='max-h-56'>
                       {YEARS.map((y) => (
@@ -887,7 +884,7 @@ export function DetailsStep({
                 </FieldRow>
 
                 {/* Registration month + year */}
-                <FieldRow label='Датум на регистрација'>
+                <FieldRow label='Registration Date'>
                   <div className='flex gap-2 items-center'>
                     <Select
                       value={formData.specifications?.reg_month || ''}
@@ -896,7 +893,7 @@ export function DetailsStep({
                       <SelectTrigger
                         className={cn(ghostSelect, 'min-w-[110px]')}
                       >
-                        <SelectValue placeholder='Месец' />
+                        <SelectValue placeholder='Month' />
                       </SelectTrigger>
                       <SelectContent>
                         {MONTHS.map((m, i) => (
@@ -917,7 +914,7 @@ export function DetailsStep({
                       onValueChange={(val) => handleSpec('reg_year', val)}
                     >
                       <SelectTrigger className={cn(ghostSelect, 'w-24')}>
-                        <SelectValue placeholder='Година' />
+                        <SelectValue placeholder='Year' />
                       </SelectTrigger>
                       <SelectContent className='max-h-56'>
                         {YEARS.map((y) => (
@@ -931,16 +928,16 @@ export function DetailsStep({
                 </FieldRow>
 
                 {/* ── Детали ── */}
-                <SectionLabel>Детали</SectionLabel>
+                <SectionLabel>Details</SectionLabel>
 
                 {/* Mileage */}
-                <FieldRow label='Километри' required>
+                <FieldRow label='Mileage' required>
                   <Select
                     value={formData.specifications?.mileage || ''}
                     onValueChange={(val) => handleSpec('mileage', val)}
                   >
                     <SelectTrigger className={ghostSelect}>
-                      <SelectValue placeholder='Поминати км' />
+                      <SelectValue placeholder='Mileage' />
                     </SelectTrigger>
                     <SelectContent>
                       {MILEAGE_OPTIONS.map((m) => (
@@ -953,13 +950,13 @@ export function DetailsStep({
                 </FieldRow>
 
                 {/* Emission */}
-                <FieldRow label='Емисија'>
+                <FieldRow label='Emission Standard' required>
                   <Select
                     value={formData.specifications?.emission || ''}
                     onValueChange={(val) => handleSpec('emission', val)}
                   >
                     <SelectTrigger className={ghostSelect}>
-                      <SelectValue placeholder='Еуро стандард' />
+                      <SelectValue placeholder='Euro standard' />
                     </SelectTrigger>
                     <SelectContent>
                       {EMISSION_STANDARDS.map((e) => (
@@ -974,11 +971,11 @@ export function DetailsStep({
                 {/* Color swatches */}
                 <div className='px-4 py-3 space-y-2'>
                   <span className='text-sm text-muted-foreground hidden sm:block'>
-                    Боја
+                    Color
                   </span>
-                  {/* Mobile: show "Боја" label always */}
+                  {/* Mobile: show "Color" label always */}
                   <span className='text-sm text-muted-foreground sm:hidden'>
-                    Боја
+                    Color
                   </span>
                   <div className='flex flex-wrap gap-3'>
                     {CAR_COLORS.map((c) => {
@@ -1029,12 +1026,12 @@ export function DetailsStep({
             {/* ════════════════════════
                 LISTING DETAILS
             ════════════════════════ */}
-            <SectionLabel>Оглас</SectionLabel>
+            <SectionLabel>Listing Details</SectionLabel>
 
             {/* New / Used toggle chips */}
             <div className='px-4 py-3 space-y-2'>
               <span className='hidden sm:block text-sm text-muted-foreground'>
-                Состојба
+                Condition
               </span>
               <div className='flex gap-2 flex-wrap'>
                 {CONDITIONS.map((c) => {
@@ -1059,10 +1056,10 @@ export function DetailsStep({
             </div>
 
             {/* Price */}
-            <FieldRow label='Цена' required>
+            <FieldRow label='Price' required>
               <div className='flex items-center gap-1 flex-wrap'>
                 <div className='relative flex items-center'>
-                  <span className='absolute left-0 text-xs text-muted-foreground pointer-events-none select-none'>
+                  <span className='absolute left-3 text-xs text-muted-foreground pointer-events-none select-none'>
                     {currencySymbol}
                   </span>
                   <Input
@@ -1074,18 +1071,21 @@ export function DetailsStep({
                     onChange={(e) =>
                       updateFormData({ price: parseFloat(e.target.value) || 0 })
                     }
-                    className={cn(ghostInput, 'pl-7 w-28')}
+                    className={cn(
+                      ghostInput,
+                      'pl-8 w-28 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none',
+                    )}
                   />
                 </div>
                 <Select
                   value={formData.currency || 'MKD'}
                   onValueChange={(val) => updateFormData({ currency: val })}
                 >
-                  <SelectTrigger className='h-9 w-[68px] border-0 shadow-none focus:ring-0 bg-transparent text-xs font-medium'>
+                  <SelectTrigger className='h-9 w-[84px] px-2 border-0 shadow-none focus:ring-0 bg-transparent text-xs font-medium'>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value='MKD'>МКД</SelectItem>
+                    <SelectItem value='MKD'>MKD</SelectItem>
                     <SelectItem value='EUR'>EUR</SelectItem>
                   </SelectContent>
                 </Select>
@@ -1094,25 +1094,17 @@ export function DetailsStep({
 
             {/* ─── Switches ─── */}
             <SwitchRow
-              icon={TrendingDown}
-              label='Предлог цена'
-              description='Прифаќам понуди под објавената цена'
-              checked={formData.isPriceNegotiable ?? false}
-              onChange={(v) => updateFormData({ isPriceNegotiable: v })}
-            />
-
-            <SwitchRow
               icon={Tag}
-              label='Сакам да добивам предлози за цена'
-              description='Купувачите можат да испратат своја понуда'
+              label='Accept price offers'
+              description='Buyers can send their own offer'
               checked={formData.acceptsPriceOffers ?? false}
               onChange={(v) => updateFormData({ acceptsPriceOffers: v })}
             />
 
             <SwitchRow
               icon={Package}
-              label='Испраќам по карго'
-              description='Производот може да се достави преку карго'
+              label='Shipping available'
+              description='The product can be delivered by cargo'
               checked={formData.shippingAvailable ?? false}
               onChange={(v) => updateFormData({ shippingAvailable: v })}
             />
@@ -1120,10 +1112,10 @@ export function DetailsStep({
             {/* ════════════════════════
                 LOCATION
             ════════════════════════ */}
-            <SectionLabel>Локација</SectionLabel>
+            <SectionLabel>Location</SectionLabel>
 
             {/* Region / City */}
-            <FieldRow label='Град / Регион' required>
+            <FieldRow label='City / Region' required>
               <Select
                 value={selectedRegion}
                 onValueChange={(v) => {
@@ -1131,7 +1123,7 @@ export function DetailsStep({
                 }}
               >
                 <SelectTrigger className={ghostSelect}>
-                  <SelectValue placeholder='Избери град' />
+                  <SelectValue placeholder='Select Region' />
                 </SelectTrigger>
                 <SelectContent className='max-h-64'>
                   {Object.keys(MK_LOCATIONS).map((region) => (
@@ -1146,13 +1138,13 @@ export function DetailsStep({
             {/* Municipality — appears after region */}
             {selectedRegion &&
               (MK_LOCATIONS[selectedRegion]?.length ?? 0) > 0 && (
-                <FieldRow label='Општина' required>
+                <FieldRow label='Municipality' required>
                   <Select
                     value={formData.city || ''}
                     onValueChange={(v) => updateFormData({ city: v })}
                   >
                     <SelectTrigger className={ghostSelect}>
-                      <SelectValue placeholder='Избери општина' />
+                      <SelectValue placeholder='Select Municipality' />
                     </SelectTrigger>
                     <SelectContent className='max-h-56'>
                       {MK_LOCATIONS[selectedRegion].map((mun) => (
@@ -1168,23 +1160,23 @@ export function DetailsStep({
             {/* ════════════════════════
                 DESCRIPTION & CONTACT
             ════════════════════════ */}
-            <SectionLabel>Опис и контакт</SectionLabel>
+            <SectionLabel>Description & Contact</SectionLabel>
 
             {/* Description */}
-            <FieldRow label='Опис' required tall>
+            <FieldRow label='Description' required tall>
               <Textarea
-                placeholder='Опишете го производот...'
+                placeholder='Describe the product...'
                 value={formData.description || ''}
                 onChange={(e) =>
                   updateFormData({ description: e.target.value })
                 }
                 rows={4}
-                className='resize-none text-sm border-0 shadow-none focus-visible:ring-0 bg-transparent px-0 -mt-1'
+                className='resize-none text-sm border-0 shadow-none focus-visible:ring-0 bg-transparent px-3 -mt-1'
               />
             </FieldRow>
 
             {/* Phone */}
-            <FieldRow label='Телефон' required>
+            <FieldRow label='Phone' required>
               <Input
                 type='tel'
                 placeholder='+389 70 123 456'
@@ -1197,7 +1189,7 @@ export function DetailsStep({
             </FieldRow>
 
             {/* Email */}
-            <FieldRow label='Е-пошта' required>
+            <FieldRow label='Email' required>
               <Input
                 type='email'
                 placeholder='your@email.com'
