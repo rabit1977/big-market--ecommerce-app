@@ -848,7 +848,7 @@ export function DetailsStep({
                 )}
 
                 {/* Body type */}
-                <div className='px-4 py-3 space-y-2'>
+                <div className='p py-3 space-y-2'>
                   <span className='hidden sm:block text-sm text-muted-foreground'>
                     Body Type
                   </span>

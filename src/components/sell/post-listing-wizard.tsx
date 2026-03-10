@@ -190,7 +190,7 @@ export function PostListingWizard({
   const progress = (currentStep / steps.length) * 100;
 
   return (
-    <div className='min-h-screen bg-background py-8'>
+    <div className='min-h-screen bg-background py-5'>
       <div className='container-wide max-w-4xl'>
         {/* Progress Header */}
         <div className='mb-8'>
@@ -248,7 +248,7 @@ export function PostListingWizard({
         </div>
 
         {/* Step Content */}
-        <Card className='p-6 md:p-8 bg-background'>
+        <Card className='p-2 md:p-8 bg-background'>
           <AnimatePresence mode='wait'>
             <motion.div
               key={currentStep}
