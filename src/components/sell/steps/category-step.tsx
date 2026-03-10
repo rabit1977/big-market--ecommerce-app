@@ -20,7 +20,7 @@ import {
   Wrench,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ListingFormData } from '../post-listing-wizard';
 
 interface CategoryStepProps {
@@ -61,6 +61,18 @@ export function CategoryStep({
   const t = useTranslations('Sell');
 
   const initialState = useMemo(() => {
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      const levelParam = url.searchParams.get('cat_level');
+      if (levelParam) {
+        return {
+          level: parseInt(levelParam, 10),
+          mainId: url.searchParams.get('main_id') || null,
+          subId: url.searchParams.get('sub_id') || null,
+        };
+      }
+    }
+
     if (formData.subCategory) {
       const leaf = categories.find((c) => c.slug === formData.subCategory);
       if (leaf?.parentId) {
@@ -106,6 +118,10 @@ export function CategoryStep({
     const hasSubs = categories.some((cat) => cat.parentId === category._id);
     if (hasSubs) {
       setLevel(1);
+      const url = new URL(window.location.href);
+      url.searchParams.set('cat_level', '1');
+      url.searchParams.set('main_id', category._id);
+      window.history.pushState({}, '', url.toString());
     } else {
       updateFormData({ category: category.slug, subCategory: undefined });
       onNext();
@@ -119,6 +135,11 @@ export function CategoryStep({
     );
     if (hasSubSubs) {
       setLevel(2);
+      const url = new URL(window.location.href);
+      url.searchParams.set('cat_level', '2');
+      url.searchParams.set('sub_id', subcategory._id);
+      if (selectedMainId) url.searchParams.set('main_id', selectedMainId);
+      window.history.pushState({}, '', url.toString());
     } else {
       updateFormData({
         category: categories.find((c) => c._id === selectedMainId)?.slug,
@@ -137,14 +158,37 @@ export function CategoryStep({
   };
 
   const goBack = () => {
-    if (level === 2) {
-      setLevel(1);
-      setSelectedSubId(null);
-    } else if (level === 1) {
-      setLevel(0);
-      setSelectedMainId(null);
-    }
+    window.history.back();
   };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const url = new URL(window.location.href);
+      const levelParam = url.searchParams.get('cat_level');
+      const lvl = levelParam ? parseInt(levelParam, 10) : 0;
+      
+      setLevel(lvl);
+
+      if (lvl === 0) {
+        setSelectedMainId(null);
+        setSelectedSubId(null);
+      } else if (lvl === 1) {
+        const mId = url.searchParams.get('main_id');
+        setSelectedMainId(mId || null);
+        setSelectedSubId(null);
+      } else if (lvl === 2) {
+        const mId = url.searchParams.get('main_id');
+        const sId = url.searchParams.get('sub_id');
+        setSelectedMainId(mId || null);
+        setSelectedSubId(sId || null);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    handlePopState();
+
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const currentItems =
     level === 0

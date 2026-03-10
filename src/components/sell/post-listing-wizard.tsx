@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 import { CategoryStep } from './steps/category-step';
 import { DetailsStep } from './steps/details-step';
@@ -85,17 +85,47 @@ export function PostListingWizard({
 
   const nextStep = () => {
     if (currentStep < steps.length) {
-      setCurrentStep(currentStep + 1);
+      const next = currentStep + 1;
+      setCurrentStep(next);
+      
+      const url = new URL(window.location.href);
+      url.searchParams.set('step', next.toString());
+      url.searchParams.delete('cat_level');
+      url.searchParams.delete('main_id');
+      url.searchParams.delete('sub_id');
+      window.history.pushState({}, '', url.toString());
+      
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   const prevStep = () => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.history.back();
     }
   };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const url = new URL(window.location.href);
+      const stepParam = url.searchParams.get('step');
+      const step = stepParam ? parseInt(stepParam, 10) : 1;
+      
+      if (step > 1 && !formData.category) {
+         setCurrentStep(1);
+         const resetUrl = new URL(window.location.href);
+         resetUrl.searchParams.delete('step');
+         window.history.replaceState({}, '', resetUrl.toString());
+      } else {
+         setCurrentStep(step);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    handlePopState();
+
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [formData.category]);
 
   const canProceed = () => {
     switch (currentStep) {
