@@ -278,7 +278,7 @@ export function PostListingWizard({
         </div>
 
         {/* Step Content */}
-        <Card className='p-2 md:p-8 bg-background'>
+        <Card className='p-2 md:p-6 bg-background'>
           <AnimatePresence mode='wait'>
             <motion.div
               key={currentStep}

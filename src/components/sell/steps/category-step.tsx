@@ -221,7 +221,7 @@ export function CategoryStep({
         </div>
       </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-1'>
         {currentItems.map((item) => {
           const Icon = categoryIcons[item.slug] || Smartphone;
           const hasMore = categories.some((cat) => cat.parentId === item._id);
@@ -234,11 +234,11 @@ export function CategoryStep({
                 else if (level === 1) handleSubSelect(item);
                 else handleSubSubSelect(item);
               }}
-              className='p-3 cursor-pointer hover:border-popover-foreground/50 hover:shadow-md transition-all group'
+              className='p-2 cursor-pointer hover:border-popover-foreground/50 hover:shadow-md transition-all group'
             >
               <div className='flex items-center gap-4'>
-                <div className='w-12 h-12 rounded-xl bg-muted group-hover:bg-popover flex items-center justify-center transition-colors'>
-                  <Icon className='w-6 h-6 group-hover:text-primary transition-colors ' />
+                <div className='w-10 h-10 rounded-xl bg-muted group-hover:bg-popover flex items-center justify-center transition-colors'>
+                  <Icon className='w-5 h-5 group-hover:text-primary transition-colors ' />
                 </div>
 
                 <div className='flex-1'>
