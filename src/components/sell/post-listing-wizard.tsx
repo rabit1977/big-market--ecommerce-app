@@ -351,6 +351,12 @@ export function PostListingWizard({
                             block: 'center',
                           });
                           element.focus();
+                          
+                          element.classList.add('ring-2', 'ring-destructive', 'bg-destructive/5', 'rounded-xl', 'transition-all', 'duration-500');
+                          setTimeout(() => {
+                            element.classList.remove('ring-2', 'ring-destructive', 'bg-destructive/5', 'rounded-xl', 'transition-all', 'duration-500');
+                          }, 3000);
+
                           import('sonner').then(({ toast }) =>
                             toast.error(t('fill_field', { field })),
                           );
@@ -377,6 +383,12 @@ export function PostListingWizard({
                               behavior: 'smooth',
                               block: 'center',
                             });
+                            
+                            element.classList.add('ring-2', 'ring-destructive', 'bg-destructive/5', 'rounded-xl', 'transition-all', 'duration-500');
+                            setTimeout(() => {
+                              element.classList.remove('ring-2', 'ring-destructive', 'bg-destructive/5', 'rounded-xl', 'transition-all', 'duration-500');
+                            }, 3000);
+
                             import('sonner').then(({ toast }) =>
                               toast.error(
                                 t('fill_field', { field: field.label }),

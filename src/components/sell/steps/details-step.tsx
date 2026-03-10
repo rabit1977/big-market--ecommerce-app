@@ -589,14 +589,17 @@ function FieldRow({
   required,
   children,
   tall,
+  id,
 }: {
   label: string;
   required?: boolean;
   children: React.ReactNode;
   tall?: boolean;
+  id?: string;
 }) {
   return (
     <div
+      id={id}
       className={cn(
         'flex gap-3 px-4',
         tall
@@ -744,7 +747,10 @@ export function DetailsStep({
           <div className='rounded-xl border bg-card overflow-hidden divide-y divide-border'>
             {/* Ad title */}
 
-            <div className='p-4 sm:p-6 bg-primary/5 transition-colors'>
+            <div
+              id='title'
+              className='p-4 sm:p-6 bg-primary/5 transition-colors'
+            >
               <div className='mb-3 flex items-center justify-between'>
                 <div className='flex items-center gap-1.5'>
                   <span className='text-xs font-bold uppercase tracking-widest text-primary flex items-center gap-1.5'>
@@ -1009,6 +1015,7 @@ export function DetailsStep({
                   key={field.key}
                   label={field.label}
                   required={field.required}
+                  id={`spec-${field.key}`}
                 >
                   {field.type === 'select' ? (
                     <Select
@@ -1049,9 +1056,9 @@ export function DetailsStep({
             <SectionLabel>Listing Details</SectionLabel>
 
             {/* New / Used toggle chips */}
-            <div className='px-4 py-3 space-y-2'>
-              <span className='hidden sm:block text-sm text-muted-foreground'>
-                Condition
+            <div id='condition' className='px-4 py-3 space-y-2'>
+              <span className='text-sm text-muted-foreground'>
+                Condition <span className='text-destructive ml-0.5'>*</span>
               </span>
               <div className='flex gap-2 flex-wrap'>
                 {CONDITIONS.map((c) => {
@@ -1076,12 +1083,9 @@ export function DetailsStep({
             </div>
 
             {/* Price */}
-            <FieldRow label='Price' required>
-              <div className='flex items-center gap-1 flex-wrap'>
-                <div className='relative flex items-center'>
-                  <span className='absolute left-3 text-xs text-muted-foreground pointer-events-none select-none'>
-                    {currencySymbol}
-                  </span>
+            <FieldRow id='price' label='Price' required>
+              <div className='flex items-center justify-between flex-wrap w-full'>
+                <div className='flex flex-2 items-center border-r'>
                   <Input
                     type='number'
                     placeholder=''
@@ -1096,15 +1100,18 @@ export function DetailsStep({
                     }}
                     className={cn(
                       ghostInput,
-                      'pl-8 w-28 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none',
+                      '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none',
                     )}
                   />
+                  <span className='text-xs text-muted-foreground pointer-events-none select-none pr-4'>
+                    {currencySymbol}
+                  </span>
                 </div>
                 <Select
                   value={formData.currency || 'MKD'}
                   onValueChange={(val) => updateFormData({ currency: val })}
                 >
-                  <SelectTrigger className='h-10 w-[84px] px-2 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent text-xs font-medium'>
+                  <SelectTrigger className='flex-1 h-10 w-[84px] px-2 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent text-xs font-medium'>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -1136,7 +1143,7 @@ export function DetailsStep({
             <SectionLabel>Location</SectionLabel>
 
             {/* Region / City */}
-            <FieldRow label='Location' required>
+            <FieldRow id='city' label='Location' required>
               <Select
                 value={selectedRegion}
                 onValueChange={(v) => {
@@ -1197,7 +1204,7 @@ export function DetailsStep({
             </FieldRow>
 
             {/* Phone */}
-            <FieldRow label='Phone' required>
+            <FieldRow id='contactPhone' label='Phone' required>
               <Input
                 type='tel'
                 placeholder='+389 70 123 456'
@@ -1210,7 +1217,7 @@ export function DetailsStep({
             </FieldRow>
 
             {/* Email */}
-            <FieldRow label='Email' required>
+            <FieldRow id='contactEmail' label='Email' required>
               <Input
                 type='email'
                 placeholder='your@email.com'
