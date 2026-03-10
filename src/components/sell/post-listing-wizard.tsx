@@ -190,7 +190,7 @@ export function PostListingWizard({
   const progress = (currentStep / steps.length) * 100;
 
   return (
-    <div className='min-h-screen bg-background py-5'>
+    <div className='min-h-screen bg-background py-2'>
       <div className='container-wide max-w-4xl'>
         {/* Progress Header */}
         <div className='mb-8'>

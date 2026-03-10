@@ -568,9 +568,9 @@ const MANUAL_KEYS = new Set([
 // Style tokens
 // ─────────────────────────────────────────────────────────────────────────────
 const ghostSelect =
-  'h-9 border-0 shadow-none focus:ring-0 bg-transparent px-3 font-medium text-sm [&>svg]:opacity-40';
+  'h-10 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-3 font-medium text-sm [&>svg]:opacity-40';
 const ghostInput =
-  'h-9 border-0 shadow-none focus-visible:ring-0 bg-transparent px-3 font-medium text-sm';
+  'h-10 border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-3 font-medium text-sm';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Sub-components
@@ -630,7 +630,9 @@ function Toggle({
       onClick={() => onChange(!checked)}
       className={cn(
         'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-        checked ? 'bg-primary' : 'bg-input',
+        checked
+          ? 'bg-primary'
+          : 'bg-muted-foreground/30 dark:bg-muted-foreground/50',
       )}
     >
       <span
@@ -744,18 +746,20 @@ export function DetailsStep({
             <h2 className='text-2xl font-bold'>{t('details_title')}</h2>
           </div>
 
-          {/* Ad title */}
-          <Input
-            placeholder={
-              selectedCategory?.template?.titlePlaceholder || t('label_title')
-            }
-            value={formData.title || ''}
-            onChange={(e) => updateFormData({ title: e.target.value })}
-            className='h-12 text-base font-medium'
-          />
-
           {/* ═══════════════ UNIFIED CARD ═══════════════ */}
           <div className='rounded-xl border bg-card overflow-hidden divide-y divide-border'>
+            {/* Ad title */}
+            <FieldRow label='Title' required>
+              <Input
+                placeholder={
+                  selectedCategory?.template?.titlePlaceholder ||
+                  t('label_title')
+                }
+                value={formData.title || ''}
+                onChange={(e) => updateFormData({ title: e.target.value })}
+                className={cn(ghostInput, 'text-base font-medium px-3')}
+              />
+            </FieldRow>
             {/* ── Dynamic template fields ── */}
             {dynamicFields.map((field) => (
               <FieldRow
@@ -1092,7 +1096,7 @@ export function DetailsStep({
                   value={formData.currency || 'MKD'}
                   onValueChange={(val) => updateFormData({ currency: val })}
                 >
-                  <SelectTrigger className='h-9 w-[84px] px-2 border-0 shadow-none focus:ring-0 bg-transparent text-xs font-medium'>
+                  <SelectTrigger className='h-10 w-[84px] px-2 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent text-xs font-medium'>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -1107,7 +1111,6 @@ export function DetailsStep({
             <SwitchRow
               icon={Tag}
               label='Accept price offers'
-              description='Buyers can send their own offer'
               checked={formData.acceptsPriceOffers ?? false}
               onChange={(v) => updateFormData({ acceptsPriceOffers: v })}
             />
@@ -1115,7 +1118,6 @@ export function DetailsStep({
             <SwitchRow
               icon={Package}
               label='Shipping available'
-              description='The product can be delivered by cargo'
               checked={formData.shippingAvailable ?? false}
               onChange={(v) => updateFormData({ shippingAvailable: v })}
             />
@@ -1182,7 +1184,7 @@ export function DetailsStep({
                   updateFormData({ description: e.target.value })
                 }
                 rows={4}
-                className='resize-none text-sm border-0 shadow-none focus-visible:ring-0 bg-transparent px-3 -mt-1'
+                className='resize-none text-sm border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-3 -mt-1'
               />
             </FieldRow>
 
