@@ -102,7 +102,6 @@ export default async function HomePage({ searchParams }: PageProps) {
           />
         )}
       </div>
-
       {/* 3. Main Content Grid */}
       <div className='container-wide py-5'>
         <div className='grid grid-cols-1 lg:grid-cols-4 gap-8 items-start'>

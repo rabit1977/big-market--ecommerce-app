@@ -281,33 +281,41 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
   const isLoading = isSubmitting || isPending;
 
   return (
-    <div className='flex min-h-[80vh] items-center justify-center p-4'>
+    <div className='flex min-h-[80vh] items-center justify-center p-2 sm:p-4 py-4'>
       <div className='w-full max-w-md'>
         {/* Logo Section */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className='text-center mb-8'
+          className='text-center mb-4 sm:mb-8'
         >
-          <div className='inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary shadow-xl shadow-primary/25 mb-4'>
-            <Zap className='h-8 w-8 text-primary-foreground' />
+          <div className='flex items-center justify-center gap-4'>
+            <div className='inline-flex items-center justify-center w-10 h-10 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-primary shadow-lg sm:shadow-xl shadow-primary/25'>
+              <Zap className='h-5 w-5 sm:h-8 sm:w-8 text-primary-foreground' />
+            </div>
+            <div className='flex flex-col items-start justify-center'>
+              <h1 className='text-lg sm:text-2xl font-bold text-foreground'>
+                PazarPlus
+              </h1>
+              <p className='text-xs sm:text-base text-muted-foreground hidden sm:block'>
+                Premium Marketplace
+              </p>
+            </div>
           </div>
-          <h1 className='text-2xl font-bold text-foreground'>PazarPlus</h1>
-          <p className='text-muted-foreground mt-1'>Premium Marketplace</p>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className='rounded-2xl border border-border bg-card shadow-xl overflow-hidden'
+          className='rounded-xl sm:rounded-2xl border border-border bg-card shadow-xl overflow-hidden flex flex-col'
         >
           {/* Tab Navigation */}
           <div className='flex border-b border-border bg-muted/30'>
             <button
               type='button'
               onClick={() => handleModeChange('login')}
-              className={`flex-1 px-6 py-4 font-semibold transition-all relative ${
+              className={`flex-1 px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base font-semibold transition-all relative ${
                 mode === 'login'
                   ? 'text-primary bg-background'
                   : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
@@ -325,7 +333,7 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
             <button
               type='button'
               onClick={() => handleModeChange('signup')}
-              className={`flex-1 px-6 py-4 font-semibold transition-all relative ${
+              className={`flex-1 px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base font-semibold transition-all relative ${
                 mode === 'signup'
                   ? 'text-primary bg-background'
                   : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
@@ -343,18 +351,18 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
           </div>
 
           {/* Form */}
-          <div className='p-6 sm:p-8'>
+          <div className='p-4 sm:p-8 flex-1 overflow-y-auto'>
             {/* OAuth Buttons */}
-            <div className='space-y-3 mb-6'>
+            <div className='space-y-2.5 sm:space-y-3 mb-4 sm:mb-6'>
               <Button
                 type='button'
                 variant='outline'
-                className='w-full h-12 rounded-xl font-medium gap-3 hover:bg-accent'
+                className='w-full h-10 sm:h-12 rounded-xl font-medium gap-3 hover:bg-accent text-sm'
                 onClick={() => handleOAuthSignIn('google')}
                 disabled={isLoading || isOAuthLoading !== null}
               >
                 {isOAuthLoading === 'google' ? (
-                  <Loader2 className='h-5 w-5 animate-spin' />
+                  <Loader2 className='h-4 w-4 sm:h-5 sm:w-5 animate-spin' />
                 ) : (
                   <GoogleIcon />
                 )}
@@ -363,12 +371,12 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
               <Button
                 type='button'
                 variant='outline'
-                className='w-full h-12 rounded-xl font-medium gap-3 hover:bg-accent'
+                className='w-full h-10 sm:h-12 rounded-xl font-medium gap-3 hover:bg-accent text-sm'
                 onClick={() => handleOAuthSignIn('github')}
                 disabled={isLoading || isOAuthLoading !== null}
               >
                 {isOAuthLoading === 'github' ? (
-                  <Loader2 className='h-5 w-5 animate-spin' />
+                  <Loader2 className='h-4 w-4 sm:h-5 sm:w-5 animate-spin' />
                 ) : (
                   <GitHubIcon />
                 )}
@@ -377,12 +385,12 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
             </div>
 
             {/* Divider */}
-            <div className='relative mb-6'>
+            <div className='relative mb-4 sm:mb-6'>
               <div className='absolute inset-0 flex items-center'>
                 <div className='w-full border-t border-border' />
               </div>
-              <div className='relative flex justify-center text-xs uppercase'>
-                <span className='bg-card px-3 text-muted-foreground'>
+              <div className='relative flex justify-center text-[10px] sm:text-xs uppercase'>
+                <span className='bg-card px-3 text-muted-foreground tracking-wider'>
                   Or continue with email
                 </span>
               </div>
@@ -397,7 +405,7 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
                   exit={{ opacity: 0, x: mode === 'login' ? 20 : -20 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <div className='space-y-5'>
+                  <div className='space-y-3 sm:space-y-5'>
                     {/* Server Error */}
                     {serverError && (
                       <motion.div
@@ -412,9 +420,12 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
 
                     {/* Name Field (Signup only) */}
                     {mode === 'signup' && (
-                      <div className='space-y-2'>
-                        <label htmlFor='name' className='form-label'>
-                          <User className='h-4 w-4 text-muted-foreground' />
+                      <div className='space-y-1 sm:space-y-2'>
+                        <label
+                          htmlFor='name'
+                          className='form-label text-xs sm:text-sm'
+                        >
+                          <User className='h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground inline-block mr-1' />
                           Full Name
                         </label>
                         <div className='relative'>
@@ -425,9 +436,9 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
                             value={formData.name}
                             onChange={handleChange}
                             disabled={isLoading}
-                            className='pl-11'
+                            className='pl-9 sm:pl-11 h-9 sm:h-10 text-sm'
                           />
-                          <User className='absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
+                          <User className='absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
                         </div>
                         {errors.name && (
                           <p className='text-destructive text-xs flex items-center gap-1'>
@@ -439,9 +450,12 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
                     )}
 
                     {/* Email Field */}
-                    <div className='space-y-2'>
-                      <label htmlFor='email' className='form-label'>
-                        <Mail className='h-4 w-4 text-muted-foreground' />
+                    <div className='space-y-1 sm:space-y-2'>
+                      <label
+                        htmlFor='email'
+                        className='form-label text-xs sm:text-sm'
+                      >
+                        <Mail className='h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground inline-block mr-1' />
                         Email Address
                       </label>
                       <div className='relative'>
@@ -453,9 +467,9 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
                           value={formData.email}
                           onChange={handleChange}
                           disabled={isLoading}
-                          className='pl-11'
+                          className='pl-9 sm:pl-11 h-9 sm:h-10 text-sm'
                         />
-                        <Mail className='absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
+                        <Mail className='absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
                       </div>
                       {errors.email && (
                         <p className='text-destructive text-xs flex items-center gap-1'>
@@ -466,9 +480,12 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
                     </div>
 
                     {/* Password Field */}
-                    <div className='space-y-2'>
-                      <label htmlFor='password' className='form-label'>
-                        <Lock className='h-4 w-4 text-muted-foreground' />
+                    <div className='space-y-1 sm:space-y-2'>
+                      <label
+                        htmlFor='password'
+                        className='form-label text-xs sm:text-sm'
+                      >
+                        <Lock className='h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground inline-block mr-1' />
                         Password
                       </label>
                       <div className='relative'>
@@ -480,13 +497,13 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
                           value={formData.password}
                           onChange={handleChange}
                           disabled={isLoading}
-                          className='pl-11 pr-11'
+                          className='pl-9 sm:pl-11 pr-11 h-9 sm:h-10 text-sm'
                         />
-                        <Lock className='absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
+                        <Lock className='absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
                         <button
                           type='button'
                           onClick={() => setShowPassword(!showPassword)}
-                          className='absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
+                          className='absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
                           tabIndex={-1}
                         >
                           {showPassword ? (
@@ -535,9 +552,12 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
 
                     {/* Confirm Password Field (Signup only) */}
                     {mode === 'signup' && (
-                      <div className='space-y-2'>
-                        <label htmlFor='confirmPassword' className='form-label'>
-                          <CheckCircle2 className='h-4 w-4 text-muted-foreground' />
+                      <div className='space-y-1 sm:space-y-2'>
+                        <label
+                          htmlFor='confirmPassword'
+                          className='form-label text-xs sm:text-sm'
+                        >
+                          <CheckCircle2 className='h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground inline-block mr-1' />
                           Confirm Password
                         </label>
                         <div className='relative'>
@@ -549,15 +569,15 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
                             value={formData.confirmPassword}
                             onChange={handleChange}
                             disabled={isLoading}
-                            className='pl-11 pr-11'
+                            className='pl-9 sm:pl-11 pr-11 h-9 sm:h-10 text-sm'
                           />
-                          <CheckCircle2 className='absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
+                          <CheckCircle2 className='absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
                           <button
                             type='button'
                             onClick={() =>
                               setShowConfirmPassword(!showConfirmPassword)
                             }
-                            className='absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
+                            className='absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
                             tabIndex={-1}
                           >
                             {showConfirmPassword ? (
@@ -584,26 +604,28 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
                     )}
 
                     {/* Submit Button */}
-                    <Button
-                      type='submit'
-                      className='w-full h-12 text-base font-semibold rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300'
-                      size='lg'
-                      disabled={isLoading}
-                    >
-                      {isLoading ? (
-                        <>
-                          <Loader2 className='h-5 w-5 animate-spin mr-2' />
-                          {mode === 'login'
-                            ? 'Logging in...'
-                            : 'Creating account...'}
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className='h-4 w-4 mr-2' />
-                          {mode === 'login' ? 'Login' : 'Create Account'}
-                        </>
-                      )}
-                    </Button>
+                    <div className='pt-2 sm:pt-4'>
+                      <Button
+                        type='submit'
+                        className='w-full h-10 sm:h-12 text-sm sm:text-base font-semibold rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300'
+                        size='lg'
+                        disabled={isLoading}
+                      >
+                        {isLoading ? (
+                          <>
+                            <Loader2 className='h-5 w-5 animate-spin mr-2' />
+                            {mode === 'login'
+                              ? 'Logging in...'
+                              : 'Creating account...'}
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className='h-4 w-4 mr-2' />
+                            {mode === 'login' ? 'Login' : 'Create Account'}
+                          </>
+                        )}
+                      </Button>
+                    </div>
 
                     {/* Forgot Password */}
                     {mode === 'login' && (
@@ -627,8 +649,8 @@ export function AuthForm({ initialMode = 'login' }: AuthFormProps) {
           </div>
 
           {/* Footer */}
-          <div className='px-6 sm:px-8 pb-6 text-center'>
-            <p className='text-xs text-muted-foreground'>
+          <div className='px-4 sm:px-8 pb-4 sm:pb-6 text-center mt-auto'>
+            <p className='text-[10px] sm:text-xs text-muted-foreground'>
               By continuing, you agree to our{' '}
               <a href='/help/terms' className='text-primary hover:underline'>
                 Rules & Terms

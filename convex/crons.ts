@@ -16,6 +16,12 @@ crons.daily(
   api.promotions.checkExpiringPromotions,
 );
 
+crons.daily(
+  'daily-promotion-expired-check',
+  { hourUTC: 12, minuteUTC: 45 },
+  api.promotions.checkExpiredPromotions,
+);
+
 // Daily search alerts at 08:00 UTC (10:00 MKD)
 crons.daily(
   'daily-search-alerts',
