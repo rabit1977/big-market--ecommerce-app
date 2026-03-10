@@ -577,9 +577,9 @@ const MANUAL_KEYS = new Set([
 // Style tokens
 // ─────────────────────────────────────────────────────────────────────────────
 const ghostSelect =
-  'h-10 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-3 font-medium text-sm [&>svg]:opacity-40';
+  'h-10 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-muted/50 transition-colors rounded-md px-3 font-medium text-sm [&>svg]:opacity-40';
 const ghostInput =
-  'h-10 border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-3 font-medium text-sm';
+  'h-10 border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-muted/50 transition-colors rounded-md px-3 font-medium text-sm';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Sub-components
@@ -1111,7 +1111,7 @@ export function DetailsStep({
                   value={formData.currency || 'MKD'}
                   onValueChange={(val) => updateFormData({ currency: val })}
                 >
-                  <SelectTrigger className='flex-1 h-10 w-[84px] px-2 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent text-xs font-medium'>
+                  <SelectTrigger className='flex-1 h-10 w-[84px] px-2 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-muted/50 transition-colors rounded-md text-xs font-medium'>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -1199,7 +1199,7 @@ export function DetailsStep({
                   updateFormData({ description: e.target.value })
                 }
                 rows={4}
-                className='resize-none text-sm border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-3 -mt-1'
+                className='resize-none text-sm border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-muted/50 transition-colors rounded-md px-3 py-2 -mt-1'
               />
             </FieldRow>
 
