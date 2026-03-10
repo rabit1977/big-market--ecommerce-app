@@ -220,19 +220,19 @@ export function PostListingWizard({
   const progress = (currentStep / steps.length) * 100;
 
   return (
-    <div className='min-h-screen bg-background py-2'>
+    <div className='min-h-screen bg-background'>
       <div className='container-wide max-w-4xl'>
         {/* Progress Header */}
         <div className='mb-8'>
-          <div className='flex items-center justify-between mb-4'>
-            <h1 className='text-3xl font-bold'>{t('page_title')}</h1>
-            <span className='text-sm text-muted-foreground'>
+          <div className='flex items-center justify-between mb-2'>
+            <h1 className='text-xl font-bold'>{t('page_title')}</h1>
+            <span className='text-xs text-muted-foreground'>
               {t('step_of', { current: currentStep, total: steps.length })}
             </span>
           </div>
 
           {/* Progress Bar */}
-          <Progress value={progress} className='h-2 mb-6' />
+          <Progress value={progress} className='h-1 sm:h-2 mb-4' />
 
           {/* Step Indicators */}
           <div className='flex items-center justify-between'>
@@ -241,7 +241,7 @@ export function PostListingWizard({
                 <div className='flex flex-col items-center flex-1'>
                   <div
                     className={`
-                      w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all
+                      w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-semibold transition-all
                       ${
                         currentStep > step.id
                           ? 'bg-primary text-primary-foreground'

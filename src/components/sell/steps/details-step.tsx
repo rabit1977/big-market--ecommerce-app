@@ -11,7 +11,15 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { Check, ChevronLeft, Package, Tag } from 'lucide-react';
+import {
+  ArrowRightLeft,
+  Check,
+  ChevronLeft,
+  Info,
+  Package,
+  PenLine,
+  Tag,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ListingFormData } from '../post-listing-wizard';
 
@@ -559,6 +567,7 @@ const MANUAL_KEYS = new Set([
   'mileage',
   'emission',
   'body_type',
+  'bodyType',
   'color',
   'condition',
   'sostojba',
@@ -595,7 +604,7 @@ function FieldRow({
           : 'items-center min-h-[40px]',
       )}
     >
-      <span className='hidden sm:block text-sm text-muted-foreground w-28 shrink-0 pt-px truncate'>
+      <span className='hidden sm:block text-sm text-muted-foreground w-28 shrink-0 truncate'>
         {label}
         {required && <span className='text-destructive ml-0.5'>*</span>}
       </span>
@@ -606,7 +615,7 @@ function FieldRow({
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div className='px-4 pt-2 pb-1 bg-muted/30'>
+    <div className='px-4 pt-2 pb-1 bg-muted'>
       <span className='text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60'>
         {children}
       </span>
@@ -715,22 +724,7 @@ export function DetailsStep({
 
   return (
     <div className='min-h-screen bg-background'>
-      {/* Mobile sticky header */}
-      <div className='sticky top-0 z-10 flex items-center gap-3 px-4 py-3 bg-background/95 backdrop-blur border-b lg:hidden'>
-        <Button
-          variant='ghost'
-          size='icon'
-          className='shrink-0 -ml-1'
-          onClick={onBack}
-        >
-          <ChevronLeft className='h-5 w-5' />
-        </Button>
-        <span className='font-semibold text-base truncate'>
-          {t('details_title')}
-        </span>
-      </div>
-
-      <div className='max-w-5xl mx-auto py-6 grid grid-cols-1 lg:grid-cols-3 gap-8'>
+      <div className='max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8'>
         {/* ── Main column ── */}
         <div className='lg:col-span-2 space-y-4'>
           {/* Desktop back + title */}
@@ -749,7 +743,17 @@ export function DetailsStep({
           {/* ═══════════════ UNIFIED CARD ═══════════════ */}
           <div className='rounded-xl border bg-card overflow-hidden divide-y divide-border'>
             {/* Ad title */}
-            <FieldRow label='Title' required>
+
+            <div className='p-4 sm:p-6 bg-primary/5 transition-colors'>
+              <div className='mb-3 flex items-center justify-between'>
+                <div className='flex items-center gap-1.5'>
+                  <span className='text-xs font-bold uppercase tracking-widest text-primary flex items-center gap-1.5'>
+                    <PenLine className='w-4 h-4' />
+                    Listing Title
+                  </span>
+                  <span className='text-destructive font-bold text-sm'>*</span>
+                </div>
+              </div>
               <Input
                 placeholder={
                   selectedCategory?.template?.titlePlaceholder ||
@@ -757,47 +761,14 @@ export function DetailsStep({
                 }
                 value={formData.title || ''}
                 onChange={(e) => updateFormData({ title: e.target.value })}
-                className={cn(ghostInput, 'text-base font-medium px-3')}
+                className='text-lg sm:text-2xl font-bold h-12 sm:h-16 px-4 bg-background border-2 border-primary/20 hover:border-primary/40 focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-primary/20 transition-all rounded-xl placeholder:text-muted-foreground/40 placeholder:font-medium shadow-sm'
               />
-            </FieldRow>
-            {/* ── Dynamic template fields ── */}
-            {dynamicFields.map((field) => (
-              <FieldRow
-                key={field.key}
-                label={field.label}
-                required={field.required}
-              >
-                {field.type === 'select' ? (
-                  <Select
-                    value={formData.specifications?.[field.key] || ''}
-                    onValueChange={(val) => handleSpec(field.key, val)}
-                  >
-                    <SelectTrigger className={ghostSelect}>
-                      <SelectValue placeholder={field.label} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {field.options?.map((opt) => (
-                        <SelectItem key={opt} value={opt}>
-                          {opt}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                ) : (
-                  <Input
-                    type={field.type === 'number' ? 'number' : 'text'}
-                    placeholder={field.placeholder || field.label}
-                    value={formData.specifications?.[field.key] || ''}
-                    onChange={(e) => handleSpec(field.key, e.target.value)}
-                    className={cn(ghostInput, 'max-w-xs')}
-                  />
-                )}
-              </FieldRow>
-            ))}
-
-            {/* ════════════════════════
-                VEHICLE BLOCK
-            ════════════════════════ */}
+              <p className='text-xs text-muted-foreground mt-3 flex items-center gap-1.5 font-medium'>
+                <Info className='w-4 h-4 text-primary/70 shrink-0' />
+                This is the main title that buyers will see when searching for
+                your item. Make it clear!
+              </p>
+            </div>
             {isVehicle && (
               <>
                 <SectionLabel>Возило</SectionLabel>
@@ -852,8 +823,8 @@ export function DetailsStep({
                 )}
 
                 {/* Body type */}
-                <div className='p py-3 space-y-2'>
-                  <span className='hidden sm:block text-sm text-muted-foreground'>
+                <div className='px-4 py-3 space-y-2'>
+                  <span className='text-sm text-muted-foreground'>
                     Body Type
                   </span>
                   <div className='grid grid-cols-4 sm:grid-cols-8 gap-1.5'>
@@ -878,26 +849,6 @@ export function DetailsStep({
 
                 {/* ── Registration ── */}
                 <SectionLabel>Registration</SectionLabel>
-
-                {/* Year of manufacture */}
-                <FieldRow label='Year of Manufacture' required>
-                  <Select
-                    value={formData.specifications?.year || ''}
-                    onValueChange={(val) => handleSpec('year', val)}
-                  >
-                    <SelectTrigger className={ghostSelect}>
-                      <SelectValue placeholder='Year of manufacture' />
-                    </SelectTrigger>
-                    <SelectContent className='max-h-56'>
-                      {YEARS.map((y) => (
-                        <SelectItem key={y} value={y}>
-                          {y}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FieldRow>
-
                 {/* Registration month + year */}
                 <FieldRow label='Registration Date'>
                   <div className='flex gap-2 items-center'>
@@ -1037,6 +988,60 @@ export function DetailsStep({
                 </div>
               </>
             )}
+            {/* ── Dynamic template fields ── */}
+            {dynamicFields.map((field) => {
+              if (field.key === 'isTradePossible') {
+                return (
+                  <SwitchRow
+                    key={field.key}
+                    icon={ArrowRightLeft}
+                    label={field.label}
+                    checked={formData.specifications?.isTradePossible === 'Да'}
+                    onChange={(v) =>
+                      handleSpec('isTradePossible', v ? 'Да' : 'Не')
+                    }
+                  />
+                );
+              }
+
+              return (
+                <FieldRow
+                  key={field.key}
+                  label={field.label}
+                  required={field.required}
+                >
+                  {field.type === 'select' ? (
+                    <Select
+                      value={formData.specifications?.[field.key] || ''}
+                      onValueChange={(val) => handleSpec(field.key, val)}
+                    >
+                      <SelectTrigger className={ghostSelect}>
+                        <SelectValue placeholder={field.label} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {field.options?.map((opt) => (
+                          <SelectItem key={opt} value={opt}>
+                            {opt}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Input
+                      type={field.type === 'number' ? 'number' : 'text'}
+                      placeholder={field.placeholder || field.label}
+                      value={formData.specifications?.[field.key] || ''}
+                      onChange={(e) => handleSpec(field.key, e.target.value)}
+                      className={cn(ghostInput, 'max-w-xs')}
+                    />
+                  )}
+                </FieldRow>
+              );
+            })}
+
+            {/* ════════════════════════
+                VEHICLE BLOCK
+            ════════════════════════ */}
 
             {/* ════════════════════════
                 LISTING DETAILS
@@ -1079,13 +1084,16 @@ export function DetailsStep({
                   </span>
                   <Input
                     type='number'
-                    placeholder='0'
+                    placeholder=''
                     min={0}
                     step={500}
-                    value={formData.price || ''}
-                    onChange={(e) =>
-                      updateFormData({ price: parseFloat(e.target.value) || 0 })
-                    }
+                    value={formData.price ?? ''}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      updateFormData({
+                        price: val === '' ? undefined : parseFloat(val),
+                      });
+                    }}
                     className={cn(
                       ghostInput,
                       'pl-8 w-28 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none',
@@ -1128,7 +1136,7 @@ export function DetailsStep({
             <SectionLabel>Location</SectionLabel>
 
             {/* Region / City */}
-            <FieldRow label='City / Region' required>
+            <FieldRow label='Location' required>
               <Select
                 value={selectedRegion}
                 onValueChange={(v) => {
@@ -1136,7 +1144,7 @@ export function DetailsStep({
                 }}
               >
                 <SelectTrigger className={ghostSelect}>
-                  <SelectValue placeholder='Select Region' />
+                  <SelectValue placeholder='Select Location' />
                 </SelectTrigger>
                 <SelectContent className='max-h-64'>
                   {Object.keys(MK_LOCATIONS).map((region) => (
