@@ -11,10 +11,13 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import {
     Select,
     SelectContent,
+    SelectGroup,
     SelectItem,
+    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { MK_LOCATIONS } from '@/lib/locations';
 import { Slider } from '@/components/ui/slider';
 import { MapPin, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -60,12 +63,16 @@ interface FilterPanelProps {
 const PRICE_MIN_DEFAULT = 0;
 const PRICE_MAX_DEFAULT = 1_000_000;
 
-const CITIES = [
-  'Skopje', 'Bitola', 'Kumanovo', 'Prilep', 'Tetovo', 'Veles', 'Ohrid', 'Gostivar',
-  'Štip', 'Strumica', 'Kavadarci', 'Kočani', 'Kičevo', 'Struga', 'Radoviš', 'Gevgelija',
-];
-
 const DEFAULT_FILTERS: FilterState = { sortBy: 'newest' };
+
+const getLocationLabel = (cityValue: string) => {
+  for (const [region, cities] of Object.entries(MK_LOCATIONS)) {
+    if (region.toLowerCase() === cityValue) return `Цел регион (${region})`;
+    const match = cities.find(c => c.toLowerCase() === cityValue);
+    if (match) return match;
+  }
+  return cityValue;
+};
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -480,8 +487,18 @@ export function FilterPanel({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t('all_cities')}</SelectItem>
-                {CITIES.map((city) => (
-                  <SelectItem key={city} value={city.toLowerCase()}>{city}</SelectItem>
+                {Object.entries(MK_LOCATIONS).map(([region, municipalities]) => (
+                  <SelectGroup key={region}>
+                    <SelectLabel className="font-bold text-primary">{region}</SelectLabel>
+                    <SelectItem value={region.toLowerCase()} className="font-medium text-foreground">
+                      Цел регион ({region})
+                    </SelectItem>
+                    {municipalities.map((city) => (
+                      <SelectItem key={city} value={city.toLowerCase()} className="pl-6 text-muted-foreground hover:text-foreground">
+                        {city}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
                 ))}
               </SelectContent>
             </Select>
@@ -566,7 +583,7 @@ export function FilterPanel({
                 <FilterBadge label={categories.find((c) => c.slug === filters.subCategory)?.name} onRemove={() => handleSubCategoryChange('all')} />
               )}
               {filters.city && filters.city !== 'all' && (
-                <FilterBadge label={CITIES.find((c) => c.toLowerCase() === filters.city)} onRemove={() => updateFilter('city', undefined)} />
+                <FilterBadge label={getLocationLabel(filters.city)} onRemove={() => updateFilter('city', undefined)} />
               )}
               {Object.entries(dynamicFilters).map(([key, value]) => {
                 const fieldLabel = template?.fields?.find((f: any) => f.key === key)?.label ?? key;

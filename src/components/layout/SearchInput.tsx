@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { CITIES } from '@/lib/constants/cities';
+import { MK_LOCATIONS } from '@/lib/locations';
 import { useSidebar } from '@/lib/context/sidebar-context';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -41,6 +41,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     const { toggle } = useSidebar();
     const [isCityPanelOpen, setIsCityPanelOpen] = useState(false);
     const [citySearch, setCitySearch] = useState('');
+    const [expandedRegions, setExpandedRegions] = useState<Record<string, boolean>>({});
     const panelRef = useRef<HTMLDivElement>(null);
     const tNav = useTranslations('Navigation');
     const tCommon = useTranslations('Common');
@@ -48,6 +49,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     const closePanel = useCallback(() => {
       setIsCityPanelOpen(false);
       setCitySearch('');
+      setExpandedRegions({});
     }, []);
 
     // Close on click outside
@@ -72,13 +74,24 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       return () => document.removeEventListener('keydown', handleKey);
     }, [isCityPanelOpen, closePanel]);
 
-    // Memoize filtered cities — CITIES is a large constant array
-    const filteredCities = useMemo(() =>
-      CITIES.filter(
-        (c) => c !== 'All Cities' && c.toLowerCase().includes(citySearch.toLowerCase())
-      ),
-      [citySearch]
-    );
+    // Memoize filtered locations based on MK_LOCATIONS
+    const filteredLocations = useMemo(() => {
+      const q = citySearch.toLowerCase();
+      
+      return Object.entries(MK_LOCATIONS).map(([region, municipalities]) => {
+        if (!q) {
+          return { region, municipalities };
+        }
+        
+        const regionMatch = region.toLowerCase().includes(q);
+        const munsMatch = municipalities.filter(m => m.toLowerCase().includes(q));
+        
+        return {
+          region,
+          municipalities: regionMatch ? municipalities : munsMatch
+        };
+      }).filter(item => item.region.toLowerCase().includes(q) || item.municipalities.length > 0);
+    }, [citySearch]);
 
     const handleCitySelect = useCallback((city: string) => {
       onCityChange(city);
@@ -204,14 +217,15 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                     </Button>
                   </div>
 
-                  <div className="px-4 py-3 border-b">
+                  <div className="px-4 py-3">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         placeholder={tCommon('search_cities') || 'Search cities...'}
                         value={citySearch}
                         onChange={(e) => setCitySearch(e.target.value)}
-                        className="h-9 pl-9 rounded-(--bm-button-border-radius) text-sm bg-background"                        autoFocus
+                        className="h-9 pl-9 rounded-(--bm-button-border-radius) text-sm bg-background border-none shadow-none focus-visible:ring-0"
+                        autoFocus
                       />
                     </div>
                   </div>
@@ -236,25 +250,54 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 
                       <div className="h-px bg-border/50 my-2" />
 
-                      {filteredCities.length > 0 ? (
-                        filteredCities.map((city) => (
-                          <button
-                            key={city}
-                            onClick={() => handleCitySelect(city)}
-                            className={cn(
-                              'w-full flex items-center gap-3 py-2.5 px-3 rounded-(--bm-button-border-radius) text-sm font-medium transition-all',
-                              selectedCity === city
-                                ? 'bg-secondary text-foreground font-bold'
-                                : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
-                            )}
-                          >
-                            <div className={cn(
-                              'w-1.5 h-1.5 rounded-full transition-colors',
-                              selectedCity === city ? 'bg-primary' : 'bg-muted-foreground/30'
-                            )} />
-                            {city}
-                          </button>
-                        ))
+                      {filteredLocations.length > 0 ? (
+                        filteredLocations.map(({ region, municipalities }) => {
+                          const isExpanded = !!expandedRegions[region] || citySearch.length > 0;
+                          
+                          return (
+                          <div key={region} className="mb-2">
+                            <button
+                              onClick={() => setExpandedRegions(prev => ({ ...prev, [region]: !prev[region] }))}
+                              className="w-full flex items-center justify-between px-3 py-2 group text-left text-sm font-bold uppercase tracking-wider text-foreground hover:text-primary transition-colors"
+                            >
+                              <span>{region}</span>
+                              <ChevronDown className={cn("h-4 w-4 transition-transform text-muted-foreground group-hover:text-primary", isExpanded && "rotate-180")} />
+                            </button>
+                            
+                            <AnimatePresence initial={false}>
+                              {isExpanded && (
+                                <motion.div
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: "auto", opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  transition={{ duration: 0.2 }}
+                                  className="overflow-hidden"
+                                >
+                                  <div className="pt-1 pb-2 space-y-0.5">
+
+                                    {municipalities.map((city) => (
+                                      <button
+                                        key={city}
+                                        onClick={() => handleCitySelect(city)}
+                                        className={cn(
+                                          'w-full flex items-center gap-3 py-2 px-4 rounded-(--bm-button-border-radius) text-sm transition-all',
+                                          selectedCity === city
+                                            ? 'bg-primary/10 text-primary font-bold ml-1'
+                                            : 'text-muted-foreground hover:text-foreground hover:bg-secondary pl-6 text-sm'
+                                        )}
+                                      >
+                                        {selectedCity === city && (
+                                          <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                        )}
+                                        {city}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        )})
                       ) : (
                         <div className="text-center py-8 text-sm text-muted-foreground">
                           {tCommon('no_cities_found', { query: citySearch })}

@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ListingFormData } from '../post-listing-wizard';
+import { MK_LOCATIONS } from '@/lib/locations';
 
 interface DetailsStepProps {
   categories: Array<{
@@ -47,55 +48,8 @@ interface DetailsStepProps {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Macedonia — all municipalities grouped by city/region
+// Imported from @/lib/locations
 // ─────────────────────────────────────────────────────────────────────────────
-const MK_LOCATIONS: Record<string, string[]> = {
-  Скопје: [
-    'Аеродром',
-    'Бутел',
-    'Гази Баба',
-    'Ѓорче Петров',
-    'Зелениково',
-    'Карпош',
-    'Кисела Вода',
-    'Петровец',
-    'Сарај',
-    'Сопиште',
-    'Студеничани',
-    'Центар',
-    'Чаир',
-    'Шуто Оризари',
-  ],
-  Битола: ['Битола', 'Новаци', 'Могила', 'Демир Хисар'],
-  Куманово: ['Куманово', 'Липково', 'Старо Нагоричане'],
-  Прилеп: ['Прилеп', 'Долнени', 'Кривогаштани'],
-  Тетово: ['Тетово', 'Брвеница', 'Јегуновце', 'Теарце', 'Желино', 'Боговиње'],
-  Велес: ['Велес', 'Чашка'],
-  Охрид: ['Охрид', 'Дебрца'],
-  Гостивар: ['Гостивар', 'Врапчиште', 'Маврово и Ростуше'],
-  Штип: ['Штип', 'Карбинци', 'Лесново'],
-  Струмица: [
-    'Струмица',
-    'Василево',
-    'Босилово',
-    'Ново Село',
-    'Радовиш',
-    'Конче',
-  ],
-  Кавадарци: ['Кавадарци', 'Росоман', 'Неготино'],
-  Кочани: ['Кочани', 'Чешиново-Облешево', 'Зрновци', 'Виница'],
-  Кичево: ['Кичево', 'Осломеј', 'Вранештица', 'Зајас', 'Пласница', 'Другово'],
-  Струга: ['Струга', 'Вевчани'],
-  Гевгелија: ['Гевгелија', 'Богданци', 'Дојран', 'Валандово'],
-  Дебар: ['Дебар', 'Центар Жупа', 'Маврово и Ростуше'],
-  'Крива Паланка': ['Крива Паланка', 'Кратово', 'Ранковце'],
-  'Свети Николе': ['Свети Николе', 'Лозово'],
-  Берово: ['Берово', 'Пехчево', 'Делчево', 'Македонска Каменица'],
-  'Прешево / Пчиња': ['Врање', 'Бујановац'],
-  'Скопска Блатија': ['Илинден', 'Арачиново', 'Чучер-Сандево'],
-  Полог: ['Боговиње', 'Желино', 'Теарце'],
-  'Овче Поле': ['Свети Николе', 'Лозово', 'Пробиштип'],
-  Тиквеш: ['Кавадарци', 'Неготино', 'Росоман'],
-};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Other static data
@@ -577,9 +531,9 @@ const MANUAL_KEYS = new Set([
 // Style tokens
 // ─────────────────────────────────────────────────────────────────────────────
 const ghostSelect =
-  'h-10 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-muted/50 transition-colors rounded-md px-3 font-medium text-sm [&>svg]:opacity-40';
+  'h-10 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-secondary/30 transition-colors rounded-md px-3 font-medium text-sm [&>svg]:opacity-40';
 const ghostInput =
-  'h-10 border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-muted/50 transition-colors rounded-md px-3 font-medium text-sm';
+  'h-10 border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-secondary/30 transition-colors rounded-md px-3 font-medium text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Sub-components
@@ -1111,7 +1065,7 @@ export function DetailsStep({
                   value={formData.currency || 'MKD'}
                   onValueChange={(val) => updateFormData({ currency: val })}
                 >
-                  <SelectTrigger className='flex-1 h-10 w-[84px] px-2 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-muted/50 transition-colors rounded-md text-xs font-medium'>
+                  <SelectTrigger className='flex-1 h-10 w-[84px] px-2 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-secondary/30 transition-colors rounded-md text-xs font-medium'>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -1164,12 +1118,28 @@ export function DetailsStep({
             </FieldRow>
 
             {/* Municipality — appears after region */}
-            {selectedRegion &&
+            {selectedRegion && selectedRegion !== 'Друго' &&
               (MK_LOCATIONS[selectedRegion]?.length ?? 0) > 0 && (
                 <FieldRow label='Municipality' required>
                   <Select
-                    value={formData.city || ''}
-                    onValueChange={(v) => updateFormData({ city: v })}
+                    value={
+                      !formData.city
+                        ? ''
+                        : formData.city === 'Друго'
+                        ? 'other_municipality'
+                        : MK_LOCATIONS[selectedRegion]
+                            .map((m) => m.toLowerCase())
+                            .includes(formData.city.toLowerCase())
+                        ? formData.city.toLowerCase()
+                        : 'other_municipality'
+                    }
+                    onValueChange={(v) => {
+                      if (v === 'other_municipality') {
+                        updateFormData({ city: 'Друго' });
+                      } else {
+                        updateFormData({ city: v });
+                      }
+                    }}
                   >
                     <SelectTrigger className={ghostSelect}>
                       <SelectValue placeholder='Select Municipality' />
@@ -1180,10 +1150,30 @@ export function DetailsStep({
                           {mun}
                         </SelectItem>
                       ))}
+                      <SelectItem value='other_municipality'>Друго</SelectItem>
                     </SelectContent>
                   </Select>
                 </FieldRow>
               )}
+
+            {/* Custom Location input if "Друго" (Other) is chosen */}
+            {(selectedRegion === 'Друго' ||
+              (selectedRegion &&
+                formData.city &&
+                !MK_LOCATIONS[selectedRegion]
+                  ?.map((m) => m.toLowerCase())
+                  .includes(formData.city.toLowerCase()))) && (
+              <FieldRow label='Enter Location' required>
+                <Input
+                  placeholder='Type your location...'
+                  value={formData.city === 'Друго' ? '' : formData.city || ''}
+                  onChange={(e) =>
+                    updateFormData({ city: e.target.value || 'Друго' })
+                  }
+                  className={ghostInput}
+                />
+              </FieldRow>
+            )}
 
             {/* ════════════════════════
                 DESCRIPTION & CONTACT
@@ -1199,7 +1189,7 @@ export function DetailsStep({
                   updateFormData({ description: e.target.value })
                 }
                 rows={4}
-                className='resize-none text-sm border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-muted/50 transition-colors rounded-md px-3 py-2 -mt-1'
+                className='resize-none text-sm border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-secondary/30 transition-colors rounded-md px-3 py-2 -mt-1'
               />
             </FieldRow>
 
