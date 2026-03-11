@@ -21159,6 +21159,8 @@ export const seedCategories = internalMutation({
           template: catData.template,
           isFeatured: catData.isFeatured,
           isActive: catData.isActive,
+          parentId: parentId as any,
+          description: catData.description,
         });
         slugToId.set(catData.slug, existing._id);
       } else {
