@@ -1,0 +1,2856 @@
+[
+  {
+    "name": "Motor Vehicles",
+    "slug": "motor-vehicles",
+    "parent": null,
+    "children": [
+      {
+        "name": "Cars",
+        "slug": "cars",
+        "parent": "motor-vehicles",
+        "grandchildren": []
+      },
+      {
+        "name": "Motorcycles (above 50 cc)",
+        "slug": "motorcycles-above-50cc",
+        "parent": "motor-vehicles",
+        "grandchildren": []
+      },
+      {
+        "name": "Mopeds (under 50 cc)",
+        "slug": "mopeds-under-50cc",
+        "parent": "motor-vehicles",
+        "grandchildren": []
+      },
+      {
+        "name": "Electric Scooters",
+        "slug": "electric-scooters",
+        "parent": "motor-vehicles",
+        "grandchildren": []
+      },
+      {
+        "name": "Buses",
+        "slug": "buses",
+        "parent": "motor-vehicles",
+        "grandchildren": []
+      },
+      {
+        "name": "Vans",
+        "slug": "vans",
+        "parent": "motor-vehicles",
+        "grandchildren": []
+      },
+      {
+        "name": "Trucks",
+        "slug": "trucks",
+        "parent": "motor-vehicles",
+        "grandchildren": []
+      },
+      {
+        "name": "Trailers",
+        "slug": "trailers",
+        "parent": "motor-vehicles",
+        "grandchildren": []
+      },
+      {
+        "name": "Damaged Vehicles / For Spare Parts",
+        "slug": "damaged-vehicles-parts",
+        "parent": "motor-vehicles",
+        "grandchildren": []
+      },
+      {
+        "name": "Camping Vehicles",
+        "slug": "camping-vehicles",
+        "parent": "motor-vehicles",
+        "grandchildren": []
+      },
+      {
+        "name": "Agricultural Vehicles",
+        "slug": "agricultural-vehicles",
+        "parent": "motor-vehicles",
+        "grandchildren": [
+          {
+            "name": "All Agricultural Vehicles",
+            "slug": "all-agricultural-vehicles",
+            "parent": "agricultural-vehicles"
+          },
+          {
+            "name": "Tractors",
+            "slug": "tractors",
+            "parent": "agricultural-vehicles"
+          },
+          {
+            "name": "Attachment Machines",
+            "slug": "attachment-machines",
+            "parent": "agricultural-vehicles"
+          },
+          {
+            "name": "Harvesters",
+            "slug": "harvesters",
+            "parent": "agricultural-vehicles"
+          },
+          {
+            "name": "Forestry Machines",
+            "slug": "forestry-machines",
+            "parent": "agricultural-vehicles"
+          },
+          {
+            "name": "Spare Parts",
+            "slug": "spare-parts-agri",
+            "parent": "agricultural-vehicles"
+          },
+          {
+            "name": "Other",
+            "slug": "other-agri",
+            "parent": "agricultural-vehicles"
+          }
+        ]
+      },
+      {
+        "name": "Heavy Duty / Construction / Forklifts",
+        "slug": "heavy-duty-construction",
+        "parent": "motor-vehicles",
+        "grandchildren": [
+          {
+            "name": "All Heavy Vehicles",
+            "slug": "all-heavy-vehicles",
+            "parent": "heavy-duty-construction"
+          },
+          {
+            "name": "Freight and Towing Vehicles",
+            "slug": "freight-towing-vehicles",
+            "parent": "heavy-duty-construction"
+          },
+          {
+            "name": "Construction Machines",
+            "slug": "construction-machines",
+            "parent": "heavy-duty-construction"
+          },
+          {
+            "name": "Forklifts and Cargo Handling",
+            "slug": "forklifts-handling",
+            "parent": "heavy-duty-construction"
+          },
+          {
+            "name": "Spare Parts",
+            "slug": "spare-parts-heavy",
+            "parent": "heavy-duty-construction"
+          },
+          {
+            "name": "Other",
+            "slug": "other-heavy",
+            "parent": "heavy-duty-construction"
+          }
+        ]
+      },
+      {
+        "name": "Boats / Yachts / Jet Skis",
+        "slug": "boats-yachts-jetskis",
+        "parent": "motor-vehicles",
+        "grandchildren": [
+          {
+            "name": "All Boats",
+            "slug": "all-boats",
+            "parent": "boats-yachts-jetskis"
+          },
+          {
+            "name": "Motor Boats",
+            "slug": "motor-boats",
+            "parent": "boats-yachts-jetskis"
+          },
+          {
+            "name": "Sailing Boats",
+            "slug": "sailing-boats",
+            "parent": "boats-yachts-jetskis"
+          },
+          {
+            "name": "Rowing Boats",
+            "slug": "rowing-boats",
+            "parent": "boats-yachts-jetskis"
+          },
+          {
+            "name": "Rubber Boats",
+            "slug": "rubber-boats",
+            "parent": "boats-yachts-jetskis"
+          },
+          {
+            "name": "Jet Skis",
+            "slug": "jet-skis",
+            "parent": "boats-yachts-jetskis"
+          },
+          {
+            "name": "Parts and Accessories",
+            "slug": "parts-accessories-boats",
+            "parent": "boats-yachts-jetskis"
+          },
+          {
+            "name": "Other",
+            "slug": "other-boats",
+            "parent": "boats-yachts-jetskis"
+          }
+        ]
+      },
+      {
+        "name": "Auto Parts and Equipment",
+        "slug": "auto-parts-equipment",
+        "parent": "motor-vehicles",
+        "grandchildren": [
+          {
+            "name": "All Auto Parts",
+            "slug": "all-auto-parts",
+            "parent": "auto-parts-equipment"
+          },
+          {
+            "name": "Tires and Rims",
+            "slug": "tires-rims",
+            "parent": "auto-parts-equipment"
+          },
+          {
+            "name": "Auto Hi-Fi and Navigation",
+            "slug": "auto-hifi-navigation",
+            "parent": "auto-parts-equipment"
+          },
+          {
+            "name": "Spare Parts",
+            "slug": "spare-parts-cars",
+            "parent": "auto-parts-equipment"
+          },
+          {
+            "name": "Tuning",
+            "slug": "tuning-cars",
+            "parent": "auto-parts-equipment"
+          },
+          {
+            "name": "Styling and Sports Equipment",
+            "slug": "styling-sports-cars",
+            "parent": "auto-parts-equipment"
+          },
+          {
+            "name": "Motor Oil and Additives",
+            "slug": "oil-additives-cars",
+            "parent": "auto-parts-equipment"
+          },
+          {
+            "name": "Car Care",
+            "slug": "car-care",
+            "parent": "auto-parts-equipment"
+          },
+          {
+            "name": "Car Accessories",
+            "slug": "car-accessories",
+            "parent": "auto-parts-equipment"
+          },
+          {
+            "name": "Roof Racks",
+            "slug": "roof-racks",
+            "parent": "auto-parts-equipment"
+          },
+          {
+            "name": "Tools",
+            "slug": "tools-cars",
+            "parent": "auto-parts-equipment"
+          },
+          {
+            "name": "Repair Instructions, Books",
+            "slug": "manuals-books-cars",
+            "parent": "auto-parts-equipment"
+          },
+          {
+            "name": "Other",
+            "slug": "other-auto-parts",
+            "parent": "auto-parts-equipment"
+          }
+        ]
+      },
+      {
+        "name": "Motorcycle Parts and Equipment",
+        "slug": "motorcycle-parts-equipment",
+        "parent": "motor-vehicles",
+        "grandchildren": [
+          {
+            "name": "All Motorcycle Parts",
+            "slug": "all-motorcycle-parts",
+            "parent": "motorcycle-parts-equipment"
+          },
+          {
+            "name": "Tires and Rims",
+            "slug": "tires-rims-moto",
+            "parent": "motorcycle-parts-equipment"
+          },
+          {
+            "name": "Spare Parts",
+            "slug": "spare-parts-moto",
+            "parent": "motorcycle-parts-equipment"
+          },
+          {
+            "name": "Clothing/Protection",
+            "slug": "clothing-protection-moto",
+            "parent": "motorcycle-parts-equipment"
+          },
+          {
+            "name": "Tuning",
+            "slug": "tuning-moto",
+            "parent": "motorcycle-parts-equipment"
+          },
+          {
+            "name": "Styling and Sports Equipment",
+            "slug": "styling-sports-moto",
+            "parent": "motorcycle-parts-equipment"
+          },
+          {
+            "name": "Motor Oil and Additives",
+            "slug": "oil-additives-moto",
+            "parent": "motorcycle-parts-equipment"
+          },
+          {
+            "name": "Motorcycle Accessories",
+            "slug": "accessories-moto",
+            "parent": "motorcycle-parts-equipment"
+          },
+          {
+            "name": "Tools",
+            "slug": "tools-moto",
+            "parent": "motorcycle-parts-equipment"
+          },
+          {
+            "name": "Motorcycle Care",
+            "slug": "care-moto",
+            "parent": "motorcycle-parts-equipment"
+          },
+          {
+            "name": "Repair Instructions/Books",
+            "slug": "manuals-books-moto",
+            "parent": "motorcycle-parts-equipment"
+          }
+        ]
+      },
+      {
+        "name": "Towing Service",
+        "slug": "towing-service",
+        "parent": "motor-vehicles",
+        "grandchildren": []
+      },
+      {
+        "name": "Car/Vehicle Buying Service",
+        "slug": "vehicle-buying",
+        "parent": "motor-vehicles",
+        "grandchildren": []
+      },
+      {
+        "name": "Other",
+        "slug": "other-vehicles",
+        "parent": "motor-vehicles",
+        "grandchildren": []
+      }
+    ]
+  },
+  {
+    "name": "Real Estate",
+    "slug": "real-estate",
+    "parent": null,
+    "children": [
+      {
+        "name": "Apartments",
+        "slug": "apartments",
+        "parent": "real-estate",
+        "grandchildren": [
+          {
+            "name": "Apartments for Sale",
+            "slug": "apartments-sale",
+            "parent": "apartments"
+          },
+          {
+            "name": "Apartments for Rent",
+            "slug": "apartments-rent",
+            "parent": "apartments"
+          }
+        ]
+      },
+      {
+        "name": "Houses / Villas",
+        "slug": "houses",
+        "parent": "real-estate",
+        "grandchildren": [
+          {
+            "name": "Houses for Sale",
+            "slug": "houses-sale",
+            "parent": "houses"
+          },
+          {
+            "name": "Houses for Rent",
+            "slug": "houses-rent",
+            "parent": "houses"
+          }
+        ]
+      },
+      {
+        "name": "Commercial Space",
+        "slug": "commercial-space",
+        "parent": "real-estate",
+        "grandchildren": [
+          {
+            "name": "Offices",
+            "slug": "offices",
+            "parent": "commercial-space"
+          },
+          {
+            "name": "Shops / Stores",
+            "slug": "shops",
+            "parent": "commercial-space"
+          },
+          {
+            "name": "Warehouses",
+            "slug": "warehouses",
+            "parent": "commercial-space"
+          },
+          {
+            "name": "Industrial Plants",
+            "slug": "industrial-plants",
+            "parent": "commercial-space"
+          }
+        ]
+      },
+      {
+        "name": "Land / Plots",
+        "slug": "land",
+        "parent": "real-estate",
+        "grandchildren": [
+          {
+            "name": "Construction Land",
+            "slug": "construction-land",
+            "parent": "land"
+          },
+          {
+            "name": "Agricultural Land",
+            "slug": "agricultural-land",
+            "parent": "land"
+          },
+          {
+            "name": "Industrial Land",
+            "slug": "industrial-land",
+            "parent": "land"
+          }
+        ]
+      },
+      {
+        "name": "Holiday Homes / Villas",
+        "slug": "holiday-homes",
+        "parent": "real-estate",
+        "grandchildren": [
+          {
+            "name": "Holiday Homes for Sale",
+            "slug": "holiday-homes-sale",
+            "parent": "holiday-homes"
+          },
+          {
+            "name": "Holiday Homes for Rent",
+            "slug": "holiday-homes-rent",
+            "parent": "holiday-homes"
+          }
+        ]
+      },
+      {
+        "name": "Garages / Parking",
+        "slug": "garages",
+        "parent": "real-estate",
+        "grandchildren": []
+      },
+      {
+        "name": "Rooms / Shared Accommodation",
+        "slug": "rooms-accommodation",
+        "parent": "real-estate",
+        "grandchildren": []
+      },
+      {
+        "name": "Abroad",
+        "slug": "real-estate-abroad",
+        "parent": "real-estate",
+        "grandchildren": []
+      },
+      {
+        "name": "Other Real Estate",
+        "slug": "other-real-estate",
+        "parent": "real-estate",
+        "grandchildren": []
+      },
+      {
+        "name": "Commercial Real Estate",
+        "slug": "commercial-real-estate",
+        "parent": "real-estate",
+        "grandchildren": []
+      }
+    ]
+  },
+  {
+    "name": "Home Appliances",
+    "slug": "home-appliances",
+    "parent": null,
+    "children": [
+      {
+        "name": "Air Conditioners",
+        "slug": "air-conditioners",
+        "parent": "home-appliances",
+        "grandchildren": [
+          {
+            "name": "Inverter AC",
+            "slug": "inverter-ac",
+            "parent": "air-conditioners"
+          },
+          {
+            "name": "Standard AC",
+            "slug": "standard-ac",
+            "parent": "air-conditioners"
+          },
+          {
+            "name": "Mobile AC",
+            "slug": "mobile-ac",
+            "parent": "air-conditioners"
+          },
+          {
+            "name": "Multi Split AC",
+            "slug": "multi-split-ac",
+            "parent": "air-conditioners"
+          },
+          {
+            "name": "Fans",
+            "slug": "fans",
+            "parent": "air-conditioners"
+          },
+          {
+            "name": "Accessories for AC",
+            "slug": "ac-accessories",
+            "parent": "air-conditioners"
+          }
+        ]
+      },
+      {
+        "name": "Refrigerators",
+        "slug": "refrigerators",
+        "parent": "home-appliances",
+        "grandchildren": [
+          {
+            "name": "Combined Refrigerators",
+            "slug": "combined-refrigerators",
+            "parent": "refrigerators"
+          },
+          {
+            "name": "Double Door Refrigerators",
+            "slug": "double-door-refrigerators",
+            "parent": "refrigerators"
+          },
+          {
+            "name": "Single Door Refrigerators",
+            "slug": "single-door-refrigerators",
+            "parent": "refrigerators"
+          },
+          {
+            "name": "Built-in Refrigerators",
+            "slug": "built-in-refrigerators",
+            "parent": "refrigerators"
+          },
+          {
+            "name": "Mini Refrigerators",
+            "slug": "mini-refrigerators",
+            "parent": "refrigerators"
+          },
+          {
+            "name": "Portable Refrigerators",
+            "slug": "portable-refrigerators",
+            "parent": "refrigerators"
+          },
+          {
+            "name": "Refrigerator Elements",
+            "slug": "refrigerator-elements",
+            "parent": "refrigerators"
+          }
+        ]
+      },
+      {
+        "name": "Freezers",
+        "slug": "freezers",
+        "parent": "home-appliances",
+        "grandchildren": [
+          {
+            "name": "Vertical Freezers",
+            "slug": "vertical-freezers",
+            "parent": "freezers"
+          },
+          {
+            "name": "Horizontal Freezers",
+            "slug": "horizontal-freezers",
+            "parent": "freezers"
+          },
+          {
+            "name": "Built-in Freezers",
+            "slug": "built-in-freezers",
+            "parent": "freezers"
+          }
+        ]
+      },
+      {
+        "name": "Washing Machines",
+        "slug": "washing-machines",
+        "parent": "home-appliances",
+        "grandchildren": [
+          {
+            "name": "Washing Machines",
+            "slug": "washing-machines-sub",
+            "parent": "washing-machines"
+          },
+          {
+            "name": "Dryers",
+            "slug": "dryers",
+            "parent": "washing-machines"
+          },
+          {
+            "name": "Washer Dryer Combo",
+            "slug": "washer-dryer-combo",
+            "parent": "washing-machines"
+          }
+        ]
+      },
+      {
+        "name": "Dishwashers",
+        "slug": "dishwashers",
+        "parent": "home-appliances",
+        "grandchildren": [
+          {
+            "name": "Built-in Dishwashers",
+            "slug": "built-in-dishwashers",
+            "parent": "dishwashers"
+          },
+          {
+            "name": "Freestanding Dishwashers",
+            "slug": "freestanding-dishwashers",
+            "parent": "dishwashers"
+          }
+        ]
+      },
+      {
+        "name": "Stoves, Ovens & Hobs",
+        "slug": "stoves-ovens",
+        "parent": "home-appliances",
+        "grandchildren": [
+          {
+            "name": "Electric Stoves",
+            "slug": "electric-stoves",
+            "parent": "stoves-ovens"
+          },
+          {
+            "name": "Combined Stoves",
+            "slug": "combined-stoves",
+            "parent": "stoves-ovens"
+          },
+          {
+            "name": "Gas Stoves",
+            "slug": "gas-stoves",
+            "parent": "stoves-ovens"
+          },
+          {
+            "name": "Mini Stoves",
+            "slug": "mini-stoves",
+            "parent": "stoves-ovens"
+          },
+          {
+            "name": "Built-in Ovens",
+            "slug": "built-in-ovens",
+            "parent": "stoves-ovens"
+          },
+          {
+            "name": "Built-in Hobs",
+            "slug": "built-in-hobs",
+            "parent": "stoves-ovens"
+          },
+          {
+            "name": "Built-in Oven & Hob Sets",
+            "slug": "built-in-sets",
+            "parent": "stoves-ovens"
+          },
+          {
+            "name": "Accessories",
+            "slug": "stove-accessories",
+            "parent": "stoves-ovens"
+          }
+        ]
+      },
+      {
+        "name": "Microwaves",
+        "slug": "microwaves",
+        "parent": "home-appliances",
+        "grandchildren": [
+          {
+            "name": "Built-in Microwaves",
+            "slug": "built-in-microwaves",
+            "parent": "microwaves"
+          },
+          {
+            "name": "Freestanding Microwaves",
+            "slug": "freestanding-microwaves",
+            "parent": "microwaves"
+          }
+        ]
+      },
+      {
+        "name": "Hoods",
+        "slug": "hoods",
+        "parent": "home-appliances",
+        "grandchildren": [
+          {
+            "name": "Built-in Hoods",
+            "slug": "built-in-hoods",
+            "parent": "hoods"
+          },
+          {
+            "name": "Standard Hoods",
+            "slug": "standard-hoods",
+            "parent": "hoods"
+          }
+        ]
+      },
+      {
+        "name": "Water Heaters",
+        "slug": "water-heaters",
+        "parent": "home-appliances",
+        "grandchildren": [
+          {
+            "name": "Combined Water Heaters",
+            "slug": "combined-water-heaters",
+            "parent": "water-heaters"
+          },
+          {
+            "name": "Standard Water Heaters",
+            "slug": "standard-water-heaters",
+            "parent": "water-heaters"
+          },
+          {
+            "name": "Instant Water Heaters",
+            "slug": "instant-water-heaters",
+            "parent": "water-heaters"
+          }
+        ]
+      },
+      {
+        "name": "Heaters",
+        "slug": "heaters",
+        "parent": "home-appliances",
+        "grandchildren": [
+          {
+            "name": "Radiators",
+            "slug": "radiators",
+            "parent": "heaters"
+          },
+          {
+            "name": "Fireplaces & Stoves",
+            "slug": "fireplaces-stoves",
+            "parent": "heaters"
+          },
+          {
+            "name": "Space Heaters",
+            "slug": "space-heaters",
+            "parent": "heaters"
+          },
+          {
+            "name": "Solid Fuel Stoves",
+            "slug": "solid-fuel-stoves",
+            "parent": "heaters"
+          }
+        ]
+      },
+      {
+        "name": "Cooling & Wine Displays",
+        "slug": "cooling-displays",
+        "parent": "home-appliances",
+        "grandchildren": [
+          {
+            "name": "Wine Coolers",
+            "slug": "wine-coolers",
+            "parent": "cooling-displays"
+          }
+        ]
+      },
+      {
+        "name": "Accessories",
+        "slug": "appliances-accessories",
+        "parent": "home-appliances",
+        "grandchildren": [
+          {
+            "name": "Stove/Oven Accessories",
+            "slug": "acc-stoves",
+            "parent": "appliances-accessories"
+          },
+          {
+            "name": "Spare Parts",
+            "slug": "acc-spare-parts",
+            "parent": "appliances-accessories"
+          },
+          {
+            "name": "Air Purifier Filters",
+            "slug": "acc-filters",
+            "parent": "appliances-accessories"
+          },
+          {
+            "name": "Washer/Dryer Accessories",
+            "slug": "acc-washing",
+            "parent": "appliances-accessories"
+          },
+          {
+            "name": "AC/Hood Accessories",
+            "slug": "acc-ac-hood",
+            "parent": "appliances-accessories"
+          },
+          {
+            "name": "Fridge/Freezer Accessories",
+            "slug": "acc-fridge",
+            "parent": "appliances-accessories"
+          }
+        ]
+      },
+      {
+        "name": "Cleaning & Protection",
+        "slug": "cleaning-protection",
+        "parent": "home-appliances",
+        "grandchildren": [
+          {
+            "name": "Cleaning Wipes",
+            "slug": "cleaning-wipes",
+            "parent": "cleaning-protection"
+          },
+          {
+            "name": "Cleaning Liquid",
+            "slug": "cleaning-liquid",
+            "parent": "cleaning-protection"
+          },
+          {
+            "name": "Cleaning Tablets",
+            "slug": "cleaning-tablets",
+            "parent": "cleaning-protection"
+          }
+        ]
+      },
+      {
+        "name": "Air Purifiers",
+        "slug": "air-purifiers",
+        "parent": "home-appliances",
+        "grandchildren": []
+      }
+    ]
+  },
+  {
+    "name": "Home and Garden",
+    "slug": "home-and-garden",
+    "parent": null,
+    "children": [
+      {
+        "name": "Furniture",
+        "slug": "furniture",
+        "parent": "home-and-garden",
+        "grandchildren": [
+          {
+            "name": "Living Room",
+            "slug": "living-room",
+            "parent": "furniture"
+          },
+          {
+            "name": "Bedroom",
+            "slug": "bedroom",
+            "parent": "furniture"
+          },
+          {
+            "name": "Dining Room",
+            "slug": "dining-room",
+            "parent": "furniture"
+          },
+          {
+            "name": "Kitchen",
+            "slug": "kitchen-furniture",
+            "parent": "furniture"
+          },
+          {
+            "name": "Hallway / Entryway",
+            "slug": "entryway",
+            "parent": "furniture"
+          },
+          {
+            "name": "Office Furniture",
+            "slug": "office-furniture",
+            "parent": "furniture"
+          },
+          {
+            "name": "Wardrobe Elements",
+            "slug": "wardrobe-elements",
+            "parent": "furniture"
+          }
+        ]
+      },
+      {
+        "name": "Garden and Terrace",
+        "slug": "garden-terrace",
+        "parent": "home-and-garden",
+        "grandchildren": [
+          {
+            "name": "Garden Furniture",
+            "slug": "garden-furniture",
+            "parent": "garden-terrace"
+          },
+          {
+            "name": "Pools",
+            "slug": "pools",
+            "parent": "garden-terrace"
+          },
+          {
+            "name": "Solar Showers",
+            "slug": "solar-showers",
+            "parent": "garden-terrace"
+          },
+          {
+            "name": "BBQ and Equipment",
+            "slug": "bbq-equipment",
+            "parent": "garden-terrace"
+          },
+          {
+            "name": "Fences and Equipment",
+            "slug": "fences-equipment",
+            "parent": "garden-terrace"
+          },
+          {
+            "name": "Flower Pots / Planters",
+            "slug": "flower-pots",
+            "parent": "garden-terrace"
+          },
+          {
+            "name": "Garden Decoration",
+            "slug": "garden-decoration",
+            "parent": "garden-terrace"
+          },
+          {
+            "name": "Fountains",
+            "slug": "fountains",
+            "parent": "garden-terrace"
+          },
+          {
+            "name": "Terrace Flooring",
+            "slug": "terrace-flooring",
+            "parent": "garden-terrace"
+          }
+        ]
+      },
+      {
+        "name": "Kitchen and Dining",
+        "slug": "kitchen-dining",
+        "parent": "home-and-garden",
+        "grandchildren": [
+          {
+            "name": "Cooking and Baking Cookware",
+            "slug": "cookware-baking",
+            "parent": "kitchen-dining"
+          },
+          {
+            "name": "Serving Food and Drinks",
+            "slug": "serving-food-drinks",
+            "parent": "kitchen-dining"
+          },
+          {
+            "name": "Kitchen Textiles",
+            "slug": "kitchen-textiles",
+            "parent": "kitchen-dining"
+          },
+          {
+            "name": "Food Storage Containers",
+            "slug": "food-storage",
+            "parent": "kitchen-dining"
+          },
+          {
+            "name": "Shopping Carts",
+            "slug": "shopping-carts",
+            "parent": "kitchen-dining"
+          }
+        ]
+      },
+      {
+        "name": "Bedding, Pillows and Covers",
+        "slug": "bedding",
+        "parent": "home-and-garden",
+        "grandchildren": [
+          {
+            "name": "Pillows",
+            "slug": "pillows",
+            "parent": "bedding"
+          },
+          {
+            "name": "Bedding Sets",
+            "slug": "bedding-sets",
+            "parent": "bedding"
+          },
+          {
+            "name": "Duvets",
+            "slug": "duvets",
+            "parent": "bedding"
+          },
+          {
+            "name": "Blankets",
+            "slug": "blankets",
+            "parent": "bedding"
+          },
+          {
+            "name": "Bedspreads / Covers",
+            "slug": "bedspreads",
+            "parent": "bedding"
+          }
+        ]
+      },
+      {
+        "name": "Lighting",
+        "slug": "lighting",
+        "parent": "home-and-garden",
+        "grandchildren": [
+          {
+            "name": "Chandeliers",
+            "slug": "chandeliers",
+            "parent": "lighting"
+          },
+          {
+            "name": "Ceiling Lights",
+            "slug": "ceiling-lights",
+            "parent": "lighting"
+          },
+          {
+            "name": "Lamps",
+            "slug": "lamps",
+            "parent": "lighting"
+          },
+          {
+            "name": "Garden Lighting",
+            "slug": "garden-lighting",
+            "parent": "lighting"
+          },
+          {
+            "name": "Light Bulbs",
+            "slug": "light-bulbs",
+            "parent": "lighting"
+          },
+          {
+            "name": "LED Strips",
+            "slug": "led-strips",
+            "parent": "lighting"
+          },
+          {
+            "name": "Track Lighting",
+            "slug": "track-lighting",
+            "parent": "lighting"
+          },
+          {
+            "name": "Other Lighting",
+            "slug": "other-lighting",
+            "parent": "lighting"
+          },
+          {
+            "name": "Recessed Lighting",
+            "slug": "recessed-lighting",
+            "parent": "lighting"
+          },
+          {
+            "name": "Decorative Lighting",
+            "slug": "decorative-lighting",
+            "parent": "lighting"
+          }
+        ]
+      },
+      {
+        "name": "Decoration",
+        "slug": "decoration",
+        "parent": "home-and-garden",
+        "grandchildren": [
+          {
+            "name": "Home Textiles",
+            "slug": "home-textiles",
+            "parent": "decoration"
+          },
+          {
+            "name": "Paintings / Pictures",
+            "slug": "paintings-pictures",
+            "parent": "decoration"
+          },
+          {
+            "name": "Clocks",
+            "slug": "clocks",
+            "parent": "decoration"
+          },
+          {
+            "name": "Artificial Flowers and Pots",
+            "slug": "artificial-flowers",
+            "parent": "decoration"
+          },
+          {
+            "name": "Wall Decoration",
+            "slug": "wall-decoration",
+            "parent": "decoration"
+          },
+          {
+            "name": "Decorative Items",
+            "slug": "decorative-items",
+            "parent": "decoration"
+          },
+          {
+            "name": "Candles and Candlesticks",
+            "slug": "candles",
+            "parent": "decoration"
+          },
+          {
+            "name": "Picture Frames",
+            "slug": "picture-frames",
+            "parent": "decoration"
+          },
+          {
+            "name": "Vases",
+            "slug": "vases",
+            "parent": "decoration"
+          },
+          {
+            "name": "Carpets, Rugs and Mats",
+            "slug": "carpets-rugs",
+            "parent": "decoration"
+          },
+          {
+            "name": "Easter Decoration",
+            "slug": "easter-decoration",
+            "parent": "decoration"
+          },
+          {
+            "name": "Holiday Decoration",
+            "slug": "holiday-decoration",
+            "parent": "decoration"
+          },
+          {
+            "name": "Other Decoration",
+            "slug": "other-decoration",
+            "parent": "decoration"
+          }
+        ]
+      },
+      {
+        "name": "Bathroom Equipment",
+        "slug": "bathroom-equipment",
+        "parent": "home-and-garden",
+        "grandchildren": [
+          {
+            "name": "Bathroom Furniture and Sanitary Ware",
+            "slug": "bathroom-furniture",
+            "parent": "bathroom-equipment"
+          },
+          {
+            "name": "Bathroom Sets",
+            "slug": "bathroom-sets",
+            "parent": "bathroom-equipment"
+          },
+          {
+            "name": "Towels",
+            "slug": "towels",
+            "parent": "bathroom-equipment"
+          },
+          {
+            "name": "Bathroom Mats and Rugs",
+            "slug": "bathroom-mats",
+            "parent": "bathroom-equipment"
+          },
+          {
+            "name": "Shower Curtains",
+            "slug": "shower-curtains",
+            "parent": "bathroom-equipment"
+          },
+          {
+            "name": "Bath and Shower Mats (Rubber)",
+            "slug": "bath-rubber-mats",
+            "parent": "bathroom-equipment"
+          },
+          {
+            "name": "Sanitary Equipment",
+            "slug": "sanitary-equipment",
+            "parent": "bathroom-equipment"
+          },
+          {
+            "name": "Faucets and Accessories",
+            "slug": "faucets-accessories",
+            "parent": "bathroom-equipment"
+          }
+        ]
+      },
+      {
+        "name": "Wine and Brandy Preparation",
+        "slug": "wine-brandy-production",
+        "parent": "home-and-garden",
+        "grandchildren": [
+          {
+            "name": "Wine and Brandy Storage Vessels",
+            "slug": "wine-storage",
+            "parent": "wine-brandy-production"
+          },
+          {
+            "name": "Preparation Equipment",
+            "slug": "preparation-equipment",
+            "parent": "wine-brandy-production"
+          },
+          {
+            "name": "Additional Equipment",
+            "slug": "additional-equipment",
+            "parent": "wine-brandy-production"
+          }
+        ]
+      },
+      {
+        "name": "Smart Home",
+        "slug": "smart-home",
+        "parent": "home-and-garden",
+        "grandchildren": [
+          {
+            "name": "Smart Home Elements",
+            "slug": "smart-home-elements",
+            "parent": "smart-home"
+          },
+          {
+            "name": "Security Equipment",
+            "slug": "security-equipment",
+            "parent": "smart-home"
+          }
+        ]
+      },
+      {
+        "name": "New Year Decoration",
+        "slug": "new-year-decoration",
+        "parent": "home-and-garden",
+        "grandchildren": [
+          {
+            "name": "Christmas Trees",
+            "slug": "christmas-trees",
+            "parent": "new-year-decoration"
+          },
+          {
+            "name": "Tree Ornaments",
+            "slug": "tree-ornaments",
+            "parent": "new-year-decoration"
+          },
+          {
+            "name": "Christmas Lights",
+            "slug": "christmas-lights",
+            "parent": "new-year-decoration"
+          },
+          {
+            "name": "Garlands, Wreaths and Branches",
+            "slug": "garlands-wreaths",
+            "parent": "new-year-decoration"
+          },
+          {
+            "name": "Decorative Christmas Ornaments",
+            "slug": "decorative-ornaments",
+            "parent": "new-year-decoration"
+          }
+        ]
+      },
+      {
+        "name": "Carpentry",
+        "slug": "carpentry",
+        "parent": "home-and-garden",
+        "grandchildren": []
+      },
+      {
+        "name": "Solar Elements",
+        "slug": "solar-elements",
+        "parent": "home-and-garden",
+        "grandchildren": [
+          {
+            "name": "Solar Panels",
+            "slug": "solar-panels",
+            "parent": "solar-elements"
+          },
+          {
+            "name": "Charge Controllers and Inverters",
+            "slug": "charge-controllers",
+            "parent": "solar-elements"
+          },
+          {
+            "name": "Solar Batteries",
+            "slug": "solar-batteries",
+            "parent": "solar-elements"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Mobile Phones and Accessories",
+    "slug": "mobile-phones-accessories",
+    "parent": null,
+    "children": [
+      {
+        "name": "Mobile Phones",
+        "slug": "mobile-phones",
+        "parent": "mobile-phones-accessories",
+        "grandchildren": []
+      },
+      {
+        "name": "Accessories for Mobile Phones",
+        "slug": "mobile-accessories",
+        "parent": "mobile-phones-accessories",
+        "grandchildren": [
+          {
+            "name": "Batteries",
+            "slug": "mobile-batteries",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Chargers",
+            "slug": "mobile-chargers",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Screens",
+            "slug": "mobile-screens",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Motherboards",
+            "slug": "mobile-motherboards",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Headphones",
+            "slug": "mobile-headphones",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Memory Cards",
+            "slug": "mobile-memory-cards",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Antennas",
+            "slug": "mobile-antennas",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Cameras",
+            "slug": "mobile-cameras",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Microphones",
+            "slug": "mobile-microphones",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Cases",
+            "slug": "mobile-cases",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Car Chargers",
+            "slug": "mobile-car-chargers",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Protective Foils & Glass",
+            "slug": "mobile-protectors",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Bumpers",
+            "slug": "mobile-bumpers",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Protective Cases",
+            "slug": "mobile-cases-protectors",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Bluetooth Accessories",
+            "slug": "mobile-bluetooth",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Mobile Decorations",
+            "slug": "mobile-decorations",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Sim Cards",
+            "slug": "mobile-sim-cards",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Selfie Sticks",
+            "slug": "mobile-selfie-sticks",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Service Tools",
+            "slug": "mobile-service-tools",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Mobile Phone Services",
+            "slug": "mobile-services",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Buying Mobile Phones",
+            "slug": "mobile-buying",
+            "parent": "mobile-accessories"
+          },
+          {
+            "name": "Other Accessories",
+            "slug": "mobile-accessories-other",
+            "parent": "mobile-accessories"
+          }
+        ]
+      },
+      {
+        "name": "Tablets",
+        "slug": "tablets",
+        "parent": "mobile-phones-accessories",
+        "grandchildren": []
+      },
+      {
+        "name": "Smartwatches",
+        "slug": "smartwatches",
+        "parent": "mobile-phones-accessories",
+        "grandchildren": []
+      },
+      {
+        "name": "Landlines",
+        "slug": "landlines",
+        "parent": "mobile-phones-accessories",
+        "grandchildren": []
+      },
+      {
+        "name": "Faxes",
+        "slug": "faxes",
+        "parent": "mobile-phones-accessories",
+        "grandchildren": []
+      },
+      {
+        "name": "Old Phones",
+        "slug": "old-phones",
+        "parent": "mobile-phones-accessories",
+        "grandchildren": []
+      },
+      {
+        "name": "Other",
+        "slug": "mobile-other",
+        "parent": "mobile-phones-accessories",
+        "grandchildren": []
+      }
+    ]
+  },
+  {
+    "name": "Computers",
+    "slug": "computers",
+    "parent": null,
+    "children": []
+  },
+  {
+    "name": "TV, Audio and Video",
+    "slug": "tv-audio-video",
+    "parent": null,
+    "children": [
+      {
+        "name": "TV",
+        "slug": "tv",
+        "parent": "tv-audio-video",
+        "grandchildren": [
+          {
+            "name": "Televisions",
+            "slug": "televisions",
+            "parent": "tv"
+          },
+          {
+            "name": "TV-AV Cables",
+            "slug": "tv-av-cables",
+            "parent": "tv"
+          },
+          {
+            "name": "TV Antennas and Receivers",
+            "slug": "tv-antennas-receivers",
+            "parent": "tv"
+          },
+          {
+            "name": "TV Adapters",
+            "slug": "tv-adapters",
+            "parent": "tv"
+          },
+          {
+            "name": "Screen Cleaning",
+            "slug": "screen-cleaning",
+            "parent": "tv"
+          },
+          {
+            "name": "TV Accessories",
+            "slug": "tv-accessories",
+            "parent": "tv"
+          },
+          {
+            "name": "TV Mounts",
+            "slug": "tv-mounts",
+            "parent": "tv"
+          },
+          {
+            "name": "Remote Controls",
+            "slug": "remote-controls",
+            "parent": "tv"
+          }
+        ]
+      },
+      {
+        "name": "Audio",
+        "slug": "audio",
+        "parent": "tv-audio-video",
+        "grandchildren": [
+          {
+            "name": "Soundbars",
+            "slug": "soundbars",
+            "parent": "audio"
+          },
+          {
+            "name": "Headphones and Equipment",
+            "slug": "headphones-equipment",
+            "parent": "audio"
+          },
+          {
+            "name": "Radio Clocks and Thermometers",
+            "slug": "radio-clocks",
+            "parent": "audio"
+          },
+          {
+            "name": "Radios",
+            "slug": "radios",
+            "parent": "audio"
+          },
+          {
+            "name": "Other Audio Equipment",
+            "slug": "other-audio",
+            "parent": "audio"
+          },
+          {
+            "name": "Hi-Fi Systems",
+            "slug": "hifi-systems",
+            "parent": "audio"
+          },
+          {
+            "name": "MP3 Players",
+            "slug": "mp3-players",
+            "parent": "audio"
+          },
+          {
+            "name": "Microphones and Equipment",
+            "slug": "microphones",
+            "parent": "audio"
+          },
+          {
+            "name": "Converters",
+            "slug": "converters",
+            "parent": "audio"
+          },
+          {
+            "name": "Audio Systems",
+            "slug": "audio-systems",
+            "parent": "audio"
+          },
+          {
+            "name": "Turntables",
+            "slug": "turntables",
+            "parent": "audio"
+          },
+          {
+            "name": "Dictaphones",
+            "slug": "dictaphones",
+            "parent": "audio"
+          },
+          {
+            "name": "CD Players",
+            "slug": "cd-players",
+            "parent": "audio"
+          },
+          {
+            "name": "Wireless Speakers",
+            "slug": "wireless-speakers",
+            "parent": "audio"
+          },
+          {
+            "name": "Speakers and Equipment",
+            "slug": "speakers-equipment",
+            "parent": "audio"
+          }
+        ]
+      },
+      {
+        "name": "Video and Projectors",
+        "slug": "video-projectors",
+        "parent": "tv-audio-video",
+        "grandchildren": [
+          {
+            "name": "Projectors",
+            "slug": "projectors",
+            "parent": "video-projectors"
+          },
+          {
+            "name": "Projector Screens",
+            "slug": "projector-screens",
+            "parent": "video-projectors"
+          },
+          {
+            "name": "Other Video Equipment",
+            "slug": "other-video",
+            "parent": "video-projectors"
+          },
+          {
+            "name": "DVD Players",
+            "slug": "dvd-players",
+            "parent": "video-projectors"
+          },
+          {
+            "name": "Interactive Graphic Tablets",
+            "slug": "graphic-tablets",
+            "parent": "video-projectors"
+          },
+          {
+            "name": "Projector Accessories",
+            "slug": "projector-accessories",
+            "parent": "video-projectors"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Watches and Jewelry",
+    "slug": "watches-jewelry",
+    "parent": null,
+    "children": []
+  },
+  {
+    "name": "Health, Beauty and Equipment",
+    "slug": "health-beauty",
+    "parent": null,
+    "children": []
+  },
+  {
+    "name": "Books and Literature",
+    "slug": "books-literature",
+    "parent": null,
+    "children": []
+  },
+  {
+    "name": "Office and School Supplies",
+    "slug": "office-school-supplies",
+    "parent": null,
+    "children": []
+  },
+  {
+    "name": "Do It Yourself (DIY)",
+    "slug": "napravete-sami",
+    "parent": null,
+    "children": [
+      {
+        "name": "Cordless Tools",
+        "slug": "cordless-tools",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Cordless Drills & Drivers",
+            "slug": "cordless-drills",
+            "parent": "cordless-tools"
+          },
+          {
+            "name": "Cordless Rotary Hammers",
+            "slug": "cordless-rotary-hammers",
+            "parent": "cordless-tools"
+          },
+          {
+            "name": "Cordless Grinders",
+            "slug": "cordless-grinders",
+            "parent": "cordless-tools"
+          },
+          {
+            "name": "Cordless Impact Drivers",
+            "slug": "cordless-impact-drivers",
+            "parent": "cordless-tools"
+          },
+          {
+            "name": "Cordless Saws",
+            "slug": "cordless-saws",
+            "parent": "cordless-tools"
+          },
+          {
+            "name": "Cordless Routers & Planers",
+            "slug": "cordless-routers-planers",
+            "parent": "cordless-tools"
+          },
+          {
+            "name": "Cordless Renovators & Multitools",
+            "slug": "cordless-multitools",
+            "parent": "cordless-tools"
+          },
+          {
+            "name": "Cordless Industrial Vacuums",
+            "slug": "cordless-vacuums",
+            "parent": "cordless-tools"
+          },
+          {
+            "name": "Cordless Tool Sets",
+            "slug": "cordless-tool-sets",
+            "parent": "cordless-tools"
+          },
+          {
+            "name": "Batteries & Chargers",
+            "slug": "cordless-batteries-chargers",
+            "parent": "cordless-tools"
+          },
+          {
+            "name": "Other Cordless Tools",
+            "slug": "cordless-other",
+            "parent": "cordless-tools"
+          }
+        ]
+      },
+      {
+        "name": "Garden Tools",
+        "slug": "garden-tools",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Lawn Mowers",
+            "slug": "garden-mowers",
+            "parent": "garden-tools"
+          },
+          {
+            "name": "Grass Trimmers",
+            "slug": "garden-trimmers",
+            "parent": "garden-tools"
+          },
+          {
+            "name": "Pressure Washers",
+            "slug": "garden-pressure-washers",
+            "parent": "garden-tools"
+          },
+          {
+            "name": "Garden Hand Tools",
+            "slug": "garden-hand-tools",
+            "parent": "garden-tools"
+          },
+          {
+            "name": "Watering & Irrigation",
+            "slug": "garden-watering",
+            "parent": "garden-tools"
+          },
+          {
+            "name": "Chainsaws",
+            "slug": "garden-chainsaws",
+            "parent": "garden-tools"
+          },
+          {
+            "name": "Water Pumps",
+            "slug": "garden-pumps",
+            "parent": "garden-tools"
+          },
+          {
+            "name": "Leaf Blowers & Vacuums",
+            "slug": "garden-blowers",
+            "parent": "garden-tools"
+          },
+          {
+            "name": "Earth Augers",
+            "slug": "garden-augers",
+            "parent": "garden-tools"
+          },
+          {
+            "name": "Planting & Care",
+            "slug": "garden-planting",
+            "parent": "garden-tools"
+          },
+          {
+            "name": "Other Garden Tools",
+            "slug": "garden-other",
+            "parent": "garden-tools"
+          },
+          {
+            "name": "Nets & Foils",
+            "slug": "garden-nets",
+            "parent": "garden-tools"
+          }
+        ]
+      },
+      {
+        "name": "Electric Tools",
+        "slug": "electric-tools",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Electric Drills & Drivers",
+            "slug": "electric-drills",
+            "parent": "electric-tools"
+          },
+          {
+            "name": "Electric Rotary Hammers",
+            "slug": "electric-rotary-hammers",
+            "parent": "electric-tools"
+          },
+          {
+            "name": "Electric Saws",
+            "slug": "electric-saws",
+            "parent": "electric-tools"
+          },
+          {
+            "name": "Electric Grinders",
+            "slug": "electric-grinders",
+            "parent": "electric-tools"
+          },
+          {
+            "name": "Electric Planers & Routers",
+            "slug": "electric-planers",
+            "parent": "electric-tools"
+          },
+          {
+            "name": "Renovators - Multitools",
+            "slug": "electric-multitools",
+            "parent": "electric-tools"
+          },
+          {
+            "name": "Industrial Vacuums",
+            "slug": "electric-vacuums",
+            "parent": "electric-tools"
+          },
+          {
+            "name": "Heat Guns",
+            "slug": "electric-heat-guns",
+            "parent": "electric-tools"
+          },
+          {
+            "name": "Staplers & Nailers",
+            "slug": "electric-staplers",
+            "parent": "electric-tools"
+          },
+          {
+            "name": "Wall Chasers",
+            "slug": "electric-wall-chasers",
+            "parent": "electric-tools"
+          },
+          {
+            "name": "Mixers for Construction Materials",
+            "slug": "electric-mixers",
+            "parent": "electric-tools"
+          },
+          {
+            "name": "Sheet Metal Shears",
+            "slug": "electric-shears",
+            "parent": "electric-tools"
+          },
+          {
+            "name": "Glue Guns",
+            "slug": "electric-glue-guns",
+            "parent": "electric-tools"
+          },
+          {
+            "name": "Other Electric Tools",
+            "slug": "electric-other",
+            "parent": "electric-tools"
+          },
+          {
+            "name": "Electric Tool Accessories",
+            "slug": "electric-accessories",
+            "parent": "electric-tools"
+          },
+          {
+            "name": "Routers",
+            "slug": "electric-routers",
+            "parent": "electric-tools"
+          }
+        ]
+      },
+      {
+        "name": "Hand Tools",
+        "slug": "hand-tools",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Pliers",
+            "slug": "hand-pliers",
+            "parent": "hand-tools"
+          },
+          {
+            "name": "Wrenches & Spanners",
+            "slug": "hand-wrenches",
+            "parent": "hand-tools"
+          },
+          {
+            "name": "Screwdrivers",
+            "slug": "hand-screwdrivers",
+            "parent": "hand-tools"
+          },
+          {
+            "name": "Tool Sets",
+            "slug": "hand-tool-sets",
+            "parent": "hand-tools"
+          },
+          {
+            "name": "Cutters & Utility Knives",
+            "slug": "hand-cutters",
+            "parent": "hand-tools"
+          },
+          {
+            "name": "Tool Storage & Organization",
+            "slug": "hand-storage",
+            "parent": "hand-tools"
+          },
+          {
+            "name": "Saws & Hacksaws",
+            "slug": "hand-saws",
+            "parent": "hand-tools"
+          },
+          {
+            "name": "Hammers & Mallets",
+            "slug": "hand-hammers",
+            "parent": "hand-tools"
+          },
+          {
+            "name": "Wire Brushes & Files",
+            "slug": "hand-brushes",
+            "parent": "hand-tools"
+          },
+          {
+            "name": "Clamps & Vices",
+            "slug": "hand-clamps",
+            "parent": "hand-tools"
+          },
+          {
+            "name": "Chisels & Crowbars",
+            "slug": "hand-chisels",
+            "parent": "hand-tools"
+          },
+          {
+            "name": "Marking Tools",
+            "slug": "hand-marking",
+            "parent": "hand-tools"
+          },
+          {
+            "name": "Hand Staplers",
+            "slug": "hand-staplers",
+            "parent": "hand-tools"
+          },
+          {
+            "name": "Automotive Tools",
+            "slug": "hand-automotive",
+            "parent": "hand-tools"
+          },
+          {
+            "name": "Shears & Bolt Cutters",
+            "slug": "hand-shears",
+            "parent": "hand-tools"
+          },
+          {
+            "name": "Other Hand Tools",
+            "slug": "hand-other",
+            "parent": "hand-tools"
+          }
+        ]
+      },
+      {
+        "name": "Painting & Ceramics",
+        "slug": "painting-ceramics",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Paint Brushes",
+            "slug": "painting-brushes",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Paint Rollers",
+            "slug": "painting-rollers",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Foils & Protection",
+            "slug": "painting-foil",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Trowels",
+            "slug": "painting-trowels",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Spatulas",
+            "slug": "painting-spatulas",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Ladles & Trowels",
+            "slug": "painting-ladles",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Mixers",
+            "slug": "painting-mixers",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Silicone & Foam Guns",
+            "slug": "painting-guns",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Telescopic Poles",
+            "slug": "painting-telescopic",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Ceramic Tools",
+            "slug": "ceramics-tools",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Tile Cutters",
+            "slug": "ceramics-cutters",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Ladders, Scaffolding & Platforms",
+            "slug": "painting-ladders",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Sanders & Abrasives",
+            "slug": "painting-sanders",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Buckets & Trays",
+            "slug": "painting-buckets",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Cleaning Brushes",
+            "slug": "painting-cleaning",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Other Painting Tools",
+            "slug": "painting-other",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Silicone Guns",
+            "slug": "painting-silicone-guns",
+            "parent": "painting-ceramics"
+          },
+          {
+            "name": "Large Brushes",
+            "slug": "painting-brushes-large",
+            "parent": "painting-ceramics"
+          }
+        ]
+      },
+      {
+        "name": "Paints & Varnishes",
+        "slug": "paints-varnishes",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Wall Paints",
+            "slug": "paints-wall",
+            "parent": "paints-varnishes"
+          },
+          {
+            "name": "Metal Paints",
+            "slug": "paints-metal",
+            "parent": "paints-varnishes"
+          },
+          {
+            "name": "Concrete & Stone Paints",
+            "slug": "paints-concrete",
+            "parent": "paints-varnishes"
+          },
+          {
+            "name": "Wood Varnishes",
+            "slug": "paints-wood",
+            "parent": "paints-varnishes"
+          },
+          {
+            "name": "Spray Paints",
+            "slug": "paints-sprays",
+            "parent": "paints-varnishes"
+          }
+        ]
+      },
+      {
+        "name": "Protective Equipment (PPE)",
+        "slug": "protective-equipment",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Safety Shoes",
+            "slug": "protective-shoes",
+            "parent": "protective-equipment"
+          },
+          {
+            "name": "Protective Clothing",
+            "slug": "protective-clothing",
+            "parent": "protective-equipment"
+          },
+          {
+            "name": "Protective Gloves",
+            "slug": "protective-gloves",
+            "parent": "protective-equipment"
+          },
+          {
+            "name": "Protective Masks",
+            "slug": "protective-masks",
+            "parent": "protective-equipment"
+          },
+          {
+            "name": "Safety Glasses",
+            "slug": "protective-glasses",
+            "parent": "protective-equipment"
+          },
+          {
+            "name": "Helmets & Visors",
+            "slug": "protective-helmets",
+            "parent": "protective-equipment"
+          },
+          {
+            "name": "Hearing Protection",
+            "slug": "protective-hearing",
+            "parent": "protective-equipment"
+          },
+          {
+            "name": "Welding Masks",
+            "slug": "protective-welding",
+            "parent": "protective-equipment"
+          },
+          {
+            "name": "Knee Pads",
+            "slug": "protective-knee",
+            "parent": "protective-equipment"
+          },
+          {
+            "name": "Other PPE",
+            "slug": "protective-other",
+            "parent": "protective-equipment"
+          }
+        ]
+      },
+      {
+        "name": "Technical Chemistry",
+        "slug": "technical-chemistry",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Construction Silicone",
+            "slug": "chem-silicone",
+            "parent": "technical-chemistry"
+          },
+          {
+            "name": "PU Foam",
+            "slug": "chem-foam",
+            "parent": "technical-chemistry"
+          },
+          {
+            "name": "Adhesives & Putty",
+            "slug": "chem-adhesives",
+            "parent": "technical-chemistry"
+          },
+          {
+            "name": "Technical Sprays",
+            "slug": "chem-sprays",
+            "parent": "technical-chemistry"
+          },
+          {
+            "name": "Thermo & Fluoro Sprays",
+            "slug": "chem-thermo-sprays",
+            "parent": "technical-chemistry"
+          },
+          {
+            "name": "Other Technical Chemistry",
+            "slug": "chem-other",
+            "parent": "technical-chemistry"
+          }
+        ]
+      },
+      {
+        "name": "Tool Accessories",
+        "slug": "tool-accessories",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Bits & Bit Holders",
+            "slug": "acc-bits",
+            "parent": "tool-accessories"
+          },
+          {
+            "name": "Grinding & Cutting Accessories",
+            "slug": "acc-grinding",
+            "parent": "tool-accessories"
+          },
+          {
+            "name": "Drills, Chisels & Points",
+            "slug": "acc-drills",
+            "parent": "tool-accessories"
+          },
+          {
+            "name": "Saw Blades",
+            "slug": "acc-blades",
+            "parent": "tool-accessories"
+          },
+          {
+            "name": "Milling & Grooving",
+            "slug": "acc-milling",
+            "parent": "tool-accessories"
+          },
+          {
+            "name": "Hole Saws & Adapters",
+            "slug": "acc-crowns",
+            "parent": "tool-accessories"
+          },
+          {
+            "name": "Staples & Nails",
+            "slug": "acc-staples",
+            "parent": "tool-accessories"
+          },
+          {
+            "name": "Chucks & Accessories",
+            "slug": "acc-chucks",
+            "parent": "tool-accessories"
+          },
+          {
+            "name": "Grinder Accessories",
+            "slug": "acc-grinder-parts",
+            "parent": "tool-accessories"
+          },
+          {
+            "name": "Heat Gun Accessories",
+            "slug": "acc-heat-gun-parts",
+            "parent": "tool-accessories"
+          },
+          {
+            "name": "Planer Accessories",
+            "slug": "acc-planer-parts",
+            "parent": "tool-accessories"
+          },
+          {
+            "name": "Pressure Washer Accessories",
+            "slug": "acc-washer-parts",
+            "parent": "tool-accessories"
+          },
+          {
+            "name": "Multitool Accessories",
+            "slug": "acc-multitool-parts",
+            "parent": "tool-accessories"
+          },
+          {
+            "name": "Welding & Soldering Accessories",
+            "slug": "acc-welding",
+            "parent": "tool-accessories"
+          },
+          {
+            "name": "Other Machine Accessories",
+            "slug": "acc-machine-other",
+            "parent": "tool-accessories"
+          },
+          {
+            "name": "Misc Tools & storage",
+            "slug": "acc-misc",
+            "parent": "tool-accessories"
+          }
+        ]
+      },
+      {
+        "name": "Machines & Pneumatics",
+        "slug": "machines-pneumatics",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Log Splitters",
+            "slug": "mach-splitters",
+            "parent": "machines-pneumatics"
+          },
+          {
+            "name": "Air Compressors",
+            "slug": "mach-compressors",
+            "parent": "machines-pneumatics"
+          },
+          {
+            "name": "Power Generators",
+            "slug": "mach-generators",
+            "parent": "machines-pneumatics"
+          },
+          {
+            "name": "Welding Machines",
+            "slug": "mach-welders",
+            "parent": "machines-pneumatics"
+          },
+          {
+            "name": "Hoists & Winches",
+            "slug": "mach-lifts",
+            "parent": "machines-pneumatics"
+          },
+          {
+            "name": "Hydraulic Presses",
+            "slug": "mach-presses",
+            "parent": "machines-pneumatics"
+          },
+          {
+            "name": "Soldering Irons",
+            "slug": "mach-soldering",
+            "parent": "machines-pneumatics"
+          },
+          {
+            "name": "Trolleys & Carts",
+            "slug": "mach-trolleys",
+            "parent": "machines-pneumatics"
+          },
+          {
+            "name": "Pneumatic Tools",
+            "slug": "mach-pneumatic",
+            "parent": "machines-pneumatics"
+          },
+          {
+            "name": "Floor Cleaning Machines",
+            "slug": "mach-cleaning",
+            "parent": "machines-pneumatics"
+          },
+          {
+            "name": "Pipe Welders",
+            "slug": "mach-pipe-welders",
+            "parent": "machines-pneumatics"
+          },
+          {
+            "name": "Forklifts & Pallet Jacks",
+            "slug": "mach-forklifts",
+            "parent": "machines-pneumatics"
+          },
+          {
+            "name": "Other Machines",
+            "slug": "mach-other",
+            "parent": "machines-pneumatics"
+          },
+          {
+            "name": "Pneumatic Guns",
+            "slug": "mach-pneumatic-guns",
+            "parent": "machines-pneumatics"
+          }
+        ]
+      },
+      {
+        "name": "Measuring Tools",
+        "slug": "measuring-tools",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Construction Lasers",
+            "slug": "meas-lasers",
+            "parent": "measuring-tools"
+          },
+          {
+            "name": "Detectors",
+            "slug": "meas-detectors",
+            "parent": "measuring-tools"
+          },
+          {
+            "name": "Measuring Tapes",
+            "slug": "meas-tapes",
+            "parent": "measuring-tools"
+          },
+          {
+            "name": "Levels",
+            "slug": "meas-levels",
+            "parent": "measuring-tools"
+          },
+          {
+            "name": "Rulers & Squares",
+            "slug": "meas-rulers",
+            "parent": "measuring-tools"
+          },
+          {
+            "name": "Protractors & Compasses",
+            "slug": "meas-protractors",
+            "parent": "measuring-tools"
+          },
+          {
+            "name": "Micrometers",
+            "slug": "meas-micrometers",
+            "parent": "measuring-tools"
+          },
+          {
+            "name": "Multimeters & Testers",
+            "slug": "meas-multimeters",
+            "parent": "measuring-tools"
+          },
+          {
+            "name": "Calipers",
+            "slug": "meas-calipers",
+            "parent": "measuring-tools"
+          },
+          {
+            "name": "Thermal & Inspection Cameras",
+            "slug": "meas-cameras",
+            "parent": "measuring-tools"
+          },
+          {
+            "name": "Tripods & Accessories",
+            "slug": "meas-tripods",
+            "parent": "measuring-tools"
+          },
+          {
+            "name": "Other Measuring Tools",
+            "slug": "meas-other",
+            "parent": "measuring-tools"
+          }
+        ]
+      },
+      {
+        "name": "Tapes & Ropes",
+        "slug": "tapes-ropes",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Masking Tape",
+            "slug": "tape-crepe",
+            "parent": "tapes-ropes"
+          },
+          {
+            "name": "Insulation Tape",
+            "slug": "tape-insulation",
+            "parent": "tapes-ropes"
+          },
+          {
+            "name": "Scotch Tape",
+            "slug": "tape-scoth",
+            "parent": "tapes-ropes"
+          },
+          {
+            "name": "Double-sided Tape",
+            "slug": "tape-double",
+            "parent": "tapes-ropes"
+          },
+          {
+            "name": "Sealing Tape",
+            "slug": "tape-sealing",
+            "parent": "tapes-ropes"
+          },
+          {
+            "name": "Banding Tape",
+            "slug": "tape-banding",
+            "parent": "tapes-ropes"
+          },
+          {
+            "name": "Ropes",
+            "slug": "tape-ropes",
+            "parent": "tapes-ropes"
+          },
+          {
+            "name": "Other Tapes & Ropes",
+            "slug": "tape-other",
+            "parent": "tapes-ropes"
+          }
+        ]
+      },
+      {
+        "name": "Metal Hardware",
+        "slug": "metal-hardware",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Screws & Bolts",
+            "slug": "metal-screws",
+            "parent": "metal-hardware"
+          },
+          {
+            "name": "Nails",
+            "slug": "metal-nails",
+            "parent": "metal-hardware"
+          },
+          {
+            "name": "Dowels",
+            "slug": "metal-dowels",
+            "parent": "metal-hardware"
+          },
+          {
+            "name": "Small Hardware",
+            "slug": "metal-small",
+            "parent": "metal-hardware"
+          },
+          {
+            "name": "Chains & Cables",
+            "slug": "metal-chains",
+            "parent": "metal-hardware"
+          },
+          {
+            "name": "Locks & Handles",
+            "slug": "metal-locks",
+            "parent": "metal-hardware"
+          },
+          {
+            "name": "Metal Cabinets & Safes",
+            "slug": "metal-safes",
+            "parent": "metal-hardware"
+          },
+          {
+            "name": "Padlocks",
+            "slug": "metal-padlocks",
+            "parent": "metal-hardware"
+          },
+          {
+            "name": "Furniture Hardware",
+            "slug": "metal-furniture",
+            "parent": "metal-hardware"
+          },
+          {
+            "name": "Shelf Brackets",
+            "slug": "metal-brackets",
+            "parent": "metal-hardware"
+          },
+          {
+            "name": "Other Metal Hardware",
+            "slug": "metal-other",
+            "parent": "metal-hardware"
+          }
+        ]
+      },
+      {
+        "name": "Electrical Materials",
+        "slug": "electrical-materials",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Extension Cords & Splitters",
+            "slug": "elec-cables",
+            "parent": "electrical-materials"
+          },
+          {
+            "name": "Batteries & Chargers",
+            "slug": "elec-batteries",
+            "parent": "electrical-materials"
+          },
+          {
+            "name": "Switches",
+            "slug": "elec-switches",
+            "parent": "electrical-materials"
+          },
+          {
+            "name": "Sockets",
+            "slug": "elec-sockets",
+            "parent": "electrical-materials"
+          },
+          {
+            "name": "Plugs",
+            "slug": "elec-plugs",
+            "parent": "electrical-materials"
+          },
+          {
+            "name": "Modular Hardware",
+            "slug": "elec-modular",
+            "parent": "electrical-materials"
+          },
+          {
+            "name": "Junction Boxes",
+            "slug": "elec-boxes",
+            "parent": "electrical-materials"
+          },
+          {
+            "name": "Distribution Panels",
+            "slug": "elec-panels",
+            "parent": "electrical-materials"
+          },
+          {
+            "name": "Circuit Breakers",
+            "slug": "elec-breakers",
+            "parent": "electrical-materials"
+          },
+          {
+            "name": "Cable Carriers",
+            "slug": "elec-carriers",
+            "parent": "electrical-materials"
+          },
+          {
+            "name": "Other Cables",
+            "slug": "elec-other",
+            "parent": "electrical-materials"
+          }
+        ]
+      },
+      {
+        "name": "Plumbing",
+        "slug": "plumbing",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Valves & Regulators",
+            "slug": "plumbing-valves",
+            "parent": "plumbing"
+          },
+          {
+            "name": "Siphons & Drains",
+            "slug": "plumbing-drains",
+            "parent": "plumbing"
+          },
+          {
+            "name": "Parts & Accessories",
+            "slug": "plumbing-parts",
+            "parent": "plumbing"
+          }
+        ]
+      },
+      {
+        "name": "Construction Materials",
+        "slug": "construction-materials",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Building Materials",
+            "slug": "const-building",
+            "parent": "construction-materials"
+          },
+          {
+            "name": "Flooring & Wall Coverings",
+            "slug": "const-flooring",
+            "parent": "construction-materials"
+          },
+          {
+            "name": "Insulation",
+            "slug": "const-insulation",
+            "parent": "construction-materials"
+          },
+          {
+            "name": "Drainage",
+            "slug": "const-drainage",
+            "parent": "construction-materials"
+          },
+          {
+            "name": "Construction Equipment",
+            "slug": "const-equipment",
+            "parent": "construction-materials"
+          }
+        ]
+      },
+      {
+        "name": "Tiling Program",
+        "slug": "tiling-program",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Tile Spacers",
+            "slug": "tiling-spacers",
+            "parent": "tiling-program"
+          }
+        ]
+      },
+      {
+        "name": "Agricultural Machines",
+        "slug": "agricultural-machines",
+        "parent": "napravete-sami",
+        "grandchildren": [
+          {
+            "name": "Cultivators & Tillers",
+            "slug": "agri-cultivators",
+            "parent": "agricultural-machines"
+          },
+          {
+            "name": "Storage & Transport Equipment",
+            "slug": "agri-storage",
+            "parent": "agricultural-machines"
+          },
+          {
+            "name": "Other Agricultural Machines",
+            "slug": "agri-other",
+            "parent": "agricultural-machines"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Fashion & Clothing",
+    "slug": "fashion-clothing",
+    "parent": null,
+    "children": [
+      {
+        "name": "Shoes",
+        "slug": "shoes",
+        "parent": "fashion-clothing",
+        "grandchildren": []
+      },
+      {
+        "name": "Bags & Accessories",
+        "slug": "bags-accessories",
+        "parent": "fashion-clothing",
+        "grandchildren": []
+      }
+    ]
+  },
+  {
+    "name": "Sports & Hobbies",
+    "slug": "sports-hobbies",
+    "parent": null,
+    "children": [
+      {
+        "name": "Bicycles",
+        "slug": "bicycles",
+        "parent": "sports-hobbies",
+        "grandchildren": []
+      },
+      {
+        "name": "Fitness Equipment",
+        "slug": "fitness-equipment",
+        "parent": "sports-hobbies",
+        "grandchildren": []
+      },
+      {
+        "name": "Fishing",
+        "slug": "fishing",
+        "parent": "sports-hobbies",
+        "grandchildren": []
+      },
+      {
+        "name": "Winter Sports",
+        "slug": "winter-sports",
+        "parent": "sports-hobbies",
+        "grandchildren": []
+      },
+      {
+        "name": "Musical Instruments",
+        "slug": "musical-instruments",
+        "parent": "sports-hobbies",
+        "grandchildren": []
+      },
+      {
+        "name": "Collecting & Antiques",
+        "slug": "collecting-antiques",
+        "parent": "sports-hobbies",
+        "grandchildren": []
+      }
+    ]
+  },
+  {
+    "name": "Animals & Pets",
+    "slug": "animals-pets",
+    "parent": null,
+    "children": [
+      {
+        "name": "Dogs",
+        "slug": "dogs",
+        "parent": "animals-pets",
+        "grandchildren": []
+      },
+      {
+        "name": "Cats",
+        "slug": "cats",
+        "parent": "animals-pets",
+        "grandchildren": []
+      },
+      {
+        "name": "Birds",
+        "slug": "birds",
+        "parent": "animals-pets",
+        "grandchildren": []
+      },
+      {
+        "name": "Pet Accessories",
+        "slug": "pet-accessories",
+        "parent": "animals-pets",
+        "grandchildren": []
+      },
+      {
+        "name": "Other Animals",
+        "slug": "other-animals",
+        "parent": "animals-pets",
+        "grandchildren": []
+      }
+    ]
+  },
+  {
+    "name": "Jobs & Services",
+    "slug": "jobs-services",
+    "parent": null,
+    "children": [
+      {
+        "name": "Jobs",
+        "slug": "jobs",
+        "parent": "jobs-services",
+        "grandchildren": []
+      },
+      {
+        "name": "Services",
+        "slug": "services",
+        "parent": "jobs-services",
+        "grandchildren": []
+      },
+      {
+        "name": "Freelance / Remote Work",
+        "slug": "freelance-remote",
+        "parent": "jobs-services",
+        "grandchildren": []
+      }
+    ]
+  },
+  {
+    "name": "Food & Agriculture",
+    "slug": "food-agriculture",
+    "parent": null,
+    "children": [
+      {
+        "name": "Fresh Produce",
+        "slug": "fresh-produce",
+        "parent": "food-agriculture",
+        "grandchildren": []
+      },
+      {
+        "name": "Seeds & Seedlings",
+        "slug": "seeds-seedlings",
+        "parent": "food-agriculture",
+        "grandchildren": []
+      },
+      {
+        "name": "Livestock",
+        "slug": "livestock",
+        "parent": "food-agriculture",
+        "grandchildren": []
+      },
+      {
+        "name": "Farm Land for Sale/Rent",
+        "slug": "farm-land-sale",
+        "parent": "food-agriculture",
+        "grandchildren": []
+      }
+    ]
+  },
+  {
+    "name": "Business Equipment",
+    "slug": "business-equipment",
+    "parent": null,
+    "children": [
+      {
+        "name": "Office Furniture",
+        "slug": "business-office-furniture",
+        "parent": "business-equipment",
+        "grandchildren": []
+      },
+      {
+        "name": "Catering Equipment",
+        "slug": "catering-equipment",
+        "parent": "business-equipment",
+        "grandchildren": []
+      },
+      {
+        "name": "POS & Retail Systems",
+        "slug": "pos-retail-systems",
+        "parent": "business-equipment",
+        "grandchildren": []
+      },
+      {
+        "name": "Industrial Machinery",
+        "slug": "industrial-machinery",
+        "parent": "business-equipment",
+        "grandchildren": []
+      }
+    ]
+  }
+]
