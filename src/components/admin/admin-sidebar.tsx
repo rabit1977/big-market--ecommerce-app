@@ -383,7 +383,7 @@ export const AdminSidebar = () => {
             </SheetTrigger>
             <SheetContent
               side='bottom'
-              className='h-[85vh] rounded-t-3xl p-0 flex flex-col shadow-[0_-20px_50px_rgba(0,0,0,0.1)] border-b-0 [&>button]:hidden'
+              className='h-[95vh] rounded-t-3xl p-0 flex flex-col shadow-[0_-20px_50px_rgba(0,0,0,0.1)] border-b-0 [&>button]:hidden'
             >
               <div
                 className='flex flex-col cursor-grab active:cursor-grabbing z-10 touch-pan-y'
@@ -469,7 +469,7 @@ export const AdminSidebar = () => {
                     >
                       <Link href='/'>
                         <Home className='w-4 h-4 mr-2 opacity-70' />
-                        {t('store')}
+                        {t('store') || 'Store'}
                       </Link>
                     </Button>
                     <Button

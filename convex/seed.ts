@@ -427,19 +427,14 @@ const categoriesData = [
       fields: [
         {
           key: 'adType',
-          label: 'Тип на оглас',
-          options: [
-            'Се продава',
-            'Се купува',
-            'Се изнајмува',
-            'Се бара изнајмување',
-          ],
+          label: 'Ad Type',
+          options: ['For Sale', 'Wanted', 'For Rent', 'Rent Wanted'],
           type: 'select',
         },
         {
           key: 'isTradePossible',
-          label: 'Може замена',
-          options: ['Да', 'Не'],
+          label: 'Trade Possible',
+          options: ['Yes', 'No'],
           type: 'select',
         },
         {
@@ -451,7 +446,13 @@ const categoriesData = [
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
+          options: ['Honda', 'Yamaha', 'Kawasaki', 'Suzuki', 'BMW', 'Ducati', 'KTM', 'Harley-Davidson', 'Triumph', 'Aprilia', 'Husqvarna', 'Royal Enfield', 'Other'],
+          type: 'select',
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          placeholder: 'e.g. CBR 600RR',
           type: 'text',
         },
         {
@@ -462,7 +463,7 @@ const categoriesData = [
         },
         {
           key: 'mileage',
-          label: 'Mileage',
+          label: 'Mileage (km)',
           placeholder: 'km',
           type: 'number',
         },
@@ -477,6 +478,12 @@ const categoriesData = [
           label: 'Power (KW)',
           placeholder: 'KW',
           type: 'number',
+        },
+        {
+          key: 'bodyType',
+          label: 'Type',
+          options: ['Sport', 'Naked/Streetfighter', 'Cruiser', 'Touring', 'Enduro/Adventure', 'Off-Road/Motocross', 'Scooter', 'Other'],
+          type: 'select',
         },
         {
           key: 'color',
@@ -499,19 +506,14 @@ const categoriesData = [
       fields: [
         {
           key: 'adType',
-          label: 'Тип на оглас',
-          options: [
-            'Се продава',
-            'Се купува',
-            'Се изнајмува',
-            'Се бара изнајмување',
-          ],
+          label: 'Ad Type',
+          options: ['For Sale', 'Wanted', 'For Rent', 'Rent Wanted'],
           type: 'select',
         },
         {
           key: 'isTradePossible',
-          label: 'Може замена',
-          options: ['Да', 'Не'],
+          label: 'Trade Possible',
+          options: ['Yes', 'No'],
           type: 'select',
         },
         {
@@ -534,7 +536,7 @@ const categoriesData = [
         },
         {
           key: 'mileage',
-          label: 'Mileage',
+          label: 'Mileage (km)',
           placeholder: 'km',
           type: 'number',
         },
@@ -546,8 +548,8 @@ const categoriesData = [
         },
         {
           key: 'power',
-          label: 'Power (KW)',
-          placeholder: 'KW',
+          label: 'Power (W)',
+          placeholder: 'W',
           type: 'number',
         },
         {
@@ -556,7 +558,7 @@ const categoriesData = [
           type: 'color-picker',
         },
       ],
-      titlePlaceholder: 'e.g. Honda CBR 600RR',
+      titlePlaceholder: 'e.g. Yamaha Aerox 50cc',
     },
   },
   {
@@ -571,19 +573,14 @@ const categoriesData = [
       fields: [
         {
           key: 'adType',
-          label: 'Тип на оглас',
-          options: [
-            'Се продава',
-            'Се купува',
-            'Се изнајмува',
-            'Се бара изнајмување',
-          ],
+          label: 'Ad Type',
+          options: ['For Sale', 'Wanted', 'For Rent', 'Rent Wanted'],
           type: 'select',
         },
         {
           key: 'isTradePossible',
-          label: 'Може замена',
-          options: ['Да', 'Не'],
+          label: 'Trade Possible',
+          options: ['Yes', 'No'],
           type: 'select',
         },
         {
@@ -606,20 +603,20 @@ const categoriesData = [
         },
         {
           key: 'mileage',
-          label: 'Mileage',
+          label: 'Mileage (km)',
           placeholder: 'km',
           type: 'number',
         },
         {
-          key: 'ccm',
-          label: 'Displacement (ccm)',
-          placeholder: 'ccm',
+          key: 'range_km',
+          label: 'Range per Charge (km)',
+          placeholder: 'km',
           type: 'number',
         },
         {
           key: 'power',
-          label: 'Power (KW)',
-          placeholder: 'KW',
+          label: 'Power (W)',
+          placeholder: 'W',
           type: 'number',
         },
         {
@@ -628,7 +625,7 @@ const categoriesData = [
           type: 'color-picker',
         },
       ],
-      titlePlaceholder: 'e.g. Honda CBR 600RR',
+      titlePlaceholder: 'e.g. Xiaomi Pro 2 Electric Scooter',
     },
   },
   {
@@ -643,19 +640,14 @@ const categoriesData = [
       fields: [
         {
           key: 'adType',
-          label: 'Тип на оглас',
-          options: [
-            'Се продава',
-            'Се купува',
-            'Се изнајмува',
-            'Се бара изнајмување',
-          ],
+          label: 'Ad Type',
+          options: ['For Sale', 'Wanted', 'For Rent', 'Rent Wanted'],
           type: 'select',
         },
         {
           key: 'isTradePossible',
-          label: 'Може замена',
-          options: ['Да', 'Не'],
+          label: 'Trade Possible',
+          options: ['Yes', 'No'],
           type: 'select',
         },
         {
@@ -728,19 +720,14 @@ const categoriesData = [
       fields: [
         {
           key: 'adType',
-          label: 'Тип на оглас',
-          options: [
-            'Се продава',
-            'Се купува',
-            'Се изнајмува',
-            'Се бара изнајмување',
-          ],
+          label: 'Ad Type',
+          options: ['For Sale', 'Wanted', 'For Rent', 'Rent Wanted'],
           type: 'select',
         },
         {
           key: 'isTradePossible',
-          label: 'Може замена',
-          options: ['Да', 'Не'],
+          label: 'Trade Possible',
+          options: ['Yes', 'No'],
           type: 'select',
         },
         {
@@ -813,19 +800,14 @@ const categoriesData = [
       fields: [
         {
           key: 'adType',
-          label: 'Тип на оглас',
-          options: [
-            'Се продава',
-            'Се купува',
-            'Се изнајмува',
-            'Се бара изнајмување',
-          ],
+          label: 'Ad Type',
+          options: ['For Sale', 'Wanted', 'For Rent', 'Rent Wanted'],
           type: 'select',
         },
         {
           key: 'isTradePossible',
-          label: 'Може замена',
-          options: ['Да', 'Не'],
+          label: 'Trade Possible',
+          options: ['Yes', 'No'],
           type: 'select',
         },
         {
@@ -897,19 +879,43 @@ const categoriesData = [
           type: 'select',
         },
         {
+          key: 'trailer_type',
+          label: 'Trailer Type',
+          options: ['Flatbed', 'Curtainsider', 'Box', 'Tanker', 'Refrigerated', 'Tipper', 'Car Transporter', 'Other'],
+          type: 'select',
+        },
+        {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
+          placeholder: 'e.g. Schmitz, Krone, Wielton',
           type: 'text',
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'year',
+          label: 'Year',
+          placeholder: 'Year',
+          type: 'number',
+        },
+        {
+          key: 'length_m',
+          label: 'Length (m)',
+          placeholder: 'm',
+          type: 'number',
+        },
+        {
+          key: 'axles',
+          label: 'Number of Axles',
+          placeholder: 'Axles',
+          type: 'number',
+        },
+        {
+          key: 'load_capacity_tons',
+          label: 'Load Capacity (tons)',
+          placeholder: 'tons',
+          type: 'number',
         },
       ],
-      titlePlaceholder: 'e.g. Trailers',
+      titlePlaceholder: 'e.g. Schmitz Curtainsider 13.6m',
     },
   },
   {
@@ -923,25 +929,43 @@ const categoriesData = [
     template: {
       fields: [
         {
-          key: 'condition',
-          label: 'Condition',
-          options: ['New', 'Used', 'Damaged'],
+          key: 'vehicle_type',
+          label: 'Vehicle Type',
+          options: ['Car', 'Motorcycle', 'Van', 'Truck', 'Bus', 'Other'],
           type: 'select',
         },
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
+          options: ['Audi', 'BMW', 'Citroen', 'Dacia', 'Fiat', 'Ford', 'Honda', 'Hyundai', 'Kia', 'Mazda', 'Mercedes-Benz', 'Mitsubishi', 'Nissan', 'Opel', 'Peugeot', 'Renault', 'Seat', 'Skoda', 'Toyota', 'Volkswagen', 'Volvo', 'Other'],
+          type: 'select',
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          placeholder: 'Model',
           type: 'text',
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'year',
+          label: 'Year',
+          placeholder: 'Year',
+          type: 'number',
+        },
+        {
+          key: 'damage_type',
+          label: 'Damage Type',
+          options: ['Front Damage', 'Rear Damage', 'Side Damage', 'Flood', 'Fire', 'Engine Failure', 'Transmission', 'Other'],
+          type: 'select',
+        },
+        {
+          key: 'engine_cc',
+          label: 'Engine (cc)',
+          placeholder: 'cc',
+          type: 'number',
         },
       ],
-      titlePlaceholder: 'e.g. Damaged Vehicles / For Spare Parts',
+      titlePlaceholder: 'e.g. BMW 320d 2015 Damaged – For Parts',
     },
   },
   {
@@ -961,19 +985,43 @@ const categoriesData = [
           type: 'select',
         },
         {
+          key: 'camping_type',
+          label: 'Type',
+          options: ['Motorhome', 'Camper Van', 'Caravan', 'Folding Caravan', 'Camper Pickup'],
+          type: 'select',
+        },
+        {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
+          placeholder: 'e.g. Fiat, Mercedes, Knaus',
           type: 'text',
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'year',
+          label: 'Year',
+          placeholder: 'Year',
+          type: 'number',
+        },
+        {
+          key: 'berths',
+          label: 'Sleeping Places (Berths)',
+          placeholder: 'Berths',
+          type: 'number',
+        },
+        {
+          key: 'length_m',
+          label: 'Length (m)',
+          placeholder: 'm',
+          type: 'number',
+        },
+        {
+          key: 'fuel',
+          label: 'Fuel',
+          options: ['Diesel', 'Petrol', 'Electric'],
+          type: 'select',
         },
       ],
-      titlePlaceholder: 'e.g. Camping Vehicles',
+      titlePlaceholder: 'e.g. Fiat Ducato Motorhome 2018',
     },
   },
   {
@@ -1059,17 +1107,41 @@ const categoriesData = [
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
+          options: ['John Deere', 'Massey Ferguson', 'New Holland', 'Fendt', 'Deutz-Fahr', 'Case IH', 'Claas', 'Kubota', 'Same', 'Landini', 'IMT', 'TAFE', 'Other'],
+          type: 'select',
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          placeholder: 'Model',
           type: 'text',
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'year',
+          label: 'Year',
+          placeholder: 'Year',
+          type: 'number',
+        },
+        {
+          key: 'hp',
+          label: 'Horsepower (HP)',
+          placeholder: 'HP',
+          type: 'number',
+        },
+        {
+          key: 'hours_worked',
+          label: 'Hours Worked',
+          placeholder: 'h',
+          type: 'number',
+        },
+        {
+          key: 'drive_type',
+          label: 'Drive',
+          options: ['2WD', '4WD'],
+          type: 'select',
         },
       ],
-      titlePlaceholder: 'e.g. Tractors',
+      titlePlaceholder: 'e.g. John Deere 6100M 4WD',
     },
   },
   {
@@ -1123,17 +1195,35 @@ const categoriesData = [
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
-          type: 'text',
+          options: ['John Deere', 'Claas', 'New Holland', 'Case IH', 'Fendt', 'Other'],
+          type: 'select',
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'harvester_type',
+          label: 'Type',
+          options: ['Grain', 'Corn', 'Sunflower', 'Grape', 'Sugar Beet', 'Universal', 'Other'],
+          type: 'select',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'Year',
+          type: 'number',
+        },
+        {
+          key: 'hp',
+          label: 'HP',
+          placeholder: 'HP',
+          type: 'number',
+        },
+        {
+          key: 'hours_worked',
+          label: 'Hours Worked',
+          placeholder: 'h',
+          type: 'number',
         },
       ],
-      titlePlaceholder: 'e.g. Harvesters',
+      titlePlaceholder: 'e.g. John Deere S560 Combine Harvester',
     },
   },
   {
@@ -1345,19 +1435,37 @@ const categoriesData = [
           type: 'select',
         },
         {
-          key: 'brand',
-          label: 'Brand',
-          placeholder: 'Brand',
-          type: 'text',
+          key: 'machine_type',
+          label: 'Machine Type',
+          options: ['Excavator', 'Bulldozer', 'Wheel Loader', 'Crane', 'Compactor/Roller', 'Motor Grader', 'Skid Steer', 'Backhoe Loader', 'Paver', 'Scraper', 'Other'],
+          type: 'select',
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'brand',
+          label: 'Brand',
+          options: ['CAT', 'Komatsu', 'Volvo', 'Liebherr', 'JCB', 'Doosan', 'Hitachi', 'Hyundai', 'New Holland', 'Terex', 'Other'],
+          type: 'select',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'Year',
+          type: 'number',
+        },
+        {
+          key: 'hours_operated',
+          label: 'Hours Operated',
+          placeholder: 'h',
+          type: 'number',
+        },
+        {
+          key: 'weight_tons',
+          label: 'Operating Weight (tons)',
+          placeholder: 'tons',
+          type: 'number',
         },
       ],
-      titlePlaceholder: 'e.g. Construction Machines',
+      titlePlaceholder: 'e.g. CAT 320 Excavator 2018',
     },
   },
   {
@@ -1377,19 +1485,49 @@ const categoriesData = [
           type: 'select',
         },
         {
-          key: 'brand',
-          label: 'Brand',
-          placeholder: 'Brand',
-          type: 'text',
+          key: 'forklift_type',
+          label: 'Type',
+          options: ['Counterbalance', 'Reach Truck', 'Pallet Stacker', 'Order Picker', 'Telehandler', 'Other'],
+          type: 'select',
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'fuel',
+          label: 'Fuel',
+          options: ['Electric', 'LPG', 'Diesel', 'Petrol'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          options: ['Toyota', 'Linde', 'Jungheinrich', 'Still', 'Crown', 'Hyster', 'Yale', 'Manitou', 'Other'],
+          type: 'select',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'Year',
+          type: 'number',
+        },
+        {
+          key: 'lift_capacity_tons',
+          label: 'Lift Capacity (tons)',
+          placeholder: 'tons',
+          type: 'number',
+        },
+        {
+          key: 'mast_height_m',
+          label: 'Mast Height (m)',
+          placeholder: 'm',
+          type: 'number',
+        },
+        {
+          key: 'hours_operated',
+          label: 'Hours Operated',
+          placeholder: 'h',
+          type: 'number',
         },
       ],
-      titlePlaceholder: 'e.g. Forklifts and Cargo Handling',
+      titlePlaceholder: 'e.g. Toyota 3-ton Electric Forklift',
     },
   },
   {
@@ -1543,13 +1681,43 @@ const categoriesData = [
           type: 'text',
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'year',
+          label: 'Year',
+          placeholder: 'Year',
+          type: 'number',
+        },
+        {
+          key: 'length_m',
+          label: 'Length (m)',
+          placeholder: 'm',
+          type: 'number',
+        },
+        {
+          key: 'fuel',
+          label: 'Fuel',
+          options: ['Petrol', 'Diesel', 'Electric'],
+          type: 'select',
+        },
+        {
+          key: 'motor_brand',
+          label: 'Motor Brand',
+          placeholder: 'e.g. Yamaha, Mercury, Suzuki',
+          type: 'text',
+        },
+        {
+          key: 'motor_hp',
+          label: 'Motor HP',
+          placeholder: 'HP',
+          type: 'number',
+        },
+        {
+          key: 'berths',
+          label: 'Sleeping Berths',
+          placeholder: 'Berths',
+          type: 'number',
         },
       ],
-      titlePlaceholder: 'e.g. Motor Boats',
+      titlePlaceholder: 'e.g. Yamaha 200HP Motor Boat 7m',
     },
   },
   {
@@ -1575,13 +1743,31 @@ const categoriesData = [
           type: 'text',
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'year',
+          label: 'Year',
+          placeholder: 'Year',
+          type: 'number',
+        },
+        {
+          key: 'length_m',
+          label: 'Length (m)',
+          placeholder: 'm',
+          type: 'number',
+        },
+        {
+          key: 'berths',
+          label: 'Sleeping Berths',
+          placeholder: 'Berths',
+          type: 'number',
+        },
+        {
+          key: 'auxiliary_engine',
+          label: 'Auxiliary Engine',
+          options: ['Yes', 'No'],
+          type: 'select',
         },
       ],
-      titlePlaceholder: 'e.g. Sailing Boats',
+      titlePlaceholder: 'e.g. Bavaria 37 Sailing Yacht',
     },
   },
   {
@@ -2587,25 +2773,31 @@ const categoriesData = [
     template: {
       fields: [
         {
-          key: 'condition',
-          label: 'Condition',
-          options: ['New', 'Used', 'Damaged'],
+          key: 'service_area',
+          label: 'Service Area',
+          placeholder: 'City or region',
+          type: 'text',
+        },
+        {
+          key: 'availability',
+          label: 'Availability',
+          options: ['24/7', 'Daytime Only', 'Weekdays', 'Weekends', 'By Appointment'],
           type: 'select',
         },
         {
-          key: 'brand',
-          label: 'Brand',
-          placeholder: 'Brand',
-          type: 'text',
+          key: 'vehicle_types',
+          label: 'Vehicles Accepted',
+          options: ['Cars', 'Motorcycles', 'Trucks', 'Vans', 'All Types'],
+          type: 'select',
         },
         {
           key: 'description',
           label: 'Description',
-          placeholder: 'Details...',
+          placeholder: 'Details about the service...',
           type: 'textarea',
         },
       ],
-      titlePlaceholder: 'e.g. Towing Service',
+      titlePlaceholder: 'e.g. 24/7 Towing Service – Skopje Region',
     },
   },
   {
@@ -2619,25 +2811,25 @@ const categoriesData = [
     template: {
       fields: [
         {
-          key: 'condition',
-          label: 'Condition',
-          options: ['New', 'Used', 'Damaged'],
+          key: 'vehicle_type',
+          label: 'Vehicle Type',
+          options: ['Cars', 'Motorcycles', 'Vans', 'Trucks', 'Agricultural', 'Any'],
           type: 'select',
         },
         {
-          key: 'brand',
-          label: 'Brand',
-          placeholder: 'Brand',
-          type: 'text',
+          key: 'condition_preference',
+          label: 'Condition Preference',
+          options: ['Any Condition', 'Damaged OK', 'Non-running OK', 'Running Only'],
+          type: 'select',
         },
         {
           key: 'description',
           label: 'Description',
-          placeholder: 'Details...',
+          placeholder: 'Details about vehicles you buy...',
           type: 'textarea',
         },
       ],
-      titlePlaceholder: 'e.g. Car/Vehicle Buying Service',
+      titlePlaceholder: 'e.g. We Buy All Cars – Cash Payment',
     },
   },
   {
@@ -2683,16 +2875,16 @@ const categoriesData = [
     template: {
       fields: [
         {
-          key: 'condition',
-          label: 'Condition',
-          options: ['New', 'Used', 'Damaged'],
+          key: 'adType',
+          label: 'Ad Type',
+          options: ['For Sale', 'For Rent', 'Wanted'],
           type: 'select',
         },
         {
-          key: 'brand',
-          label: 'Brand',
-          placeholder: 'Brand',
-          type: 'text',
+          key: 'property_type',
+          label: 'Property Type',
+          options: ['Apartment', 'House', 'Land', 'Garage', 'Commercial', 'Room', 'Other'],
+          type: 'select',
         },
         {
           key: 'description',
@@ -3930,25 +4122,43 @@ const categoriesData = [
     template: {
       fields: [
         {
-          key: 'condition',
-          label: 'Condition',
-          options: ['New', 'Used', 'Damaged'],
+          key: 'adType',
+          label: 'Ad Type',
+          options: ['For Sale', 'For Rent', 'Wanted'],
           type: 'select',
         },
         {
-          key: 'brand',
-          label: 'Brand',
-          placeholder: 'Brand',
-          type: 'text',
+          key: 'garage_type',
+          label: 'Type',
+          options: ['Garage', 'Parking Spot', 'Car Box', 'Carport', 'Storage Room'],
+          type: 'select',
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Good', 'Needs Renovation'],
+          type: 'select',
+        },
+        {
+          key: 'm2',
+          label: 'Area (m2)',
+          placeholder: 'm2',
+          type: 'number',
+        },
+        {
+          key: 'electricity',
+          label: 'Electricity',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'security',
+          label: 'Security',
+          options: ['None', 'Lock', 'Camera', 'Guard', 'Camera + Guard'],
+          type: 'select',
         },
       ],
-      titlePlaceholder: 'e.g. Garages / Parking',
+      titlePlaceholder: 'e.g. Garage 18m2 in Centar',
     },
   },
   {
@@ -3962,25 +4172,49 @@ const categoriesData = [
     template: {
       fields: [
         {
-          key: 'condition',
-          label: 'Condition',
-          options: ['New', 'Used', 'Damaged'],
+          key: 'adType',
+          label: 'Ad Type',
+          options: ['For Rent', 'Wanted'],
           type: 'select',
         },
         {
-          key: 'brand',
-          label: 'Brand',
-          placeholder: 'Brand',
-          type: 'text',
+          key: 'm2',
+          label: 'Area (m2)',
+          placeholder: 'm2',
+          type: 'number',
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'floor',
+          label: 'Floor',
+          placeholder: 'Floor',
+          type: 'number',
+        },
+        {
+          key: 'furnished',
+          label: 'Furnished',
+          options: ['Yes', 'Partially', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'heating',
+          label: 'Heating',
+          options: ['Central', 'Electricity', 'Gas', 'Wood'],
+          type: 'select',
+        },
+        {
+          key: 'bathroom',
+          label: 'Bathroom',
+          options: ['Private', 'Shared'],
+          type: 'select',
+        },
+        {
+          key: 'gender_preference',
+          label: 'Preference',
+          options: ['Any', 'Male', 'Female'],
+          type: 'select',
         },
       ],
-      titlePlaceholder: 'e.g. Rooms / Shared Accommodation',
+      titlePlaceholder: 'e.g. Furnished Room for Rent in Aerodrom',
     },
   },
   {
@@ -3994,25 +4228,49 @@ const categoriesData = [
     template: {
       fields: [
         {
-          key: 'condition',
-          label: 'Condition',
-          options: ['New', 'Used', 'Damaged'],
+          key: 'adType',
+          label: 'Ad Type',
+          options: ['For Sale', 'For Rent'],
           type: 'select',
         },
         {
-          key: 'brand',
-          label: 'Brand',
-          placeholder: 'Brand',
-          type: 'text',
+          key: 'country',
+          label: 'Country',
+          options: ['Greece', 'Turkey', 'Spain', 'Italy', 'Croatia', 'Bulgaria', 'Serbia', 'Montenegro', 'Germany', 'Austria', 'UK', 'UAE', 'Other'],
+          type: 'select',
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'property_type',
+          label: 'Property Type',
+          options: ['Apartment', 'House', 'Villa', 'Land', 'Commercial', 'Studio'],
+          type: 'select',
+        },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Renovated', 'Good', 'Needs Renovation'],
+          type: 'select',
+        },
+        {
+          key: 'm2',
+          label: 'Area (m2)',
+          placeholder: 'm2',
+          type: 'number',
+        },
+        {
+          key: 'rooms',
+          label: 'Rooms',
+          placeholder: 'Rooms',
+          type: 'number',
+        },
+        {
+          key: 'price_currency',
+          label: 'Currency',
+          options: ['EUR', 'USD', 'GBP'],
+          type: 'select',
         },
       ],
-      titlePlaceholder: 'e.g. Abroad',
+      titlePlaceholder: 'e.g. Studio Apartment in Thessaloniki',
     },
   },
   {
@@ -9391,52 +9649,53 @@ const categoriesData = [
         {
           key: 'condition',
           label: 'Condition',
-          options: [
-            'New',
-            'Used - Excellent',
-            'Used - Good',
-            'Used - Fair',
-            'For Parts',
-          ],
+          options: ['New (Sealed)', 'New (Open Box)', 'Like New', 'Used', 'For Parts'],
           type: 'select',
         },
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'e.g. Apple, Samsung, Xiaomi',
-          type: 'text',
+          options: ['Apple', 'Samsung', 'Huawei', 'Xiaomi', 'Realme', 'OnePlus', 'OPPO', 'Vivo', 'Nokia', 'Motorola', 'Sony', 'LG', 'Google Pixel', 'Other'],
+          type: 'select',
         },
         {
           key: 'model',
           label: 'Model',
-          placeholder: 'Model',
+          placeholder: 'e.g. iPhone 15 Pro, Galaxy S24',
           type: 'text',
         },
         {
-          key: 'storage',
+          key: 'storage_gb',
           label: 'Storage (GB)',
-          placeholder: 'GB',
-          type: 'number',
+          options: ['16', '32', '64', '128', '256', '512', '1TB'],
+          type: 'select',
         },
         {
-          key: 'ram',
+          key: 'ram_gb',
           label: 'RAM (GB)',
-          placeholder: 'GB',
-          type: 'number',
+          options: ['2', '3', '4', '6', '8', '12', '16'],
+          type: 'select',
+        },
+        {
+          key: 'network',
+          label: 'Network',
+          options: ['3G', '4G', '5G'],
+          type: 'select',
         },
         {
           key: 'color',
           label: 'Color',
-          type: 'color-picker',
+          placeholder: 'Color',
+          type: 'text',
         },
         {
-          key: 'battery_health',
-          label: 'Battery Health (%)',
-          placeholder: '%',
-          type: 'number',
+          key: 'warranty',
+          label: 'Warranty',
+          options: ['None', 'Until 3 months', '3-6 months', '6-12 months', 'Over 1 year'],
+          type: 'select',
         },
       ],
-      titlePlaceholder: 'e.g. iPhone 14 Pro 256GB',
+      titlePlaceholder: 'e.g. iPhone 15 128GB Like New',
     },
   },
   {
@@ -10188,23 +10447,41 @@ const categoriesData = [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Used', 'Damaged'],
+          options: ['New', 'Like New', 'Used', 'Damaged'],
           type: 'select',
         },
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
+          options: ['Apple', 'Samsung', 'Garmin', 'Xiaomi', 'Fitbit', 'Huawei', 'Amazfit', 'Other'],
+          type: 'select',
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          placeholder: 'e.g. Apple Watch Series 9',
           type: 'text',
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'compatibility',
+          label: 'Compatibility',
+          options: ['iOS', 'Android', 'Both'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'Color',
+          type: 'text',
+        },
+        {
+          key: 'battery_days',
+          label: 'Battery Life (days)',
+          placeholder: 'Days',
+          type: 'number',
         },
       ],
-      titlePlaceholder: 'e.g. Smartwatches',
+      titlePlaceholder: 'e.g. Apple Watch Series 9 45mm',
     },
   },
   {
@@ -10762,17 +11039,35 @@ const categoriesData = [
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
-          type: 'text',
+          options: ['Samsung', 'LG', 'Sony', 'Bose', 'JBL', 'Sonos', 'Yamaha', 'Denon', 'Polk', 'Other'],
+          type: 'select',
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'channels',
+          label: 'Channels',
+          options: ['2.0', '2.1', '3.0', '3.1', '5.1', '7.1', 'Dolby Atmos (e.g. 3.1.2)', 'Other'],
+          type: 'select',
+        },
+        {
+          key: 'power_watts',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'bluetooth',
+          label: 'Bluetooth',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'dolby_atmos',
+          label: 'Dolby Atmos',
+          options: ['Yes', 'No'],
+          type: 'select',
         },
       ],
-      titlePlaceholder: 'e.g. Soundbars',
+      titlePlaceholder: 'e.g. Samsung Q70B 3.1.2ch Soundbar',
     },
   },
   {
@@ -10788,23 +11083,41 @@ const categoriesData = [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Used', 'Damaged'],
+          options: ['New', 'Like New', 'Used', 'Damaged'],
           type: 'select',
         },
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
-          type: 'text',
+          options: ['Sony', 'Bose', 'Sennheiser', 'Audio-Technica', 'Jabra', 'JBL', 'Apple AirPods', 'Samsung', 'Beyerdynamic', 'Other'],
+          type: 'select',
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'type',
+          label: 'Type',
+          options: ['Over-Ear', 'On-Ear', 'In-Ear (Earbuds)', 'True Wireless (TWS)'],
+          type: 'select',
+        },
+        {
+          key: 'wireless',
+          label: 'Wireless',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'noise_cancelling',
+          label: 'Active Noise Cancelling',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'Color',
+          type: 'text',
         },
       ],
-      titlePlaceholder: 'e.g. Headphones and Equipment',
+      titlePlaceholder: 'e.g. Sony WH-1000XM5 Wireless Headphones',
     },
   },
   {
@@ -18318,87 +18631,6 @@ const categoriesData = [
       titlePlaceholder: 'e.g. Other Agricultural Machines',
     },
   },
-  // ─── ENRICHED TEMPLATES (overwrite generic ones via slug upsert) ─────────────
-
-  // Motor Vehicles enrichment
-  { name: 'Trailers', slug: 'trailers', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'motor-vehicles', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' }, { key: 'trailer_type', label: 'Trailer Type', options: ['Flatbed', 'Curtainsider', 'Box', 'Tanker', 'Refrigerated', 'Tipper', 'Car Transporter', 'Other'], type: 'select' }, { key: 'brand', label: 'Brand', placeholder: 'e.g. Schmitz, Krone, Wielton', type: 'text' }, { key: 'year', label: 'Year', placeholder: 'Year', type: 'number' }, { key: 'length_m', label: 'Length (m)', placeholder: 'm', type: 'number' }, { key: 'axles', label: 'Number of Axles', placeholder: 'Axles', type: 'number' }, { key: 'load_capacity_tons', label: 'Load Capacity (tons)', placeholder: 'tons', type: 'number' }], titlePlaceholder: 'e.g. Schmitz Curtainsider 13.6m' } },
-
-  { name: 'Damaged Vehicles / For Spare Parts', slug: 'damaged-vehicles-parts', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'motor-vehicles', template: { fields: [{ key: 'vehicle_type', label: 'Vehicle Type', options: ['Car', 'Motorcycle', 'Van', 'Truck', 'Bus', 'Other'], type: 'select' }, { key: 'brand', label: 'Brand', options: ['Audi', 'BMW', 'Citroen', 'Dacia', 'Fiat', 'Ford', 'Honda', 'Hyundai', 'Kia', 'Mazda', 'Mercedes-Benz', 'Mitsubishi', 'Nissan', 'Opel', 'Peugeot', 'Renault', 'Seat', 'Skoda', 'Toyota', 'Volkswagen', 'Volvo', 'Other'], type: 'select' }, { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' }, { key: 'year', label: 'Year', placeholder: 'Year', type: 'number' }, { key: 'damage_type', label: 'Damage Type', options: ['Front Damage', 'Rear Damage', 'Side Damage', 'Flood', 'Fire', 'Engine Failure', 'Transmission', 'Other'], type: 'select' }, { key: 'engine_cc', label: 'Engine (cc)', placeholder: 'cc', type: 'number' }], titlePlaceholder: 'e.g. BMW 320d 2015 Damaged – For Parts' } },
-
-  { name: 'Camping Vehicles', slug: 'camping-vehicles', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'motor-vehicles', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' }, { key: 'camping_type', label: 'Type', options: ['Motorhome', 'Camper Van', 'Caravan', 'Folding Caravan', 'Camper Pickup'], type: 'select' }, { key: 'brand', label: 'Brand', placeholder: 'e.g. Fiat, Mercedes, Knaus', type: 'text' }, { key: 'year', label: 'Year', placeholder: 'Year', type: 'number' }, { key: 'berths', label: 'Sleeping Places (Berths)', placeholder: 'Berths', type: 'number' }, { key: 'length_m', label: 'Length (m)', placeholder: 'm', type: 'number' }, { key: 'fuel', label: 'Fuel', options: ['Diesel', 'Petrol', 'Electric'], type: 'select' }], titlePlaceholder: 'e.g. Fiat Ducato Motorhome 2018' } },
-
-  { name: 'Tractors', slug: 'tractors', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'agricultural-vehicles', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' }, { key: 'brand', label: 'Brand', options: ['John Deere', 'Massey Ferguson', 'New Holland', 'Fendt', 'Deutz-Fahr', 'Case IH', 'Claas', 'Kubota', 'Same', 'Landini', 'IMT', 'TAFE', 'Other'], type: 'select' }, { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' }, { key: 'year', label: 'Year', placeholder: 'Year', type: 'number' }, { key: 'hp', label: 'Horsepower (HP)', placeholder: 'HP', type: 'number' }, { key: 'hours_worked', label: 'Hours Worked', placeholder: 'h', type: 'number' }, { key: 'drive_type', label: 'Drive', options: ['2WD', '4WD'], type: 'select' }], titlePlaceholder: 'e.g. John Deere 6100M 4WD' } },
-
-  { name: 'Harvesters', slug: 'harvesters', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'agricultural-vehicles', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' }, { key: 'brand', label: 'Brand', options: ['John Deere', 'Claas', 'New Holland', 'Case IH', 'Fendt', 'Other'], type: 'select' }, { key: 'harvester_type', label: 'Type', options: ['Grain', 'Corn', 'Sunflower', 'Grape', 'Sugar Beet', 'Universal', 'Other'], type: 'select' }, { key: 'year', label: 'Year', placeholder: 'Year', type: 'number' }, { key: 'hp', label: 'HP', placeholder: 'HP', type: 'number' }, { key: 'hours_worked', label: 'Hours Worked', placeholder: 'h', type: 'number' }], titlePlaceholder: 'e.g. John Deere S560 Combine Harvester' } },
-
-  { name: 'Construction Machines', slug: 'construction-machines', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'heavy-duty-construction', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' }, { key: 'machine_type', label: 'Machine Type', options: ['Excavator', 'Bulldozer', 'Wheel Loader', 'Crane', 'Compactor/Roller', 'Motor Grader', 'Skid Steer', 'Backhoe Loader', 'Paver', 'Scraper', 'Other'], type: 'select' }, { key: 'brand', label: 'Brand', options: ['CAT', 'Komatsu', 'Volvo', 'Liebherr', 'JCB', 'Doosan', 'Hitachi', 'Hyundai', 'New Holland', 'Terex', 'Other'], type: 'select' }, { key: 'year', label: 'Year', placeholder: 'Year', type: 'number' }, { key: 'hours_operated', label: 'Hours Operated', placeholder: 'h', type: 'number' }, { key: 'weight_tons', label: 'Operating Weight (tons)', placeholder: 'tons', type: 'number' }], titlePlaceholder: 'e.g. CAT 320 Excavator 2018' } },
-
-  { name: 'Forklifts and Cargo Handling', slug: 'forklifts-handling', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'heavy-duty-construction', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' }, { key: 'forklift_type', label: 'Type', options: ['Counterbalance', 'Reach Truck', 'Pallet Stacker', 'Order Picker', 'Telehandler', 'Other'], type: 'select' }, { key: 'fuel', label: 'Fuel', options: ['Electric', 'LPG', 'Diesel', 'Petrol'], type: 'select' }, { key: 'brand', label: 'Brand', options: ['Toyota', 'Linde', 'Jungheinrich', 'Still', 'Crown', 'Hyster', 'Yale', 'Manitou', 'Other'], type: 'select' }, { key: 'year', label: 'Year', placeholder: 'Year', type: 'number' }, { key: 'lift_capacity_tons', label: 'Lift Capacity (tons)', placeholder: 'tons', type: 'number' }, { key: 'mast_height_m', label: 'Mast Height (m)', placeholder: 'm', type: 'number' }, { key: 'hours_operated', label: 'Hours Operated', placeholder: 'h', type: 'number' }], titlePlaceholder: 'e.g. Toyota 3-ton Electric Forklift' } },
-
-  { name: 'Motor Boats', slug: 'motor-boats', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'boats-yachts-jetskis', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' }, { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' }, { key: 'year', label: 'Year', placeholder: 'Year', type: 'number' }, { key: 'length_m', label: 'Length (m)', placeholder: 'm', type: 'number' }, { key: 'fuel', label: 'Fuel', options: ['Petrol', 'Diesel', 'Electric'], type: 'select' }, { key: 'motor_brand', label: 'Motor Brand', placeholder: 'e.g. Yamaha, Mercury, Suzuki', type: 'text' }, { key: 'motor_hp', label: 'Motor HP', placeholder: 'HP', type: 'number' }, { key: 'berths', label: 'Sleeping Berths', placeholder: 'Berths', type: 'number' }], titlePlaceholder: 'e.g. Yamaha 200HP Motor Boat 7m' } },
-
-  { name: 'Sailing Boats', slug: 'sailing-boats', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'boats-yachts-jetskis', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' }, { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' }, { key: 'year', label: 'Year', placeholder: 'Year', type: 'number' }, { key: 'length_m', label: 'Length (m)', placeholder: 'm', type: 'number' }, { key: 'berths', label: 'Sleeping Berths', placeholder: 'Berths', type: 'number' }, { key: 'auxiliary_engine', label: 'Auxiliary Engine', options: ['Yes', 'No'], type: 'select' }], titlePlaceholder: 'e.g. Bavaria 37 Sailing Yacht' } },
-
-  // Real Estate enrichment
-  { name: 'Garages / Parking', slug: 'garages', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'real-estate', template: { fields: [{ key: 'adType', label: 'Ad Type', options: ['For Sale', 'For Rent', 'Wanted'], type: 'select' }, { key: 'garage_type', label: 'Type', options: ['Garage', 'Parking Spot', 'Car Box', 'Carport', 'Storage Room'], type: 'select' }, { key: 'condition', label: 'Condition', options: ['New', 'Good', 'Needs Renovation'], type: 'select' }, { key: 'm2', label: 'Area (m2)', placeholder: 'm2', type: 'number' }, { key: 'electricity', label: 'Electricity', options: ['Yes', 'No'], type: 'select' }, { key: 'security', label: 'Security', options: ['None', 'Lock', 'Camera', 'Guard', 'Camera + Guard'], type: 'select' }], titlePlaceholder: 'e.g. Garage 18m2 in Centar' } },
-
-  { name: 'Rooms / Shared Accommodation', slug: 'rooms-accommodation', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'real-estate', template: { fields: [{ key: 'adType', label: 'Ad Type', options: ['For Rent', 'Wanted'], type: 'select' }, { key: 'm2', label: 'Area (m2)', placeholder: 'm2', type: 'number' }, { key: 'floor', label: 'Floor', placeholder: 'Floor', type: 'number' }, { key: 'furnished', label: 'Furnished', options: ['Yes', 'Partially', 'No'], type: 'select' }, { key: 'heating', label: 'Heating', options: ['Central', 'Electricity', 'Gas', 'Wood'], type: 'select' }, { key: 'bathroom', label: 'Bathroom', options: ['Private', 'Shared'], type: 'select' }, { key: 'gender_preference', label: 'Preference', options: ['Any', 'Male', 'Female'], type: 'select' }], titlePlaceholder: 'e.g. Furnished Room for Rent in Aerodrom' } },
-
-  { name: 'Abroad', slug: 'real-estate-abroad', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'real-estate', template: { fields: [{ key: 'adType', label: 'Ad Type', options: ['For Sale', 'For Rent'], type: 'select' }, { key: 'country', label: 'Country', options: ['Greece', 'Turkey', 'Spain', 'Italy', 'Croatia', 'Bulgaria', 'Serbia', 'Montenegro', 'Germany', 'Austria', 'UK', 'UAE', 'Other'], type: 'select' }, { key: 'property_type', label: 'Property Type', options: ['Apartment', 'House', 'Villa', 'Land', 'Commercial', 'Studio'], type: 'select' }, { key: 'condition', label: 'Condition', options: ['New', 'Renovated', 'Good', 'Needs Renovation'], type: 'select' }, { key: 'm2', label: 'Area (m2)', placeholder: 'm2', type: 'number' }, { key: 'rooms', label: 'Rooms', placeholder: 'Rooms', type: 'number' }, { key: 'price_currency', label: 'Currency', options: ['EUR', 'USD', 'GBP'], type: 'select' }], titlePlaceholder: 'e.g. Studio Apartment in Thessaloniki' } },
-
-  // Commercial real estate (new subcategory)
-  { name: 'Commercial Real Estate', slug: 'commercial-real-estate', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'real-estate', template: { fields: [{ key: 'adType', label: 'Ad Type', options: ['For Sale', 'For Rent'], type: 'select' }, { key: 'commercial_type', label: 'Type', options: ['Office Space', 'Retail Shop', 'Warehouse', 'Restaurant / Café', 'Hotel / Hostel', 'Industrial Space', 'Other'], type: 'select' }, { key: 'condition', label: 'Condition', options: ['New', 'Renovated', 'Good', 'Needs Renovation'], type: 'select' }, { key: 'm2', label: 'Area (m2)', placeholder: 'm2', type: 'number' }, { key: 'floor', label: 'Floor', placeholder: 'Floor (0 = ground floor)', type: 'number' }, { key: 'heating', label: 'Heating', options: ['Central', 'Electricity', 'Heat Pump', 'None'], type: 'select' }, { key: 'parking', label: 'Parking', options: ['Yes', 'No', 'Nearby'], type: 'select' }], titlePlaceholder: 'e.g. Office Space 80m2 in Business District' } },
-
-  {
-    name: 'Other',
-    slug: 'other-categories',
-    description: '',
-    image: '',
-    isActive: true,
-    isFeatured: true,
-    parentSlug: null,
-    template: {
-      fields: [
-        {
-          key: 'condition',
-          label: 'Condition',
-          options: ['New', 'Used', 'Damaged'],
-          type: 'select',
-        },
-        {
-          key: 'brand',
-          label: 'Brand',
-          placeholder: 'Brand',
-          type: 'text',
-        },
-        {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
-        },
-      ],
-      titlePlaceholder: 'e.g. Other',
-    },
-  },
-  // ─── MOBILE PHONES enrichment ────────────────────────────────────────────────
-  { name: 'Mobile Phones', slug: 'mobile-phones', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'mobile-phones-accessories', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New (Sealed)', 'New (Open Box)', 'Like New', 'Used', 'For Parts'], type: 'select' }, { key: 'brand', label: 'Brand', options: ['Apple', 'Samsung', 'Huawei', 'Xiaomi', 'Realme', 'OnePlus', 'OPPO', 'Vivo', 'Nokia', 'Motorola', 'Sony', 'LG', 'Google Pixel', 'Other'], type: 'select' }, { key: 'model', label: 'Model', placeholder: 'e.g. iPhone 15 Pro, Galaxy S24', type: 'text' }, { key: 'storage_gb', label: 'Storage (GB)', options: ['16', '32', '64', '128', '256', '512', '1TB'], type: 'select' }, { key: 'ram_gb', label: 'RAM (GB)', options: ['2', '3', '4', '6', '8', '12', '16'], type: 'select' }, { key: 'network', label: 'Network', options: ['3G', '4G', '5G'], type: 'select' }, { key: 'color', label: 'Color', placeholder: 'Color', type: 'text' }, { key: 'warranty', label: 'Warranty', options: ['None', 'Until 3 months', '3-6 months', '6-12 months', 'Over 1 year'], type: 'select' }], titlePlaceholder: 'e.g. iPhone 15 128GB Like New' } },
-
-  { name: 'Tablets', slug: 'tablets', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'mobile-phones-accessories', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New (Sealed)', 'New (Open Box)', 'Like New', 'Used', 'For Parts'], type: 'select' }, { key: 'brand', label: 'Brand', options: ['Apple', 'Samsung', 'Lenovo', 'Huawei', 'Xiaomi', 'Amazon Kindle', 'Microsoft Surface', 'Other'], type: 'select' }, { key: 'model', label: 'Model', placeholder: 'e.g. iPad Air 5, Galaxy Tab S9', type: 'text' }, { key: 'storage_gb', label: 'Storage (GB)', options: ['16', '32', '64', '128', '256', '512'], type: 'select' }, { key: 'screen_size_inch', label: 'Screen Size (inch)', placeholder: 'Inch', type: 'number' }, { key: 'network', label: 'Connectivity', options: ['Wi-Fi Only', 'Wi-Fi + 4G', 'Wi-Fi + 5G'], type: 'select' }, { key: 'color', label: 'Color', placeholder: 'Color', type: 'text' }], titlePlaceholder: 'e.g. Samsung Galaxy Tab S9 128GB' } },
-
-  { name: 'Smartwatches', slug: 'smartwatches', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'mobile-phones-accessories', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Like New', 'Used', 'Damaged'], type: 'select' }, { key: 'brand', label: 'Brand', options: ['Apple', 'Samsung', 'Garmin', 'Xiaomi', 'Fitbit', 'Huawei', 'Amazfit', 'Other'], type: 'select' }, { key: 'model', label: 'Model', placeholder: 'e.g. Apple Watch Series 9', type: 'text' }, { key: 'compatibility', label: 'Compatibility', options: ['iOS', 'Android', 'Both'], type: 'select' }, { key: 'color', label: 'Color', placeholder: 'Color', type: 'text' }, { key: 'battery_days', label: 'Battery Life (days)', placeholder: 'Days', type: 'number' }], titlePlaceholder: 'e.g. Apple Watch Series 9 45mm' } },
-
-  // ─── COMPUTERS enrichment ────────────────────────────────────────────────────
-  { name: 'Laptops', slug: 'laptops', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'computers', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Like New', 'Used', 'For Parts'], type: 'select' }, { key: 'brand', label: 'Brand', options: ['Apple', 'Lenovo', 'HP', 'Dell', 'ASUS', 'Acer', 'MSI', 'Samsung', 'Toshiba', 'Other'], type: 'select' }, { key: 'processor', label: 'Processor', options: ['Intel Core i3', 'Intel Core i5', 'Intel Core i7', 'Intel Core i9', 'AMD Ryzen 3', 'AMD Ryzen 5', 'AMD Ryzen 7', 'AMD Ryzen 9', 'Apple M1', 'Apple M2', 'Apple M3', 'Other'], type: 'select' }, { key: 'ram_gb', label: 'RAM (GB)', options: ['4', '8', '16', '32', '64'], type: 'select' }, { key: 'storage_gb', label: 'Storage (GB)', options: ['128', '256', '512', '1024', '2048'], type: 'select' }, { key: 'storage_type', label: 'Storage Type', options: ['SSD', 'HDD', 'SSD + HDD'], type: 'select' }, { key: 'screen_size_inch', label: 'Screen Size (inch)', placeholder: 'Inch', type: 'number' }, { key: 'gpu', label: 'GPU', options: ['Integrated', 'NVIDIA GTX', 'NVIDIA RTX', 'AMD Radeon', 'Other'], type: 'select' }, { key: 'color', label: 'Color', placeholder: 'Color', type: 'text' }], titlePlaceholder: 'e.g. Lenovo ThinkPad i7 16GB 512GB SSD' } },
-
-  { name: 'Desktop Computers', slug: 'desktop-computers', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'computers', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Like New', 'Used', 'For Parts'], type: 'select' }, { key: 'brand', label: 'Brand', options: ['HP', 'Dell', 'Lenovo', 'ASUS', 'Acer', 'Custom Built', 'Other'], type: 'select' }, { key: 'processor', label: 'Processor', options: ['Intel Core i3', 'Intel Core i5', 'Intel Core i7', 'Intel Core i9', 'AMD Ryzen 5', 'AMD Ryzen 7', 'AMD Ryzen 9', 'Other'], type: 'select' }, { key: 'ram_gb', label: 'RAM (GB)', options: ['4', '8', '16', '32', '64', '128'], type: 'select' }, { key: 'storage_gb', label: 'Storage (GB)', options: ['128', '256', '512', '1024', '2048'], type: 'select' }, { key: 'storage_type', label: 'Storage Type', options: ['SSD', 'HDD', 'SSD + HDD'], type: 'select' }, { key: 'gpu', label: 'GPU', options: ['Integrated', 'NVIDIA GTX 1060', 'NVIDIA GTX 1660', 'NVIDIA RTX 3060', 'NVIDIA RTX 3080', 'NVIDIA RTX 4090', 'AMD Radeon RX 580', 'AMD Radeon RX 6700', 'Other'], type: 'select' }], titlePlaceholder: 'e.g. Custom PC i7 32GB RTX 3070' } },
-
-  { name: 'Monitors', slug: 'monitors', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'computers', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Like New', 'Used', 'Damaged'], type: 'select' }, { key: 'brand', label: 'Brand', options: ['Samsung', 'LG', 'Dell', 'ASUS', 'BenQ', 'Acer', 'AOC', 'ViewSonic', 'Other'], type: 'select' }, { key: 'screen_size_inch', label: 'Screen Size (inch)', placeholder: 'Inch', type: 'number' }, { key: 'resolution', label: 'Resolution', options: ['1080p Full HD', '1440p 2K QHD', '4K Ultra HD', '5K', '8K'], type: 'select' }, { key: 'panel_type', label: 'Panel Type', options: ['IPS', 'VA', 'TN', 'OLED'], type: 'select' }, { key: 'refresh_rate_hz', label: 'Refresh Rate (Hz)', options: ['60', '75', '100', '120', '144', '165', '240', '360'], type: 'select' }, { key: 'curved', label: 'Curved', options: ['Yes', 'No'], type: 'select' }], titlePlaceholder: 'e.g. Samsung 27" 4K 144Hz IPS Monitor' } },
-
-  // ─── AUDIO/VIDEO enrichment ───────────────────────────────────────────────────
-  { name: 'Soundbars', slug: 'soundbars', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'audio', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' }, { key: 'brand', label: 'Brand', options: ['Samsung', 'LG', 'Sony', 'Bose', 'JBL', 'Sonos', 'Yamaha', 'Denon', 'Polk', 'Other'], type: 'select' }, { key: 'channels', label: 'Channels', options: ['2.0', '2.1', '3.0', '3.1', '5.1', '7.1', 'Dolby Atmos (e.g. 3.1.2)', 'Other'], type: 'select' }, { key: 'power_watts', label: 'Power (W)', placeholder: 'Watts', type: 'number' }, { key: 'bluetooth', label: 'Bluetooth', options: ['Yes', 'No'], type: 'select' }, { key: 'dolby_atmos', label: 'Dolby Atmos', options: ['Yes', 'No'], type: 'select' }], titlePlaceholder: 'e.g. Samsung Q70B 3.1.2ch Soundbar' } },
-
-  { name: 'Headphones and Equipment', slug: 'headphones-equipment', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'audio', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Like New', 'Used', 'Damaged'], type: 'select' }, { key: 'brand', label: 'Brand', options: ['Sony', 'Bose', 'Sennheiser', 'Audio-Technica', 'Jabra', 'JBL', 'Apple AirPods', 'Samsung', 'Beyerdynamic', 'Other'], type: 'select' }, { key: 'type', label: 'Type', options: ['Over-Ear', 'On-Ear', 'In-Ear (Earbuds)', 'True Wireless (TWS)'], type: 'select' }, { key: 'wireless', label: 'Wireless', options: ['Yes', 'No'], type: 'select' }, { key: 'noise_cancelling', label: 'Active Noise Cancelling', options: ['Yes', 'No'], type: 'select' }, { key: 'color', label: 'Color', placeholder: 'Color', type: 'text' }], titlePlaceholder: 'e.g. Sony WH-1000XM5 Wireless Headphones' } },
 
   // ─── 6 NEW TOP-LEVEL CATEGORIES ───────────────────────────────────────────────
 
@@ -18438,11 +18670,11 @@ const categoriesData = [
   { name: 'Fresh Produce', slug: 'fresh-produce', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'food-agriculture', template: { fields: [{ key: 'product_type', label: 'Type', options: ['Vegetables', 'Fruits', 'Herbs', 'Mushrooms', 'Other'], type: 'select' }, { key: 'quantity_kg', label: 'Quantity (kg)', placeholder: 'kg', type: 'number' }, { key: 'organic', label: 'Organic', options: ['Yes', 'No'], type: 'select' }], titlePlaceholder: 'e.g. Organic Tomatoes 10kg' } },
   { name: 'Seeds & Seedlings', slug: 'seeds-seedlings', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'food-agriculture', template: { fields: [{ key: 'plant_type', label: 'Type', options: ['Vegetable Seeds', 'Flower Seeds', 'Fruit Seedlings', 'Grape Vine', 'Tree Seedlings', 'Other'], type: 'select' }, { key: 'quantity', label: 'Quantity', placeholder: 'Pieces or grams', type: 'text' }], titlePlaceholder: 'e.g. Tomato Seedlings 50-pack' } },
   { name: 'Livestock', slug: 'livestock', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'food-agriculture', template: { fields: [{ key: 'livestock_type', label: 'Type', options: ['Cattle', 'Sheep', 'Goats', 'Pigs', 'Horses', 'Donkeys', 'Poultry', 'Bees / Beehives', 'Other'], type: 'select' }, { key: 'quantity', label: 'Quantity (head)', placeholder: 'Number', type: 'number' }, { key: 'vaccinated', label: 'Vaccinated', options: ['Yes', 'No', 'Partially'], type: 'select' }], titlePlaceholder: 'e.g. 3 Merino Sheep' } },
-  { name: 'Agricultural Land', slug: 'agricultural-land', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'food-agriculture', template: { fields: [{ key: 'adType', label: 'Ad Type', options: ['For Sale', 'For Rent', 'Wanted'], type: 'select' }, { key: 'm2', label: 'Area (m2)', placeholder: 'm2', type: 'number' }, { key: 'land_type', label: 'Land Type', options: ['Arable', 'Pasture', 'Orchard', 'Vineyard', 'Forest', 'Meadow', 'Mixed'], type: 'select' }, { key: 'water', label: 'Irrigation/Water', options: ['Yes', 'No', 'Nearby'], type: 'select' }, { key: 'road', label: 'Road Access', options: ['Asphalt', 'Dirt Road', 'None'], type: 'select' }], titlePlaceholder: 'e.g. Arable Land 5000m2 near Veles' } },
+  { name: 'Farm Land for Sale/Rent', slug: 'farm-land-sale', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'food-agriculture', template: { fields: [{ key: 'adType', label: 'Ad Type', options: ['For Sale', 'For Rent', 'Wanted'], type: 'select' }, { key: 'm2', label: 'Area (m2)', placeholder: 'm2', type: 'number' }, { key: 'land_type', label: 'Land Type', options: ['Arable', 'Pasture', 'Orchard', 'Vineyard', 'Forest', 'Meadow', 'Mixed'], type: 'select' }, { key: 'water', label: 'Irrigation/Water', options: ['Yes', 'No', 'Nearby'], type: 'select' }, { key: 'road', label: 'Road Access', options: ['Asphalt', 'Dirt Road', 'None'], type: 'select' }], titlePlaceholder: 'e.g. Arable Land 5000m2 near Veles' } },
 
   // 6. BUSINESS EQUIPMENT
   { name: 'Business Equipment', slug: 'business-equipment', description: '', image: '', isActive: true, isFeatured: false, parentSlug: null, template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Used', 'Refurbished'], type: 'select' }, { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' }], titlePlaceholder: 'e.g. Business Equipment' } },
-  { name: 'Office Furniture', slug: 'office-furniture', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'business-equipment', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Like New', 'Used'], type: 'select' }, { key: 'item_type', label: 'Type', options: ['Desk', 'Office Chair', 'Cabinet / Shelf', 'Meeting Table', 'Reception Desk', 'Partition / Room Divider', 'Other'], type: 'select' }, { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' }, { key: 'quantity', label: 'Quantity', placeholder: 'Pieces', type: 'number' }], titlePlaceholder: 'e.g. Set of 10 Office Chairs' } },
+  { name: 'Office Furniture', slug: 'business-office-furniture', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'business-equipment', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Like New', 'Used'], type: 'select' }, { key: 'item_type', label: 'Type', options: ['Desk', 'Office Chair', 'Cabinet / Shelf', 'Meeting Table', 'Reception Desk', 'Partition / Room Divider', 'Other'], type: 'select' }, { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' }, { key: 'quantity', label: 'Quantity', placeholder: 'Pieces', type: 'number' }], titlePlaceholder: 'e.g. Set of 10 Office Chairs' } },
   { name: 'Catering Equipment', slug: 'catering-equipment', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'business-equipment', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Used', 'Refurbished'], type: 'select' }, { key: 'item_type', label: 'Type', options: ['Commercial Oven', 'Grill / Fryer', 'Commercial Fridge', 'Bar Equipment', 'Coffee Machine', 'Dishwasher (Commercial)', 'Tables & Chairs', 'Food Display', 'Other'], type: 'select' }, { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' }], titlePlaceholder: 'e.g. Commercial Pizza Oven' } },
   { name: 'POS & Retail Systems', slug: 'pos-retail-systems', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'business-equipment', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Like New', 'Used'], type: 'select' }, { key: 'item_type', label: 'Type', options: ['POS Terminal', 'Cash Register', 'Barcode Scanner', 'Receipt Printer', 'Label Printer', 'POS Software', 'Card Reader', 'Other'], type: 'select' }, { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' }], titlePlaceholder: 'e.g. POS System with Receipt Printer' } },
   { name: 'Industrial Machinery', slug: 'industrial-machinery', description: '', image: '', isActive: true, isFeatured: false, parentSlug: 'business-equipment', template: { fields: [{ key: 'condition', label: 'Condition', options: ['New', 'Used', 'For Parts'], type: 'select' }, { key: 'machinery_type', label: 'Type', options: ['CNC Machine', 'Lathe', 'Welding Machine', 'Woodworking Machine', 'Packaging Machine', 'Printing Machine', 'Textile Machine', 'Other'], type: 'select' }, { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' }, { key: 'year', label: 'Year', placeholder: 'Year', type: 'number' }, { key: 'power_kw', label: 'Power (kW)', placeholder: 'kW', type: 'number' }], titlePlaceholder: 'e.g. CNC Milling Machine 5-axis' } },
@@ -18470,7 +18702,12 @@ export const seedCategories = internalMutation({
         .unique();
 
       if (existing) {
-        await ctx.db.patch(existing._id, { template: catData.template });
+        await ctx.db.patch(existing._id, {
+          name: catData.name,
+          template: catData.template,
+          isFeatured: catData.isFeatured,
+          isActive: catData.isActive,
+        });
         slugToId.set(catData.slug, existing._id);
       } else {
         const id = await ctx.db.insert('categories', {
