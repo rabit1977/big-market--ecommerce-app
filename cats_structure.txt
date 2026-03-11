@@ -1,0 +1,142 @@
+ROOT: Motor Vehicles (motor-vehicles) - 18 children
+  - Cars (cars)
+  - Motorcycles (above 50 cc) (motorcycles-above-50cc)
+  - Mopeds (under 50 cc) (mopeds-under-50cc)
+  - Electric Scooters (electric-scooters)
+  - Buses (buses)
+  - Vans (vans)
+  - Trucks (trucks)
+  - Trailers (trailers)
+  - Damaged Vehicles / For Spare Parts (damaged-vehicles-parts)
+  - Camping Vehicles (camping-vehicles)
+  - Agricultural Vehicles (agricultural-vehicles)
+  - Heavy Duty / Construction / Forklifts (heavy-duty-construction)
+  - Boats / Yachts / Jet Skis (boats-yachts-jetskis)
+  - Auto Parts and Equipment (auto-parts-equipment)
+  - Motorcycle Parts and Equipment (motorcycle-parts-equipment)
+  - Towing Service (towing-service)
+  - Car/Vehicle Buying Service (vehicle-buying)
+  - Other (other-vehicles)
+
+ROOT: Real Estate (real-estate) - 10 children
+  - Apartments (apartments)
+  - Houses / Villas (houses)
+  - Commercial Space (commercial-space)
+  - Land / Plots (land)
+  - Holiday Homes / Villas (holiday-homes)
+  - Garages / Parking (garages)
+  - Rooms / Shared Accommodation (rooms-accommodation)
+  - Abroad (real-estate-abroad)
+  - Other Real Estate (other-real-estate)
+  - Commercial Real Estate (commercial-real-estate)
+
+ROOT: Home Appliances (home-appliances) - 14 children
+  - Air Conditioners (air-conditioners)
+  - Refrigerators (refrigerators)
+  - Freezers (freezers)
+  - Washing Machines (washing-machines)
+  - Dishwashers (dishwashers)
+  - Stoves, Ovens & Hobs (stoves-ovens)
+  - Microwaves (microwaves)
+  - Hoods (hoods)
+  - Water Heaters (water-heaters)
+  - Heaters (heaters)
+  - Cooling & Wine Displays (cooling-displays)
+  - Accessories (appliances-accessories)
+  - Cleaning & Protection (cleaning-protection)
+  - Air Purifiers (air-purifiers)
+
+ROOT: Home and Garden (home-and-garden) - 12 children
+  - Furniture (furniture)
+  - Garden and Terrace (garden-terrace)
+  - Kitchen and Dining (kitchen-dining)
+  - Bedding, Pillows and Covers (bedding)
+  - Lighting (lighting)
+  - Decoration (decoration)
+  - Bathroom Equipment (bathroom-equipment)
+  - Wine and Brandy Preparation (wine-brandy-production)
+  - Smart Home (smart-home)
+  - New Year Decoration (new-year-decoration)
+  - Carpentry (carpentry)
+  - Solar Elements (solar-elements)
+
+ROOT: Mobile Phones and Accessories (mobile-phones-accessories) - 8 children
+  - Mobile Phones (mobile-phones)
+  - Accessories for Mobile Phones (mobile-accessories)
+  - Tablets (tablets)
+  - Smartwatches (smartwatches)
+  - Landlines (landlines)
+  - Faxes (faxes)
+  - Old Phones (old-phones)
+  - Other (mobile-other)
+
+ROOT: Computers (computers) - 0 children
+
+ROOT: TV, Audio and Video (tv-audio-video) - 3 children
+  - TV (tv)
+  - Audio (audio)
+  - Video and Projectors (video-projectors)
+
+ROOT: Watches and Jewelry (watches-jewelry) - 0 children
+
+ROOT: Health, Beauty and Equipment (health-beauty) - 0 children
+
+ROOT: Books and Literature (books-literature) - 0 children
+
+ROOT: Office and School Supplies (office-school-supplies) - 0 children
+
+ROOT: Do It Yourself (DIY) (napravete-sami) - 18 children
+  - Cordless Tools (cordless-tools)
+  - Garden Tools (garden-tools)
+  - Electric Tools (electric-tools)
+  - Hand Tools (hand-tools)
+  - Painting & Ceramics (painting-ceramics)
+  - Paints & Varnishes (paints-varnishes)
+  - Protective Equipment (PPE) (protective-equipment)
+  - Technical Chemistry (technical-chemistry)
+  - Tool Accessories (tool-accessories)
+  - Machines & Pneumatics (machines-pneumatics)
+  - Measuring Tools (measuring-tools)
+  - Tapes & Ropes (tapes-ropes)
+  - Metal Hardware (metal-hardware)
+  - Electrical Materials (electrical-materials)
+  - Plumbing (plumbing)
+  - Construction Materials (construction-materials)
+  - Tiling Program (tiling-program)
+  - Agricultural Machines (agricultural-machines)
+
+ROOT: Fashion & Clothing (fashion-clothing) - 2 children
+  - Shoes (shoes)
+  - Bags & Accessories (bags-accessories)
+
+ROOT: Sports & Hobbies (sports-hobbies) - 6 children
+  - Bicycles (bicycles)
+  - Fitness Equipment (fitness-equipment)
+  - Fishing (fishing)
+  - Winter Sports (winter-sports)
+  - Musical Instruments (musical-instruments)
+  - Collecting & Antiques (collecting-antiques)
+
+ROOT: Animals & Pets (animals-pets) - 5 children
+  - Dogs (dogs)
+  - Cats (cats)
+  - Birds (birds)
+  - Pet Accessories (pet-accessories)
+  - Other Animals (other-animals)
+
+ROOT: Jobs & Services (jobs-services) - 3 children
+  - Jobs (jobs)
+  - Services (services)
+  - Freelance / Remote Work (freelance-remote)
+
+ROOT: Food & Agriculture (food-agriculture) - 4 children
+  - Fresh Produce (fresh-produce)
+  - Seeds & Seedlings (seeds-seedlings)
+  - Livestock (livestock)
+  - Farm Land for Sale/Rent (farm-land-sale)
+
+ROOT: Business Equipment (business-equipment) - 4 children
+  - Office Furniture (business-office-furniture)
+  - Catering Equipment (catering-equipment)
+  - POS & Retail Systems (pos-retail-systems)
+  - Industrial Machinery (industrial-machinery)
