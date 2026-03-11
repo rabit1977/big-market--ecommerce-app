@@ -1,0 +1,60 @@
+=== EMPTY ROOTS ===
+
+=== DUPLICATE SUB-CATEGORIES ACROSS ENTIRE DB ===
+
+Name: other
+  - Other (slug: other-vehicles, parent: motor-vehicles)
+  - Other (slug: other-agri, parent: agricultural-vehicles)
+  - Other (slug: other-heavy, parent: heavy-duty-construction)
+  - Other (slug: other-boats, parent: boats-yachts-jetskis)
+  - Other (slug: other-auto-parts, parent: auto-parts-equipment)
+  - Other (slug: mobile-other, parent: mobile-phones-accessories)
+
+Name: spare parts
+  - Spare Parts (slug: spare-parts-agri, parent: agricultural-vehicles)
+  - Spare Parts (slug: spare-parts-heavy, parent: heavy-duty-construction)
+  - Spare Parts (slug: spare-parts-cars, parent: auto-parts-equipment)
+  - Spare Parts (slug: spare-parts-moto, parent: motorcycle-parts-equipment)
+  - Spare Parts (slug: acc-spare-parts, parent: appliances-accessories)
+
+Name: tires and rims
+  - Tires and Rims (slug: tires-rims, parent: auto-parts-equipment)
+  - Tires and Rims (slug: tires-rims-moto, parent: motorcycle-parts-equipment)
+
+Name: tuning
+  - Tuning (slug: tuning-cars, parent: auto-parts-equipment)
+  - Tuning (slug: tuning-moto, parent: motorcycle-parts-equipment)
+
+Name: styling and sports equipment
+  - Styling and Sports Equipment (slug: styling-sports-cars, parent: auto-parts-equipment)
+  - Styling and Sports Equipment (slug: styling-sports-moto, parent: motorcycle-parts-equipment)
+
+Name: motor oil and additives
+  - Motor Oil and Additives (slug: oil-additives-cars, parent: auto-parts-equipment)
+  - Motor Oil and Additives (slug: oil-additives-moto, parent: motorcycle-parts-equipment)
+
+Name: tools
+  - Tools (slug: tools-cars, parent: auto-parts-equipment)
+  - Tools (slug: tools-moto, parent: motorcycle-parts-equipment)
+
+Name: washing machines
+  - Washing Machines (slug: washing-machines, parent: home-appliances)
+  - Washing Machines (slug: washing-machines-sub, parent: washing-machines)
+
+Name: accessories
+  - Accessories (slug: appliances-accessories, parent: home-appliances)
+  - Accessories (slug: stove-accessories, parent: stoves-ovens)
+
+Name: office furniture
+  - Office Furniture (slug: office-furniture, parent: furniture)
+  - Office Furniture (slug: business-office-furniture, parent: business-equipment)
+
+Name: smartwatches
+  - Smartwatches (slug: smartwatches, parent: mobile-phones-accessories)
+  - Smartwatches (slug: smartwatches-jewelry, parent: watches-jewelry)
+
+Name: batteries & chargers
+  - Batteries & Chargers (slug: cordless-batteries-chargers, parent: cordless-tools)
+  - Batteries & Chargers (slug: elec-batteries, parent: electrical-materials)
+
+Total unique categories parsed: 565
