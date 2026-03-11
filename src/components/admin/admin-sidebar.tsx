@@ -97,8 +97,6 @@ export const AdminSidebar = () => {
     { href: '/admin/dashboard', label: t('overview'), icon: LayoutDashboard },
     { href: '/admin/listings', label: t('all_listings'), icon: Tag },
     { href: '/admin/users', label: t('users'), icon: Users },
-    { href: '/admin/followers', label: 'Followers', icon: Users },
-    { href: '/admin/categories', label: t('categories'), icon: Layers },
     { href: '/admin/analytics', label: t('analytics'), icon: BarChart3 },
     { href: '/admin/revenue', label: t('revenue'), icon: CreditCard },
     {

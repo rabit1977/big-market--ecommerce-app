@@ -1,0 +1,278 @@
+[
+  {
+    "name": "Cars",
+    "slug": "cars",
+    "parentSlug": "motor-vehicles",
+    "hasFields": false
+  },
+  {
+    "name": "Motorcycles (Above 50cc)",
+    "slug": "motorcycles-above-50cc",
+    "parentSlug": "motorcycles-scooters",
+    "hasFields": false
+  },
+  {
+    "name": "Mopeds & Scooters (Under 50cc)",
+    "slug": "mopeds-under-50cc",
+    "parentSlug": "motorcycles-scooters",
+    "hasFields": false
+  },
+  {
+    "name": "Electric Scooters & Bikes",
+    "slug": "electric-scooters-bikes",
+    "parentSlug": "motorcycles-scooters",
+    "hasFields": false
+  },
+  {
+    "name": "Quads & ATVs",
+    "slug": "quads-atvs",
+    "parentSlug": "motorcycles-scooters",
+    "hasFields": false
+  },
+  {
+    "name": "Vans & Minibuses",
+    "slug": "vans-minibuses",
+    "parentSlug": "commercial-transport-vehicles",
+    "hasFields": false
+  },
+  {
+    "name": "Trucks (Up to 7.5t)",
+    "slug": "trucks-light",
+    "parentSlug": "commercial-transport-vehicles",
+    "hasFields": false
+  },
+  {
+    "name": "Heavy Trucks (Over 7.5t)",
+    "slug": "trucks-heavy",
+    "parentSlug": "commercial-transport-vehicles",
+    "hasFields": false
+  },
+  {
+    "name": "Buses & Coaches",
+    "slug": "buses-coaches",
+    "parentSlug": "commercial-transport-vehicles",
+    "hasFields": false
+  },
+  {
+    "name": "Trailers & Semi-Trailers",
+    "slug": "trailers-semitrailers",
+    "parentSlug": "commercial-transport-vehicles",
+    "hasFields": false
+  },
+  {
+    "name": "Motorhomes / Campers",
+    "slug": "motorhomes",
+    "parentSlug": "camping-caravans",
+    "hasFields": false
+  },
+  {
+    "name": "Caravans / Towable Campers",
+    "slug": "towable-caravans",
+    "parentSlug": "camping-caravans",
+    "hasFields": false
+  },
+  {
+    "name": "Tires & Rims",
+    "slug": "tires-rims",
+    "parentSlug": "parts-tires-accessories-root",
+    "hasFields": false
+  },
+  {
+    "name": "Car Spare Parts",
+    "slug": "car-spare-parts",
+    "parentSlug": "parts-tires-accessories-root",
+    "hasFields": false
+  },
+  {
+    "name": "Motorcycle Spare Parts",
+    "slug": "moto-spare-parts",
+    "parentSlug": "parts-tires-accessories-root",
+    "hasFields": false
+  },
+  {
+    "name": "Machinery & Transport Spare Parts",
+    "slug": "machinery-transport-parts",
+    "parentSlug": "parts-tires-accessories-root",
+    "hasFields": false
+  },
+  {
+    "name": "Marine Parts & Accessories",
+    "slug": "marine-parts-accessories",
+    "parentSlug": "parts-tires-accessories-root",
+    "hasFields": false
+  },
+  {
+    "name": "Car Audio & Navigation",
+    "slug": "car-audio-navigation",
+    "parentSlug": "parts-tires-accessories-root",
+    "hasFields": false
+  },
+  {
+    "name": "Car Care & Cosmetics",
+    "slug": "car-care-cosmetics",
+    "parentSlug": "parts-tires-accessories-root",
+    "hasFields": false
+  },
+  {
+    "name": "Motorcycle Clothing & Helmets",
+    "slug": "moto-clothing-helmets",
+    "parentSlug": "parts-tires-accessories-root",
+    "hasFields": false
+  },
+  {
+    "name": "Automotive Tools & Diagnostics",
+    "slug": "automotive-tools-diag",
+    "parentSlug": "parts-tires-accessories-root",
+    "hasFields": false
+  },
+  {
+    "name": "Tractors",
+    "slug": "tractors-agri",
+    "parentSlug": "agri-heavy-machinery",
+    "hasFields": false
+  },
+  {
+    "name": "Harvesters & Combines",
+    "slug": "harvesters-combines",
+    "parentSlug": "agri-heavy-machinery",
+    "hasFields": false
+  },
+  {
+    "name": "Construction Machinery",
+    "slug": "construction-machinery",
+    "parentSlug": "agri-heavy-machinery",
+    "hasFields": false
+  },
+  {
+    "name": "Forklifts & Handling",
+    "slug": "forklifts-handling-machinery",
+    "parentSlug": "agri-heavy-machinery",
+    "hasFields": false
+  },
+  {
+    "name": "Forestry Machinery",
+    "slug": "forestry-machinery",
+    "parentSlug": "agri-heavy-machinery",
+    "hasFields": false
+  },
+  {
+    "name": "Attachment Machines / Implements",
+    "slug": "attachment-implements",
+    "parentSlug": "agri-heavy-machinery",
+    "hasFields": false
+  },
+  {
+    "name": "Motor Boats & Yachts",
+    "slug": "motor-boats-yachts",
+    "parentSlug": "boats-watercraft",
+    "hasFields": false
+  },
+  {
+    "name": "Sailing Boats",
+    "slug": "sailing-boats",
+    "parentSlug": "boats-watercraft",
+    "hasFields": false
+  },
+  {
+    "name": "Jet Skis",
+    "slug": "jet-skis",
+    "parentSlug": "boats-watercraft",
+    "hasFields": false
+  },
+  {
+    "name": "Rowing & Rubber Boats",
+    "slug": "rowing-rubber-boats",
+    "parentSlug": "boats-watercraft",
+    "hasFields": false
+  },
+  {
+    "name": "Vehicle Services",
+    "slug": "vehicle-services",
+    "parentSlug": "motor-vehicles",
+    "hasFields": false
+  },
+  {
+    "name": "Apartments",
+    "slug": "apartments",
+    "parentSlug": "real-estate",
+    "hasFields": false
+  },
+  {
+    "name": "Houses & Villas",
+    "slug": "houses",
+    "parentSlug": "real-estate",
+    "hasFields": false
+  },
+  {
+    "name": "Commercial & Business Space",
+    "slug": "commercial-space",
+    "parentSlug": "real-estate",
+    "hasFields": false
+  },
+  {
+    "name": "Land & Plots",
+    "slug": "land",
+    "parentSlug": "real-estate",
+    "hasFields": false
+  },
+  {
+    "name": "Holiday Homes / Cabins",
+    "slug": "holiday-homes",
+    "parentSlug": "real-estate",
+    "hasFields": false
+  },
+  {
+    "name": "Garages & Parking",
+    "slug": "garages",
+    "parentSlug": "real-estate",
+    "hasFields": false
+  },
+  {
+    "name": "Rooms & Roommates",
+    "slug": "rooms-accommodation",
+    "parentSlug": "real-estate",
+    "hasFields": false
+  },
+  {
+    "name": "Real Estate Abroad",
+    "slug": "real-estate-abroad",
+    "parentSlug": "real-estate",
+    "hasFields": false
+  },
+  {
+    "name": "Guitars & Basses",
+    "slug": "musical-guitars-basses",
+    "parentSlug": "musical-instruments",
+    "hasFields": false
+  },
+  {
+    "name": "Pianos & Keyboards",
+    "slug": "musical-pianos-keyboards",
+    "parentSlug": "musical-instruments",
+    "hasFields": false
+  },
+  {
+    "name": "Drums & Percussion",
+    "slug": "musical-drums-percussion",
+    "parentSlug": "musical-instruments",
+    "hasFields": false
+  },
+  {
+    "name": "DJ & Studio Equipment",
+    "slug": "musical-dj-studio",
+    "parentSlug": "musical-instruments",
+    "hasFields": false
+  },
+  {
+    "name": "Wind & String Instruments",
+    "slug": "musical-wind-strings",
+    "parentSlug": "musical-instruments",
+    "hasFields": false
+  },
+  {
+    "name": "Accessories & Equipment",
+    "slug": "musical-accessories",
+    "parentSlug": "musical-instruments",
+    "hasFields": false
+  }
+]

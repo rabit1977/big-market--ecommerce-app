@@ -36,6 +36,7 @@ import {
     Star,
     TrendingUp,
     User,
+    Users,
     Wallet
 } from 'lucide-react';
 import Image from 'next/image';
@@ -582,6 +583,7 @@ export function UserDashboardClient({ userId }: UserDashboardClientProps) {
                             <div className="space-y-2">
                                 <QuickAction href="/my-listings" icon={Package} label="My Listings" />
                                 <QuickAction href="/favorites" icon={Heart} label="My Favorites" />
+                                <QuickAction href="/dashboard/followers" icon={Users} label="Store Followers" />
                                 <QuickAction href="/wallet" icon={Wallet} label="Wallet" />
                                 <QuickAction href="/premium" icon={Crown} label="Promotions" />
                                 <QuickAction href="/my-listings/stats" icon={TrendingUp} label="Listing Stats" />
