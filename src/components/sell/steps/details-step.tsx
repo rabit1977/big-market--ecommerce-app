@@ -693,50 +693,47 @@ export function DetailsStep({
 
           {/* ═══════════════ UNIFIED CARD ═══════════════ */}
           <div className='rounded-xl border bg-card overflow-hidden divide-y divide-border'>
-            {/* Ad title */}
-
-            <div
-              id='title'
-              className='p-4 sm:p-6 bg-primary/5 transition-colors'
-            >
-              <div className='mb-3 flex items-center justify-between'>
-                <div className='flex items-center gap-1.5'>
-                  {formData.category && (
-                    <span className='text-[10px] font-bold text-primary opacity-60 uppercase tracking-widest'>
-                      {categories.find(c => c.slug === formData.category)?.name || formData.category}
-                    </span>
-                  )}
-                  {formData.subCategory && formData.subCategory !== formData.category && (
-                    <>
-                      <span className='text-[10px] font-bold text-muted-foreground mx-1'>{'>'}</span>
-                      <span className='text-[10px] font-bold text-primary opacity-80 uppercase tracking-widest'>
-                        {categories.find(c => c.slug === formData.subCategory)?.name || formData.subCategory}
-                      </span>
-                    </>
-                  )}
-                </div>
-                <div className='flex items-center gap-1.5 mt-2'>
-                  <span className='text-xs font-bold uppercase tracking-widest text-primary flex items-center gap-1.5'>
-                    <PenLine className='w-4 h-4' />
-                    Listing Title
+            <div id='title' className='p-5 sm:p-7 space-y-4 bg-card transition-all'>
+              <div className='flex flex-wrap items-center gap-1 opacity-50 px-0.5'>
+                {formData.category && (
+                  <span className='text-[10px] sm:text-[11px] font-bold text-neutral-800/90 uppercase tracking-widest'>
+                    {categories.find(c => c.slug === formData.category)?.name || formData.category}
                   </span>
-                  <span className='text-destructive font-bold text-sm'>*</span>
+                )}
+                {formData.subCategory && formData.subCategory !== formData.category && (
+                  <>
+                    <span className='text-[10px] font-bold text-neutral-500 mx-1'>{'>'}</span>
+                    <span className='text-[10px] sm:text-[11px] font-bold text-neutral-800/90 uppercase tracking-widest'>
+                      {categories.find(c => c.slug === formData.subCategory)?.name || formData.subCategory}
+                    </span>
+                  </>
+                )}
+              </div>
+
+              <div className='space-y-2'>
+                <label className='flex items-center gap-2 text-xs font-black uppercase tracking-tighter text-muted-foreground mb-1'>
+                  <PenLine className='w-3.5 h-3.5' />
+                  {t('label_title')}
+                  <span className='text-red-500'>*</span>
+                </label>
+                
+                <Input
+                  placeholder={
+                    selectedCategory?.template?.titlePlaceholder ||
+                    t('label_title')
+                  }
+                  value={formData.title || ''}
+                  onChange={(e) => updateFormData({ title: e.target.value })}
+                  className='text-lg sm:text-2xl font-bold h-12 sm:h-16 px-4 bg-background border-2 border-border/60 hover:border-primary/30 focus-visible:border-primary/50 focus-visible:ring-4 focus-visible:ring-primary/5 transition-all rounded-xl placeholder:text-muted-foreground/30 shadow-none'
+                />
+                
+                <div className='flex items-start gap-2 pt-1'>
+                  <Info className='w-3.5 h-3.5 text-primary mt-0.5 shrink-0' />
+                  <p className='text-[11px] text-muted-foreground/80 leading-snug font-medium italic'>
+                    This is the main title that buyers will see when searching for your item. Make it clear and descriptive!
+                  </p>
                 </div>
               </div>
-              <Input
-                placeholder={
-                  selectedCategory?.template?.titlePlaceholder ||
-                  t('label_title')
-                }
-                value={formData.title || ''}
-                onChange={(e) => updateFormData({ title: e.target.value })}
-                className='text-lg sm:text-2xl font-bold h-12 sm:h-16 px-4 bg-background border-2 border-primary/20 hover:border-primary/40 focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-primary/20 transition-all rounded-xl placeholder:text-muted-foreground/40 placeholder:font-medium shadow-sm'
-              />
-              <p className='text-xs text-muted-foreground mt-3 flex items-center gap-1.5 font-medium'>
-                <Info className='w-4 h-4 text-primary/70 shrink-0' />
-                This is the main title that buyers will see when searching for
-                your item. Make it clear!
-              </p>
             </div>
 
             {/* ── Dynamic template fields ── */}

@@ -593,14 +593,14 @@ export function ListingDetailContent({
                   <div className='flex flex-col flex-1'>
                     <div className='flex items-center gap-1 mb-1'>
                       {categoryData && (
-                        <span className='text-[10px] font-bold text-primary hover:underline cursor-pointer uppercase tracking-wider'>
+                        <span className='text-[10px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
                           {categoryData.name}
                         </span>
                       )}
                       {subCategoryData && (
                         <>
-                          <span className='text-[10px] font-bold text-muted-foreground mx-1'>{'>'}</span>
-                          <span className='text-[10px] font-bold text-primary hover:underline cursor-pointer uppercase tracking-wider'>
+                          <span className='text-[10px] font-bold text-neutral-500 mx-1'>{'>'}</span>
+                          <span className='text-[10px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
                             {subCategoryData.name}
                           </span>
                         </>
@@ -819,14 +819,14 @@ export function ListingDetailContent({
                     <div className='flex flex-col flex-1'>
                       <div className='flex items-center gap-1 mb-1'>
                         {categoryData && (
-                          <span className='text-[10px] font-bold text-primary hover:underline cursor-pointer uppercase tracking-wider'>
+                          <span className='text-[10px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
                             {categoryData.name}
                           </span>
                         )}
                         {subCategoryData && (
                           <>
-                            <span className='text-[10px] font-bold text-muted-foreground mx-1'>{'>'}</span>
-                            <span className='text-[10px] font-bold text-primary hover:underline cursor-pointer uppercase tracking-wider'>
+                            <span className='text-[10px] font-bold text-neutral-500 mx-1'>{'>'}</span>
+                            <span className='text-[10px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
                               {subCategoryData.name}
                             </span>
                           </>
