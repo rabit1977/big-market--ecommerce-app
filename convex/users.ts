@@ -176,24 +176,57 @@ export const syncUser = mutation({
         });
 
         // Migrate listings if they were associated with old ID or internal ID
-        const listingsToMigrate = await ctx.db
-          .query("listings")
-          .collect(); // We have to filter manually if we don't have multiple indices
-        
+        const listingsToMigrate = await ctx.db.query("listings").collect();
         const userInternalId = existingByEmail._id as string;
         
         for (const listing of listingsToMigrate) {
-           if (listing.userId === oldExternalId || listing.userId === userInternalId || listing.userId === "pending") {
-              await ctx.db.patch(listing._id, { userId: args.externalId });
-           }
+          if (listing.userId === oldExternalId || listing.userId === userInternalId || listing.userId === "pending") {
+            await ctx.db.patch(listing._id, { userId: args.externalId });
+          }
         }
 
         // Migrate favorites
         const favoritesToMigrate = await ctx.db.query("favorites").collect();
         for (const fav of favoritesToMigrate) {
-            if (fav.userId === oldExternalId || fav.userId === userInternalId) {
-                await ctx.db.patch(fav._id, { userId: args.externalId });
-            }
+          if (fav.userId === oldExternalId || fav.userId === userInternalId) {
+            await ctx.db.patch(fav._id, { userId: args.externalId });
+          }
+        }
+
+        // Migrate followed sellers (stores THIS user follows)
+        const followsToMigrate = await ctx.db
+          .query('followedSellers')
+          .filter((q) => q.or(
+            q.eq(q.field('followerId'), oldExternalId),
+            q.eq(q.field('followerId'), userInternalId)
+          ))
+          .collect();
+        for (const row of followsToMigrate) {
+          await ctx.db.patch(row._id, { followerId: args.externalId });
+        }
+
+        // Migrate store followers (users following THIS user's store)
+        const myFollowersToMigrate = await ctx.db
+          .query('followedSellers')
+          .filter((q) => q.or(
+            q.eq(q.field('sellerId'), oldExternalId),
+            q.eq(q.field('sellerId'), userInternalId)
+          ))
+          .collect();
+        for (const row of myFollowersToMigrate) {
+          await ctx.db.patch(row._id, { sellerId: args.externalId });
+        }
+
+        // Migrate notifications
+        const notificationsToMigrate = await ctx.db
+          .query('notifications')
+          .filter((q) => q.or(
+            q.eq(q.field('userId'), oldExternalId),
+            q.eq(q.field('userId'), userInternalId)
+          ))
+          .collect();
+        for (const n of notificationsToMigrate) {
+          await ctx.db.patch(n._id, { userId: args.externalId });
         }
 
         return existingByEmail._id;

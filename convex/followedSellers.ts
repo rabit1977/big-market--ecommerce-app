@@ -6,24 +6,24 @@ import { mutation, query, MutationCtx, QueryCtx } from './_generated/server';
  * This prevents ID-format mismatches between follow/query operations.
  */
 async function toExternalId(ctx: QueryCtx | MutationCtx, id: string): Promise<string> {
-  // Try as externalId first (most common path)
+  if (!id) return id;
+  
+  // 1. Try as internal Convex ID (fastest if it's already a doc id)
+  const normalizedId = ctx.db.normalizeId('users', id);
+  if (normalizedId) {
+    const user = await ctx.db.get(normalizedId);
+    if (user?.externalId) return user.externalId;
+  }
+
+  // 2. Try as externalId index
   const byExternal = await ctx.db
     .query('users')
     .withIndex('by_externalId', (q) => q.eq('externalId', id))
     .unique();
   if (byExternal) return byExternal.externalId;
 
-  // Try as internal Convex ID
-  try {
-    const byInternal = await ctx.db.get(id as any);
-    if (byInternal && (byInternal as any).externalId) {
-      return (byInternal as any).externalId as string;
-    }
-  } catch (_) {
-    // Not a valid Convex document ID – fall through
-  }
-
-  return id; // Return as-is if we cannot resolve
+  // 3. Fallback: maybe it's an email or something else? No, just return as-is
+  return id;
 }
 
 // ─── Follow ──────────────────────────────────────────────────────────────────
@@ -127,10 +127,17 @@ export const getFollowedSellers = query({
 
     const sellers = await Promise.all(
       follows.map(async (follow) => {
-        const seller = await ctx.db
+        // Find seller by externalId or search by internal _id if stored format was wrong in old records
+        let seller = await ctx.db
           .query('users')
           .withIndex('by_externalId', (q) => q.eq('externalId', follow.sellerId))
           .unique();
+        
+        if (!seller) {
+           const normId = ctx.db.normalizeId('users', follow.sellerId);
+           if (normId) seller = await ctx.db.get(normId);
+        }
+
         return seller ? { ...seller, followedAt: follow.createdAt } : null;
       }),
     );
@@ -177,31 +184,6 @@ export const getFollowerCount = query({
       .withIndex('by_seller', (q) => q.eq('sellerId', sId))
       .collect();
     return follows.length;
-  },
-});
-
-// ─── One-time backfill ────────────────────────────────────────────────────────
-
-export const backfillFollows = mutation({
-  args: {},
-  handler: async (ctx) => {
-    const allFollows = await ctx.db.query('followedSellers').collect();
-    let updated = 0;
-
-    for (const follow of allFollows) {
-      const canonicalSellerId = await toExternalId(ctx, follow.sellerId);
-      const canonicalFollowerId = await toExternalId(ctx, follow.followerId);
-
-      if (canonicalSellerId !== follow.sellerId || canonicalFollowerId !== follow.followerId) {
-        await ctx.db.patch(follow._id, {
-          sellerId: canonicalSellerId,
-          followerId: canonicalFollowerId,
-        });
-        updated++;
-      }
-    }
-
-    return { updated, status: 'done' };
   },
 });
 
