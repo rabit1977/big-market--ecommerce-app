@@ -711,7 +711,7 @@ export function ListingDetailContent({
             </div>
 
             {/* RESTORED: Mobile Seller & Contact Info */}
-            <div className='sm:hidden flex items-center gap-3 pt-4 border-t border-border'>
+            <div className='md:hidden flex items-center gap-3 pt-4 border-t border-border'>
               <Link
                 href={`/store/${listing.userId}`}
                 className='shrink-0 hover:opacity-80 transition-opacity'
@@ -729,7 +729,7 @@ export function ListingDetailContent({
                   <span className='font-bold text-sm text-foreground group-hover:text-primary transition-colors'>
                     {seller?.name ?? t('seller')}
                   </span>
-                  <SellerBadge seller={seller} size='sm' showLabel />
+                  <SellerBadge seller={seller} size='sm' />
                 </Link>
                 <p className='text-[10px] font-medium text-muted-foreground uppercase tracking-wider'>
                   {seller?.isVerified || seller?.accountStatus === 'ACTIVE'
@@ -754,7 +754,7 @@ export function ListingDetailContent({
             </div>
 
             {/* RESTORED: Mobile Action Buttons */}
-            <div className='sm:hidden flex flex-col pt-3 space-y-3 gap-3 w-full'>
+            <div className='md:hidden flex flex-col pt-3 space-y-3 gap-3 w-full'>
               {!isListingOwner && (
                 <div className='space-y-3 pt-2'>
                   <ContactSellerButton
@@ -900,7 +900,7 @@ export function ListingDetailContent({
                         {seller?.name ??
                           (seller === undefined ? t('loading') : t('seller'))}
                       </h4>
-                      <SellerBadge seller={seller} showLabel />
+                      <SellerBadge seller={seller} />
                     </Link>
                     <p
                       className='text-[10px] font-bold text-muted-foreground uppercase tracking-widest'
