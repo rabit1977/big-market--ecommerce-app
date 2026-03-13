@@ -1,7 +1,6 @@
 import { internalMutation } from './_generated/server';
 
 const categoriesData = [
-  
   {
     "name": "Motor Vehicles",
     "slug": "motor-vehicles",
@@ -1271,7 +1270,7 @@ const categoriesData = [
           "type": "select"
         },
         {
-          "key": "is_trade_possible",
+          "key": "isTradePossible",
           "label": "Open to Exchange/Trade",
           "options": ["Yes", "No"],
           "type": "select"
@@ -1369,7 +1368,7 @@ const categoriesData = [
           "type": "select"
         },
         {
-          "key": "is_trade_possible",
+          "key": "isTradePossible",
           "label": "Open to Exchange/Trade",
           "options": ["Yes", "No"],
           "type": "select"
@@ -1525,7 +1524,7 @@ const categoriesData = [
           "type": "select"
         },
         {
-          "key": "is_trade_possible",
+          "key": "isTradePossible",
           "label": "Open to Exchange (npr. so kompenzacija)",
           "options": ["Yes", "No"],
           "type": "select"
@@ -1746,6 +1745,7 @@ const categoriesData = [
       "titlePlaceholder": "e.g. Seaside Studio in Halkidiki"
     }
   },
+
   {
     name: 'Home Appliances',
     slug: 'home-appliances',
@@ -20395,38 +20395,7 @@ const categoriesData = [
       titlePlaceholder: 'e.g. All Auto Parts',
     },
   },
-  {
-    name: 'Tires and Rims',
-    slug: 'tires-rims',
-    description: '',
-    image: '',
-    isActive: true,
-    isFeatured: false,
-    parentSlug: 'auto-parts-equipment',
-    template: {
-      fields: [
-        {
-          key: 'condition',
-          label: 'Condition',
-          options: ['New', 'Used', 'Damaged'],
-          type: 'select',
-        },
-        {
-          key: 'brand',
-          label: 'Brand',
-          placeholder: 'Brand',
-          type: 'text',
-        },
-        {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
-        },
-      ],
-      titlePlaceholder: 'e.g. Tires and Rims',
-    },
-  },
+
   {
     name: 'Auto Hi-Fi and Navigation',
     slug: 'auto-hifi-navigation',

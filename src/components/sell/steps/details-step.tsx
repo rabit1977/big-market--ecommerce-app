@@ -511,9 +511,9 @@ const VEHICLE_SLUGS = [
   'vozila',
   'avtomobili',
 ];
-const MANUAL_KEYS = new Set([
-  'condition',
-  'sostojba',
+const MANUAL_KEYS = new Set<string>([
+  // 'condition', // Removed to allow dynamic condition field
+  // 'sostojba',
 ]);
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -725,7 +725,7 @@ export function DetailsStep({
                     key={field.key}
                     icon={ArrowRightLeft}
                     label={field.label}
-                    checked={formData.specifications?.isTradePossible === 'Да'}
+                    checked={['Да', 'Yes', 'True', 'true'].includes(formData.specifications?.isTradePossible)}
                     onChange={(v) =>
                       handleSpec('isTradePossible', v ? 'Да' : 'Не')
                     }
@@ -778,33 +778,34 @@ export function DetailsStep({
             ════════════════════════ */}
             <SectionLabel>Listing Details</SectionLabel>
 
-            {/* New / Used toggle chips */}
-            <div id='condition' className='px-4 py-3 space-y-2'>
-              <span className='text-sm text-muted-foreground'>
-                Condition <span className='text-destructive ml-0.5'>*</span>
-              </span>
-              <div className='flex gap-2 flex-wrap'>
-                {CONDITIONS.map((c) => {
-                  const active = (formData.condition || '') === c.value;
-                  return (
-                    <button
-                      key={c.value}
-                      type='button'
-                      onClick={() => updateFormData({ condition: c.value })}
-                      className={cn(
-                        'px-4 py-1.5 rounded-full border text-sm font-medium transition-all',
-                        active
-                          ? 'border-primary bg-primary text-primary-foreground'
-                          : 'border-border text-muted-foreground hover:border-foreground hover:text-foreground',
-                      )}
-                    >
-                      {c.label}
-                    </button>
-                  );
-                })}
+            {/* New / Used toggle chips - Only show if not defined in template as dynamic field */}
+            {!dynamicFields.some(f => f.key === 'condition') && (
+              <div id='condition' className='px-4 py-3 space-y-2'>
+                <span className='text-sm text-muted-foreground'>
+                  Condition <span className='text-destructive ml-0.5'>*</span>
+                </span>
+                <div className='flex gap-2 flex-wrap'>
+                  {CONDITIONS.map((c) => {
+                    const active = (formData.condition || '') === c.value;
+                    return (
+                      <button
+                        key={c.value}
+                        type='button'
+                        onClick={() => updateFormData({ condition: c.value })}
+                        className={cn(
+                          'px-4 py-1.5 rounded-full border text-sm font-medium transition-all',
+                          active
+                            ? 'border-primary bg-primary text-primary-foreground'
+                            : 'border-border text-muted-foreground hover:border-foreground hover:text-foreground',
+                        )}
+                      >
+                        {c.label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-
+            )}
             {/* Price */}
             <FieldRow id='price' label='Price' required>
               <div className='flex items-center justify-between flex-wrap w-full'>
