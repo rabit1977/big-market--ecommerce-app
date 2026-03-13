@@ -205,28 +205,3 @@ export const backfillFollows = mutation({
   },
 });
 
-// ─── DEBUG: See all raw rows in followedSellers ───────────────────────────────
-export const debugAll = query({
-  args: {},
-  handler: async (ctx) => {
-    return ctx.db.query('followedSellers').collect();
-  },
-});
-
-// ─── DEBUG: Resolve any ID to its canonical externalId ───────────────────────
-export const debugResolveId = query({
-  args: { id: v.string() },
-  handler: async (ctx, { id }) => {
-    const canonical = await toExternalId(ctx, id);
-    const userByExternal = await ctx.db
-      .query('users')
-      .withIndex('by_externalId', (q) => q.eq('externalId', id))
-      .unique();
-    return {
-      input: id,
-      canonical,
-      foundByExternalId: !!userByExternal,
-      userName: userByExternal?.name,
-    };
-  },
-});

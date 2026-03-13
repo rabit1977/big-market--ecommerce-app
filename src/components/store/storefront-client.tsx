@@ -298,8 +298,6 @@ export function StorefrontClient({
 function StoreFollowersPanel({ sellerId }: { sellerId: string }) {
   const { data: session } = useSession();
   const followers = useQuery(api.followedSellers.getStoreFollowers, { sellerId });
-  const allRows = useQuery(api.followedSellers.debugAll, {});
-  const resolvedId = useQuery(api.followedSellers.debugResolveId, { id: sellerId });
 
   if (followers === undefined) {
     // Loading…
@@ -327,21 +325,6 @@ function StoreFollowersPanel({ sellerId }: { sellerId: string }) {
         </span>
       </div>
 
-      {/* ── TEMPORARY DEBUG — remove after fixing ── */}
-      <details className='mb-3 text-[10px] font-mono bg-muted/60 border border-yellow-400/40 rounded-lg p-2 text-muted-foreground'>
-        <summary className='cursor-pointer font-bold text-yellow-600'>🔍 Debug Info (remove later)</summary>
-        <div className='mt-2 space-y-1 break-all'>
-          <p><strong>Your logged in ID:</strong> {session?.user?.id}</p>
-          <p><strong>Store you are looking at (sellerId):</strong> {sellerId}</p>
-          <hr className="my-2 border-yellow-400/20" />
-          <p className="font-bold">Summary of Database rows:</p>
-          <ul className="list-disc pl-4 mt-1">
-            <li>Times YOU followed someone else: {allRows?.filter((r: any) => r.followerId === session?.user?.id).length ?? 0}</li>
-            <li>Times SOMEONE ELSE followed this store: {allRows?.filter((r: any) => r.sellerId === resolvedId?.canonical).length ?? 0}</li>
-          </ul>
-        </div>
-      </details>
-      {/* ── END DEBUG ── */}
 
       {followers.length === 0 ? (
         <p className='text-sm text-muted-foreground py-4 text-center border border-dashed border-border rounded-xl'>

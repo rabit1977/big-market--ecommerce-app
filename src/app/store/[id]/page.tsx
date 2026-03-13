@@ -39,12 +39,10 @@ export default async function StorePage({ params }: StorePageProps) {
     profile = await fetchQuery(api.storefront.getPublicProfile, { userId: id });
     listings = (await fetchQuery(api.listings.getByUser, { userId: id })) ?? [];
   } catch (error) {
-    console.error('[StorePage] CAUGHT ERROR fetching store data for id:', id, error);
     notFound();
   }
 
   if (!profile) {
-    console.error('[StorePage] PROFILE IS NULL for id:', id);
     notFound();
   }
 
