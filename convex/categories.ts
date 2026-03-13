@@ -50,7 +50,7 @@ export const getRoot = query({
   handler: async (ctx) => {
     const categories = await ctx.db
       .query('categories')
-      .withIndex('by_parentId', (q) => q.eq('parentId', undefined))
+      .withIndex('by_parentId_position', (q) => q.eq('parentId', undefined))
       .collect();
 
     return await getCategoryCounts(ctx, categories, false);
@@ -62,7 +62,7 @@ export const getChildren = query({
   handler: async (ctx, args) => {
     const categories = await ctx.db
       .query('categories')
-      .withIndex('by_parentId', (q) => q.eq('parentId', args.parentId))
+      .withIndex('by_parentId_position', (q) => q.eq('parentId', args.parentId))
       .collect();
 
     return await getCategoryCounts(ctx, categories, true);

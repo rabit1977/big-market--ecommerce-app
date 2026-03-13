@@ -284,274 +284,6 @@ const categoriesData = [
     }
   },
   {
-    "name": "Commercial & Transport Vehicles",
-    "slug": "commercial-transport-vehicles",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "motor-vehicles",
-    "template": {
-      "fields": [],
-      "titlePlaceholder": "e.g. Transport"
-    }
-  },
-  {
-    "name": "Vans & Minibuses",
-    "slug": "vans-minibuses",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "commercial-transport-vehicles",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used", "Damaged"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Mercedes-Benz", "VW", "Ford", "Renault", "Fiat", "Peugeot", "Citroen", "Iveco", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "model",
-          "label": "Model",
-          "placeholder": "e.g. Sprinter, Transit",
-          "type": "text"
-        },
-        {
-          "key": "vehicle_configuration",
-          "label": "Configuration",
-          "options": ["Panel Van (Cargo)", "Minibus (Passenger)", "Crew Cab (Mixto)", "Dropside / Flatbed", "Refrigerated"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Mercedes Sprinter 316 CDI"
-    }
-  },
-  {
-    "name": "Trucks (Up to 7.5t)",
-    "slug": "trucks-light",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "commercial-transport-vehicles",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used", "Damaged"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Iveco", "Mercedes-Benz", "MAN", "Renault", "Fuso", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "model",
-          "label": "Model",
-          "placeholder": "e.g. Daily",
-          "type": "text"
-        },
-        {
-          "key": "truck_body_type",
-          "label": "Body Type",
-          "options": ["Box / Closed", "Curtainsider", "Tipper / Dumper", "Flatbed", "Refrigerated", "Other"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Iveco Daily 35C15 Tipper"
-    }
-  },
-  {
-    "name": "Heavy Trucks (Over 7.5t)",
-    "slug": "trucks-heavy",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "commercial-transport-vehicles",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used", "Damaged"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["MAN", "Mercedes-Benz", "Volvo", "Scania", "DAF", "Renault", "Iveco", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "model",
-          "label": "Model",
-          "placeholder": "e.g. R450, Actros",
-          "type": "text"
-        },
-        {
-          "key": "truck_type",
-          "label": "Type",
-          "options": ["Tractor Unit (Glava)", "Tipper", "Box", "Curtainsider", "Refrigerated", "Chassis Cab", "Other"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Scania R450 Tractor Unit"
-    }
-  },
-  {
-    "name": "Buses & Coaches",
-    "slug": "buses-coaches",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "commercial-transport-vehicles",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Mercedes-Benz", "Setra", "MAN", "Neoplan", "Volvo", "Scania", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "seats",
-          "label": "Number of Seats",
-          "placeholder": "e.g. 50+1+1",
-          "type": "text"
-        }
-      ],
-      "titlePlaceholder": "e.g. Setra S 415 HD Coach"
-    }
-  },
-  {
-    "name": "Trailers & Semi-Trailers",
-    "slug": "trailers-semitrailers",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "commercial-transport-vehicles",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Schmitz Cargobull", "Krone", "Kögel", "Schwarzmüller", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "type",
-          "label": "Type",
-          "options": ["Curtainsider Semi", "Refrigerated Semi", "Tipper Semi", "Low Loader", "Car Transporter", "Light Car Trailer", "Other"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Schmitz Cargobull Curtainsider"
-    }
-  },
-  {
-    "name": "Camping & Caravans",
-    "slug": "camping-caravans",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "motor-vehicles",
-    "template": {
-      "fields": [],
-      "titlePlaceholder": "e.g. Campers"
-    }
-  },
-  {
-    "name": "Motorhomes / Campers",
-    "slug": "motorhomes",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "camping-caravans",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used", "Damaged"],
-          "type": "select"
-        },
-        {
-          "key": "camper_brand",
-          "label": "Camper Manufacturer",
-          "placeholder": "e.g. Adria, Hymer",
-          "type": "text"
-        },
-        {
-          "key": "sleeping_capacity",
-          "label": "Sleeping Capacity",
-          "options": ["1", "2", "3", "4", "5", "6+"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Fiat Ducato Adria Camper"
-    }
-  },
-  {
-    "name": "Caravans / Towable Campers",
-    "slug": "towable-caravans",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "camping-caravans",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "placeholder": "e.g. Hobby, Knaus",
-          "type": "text"
-        },
-        {
-          "key": "length_meters",
-          "label": "Length (m)",
-          "placeholder": "m",
-          "type": "number"
-        }
-      ],
-      "titlePlaceholder": "e.g. Hobby Premium 560"
-    }
-  },
-  {
     "name": "Parts, Tires & Accessories",
     "slug": "parts-tires-accessories-root",
     "description": "Unified category for all vehicle parts, tires, and accessories.",
@@ -865,6 +597,409 @@ const categoriesData = [
     }
   },
   {
+    "name": "Boats & Watercraft",
+    "slug": "boats-watercraft",
+    "description": "",
+    "image": "",
+    "isActive": true,
+    "isFeatured": false,
+    "parentSlug": "motor-vehicles",
+    "template": {
+      "fields": [],
+      "titlePlaceholder": "e.g. Boats"
+    }
+  },
+  {
+    "name": "Motor Boats & Yachts",
+    "slug": "motor-boats-yachts",
+    "description": "",
+    "image": "",
+    "isActive": true,
+    "isFeatured": false,
+    "parentSlug": "boats-watercraft",
+    "template": {
+      "fields": [
+        {
+          "key": "condition",
+          "label": "Condition",
+          "options": ["New", "Used"],
+          "type": "select"
+        },
+        {
+          "key": "make",
+          "label": "Make",
+          "placeholder": "e.g. Bayliner",
+          "type": "text"
+        },
+        {
+          "key": "engine_type",
+          "label": "Engine Type",
+          "options": ["Outboard (Vanbrodski)", "Inboard (Vgraden)", "Inboard/Outboard", "No Engine"],
+          "type": "select"
+        }
+      ],
+      "titlePlaceholder": "e.g. Bayliner 175 with Mercury 135HP"
+    }
+  },
+  {
+    "name": "Sailing Boats",
+    "slug": "sailing-boats",
+    "description": "",
+    "image": "",
+    "isActive": true,
+    "isFeatured": false,
+    "parentSlug": "boats-watercraft",
+    "template": {
+      "fields": [
+        {
+          "key": "condition",
+          "label": "Condition",
+          "options": ["New", "Used"],
+          "type": "select"
+        },
+        {
+          "key": "make",
+          "label": "Make",
+          "placeholder": "e.g. Bavaria",
+          "type": "text"
+        },
+        {
+          "key": "length_meters",
+          "label": "Length (m)",
+          "placeholder": "m",
+          "type": "number"
+        }
+      ],
+      "titlePlaceholder": "e.g. Bavaria 38 Cruiser"
+    }
+  },
+  {
+    "name": "Jet Skis",
+    "slug": "jet-skis",
+    "description": "",
+    "image": "",
+    "isActive": true,
+    "isFeatured": false,
+    "parentSlug": "boats-watercraft",
+    "template": {
+      "fields": [
+        {
+          "key": "condition",
+          "label": "Condition",
+          "options": ["New", "Used"],
+          "type": "select"
+        },
+        {
+          "key": "make",
+          "label": "Make",
+          "options": ["Sea-Doo", "Yamaha", "Kawasaki", "Other"],
+          "type": "select"
+        },
+        {
+          "key": "engine_power_hp",
+          "label": "Engine Power (HP)",
+          "placeholder": "HP",
+          "type": "number"
+        }
+      ],
+      "titlePlaceholder": "e.g. Sea-Doo Spark 90HP"
+    }
+  },
+  {
+    "name": "Rowing & Rubber Boats",
+    "slug": "rowing-rubber-boats",
+    "description": "",
+    "image": "",
+    "isActive": true,
+    "isFeatured": false,
+    "parentSlug": "boats-watercraft",
+    "template": {
+      "fields": [
+        {
+          "key": "condition",
+          "label": "Condition",
+          "options": ["New", "Used"],
+          "type": "select"
+        },
+        {
+          "key": "type",
+          "label": "Type",
+          "options": ["Rubber / Inflatable Boat", "RIB", "Kayak", "Canoe", "Rowing Boat", "SUP Board", "Other"],
+          "type": "select"
+        }
+      ],
+      "titlePlaceholder": "e.g. Zodiac Inflatable Boat 3.2m"
+    }
+  },
+  {
+    "name": "Camping & Caravans",
+    "slug": "camping-caravans",
+    "description": "",
+    "image": "",
+    "isActive": true,
+    "isFeatured": false,
+    "parentSlug": "motor-vehicles",
+    "template": {
+      "fields": [],
+      "titlePlaceholder": "e.g. Campers"
+    }
+  },
+  {
+    "name": "Motorhomes / Campers",
+    "slug": "motorhomes",
+    "description": "",
+    "image": "",
+    "isActive": true,
+    "isFeatured": false,
+    "parentSlug": "camping-caravans",
+    "template": {
+      "fields": [
+        {
+          "key": "condition",
+          "label": "Condition",
+          "options": ["New", "Used", "Damaged"],
+          "type": "select"
+        },
+        {
+          "key": "camper_brand",
+          "label": "Camper Manufacturer",
+          "placeholder": "e.g. Adria, Hymer",
+          "type": "text"
+        },
+        {
+          "key": "sleeping_capacity",
+          "label": "Sleeping Capacity",
+          "options": ["1", "2", "3", "4", "5", "6+"],
+          "type": "select"
+        }
+      ],
+      "titlePlaceholder": "e.g. Fiat Ducato Adria Camper"
+    }
+  },
+  {
+    "name": "Caravans / Towable Campers",
+    "slug": "towable-caravans",
+    "description": "",
+    "image": "",
+    "isActive": true,
+    "isFeatured": false,
+    "parentSlug": "camping-caravans",
+    "template": {
+      "fields": [
+        {
+          "key": "condition",
+          "label": "Condition",
+          "options": ["New", "Used"],
+          "type": "select"
+        },
+        {
+          "key": "make",
+          "label": "Make",
+          "placeholder": "e.g. Hobby, Knaus",
+          "type": "text"
+        },
+        {
+          "key": "length_meters",
+          "label": "Length (m)",
+          "placeholder": "m",
+          "type": "number"
+        }
+      ],
+      "titlePlaceholder": "e.g. Hobby Premium 560"
+    }
+  },
+  {
+    "name": "Commercial & Transport Vehicles",
+    "slug": "commercial-transport-vehicles",
+    "description": "",
+    "image": "",
+    "isActive": true,
+    "isFeatured": false,
+    "parentSlug": "motor-vehicles",
+    "template": {
+      "fields": [],
+      "titlePlaceholder": "e.g. Transport"
+    }
+  },
+  {
+    "name": "Vans & Minibuses",
+    "slug": "vans-minibuses",
+    "description": "",
+    "image": "",
+    "isActive": true,
+    "isFeatured": false,
+    "parentSlug": "commercial-transport-vehicles",
+    "template": {
+      "fields": [
+        {
+          "key": "condition",
+          "label": "Condition",
+          "options": ["New", "Used", "Damaged"],
+          "type": "select"
+        },
+        {
+          "key": "make",
+          "label": "Make",
+          "options": ["Mercedes-Benz", "VW", "Ford", "Renault", "Fiat", "Peugeot", "Citroen", "Iveco", "Other"],
+          "type": "select"
+        },
+        {
+          "key": "model",
+          "label": "Model",
+          "placeholder": "e.g. Sprinter, Transit",
+          "type": "text"
+        },
+        {
+          "key": "vehicle_configuration",
+          "label": "Configuration",
+          "options": ["Panel Van (Cargo)", "Minibus (Passenger)", "Crew Cab (Mixto)", "Dropside / Flatbed", "Refrigerated"],
+          "type": "select"
+        }
+      ],
+      "titlePlaceholder": "e.g. Mercedes Sprinter 316 CDI"
+    }
+  },
+  {
+    "name": "Trucks (Up to 7.5t)",
+    "slug": "trucks-light",
+    "description": "",
+    "image": "",
+    "isActive": true,
+    "isFeatured": false,
+    "parentSlug": "commercial-transport-vehicles",
+    "template": {
+      "fields": [
+        {
+          "key": "condition",
+          "label": "Condition",
+          "options": ["New", "Used", "Damaged"],
+          "type": "select"
+        },
+        {
+          "key": "make",
+          "label": "Make",
+          "options": ["Iveco", "Mercedes-Benz", "MAN", "Renault", "Fuso", "Other"],
+          "type": "select"
+        },
+        {
+          "key": "model",
+          "label": "Model",
+          "placeholder": "e.g. Daily",
+          "type": "text"
+        },
+        {
+          "key": "truck_body_type",
+          "label": "Body Type",
+          "options": ["Box / Closed", "Curtainsider", "Tipper / Dumper", "Flatbed", "Refrigerated", "Other"],
+          "type": "select"
+        }
+      ],
+      "titlePlaceholder": "e.g. Iveco Daily 35C15 Tipper"
+    }
+  },
+  {
+    "name": "Heavy Trucks (Over 7.5t)",
+    "slug": "trucks-heavy",
+    "description": "",
+    "image": "",
+    "isActive": true,
+    "isFeatured": false,
+    "parentSlug": "commercial-transport-vehicles",
+    "template": {
+      "fields": [
+        {
+          "key": "condition",
+          "label": "Condition",
+          "options": ["New", "Used", "Damaged"],
+          "type": "select"
+        },
+        {
+          "key": "make",
+          "label": "Make",
+          "options": ["MAN", "Mercedes-Benz", "Volvo", "Scania", "DAF", "Renault", "Iveco", "Other"],
+          "type": "select"
+        },
+        {
+          "key": "model",
+          "label": "Model",
+          "placeholder": "e.g. R450, Actros",
+          "type": "text"
+        },
+        {
+          "key": "truck_type",
+          "label": "Type",
+          "options": ["Tractor Unit (Glava)", "Tipper", "Box", "Curtainsider", "Refrigerated", "Chassis Cab", "Other"],
+          "type": "select"
+        }
+      ],
+      "titlePlaceholder": "e.g. Scania R450 Tractor Unit"
+    }
+  },
+  {
+    "name": "Buses & Coaches",
+    "slug": "buses-coaches",
+    "description": "",
+    "image": "",
+    "isActive": true,
+    "isFeatured": false,
+    "parentSlug": "commercial-transport-vehicles",
+    "template": {
+      "fields": [
+        {
+          "key": "condition",
+          "label": "Condition",
+          "options": ["New", "Used"],
+          "type": "select"
+        },
+        {
+          "key": "make",
+          "label": "Make",
+          "options": ["Mercedes-Benz", "Setra", "MAN", "Neoplan", "Volvo", "Scania", "Other"],
+          "type": "select"
+        },
+        {
+          "key": "seats",
+          "label": "Number of Seats",
+          "placeholder": "e.g. 50+1+1",
+          "type": "text"
+        }
+      ],
+      "titlePlaceholder": "e.g. Setra S 415 HD Coach"
+    }
+  },
+  {
+    "name": "Trailers & Semi-Trailers",
+    "slug": "trailers-semitrailers",
+    "description": "",
+    "image": "",
+    "isActive": true,
+    "isFeatured": false,
+    "parentSlug": "commercial-transport-vehicles",
+    "template": {
+      "fields": [
+        {
+          "key": "condition",
+          "label": "Condition",
+          "options": ["New", "Used"],
+          "type": "select"
+        },
+        {
+          "key": "make",
+          "label": "Make",
+          "options": ["Schmitz Cargobull", "Krone", "Kögel", "Schwarzmüller", "Other"],
+          "type": "select"
+        },
+        {
+          "key": "type",
+          "label": "Type",
+          "options": ["Curtainsider Semi", "Refrigerated Semi", "Tipper Semi", "Low Loader", "Car Transporter", "Light Car Trailer", "Other"],
+          "type": "select"
+        }
+      ],
+      "titlePlaceholder": "e.g. Schmitz Cargobull Curtainsider"
+    }
+  },
+  {
     "name": "Agricultural & Heavy Machinery",
     "slug": "agri-heavy-machinery",
     "description": "",
@@ -1073,141 +1208,6 @@ const categoriesData = [
         }
       ],
       "titlePlaceholder": "e.g. Lemken 3-Furrow Reversible Plough"
-    }
-  },
-  {
-    "name": "Boats & Watercraft",
-    "slug": "boats-watercraft",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "motor-vehicles",
-    "template": {
-      "fields": [],
-      "titlePlaceholder": "e.g. Boats"
-    }
-  },
-  {
-    "name": "Motor Boats & Yachts",
-    "slug": "motor-boats-yachts",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "boats-watercraft",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "placeholder": "e.g. Bayliner",
-          "type": "text"
-        },
-        {
-          "key": "engine_type",
-          "label": "Engine Type",
-          "options": ["Outboard (Vanbrodski)", "Inboard (Vgraden)", "Inboard/Outboard", "No Engine"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Bayliner 175 with Mercury 135HP"
-    }
-  },
-  {
-    "name": "Sailing Boats",
-    "slug": "sailing-boats",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "boats-watercraft",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "placeholder": "e.g. Bavaria",
-          "type": "text"
-        },
-        {
-          "key": "length_meters",
-          "label": "Length (m)",
-          "placeholder": "m",
-          "type": "number"
-        }
-      ],
-      "titlePlaceholder": "e.g. Bavaria 38 Cruiser"
-    }
-  },
-  {
-    "name": "Jet Skis",
-    "slug": "jet-skis",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "boats-watercraft",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Sea-Doo", "Yamaha", "Kawasaki", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "engine_power_hp",
-          "label": "Engine Power (HP)",
-          "placeholder": "HP",
-          "type": "number"
-        }
-      ],
-      "titlePlaceholder": "e.g. Sea-Doo Spark 90HP"
-    }
-  },
-  {
-    "name": "Rowing & Rubber Boats",
-    "slug": "rowing-rubber-boats",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "boats-watercraft",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "type",
-          "label": "Type",
-          "options": ["Rubber / Inflatable Boat", "RIB", "Kayak", "Canoe", "Rowing Boat", "SUP Board", "Other"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Zodiac Inflatable Boat 3.2m"
     }
   },
   {
@@ -21108,9 +21108,10 @@ export const seedCategories = internalMutation({
     // 1. Build a map of slug to _id for inserted categories
     const slugToId = new Map<string, string>();
 
-    // 2. Separate into roots and children
-    const roots = categoriesData.filter((c) => !c.parentSlug);
-    const children = categoriesData.filter((c) => c.parentSlug);
+    // 2. Separate into roots and children (with original index for positioning)
+    const categoriesWithIndex = categoriesData.map((c, index) => ({ ...c, originalIndex: index }));
+    const roots = categoriesWithIndex.filter((c) => !c.parentSlug);
+    const children = categoriesWithIndex.filter((c) => c.parentSlug);
 
     // 3. Helper to insert and handle existing
     const insertOrUpdate = async (
@@ -21129,6 +21130,7 @@ export const seedCategories = internalMutation({
           isFeatured: catData.isFeatured,
           isActive: catData.isActive,
           parentId: parentId as any,
+          position: catData.originalIndex,
           description: catData.description,
         });
         slugToId.set(catData.slug, existing._id);
@@ -21141,6 +21143,7 @@ export const seedCategories = internalMutation({
           isActive: catData.isActive,
           isFeatured: catData.isFeatured,
           parentId: parentId as any,
+          position: catData.originalIndex,
           template: catData.template,
           createdAt: Date.now(),
         });

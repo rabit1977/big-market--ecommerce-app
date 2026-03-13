@@ -90,6 +90,7 @@ export default defineSchema({
   })
     .index('by_slug', ['slug'])
     .index('by_parentId', ['parentId'])
+    .index('by_parentId_position', ['parentId', 'position'])
     .index('by_isActive', ['isActive']),
 
   // ─── LISTINGS ───────────────────────────────────────────────────────────────
