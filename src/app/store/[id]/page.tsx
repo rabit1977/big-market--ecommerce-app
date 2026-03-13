@@ -32,13 +32,14 @@ export default async function StorePage({ params }: StorePageProps) {
   const { id } = await params;
   const t = await getTranslations('Store');
 
-  let profile;
-  let listings;
+  let profile: any = null;
+  let listings: any[] = [];
 
   try {
     profile = await fetchQuery(api.storefront.getPublicProfile, { userId: id });
-    listings = await fetchQuery(api.listings.getByUser, { userId: id });
+    listings = (await fetchQuery(api.listings.getByUser, { userId: id })) ?? [];
   } catch (error) {
+    console.error('[StorePage] Error fetching store data:', error);
     notFound();
   }
 
@@ -48,7 +49,7 @@ export default async function StorePage({ params }: StorePageProps) {
 
   return (
     <>
-      <StorefrontClient profile={profile} listings={listings} />
+      <StorefrontClient profile={profile!} listings={listings ?? []} />
     </>
   );
 }

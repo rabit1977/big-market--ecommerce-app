@@ -60,6 +60,8 @@ export async function getNotificationsAction(
               listingId:    rawMeta.listingId     ? String(rawMeta.listingId)    : undefined,
               senderId:     rawMeta.senderId      ? String(rawMeta.senderId)     : undefined,
               senderName:   rawMeta.senderName    ? String(rawMeta.senderName)   : undefined,
+              followerId:   rawMeta.followerId    ? String(rawMeta.followerId)   : undefined,
+              followerName: rawMeta.followerName  ? String(rawMeta.followerName) : undefined,
             }
           : undefined;
 

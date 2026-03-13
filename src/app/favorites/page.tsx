@@ -457,8 +457,14 @@ function StoreFollowersSection({ userId }: { userId: string }) {
   const followers = useQuery(api.followedSellers.getStoreFollowers, { sellerId: userId });
   const t = useTranslations('Favorites');
 
-  // More robust premium check (Business/Premium/Pro tiers or Admin role)
-  const isPremium = user?.role === 'ADMIN' || (user?.membershipTier && user.membershipTier !== 'FREE');
+  if (user === undefined) return <CenteredSpinner />;
+
+  // Broaden premium check: Business/Premium/Pro tiers, or any active non-free membership, or Admin role
+  const tier = (user?.membershipTier || '').toUpperCase();
+  const isPremium = 
+    user?.role === 'ADMIN' || 
+    (tier && tier !== 'FREE') || 
+    user?.membershipStatus === 'ACTIVE';
 
   if (!isPremium) return null;
 

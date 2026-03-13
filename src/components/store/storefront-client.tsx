@@ -91,7 +91,7 @@ export function StorefrontClient({
                 </h1>
                 <div className='text-sm text-muted-foreground mt-1'>
                   {t('member_since')}{' '}
-                  {new Date(profile.createdAt).getFullYear()}
+                  {profile.createdAt ? new Date(profile.createdAt).getFullYear() : 'N/A'}
                 </div>
               </div>
             </div>
@@ -184,7 +184,7 @@ export function StorefrontClient({
               )}
               <span className='flex items-center gap-1.5 text-xs'>
                 <CalendarDays className='w-4 h-4' /> {t('member_since')}{' '}
-                {new Date(profile.createdAt).getFullYear()}
+                {profile.createdAt ? new Date(profile.createdAt).getFullYear() : 'N/A'}
               </span>
             </div>
 
@@ -199,7 +199,7 @@ export function StorefrontClient({
                 />
               ))}
               <span className='text-xs font-bold ml-1.5 hover:underline decoration-foreground/30 underline-offset-2'>
-                {profile.averageRating.toFixed(1)} ({profile.reviewCount}{' '}
+                {(profile.averageRating ?? 0).toFixed(1)} ({profile.reviewCount ?? 0}{' '}
                 {t('found')})
               </span>
             </a>

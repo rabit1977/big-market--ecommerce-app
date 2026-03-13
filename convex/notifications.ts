@@ -33,6 +33,7 @@ export const list = query({
   handler: async (ctx, args) => {
     // Determine the user's possible IDs (externalId and internal _id)
     const userIds = await resolveUserIds(ctx, args.userId);
+    console.log(`[Notifications] Listing for ${args.userId} resolved to:`, userIds);
 
     let notifications = [];
 

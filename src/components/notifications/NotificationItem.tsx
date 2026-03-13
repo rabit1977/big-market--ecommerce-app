@@ -15,6 +15,7 @@ import {
     Tag,
     TrendingDown,
     Truck,
+    Users,
     X,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -37,7 +38,8 @@ export type NotificationType =
   | 'SUCCESS'
   | 'ERROR'
   | 'WARNING'
-  | 'INQUIRY';
+  | 'INQUIRY'
+  | 'STORE_FOLLOW';
 
 interface TypeConfig {
   icon: React.ElementType;
@@ -60,6 +62,7 @@ const typeConfigs: Record<string, TypeConfig> = {
   SUCCESS:         { icon: Bell,          color: 'text-emerald-500', bgColor: 'bg-emerald-500/10' },
   ERROR:           { icon: AlertCircle,   color: 'text-red-500',     bgColor: 'bg-red-500/10'     },
   WARNING:         { icon: AlertCircle,   color: 'text-amber-500',   bgColor: 'bg-amber-500/10'   },
+  STORE_FOLLOW:    { icon: Users,         color: 'text-pink-500',    bgColor: 'bg-pink-500/10'    },
 };
 
 // ─── Props ────────────────────────────────────────────────────────────────────
