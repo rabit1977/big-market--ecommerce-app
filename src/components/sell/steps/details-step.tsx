@@ -708,7 +708,7 @@ export function DetailsStep({
                   )}
                   {formData.subCategory && formData.subCategory !== formData.category && (
                     <>
-                      <span className='text-[10px] font-bold text-muted-foreground'>/</span>
+                      <span className='text-[10px] font-bold text-muted-foreground mx-1'>{'>'}</span>
                       <span className='text-[10px] font-bold text-primary opacity-80 uppercase tracking-widest'>
                         {categories.find(c => c.slug === formData.subCategory)?.name || formData.subCategory}
                       </span>

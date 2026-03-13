@@ -34,6 +34,7 @@ export const follow = mutation({
         type: 'SYSTEM',
         title: 'New Store Follower',
         message: `${followerName} started following your store.`,
+        link: '/favorites?tab=stores',
         isRead: false,
         createdAt: Date.now(),
         metadata: {

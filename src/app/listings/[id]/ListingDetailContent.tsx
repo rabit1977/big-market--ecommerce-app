@@ -599,7 +599,7 @@ export function ListingDetailContent({
                       )}
                       {subCategoryData && (
                         <>
-                          <span className='text-[10px] font-bold text-muted-foreground'>/</span>
+                          <span className='text-[10px] font-bold text-muted-foreground mx-1'>{'>'}</span>
                           <span className='text-[10px] font-bold text-primary hover:underline cursor-pointer uppercase tracking-wider'>
                             {subCategoryData.name}
                           </span>
@@ -825,7 +825,7 @@ export function ListingDetailContent({
                         )}
                         {subCategoryData && (
                           <>
-                            <span className='text-[10px] font-bold text-muted-foreground'>/</span>
+                            <span className='text-[10px] font-bold text-muted-foreground mx-1'>{'>'}</span>
                             <span className='text-[10px] font-bold text-primary hover:underline cursor-pointer uppercase tracking-wider'>
                               {subCategoryData.name}
                             </span>

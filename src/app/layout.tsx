@@ -9,6 +9,7 @@ import { CompareWidget } from '@/components/listing/compare-widget';
 import { Watermark } from '@/components/shared/watermark';
 import { Toast } from '@/components/toast';
 import { CommandPalette } from '@/components/ui/command-palette';
+import { NotificationListener } from '@/components/notifications/notification-listener';
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
@@ -86,6 +87,7 @@ export default async function RootLayout({
                 <FooterWrapper />
                 <CompareWidget />
                 <Toast />
+                <NotificationListener />
                 <InstallPwaPrompt />
               </div>
             </div>

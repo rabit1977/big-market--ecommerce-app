@@ -20,6 +20,7 @@ import {
   Search,
   Store,
   Trash2,
+  Users,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -28,6 +29,7 @@ import Link from 'next/link';
 import { memo, use, useOptimistic, useTransition } from 'react';
 import { toast } from 'sonner';
 import { api } from '../../../convex/_generated/api';
+import { FollowSellerButton } from '@/components/shared/follow-seller-button';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -188,7 +190,7 @@ function FavoritesTabs({
           value='stores'
           className='text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md'
         >
-          Stores ({followedStores?.length ?? 0})
+          {t('stores_tab', { count: (followedStores?.length ?? 0) })}
         </TabsTrigger>
         <TabsTrigger
           value='visited'
@@ -264,54 +266,76 @@ function FavoritesTabs({
         )}
       </TabsContent>
 
-      {/* ── Followed Stores ── */}
-      <TabsContent value='stores'>
-        {!followedStores ? (
-          <CenteredSpinner />
-        ) : followedStores.length === 0 ? (
-          <EmptyState
-            icon={
-              <Store className='w-8 h-8 md:w-10 md:h-10 text-muted-foreground/40' />
-            }
-            title='No followed stores'
-            description='Follow sellers to easily find their listings later.'
-            action={{ label: t('browse_listings'), href: '/listings' }}
-          />
-        ) : (
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3'>
-            {followedStores.map(
-              (store) =>
-                store && (
-                  <Link
-                    key={store._id}
-                    href={`/store/${store.externalId}`}
-                    className='group flex flex-col gap-3 bg-card p-4 rounded-2xl border border-border/50 hover:border-primary/30 hover:shadow-sm transition-all text-center items-center justify-center'
-                  >
-                    <Avatar className='h-16 w-16 md:h-20 md:w-20 rounded-xl mb-1 shadow-sm border border-border group-hover:scale-105 transition-transform'>
-                      <AvatarImage
-                        src={store.image || ''}
-                        alt={store.name || 'Store'}
-                        className='object-cover'
-                      />
-                      <AvatarFallback className='text-xl bg-muted text-muted-foreground font-bold'>
-                        {store.name?.charAt(0).toUpperCase() || 'S'}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <h3 className='font-bold text-sm md:text-base text-foreground group-hover:text-primary transition-colors mb-0.5 line-clamp-1 px-4'>
-                        {store.accountType === 'COMPANY' && store.companyName
-                          ? store.companyName
-                          : store.name}
-                      </h3>
-                      <p className='text-[10px] md:text-xs text-muted-foreground font-medium uppercase tracking-wider'>
-                        Followed {formatDistanceToNow(store.followedAt)} ago
-                      </p>
-                    </div>
-                  </Link>
-                ),
-            )}
+      {/* ── Stores & Followers ── */}
+      <TabsContent value='stores' className='space-y-6'>
+        {/* Section 1: Stores I Follow */}
+        <div className='space-y-4'>
+          <div className='flex items-center justify-between border-b border-border/50 pb-2'>
+            <h3 className='font-bold text-lg md:text-xl text-foreground flex items-center gap-2'>
+              <Store className='w-5 h-5 text-primary' />
+              {t('followed_stores', { count: followedStores?.length ?? 0 })}
+            </h3>
           </div>
-        )}
+
+          {!followedStores ? (
+            <CenteredSpinner />
+          ) : followedStores.length === 0 ? (
+            <div className='py-8 text-center bg-card/30 border border-dashed border-border rounded-2xl'>
+               <p className='text-xs text-muted-foreground font-medium'>{t('no_followed_stores')}</p>
+               <Link href='/listings' className='text-xs font-bold text-primary hover:underline mt-2 inline-block'>
+                 {t('discover_stores')}
+               </Link>
+            </div>
+          ) : (
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3'>
+              {followedStores.map(
+                (store) =>
+                  store && (
+                    <div
+                      key={store._id}
+                      className='group relative flex flex-col gap-3 bg-card p-4 rounded-2xl border border-border/50 hover:border-primary/30 hover:shadow-sm transition-all text-center items-center justify-center'
+                    >
+                      <Link href={`/store/${store.externalId}`} className='flex flex-col items-center gap-3 w-full'>
+                        <Avatar className='h-16 w-16 md:h-20 md:w-20 rounded-xl mb-1 shadow-sm border border-border group-hover:scale-105 transition-transform shrink-0'>
+                          <AvatarImage
+                            src={store.image || ''}
+                            alt={store.name || 'Store'}
+                            className='object-cover'
+                          />
+                          <AvatarFallback className='text-xl bg-muted text-muted-foreground font-bold'>
+                            {store.name?.charAt(0).toUpperCase() || 'S'}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className='w-full'>
+                          <h3 className='font-bold text-sm md:text-base text-foreground group-hover:text-primary transition-colors mb-0.5 line-clamp-1 px-2'>
+                            {store.accountType === 'COMPANY' && store.companyName
+                              ? store.companyName
+                              : store.name}
+                          </h3>
+                          <p className='text-[10px] md:text-xs text-muted-foreground font-medium uppercase tracking-wider'>
+                            Followed {formatDistanceToNow(store.followedAt)} ago
+                          </p>
+                        </div>
+                      </Link>
+                      
+                      <div className='mt-1 w-full'>
+                         <FollowSellerButton 
+                           sellerId={store.externalId} 
+                           sellerName={store.name} 
+                           size='sm' 
+                           variant='ghost'
+                           className='h-8 w-full text-[10px] font-bold uppercase tracking-wider'
+                         />
+                      </div>
+                    </div>
+                  ),
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Section 2: My Store Followers (Only for Premium Users) */}
+        <StoreFollowersSection userId={userId} />
       </TabsContent>
 
       {/* ── History ── */}
@@ -427,6 +451,59 @@ const EmptyState = memo(function EmptyState({
     </div>
   );
 });
+
+function StoreFollowersSection({ userId }: { userId: string }) {
+  const user = useQuery(api.users.getByExternalId, { externalId: userId });
+  const followers = useQuery(api.followedSellers.getStoreFollowers, { sellerId: userId });
+  const t = useTranslations('Favorites');
+
+  // More robust premium check (Business/Premium/Pro tiers or Admin role)
+  const isPremium = user?.role === 'ADMIN' || (user?.membershipTier && user.membershipTier !== 'FREE');
+
+  if (!isPremium) return null;
+
+  return (
+    <div className='space-y-4 pt-4 border-t border-border/10'>
+      <div className='flex items-center justify-between border-b border-border/50 pb-2'>
+        <h3 className='font-bold text-lg md:text-xl text-foreground flex items-center gap-2'>
+          <Users className='w-5 h-5 text-primary' />
+          {t('my_followers')} ({followers?.length ?? 0})
+        </h3>
+      </div>
+
+      {!followers ? (
+        <CenteredSpinner />
+      ) : followers.length === 0 ? (
+        <div className='py-12 text-center bg-card/10 border border-dashed border-border rounded-xl'>
+           <p className='text-xs text-muted-foreground font-medium'>{t('no_followers')}</p>
+           <p className='text-[10px] text-muted-foreground/60 mt-1 max-w-xs mx-auto'>{t('followers_desc')}</p>
+        </div>
+      ) : (
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3'>
+          {followers.map((follower) => {
+            if (!follower) return null;
+            return (
+              <div key={follower._id} className='flex items-center gap-3 bg-card p-3 rounded-2xl border border-border/50 hover:border-primary/20 transition-all'>
+                  <Avatar className='h-10 w-10 md:h-12 md:w-12 rounded-xl border border-border shrink-0'>
+                    <AvatarImage src={follower.image || ''} className='object-cover' />
+                    <AvatarFallback className='bg-muted text-muted-foreground font-bold text-sm'>
+                      {follower.name?.charAt(0).toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className='flex-1 min-w-0'>
+                    <p className='font-bold text-sm truncate text-foreground'>{follower.name}</p>
+                    <p className='text-[10px] text-muted-foreground font-medium uppercase tracking-tight'>
+                        Followed {formatDistanceToNow(follower.followedAt)} ago
+                    </p>
+                  </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function CenteredSpinner() {
   return (

@@ -224,7 +224,14 @@
     "no_history_desc": "Ads you view will appear here.",
     "search_removed": "Search removed",
     "failed_to_remove": "Failed to remove search",
-    "saved_ago": "Saved {time} ago"
+    "saved_ago": "Saved {time} ago",
+    "stores_tab": "Stores & Followers ({count})",
+    "followed_stores": "Followed Stores",
+    "no_followed_stores": "No followed stores yet",
+    "discover_stores": "Discover Stores",
+    "my_followers": "My Store Followers",
+    "no_followers": "No followers yet",
+    "followers_desc": "When users follow your store, they'll see your new listings in their feed."
   },
   "Listings": {
     "result": "result",

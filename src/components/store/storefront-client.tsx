@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   Star,
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
@@ -224,21 +225,22 @@ export function StorefrontClient({
                 </span>
               }
             />
-            {!isOwner && (
-              <FollowSellerButton
-                sellerId={profile.externalId}
-                sellerName={
-                  profile.name === 'User'
-                    ? 'Andi Ebibi'
-                    : profile.accountType === 'COMPANY' && profile.companyName
-                      ? profile.companyName
-                      : profile.name
-                }
-                showCount
-                size='lg'
-                className='h-12 border-2 px-6 sm:px-8 rounded-lg font-bold tracking-tight uppercase flex-1 md:flex-none'
-              />
-            )}
+            <FollowSellerButton
+              sellerId={profile.externalId}
+              sellerName={
+                profile.name === 'User'
+                  ? 'Andi Ebibi'
+                  : profile.accountType === 'COMPANY' && profile.companyName
+                    ? profile.companyName
+                    : profile.name
+              }
+              showCount
+              size='lg'
+              className={cn(
+                'h-12 border-2 px-6 sm:px-8 rounded-lg font-bold tracking-tight uppercase flex-1 md:flex-none',
+                isOwner && 'opacity-80 pointer-events-none'
+              )}
+            />
           </div>
         </div>
 

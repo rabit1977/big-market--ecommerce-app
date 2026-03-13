@@ -226,7 +226,7 @@ export const ListingCard = memo(
                         <span className='block text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-0.5 leading-none'>
                           {listing.categoryName}
                           {listing.subCategoryName && (
-                            <span className='lowercase font-normal text-muted-foreground/60 mx-1'>in</span>
+                            <span className='font-normal text-muted-foreground/60 mx-1'>{'>'}</span>
                           )}
                           {listing.subCategoryName}
                         </span>
@@ -312,7 +312,7 @@ export const ListingCard = memo(
                     <span className='block text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1 leading-none'>
                       {listing.categoryName}
                       {listing.subCategoryName && (
-                         <span className='lowercase font-normal text-muted-foreground/60 mx-1'>in</span>
+                         <span className='font-normal text-muted-foreground/60 mx-1'>{'>'}</span>
                       )}
                       {listing.subCategoryName}
                     </span>
