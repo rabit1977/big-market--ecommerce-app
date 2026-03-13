@@ -4,7 +4,9 @@ import { mutation, query } from './_generated/server';
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query('categories').order('asc').collect();
+    const categories = await ctx.db.query('categories').collect();
+    // Sort by position (which is the original index from seed.ts)
+    return categories.sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
   },
 });
 
@@ -101,7 +103,9 @@ export const getWithCounts = query({
       }
     }
 
-    return categories.map((cat) => ({
+    const sortedCategories = categories.sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+    
+    return sortedCategories.map((cat) => ({
       ...cat,
       count: !cat.parentId
         ? parentCounts.get(cat.slug) || 0
