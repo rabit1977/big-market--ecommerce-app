@@ -7148,7 +7148,7 @@ const categoriesData = [
         {
           key: 'category',
           label: 'Laptop Category',
-          options: ['Ultrabook / Business', 'Gaming Laptop', 'Student / Home', '2-in-1 / Touchscreen', 'Workstation (Pro)'],
+          options: ['Ultrabook / Business', 'Gaming Laptop', 'Student / Home', '2-in-1 / Touchscreen', 'Workstation (Pro)', 'Other'],
           type: 'select',
         },
         {
@@ -7166,13 +7166,13 @@ const categoriesData = [
         {
           key: 'ram_gb',
           label: 'RAM (GB)',
-          options: ['4', '8', '16', '32', '64', 'Over 64'],
+          options: ['2', '4', '8', '16', '32', '64', 'Over 64', 'Other'],
           type: 'select',
         },
         {
           key: 'storage_gb',
           label: 'Storage (GB)',
-          options: ['128', '256', '512', '1TB (1024)', '2TB', 'Over 2TB'],
+          options: ['128', '256', '512', '1TB (1024)', '2TB', 'Over 2TB', 'Other'],
           type: 'select',
         },
         {
@@ -7184,7 +7184,7 @@ const categoriesData = [
         {
           key: 'gpu',
           label: 'Dedicated Graphics',
-          options: ['Integrated', 'NVIDIA RTX Series', 'NVIDIA GTX Series', 'AMD Radeon RX Series', 'Workstation (Quadro/A-Series)'],
+          options: ['Integrated', 'NVIDIA RTX Series', 'NVIDIA GTX Series', 'AMD Radeon RX Series', 'Workstation (Quadro/A-Series)', 'Other'],
           type: 'select',
         },
         {
@@ -7222,7 +7222,7 @@ const categoriesData = [
         {
           key: 'pc_type',
           label: 'Form Factor',
-          options: ['Full Tower / Tower', 'Gaming Build (Custom)', 'Mini PC / ITX', 'All-in-One (AiO)', 'Mac Studio / Mac Mini', 'Workstation'],
+          options: ['Full Tower / Tower', 'Gaming Build (Custom)', 'Mini PC / ITX', 'All-in-One (AiO)', 'Mac Studio / Mac Mini', 'Workstation', 'Other'],
           type: 'select',
         },
         {
@@ -7240,7 +7240,7 @@ const categoriesData = [
         {
           key: 'ram_gb',
           label: 'RAM (GB)',
-          options: ['8', '16', '32', '64', '128', 'Over 128'],
+          options: ['4', '8', '16', '32', '64', '128', 'Over 128', 'Other'],
           type: 'select',
         },
         {
@@ -7252,7 +7252,7 @@ const categoriesData = [
         {
           key: 'os',
           label: 'Operating System',
-          options: ['Windows 11', 'Windows 10', 'macOS', 'Linux', 'No OS (FreeDOS)'],
+          options: ['Windows 11', 'Windows 10', 'macOS', 'Linux', 'No OS (FreeDOS)', 'Other'],
           type: 'select',
         },
       ],
@@ -7284,19 +7284,19 @@ const categoriesData = [
         {
           key: 'resolution',
           label: 'Resolution',
-          options: ['FHD (1920x1080)', 'QHD / 2K (2560x1440)', '4K / UHD (3840x2160)', 'Ultrawide (21:9/32:9)', 'Apple Studio / Pro Display'],
+          options: ['FHD (1920x1080)', 'QHD / 2K (2560x1440)', '4K / UHD (3840x2160)', 'Ultrawide (21:9/32:9)', 'Apple Studio / Pro Display', 'Other'],
           type: 'select',
         },
         {
           key: 'refresh_rate_hz',
           label: 'Refresh Rate (Hz)',
-          options: ['60', '75', '144', '165', '240', '360', '500+'],
+          options: ['60', '75', '144', '165', '240', '360', '500+', 'Other'],
           type: 'select',
         },
         {
           key: 'panel_type',
           label: 'Panel Type',
-          options: ['IPS', 'OLED / QD-OLED', 'VA', 'TN', 'Mini-LED'],
+          options: ['IPS', 'OLED / QD-OLED', 'VA', 'TN', 'Mini-LED', 'Other'],
           type: 'select',
         },
       ],
@@ -7332,13 +7332,26 @@ const categoriesData = [
         {
           key: 'chipset',
           label: 'GPU Chipset',
-          options: ['NVIDIA RTX 4090', 'NVIDIA RTX 4080', 'NVIDIA RTX 4070', 'NVIDIA RTX 30 Series', 'NVIDIA RTX 20 Series', 'AMD RX 7000 Series', 'AMD RX 6000 Series', 'Intel Arc', 'Quadro / RTX Pro'],
+          options: [
+            'NVIDIA RTX 4090',
+            'NVIDIA RTX 4080',
+            'NVIDIA RTX 4070',
+            'NVIDIA RTX 30 Series',
+            'NVIDIA RTX 20 Series',
+            'NVIDIA GTX Series',
+            'AMD RX 7000 Series',
+            'AMD RX 6000 Series',
+            'AMD RX 5000 Series',
+            'Intel Arc',
+            'Quadro / RTX Pro',
+            'Legacy / Other',
+          ],
           type: 'select',
         },
         {
           key: 'vram_gb',
           label: 'VRAM (GB)',
-          options: ['4', '6', '8', '10', '12', '16', '20', '24', 'Over 24'],
+          options: ['2', '4', '6', '8', '10', '12', '16', '20', '24', 'Over 24', 'Other'],
           type: 'select',
         },
         {
@@ -7363,13 +7376,22 @@ const categoriesData = [
         {
           key: 'brand',
           label: 'Brand',
-          options: ['Intel', 'AMD'],
+          options: ['Intel', 'AMD', 'Other'],
           type: 'select',
         },
         {
           key: 'socket',
           label: 'Socket Type',
-          options: ['Intel LGA 1700', 'Intel LGA 1200', 'AMD AM5', 'AMD AM4', 'Other / Threadripper'],
+          options: [
+            'Intel LGA 1700',
+            'Intel LGA 1200',
+            'Intel LGA 1151',
+            'AMD AM5',
+            'AMD AM4',
+            'AMD AM3 / AM3+',
+            'Threadripper / Workstation',
+            'Other / Legacy',
+          ],
           type: 'select',
         },
         {
@@ -7425,13 +7447,13 @@ const categoriesData = [
         {
           key: 'type',
           label: 'Type',
-          options: ['DDR5', 'DDR4', 'DDR3', 'Laptop (SO-DIMM)'],
+          options: ['DDR5', 'DDR4', 'DDR3', 'DDR2 / Legacy', 'Laptop (SO-DIMM)', 'Other'],
           type: 'select',
         },
         {
           key: 'capacity_gb',
           label: 'Total Capacity',
-          options: ['8GB', '16GB (2x8)', '32GB (2x16)', '64GB+', 'Single Stick'],
+          options: ['4GB', '8GB', '16GB', '32GB', '64GB+', 'Single Stick', 'Other'],
           type: 'select',
         },
         {
