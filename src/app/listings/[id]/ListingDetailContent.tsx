@@ -87,6 +87,7 @@ interface Listing {
   images: string[];
   thumbnail?: string;
   category: string;
+  subCategory?: string;
   city: string;
   region?: string;
   createdAt: number;
@@ -164,17 +165,24 @@ export function ListingDetailContent({
     userId: listing.userId,
   });
 
-  // ── Category template (for field labels) ─────────────────────────────────
-  const categoryTemplate = useConvexQuery(
+  const categoryData = useConvexQuery(
     api.categories.getBySlug,
     listing.category ? { slug: listing.category } : 'skip',
   );
+  const subCategoryData = useConvexQuery(
+    api.categories.getBySlug,
+    listing.subCategory ? { slug: listing.subCategory } : 'skip',
+  );
+
+  // Use the leaf category for the template/labels
+  const activeCategory = subCategoryData || categoryData;
+
   // Build key → label map from the template fields
   const fieldLabelMap = useMemo<Record<string, string>>(() => {
-    const fields = (categoryTemplate as any)?.template?.fields;
+    const fields = (activeCategory as any)?.template?.fields;
     if (!Array.isArray(fields)) return {};
     return Object.fromEntries(fields.map((f: any) => [f.key, f.label]));
-  }, [categoryTemplate]);
+  }, [activeCategory]);
 
   useEffect(() => {
     // Safety check for browser environment + React Strict Mode guard
@@ -582,9 +590,26 @@ export function ListingDetailContent({
                   )}
                 </div>
                 <div className='flex items-start justify-between gap-2'>
-                  <h1 className='text-xl font-bold text-foreground leading-tight flex-1'>
-                    {listing.title}
-                  </h1>
+                  <div className='flex flex-col flex-1'>
+                    <div className='flex items-center gap-1 mb-1'>
+                      {categoryData && (
+                        <span className='text-[10px] font-bold text-primary hover:underline cursor-pointer uppercase tracking-wider'>
+                          {categoryData.name}
+                        </span>
+                      )}
+                      {subCategoryData && (
+                        <>
+                          <span className='text-[10px] font-bold text-muted-foreground'>/</span>
+                          <span className='text-[10px] font-bold text-primary hover:underline cursor-pointer uppercase tracking-wider'>
+                            {subCategoryData.name}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    <h1 className='text-xl font-bold text-foreground leading-tight'>
+                      {listing.title}
+                    </h1>
+                  </div>
                   <SellerBadge seller={seller} showLabel />
                 </div>
                 <div className='flex flex-col'>
@@ -791,9 +816,26 @@ export function ListingDetailContent({
               <div className='bg-card border border-border rounded-lg p-6 md:p-8 space-y-6'>
                 <div className='space-y-3'>
                   <div className='flex items-center gap-2'>
-                    <h1 className='text-xl font-bold text-muted-foreground tracking-tight leading-tight uppercase flex-1'>
-                      {listing.title}
-                    </h1>
+                    <div className='flex flex-col flex-1'>
+                      <div className='flex items-center gap-1 mb-1'>
+                        {categoryData && (
+                          <span className='text-[10px] font-bold text-primary hover:underline cursor-pointer uppercase tracking-wider'>
+                            {categoryData.name}
+                          </span>
+                        )}
+                        {subCategoryData && (
+                          <>
+                            <span className='text-[10px] font-bold text-muted-foreground'>/</span>
+                            <span className='text-[10px] font-bold text-primary hover:underline cursor-pointer uppercase tracking-wider'>
+                              {subCategoryData.name}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                      <h1 className='text-xl font-bold text-muted-foreground tracking-tight leading-tight uppercase'>
+                        {listing.title}
+                      </h1>
+                    </div>
                     <SellerBadge seller={seller} showLabel />
                   </div>
                   <div className='flex items-center gap-2 text-[10px] font-black text-muted-foreground uppercase tracking-widest'>

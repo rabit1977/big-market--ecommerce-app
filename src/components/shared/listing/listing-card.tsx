@@ -222,6 +222,15 @@ export const ListingCard = memo(
                     )}
                   >
                     <span className='group-hover:underline decoration-foreground/30 underline-offset-2 transition-all'>
+                      {listing.categoryName && (
+                        <span className='block text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-0.5 leading-none'>
+                          {listing.categoryName}
+                          {listing.subCategoryName && (
+                            <span className='lowercase font-normal text-muted-foreground/60 mx-1'>in</span>
+                          )}
+                          {listing.subCategoryName}
+                        </span>
+                      )}
                       {listing.title}
                     </span>
                     <span className='flex items-center justify-between border-border/40 mt-1'>
@@ -299,6 +308,15 @@ export const ListingCard = memo(
                 </div>
 
                 <h3 className='font-bold text-sm sm:text-base md:text-lg leading-tight line-clamp-2 group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground'>
+                  {listing.categoryName && (
+                    <span className='block text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1 leading-none'>
+                      {listing.categoryName}
+                      {listing.subCategoryName && (
+                         <span className='lowercase font-normal text-muted-foreground/60 mx-1'>in</span>
+                      )}
+                      {listing.subCategoryName}
+                    </span>
+                  )}
                   {listing.title}
                 </h3>
 

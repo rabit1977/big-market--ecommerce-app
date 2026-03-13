@@ -5,7 +5,9 @@ export interface Listing {
   description: string;
   price: number;
   category: string;
+  categoryName?: string;
   subCategory: string | null;
+  subCategoryName?: string;
   thumbnail: string | null;
   city: string;
   status: string; // 'ACTIVE', 'SOLD', etc.

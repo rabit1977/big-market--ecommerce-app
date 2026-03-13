@@ -39,6 +39,8 @@ interface Listing {
   isVerified?: boolean;
   promotionTier?: string;
   promotionExpiresAt?: number;
+  categoryName?: string;
+  subCategoryName?: string;
 }
 
 function FeaturedImageCarousel({
@@ -280,6 +282,15 @@ export function FeaturedListings({
                   {/* Simple Content */}
                   <div className='p-3 bg-card flex-1 z-20 relative pointer-events-none'>
                     <h3 className='text-base sm:text-lg font-bold line-clamp-2 leading-snug group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground mb-2 truncate'>
+                      {(listing as any).categoryName && (
+                        <span className='block text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-0.5 leading-none'>
+                          {(listing as any).categoryName}
+                          {(listing as any).subCategoryName && (
+                            <span className='lowercase font-normal text-muted-foreground/60 mx-1'>in</span>
+                          )}
+                          {(listing as any).subCategoryName}
+                        </span>
+                      )}
                       {listing.title}
                     </h3>
 
@@ -422,6 +433,15 @@ export function FeaturedListings({
                         {/* eBay Style Content Section */}
                         <div className='flex flex-col flex-1 p-2 z-20 relative pointer-events-none'>
                           <h3 className='text-sm sm:text-base font-bold leading-[1.3] line-clamp-2 text-muted-foreground group-hover:underline decoration-foreground/30 underline-offset-2 transition-all truncate'>
+                            {(listing as any).categoryName && (
+                              <span className='block text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-1 leading-none'>
+                                {(listing as any).categoryName}
+                                {(listing as any).subCategoryName && (
+                                  <span className='lowercase font-normal text-muted-foreground/60 mx-1'>in</span>
+                                )}
+                                {(listing as any).subCategoryName}
+                              </span>
+                            )}
                             {listing.title}
                           </h3>
 

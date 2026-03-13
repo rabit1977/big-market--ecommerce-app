@@ -59,14 +59,36 @@ async function releaseListingNumber(ctx: MutationCtx, number: number) {
 export const getByListingNumber = query({
   args: { listingNumber: v.number() },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const listing = await ctx.db
       .query('listings')
       .withIndex('by_listingNumber', (q) =>
         q.eq('listingNumber', args.listingNumber),
       )
       .unique();
+
+    if (!listing) return null;
+    return await withCategoryNames(ctx, listing);
   },
 });
+
+async function withCategoryNames(ctx: any, listing: any) {
+  const category = await ctx.db
+    .query('categories')
+    .withIndex('by_slug', (q: any) => q.eq('slug', listing.category))
+    .unique();
+  const subCategory = listing.subCategory
+    ? await ctx.db
+        .query('categories')
+        .withIndex('by_slug', (q: any) => q.eq('slug', listing.subCategory))
+        .unique()
+    : null;
+
+  return {
+    ...listing,
+    categoryName: category?.name,
+    subCategoryName: subCategory?.name,
+  };
+}
 
 export const get = query({
   args: {},
@@ -74,11 +96,14 @@ export const get = query({
     const listings = await ctx.db
       .query('listings')
       .withIndex('by_status', (q) => q.eq('status', 'ACTIVE'))
-      .order('desc')
       .collect();
 
+    const enriched = await Promise.all(
+      listings.map((l) => withCategoryNames(ctx, l)),
+    );
+
     const now = Date.now();
-    return listings.sort((a, b) => {
+    return enriched.sort((a, b) => {
       const isTopA =
         a.isPromoted &&
         a.promotionTier === 'TOP_POSITIONING' &&
@@ -125,12 +150,14 @@ export const getFeatured = query({
 
     // Filter for ACTIVE promoted listings (Excluding non-featured tiers)
     const featuredTiers = ['AUTO_DAILY_REFRESH', 'LISTING_HIGHLIGHT'];
-    return listings.filter(
+    const filtered = listings.filter(
       (l) =>
         l.isPromoted === true &&
         !featuredTiers.includes(l.promotionTier || '') &&
         (!l.promotionExpiresAt || l.promotionExpiresAt > now),
     );
+
+    return await Promise.all(filtered.map((l) => withCategoryNames(ctx, l)));
   },
 });
 
@@ -412,18 +439,18 @@ export const list = query({
     });
 
     // 5. Apply limit
-    if (args.limit) {
-      return sortedResults.slice(0, args.limit);
-    }
+    const limited = args.limit ? sortedResults.slice(0, args.limit) : sortedResults;
 
-    return sortedResults;
+    return await Promise.all(limited.map((l) => withCategoryNames(ctx, l)));
   },
 });
 
 export const getById = query({
   args: { id: v.id('listings') },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.id);
+    const listing = await ctx.db.get(args.id);
+    if (!listing) return null;
+    return await withCategoryNames(ctx, listing);
   },
 });
 
@@ -431,7 +458,8 @@ export const getByIds = query({
   args: { ids: v.array(v.id('listings')) },
   handler: async (ctx, args) => {
     const results = await Promise.all(args.ids.map((id) => ctx.db.get(id)));
-    return results.filter((r) => r !== null);
+    const valid = results.filter((r) => r !== null);
+    return await Promise.all(valid.map((l) => withCategoryNames(ctx, l)));
   },
 });
 
@@ -490,10 +518,10 @@ export const getByUser = query({
 
     if (args.search) {
       const queryStr = args.search.toLowerCase();
-      return listings.filter((l) => l.title.toLowerCase().includes(queryStr));
+      listings = listings.filter((l) => l.title.toLowerCase().includes(queryStr));
     }
 
-    return listings;
+    return await Promise.all(listings.map((l) => withCategoryNames(ctx, l)));
   },
 });
 

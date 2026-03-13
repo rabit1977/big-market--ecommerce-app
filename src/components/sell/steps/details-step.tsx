@@ -701,6 +701,21 @@ export function DetailsStep({
             >
               <div className='mb-3 flex items-center justify-between'>
                 <div className='flex items-center gap-1.5'>
+                  {formData.category && (
+                    <span className='text-[10px] font-bold text-primary opacity-60 uppercase tracking-widest'>
+                      {categories.find(c => c.slug === formData.category)?.name || formData.category}
+                    </span>
+                  )}
+                  {formData.subCategory && formData.subCategory !== formData.category && (
+                    <>
+                      <span className='text-[10px] font-bold text-muted-foreground'>/</span>
+                      <span className='text-[10px] font-bold text-primary opacity-80 uppercase tracking-widest'>
+                        {categories.find(c => c.slug === formData.subCategory)?.name || formData.subCategory}
+                      </span>
+                    </>
+                  )}
+                </div>
+                <div className='flex items-center gap-1.5 mt-2'>
                   <span className='text-xs font-bold uppercase tracking-widest text-primary flex items-center gap-1.5'>
                     <PenLine className='w-4 h-4' />
                     Listing Title
