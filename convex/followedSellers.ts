@@ -2,42 +2,49 @@ import { v } from 'convex/values';
 import { mutation, query, MutationCtx, QueryCtx } from './_generated/server';
 
 /**
- * Helper to ensure we always work with the canonical externalId.
+ * Resolve any user ID (externalId or internal Convex _id) to the canonical externalId.
+ * This prevents ID-format mismatches between follow/query operations.
  */
-async function getCanonicalExternalId(ctx: QueryCtx | MutationCtx, id: string): Promise<string> {
-  // 1. Try as externalId
-  const userByExternal = await ctx.db
+async function toExternalId(ctx: QueryCtx | MutationCtx, id: string): Promise<string> {
+  // Try as externalId first (most common path)
+  const byExternal = await ctx.db
     .query('users')
     .withIndex('by_externalId', (q) => q.eq('externalId', id))
     .unique();
-  if (userByExternal) return userByExternal.externalId;
+  if (byExternal) return byExternal.externalId;
 
-  // 2. Try as internal ID
+  // Try as internal Convex ID
   try {
-    const internalUser = await ctx.db.get(id as any);
-    if (internalUser && (internalUser as any).externalId) {
-      return (internalUser as any).externalId;
+    const byInternal = await ctx.db.get(id as any);
+    if (byInternal && (byInternal as any).externalId) {
+      return (byInternal as any).externalId as string;
     }
-  } catch (e) {
-    // Not a valid Convex ID
+  } catch (_) {
+    // Not a valid Convex document ID – fall through
   }
 
-  return id;
+  return id; // Return as-is if we cannot resolve
 }
 
-/** Follow a seller */
+// ─── Follow ──────────────────────────────────────────────────────────────────
+
 export const follow = mutation({
   args: { sellerId: v.string(), followerId: v.string() },
   handler: async (ctx, { sellerId, followerId }) => {
-    const sId = await getCanonicalExternalId(ctx, sellerId);
-    const fId = await getCanonicalExternalId(ctx, followerId);
+    const sId = await toExternalId(ctx, sellerId);
+    const fId = await toExternalId(ctx, followerId);
+
+    console.log(`[FollowStore] Attempting follow: sId=${sId}, fId=${fId}`);
+
+    if (sId === fId) {
+      console.warn(`[FollowStore] User ${fId} attempted to follow themselves.`);
+      throw new Error("You cannot follow your own store.");
+    }
 
     // Prevent duplicate follows
     const existing = await ctx.db
       .query('followedSellers')
-      .withIndex('by_follower_seller', (q) =>
-        q.eq('followerId', fId).eq('sellerId', sId),
-      )
+      .withIndex('by_follower_seller', (q) => q.eq('followerId', fId).eq('sellerId', sId))
       .unique();
     if (existing) return existing._id;
 
@@ -48,74 +55,69 @@ export const follow = mutation({
     });
 
     // Notify the seller
-    if (sId !== fId) {
-      console.log(`[Followers] Creating notification for seller ${sId} from follower ${fId}`);
-      const follower = await ctx.db
-        .query('users')
-        .withIndex('by_externalId', (q) => q.eq('externalId', fId))
-        .unique();
+    const follower = await ctx.db
+      .query('users')
+      .withIndex('by_externalId', (q) => q.eq('externalId', fId))
+      .unique();
+    const followerName = follower?.name || 'Someone';
 
-      const followerName = follower?.name || 'A user';
-
-      await ctx.db.insert('notifications', {
-        userId: sId,
-        type: 'STORE_FOLLOW',
-        title: 'New Store Follower',
-        message: `${followerName} started following your store.`,
-        link: '/favorites?tab=stores',
-        isRead: false,
-        createdAt: Date.now(),
-        metadata: {
-          followerId: fId,
-          followerName,
-          followerImage: follower?.image,
-        },
-      });
-    }
+    await ctx.db.insert('notifications', {
+      userId: sId,
+      type: 'STORE_FOLLOW',
+      title: 'New Follower',
+      message: `${followerName} started following your store.`,
+      link: '/favorites?tab=stores',
+      isRead: false,
+      createdAt: Date.now(),
+      metadata: {
+        followerId: fId,
+        followerName,
+        followerImage: follower?.image ?? null,
+      },
+    });
 
     return followId;
   },
 });
 
-/** Unfollow a seller */
+// ─── Unfollow ─────────────────────────────────────────────────────────────────
+
 export const unfollow = mutation({
   args: { sellerId: v.string(), followerId: v.string() },
   handler: async (ctx, { sellerId, followerId }) => {
-    const sId = await getCanonicalExternalId(ctx, sellerId);
-    const fId = await getCanonicalExternalId(ctx, followerId);
+    const sId = await toExternalId(ctx, sellerId);
+    const fId = await toExternalId(ctx, followerId);
 
     const existing = await ctx.db
       .query('followedSellers')
-      .withIndex('by_follower_seller', (q) =>
-        q.eq('followerId', fId).eq('sellerId', sId),
-      )
+      .withIndex('by_follower_seller', (q) => q.eq('followerId', fId).eq('sellerId', sId))
       .unique();
     if (existing) await ctx.db.delete(existing._id);
   },
 });
 
-/** Check if a specific user follows a specific seller */
+// ─── isFollowing ──────────────────────────────────────────────────────────────
+
 export const isFollowing = query({
   args: { sellerId: v.string(), followerId: v.string() },
   handler: async (ctx, { sellerId, followerId }) => {
-    const sId = await getCanonicalExternalId(ctx, sellerId);
-    const fId = await getCanonicalExternalId(ctx, followerId);
+    const sId = await toExternalId(ctx, sellerId);
+    const fId = await toExternalId(ctx, followerId);
 
     const existing = await ctx.db
       .query('followedSellers')
-      .withIndex('by_follower_seller', (q) =>
-        q.eq('followerId', fId).eq('sellerId', sId),
-      )
+      .withIndex('by_follower_seller', (q) => q.eq('followerId', fId).eq('sellerId', sId))
       .unique();
     return !!existing;
   },
 });
 
-/** Get all sellers a user follows (with their user data) */
+// ─── Stores I follow (Buyer view) ─────────────────────────────────────────────
+
 export const getFollowedSellers = query({
   args: { followerId: v.string() },
   handler: async (ctx, { followerId }) => {
-    const fId = await getCanonicalExternalId(ctx, followerId);
+    const fId = await toExternalId(ctx, followerId);
 
     const follows = await ctx.db
       .query('followedSellers')
@@ -123,14 +125,11 @@ export const getFollowedSellers = query({
       .order('desc')
       .collect();
 
-    // Fetch user data for each followed seller
     const sellers = await Promise.all(
       follows.map(async (follow) => {
         const seller = await ctx.db
           .query('users')
-          .withIndex('by_externalId', (q) =>
-            q.eq('externalId', follow.sellerId),
-          )
+          .withIndex('by_externalId', (q) => q.eq('externalId', follow.sellerId))
           .unique();
         return seller ? { ...seller, followedAt: follow.createdAt } : null;
       }),
@@ -140,30 +139,26 @@ export const getFollowedSellers = query({
   },
 });
 
-/** Get all users who follow a seller (Store Followers) */
+// ─── Who follows MY store (Seller / Store-owner view) ────────────────────────
+
 export const getStoreFollowers = query({
   args: { sellerId: v.string() },
   handler: async (ctx, { sellerId }) => {
-    const sId = await getCanonicalExternalId(ctx, sellerId);
+    const sId = await toExternalId(ctx, sellerId);
 
-    const followers = await ctx.db
+    const follows = await ctx.db
       .query('followedSellers')
       .withIndex('by_seller', (q) => q.eq('sellerId', sId))
       .order('desc')
       .collect();
 
-    // Fetch user data for each follower
     const followerUsers = await Promise.all(
-      followers.map(async (follow) => {
-        const followerUser = await ctx.db
+      follows.map(async (follow) => {
+        const user = await ctx.db
           .query('users')
-          .withIndex('by_externalId', (q) =>
-            q.eq('externalId', follow.followerId),
-          )
+          .withIndex('by_externalId', (q) => q.eq('externalId', follow.followerId))
           .unique();
-        return followerUser
-          ? { ...followerUser, followedAt: follow.createdAt }
-          : null;
+        return user ? { ...user, followedAt: follow.createdAt } : null;
       }),
     );
 
@@ -171,11 +166,12 @@ export const getStoreFollowers = query({
   },
 });
 
-/** Get follower count for a seller */
+// ─── Follower count ──────────────────────────────────────────────────────────
+
 export const getFollowerCount = query({
   args: { sellerId: v.string() },
   handler: async (ctx, { sellerId }) => {
-    const sId = await getCanonicalExternalId(ctx, sellerId);
+    const sId = await toExternalId(ctx, sellerId);
     const follows = await ctx.db
       .query('followedSellers')
       .withIndex('by_seller', (q) => q.eq('sellerId', sId))
@@ -184,7 +180,8 @@ export const getFollowerCount = query({
   },
 });
 
-/** Backfill to normalize all existing follows to use canonical externalIds */
+// ─── One-time backfill ────────────────────────────────────────────────────────
+
 export const backfillFollows = mutation({
   args: {},
   handler: async (ctx) => {
@@ -192,13 +189,10 @@ export const backfillFollows = mutation({
     let updated = 0;
 
     for (const follow of allFollows) {
-      const canonicalSellerId = await getCanonicalExternalId(ctx, follow.sellerId);
-      const canonicalFollowerId = await getCanonicalExternalId(ctx, follow.followerId);
+      const canonicalSellerId = await toExternalId(ctx, follow.sellerId);
+      const canonicalFollowerId = await toExternalId(ctx, follow.followerId);
 
-      if (
-        canonicalSellerId !== follow.sellerId ||
-        canonicalFollowerId !== follow.followerId
-      ) {
+      if (canonicalSellerId !== follow.sellerId || canonicalFollowerId !== follow.followerId) {
         await ctx.db.patch(follow._id, {
           sellerId: canonicalSellerId,
           followerId: canonicalFollowerId,
@@ -207,6 +201,32 @@ export const backfillFollows = mutation({
       }
     }
 
-    return { message: `Normalized ${updated} follow records.`, status: 'success' };
+    return { updated, status: 'done' };
+  },
+});
+
+// ─── DEBUG: See all raw rows in followedSellers ───────────────────────────────
+export const debugAll = query({
+  args: {},
+  handler: async (ctx) => {
+    return ctx.db.query('followedSellers').collect();
+  },
+});
+
+// ─── DEBUG: Resolve any ID to its canonical externalId ───────────────────────
+export const debugResolveId = query({
+  args: { id: v.string() },
+  handler: async (ctx, { id }) => {
+    const canonical = await toExternalId(ctx, id);
+    const userByExternal = await ctx.db
+      .query('users')
+      .withIndex('by_externalId', (q) => q.eq('externalId', id))
+      .unique();
+    return {
+      input: id,
+      canonical,
+      foundByExternalId: !!userByExternal,
+      userName: userByExternal?.name,
+    };
   },
 });

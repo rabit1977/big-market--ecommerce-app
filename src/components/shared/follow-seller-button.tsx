@@ -71,8 +71,16 @@ export function FollowSellerButton({
               : t('store_followed')
           );
         }
-      } catch {
-        toast.error('Something went wrong. Please try again.');
+      } catch (error: any) {
+        console.error("Follow error:", error);
+        // Extracts the clean error message from Convex Error
+        let msg = error?.message || 'Something went wrong. Please try again.';
+        if (msg.includes('Uncaught Error: ')) {
+          msg = msg.split('Uncaught Error: ')[1].split('\n')[0];
+        } else if (msg.includes('[FollowStore]')) {
+          msg = msg.split('] ')[1];
+        }
+        toast.error(msg);
       }
     });
   };

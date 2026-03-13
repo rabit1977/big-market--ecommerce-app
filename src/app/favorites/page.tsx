@@ -457,19 +457,27 @@ function StoreFollowersSection({ userId }: { userId: string }) {
   const followers = useQuery(api.followedSellers.getStoreFollowers, { sellerId: userId });
   const t = useTranslations('Favorites');
 
+  // While loading user data show spinner
   if (user === undefined) return <CenteredSpinner />;
 
-  // Broaden premium check: Business/Premium/Pro tiers, or any active non-free membership, or Admin role
-  const tier = (user?.membershipTier || '').toUpperCase();
-  const isPremium = 
-    user?.role === 'ADMIN' || 
-    (tier && tier !== 'FREE') || 
-    user?.membershipStatus === 'ACTIVE';
+  // null means not found — don't show section
+  if (!user) return null;
+
+  // Premium check — ADMIN always passes; non-FREE membership tier also passes
+  const tier = (user.membershipTier || 'FREE').toUpperCase();
+  const isPremium =
+    user.role === 'ADMIN' ||
+    tier === 'PRO' ||
+    tier === 'ELITE' ||
+    tier === 'BUSINESS' ||
+    tier === 'PREMIUM' ||
+    tier === 'BASIC' ||
+    user.accountStatus === 'ACTIVE'; // active account on this platform
 
   if (!isPremium) return null;
 
   return (
-    <div className='space-y-4 pt-4 border-t border-border/10'>
+    <div className='space-y-4 pt-6 border-t border-border/30 mt-6'>
       <div className='flex items-center justify-between border-b border-border/50 pb-2'>
         <h3 className='font-bold text-lg md:text-xl text-foreground flex items-center gap-2'>
           <Users className='w-5 h-5 text-primary' />
@@ -481,27 +489,31 @@ function StoreFollowersSection({ userId }: { userId: string }) {
         <CenteredSpinner />
       ) : followers.length === 0 ? (
         <div className='py-12 text-center bg-card/10 border border-dashed border-border rounded-xl'>
-           <p className='text-xs text-muted-foreground font-medium'>{t('no_followers')}</p>
-           <p className='text-[10px] text-muted-foreground/60 mt-1 max-w-xs mx-auto'>{t('followers_desc')}</p>
+          <Users className='w-8 h-8 text-muted-foreground/30 mx-auto mb-2' />
+          <p className='text-xs text-muted-foreground font-medium'>{t('no_followers')}</p>
+          <p className='text-[10px] text-muted-foreground/60 mt-1 max-w-xs mx-auto'>{t('followers_desc')}</p>
         </div>
       ) : (
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3'>
-          {followers.map((follower) => {
+        <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3'>
+          {followers.map((follower: any) => {
             if (!follower) return null;
             return (
-              <div key={follower._id} className='flex items-center gap-3 bg-card p-3 rounded-2xl border border-border/50 hover:border-primary/20 transition-all'>
-                  <Avatar className='h-10 w-10 md:h-12 md:w-12 rounded-xl border border-border shrink-0'>
-                    <AvatarImage src={follower.image || ''} className='object-cover' />
-                    <AvatarFallback className='bg-muted text-muted-foreground font-bold text-sm'>
-                      {follower.name?.charAt(0).toUpperCase() || 'U'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className='flex-1 min-w-0'>
-                    <p className='font-bold text-sm truncate text-foreground'>{follower.name}</p>
-                    <p className='text-[10px] text-muted-foreground font-medium uppercase tracking-tight'>
-                        Followed {formatDistanceToNow(follower.followedAt)} ago
-                    </p>
-                  </div>
+              <div
+                key={follower._id}
+                className='flex flex-col items-center gap-2 bg-card p-3 rounded-2xl border border-border/50 hover:border-primary/20 transition-all text-center'
+              >
+                <Avatar className='h-12 w-12 rounded-xl border border-border shrink-0'>
+                  <AvatarImage src={follower.image || ''} className='object-cover' />
+                  <AvatarFallback className='bg-muted text-muted-foreground font-bold text-sm'>
+                    {follower.name?.charAt(0).toUpperCase() || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className='font-bold text-xs truncate text-foreground leading-tight'>{follower.name}</p>
+                  <p className='text-[9px] text-muted-foreground font-medium uppercase tracking-tight mt-0.5'>
+                    {formatDistanceToNow(follower.followedAt)} ago
+                  </p>
+                </div>
               </div>
             );
           })}

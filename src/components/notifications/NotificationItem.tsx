@@ -236,8 +236,8 @@ export function NotificationItem({
              <div className="text-[9px] font-bold text-destructive/60 uppercase">No reply channel</div>
           )}
 
-          {/* View listing / details */}
-          {link && !internalChatHref && (
+          {/* View listing or store followers */}
+          {link && !internalChatHref && !isInquiry && (
             <Link
               href={link}
               onClick={(e) => { e.stopPropagation(); markRead(); }}
@@ -248,7 +248,7 @@ export function NotificationItem({
               )}
             >
               <ExternalLink className={compact ? 'w-2.5 h-2.5' : 'w-3.5 h-3.5'} />
-              Listing
+              {type === 'STORE_FOLLOW' ? 'View Followers' : 'View'}
             </Link>
           )}
 

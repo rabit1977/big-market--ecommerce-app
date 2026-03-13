@@ -5,6 +5,9 @@ import { ContactSellerButton } from '@/components/shared/listing/contact-button'
 import { ListingCard } from '@/components/shared/listing/listing-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { api } from '@/convex/_generated/api';
+import { cn } from '@/lib/utils';
+import { useQuery } from 'convex/react';
 import {
   Building2,
   CalendarDays,
@@ -14,8 +17,8 @@ import {
   Phone,
   ShieldCheck,
   Star,
+  Users,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
@@ -45,14 +48,14 @@ export function StorefrontClient({
     },
   }));
 
-  // ----------------------------------------------------------------------
-  // BASIC FALLBACK FOR NON-PREMIUM USERS (FREE TIER)
-  // ----------------------------------------------------------------------
+  // ────────────────────────────────────────────────────────────────────────────
+  // NON-PREMIUM (FREE TIER) — basic profile view
+  // ────────────────────────────────────────────────────────────────────────────
   if (!profile.hasPremiumStorefront) {
     return (
       <div className='min-h-screen bg-background pb-20'>
         <div className='container max-w-6xl mx-auto px-4 sm:px-6 pt-8'>
-          {/* Upgrade Prompt for the Owner */}
+          {/* Upgrade Prompt (owner only) */}
           {isOwner && (
             <div className='mb-8 p-6 bg-secondary border border-border rounded-lg flex flex-col md:flex-row items-center justify-between gap-4'>
               <div>
@@ -91,7 +94,9 @@ export function StorefrontClient({
                 </h1>
                 <div className='text-sm text-muted-foreground mt-1'>
                   {t('member_since')}{' '}
-                  {profile.createdAt ? new Date(profile.createdAt).getFullYear() : 'N/A'}
+                  {profile.createdAt
+                    ? new Date(profile.createdAt).getFullYear()
+                    : 'N/A'}
                 </div>
               </div>
             </div>
@@ -132,12 +137,12 @@ export function StorefrontClient({
     );
   }
 
-  // ----------------------------------------------------------------------
-  // PREMIUM STOREFRONT (BUSINESS 450 DEN SECURED)
-  // ----------------------------------------------------------------------
+  // ────────────────────────────────────────────────────────────────────────────
+  // PREMIUM STOREFRONT
+  // ────────────────────────────────────────────────────────────────────────────
   return (
     <div className='min-h-screen bg-background pb-20'>
-      {/* Cover / Banner area */}
+      {/* Cover / Banner */}
       <div className='h-32 md:h-48 w-full bg-gradient-to-r from-primary/20 via-primary/10 to-background border-b' />
 
       <div className='container max-w-6xl mx-auto px-4 sm:px-6'>
@@ -157,11 +162,9 @@ export function StorefrontClient({
           <div className='flex-1 text-center md:text-left space-y-1.5 pt-2'>
             <div className='flex flex-col md:flex-row md:items-center gap-2 md:gap-3'>
               <h1 className='text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground'>
-                {profile.name === 'User'
-                  ? 'Andi Ebibi'
-                  : profile.accountType === 'COMPANY' && profile.companyName
-                    ? profile.companyName
-                    : profile.name}
+                {profile.accountType === 'COMPANY' && profile.companyName
+                  ? profile.companyName
+                  : profile.name}
               </h1>
               {profile.isVerified && (
                 <div className='inline-flex items-center gap-1 bg-primary/10 text-primary px-2.5 py-0.5 rounded-md text-xs font-bold uppercase tracking-wider mx-auto md:mx-0'>
@@ -184,7 +187,9 @@ export function StorefrontClient({
               )}
               <span className='flex items-center gap-1.5 text-xs'>
                 <CalendarDays className='w-4 h-4' /> {t('member_since')}{' '}
-                {profile.createdAt ? new Date(profile.createdAt).getFullYear() : 'N/A'}
+                {profile.createdAt
+                  ? new Date(profile.createdAt).getFullYear()
+                  : 'N/A'}
               </span>
             </div>
 
@@ -195,7 +200,7 @@ export function StorefrontClient({
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                   key={star}
-                  className={`w-4 h-4 ${star <= Math.round(profile.averageRating) ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground/30'}`}
+                  className={`w-4 h-4 ${star <= Math.round(profile.averageRating ?? 0) ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground/30'}`}
                 />
               ))}
               <span className='text-xs font-bold ml-1.5 hover:underline decoration-foreground/30 underline-offset-2'>
@@ -205,46 +210,50 @@ export function StorefrontClient({
             </a>
           </div>
 
+          {/* Action buttons */}
           <div className='flex flex-col sm:flex-row gap-2 w-full md:w-auto shrink-0 mt-6 md:mt-0'>
-            <ContactSellerButton
-              sellerId={profile.externalId}
-              sellerName={
-                profile.name === 'User'
-                  ? 'Andi Ebibi'
-                  : profile.accountType === 'COMPANY' && profile.companyName
+            {!isOwner && (
+              <ContactSellerButton
+                sellerId={profile.externalId}
+                sellerName={
+                  profile.accountType === 'COMPANY' && profile.companyName
                     ? profile.companyName
                     : profile.name
-              }
-              contactPhone={profile.phone}
-              contactEmail={profile.email}
-              className='rounded-lg shadow-none font-medium tracking-tight h-12 px-6 sm:px-8 border border-primary bg-primary hover:bg-primary/95 text-primary-foreground transition-all active:scale-95 flex-1 md:flex-none'
-              label={
-                <span className='flex items-center justify-center'>
-                  <Phone className='w-5 h-5 mr-3 animate-pulse' />
-                  {t('contact_seller')}
-                </span>
-              }
-            />
+                }
+                contactPhone={profile.phone}
+                contactEmail={profile.email}
+                className='rounded-lg shadow-none font-medium tracking-tight h-12 px-6 sm:px-8 border border-primary bg-primary hover:bg-primary/95 text-primary-foreground transition-all active:scale-95 flex-1 md:flex-none'
+                label={
+                  <span className='flex items-center justify-center'>
+                    <Phone className='w-5 h-5 mr-3 animate-pulse' />
+                    {t('contact_seller')}
+                  </span>
+                }
+              />
+            )}
             <FollowSellerButton
               sellerId={profile.externalId}
               sellerName={
-                profile.name === 'User'
-                  ? 'Andi Ebibi'
-                  : profile.accountType === 'COMPANY' && profile.companyName
-                    ? profile.companyName
-                    : profile.name
+                profile.accountType === 'COMPANY' && profile.companyName
+                  ? profile.companyName
+                  : profile.name
               }
               showCount
               size='lg'
               className={cn(
                 'h-12 border-2 px-6 sm:px-8 rounded-lg font-bold tracking-tight uppercase flex-1 md:flex-none',
-                isOwner && 'opacity-80 pointer-events-none'
+                isOwner && 'opacity-60 pointer-events-none',
               )}
             />
           </div>
         </div>
 
-        {/* Listings Grid */}
+        {/* ── Followers section (visible to store owner) ── */}
+        {isOwner && (
+          <StoreFollowersPanel sellerId={profile.externalId} />
+        )}
+
+        {/* ── Listings Grid ── */}
         <div className='space-y-6'>
           <div className='flex items-center justify-between border-b border-border pb-4'>
             <h2 className='text-xl md:text-2xl font-bold uppercase tracking-tight'>
@@ -280,6 +289,86 @@ export function StorefrontClient({
 
         <StoreReviews sellerId={profile.externalId} />
       </div>
+    </div>
+  );
+}
+
+// ─── Followers panel shown on the store page to the owner ─────────────────────
+
+function StoreFollowersPanel({ sellerId }: { sellerId: string }) {
+  const { data: session } = useSession();
+  const followers = useQuery(api.followedSellers.getStoreFollowers, { sellerId });
+  const allRows = useQuery(api.followedSellers.debugAll, {});
+  const resolvedId = useQuery(api.followedSellers.debugResolveId, { id: sellerId });
+
+  if (followers === undefined) {
+    // Loading…
+    return (
+      <div className='mb-8 p-6 bg-card border border-border rounded-2xl animate-pulse'>
+        <div className='h-5 w-40 bg-muted rounded mb-4' />
+        <div className='flex gap-3'>
+          {[1, 2, 3].map((i) => (
+            <div key={i} className='h-14 w-14 bg-muted rounded-xl' />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className='mb-8 p-5 md:p-6 bg-card border border-border rounded-2xl'>
+      <div className='flex items-center gap-2 mb-4'>
+        <Users className='w-5 h-5 text-primary' />
+        <h2 className='text-base md:text-lg font-black uppercase tracking-tight text-foreground'>
+          Store Followers
+        </h2>
+        <span className='ml-auto bg-primary/10 text-primary font-black text-xs px-2.5 py-1 rounded-full'>
+          {followers.length}
+        </span>
+      </div>
+
+      {/* ── TEMPORARY DEBUG — remove after fixing ── */}
+      <details className='mb-3 text-[10px] font-mono bg-muted/60 border border-yellow-400/40 rounded-lg p-2 text-muted-foreground'>
+        <summary className='cursor-pointer font-bold text-yellow-600'>🔍 Debug Info (remove later)</summary>
+        <div className='mt-2 space-y-1 break-all'>
+          <p><strong>Your logged in ID:</strong> {session?.user?.id}</p>
+          <p><strong>Store you are looking at (sellerId):</strong> {sellerId}</p>
+          <hr className="my-2 border-yellow-400/20" />
+          <p className="font-bold">Summary of Database rows:</p>
+          <ul className="list-disc pl-4 mt-1">
+            <li>Times YOU followed someone else: {allRows?.filter((r: any) => r.followerId === session?.user?.id).length ?? 0}</li>
+            <li>Times SOMEONE ELSE followed this store: {allRows?.filter((r: any) => r.sellerId === resolvedId?.canonical).length ?? 0}</li>
+          </ul>
+        </div>
+      </details>
+      {/* ── END DEBUG ── */}
+
+      {followers.length === 0 ? (
+        <p className='text-sm text-muted-foreground py-4 text-center border border-dashed border-border rounded-xl'>
+          No followers yet. Share your store to get your first follower!
+        </p>
+      ) : (
+        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3'>
+          {followers.map((follower: any) =>
+            follower ? (
+              <div
+                key={follower._id}
+                className='flex flex-col items-center gap-1.5 p-3 bg-muted/30 rounded-xl border border-border/40 hover:border-primary/30 transition-all text-center'
+              >
+                <Avatar className='h-10 w-10 rounded-full border-2 border-background shadow-sm'>
+                  <AvatarImage src={follower.image || ''} className='object-cover' />
+                  <AvatarFallback className='bg-primary/10 text-primary font-bold text-sm'>
+                    {follower.name?.charAt(0).toUpperCase() || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <p className='text-[10px] font-bold truncate w-full text-center text-foreground leading-tight'>
+                  {follower.name || 'User'}
+                </p>
+              </div>
+            ) : null,
+          )}
+        </div>
+      )}
     </div>
   );
 }
