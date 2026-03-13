@@ -132,12 +132,15 @@ export function PostListingWizard({
       case 1:
         return !!formData.category;
       case 2:
+        const condition = formData.condition || formData.specifications?.condition;
+        const description = formData.description || formData.specifications?.description;
         const hasBasicFields = !!(
           formData.title &&
-          formData.description &&
+          description &&
           formData.price &&
+          formData.region &&
           formData.city &&
-          formData.condition &&
+          condition &&
           formData.contactPhone &&
           formData.contactEmail
         );
@@ -335,7 +338,9 @@ export function PostListingWizard({
                   if (currentStep === 2 && !canProceed()) {
                     const basicRequired = [
                       'title',
+                      'description',
                       'price',
+                      'region',
                       'city',
                       'condition',
                       'contactPhone',
@@ -343,8 +348,12 @@ export function PostListingWizard({
                     ];
                     for (const field of basicRequired) {
                       // @ts-ignore
-                      if (!formData[field]) {
-                        const element = document.getElementById(field);
+                      let val = formData[field];
+                      if (field === 'condition') val = formData.condition || formData.specifications?.condition;
+                      if (field === 'description') val = formData.description || formData.specifications?.description;
+                      
+                      if (!val) {
+                        const element = document.getElementById(field) || document.getElementById(`spec-${field}`);
                         if (element) {
                           element.scrollIntoView({
                             behavior: 'smooth',

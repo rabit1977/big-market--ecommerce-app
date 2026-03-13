@@ -645,10 +645,17 @@ export function DetailsStep({
 
   const isVehicle = false; // Deprecated, using dynamic templates
 
-  const handleSpec = (key: string, value: any) =>
-    updateFormData({
+  const handleSpec = (key: string, value: any) => {
+    const updates: Partial<ListingFormData> = {
       specifications: { ...(formData.specifications || {}), [key]: value },
-    });
+    };
+    
+    // Promote key fields to top-level for validation
+    if (key === 'condition') updates.condition = value;
+    if (key === 'description') updates.description = value;
+    
+    updateFormData(updates);
+  };
 
   const selectedBrand = formData.specifications?.brand || '';
   const availableModels = selectedBrand
@@ -867,7 +874,7 @@ export function DetailsStep({
             <SectionLabel>Location</SectionLabel>
 
             {/* Region / City */}
-            <FieldRow id='city' label='Location' required>
+            <FieldRow id='region' label='Location' required>
               <Select
                 value={selectedRegion}
                 onValueChange={(v) => {
@@ -890,7 +897,7 @@ export function DetailsStep({
             {/* Municipality — appears after region */}
             {selectedRegion && selectedRegion !== 'Друго' &&
               (MK_LOCATIONS[selectedRegion]?.length ?? 0) > 0 && (
-                <FieldRow label='Municipality' required>
+                <FieldRow id='city' label='Municipality' required>
                   <Select
                     value={
                       !formData.city
@@ -933,7 +940,7 @@ export function DetailsStep({
                 !MK_LOCATIONS[selectedRegion]
                   ?.map((m) => m.toLowerCase())
                   .includes(formData.city.toLowerCase()))) && (
-              <FieldRow label='Enter Location' required>
+              <FieldRow id='city' label='Enter Location' required>
                 <Input
                   placeholder='Type your location...'
                   value={formData.city === 'Друго' ? '' : formData.city || ''}
@@ -951,17 +958,19 @@ export function DetailsStep({
             <SectionLabel>Description & Contact</SectionLabel>
 
             {/* Description */}
-            <FieldRow label='Description' required tall>
-              <Textarea
-                placeholder='Describe the product...'
-                value={formData.description || ''}
-                onChange={(e) =>
-                  updateFormData({ description: e.target.value })
-                }
-                rows={4}
-                className='resize-none text-sm border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-secondary/30 transition-colors rounded-md px-3 py-2 -mt-1'
-              />
-            </FieldRow>
+            {!dynamicFields.some(f => f.key === 'description') && (
+              <FieldRow id='description' label='Description' required tall>
+                <Textarea
+                  placeholder='Describe the product...'
+                  value={formData.description || ''}
+                  onChange={(e) =>
+                    updateFormData({ description: e.target.value })
+                  }
+                  rows={4}
+                  className='resize-none text-sm border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-secondary/30 transition-colors rounded-md px-3 py-2 -mt-1'
+                />
+              </FieldRow>
+            )}
 
             {/* Phone */}
             <FieldRow id='contactPhone' label='Phone' required>
