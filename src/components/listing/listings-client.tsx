@@ -129,7 +129,7 @@ export function ListingsClient({
   };
 
   return (
-    <div className="bg-background dark:bg-background grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8 relative">
+    <div className="bg-background dark:bg-background grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8 relative pb-20">
       <Sheet open={isMobileFiltersOpen} onOpenChange={setIsMobileFiltersOpen}>
          <SheetContent side="bottom" className="w-full h-[85vh] overflow-y-auto p-0 rounded-t-lg border-t border-border">
             <SheetTitle className="sr-only">Filter Listings</SheetTitle>
@@ -179,7 +179,7 @@ export function ListingsClient({
         )}
 
         {pagination && pagination.totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 pt-8">
+          <div className="flex items-center justify-center gap-2 pt-20 pb-12">
             <Button
               variant="outline"
               size="sm"

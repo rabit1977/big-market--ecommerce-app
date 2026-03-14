@@ -49,7 +49,7 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
   };
 
   return (
-    <div className="space-y-4 bg-background dark:bg-background pb-12">
+    <div className="space-y-4 bg-background dark:bg-background pb-20">
       <ListingGrid 
         listings={sortedListings as any} 
         onOpenFilters={() => setIsFiltersOpen(true)}
@@ -73,7 +73,7 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
       </Sheet>
 
       {/* Mobile View All Link */}
-      <div className="text-center mt-8 ">
+      <div className="text-center mt-12 mb-8">
         <Link 
           href="/listings" 
           className="inline-flex items-center bg-secondary text-foreground font-bold transition-all group px-8 py-3 rounded-lg bm-interactive shadow-none"
