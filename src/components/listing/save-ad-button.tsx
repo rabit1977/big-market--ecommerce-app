@@ -36,7 +36,7 @@ export function SaveAdButton({
         'flex items-center justify-center transition-all duration-300 group/heart active:scale-90',
         showText
           ? 'gap-2 px-4 py-2 border rounded-full text-sm font-bold shadow-sm'
-          : 'p-1.5 rounded-full shadow-sm hover:shadow-md backdrop-blur-md border border-border/50',
+          : 'p-2 rounded-full shadow-sm hover:shadow-md backdrop-blur-md border border-border/50',
         isFavorite
           ? showText
             ? 'bg-primary/10 border-primary/30 text-primary'
@@ -50,7 +50,7 @@ export function SaveAdButton({
     >
       <Heart
         className={cn(
-          showText ? 'w-3.5 h-3.5' : 'w-3.5 h-3.5 sm:w-[18px] sm:h-[18px]',
+          showText ? 'w-4.5 h-4.5' : 'w-4.5 h-4.5 sm:w-[20px] sm:h-[20px]',
           'transition-transform duration-200 group-hover/heart:scale-110',
           isFavorite && 'fill-current',
           iconClassName,

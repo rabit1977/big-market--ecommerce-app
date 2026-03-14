@@ -104,17 +104,6 @@ export function ListingGrid({
         {/* Desktop Controls */}
         <div className="flex flex-1 items-center gap-2 w-full sm:w-auto justify-between">
           <div className="flex items-center gap-2">
-            {onOpenFilters && (
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9 shrink-0 bm-interactive"
-                onClick={onOpenFilters}
-                aria-label={tListings('filters')}
-              >
-                <SlidersHorizontal className="h-4 w-4" />
-              </Button>
-            )}
             <Select value={sortBy} onValueChange={handleSortChange} disabled={isPending}>
               <SelectTrigger className="h-9 flex-1 sm:w-[180px] text-xs bm-interactive">
                 <div className="flex items-center gap-2">

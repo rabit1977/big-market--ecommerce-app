@@ -297,8 +297,11 @@ export const list = query({
 
     // Location
     if (args.city && args.city !== 'all') {
-      const searchCity = args.city.toLowerCase();
-      results = results.filter((r) => r.city?.toLowerCase() === searchCity);
+      const searchCity = args.city.toLowerCase().trim();
+      results = results.filter((r) => 
+        (r.city?.toLowerCase().trim() === searchCity) || 
+        (r.region?.toLowerCase().trim() === searchCity)
+      );
     }
 
     // Price

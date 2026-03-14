@@ -145,7 +145,8 @@
     "cond_used": "Used",
     "cond_new_construction": "New Construction",
     "cond_old_construction": "Old Construction",
-    "active_controls": "Active Controls"
+    "active_controls": "Active Controls",
+    "search_cities": "Search cities..."
   },
   "Common": {
     "mkd": "MKD",

@@ -145,7 +145,8 @@
     "cond_used": "Половен",
     "cond_new_construction": "Нова Градба",
     "cond_old_construction": "Стара Градба",
-    "active_controls": "Активни Контроли"
+    "active_controls": "Активни Контроли",
+    "search_cities": "Пребарај градови..."
   },
   "Common": {
     "mkd": "МКД",

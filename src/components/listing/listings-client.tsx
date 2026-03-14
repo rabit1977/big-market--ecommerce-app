@@ -1,6 +1,6 @@
 'use client';
 
-import { FilterPanel, FilterState } from '@/components/listing/filter-panel';
+import { FilterState } from '@/components/listing/filter-panel';
 import { ListingGrid } from '@/components/listing/listing-grid';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
@@ -9,6 +9,13 @@ import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useState, useTransition } from 'react';
+import dynamic from 'next/dynamic';
+
+// Lazy load FilterPanel to avoid hydration issues with dynamic parts
+const FilterPanel = dynamic(() => import('@/components/listing/filter-panel').then(m => m.FilterPanel), { 
+  ssr: false,
+  loading: () => <div className="p-4 text-center text-muted-foreground">Loading Filters...</div>
+});
 
 interface ListingsClientProps {
   initialListings: any[];
@@ -132,18 +139,17 @@ export function ListingsClient({
       </aside>
 
       <div className={cn("min-h-[800px] transition-opacity duration-300", isPending && "opacity-60 pointer-events-none")}>
-        {/* Mobile top bar — simplified to just filters button */}
-        <div className="lg:hidden flex items-center w-full gap-2 mb-4">
+        {/* Mobile top filter button — prominent as requested */}
+        <div className="lg:hidden mb-4">
           <Button
             onClick={() => setIsMobileFiltersOpen(true)}
             variant="outline"
-            className="flex-1 h-10 border border-border text-foreground hover:bg-secondary flex items-center justify-center gap-2 rounded-lg active:scale-95 transition-all"
+            className="w-full h-11 border border-border text-foreground hover:bg-secondary flex gap-2 rounded-xl active:scale-[0.98] transition-all shadow-sm"
           >
-            <SlidersHorizontal className="h-4 w-4" />
-            <span className="font-bold">{t('filters_sort')}</span>
+            <SlidersHorizontal className="h-4.5 w-4.5 text-primary" />
+            <span className="font-bold text-sm tracking-tight">{t('filters_sort')}</span>
           </Button>
         </div>
-
         {initialListings.length > 0 ? (
           <div className="relative">
             <ListingGrid 
