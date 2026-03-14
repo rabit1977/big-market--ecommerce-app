@@ -792,14 +792,23 @@ export const getRenewalStats = query({
 });
 
 export const search = query({
-  args: { query: v.string() },
+  args: { 
+    query: v.string(),
+    city: v.optional(v.string())
+  },
   handler: async (ctx, args) => {
-    return await ctx.db
+    let results = await ctx.db
       .query('listings')
       .withSearchIndex('search_title', (q) =>
         q.search('title', args.query).eq('status', 'ACTIVE'),
       )
       .collect();
+
+    if (args.city && args.city !== 'all') {
+      results = results.filter((r) => r.city === args.city);
+    }
+    
+    return results;
   },
 });
 

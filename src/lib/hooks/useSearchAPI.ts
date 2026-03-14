@@ -3,6 +3,7 @@ import { useDeferredValue, useEffect, useRef } from 'react';
 
 interface UseSearchAPIProps {
   query: string;
+  city?: string;
   setResults: (results: Listing[]) => void;
   setIsLoading: (loading: boolean) => void;
   minQueryLength?: number;
@@ -11,6 +12,7 @@ interface UseSearchAPIProps {
 
 export const useSearchAPI = ({
   query,
+  city,
   setResults,
   setIsLoading,
   minQueryLength = 2,
@@ -36,10 +38,11 @@ export const useSearchAPI = ({
 
     const fetchResults = async () => {
       try {
-        const response = await fetch(
-          `/api/listings/search?query=${encodeURIComponent(deferredQuery)}`,
-          { signal: controller.signal }
-        );
+        let url = `/api/listings/search?query=${encodeURIComponent(deferredQuery)}`;
+        if (city && city !== 'all') {
+            url += `&city=${encodeURIComponent(city)}`;
+        }
+        const response = await fetch(url, { signal: controller.signal });
         if (!response.ok) throw new Error('Search failed');
         const results = await response.json();
         setResultsRef.current(results.slice(0, maxResults));
@@ -53,5 +56,5 @@ export const useSearchAPI = ({
 
     fetchResults();
     return () => controller.abort();
-  }, [deferredQuery, minQueryLength, maxResults]);
+  }, [deferredQuery, minQueryLength, maxResults, city]);
 };

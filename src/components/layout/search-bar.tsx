@@ -18,8 +18,6 @@ export const SearchBar = () => {
     setInputValue,
     selectedCategory,
     setSelectedCategory,
-    selectedCity,
-    setSelectedCity,
     isSearchFocused,
     setIsSearchFocused,
     searchResults,
@@ -39,7 +37,6 @@ export const SearchBar = () => {
   const { navigateToSearchResults, isPending } = useSearchNavigation({
     inputValue,
     selectedCategory,
-    selectedCity,
     setIsSearchFocused,
     inputRef,
   });
@@ -87,8 +84,6 @@ export const SearchBar = () => {
         showResults={showResults}
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
-        selectedCity={selectedCity}
-        onCityChange={setSelectedCity}
       />
 
       {showResults && (

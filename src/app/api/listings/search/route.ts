@@ -5,13 +5,17 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get('query');
+  const city = searchParams.get('city');
 
   if (!query) {
     return NextResponse.json([]);
   }
 
   try {
-    const listings = await convex.query(api.listings.search, { query });
+    const listings = await convex.query(api.listings.search, { 
+      query,
+      city: city || undefined,
+    });
     const mappedListings = listings.map(mapConvexListing);
 
     return NextResponse.json(mappedListings.slice(0, 5));
