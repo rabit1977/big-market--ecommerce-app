@@ -2,6 +2,7 @@
 
 import { ListingQA } from '@/components/listing/listing-qa';
 import { SaveAdButton } from '@/components/listing/save-ad-button';
+import { AppBreadcrumbs } from '@/components/shared/app-breadcrumbs';
 import { FollowSellerButton } from '@/components/shared/follow-seller-button';
 import { ContactSellerButton } from '@/components/shared/listing/contact-button';
 import { PromotionIcon } from '@/components/shared/listing/promotion-icon';
@@ -278,12 +279,6 @@ export function ListingDetailContent({
             <span className='text-base font-black tracking-tight leading-none text-foreground uppercase'>
               {t('item_ref')}: {listingRef}
             </span>
-            <span
-              suppressHydrationWarning
-              className='text-xs font-bold text-muted-foreground mt-1 uppercase tracking-wider'
-            >
-              {publishDate}
-            </span>
           </div>
         </div>
         <div className='flex items-center gap-1'>
@@ -396,15 +391,19 @@ export function ListingDetailContent({
         </div>
       </div>
 
-      <div className='container-wide px-4 md:pt-3'>
+      <div className='container-wide px-4 md:pt-6'>
+        <AppBreadcrumbs
+          className='hidden md:flex mb-4'
+          customLabel={listing.title}
+        />
         {/* ── Desktop Actions ───────────────────────────────────────────── */}
-        <div className='hidden md:flex items-center justify-between mb-8 border-b border-border'>
+        <div className='hidden md:flex items-center justify-between mb-8 border-b border-border pb-4'>
           <div className='flex items-center justify-between gap-3'>
             <button
               onClick={handleShare}
-              className='flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg text-sm font-medium text-foreground hover:bg-secondary transition-all'
+              className='flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-xl text-xs font-bold uppercase tracking-widest text-foreground hover:bg-secondary transition-all'
             >
-              <Share2 className='w-4 h-4' />
+              <Share2 className='w-3.5 h-3.5' />
               {t('share')}
             </button>
             {!isListingOwner && <SaveAdButton listingId={listing._id} />}
@@ -412,9 +411,9 @@ export function ListingDetailContent({
               <>
                 <Link
                   href={`/my-listings/${listing._id}/edit`}
-                  className='flex items-center gap-2 px-4 py-2 bg-secondary border border-border rounded-lg text-sm font-medium text-foreground hover:bg-border transition-all'
+                  className='flex items-center gap-2 px-4 py-2 bg-secondary border border-border rounded-xl text-xs font-bold uppercase tracking-widest text-foreground hover:bg-border transition-all'
                 >
-                  <Edit className='w-4 h-4' />
+                  <Edit className='w-3.5 h-3.5' />
                   {t('edit_ad')}
                 </Link>
                 <DeleteListingButton listingId={listing._id} compact />
@@ -427,7 +426,7 @@ export function ListingDetailContent({
           {/* ── Left Column ─────────────────────────────────────────────── */}
           <div className='md:col-span-7 lg:col-span-8 space-y-4 md:space-y-6'>
             {/* Image Gallery */}
-            <div className='relative group overflow-hidden md:rounded-lg border border-border bg-muted'>
+            <div className='relative group overflow-hidden md:rounded-xl border border-border bg-muted'>
               <div
                 className='flex w-full aspect-[4/3] md:aspect-video overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar pointer-events-auto touch-pan-x touch-pan-y'
                 onScroll={(e) => {
@@ -455,7 +454,7 @@ export function ListingDetailContent({
                         priority={i === 0}
                       />
                       {/* Floating Badges */}
-                      <div className='absolute top-1.5 left-1.5 z-30 flex flex-col gap-2 pointer-events-none'>
+                      <div className='absolute top-2 left-2 z-30 flex flex-col gap-2 pointer-events-none'>
                         {promoConfig && (
                           <div
                             className={cn(
@@ -472,16 +471,11 @@ export function ListingDetailContent({
                       </div>
                       {/* Date Badge */}
                       <div
-                        className='absolute top-1 right-1 z-30 pointer-events-none'
+                        className='absolute top-3 right-3 z-30 pointer-events-none'
                         suppressHydrationWarning
                       >
-                        <span className='text-[9px] font-bold text-white/80 bg-black/40 backdrop-blur-sm px-1.5 py-0.5 rounded-md border border-white/10'>
-                          {listing.createdAt
-                            ? new Date(listing.createdAt).toLocaleDateString(
-                                'en-GB',
-                                { day: 'numeric', month: 'short' },
-                              )
-                            : ''}
+                        <span className='text-[10px] font-black text-white bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 uppercase tracking-widest'>
+                          {publishDate}
                         </span>
                       </div>
                     </div>
@@ -511,19 +505,22 @@ export function ListingDetailContent({
                         </div>
                       )}
                     </div>
+                    {/* Date Badge */}
+                    <div
+                      className='absolute top-3 right-3 z-30 pointer-events-none'
+                      suppressHydrationWarning
+                    >
+                      <span className='text-[10px] font-black text-white bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 uppercase tracking-widest'>
+                        {t('published')}: {publishDate}
+                      </span>
+                    </div>
                   </div>
                 )}
               </div>
 
-              <div className='hidden md:flex absolute top-3 left-3 z-30 text-white bg-black/60 backdrop-blur-md p-2.5 rounded-lg border border-white/10 flex-col pointer-events-none'>
-                <span className='text-base font-black tracking-tight leading-none text-white uppercase'>
+              <div className='hidden md:flex absolute top-4 left-4 z-30 text-white bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 flex-col pointer-events-none'>
+                <span className='text-[10px] font-black tracking-tight leading-none text-white uppercase'>
                   {t('item_ref')}: {listingRef}
-                </span>
-                <span
-                  suppressHydrationWarning
-                  className='text-xs font-bold text-white mt-1 uppercase tracking-wider'
-                >
-                  {publishDate}
                 </span>
               </div>
 
@@ -566,6 +563,31 @@ export function ListingDetailContent({
 
             {/* Mobile Info Block */}
             <div className='md:hidden space-y-4 px-4 bg-background border-b py-2'>
+              <div className='flex items-start justify-between gap-2'>
+                <div className='flex flex-col flex-1'>
+                  <div className='flex items-center gap-1 mb-1'>
+                    {categoryData && (
+                      <span className='text-[9.5px] font-bold text-foreground/40 hover:underline cursor-pointer uppercase tracking-wider'>
+                        {categoryData.name}
+                      </span>
+                    )}
+                    {subCategoryData && (
+                      <>
+                        <span className='text-[11.5px] font-bold text-neutral-500 mx-1'>
+                          {'>'}
+                        </span>
+                        <span className='text-[11.5px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
+                          {subCategoryData.name}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                  <h1 className='text-lg lg:text-xl font-bold text-foreground leading-tight tracking-tight'>
+                    {listing.title}
+                  </h1>
+                </div>
+                <SellerBadge seller={seller} showLabel />
+              </div>
               <div className='space-y-2'>
                 <div className='flex items-center gap-2 mb-1 flex-wrap'>
                   {/* SellerBadge will be next to title now */}
@@ -574,6 +596,7 @@ export function ListingDetailContent({
                       {t('condition')}: {getConditionLabel(String(condition))}
                     </span>
                   )}
+
                   {listing.status !== 'ACTIVE' && (
                     <span
                       className={cn(
@@ -589,29 +612,7 @@ export function ListingDetailContent({
                     </span>
                   )}
                 </div>
-                <div className='flex items-start justify-between gap-2'>
-                  <div className='flex flex-col flex-1'>
-                    <div className='flex items-center gap-1 mb-1'>
-                      {categoryData && (
-                        <span className='text-[11.5px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
-                          {categoryData.name}
-                        </span>
-                      )}
-                      {subCategoryData && (
-                        <>
-                          <span className='text-[11.5px] font-bold text-neutral-500 mx-1'>{'>'}</span>
-                          <span className='text-[11.5px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
-                            {subCategoryData.name}
-                          </span>
-                        </>
-                      )}
-                    </div>
-                    <h1 className='text-2xl font-bold text-foreground leading-tight'>
-                      {listing.title}
-                    </h1>
-                  </div>
-                  <SellerBadge seller={seller} showLabel />
-                </div>
+
                 <div className='flex flex-col'>
                   {listing.previousPrice &&
                     listing.previousPrice > listing.price && (
@@ -628,7 +629,7 @@ export function ListingDetailContent({
                   <div className='flex items-baseline gap-2'>
                     <span
                       suppressHydrationWarning
-                      className='text-5xl font-black text-foreground tracking-tighter'
+                      className='text-3xl font-black text-foreground tracking-tighter'
                     >
                       {listing.price > 0
                         ? formatCurrency(listing.price, listing.currency)
@@ -636,7 +637,7 @@ export function ListingDetailContent({
                     </span>
                     <div className='flex items-center gap-2 mt-0.5'>
                       {listing.price > 0 && (
-                        <span className='text-[10px] font-black text-primary uppercase tracking-tighter bg-primary/5 px-1.5 py-0.5 rounded'>
+                        <span className='text-[10px] font-black text-primary uppercase tracking-tighter bg-primary/5 px-2 py-0.5 rounded-md'>
                           {listing.isPriceNegotiable
                             ? t('negotiable')
                             : t('fixed')}
@@ -650,14 +651,8 @@ export function ListingDetailContent({
 
             {/* Specifications */}
             {filteredSpecs.length > 0 && (
-              <div className='space-y-3 pt-4 md:pt-2'>
-                <div className='flex items-center gap-2 px-1'>
-                  <div className='w-1 h-4 bg-primary rounded-full' />
-                  <h3 className='font-bold text-foreground uppercase tracking-tight text-xs'>
-                    {t('technical_specs')}
-                  </h3>
-                </div>
-                <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-0.5 px-1'>
+              <div className='space-y-3 pt-4 md:pt-0'>
+                <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-0 px-1'>
                   <SpecsColumn
                     specs={specsLeft}
                     fieldLabelMap={fieldLabelMap}
@@ -681,7 +676,7 @@ export function ListingDetailContent({
               <div className='relative'>
                 <p
                   className={cn(
-                    'text-muted-foreground whitespace-pre-wrap leading-relaxed text-base md:text-lg transition-all duration-300',
+                    'text-muted-foreground whitespace-pre-wrap leading-relaxed text-sm md:text-[15px] font-medium transition-all duration-300',
                     !isDescExpanded &&
                       listing.description.length > 300 &&
                       'max-h-[120px] overflow-hidden mask-fade-bottom',
@@ -692,7 +687,7 @@ export function ListingDetailContent({
                 {listing.description.length > 300 && (
                   <button
                     onClick={() => setIsDescExpanded(!isDescExpanded)}
-                    className='mt-4 flex items-center gap-1.5 text-foreground text-[11px] font-medium uppercase tracking-widest hover:bg-secondary transition-all bg-background border border-border px-4 py-2 rounded-lg'
+                    className='mt-4 flex items-center gap-1.5 text-foreground text-[10px] font-bold uppercase tracking-widest hover:bg-secondary transition-all bg-background border border-border px-4 py-2 rounded-xl'
                   >
                     {isDescExpanded ? (
                       <>
@@ -766,11 +761,11 @@ export function ListingDetailContent({
                     listingTitle={listing.title}
                     label={
                       <div className='flex items-center gap-2'>
-                        <MessageSquare className='w-5 h-5' />
+                        <MessageSquare className='w-4 h-4' />
                         <span>{t('contact_options')}</span>
                       </div>
                     }
-                    className='w-full h-12 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium text-base uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95'
+                    className='w-full h-11 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-sm uppercase tracking-widest inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95'
                   />
                 </div>
               )}
@@ -778,7 +773,7 @@ export function ListingDetailContent({
                 <Button
                   asChild
                   variant='outline'
-                  className='w-full h-10 border rounded-lg text-muted-foreground border-border bg-background font-medium text-xs uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95'
+                  className='w-full h-10 border rounded-xl text-muted-foreground border-border bg-background font-bold text-[10px] uppercase tracking-widest inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95'
                 >
                   <Link href={`/store/${listing.userId}`}>
                     {t('visit_storefront')}
@@ -789,7 +784,7 @@ export function ListingDetailContent({
                     sellerId={listing.userId}
                     sellerName={seller?.name}
                     variant='outline'
-                    className='w-full h-10 rounded-lg text-muted-foreground border-border bg-background font-medium text-sm uppercase tracking-tight active:scale-95'
+                    className='w-full h-10 rounded-xl text-muted-foreground border-border bg-background font-bold text-[10px] uppercase tracking-widest active:scale-95'
                   />
                 )}
               </div>
@@ -813,26 +808,28 @@ export function ListingDetailContent({
           <div className='hidden md:block md:col-span-5 lg:col-span-4 space-y-6'>
             <div className='sticky top-24 space-y-6  overflow-y-auto pr-1 no-scrollbar z-10'>
               {/* Price & Actions Card */}
-              <div className='bg-card border border-border rounded-lg p-6 md:p-8 space-y-6'>
+              <div className='bg-card border border-border rounded-xl p-6 md:p-8 space-y-6 shadow-sm'>
                 <div className='space-y-3'>
                   <div className='flex items-center gap-2'>
                     <div className='flex flex-col flex-1'>
-                      <div className='flex items-center gap-1 mb-1'>
+                      <div className='flex items-center gap-1 mb-1.5 flex-wrap'>
                         {categoryData && (
-                          <span className='text-[11.5px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
+                          <span className='text-[10px] font-black text-foreground hover:text-primary transition-colors cursor-pointer uppercase tracking-widest'>
                             {categoryData.name}
                           </span>
                         )}
                         {subCategoryData && (
                           <>
-                            <span className='text-[11.5px] font-bold text-neutral-500 mx-1'>{'>'}</span>
-                            <span className='text-[11.5px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
+                            <span className='text-[10px] font-bold text-muted-foreground/60 mx-1'>
+                              &gt;
+                            </span>
+                            <span className='text-[10px] font-black text-foreground hover:text-primary transition-colors cursor-pointer uppercase tracking-widest'>
                               {subCategoryData.name}
                             </span>
                           </>
                         )}
                       </div>
-                      <h1 className='text-2xl font-bold text-muted-foreground tracking-tight leading-tight uppercase'>
+                      <h1 className='text-lg lg:text-xl font-bold text-foreground tracking-tight leading-tight uppercase'>
                         {listing.title}
                       </h1>
                     </div>
@@ -844,7 +841,7 @@ export function ListingDetailContent({
                   </div>
                   <div
                     suppressHydrationWarning
-                    className='text-6xl font-black text-foreground tracking-tighter leading-none'
+                    className='text-3xl lg:text-4xl font-black text-foreground tracking-tighter leading-none'
                   >
                     {listing.price > 0
                       ? formatCurrency(listing.price, listing.currency)
@@ -869,18 +866,18 @@ export function ListingDetailContent({
                       listingTitle={listing.title}
                       label={
                         <div className='flex items-center gap-2'>
-                          <MessageSquare className='w-5 h-5' />
+                          <MessageSquare className='w-4 h-4' />
                           <span>{t('contact_options')}</span>
                         </div>
                       }
-                      className='w-full h-12 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium text-base uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95'
+                      className='w-full h-11 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-sm uppercase tracking-widest inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95'
                     />
                   </div>
                 )}
               </div>
 
               {/* RESTORED: Seller Card */}
-              <div className='bg-card border border-border rounded-lg p-6 overflow-hidden'>
+              <div className='bg-card border border-border rounded-xl p-6 overflow-hidden shadow-sm'>
                 <div className='flex items-center gap-4 mb-6'>
                   <Link
                     href={`/store/${listing.userId}`}
@@ -888,7 +885,7 @@ export function ListingDetailContent({
                   >
                     <UserAvatar
                       user={seller}
-                      className='w-16 h-16 border-4 border-muted shadow-md'
+                      className='w-16 h-16 border-4 border-muted shadow-sm'
                     />
                   </Link>
                   <div>
@@ -927,7 +924,7 @@ export function ListingDetailContent({
                   </div>
                 </div>
                 <div className='grid grid-cols-2 gap-2'>
-                  <div className='p-3 bg-secondary rounded-lg text-center border border-border'>
+                  <div className='p-3 bg-secondary rounded-xl text-center border border-border/50'>
                     <div className='text-base font-black text-foreground'>
                       {sellerProfile?.activeListingsCount ?? '0'}
                     </div>
@@ -935,7 +932,7 @@ export function ListingDetailContent({
                       {t('active_ads')}
                     </p>
                   </div>
-                  <div className='p-3 bg-secondary rounded-lg text-center border border-border'>
+                  <div className='p-3 bg-secondary rounded-xl text-center border border-border/50'>
                     <div className='text-base font-black text-foreground'>
                       {sellerReviewStats && sellerReviewStats.totalReviews > 0
                         ? sellerReviewStats.averageRating.toFixed(1)
@@ -953,7 +950,7 @@ export function ListingDetailContent({
                   <Button
                     asChild
                     variant='secondary'
-                    className='w-full h-10 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium text-sm uppercase tracking-tight inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95'
+                    className='w-full h-11 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs uppercase tracking-widest inline-flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95'
                   >
                     <Link href={`/store/${listing.userId}`}>
                       {t('visit_storefront')}
@@ -988,12 +985,12 @@ export function ListingDetailContent({
                   {t('safety_trust')}
                 </p>
                 <ReportModal targetId={listing._id} targetType='listing'>
-                  <button className='w-full flex items-center justify-between p-4 bg-card border border-border rounded-lg group hover:bg-secondary transition-all'>
+                  <button className='w-full flex items-center justify-between p-4 bg-card border border-border rounded-xl group hover:bg-secondary transition-all'>
                     <div className='flex items-center gap-3'>
-                      <div className='p-2 rounded-md bg-secondary group-hover:bg-border transition-colors border border-border'>
+                      <div className='p-2 rounded-xl bg-secondary group-hover:bg-border transition-colors border border-border/50'>
                         <ShieldAlert className='w-4 h-4 text-muted-foreground group-hover:text-foreground' />
                       </div>
-                      <span className='text-xs font-medium text-foreground'>
+                      <span className='text-[10px] font-bold uppercase tracking-widest text-foreground'>
                         {t('report_suspicious')}
                       </span>
                     </div>
@@ -1007,7 +1004,7 @@ export function ListingDetailContent({
 
         {/* Mobile Map & Safety */}
         <div className='md:hidden px-4 py-8 space-y-6'>
-          <div className='bg-card border border-border rounded-2xl overflow-hidden shadow-sm aspect-[4/3] relative'>
+          <div className='bg-card border border-border rounded-xl overflow-hidden shadow-sm aspect-[4/3] relative'>
             <iframe
               width='100%'
               height='100%'
@@ -1022,7 +1019,7 @@ export function ListingDetailContent({
             </div>
           </div>
 
-          <div className='p-4 bg-amber-50 rounded-2xl border border-amber-100 space-y-2'>
+          <div className='p-4 bg-amber-50 rounded-xl border border-amber-100 space-y-2'>
             <div className='flex items-center gap-2 text-amber-900'>
               <ShieldAlert className='w-4 h-4' />
               <span className='font-black text-xs uppercase tracking-tighter'>
@@ -1069,7 +1066,7 @@ const SpecsColumn = memo(function SpecsColumn({
       {specs.map(([key, value]) => (
         <div
           key={key}
-          className='flex justify-between items-baseline py-2 md:py-3 border-b border-border/40 last:border-0 group transition-colors'
+          className='flex justify-between items-baseline py-2 md:py-2.5 border-b border-border/40 last:border-0 group transition-colors'
         >
           <span className='flex-2 text-muted-foreground text-xs md:text-sm font-bold uppercase tracking-wider pr-2'>
             {fieldLabelMap[key] ?? humanize(key)}
@@ -1094,7 +1091,7 @@ const LazyMap = memo(function LazyMap({
   region?: string;
 }) {
   return (
-    <div className='bg-card border border-border rounded-lg overflow-hidden aspect-[1.5/1] relative group'>
+    <div className='bg-card border border-border rounded-xl overflow-hidden aspect-[1.5/1] relative group shadow-sm'>
       <iframe
         width='100%'
         height='100%'
@@ -1146,8 +1143,8 @@ function DeleteListingButton({
           variant={compact ? 'ghost' : 'destructive'}
           className={
             compact
-              ? 'w-full justify-start px-2 py-2.5 h-auto font-semibold text-sm rounded-xl text-foreground hover:bg-accent focus:bg-accent'
-              : 'h-10 sm:h-11 md:h-12 bg-red-600 rounded-lg hover:bg-red-700 text-white font-medium text-xs sm:text-sm sm:col-span-2 md:col-span-1 min-w-0'
+              ? 'w-full justify-start px-2 py-2.5 h-auto font-bold text-[10px] uppercase tracking-widest rounded-xl text-foreground hover:bg-accent focus:bg-accent'
+              : 'h-11 bg-red-600 rounded-xl hover:bg-red-700 text-white font-bold text-[10px] uppercase tracking-widest sm:col-span-2 md:col-span-1 min-w-0'
           }
           disabled={isPending}
         >
