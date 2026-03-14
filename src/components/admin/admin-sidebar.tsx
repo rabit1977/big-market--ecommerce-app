@@ -124,7 +124,7 @@ export const AdminSidebar = () => {
         className={cn(
           'hidden lg:flex fixed top-0 inset-x-0 z-50 h-16 transition-all duration-300 border-b',
           scrolled
-            ? 'bg-background/70 backdrop-blur-2xl border-border/50 shadow-sm'
+            ? 'bg-background/80 backdrop-blur-2xl border-border/50 shadow-sm'
             : 'bg-background border-transparent',
         )}
       >
@@ -141,7 +141,7 @@ export const AdminSidebar = () => {
           </Link>
 
           {/* Center: Navigation Pill */}
-          <nav className='absolute left-1/2 -translate-x-1/2 flex items-center bg-muted/40 backdrop-blur-md border border-border/50 p-1 rounded-full bm-interactive'>
+          <nav className='absolute left-1/2 -translate-x-1/2 flex items-center bg-background backdrop-blur-md border border-border/80 p-1 rounded-full shadow-sm'>
             {primaryNavItems.map((item) => {
               const isActive =
                 item.href === '/admin/listings'
@@ -331,7 +331,7 @@ export const AdminSidebar = () => {
                     'p-1.5 rounded-2xl transition-all duration-300',
                     isActive
                       ? 'bg-primary/10'
-                      : 'bg-transparent group-hover:bg-muted/50',
+                      : 'bg-background group-hover:bg-muted/10',
                   )}
                 >
                   <item.icon

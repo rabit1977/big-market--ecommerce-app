@@ -82,10 +82,10 @@ const AccountPage = async () => {
 
   return (
     <AuthGuard>
-      <div className='min-h-screen bg-muted/20 pb-12 pt-4 md:pt-6'>
+      <div className='min-h-screen bg-background pb-12 pt-4 md:pt-6'>
         <div className='container-wide space-y-5 md:space-y-8'>
           {/* Profile Header Card */}
-          <header className='bg-card rounded-2xl p-4 sm:p-6 md:p-8 bm-interactive shadow-none'>
+          <header className='bg-background border border-border/60 rounded-2xl p-4 sm:p-6 md:p-8 shadow-sm'>
             <div className='flex flex-col sm:flex-row items-center sm:items-end gap-4 sm:gap-6 text-center sm:text-left'>
               {/* Avatar */}
               <div className='relative shrink-0'>
@@ -161,8 +161,8 @@ const AccountPage = async () => {
             {/* Left Main Content */}
             <div className='lg:col-span-8 space-y-4 sm:space-y-6'>
               {/* Account Information Card */}
-              <div className='bg-card border border-border/60 rounded-2xl md:rounded-2xl overflow-hidden shadow-sm'>
-                <div className='px-4 sm:px-6 py-3 sm:py-4 border-b border-border/50 bg-muted/50'>
+              <div className='bg-background border border-border/60 rounded-2xl overflow-hidden shadow-sm'>
+                <div className='px-4 sm:px-6 py-3 sm:py-4 border-b border-border/50 bg-background'>
                   <h2 className='text-[10px] sm:text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2'>
                     <ShieldCheck className='h-3.5 w-3.5 text-primary' />
                     {t('personal_details')}
@@ -222,8 +222,8 @@ const AccountPage = async () => {
             {/* Right Sidebar */}
             <div className='lg:col-span-4 space-y-4 sm:space-y-6'>
               {/* Quick Navigation Card */}
-              <div className='bg-card rounded-2xl md:rounded-2xl overflow-hidden bm-interactive shadow-none'>
-                <div className='px-4 sm:px-6 py-4 border-b border-border/50 bg-muted/30'>
+              <div className='bg-background border border-border/60 rounded-2xl overflow-hidden shadow-sm'>
+                <div className='px-4 sm:px-6 py-4 border-b border-border/50 bg-background'>
                   <h3 className='text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-muted-foreground'>
                     {t('quick_navigation')}
                   </h3>

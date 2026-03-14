@@ -55,7 +55,7 @@ export function AccountStats({
           <button
             key={i}
             onClick={() => handleNavigate(item.path)}
-            className='relative group bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 text-left'
+            className='relative group bg-background border border-border/80 p-5 rounded-2xl hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 text-left'
           >
             <div className='flex items-center gap-4'>
               <div className={`w-10 h-10 shrink-0 ${item.bg} ${item.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>

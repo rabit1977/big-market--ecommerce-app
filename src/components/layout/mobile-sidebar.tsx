@@ -194,7 +194,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                   placeholder={t('search_categories')}
                   value={categorySearch}
                   onChange={(e) => setCategorySearch(e.target.value)}
-                  className='h-10 pl-10 pr-8 rounded-xl text-sm bg-muted/50 focus-visible:bg-background transition-all'
+                  className='h-10 pl-10 pr-8 rounded-xl text-sm bg-background border-border/60 focus-visible:bg-background transition-all'
                   autoFocus={false}
                 />
                 {categorySearch && (
