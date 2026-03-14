@@ -206,10 +206,10 @@ export const ListingCard = memo(
               className={cn(
                 'font-bold leading-tight line-clamp-2 text-foreground group-hover:text-primary transition-colors tracking-tight',
                 isGrid
-                  ? 'text-[9px] sm:text-[11px]'
+                  ? 'text-[11px] sm:text-[13px]'
                   : isCard
-                    ? 'text-lg sm:text-xl'
-                    : 'text-lg sm:text-xl md:text-2xl',
+                    ? 'text-xl sm:text-2xl'
+                    : 'text-xl sm:text-2xl md:text-3xl',
               )}
             >
               {listing.title}
@@ -279,8 +279,8 @@ export const ListingCard = memo(
                       className={cn(
                         'text-muted-foreground font-semibold capitalize tracking-wide',
                         isGrid
-                          ? 'text-[9px] sm:text-[10px]'
-                          : 'text-[10px] sm:text-xs',
+                          ? 'text-[10px] sm:text-[11.5px]'
+                          : 'text-xs sm:text-[13px]',
                       )}
                     >
                       {attr}
@@ -302,7 +302,7 @@ export const ListingCard = memo(
               <span
                 className={cn(
                   'font-black text-foreground tracking-tight truncate max-w-[80px] sm:max-w-none',
-                  isGrid ? 'text-[10px] sm:text-[12px]' : 'text-lg sm:text-xl',
+                  isGrid ? 'text-[11px] sm:text-[13.5px]' : 'text-xl sm:text-2xl',
                 )}
                 suppressHydrationWarning
               >
@@ -330,7 +330,7 @@ export const ListingCard = memo(
             <span
               className={cn(
                 'text-muted-foreground/50 font-bold uppercase tracking-tighter shrink-0',
-                isGrid ? 'text-[8px] sm:text-[10px]' : 'text-[10px]',
+                isGrid ? 'text-[9.5px] sm:text-[11.5px]' : 'text-[11.5px]',
               )}
               suppressHydrationWarning
             >
@@ -349,10 +349,10 @@ export const ListingCard = memo(
               className={cn(
                 'flex items-center gap-1 text-muted-foreground font-semibold uppercase tracking-wider truncate mr-1',
                 isGrid
-                  ? 'text-[7px] leading-none'
+                  ? 'text-[9px] leading-none'
                   : isCard
-                    ? 'text-[9px] sm:text-[10px]'
-                    : 'text-[9px] sm:text-[10px]',
+                    ? 'text-[11px] sm:text-[12px]'
+                    : 'text-[11px] sm:text-[12px]',
               )}
             >
               <span

@@ -275,12 +275,12 @@ export function ListingDetailContent({
             <ChevronLeft className='w-6 h-6 text-foreground' />
           </button>
           <div className='flex flex-col'>
-            <span className='text-sm font-black tracking-tight leading-none text-foreground uppercase'>
+            <span className='text-base font-black tracking-tight leading-none text-foreground uppercase'>
               {t('item_ref')}: {listingRef}
             </span>
             <span
               suppressHydrationWarning
-              className='text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-wider'
+              className='text-xs font-bold text-muted-foreground mt-1 uppercase tracking-wider'
             >
               {publishDate}
             </span>
@@ -516,12 +516,12 @@ export function ListingDetailContent({
               </div>
 
               <div className='hidden md:flex absolute top-3 left-3 z-30 text-white bg-black/60 backdrop-blur-md p-2.5 rounded-lg border border-white/10 flex-col pointer-events-none'>
-                <span className='text-sm font-black tracking-tight leading-none text-white uppercase'>
+                <span className='text-base font-black tracking-tight leading-none text-white uppercase'>
                   {t('item_ref')}: {listingRef}
                 </span>
                 <span
                   suppressHydrationWarning
-                  className='text-[10px] font-bold text-white mt-1 uppercase tracking-wider'
+                  className='text-xs font-bold text-white mt-1 uppercase tracking-wider'
                 >
                   {publishDate}
                 </span>
@@ -593,20 +593,20 @@ export function ListingDetailContent({
                   <div className='flex flex-col flex-1'>
                     <div className='flex items-center gap-1 mb-1'>
                       {categoryData && (
-                        <span className='text-[10px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
+                        <span className='text-[11.5px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
                           {categoryData.name}
                         </span>
                       )}
                       {subCategoryData && (
                         <>
-                          <span className='text-[10px] font-bold text-neutral-500 mx-1'>{'>'}</span>
-                          <span className='text-[10px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
+                          <span className='text-[11.5px] font-bold text-neutral-500 mx-1'>{'>'}</span>
+                          <span className='text-[11.5px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
                             {subCategoryData.name}
                           </span>
                         </>
                       )}
                     </div>
-                    <h1 className='text-xl font-bold text-foreground leading-tight'>
+                    <h1 className='text-2xl font-bold text-foreground leading-tight'>
                       {listing.title}
                     </h1>
                   </div>
@@ -628,7 +628,7 @@ export function ListingDetailContent({
                   <div className='flex items-baseline gap-2'>
                     <span
                       suppressHydrationWarning
-                      className='text-4xl font-black text-foreground tracking-tighter'
+                      className='text-5xl font-black text-foreground tracking-tighter'
                     >
                       {listing.price > 0
                         ? formatCurrency(listing.price, listing.currency)
@@ -681,7 +681,7 @@ export function ListingDetailContent({
               <div className='relative'>
                 <p
                   className={cn(
-                    'text-muted-foreground whitespace-pre-wrap leading-relaxed text-sm md:text-base transition-all duration-300',
+                    'text-muted-foreground whitespace-pre-wrap leading-relaxed text-base md:text-lg transition-all duration-300',
                     !isDescExpanded &&
                       listing.description.length > 300 &&
                       'max-h-[120px] overflow-hidden mask-fade-bottom',
@@ -819,20 +819,20 @@ export function ListingDetailContent({
                     <div className='flex flex-col flex-1'>
                       <div className='flex items-center gap-1 mb-1'>
                         {categoryData && (
-                          <span className='text-[10px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
+                          <span className='text-[11.5px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
                             {categoryData.name}
                           </span>
                         )}
                         {subCategoryData && (
                           <>
-                            <span className='text-[10px] font-bold text-neutral-500 mx-1'>{'>'}</span>
-                            <span className='text-[10px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
+                            <span className='text-[11.5px] font-bold text-neutral-500 mx-1'>{'>'}</span>
+                            <span className='text-[11.5px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
                               {subCategoryData.name}
                             </span>
                           </>
                         )}
                       </div>
-                      <h1 className='text-xl font-bold text-muted-foreground tracking-tight leading-tight uppercase'>
+                      <h1 className='text-2xl font-bold text-muted-foreground tracking-tight leading-tight uppercase'>
                         {listing.title}
                       </h1>
                     </div>
@@ -844,7 +844,7 @@ export function ListingDetailContent({
                   </div>
                   <div
                     suppressHydrationWarning
-                    className='text-5xl font-black text-foreground tracking-tighter leading-none'
+                    className='text-6xl font-black text-foreground tracking-tighter leading-none'
                   >
                     {listing.price > 0
                       ? formatCurrency(listing.price, listing.currency)
@@ -1071,10 +1071,10 @@ const SpecsColumn = memo(function SpecsColumn({
           key={key}
           className='flex justify-between items-baseline py-2 md:py-3 border-b border-border/40 last:border-0 group transition-colors'
         >
-          <span className='flex-2 text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-wider pr-2'>
+          <span className='flex-2 text-muted-foreground text-xs md:text-sm font-bold uppercase tracking-wider pr-2'>
             {fieldLabelMap[key] ?? humanize(key)}
           </span>
-          <span className='flex-1 font-bold text-foreground text-xs md:text-sm text-left shrink-0'>
+          <span className='flex-1 font-bold text-foreground text-sm md:text-base text-left shrink-0'>
             {String(value)}
           </span>
         </div>
