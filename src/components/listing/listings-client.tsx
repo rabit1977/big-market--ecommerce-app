@@ -144,7 +144,7 @@ export function ListingsClient({
       </aside>
 
       <div className={cn("min-h-[800px] transition-opacity duration-300", isPending && "opacity-60 pointer-events-none")}>
-        <div className="md:hidden mb-4 flex gap-2">
+        <div className="sm:hidden mb-4 flex gap-2">
           <Button
             onClick={() => setIsMobileFiltersOpen(true)}
             variant="outline"

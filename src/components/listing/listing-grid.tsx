@@ -126,11 +126,7 @@ export function ListingGrid({
                 ))}
               </SelectContent>
             </Select>
-            {showSaveSearch && (
-              <div className='hidden sm:block md:hidden'>
-                <SaveSearchButton />
-              </div>
-            )}
+
           </div>
 
           <div
