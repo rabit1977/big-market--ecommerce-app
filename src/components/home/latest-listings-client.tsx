@@ -49,7 +49,7 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
   };
 
   return (
-    <div className="space-y-4 bg-background dark:bg-background pb-20">
+    <div className="space-y-4 bg-background dark:bg-background pb-4">
       <ListingGrid 
         listings={sortedListings as any} 
         onOpenFilters={() => setIsFiltersOpen(true)}

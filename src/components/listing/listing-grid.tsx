@@ -164,7 +164,7 @@ export function ListingGrid({
           className={cn(
             'grid w-full py-4 sm:py-6',
             viewMode === 'grid'
-              ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5'
+              ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-x-2 gap-y-6 sm:gap-x-4 sm:gap-y-6 md:gap-x-6 md:gap-y-8'
               : viewMode === 'card'
                 ? 'grid-cols-1 md:grid-cols-2 gap-8'
                 : 'grid-cols-1 gap-6',
