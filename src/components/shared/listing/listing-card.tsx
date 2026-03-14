@@ -330,7 +330,7 @@ export const ListingCard = memo(
             <span
               className={cn(
                 'text-muted-foreground/50 font-bold uppercase tracking-tighter shrink-0',
-                isGrid ? 'text-[9.5px] sm:text-[11.5px]' : 'text-[11.5px]',
+                isGrid ? 'text-[8.5px] sm:text-[10.5px]' : 'text-[10.5px]',
               )}
               suppressHydrationWarning
             >
