@@ -85,7 +85,7 @@ export function AdminNotifications({ user }: { user: any }) {
                     </AnimatePresence>
                 </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-72 p-1.5 bg-card border-border shadow-none rounded-lg z-50">
+            <DropdownMenuContent align="end" className="w-72 p-1.5 bg-background border-border shadow-none rounded-lg z-50">
                 <DropdownMenuLabel className="flex items-center gap-2 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     <TrendingUp className="w-3.5 h-3.5" />
                     Activity Today

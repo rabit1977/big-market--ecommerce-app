@@ -146,7 +146,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className='fixed top-0 bottom-0 left-0 z-50 w-[85%] max-w-sm bg-card shadow-2xl flex flex-col overflow-hidden'
+            className='fixed top-0 bottom-0 left-0 z-50 w-[85%] max-w-sm bg-background shadow-2xl flex flex-col overflow-hidden'
             aria-label='Navigation menu'
           >
             {/* Header */}
@@ -317,7 +317,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
               <Link
                 href='/listings'
                 onClick={onClose}
-                className='flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-card text-foreground text-sm font-bold transition-all bm-interactive'
+                className='flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-background text-foreground text-sm font-bold transition-all bm-interactive'
               >
                 <Grid3X3 className='h-4 w-4 group-hover:text-primary transition-colors' />
                 {t('browse_all_categories')}

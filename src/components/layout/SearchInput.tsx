@@ -106,7 +106,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       <>
         <div className="relative group ">
           {/* Left: Menu + Search icon */}
-          <div className="absolute left-1 top-1/2 -translate-y-1/2 flex items-center z-20 bg-card">
+          <div className="absolute left-1 top-1/2 -translate-y-1/2 flex items-center z-20 bg-background">
             <button
               type="button"
               onClick={toggle}
@@ -129,7 +129,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             ref={ref}
             type="search"
             placeholder={tNav('search_placeholder')}
-            className="h-9 md:h-10 rounded-lg pl-10 sm:pl-16 pr-24 sm:pr-32 bg-input bg-card
+            className="h-9 md:h-10 rounded-lg pl-10 sm:pl-16 pr-24 sm:pr-32 bg-background
                        focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary
                        text-sm placeholder:text-muted-foreground/60
                        [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden
@@ -196,7 +196,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                   animate={{ x: 0 }}
                   exit={{ x: '100%' }}
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                  className="fixed top-0 bottom-0 right-0 z-[60] w-[85%] max-w-sm bg-card shadow-2xl flex flex-col overflow-hidden"
+                  className="fixed top-0 bottom-0 right-0 z-[60] w-[85%] max-w-sm bg-background shadow-2xl flex flex-col overflow-hidden"
                   role="dialog"
                   aria-modal="true"
                   aria-label="Select city"

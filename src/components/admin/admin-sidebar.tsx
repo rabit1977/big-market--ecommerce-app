@@ -420,7 +420,7 @@ export const AdminSidebar = () => {
                           'flex items-center gap-3 py-3.5 px-4 rounded-2xl border transition-all duration-200 active:scale-95 group shadow-sm bm-interactive',
                           isActive
                             ? 'bg-primary/5 border-primary/20 text-primary'
-                            : 'bg-card border-border/60 text-muted-foreground hover:text-foreground hover:border-border',
+                            : 'bg-background border-border/60 text-muted-foreground hover:text-foreground hover:border-border',
                         )}
                       >
                         <div
@@ -441,7 +441,7 @@ export const AdminSidebar = () => {
                   })}
                 </div>
 
-                <div className='rounded-3xl border border-border/60 bg-gradient-to-br from-card to-muted/20 p-5 shadow-sm mb-6 bm-interactive'>
+                <div className='rounded-3xl border border-border/60 bg-gradient-to-br from-background to-muted/20 p-5 shadow-sm mb-6 bm-interactive'>
                   <div className='flex items-center gap-4 mb-5'>
                     <Avatar className='w-12 h-12 shadow-sm border border-border'>
                       <AvatarImage src={session?.user?.image || ''} />
