@@ -113,7 +113,7 @@ export function MyListingsExportButton({ listings }: Props) {
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="outline"
-                    className="w-full sm:w-auto h-11 rounded-2xl font-black text-xs uppercase tracking-[0.15em] border border-card-foreground/10 bg-card hover:bg-muted/80 gap-3 px-6 shadow-none transition-all active:scale-95 bm-interactive group"
+                    className="w-full sm:w-auto h-10 rounded-xl font-black text-[9px] sm:text-xs uppercase tracking-[0.1em] sm:tracking-[0.15em] border border-card-foreground/10 bg-card hover:bg-muted/80 gap-3 px-6 shadow-none transition-all active:scale-95 bm-interactive group"
                 >
                     <Download className="w-4 h-4 group-hover:text-primary group-hover:scale-110 transition-all duration-300 ease-in-out opacity-60 group-hover:opacity-100" />
                     Export

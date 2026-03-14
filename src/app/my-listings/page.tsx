@@ -104,10 +104,10 @@ export default async function MyListingsPage({
                 <Button
                   asChild
                   size='lg'
-                  className='flex-1 sm:flex-none sm:w-auto gap-2 rounded-2xl font-black bg-primary hover:bg-primary/95 shrink-0 h-12 text-[10px] sm:text-xs px-4 sm:px-10 uppercase tracking-[0.1em] sm:tracking-[0.2em] transition-all shadow-xl shadow-primary/10 active:scale-95 border border-primary/20 group'
+                  className='flex-1 sm:flex-none sm:w-auto gap-2 rounded-xl font-black bg-primary hover:bg-primary/95 shrink-0 h-10 text-[9px] sm:text-xs px-4 sm:px-8 uppercase tracking-[0.1em] sm:tracking-[0.15em] transition-all shadow-xl shadow-primary/10 active:scale-95 border border-primary/20 group'
                 >
                   <Link href='/sell'>
-                    <Plus className='h-4 w-4 sm:h-5 sm:w-5 group:hover:text-primary group:hover:scale-110 transition-all duration-300 ease-in-out opacity-60 group:hover:opacity-100' />
+                    <Plus className='h-3.5 w-3.5 sm:h-4 sm:w-4 group:hover:text-primary group:hover:scale-110 transition-all duration-300 ease-in-out opacity-60 group:hover:opacity-100' />
                     {t('post_ad')}
                   </Link>
                 </Button>
@@ -116,7 +116,7 @@ export default async function MyListingsPage({
           </div>
 
           {sortedListings && sortedListings.length > 0 ? (
-            <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8'>
+            <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8'>
               {sortedListings.map((listing: ListingWithRelations) => (
                 <MyListingCard key={listing.id} listing={listing} />
               ))}

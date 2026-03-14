@@ -195,16 +195,10 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
       layout
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className='group relative flex flex-col h-full bg-card/40 backdrop-blur-md rounded-3xl overflow-hidden border border-card-foreground/5 shadow-none transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 bm-interactive'
+      className='group relative flex flex-row lg:flex-col h-auto lg:h-full bg-card/40 backdrop-blur-md rounded-2xl overflow-hidden border border-card-foreground/5 shadow-none transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 bm-interactive'
     >
       {/* Status Badges Overlay */}
       <div className='absolute top-2.5 left-2.5 z-20 flex flex-wrap gap-1.5 pointer-events-none'>
-        {listing.status === 'ACTIVE' && (
-          <div className='bg-emerald-500 text-white px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest flex items-center shadow-lg shadow-emerald-500/20'>
-            <div className='w-1 h-1 rounded-full bg-white mr-1.5 animate-pulse' />
-            {t('status_active')}
-          </div>
-        )}
         {listing.status === 'PENDING_APPROVAL' && (
           <div className='bg-amber-500 text-white px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest flex items-center shadow-lg shadow-amber-500/20'>
             <Clock className='w-2.5 h-2.5 mr-1.5' />
@@ -222,14 +216,8 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
         )}
       </div>
 
-      {/* Action Buttons Overlay (Heart + Dropdown) */}
+      {/* Action Buttons Overlay (Dropdown) */}
       <div className='absolute top-2.5 right-2.5 z-20 flex items-center gap-2'>
-        {/* Heart Save Button */}
-        <SaveAdButton
-          listingId={listing.id || listing._id || ''}
-          showText={false}
-          className='shadow-xl'
-        />
 
         {/* Action Dropdown */}
         <DropdownMenu>
@@ -328,7 +316,7 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
       </div>
 
       {/* Thumbnail Section */}
-      <div className='relative aspect-[5/4] w-full bg-muted overflow-hidden'>
+      <div className='relative w-32 md:w-36 lg:w-full aspect-square lg:aspect-[4/3] bg-muted overflow-hidden shrink-0'>
         <div
           className='flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar touch-pan-x touch-pan-y'
           onScroll={imagesArray.length > 1 ? handleScroll : undefined}
@@ -384,78 +372,68 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
 
         <div className='absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent pointer-events-none' />
 
-        {/* Date Badge — bottom-right corner */}
-        <div className='absolute bottom-3 right-3 flex items-center gap-1 bg-black/50 backdrop-blur-sm border border-white/10 px-2 py-1 rounded-lg pointer-events-none'>
-          <Clock className='w-2.5 h-2.5 text-white/60 shrink-0' />
-          <span className='text-[8px] font-black uppercase tracking-widest text-white/70 leading-none'>
-            {formatDistanceToNow(new Date(listing.createdAt || 0), {
-              addSuffix: true,
-            })}
-          </span>
-        </div>
-
         <div className='absolute bottom-3 left-3 right-16 flex flex-col pointer-events-none'>
-          <h3 className='font-black text-white text-sm sm:text-base leading-tight tracking-tight uppercase line-clamp-2 drop-shadow-md'>
+          <h3 className='font-black text-white text-[9px] sm:text-[10px] lg:text-sm leading-tight tracking-tight uppercase line-clamp-2 drop-shadow-md'>
             {listing.title}
           </h3>
         </div>
       </div>
 
       {/* Meta Info */}
-      <div className='p-3.5 flex flex-col flex-1'>
-        <div className='flex flex-col gap-1 mb-4'>
+      <div className='p-2 sm:p-3 lg:p-3.5 flex flex-col flex-1 min-w-0'>
+        <div className='flex flex-col gap-0.5 lg:gap-1 mb-2 lg:mb-4'>
           <div className='flex items-center justify-between'>
-            <div className='text-xl font-black text-foreground tracking-tighter uppercase'>
+            <div className='text-xs sm:text-sm lg:text-xl font-black text-foreground tracking-tighter uppercase'>
               {formatCurrency(listing.price, (listing as any).currency)}
             </div>
           </div>
           <div className='flex items-center'>
-            <span className='text-[8px] font-black text-primary uppercase tracking-widest bg-primary/5 px-2 py-0.5 rounded-md border border-primary/10'>
+            <span className='text-[7px] lg:text-[8px] font-black text-primary uppercase tracking-widest bg-primary/5 px-1.5 lg:px-2 py-0.5 rounded-md border border-primary/10'>
               ID: {listing.id?.slice(-8)}
             </span>
           </div>
         </div>
 
         {/* ── Live Analytics Strip ─────────────────────────────── */}
-        <div className='mb-4 bg-muted/30 border border-card-foreground/5 rounded-2xl p-2.5'>
-          <div className='grid grid-cols-4 gap-1 text-center'>
+        <div className='mb-2 lg:mb-3 bg-muted/30 border border-card-foreground/5 rounded-xl p-1 lg:p-2.5'>
+          <div className='grid grid-cols-4 gap-0.5 lg:gap-1 text-center'>
             {/* Views */}
             <div className='flex flex-col items-center gap-0.5'>
-              <Eye className='w-3 h-3 text-orange-500 opacity-70' />
-              <span className='font-black text-xs text-foreground leading-none'>
+              <Eye className='w-2.5 h-2.5 lg:w-3 lg:h-3 text-orange-500 opacity-70' />
+              <span className='font-black text-[9px] lg:text-xs text-foreground leading-none'>
                 {quickStats === undefined ? '—' : (quickStats.viewCount ?? 0)}
               </span>
-              <span className='text-[7px] font-black uppercase tracking-tight text-muted-foreground'>
+              <span className='text-[6px] lg:text-[7px] font-black uppercase tracking-tight text-muted-foreground'>
                 Views
               </span>
             </div>
             {/* Saved */}
             <div className='flex flex-col items-center gap-0.5 border-l border-card-foreground/5'>
-              <Heart className='w-3 h-3 text-rose-500 opacity-70' />
-              <span className='font-black text-xs text-foreground leading-none'>
+              <Heart className='w-2.5 h-2.5 lg:w-3 lg:h-3 text-rose-500 opacity-70' />
+              <span className='font-black text-[9px] lg:text-xs text-foreground leading-none'>
                 {quickStats === undefined ? '—' : quickStats.favorites}
               </span>
-              <span className='text-[7px] font-black uppercase tracking-tight text-muted-foreground'>
+              <span className='text-[6px] lg:text-[7px] font-black uppercase tracking-tight text-muted-foreground'>
                 Saved
               </span>
             </div>
             {/* Leads */}
             <div className='flex flex-col items-center gap-0.5 border-l border-card-foreground/5'>
-              <MousePointerClick className='w-3 h-3 text-blue-500 opacity-70' />
-              <span className='font-black text-xs text-foreground leading-none'>
+              <MousePointerClick className='w-2.5 h-2.5 lg:w-3 lg:h-3 text-blue-500 opacity-70' />
+              <span className='font-black text-[9px] lg:text-xs text-foreground leading-none'>
                 {quickStats === undefined ? '—' : quickStats.contactClicks}
               </span>
-              <span className='text-[7px] font-black uppercase tracking-tight text-muted-foreground'>
+              <span className='text-[6px] lg:text-[7px] font-black uppercase tracking-tight text-muted-foreground'>
                 Leads
               </span>
             </div>
             {/* Inquiries */}
             <div className='flex flex-col items-center gap-0.5 border-l border-card-foreground/5'>
-              <MessageSquare className='w-3 h-3 text-emerald-500 opacity-70' />
-              <span className='font-black text-xs text-foreground leading-none'>
+              <MessageSquare className='w-2.5 h-2.5 lg:w-3 lg:h-3 text-emerald-500 opacity-70' />
+              <span className='font-black text-[9px] lg:text-xs text-foreground leading-none'>
                 {quickStats === undefined ? '—' : quickStats.inquiries}
               </span>
-              <span className='text-[7px] font-black uppercase tracking-tight text-muted-foreground'>
+              <span className='text-[6px] lg:text-[7px] font-black uppercase tracking-tight text-muted-foreground'>
                 Msgs
               </span>
             </div>
@@ -469,24 +447,23 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
           </Link>
         </div>
 
-        {/* Main Action Buttons */}
-        <div className='flex flex-row gap-2 mt-auto'>
+        <div className='flex flex-row gap-1.5 lg:gap-2 mt-auto'>
           <Button
             asChild
             size='sm'
             className={cn(
-              'flex-1 bg-primary hover:bg-primary/95 text-white font-black h-10 text-[9px] uppercase tracking-[0.15em] rounded-xl transition-all shadow-lg shadow-primary/10 active:scale-95',
+              'flex-1 bg-primary hover:bg-primary/95 text-white font-black h-7 lg:h-10 text-[7px] lg:text-[9px] uppercase tracking-[0.05em] lg:tracking-[0.15em] rounded-lg lg:rounded-xl transition-all shadow-lg shadow-primary/10 active:scale-95 px-1 lg:px-3',
               listing.status === 'PENDING_APPROVAL' &&
                 'opacity-50 pointer-events-none',
             )}
           >
             <Link href={`/my-listings/promote/${listing.id}`}>
-              <Sparkles className='w-3 h-3 mr-2' />
+              <Sparkles className='w-2 lg:w-3 h-2 lg:h-3 mr-1 lg:mr-2' />
               {t('promote')}
             </Link>
           </Button>
 
-          <div className='flex flex-1 gap-2'>
+          <div className='flex flex-row flex-1 gap-1.5 lg:gap-2'>
             <AlertDialog
               open={isRenewDialogOpen}
               onOpenChange={setIsRenewDialogOpen}
@@ -495,7 +472,7 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
                 variant='secondary'
                 size='sm'
                 className={cn(
-                  'flex-1 bg-muted border border-card-foreground/5 hover:bg-muted/80 text-foreground font-black h-10 text-[9px] uppercase tracking-[0.15em] rounded-xl transition-all active:scale-95',
+                  'flex-1 bg-muted border border-card-foreground/5 hover:bg-muted/80 text-foreground font-black h-7 lg:h-10 text-[7px] lg:text-[9px] uppercase tracking-[0.05em] lg:tracking-[0.15em] rounded-lg lg:rounded-xl transition-all active:scale-95 px-1 lg:px-3',
                   (listing.status === 'PENDING_APPROVAL' || isStatsLoading) &&
                     'opacity-50 pointer-events-none',
                 )}
@@ -504,7 +481,7 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
               >
                 <RefreshCw
                   className={cn(
-                    'w-3 h-3 mr-2 opacity-60',
+                    'w-2 lg:w-3 h-2 lg:h-3 mr-1 lg:mr-2 opacity-60',
                     (isPending || isStatsLoading) && 'animate-spin',
                   )}
                 />
@@ -562,10 +539,10 @@ export const MyListingCard = ({ listing }: MyListingCardProps) => {
               <Button
                 variant='outline'
                 size='icon'
-                className='h-10 w-10 shrink-0 border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 rounded-xl transition-all active:scale-95 shadow-none'
+                className='h-7 lg:h-10 w-7 lg:w-10 shrink-0 border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 rounded-lg lg:rounded-xl transition-all active:scale-95 shadow-none'
                 onClick={handleDownloadReceipt}
               >
-                <Download className='w-4 h-4' />
+                <Download className='w-3 lg:w-4 h-3 lg:h-4' />
               </Button>
             )}
           </div>
