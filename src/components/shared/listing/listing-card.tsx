@@ -98,9 +98,9 @@ export const ListingCard = memo(
               ? 'pointer-events-auto'
               : 'pointer-events-none',
             isGrid
-              ? 'aspect-[4/3] w-full rounded-t-xl shrink-0'
+              ? 'aspect-[3/2] w-full rounded-t-xl shrink-0'
               : isCard
-                ? 'aspect-video w-full rounded-t-xl shrink-0'
+                ? 'aspect-[3/2] w-full rounded-t-xl shrink-0'
                 : 'flex-grow flex-shrink basis-10 min-w-10 max-w-54 h-full rounded-l-xl',
           )}
         >
@@ -197,9 +197,9 @@ export const ListingCard = memo(
           className={cn(
             'flex flex-col relative z-20 pointer-events-none min-w-0 transition-all duration-300',
             isGrid 
-              ? 'flex-1 p-1 sm:p-1.5' 
+              ? 'flex-1 p-1' 
               : isCard
-                ? 'flex-1 p-2 sm:p-3'
+                ? 'flex-1 p-2 sm:p-2.5'
                 : 'flex-[2] py-2 px-3 sm:px-4 sm:py-2.5',
           )}
         >
@@ -208,7 +208,7 @@ export const ListingCard = memo(
             <h3
               className={cn(
                 'font-bold leading-tight line-clamp-2 text-foreground group-hover:text-primary transition-colors tracking-tight',
-                isGrid ? 'text-xs sm:text-sm' : isCard ? 'text-lg sm:text-xl' : 'text-lg sm:text-xl md:text-2xl',
+                isGrid ? 'text-[9px] sm:text-[11px]' : isCard ? 'text-lg sm:text-xl' : 'text-lg sm:text-xl md:text-2xl',
               )}
             >
               {listing.title}
@@ -267,8 +267,8 @@ export const ListingCard = memo(
 
             return (
               <div className={cn(
-                'flex flex-wrap items-center gap-x-1 gap-y-0.5',
-                isGrid ? 'mb-0.5' : 'mb-1'
+                'flex flex-wrap items-center gap-x-0.5 gap-y-0',
+                isGrid ? 'mb-0' : 'mb-1'
               )}>
                 {attributes.map((attr, i) => (
                   <React.Fragment key={i}>
@@ -295,7 +295,7 @@ export const ListingCard = memo(
                 <span
                   className={cn(
                     'font-black text-foreground tracking-tight truncate max-w-[80px] sm:max-w-none',
-                    isGrid ? 'text-[13px] sm:text-base' : 'text-lg sm:text-xl',
+                    isGrid ? 'text-[10px] sm:text-[12px]' : 'text-lg sm:text-xl',
                   )}
                   suppressHydrationWarning
                 >
@@ -357,7 +357,10 @@ export const ListingCard = memo(
               )}
             </div>
 
-            <div className='pointer-events-auto shrink-0 scale-75 sm:scale-90 -mr-2 sm:-mr-1.5'>
+            <div className={cn(
+              'pointer-events-auto shrink-0',
+              isGrid ? 'scale-[0.6] sm:scale-75 -mr-3 sm:-mr-2' : 'scale-75 sm:scale-90 -mr-2 sm:-mr-1.5'
+            )}>
               {!isOwner && (
                 <SaveAdButton
                   listingId={listing.id || listing._id}

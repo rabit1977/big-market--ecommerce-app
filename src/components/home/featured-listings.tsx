@@ -194,7 +194,7 @@ export function FeaturedListings({
           </div>
         </div>
 
-        <div className='flex flex-col gap-6'>
+        <div className='flex flex-col gap-10'>
           {featuredListings.map((listing) => (
             <div key={listing._id} className='group relative'>
               <ListingCard 
@@ -245,7 +245,7 @@ export function FeaturedListings({
                 return (
                   <CarouselItem
                     key={listing._id}
-                    className='basis-[70%] pl-2.5 sm:basis-[40%] sm:pl-4 md:basis-[32%] md:pl-6 lg:basis-[25%]'
+                    className='basis-[45%] pl-2 sm:basis-[30%] sm:pl-3 md:basis-[22%] md:pl-4 lg:basis-[18%] xl:basis-[16.6%]'
                   >
                     <div className='h-full px-0.5'>
                       <ListingCard 
