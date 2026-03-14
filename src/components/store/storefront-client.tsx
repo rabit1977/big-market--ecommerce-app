@@ -11,6 +11,8 @@ import { useQuery } from 'convex/react';
 import {
   Building2,
   CalendarDays,
+  ChevronDown,
+  ChevronUp,
   Lock,
   MapPin,
   Package,
@@ -22,6 +24,7 @@ import {
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useState } from 'react';
 import { StoreReviews } from './store-reviews';
 
 export function StorefrontClient({
@@ -142,26 +145,26 @@ export function StorefrontClient({
   // ────────────────────────────────────────────────────────────────────────────
   return (
     <div className='min-h-screen bg-background pb-20'>
-      {/* Cover / Banner */}
-      <div className='h-32 md:h-48 w-full bg-gradient-to-r from-primary/20 via-primary/10 to-background border-b' />
+      {/* Cover / Banner - Compact mobile height */}
+      <div className='h-24 md:h-32 w-full bg-gradient-to-r from-primary/20 via-primary/10 to-background border-b' />
 
       <div className='container max-w-6xl mx-auto px-4 sm:px-6'>
-        {/* Profile Header */}
-        <div className='relative flex flex-col md:flex-row items-center md:items-end gap-4 md:gap-6 -mt-16 md:-mt-20 mb-8 md:mb-12'>
-          <Avatar className='h-32 w-32 md:h-40 md:w-40 border-4 border-background rounded-lg shadow-none bg-card'>
+        {/* Profile Header - Compacted for mobile */}
+        <div className='relative flex flex-col md:flex-row items-center md:items-end gap-3 md:gap-5 -mt-12 md:-mt-16 mb-6 md:mb-10'>
+          <Avatar className='h-24 w-24 md:h-32 md:w-32 border-4 border-background rounded-lg shadow-none bg-card'>
             <AvatarImage
               src={profile.image || ''}
               alt={profile.name || 'User'}
               className='object-cover'
             />
-            <AvatarFallback className='text-4xl bg-muted text-muted-foreground font-bold'>
+            <AvatarFallback className='text-3xl bg-muted text-muted-foreground font-bold'>
               {profile.name?.charAt(0).toUpperCase() || 'U'}
             </AvatarFallback>
           </Avatar>
 
-          <div className='flex-1 text-center md:text-left space-y-1.5 pt-2'>
-            <div className='flex flex-col md:flex-row md:items-center gap-2 md:gap-3'>
-              <h1 className='text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground'>
+          <div className='flex-1 text-center md:text-left space-y-1 pt-1'>
+            <div className='flex flex-col md:flex-row md:items-center gap-1.5 md:gap-2.5'>
+              <h1 className='text-xl md:text-2xl font-black uppercase tracking-tight text-foreground'>
                 {profile.accountType === 'COMPANY' && profile.companyName
                   ? profile.companyName
                   : profile.name}
@@ -211,7 +214,7 @@ export function StorefrontClient({
           </div>
 
           {/* Action buttons */}
-          <div className='flex flex-col sm:flex-row gap-2 w-full md:w-auto shrink-0 mt-6 md:mt-0'>
+          <div className='flex flex-col sm:flex-row gap-2 w-full md:w-auto shrink-0 md:mt-0'>
             {!isOwner && (
               <ContactSellerButton
                 sellerId={profile.externalId}
@@ -242,7 +245,7 @@ export function StorefrontClient({
               size='lg'
               className={cn(
                 'h-12 border-2 px-6 sm:px-8 rounded-lg font-bold tracking-tight uppercase flex-1 md:flex-none',
-                isOwner && 'opacity-60 pointer-events-none',
+                isOwner && 'hidden', // Hide follow button for owner as per request
               )}
             />
           </div>
@@ -256,7 +259,7 @@ export function StorefrontClient({
         {/* ── Listings Grid ── */}
         <div className='space-y-6'>
           <div className='flex items-center justify-between border-b border-border pb-4'>
-            <h2 className='text-xl md:text-2xl font-bold uppercase tracking-tight'>
+            <h2 className='text-lg md:text-xl font-bold uppercase tracking-tight'>
               {t('active_listings')}
             </h2>
             <span className='bg-primary text-primary-foreground font-bold text-xs px-3 py-1 rounded-md'>
@@ -296,59 +299,71 @@ export function StorefrontClient({
 // ─── Followers panel shown on the store page to the owner ─────────────────────
 
 function StoreFollowersPanel({ sellerId }: { sellerId: string }) {
-  const { data: session } = useSession();
   const followers = useQuery(api.followedSellers.getStoreFollowers, { sellerId });
+  const [isExpanded, setIsExpanded] = useState(false);
 
   if (followers === undefined) {
-    // Loading…
     return (
-      <div className='mb-8 p-6 bg-card border border-border rounded-2xl animate-pulse'>
-        <div className='h-5 w-40 bg-muted rounded mb-4' />
-        <div className='flex gap-3'>
-          {[1, 2, 3].map((i) => (
-            <div key={i} className='h-14 w-14 bg-muted rounded-xl' />
-          ))}
-        </div>
+      <div className='mb-4 p-4 bg-card border border-border rounded-xl animate-pulse'>
+        <div className='h-5 w-40 bg-muted rounded' />
       </div>
     );
   }
 
   return (
-    <div className='mb-8 p-5 md:p-6 bg-card border border-border rounded-2xl'>
-      <div className='flex items-center gap-2 mb-4'>
-        <Users className='w-5 h-5 text-primary' />
-        <h2 className='text-base md:text-lg font-black uppercase tracking-tight text-foreground'>
-          Store Followers
-        </h2>
-        <span className='ml-auto bg-primary/10 text-primary font-black text-xs px-2.5 py-1 rounded-full'>
-          {followers.length}
-        </span>
-      </div>
+    <div className='mb-6 bg-card border border-border rounded-2xl overflow-hidden transition-all duration-300'>
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className='w-full flex items-center gap-2.5 p-4 md:p-5 hover:bg-secondary/50 transition-colors text-left group'
+      >
+        <div className='p-1.5 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-colors'>
+          <Users className='w-4 h-4' />
+        </div>
+        <div className='flex-1'>
+          <h2 className='text-sm md:text-base font-black uppercase tracking-tight text-foreground flex items-center gap-2'>
+            Store Followers
+            <span className='bg-primary/10 text-primary font-black text-[10px] px-2 py-0.5 rounded-full border border-primary/20'>
+              {followers.length}
+            </span>
+          </h2>
+          <p className='text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5 opacity-60'>
+            {isExpanded ? 'Click to hide followers' : 'Click to view who follows you'}
+          </p>
+        </div>
+        {isExpanded ? (
+          <ChevronUp className='w-4 h-4 text-muted-foreground' />
+        ) : (
+          <ChevronDown className='w-4 h-4 text-muted-foreground' />
+        )}
+      </button>
 
-
-      {followers.length === 0 ? (
-        <p className='text-sm text-muted-foreground py-4 text-center border border-dashed border-border rounded-xl'>
-          No followers yet. Share your store to get your first follower!
-        </p>
-      ) : (
-        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3'>
-          {followers.map((follower: any) =>
-            follower ? (
-              <div
-                key={follower._id}
-                className='flex flex-col items-center gap-1.5 p-3 bg-muted/30 rounded-xl border border-border/40 hover:border-primary/30 transition-all text-center'
-              >
-                <Avatar className='h-10 w-10 rounded-full border-2 border-background shadow-sm'>
-                  <AvatarImage src={follower.image || ''} className='object-cover' />
-                  <AvatarFallback className='bg-primary/10 text-primary font-bold text-sm'>
-                    {follower.name?.charAt(0).toUpperCase() || 'U'}
-                  </AvatarFallback>
-                </Avatar>
-                <p className='text-[10px] font-bold truncate w-full text-center text-foreground leading-tight'>
-                  {follower.name || 'User'}
-                </p>
-              </div>
-            ) : null,
+      {isExpanded && (
+        <div className='px-4 pb-5 md:px-5 md:pb-6 border-t border-dashed border-border/50 pt-4 animate-in fade-in slide-in-from-top-2 duration-300'>
+          {followers.length === 0 ? (
+            <p className='text-xs text-muted-foreground py-4 text-center border border-dashed border-border/60 rounded-xl bg-muted/20'>
+              No followers yet. Share your store to get your first follower!
+            </p>
+          ) : (
+            <div className='grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 font-medium'>
+              {followers.map((follower: any) =>
+                follower ? (
+                  <div
+                    key={follower._id}
+                    className='flex flex-col items-center gap-1.5 p-2 bg-muted/30 rounded-xl border border-border/40 hover:border-primary/30 transition-all text-center group/item'
+                  >
+                    <Avatar className='h-9 w-9 rounded-full border-2 border-background shadow-sm group-hover/item:scale-105 transition-transform'>
+                      <AvatarImage src={follower.image || ''} className='object-cover' />
+                      <AvatarFallback className='bg-primary/10 text-primary font-bold text-[11px]'>
+                        {follower.name?.charAt(0).toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <p className='text-[9px] font-bold truncate w-full text-foreground leading-tight px-1'>
+                      {follower.name || 'User'}
+                    </p>
+                  </div>
+                ) : null,
+              )}
+            </div>
           )}
         </div>
       )}
