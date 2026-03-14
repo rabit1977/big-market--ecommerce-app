@@ -245,7 +245,7 @@ export function FeaturedListings({
                 return (
                   <CarouselItem
                     key={listing._id}
-                    className='basis-[45%] pl-2 sm:basis-[30%] sm:pl-3 md:basis-[22%] md:pl-4 lg:basis-[18%] xl:basis-[16.6%]'
+                    className='basis-[52%] pl-2 sm:basis-[40%] sm:pl-3 md:basis-[30%] md:pl-4 lg:basis-[23%] xl:basis-[16.6%]'
                   >
                     <div className='h-full px-0.5'>
                       <ListingCard 
@@ -257,9 +257,6 @@ export function FeaturedListings({
                 );
               })}
             </CarouselContent>
-            {/* Added arrows */}
-            <CarouselPrevious className='hidden md:flex -left-4 opacity-0 group-hover/carousel:opacity-100 transition-opacity bg-background/80 backdrop-blur border-border' />
-            <CarouselNext className='hidden md:flex -right-4 opacity-0 group-hover/carousel:opacity-100 transition-opacity bg-background/80 backdrop-blur border-border' />
           </Carousel>
         </div>
       </div>
