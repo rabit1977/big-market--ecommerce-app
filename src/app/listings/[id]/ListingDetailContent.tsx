@@ -392,10 +392,6 @@ export function ListingDetailContent({
       </div>
 
       <div className='container-wide px-4 md:pt-6'>
-        <AppBreadcrumbs
-          className='hidden md:flex mb-4'
-          customLabel={listing.title}
-        />
         {/* ── Desktop Actions ───────────────────────────────────────────── */}
         <div className='hidden md:flex items-center justify-between mb-8 border-b border-border pb-4'>
           <div className='flex items-center justify-between gap-3'>

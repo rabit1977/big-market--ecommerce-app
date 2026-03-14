@@ -339,7 +339,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                   asChild
                   variant='ghost'
                   size='icon'
-                  className='relative hidden md:flex h-9 w-9 rounded-(--bm-button-border-radius) text-muted-foreground hover:text-foreground bm-interactive transition-all duration-150'
+                  className='relative hidden md:flex h-9 w-9 rounded-full text-muted-foreground hover:text-foreground transition-all duration-150 hover:bg-accent'
                 >
                   <Link href='/admin/dashboard' aria-label='Admin Dashboard'>
                     <LayoutDashboard className='h-4.5 w-4.5' />
@@ -362,7 +362,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                 asChild
                 variant='ghost'
                 size='icon'
-                className='relative h-9 w-9 hidden sm:flex rounded-(--bm-button-border-radius) text-muted-foreground hover:text-foreground bm-interactive transition-all duration-150'
+                className='relative h-9 w-9 hidden sm:flex rounded-full text-muted-foreground hover:text-foreground transition-all duration-150 hover:bg-accent'
               >
                 <Link href='/help' aria-label='Help Center'>
                   <HelpCircle className='h-4.5 w-4.5' />

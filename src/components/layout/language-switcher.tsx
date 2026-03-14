@@ -24,7 +24,7 @@ export function LanguageSwitcher() {
         <Button
           variant="ghost"
           size="icon"
-          className="relative h-9 w-9 flex rounded-full text-muted-foreground bm-interactive transition-all"
+          className="relative h-9 w-9 flex rounded-full text-muted-foreground transition-all hover:bg-accent hover:text-foreground"
           aria-label={`Language: ${locale === 'mk' ? 'Macedonian' : 'English'}`}
         >
           <Globe className="h-4 w-4" />

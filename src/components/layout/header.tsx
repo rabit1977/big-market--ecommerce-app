@@ -111,8 +111,8 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
               <Link 
                 href="/listings"
                 className={cn(
-                  "px-3 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all hover:bg-secondary flex items-center gap-1.5",
-                  isActiveLink('/listings') ? "text-primary" : "text-muted-foreground"
+                  "h-9 px-4 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:bg-accent flex items-center gap-1.5",
+                  isActiveLink('/listings') ? "text-primary bg-primary/5" : "text-muted-foreground"
                 )}
                 title={t('listings')}
               >
@@ -122,8 +122,8 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
               <Link 
                 href="/categories"
                 className={cn(
-                  "px-3 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all hover:bg-secondary flex items-center gap-1.5",
-                  isActiveLink('/categories') ? "text-primary" : "text-muted-foreground"
+                  "h-9 px-4 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:bg-accent flex items-center gap-1.5",
+                  isActiveLink('/categories') ? "text-primary bg-primary/5" : "text-muted-foreground"
                 )}
                 title={tNav('categories')}
               >
@@ -133,8 +133,8 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
               <Link 
                 href="/favorites"
                 className={cn(
-                  "px-3 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all hover:bg-secondary flex items-center gap-1.5",
-                  isActiveLink('/favorites') ? "text-primary" : "text-muted-foreground"
+                  "h-9 px-4 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:bg-accent flex items-center gap-1.5",
+                  isActiveLink('/favorites') ? "text-primary bg-primary/5" : "text-muted-foreground"
                 )}
                 title={tNav('favorites')}
               >
@@ -150,7 +150,7 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
             <div className="flex items-center gap-1.5 lg:gap-2 shrink-0">
               <Button
                 asChild
-                className="bg-background text-foreground font-medium rounded-(--bm-button-border-radius) px-6 h-9 transition-all active:scale-[0.98] bm-interactive"
+                className="bg-background text-foreground font-medium rounded-full px-6 h-9 transition-all active:scale-[0.98] hover:bg-secondary"
               >
                 <Link href="/sell">
                   <Plus className="h-4 w-4 stroke-[3] text-primary" />

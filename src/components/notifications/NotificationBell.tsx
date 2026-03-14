@@ -168,7 +168,7 @@ export function NotificationBell({
           variant="ghost"
           size="icon"
           className={cn(
-            'relative h-10 w-10 rounded-full bm-interactive transition-all',
+            'relative h-9 w-9 rounded-full transition-all hover:bg-accent hover:text-foreground',
             className
           )}
           aria-label={`Notifications (${unreadCount} unread)`}
