@@ -56,7 +56,19 @@ export async function generateMetadata({
   }
 }
 
-const ListingDetailPage = async ({ params }: ListingDetailPageProps) => {
+const ListingDetailPage = ({ params }: ListingDetailPageProps) => {
+  return (
+    <Suspense fallback={<ListingDetailSkeleton />}>
+      <ListingDataWrapper params={params} />
+    </Suspense>
+  );
+};
+
+async function ListingDataWrapper({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
 
   // Validate ID before querying
@@ -113,19 +125,17 @@ const ListingDetailPage = async ({ params }: ListingDetailPageProps) => {
         type='application/ld+json'
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Suspense fallback={<ListingDetailSkeleton />}>
-        <ListingDetailContent
-          listing={
-            {
-              ...listing,
-              listingNumber: (listing as any).listingNumber,
-            } as any
-          }
-          initialQuestions={questions}
-        />
-      </Suspense>
+      <ListingDetailContent
+        listing={
+          {
+            ...listing,
+            listingNumber: (listing as any).listingNumber,
+          } as any
+        }
+        initialQuestions={questions}
+      />
     </>
   );
-};
+}
 
 export default ListingDetailPage;

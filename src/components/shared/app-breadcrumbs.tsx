@@ -108,7 +108,7 @@ export function AppBreadcrumbs({ className, customLabel, items }: AppBreadcrumbs
   const pathSegments = pathname.split('/').filter(Boolean);
   
   return (
-    <Breadcrumb className={cn("mb-6 bg-background/50 backdrop-blur-sm px-3 py-1.5 rounded-xl border border-border/50 w-fit max-w-full overflow-hidden bm-interactive shadow-sm", className)}>
+    <Breadcrumb className={cn("mb-6 bg-background/50 backdrop-blur-sm px-3 py-1.5 rounded-xl border border-border/50 w-fit max-w-full overflow-hidden shadow-sm", className)}>
       <BreadcrumbList className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-foreground flex-nowrap overflow-x-auto no-scrollbar">
         <BreadcrumbItem className="shrink-0">
           <BreadcrumbLink asChild>
