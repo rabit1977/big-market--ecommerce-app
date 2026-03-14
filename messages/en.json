@@ -146,7 +146,18 @@
     "cond_new_construction": "New Construction",
     "cond_old_construction": "Old Construction",
     "active_controls": "Active Controls",
-    "search_cities": "Search cities..."
+    "search_cities": "Search cities...",
+    "select_city": "Select City",
+    "ad_type": "Ad Type",
+    "sale": "Sale",
+    "buying": "Buying",
+    "user_type": "Seller Type",
+    "private": "Private Individual",
+    "company": "Business / Store",
+    "trade_possible": "Trade possible",
+    "has_shipping": "Shipping available",
+    "is_vat_included": "VAT included",
+    "is_affordable": "Budget Deal (Affordable)"
   },
   "Common": {
     "mkd": "MKD",
