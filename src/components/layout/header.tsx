@@ -111,7 +111,7 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
               <Link 
                 href="/listings"
                 className={cn(
-                  "h-9 px-4 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:bg-accent flex items-center gap-1.5",
+                  "h-9 px-3 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:bg-accent flex items-center gap-1.5",
                   isActiveLink('/listings') ? "text-primary bg-primary/5" : "text-muted-foreground"
                 )}
                 title={t('listings')}
@@ -122,7 +122,7 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
               <Link 
                 href="/categories"
                 className={cn(
-                  "h-9 px-4 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:bg-accent flex items-center gap-1.5",
+                  "h-9 px-3 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:bg-accent flex items-center gap-1.5",
                   isActiveLink('/categories') ? "text-primary bg-primary/5" : "text-muted-foreground"
                 )}
                 title={tNav('categories')}
@@ -133,7 +133,7 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
               <Link 
                 href="/favorites"
                 className={cn(
-                  "h-9 px-4 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:bg-accent flex items-center gap-1.5",
+                  "h-9 px-3 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:bg-accent flex items-center gap-1.5",
                   isActiveLink('/favorites') ? "text-primary bg-primary/5" : "text-muted-foreground"
                 )}
                 title={tNav('favorites')}
