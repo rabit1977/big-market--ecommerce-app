@@ -32,110 +32,70 @@ export async function generateMetadata(): Promise<Metadata> {
 // Keys MUST match the exact 'slug' field from the seed data
 const CATEGORY_IMAGES: Record<string, string> = {
   // 1. Real Estate
-  'real-estate':
-    'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=800',
-  'flats-apartments':
-    'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=800',
-  'houses-villas':
-    'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=800',
-  land: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=800',
-  'commercial-property':
-    'https://images.unsplash.com/photo-1486406140926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800',
+  'real-estate': 'https://cdn.pixabay.com/photo/2016/11/18/17/46/house-1836070_1280.jpg',
+  'flats-apartments': 'https://cdn.pixabay.com/photo/2014/08/11/21/40/bedroom-416062_1280.jpg',
+  'houses-villas': 'https://cdn.pixabay.com/photo/2017/04/10/22/28/residence-2219972_1280.jpg',
+  land: 'https://cdn.pixabay.com/photo/2015/03/26/09/41/tielet-690084_1280.jpg',
+  'commercial-property': 'https://cdn.pixabay.com/photo/2014/11/11/22/50/architecture-527633_1280.jpg',
 
   // 2. Vehicles
-  vehicles:
-    'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800',
-  cars: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800',
-  motorcycles:
-    'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&q=80&w=800',
-  'trucks-vans':
-    'https://images.unsplash.com/photo-1586191582110-37d4554b51cc?auto=format&fit=crop&q=80&w=800',
-  boats:
-    'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?auto=format&fit=crop&q=80&w=800',
+  vehicles: 'https://cdn.pixabay.com/photo/2012/05/29/00/43/car-49278_1280.jpg',
+  cars: 'https://cdn.pixabay.com/photo/2014/09/07/22/34/car-race-438467_1280.jpg',
+  motorcycles: 'https://cdn.pixabay.com/photo/2016/04/07/06/53/bmw-1313343_1280.jpg',
+  'trucks-vans': 'https://cdn.pixabay.com/photo/2015/09/25/11/12/truck-957173_1280.jpg',
+  boats: 'https://cdn.pixabay.com/photo/2016/11/23/18/28/boat-1854271_1280.jpg',
 
   // 3. Electronics
-  electronics:
-    'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=800',
-  'mobile-phones':
-    'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=800',
-  'computers-laptops':
-    'https://images.unsplash.com/photo-1587831990711-23ca6441447b?auto=format&fit=crop&q=80&w=800',
-  tablets:
-    'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=800',
-  'tvs-audio':
-    'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&q=80&w=800',
-  cameras:
-    'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=800',
+  electronics: 'https://cdn.pixabay.com/photo/2015/01/08/18/25/desk-593327_1280.jpg',
+  'mobile-phones': 'https://cdn.pixabay.com/photo/2014/08/05/10/27/iphone-410311_1280.jpg',
+  'computers-laptops': 'https://cdn.pixabay.com/photo/2015/05/31/10/55/man-791049_1280.jpg',
+  tablets: 'https://cdn.pixabay.com/photo/2014/08/05/10/27/iphone-410311_1280.jpg',
+  'tvs-audio': 'https://cdn.pixabay.com/photo/2017/04/24/09/35/sound-2255760_1280.jpg',
+  cameras: 'https://cdn.pixabay.com/photo/2014/08/29/14/53/camera-431119_1280.jpg',
 
-  // 4. Jobs
-  jobs: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=800',
-  'full-time':
-    'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=800',
-  'part-time':
-    'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=800',
-  freelance:
-    'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800',
-  internships:
-    'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800',
+  // 4. Jobs  
+  jobs: 'https://cdn.pixabay.com/photo/2018/02/16/10/52/industry-3157431_1280.jpg',
+  'full-time': 'https://cdn.pixabay.com/photo/2018/02/16/10/52/industry-3157431_1280.jpg',
+  'part-time': 'https://cdn.pixabay.com/photo/2015/07/17/22/43/student-849825_1280.jpg',
+  freelance: 'https://cdn.pixabay.com/photo/2015/01/08/18/25/desk-593327_1280.jpg',
+  internships: 'https://cdn.pixabay.com/photo/2015/07/17/22/43/student-849825_1280.jpg',
 
   // 5. Services
-  services:
-    'https://images.unsplash.com/photo-1581093458791-9d15482442f6?auto=format&fit=crop&q=80&w=800',
-  'home-services':
-    'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=800',
-  'business-services':
-    'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800',
-  'personal-services':
-    'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800',
+  services: 'https://cdn.pixabay.com/photo/2015/12/08/10/37/hands-1082596_1280.jpg',
+  'home-services': 'https://cdn.pixabay.com/photo/2016/08/26/15/06/home-1622401_1280.jpg',
+  'business-services': 'https://cdn.pixabay.com/photo/2018/02/16/10/52/industry-3157431_1280.jpg',
+  'personal-services': 'https://cdn.pixabay.com/photo/2014/12/16/22/25/youth-570881_1280.jpg',
 
   // 6. Fashion
-  fashion:
-    'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=80&w=800',
-  'mens-clothing':
-    'https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?auto=format&fit=crop&q=80&w=800',
-  'womens-clothing':
-    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800',
-  shoes:
-    'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800',
-  accessories:
-    'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=80&w=800',
+  fashion: 'https://cdn.pixabay.com/photo/2016/11/22/19/08/hangers-1850082_1280.jpg',
+  'mens-clothing': 'https://cdn.pixabay.com/photo/2015/09/02/13/24/man-919045_1280.jpg',
+  'womens-clothing': 'https://cdn.pixabay.com/photo/2017/08/01/11/48/woman-2564660_1280.jpg',
+  shoes: 'https://cdn.pixabay.com/photo/2014/10/22/16/23/shoes-489958_1280.jpg',
+  accessories: 'https://cdn.pixabay.com/photo/2015/08/25/11/58/sunglasses-906532_1280.jpg',
 
   // 7. Home & Garden
-  'home-garden':
-    'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=800',
-  furniture:
-    'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800',
-  appliances:
-    'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&q=80&w=800',
-  'home-decor':
-    'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=800',
-  'garden-outdoor':
-    'https://images.unsplash.com/photo-1585320806207-196c8131b254?auto=format&fit=crop&q=80&w=800',
+  'home-garden': 'https://cdn.pixabay.com/photo/2016/08/26/15/06/home-1622401_1280.jpg',
+  furniture: 'https://cdn.pixabay.com/photo/2017/08/27/10/16/interior-2685521_1280.jpg',
+  appliances: 'https://cdn.pixabay.com/photo/2014/07/10/17/17/washing-machine-389273_1280.jpg',
+  'home-decor': 'https://cdn.pixabay.com/photo/2015/04/10/17/03/pots-716579_1280.jpg',
+  'garden-outdoor': 'https://cdn.pixabay.com/photo/2017/05/19/22/41/gardening-2327666_1280.jpg',
 
   // 8. Sports & Leisure
-  'sports-leisure':
-    'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80&w=800',
-  'sports-equipment':
-    'https://images.unsplash.com/photo-1461896836934-bd45ba680baa?auto=format&fit=crop&q=80&w=800',
-  bicycles:
-    'https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&q=80&w=800',
-  'gym-fitness':
-    'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=800',
+  'sports-leisure': 'https://cdn.pixabay.com/photo/2015/01/26/22/40/child-613199_1280.jpg',
+  'sports-equipment': 'https://cdn.pixabay.com/photo/2014/04/17/23/26/tennis-326523_1280.jpg',
+  bicycles: 'https://cdn.pixabay.com/photo/2016/11/18/12/46/bicycle-1834265_1280.jpg',
+  'gym-fitness': 'https://cdn.pixabay.com/photo/2016/11/22/22/25/abs-1850926_1280.jpg',
 
   // 9. Pets
-  pets: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&q=80&w=800',
-  dogs: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&q=80&w=800',
-  cats: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=800',
-  'pet-accessories':
-    'https://images.unsplash.com/photo-1583337130417-13104dec14c3?auto=format&fit=crop&q=80&w=800',
+  pets: 'https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_1280.jpg',
+  dogs: 'https://cdn.pixabay.com/photo/2016/02/19/15/46/labrador-retriever-1210559_1280.jpg',
+  cats: 'https://cdn.pixabay.com/photo/2014/03/29/09/17/cat-300572_1280.jpg',
+  'pet-accessories': 'https://cdn.pixabay.com/photo/2016/10/15/12/01/dog-1742295_1280.jpg',
 
   // 10. Education
-  education:
-    'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=800',
-  tutoring:
-    'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800',
-  courses:
-    'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=800',
+  education: 'https://cdn.pixabay.com/photo/2015/11/19/21/10/glasses-1052010_1280.jpg',
+  tutoring: 'https://cdn.pixabay.com/photo/2015/07/17/22/43/student-849825_1280.jpg',
+  courses: 'https://cdn.pixabay.com/photo/2015/07/19/10/00/school-work-851328_1280.jpg',
 };
 
 // Fallback icon lookup by category name (for cases where image fails to load)
@@ -272,8 +232,8 @@ export default async function CategoriesPage() {
       </div>
 
       <div className='container-wide'>
-        {/* Categories Grid - Mobile: 3 cols, Desktop: Adaptive */}
-        <div className='grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-6'>
+        {/* Categories Grid - Mobile: 2 cols, Desktop: Adaptive */}
+        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-6'>
           {categories.map((category, index) => {
             const Icon = NAME_TO_ICON[category.name] || Globe;
             const imageUrl = category.image || CATEGORY_IMAGES[category.slug];
@@ -282,10 +242,10 @@ export default async function CategoriesPage() {
               <Link
                 key={category._id}
                 href={`/listings?category=${encodeURIComponent(category.slug)}`}
-                className='group relative flex flex-col bg-card border border-border/50 rounded-2xl overflow-hidden hover:shadow-xl hover:border-primary/20 transition-all duration-300'
+                className='group relative flex flex-col rounded-2xl overflow-hidden hover:shadow-xl hover:border-primary/40 transition-all duration-300 aspect-square sm:aspect-[4/3] bg-muted shadow-sm border border-border/30'
               >
-                {/* Image Area */}
-                <div className='relative aspect-[4/3] sm:aspect-square overflow-hidden bg-muted'>
+                {/* Full-Cover Background Image Area */}
+                <div className='absolute inset-0 z-0'>
                   {imageUrl ? (
                     <Image
                       src={imageUrl}
@@ -295,35 +255,20 @@ export default async function CategoriesPage() {
                       sizes='(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw'
                     />
                   ) : (
-                    // Fallback Pattern if no image
-                    <div className='absolute inset-0 bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center group-hover:bg-primary/5 transition-colors'>
-                      <Icon className='w-12 h-12 text-muted-foreground/30 group-hover:text-primary/50 transition-colors' />
+                    <div className='absolute inset-0 bg-gradient-to-br from-muted to-muted/50 flex flex-col items-center justify-center group-hover:bg-primary/5 transition-colors'>
+                      <Icon className='w-12 h-12 text-muted-foreground/30 group-hover:text-primary/50 transition-colors mb-4' />
                     </div>
                   )}
 
-                  {/* Gradient Overlay */}
-                  <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity' />
-
-                  {/* Count Badge (Top Right) */}
-                  {category.totalCount > 0 && (
-                    <div className='absolute top-2 right-2 bg-black/50 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-full border border-white/10'>
-                      {category.totalCount}
-                    </div>
-                  )}
+                  {/* Gradient Overlay for Top/Bottom Contrast -> full spread for centering */}
+                  <div className='absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors' />
                 </div>
 
-                {/* Content Area */}
-                <div className='p-3 sm:p-4 flex flex-col gap-0.5 relative bg-card'>
-                  <h3 className='font-bold text-sm sm:text-base leading-tight text-foreground group-hover:text-primary transition-colors line-clamp-2'>
+                {/* Content Overlay (Centered) */}
+                <div className='relative z-10 flex flex-col items-center justify-center p-4 w-full h-full text-center'>
+                  <h3 className='font-bold text-[18px] sm:text-xl leading-tight text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-transform group-hover:scale-110 duration-500'>
                     {category.name}
                   </h3>
-                  <p className='text-[10px] sm:text-xs text-muted-foreground font-medium'>
-                    {category.totalCount > 0
-                      ? t('items_count', {
-                          count: category.totalCount.toLocaleString(),
-                        })
-                      : t('no_items')}
-                  </p>
                 </div>
               </Link>
             );
