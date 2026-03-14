@@ -179,7 +179,7 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
         href={item.href}
         onClick={closePanel}
         className={cn(
-          'flex items-center gap-2.5 py-2 px-2.5 rounded-(--bm-button-border-radius) text-[13px] font-medium transition-all group',
+          'flex items-center gap-2 py-1.5 px-2 rounded-(--bm-button-border-radius) text-[12px] font-medium transition-all group',
           isActive
             ? 'bg-secondary/50 text-foreground font-bold'
             : item.danger
@@ -189,18 +189,18 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
       >
         <item.icon
           className={cn(
-            'w-3.5 h-3.5 shrink-0',
+            'w-3 h-3 shrink-0',
             item.iconColor || (isActive ? 'text-primary' : ''),
             item.danger && 'group-hover:text-destructive',
           )}
         />
         <span className='flex-1'>{item.label}</span>
         {item.badge && item.badge > 0 ? (
-          <Badge className='h-[18px] min-w-[18px] px-1 bg-primary hover:bg-primary/90 text-[9px] font-bold'>
+          <Badge className='h-[16px] min-w-[16px] px-1 bg-primary hover:bg-primary/90 text-[8px] font-bold'>
             {item.badge > 99 ? '99+' : item.badge}
           </Badge>
         ) : (
-          <ChevronRight className='w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-40 group-hover:translate-x-0 transition-all' />
+          <ChevronRight className='w-2.5 h-2.5 opacity-0 -translate-x-1 group-hover:opacity-40 group-hover:translate-x-0 transition-all' />
         )}
       </Link>
     );
@@ -436,12 +436,12 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                       />
                       <div className='overflow-hidden min-w-0'>
                         <div className='flex items-center gap-1'>
-                          <span className='font-medium text-[13px] truncate'>
+                          <span className='font-bold text-[12px] truncate'>
                             {userDisplayName}
                           </span>
                           <BadgeCheck className='w-3 h-3 text-primary shrink-0' />
                         </div>
-                        <p className='text-[10px] text-muted-foreground truncate leading-tight'>
+                        <p className='text-[9px] text-muted-foreground truncate leading-tight'>
                           {user.email}
                         </p>
                       </div>
@@ -477,26 +477,6 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
 
                 {/* Menu */}
                 <div className='flex-1 overflow-y-auto overscroll-contain py-1'>
-                  <div className='flex items-center px-4 pt-2 pb-2'>
-                    <div className='flex items-center justify-around gap-2 mr-auto w-full'>
-                      <LanguageSwitcher />
-                      <Button
-                        variant='outline'
-                        size='icon'
-                        onClick={() =>
-                          setTheme(theme === 'dark' ? 'light' : 'dark')
-                        }
-                        className='h-9 w-9 shrink-0 rounded-full bm-interactive text-muted-foreground hover:text-foreground'
-                        aria-label='Toggle theme'
-                      >
-                        <Sun className='h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0' />
-                        <Moon className='absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100' />
-                      </Button>
-                      <PaletteSwitcher />
-                    </div>
-                  </div>
-                  <div className='mx-3 my-1 h-px bg-border/30' />
-
                   {adminItems.length > 0 && (
                     <>
                       {renderSectionLabel(t('administration'))}
@@ -519,35 +499,52 @@ export const NavActions = ({ initialWishlistCount }: NavActionsProps) => {
                   <div className='px-1.5'>
                     {accountItems.map(renderMenuItem)}
                   </div>
-                  <div className='mx-3 my-1 h-px' />
+                  <div className='mx-3 my-1 h-px bg-border/30' />
 
                   {renderSectionLabel(t('support_section'))}
                   <div className='px-1.5'>
                     {supportItems.map(renderMenuItem)}
                   </div>
-                  <div className='mx-3 my-1 h-px' />
+                  <div className='mx-3 my-1 h-px bg-border/30' />
 
                   {renderSectionLabel(t('account_section'))}
                   <div className='px-1.5'>
                     {settingsItems.map(renderMenuItem)}
                   </div>
-                  <div className='mx-3 my-1 h-px' />
+                  <div className='mx-3 my-1 h-px bg-border/30' />
 
-                  <div className='px-1.5 pb-1'>
+                  <div className='px-1.5 pb-2'>
                     {dangerItems.map(renderMenuItem)}
                   </div>
                 </div>
 
                 {/* Footer */}
-                <div className='border-t px-3 py-2 shrink-0'>
+                <div className='border-t px-4 py-3 shrink-0 bg-muted/20 space-y-3'>
+                  <div className='flex items-center justify-around gap-2 w-full'>
+                    <LanguageSwitcher />
+                    <Button
+                      variant='outline'
+                      size='icon'
+                      onClick={() =>
+                        setTheme(theme === 'dark' ? 'light' : 'dark')
+                      }
+                      className='h-8 w-8 shrink-0 rounded-full bg-background border-border/50 text-muted-foreground hover:text-foreground shadow-sm'
+                      aria-label='Toggle theme'
+                    >
+                      <Sun className='h-3.5 w-3.5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0' />
+                      <Moon className='absolute h-3.5 w-3.5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100' />
+                    </Button>
+                    <PaletteSwitcher />
+                  </div>
+
                   <button
                     onClick={() => {
                       closePanel();
                       handleLogout();
                     }}
-                    className='flex items-center justify-center gap-1.5 w-full py-2 rounded-lg bg-muted/40 hover:bg-destructive/10 text-muted-foreground hover:text-destructive text-[12px] font-semibold transition-colors'
+                    className='flex items-center justify-center gap-1.5 w-full py-2 rounded-xl bg-background border border-border/50 hover:bg-destructive/5 hover:text-destructive hover:border-destructive/20 text-muted-foreground text-[11px] font-bold uppercase tracking-wider transition-all shadow-sm'
                   >
-                    <LogOut className='w-3.5 h-3.5' />
+                    <LogOut className='w-3 h-3' />
                     {t('log_out')}
                   </button>
                 </div>
