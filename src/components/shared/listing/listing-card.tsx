@@ -90,7 +90,7 @@ export const ListingCard = memo(
         {/* Image Section - The container for the 'card' look */}
         <div
           className={cn(
-            'relative overflow-hidden z-20 bg-background transition-all duration-150',
+            'relative overflow-hidden z-20 transition-all duration-150',
             imagesArray.length > 1
               ? 'pointer-events-auto'
               : 'pointer-events-none',
@@ -111,14 +111,14 @@ export const ListingCard = memo(
                 <Link
                   key={i}
                   href={`/listings/${listing.id || listing._id}`}
-                  className='relative w-full h-full flex-shrink-0 snap-center pointer-events-auto'
+                  className='relative w-full h-full flex-shrink-0 snap-center pointer-events-auto overflow-hidden'
                   aria-label={`View ${listing.title}`}
                 >
                   <Image
                     src={imgSrc}
                     alt={`${listing.title} - Image ${i + 1}`}
                     fill
-                    className='object-cover transition-transform duration-700 ease-out group-hover:scale-105 pointer-events-none'
+                    className='object-cover object-center w-full h-full transition-transform duration-700 ease-out group-hover:scale-110 pointer-events-none'
                     sizes={
                       isCard
                         ? '(max-width: 768px) 100vw, 80vw'

@@ -389,7 +389,7 @@ function FavoritesTabs({
               <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3'>
                 {followers.map((follower: any) => {
                   if (!follower) return null;
-                  const isAlsoFollowing = followedStores?.some(s => s.externalId === follower.externalId);
+                  const isAlsoFollowing = followedStores?.some(s => s?.externalId === follower.externalId) ?? false;
                   
                   return (
                     <div

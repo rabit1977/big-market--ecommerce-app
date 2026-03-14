@@ -96,7 +96,7 @@ function FeaturedImageCarousel({
         {imagesArray.map((img, i) => (
           <div
             key={i}
-            className='relative w-full h-full flex-shrink-0 snap-center'
+            className='relative w-full h-full flex-shrink-0 snap-center overflow-hidden'
           >
             <Image
               src={img}
@@ -240,7 +240,7 @@ export function FeaturedListings({
                     key={listing._id}
                     className='basis-[52%] pl-2 sm:basis-[40%] sm:pl-3 md:basis-[30%] md:pl-4 lg:basis-[23%] xl:basis-[16.6%]'
                   >
-                    <div className='h-full px-0.5'>
+                    <div className='h-full'>
                       <ListingCard 
                         listing={listing as any} 
                         viewMode="grid"
