@@ -73,7 +73,7 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
       </Sheet>
 
       {/* Mobile View All Link */}
-      <div className="text-center mt-8 md:hidden">
+      <div className="text-center mt-8 ">
         <Link 
           href="/listings" 
           className="inline-flex items-center bg-secondary text-foreground font-bold transition-all group px-8 py-3 rounded-lg bm-interactive shadow-none"

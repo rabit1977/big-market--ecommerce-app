@@ -22,7 +22,6 @@ interface ListingCardProps {
 export const ListingCard = memo(
   ({ listing, viewMode = 'list' }: ListingCardProps) => {
     const t = useTranslations('Common');
-    const tBadge = useTranslations('SellerBadge');
     const tFilter = useTranslations('FilterPanel');
     const { data: session } = useSession();
     const isOwner = session?.user?.id === listing.userId;
@@ -65,13 +64,11 @@ export const ListingCard = memo(
     const isCard = viewMode === 'card';
 
     // Real logic from listing and user metadata
-    const tier = listing.user?.membershipTier;
     const isPromoted =
       listing.isPromoted &&
       (!listing.promotionExpiresAt || listing.promotionExpiresAt > Date.now());
     const promotionTier = isPromoted ? listing.promotionTier : null;
     const promoConfig = isPromoted ? getPromotionConfig(promotionTier) : null;
-    const isVerified = listing.user?.isVerified;
 
     return (
       <div
@@ -196,8 +193,8 @@ export const ListingCard = memo(
         <div
           className={cn(
             'flex flex-col relative z-20 pointer-events-none min-w-0 transition-all duration-300',
-            isGrid 
-              ? 'flex-1 p-1' 
+            isGrid
+              ? 'flex-1 p-1'
               : isCard
                 ? 'flex-1 p-2 sm:p-2.5'
                 : 'flex-[2] py-2 px-3 sm:px-4 sm:py-2.5',
@@ -208,7 +205,11 @@ export const ListingCard = memo(
             <h3
               className={cn(
                 'font-bold leading-tight line-clamp-2 text-foreground group-hover:text-primary transition-colors tracking-tight',
-                isGrid ? 'text-[9px] sm:text-[11px]' : isCard ? 'text-lg sm:text-xl' : 'text-lg sm:text-xl md:text-2xl',
+                isGrid
+                  ? 'text-[9px] sm:text-[11px]'
+                  : isCard
+                    ? 'text-lg sm:text-xl'
+                    : 'text-lg sm:text-xl md:text-2xl',
               )}
             >
               {listing.title}
@@ -266,16 +267,22 @@ export const ListingCard = memo(
             if (attributes.length === 0) return null;
 
             return (
-              <div className={cn(
-                'flex flex-wrap items-center gap-x-0.5 gap-y-0',
-                isGrid ? 'mb-0' : 'mb-1'
-              )}>
+              <div
+                className={cn(
+                  'flex flex-wrap items-center gap-x-0.5 gap-y-0',
+                  isGrid ? 'mb-0' : 'mb-1',
+                )}
+              >
                 {attributes.map((attr, i) => (
                   <React.Fragment key={i}>
-                    <span className={cn(
-                      'text-muted-foreground font-semibold capitalize tracking-wide',
-                      isGrid ? 'text-[9px] sm:text-[10px]' : 'text-[10px] sm:text-xs'
-                    )}>
+                    <span
+                      className={cn(
+                        'text-muted-foreground font-semibold capitalize tracking-wide',
+                        isGrid
+                          ? 'text-[9px] sm:text-[10px]'
+                          : 'text-[10px] sm:text-xs',
+                      )}
+                    >
                       {attr}
                     </span>
                     {i < attributes.length - 1 && (
@@ -290,25 +297,29 @@ export const ListingCard = memo(
           })()}
 
           {/* Price & Date Row */}
-          <div className='flex items-center justify-between mb-1'>
+          <div className='flex items-center justify-between my-1'>
             <div className='flex items-baseline gap-1.5 flex-wrap min-w-0'>
-                <span
-                  className={cn(
-                    'font-black text-foreground tracking-tight truncate max-w-[80px] sm:max-w-none',
-                    isGrid ? 'text-[10px] sm:text-[12px]' : 'text-lg sm:text-xl',
-                  )}
-                  suppressHydrationWarning
-                >
-                  {listing.price > 0
-                    ? formatCurrency(listing.price, (listing as any).currency)
-                    : 'Price on req'}
-                </span>
+              <span
+                className={cn(
+                  'font-black text-foreground tracking-tight truncate max-w-[80px] sm:max-w-none',
+                  isGrid ? 'text-[10px] sm:text-[12px]' : 'text-lg sm:text-xl',
+                )}
+                suppressHydrationWarning
+              >
+                {listing.price > 0
+                  ? formatCurrency(listing.price, (listing as any).currency)
+                  : 'Price on req'}
+              </span>
               {listing.previousPrice &&
                 listing.previousPrice > listing.price && (
-                  <span className={cn(
-                    'text-muted-foreground/60 line-through',
-                    isGrid ? 'text-[9px] sm:text-[10px]' : 'text-[10px] sm:text-xs'
-                  )}>
+                  <span
+                    className={cn(
+                      'text-muted-foreground/60 line-through',
+                      isGrid
+                        ? 'text-[9px] sm:text-[10px]'
+                        : 'text-[10px] sm:text-xs',
+                    )}
+                  >
                     {formatCurrency(
                       listing.previousPrice,
                       (listing as any).currency,
@@ -319,7 +330,7 @@ export const ListingCard = memo(
             <span
               className={cn(
                 'text-muted-foreground/50 font-bold uppercase tracking-tighter shrink-0',
-                isGrid ? 'text-[8px] sm:text-[10px]' : 'text-[10px]'
+                isGrid ? 'text-[8px] sm:text-[10px]' : 'text-[10px]',
               )}
               suppressHydrationWarning
             >
@@ -334,33 +345,53 @@ export const ListingCard = memo(
 
           {/* Breadcrumb & Heart Button Row */}
           <div className='flex items-center justify-between mt-auto pt-1'>
-            <div className={cn(
-              'flex items-center gap-1 text-muted-foreground font-semibold uppercase tracking-wider truncate mr-1',
-              isGrid ? 'text-[7px] leading-none' : isCard ? 'text-[9px] sm:text-[10px]' : 'text-[9px] sm:text-[10px]'
-            )}>
-              <span className={cn(
-                'truncate',
-                isGrid ? 'max-w-[35px] sm:max-w-[60px]' : isCard ? 'max-w-none' : 'max-w-[80px] sm:max-w-none'
-              )}>
+            <div
+              className={cn(
+                'flex items-center gap-1 text-muted-foreground font-semibold uppercase tracking-wider truncate mr-1',
+                isGrid
+                  ? 'text-[7px] leading-none'
+                  : isCard
+                    ? 'text-[9px] sm:text-[10px]'
+                    : 'text-[9px] sm:text-[10px]',
+              )}
+            >
+              <span
+                className={cn(
+                  'truncate',
+                  isGrid
+                    ? 'max-w-[35px] sm:max-w-[60px]'
+                    : isCard
+                      ? 'max-w-none'
+                      : 'max-w-[80px] sm:max-w-none',
+                )}
+              >
                 {listing.categoryName || listing.category}
               </span>
               {listing.subCategoryName && (
                 <>
                   <span className='opacity-40'>&gt;</span>
-                  <span className={cn(
-                    'truncate',
-                    isGrid ? 'max-w-[35px] sm:max-w-[60px]' : isCard ? 'max-w-none' : 'max-w-[80px] sm:max-w-none'
-                  )}>
+                  <span
+                    className={cn(
+                      'truncate',
+                      isGrid
+                        ? 'max-w-[35px] sm:max-w-[60px]'
+                        : isCard
+                          ? 'max-w-none'
+                          : 'max-w-[80px] sm:max-w-none',
+                    )}
+                  >
                     {listing.subCategoryName}
                   </span>
                 </>
               )}
             </div>
 
-            <div className={cn(
-              'pointer-events-auto shrink-0',
-              isGrid ? 'scale-[0.85] sm:scale-110 -mr-1' : 'scale-[0.85] sm:scale-125 -mr-0.5'
-            )}>
+            <div
+              className={cn(
+                'pointer-events-auto shrink-0',
+                isGrid ? 'scale-[0.85] -mr-1' : 'scale-[0.85] -mr-0.5',
+              )}
+            >
               {!isOwner && (
                 <SaveAdButton
                   listingId={listing.id || listing._id}

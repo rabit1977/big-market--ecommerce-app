@@ -167,10 +167,10 @@ export function Footer() {
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-border/40 pt-6 flex flex-col-reverse md:flex-row justify-between items-center gap-4">
-          <div className="flex flex-col md:flex-row items-center gap-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+        <div className="border-t border-border/40 pt-6 mb-8 flex flex-col-reverse md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-col md:flex-row items-center gap-3 text-[9px] sm:text-xs font-bold text-muted-foreground uppercase tracking-wide">
             {/* suppressHydrationWarning is safe here for dates */}
-            <p suppressHydrationWarning>&copy; {currentYear} PazarPlus. {tFooter('all_rights_reserved')}</p>
+            <p suppressHydrationWarning className="text-xs sm:text-sm">&copy; {currentYear} PazarPlus. {tFooter('all_rights_reserved')}</p>
             <div className="hidden md:block w-0.5 h-0.5 rounded-full bg-border" />
             <div className="flex gap-4">
               <Link href="/help/terms#privacy" className="hover:text-foreground transition-colors">{tFooter('privacy')}</Link>
