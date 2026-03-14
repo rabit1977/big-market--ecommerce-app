@@ -3,7 +3,7 @@
 import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Plus, Zap } from 'lucide-react';
+import { Heart, LayoutGrid, List, Plus, Search, Zap } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -20,6 +20,7 @@ interface HeaderProps {
 const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderProps) => {
   const pathname = usePathname();
   const t = useTranslations('Navigation');
+  const tNav = useTranslations('NavActions');
   const [isScrolled, setIsScrolled] = useState(false);
   const [isScrollingUp, setIsScrollingUp] = useState(false);
   const lastScrollYRef = useRef(0);
@@ -90,38 +91,78 @@ const Header = ({ isMenuOpen, toggleMobileMenu, initialWishlistCount }: HeaderPr
         </div>
 
         {/* ── DESKTOP NAV (≥ md) ── */}
-        <div className="hidden md:flex items-center gap-3 lg:gap-4 h-16">
-          <Link
-            href="/"
-            className="flex shrink-0 items-center gap-2.5 group mr-1"
-            aria-label="PazarPlus page"
-          >
-            <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center group-hover:bg-primary/90 transition-all duration-150">
-              <Zap className="h-5 w-5 text-white" fill="currentColor" />
-            </div>
-            <span className="text-xl font-bold tracking-tight text-foreground leading-none whitespace-nowrap">
-              PazarPlus<span className="text-primary">.</span>
-            </span>
-          </Link>
-          <div className="flex-1 max-w-xl mx-auto">
-            <SearchBar />
-          </div>
-
-          <div className="flex items-center gap-1.5 lg:gap-2 shrink-0">
-            <Button
-              asChild
-              className="bg-background text-foreground font-medium rounded-(--bm-button-border-radius) px-6 h-9 transition-all active:scale-[0.98] bm-interactive"
+        <div className="hidden md:flex flex-col">
+          <div className="flex items-center gap-3 lg:gap-4 h-16">
+            <Link
+              href="/"
+              className="flex shrink-0 items-center gap-2.5 group mr-1"
+              aria-label="PazarPlus page"
             >
-              <Link href="/sell">
-                <Plus className="h-4 w-4 stroke-[3] text-primary" />
-                {t('post_ad')}
+              <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center group-hover:bg-primary/90 transition-all duration-150">
+                <Zap className="h-5 w-5 text-white" fill="currentColor" />
+              </div>
+              <span className="hidden xl:inline text-xl font-bold tracking-tight text-foreground leading-none whitespace-nowrap">
+                PazarPlus<span className="text-primary">.</span>
+              </span>
+            </Link>
+
+            {/* Main Navigation Links - DESKTOP (md+) */}
+            <nav className="hidden md:flex items-center gap-1 mx-2">
+              <Link 
+                href="/listings"
+                className={cn(
+                  "px-3 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all hover:bg-secondary flex items-center gap-1.5",
+                  isActiveLink('/listings') ? "text-primary" : "text-muted-foreground"
+                )}
+                title={t('listings')}
+              >
+                <Search className="h-3.5 w-3.5" />
+                <span className="hidden xl:inline">{t('listings')}</span>
               </Link>
-            </Button>
+              <Link 
+                href="/categories"
+                className={cn(
+                  "px-3 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all hover:bg-secondary flex items-center gap-1.5",
+                  isActiveLink('/categories') ? "text-primary" : "text-muted-foreground"
+                )}
+                title={tNav('categories')}
+              >
+                <LayoutGrid className="h-3.5 w-3.5" />
+                <span className="hidden xl:inline">{tNav('categories')}</span>
+              </Link>
+              <Link 
+                href="/favorites"
+                className={cn(
+                  "px-3 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all hover:bg-secondary flex items-center gap-1.5",
+                  isActiveLink('/favorites') ? "text-primary" : "text-muted-foreground"
+                )}
+                title={tNav('favorites')}
+              >
+                <Heart className="h-3.5 w-3.5" />
+                <span className="hidden xl:inline">{tNav('favorites')}</span>
+              </Link>
+            </nav>
 
-            <div className="mx-1 w-px h-6 bg-border/40" />
+            <div className="flex-1 max-w-xl mx-auto">
+              <SearchBar />
+            </div>
 
-            <NotificationBell />
-            <NavActions initialWishlistCount={initialWishlistCount} />
+            <div className="flex items-center gap-1.5 lg:gap-2 shrink-0">
+              <Button
+                asChild
+                className="bg-background text-foreground font-medium rounded-(--bm-button-border-radius) px-6 h-9 transition-all active:scale-[0.98] bm-interactive"
+              >
+                <Link href="/sell">
+                  <Plus className="h-4 w-4 stroke-[3] text-primary" />
+                  {t('post_ad')}
+                </Link>
+              </Button>
+
+              <div className="mx-1 w-px h-6 bg-border/40" />
+
+              <NotificationBell />
+              <NavActions initialWishlistCount={initialWishlistCount} />
+            </div>
           </div>
         </div>
       </div>

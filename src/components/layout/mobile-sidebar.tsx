@@ -13,7 +13,7 @@ import { useSidebar } from '@/lib/context/sidebar-context';
 import { useOnClickOutside } from '@/lib/hooks/useOnClickOutside';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronRight, Grid3X3, Moon, Search, Sun, X, Zap } from 'lucide-react';
+import { ChevronRight, Grid3X3, Heart, Home, List, Moon, Search, Sun, X, Zap } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
@@ -34,6 +34,7 @@ interface MobileSidebarProps {
 
 export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
   const t = useTranslations('Sidebar');
+  const tNav = useTranslations('NavActions');
   const { activeCategory, setActiveCategory } = useSidebar();
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
@@ -211,6 +212,40 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
 
             {/* Categories */}
             <div className='flex-1 overflow-y-auto min-h-0 overscroll-contain'>
+              {/* Quick Navigation - Essential when bottom nav is hidden */}
+              <div className='px-4 pt-4 pb-2 grid grid-cols-3 gap-2 border-b border-border/40'>
+                <Link
+                  href='/'
+                  onClick={onClose}
+                  className='flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl hover:bg-secondary transition-all active:scale-95 text-center group'
+                >
+                   <div className='w-9 h-9 rounded-full bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors'>
+                      <Home className='h-4.5 w-4.5 text-primary' />
+                   </div>
+                   <span className='text-[10px] font-bold uppercase tracking-tight text-muted-foreground group-hover:text-foreground'>{tNav('home')}</span>
+                </Link>
+                <Link
+                  href='/listings'
+                  onClick={onClose}
+                  className='flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl hover:bg-secondary transition-all active:scale-95 text-center group'
+                >
+                   <div className='w-9 h-9 rounded-full bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors'>
+                      <List className='h-4.5 w-4.5 text-primary' />
+                   </div>
+                   <span className='text-[10px] font-bold uppercase tracking-tight text-muted-foreground group-hover:text-foreground'>{tNav('browse_listings')}</span>
+                </Link>
+                <Link
+                  href='/favorites'
+                  onClick={onClose}
+                  className='flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl hover:bg-secondary transition-all active:scale-95 text-center group'
+                >
+                   <div className='w-9 h-9 rounded-full bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors'>
+                      <Heart className='h-4.5 w-4.5 text-primary' />
+                   </div>
+                   <span className='text-[10px] font-bold uppercase tracking-tight text-muted-foreground group-hover:text-foreground'>{tNav('favorites')}</span>
+                </Link>
+              </div>
+
               <div className='py-3 px-3'>
                 <div className='flex items-center justify-between px-3 mb-3'>
                   <div className='flex items-center gap-2 text-muted-foreground'>

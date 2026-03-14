@@ -72,8 +72,8 @@ export function LatestListingsClient({ initialListings, categories }: LatestList
         </SheetContent>
       </Sheet>
 
-      {/* Mobile View All Link */}
-      <div className="text-center mt-12 mb-8">
+      {/* Mobile View All Link - Hidden when navbar has links (md+) */}
+      <div className="text-center mt-12 mb-8 md:hidden">
         <Link 
           href="/listings" 
           className="inline-flex items-center bg-secondary text-foreground font-bold transition-all group px-8 py-3 rounded-lg bm-interactive shadow-none"

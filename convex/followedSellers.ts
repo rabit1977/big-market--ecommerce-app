@@ -36,10 +36,12 @@ export const follow = mutation({
 
     console.log(`[FollowStore] Attempting follow: sId=${sId}, fId=${fId}`);
 
+    /* 
     if (sId === fId) {
       console.warn(`[FollowStore] User ${fId} attempted to follow themselves.`);
       throw new Error("You cannot follow your own store.");
     }
+    */
 
     // Prevent duplicate follows
     const existing = await ctx.db

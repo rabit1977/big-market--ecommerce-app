@@ -26,10 +26,11 @@ import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
-import { memo, use, useOptimistic, useTransition } from 'react';
+import { memo, use, useMemo, useOptimistic, useTransition } from 'react';
 import { toast } from 'sonner';
 import { api } from '../../../convex/_generated/api';
 import { FollowSellerButton } from '@/components/shared/follow-seller-button';
+import { cn } from '@/lib/utils';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -54,7 +55,8 @@ export default function FavoritesPage({ searchParams }: PageProps) {
     tab === 'searches' ||
     tab === 'listings' ||
     tab === 'visited' ||
-    tab === 'stores'
+    tab === 'following' ||
+    tab === 'followers'
       ? tab
       : 'listings';
 
@@ -129,6 +131,10 @@ function FavoritesTabs({
     followerId: userId,
   });
 
+  const followers = useQuery(api.followedSellers.getStoreFollowers, { sellerId: userId });
+  
+  const user = useQuery(api.users.getByExternalId, { externalId: userId });
+
   const deleteSearchMutation = useMutation(api.searches.deleteSavedSearch);
 
   // React 19: useOptimistic for instant search removal without waiting for server
@@ -171,30 +177,55 @@ function FavoritesTabs({
     return a.localeCompare(b);
   });
 
+  const isPremium = useMemo(() => {
+    if (!user) return false;
+    const tier = (user.membershipTier || 'FREE').toUpperCase();
+    return (
+      user.role === 'ADMIN' ||
+      tier === 'PRO' ||
+      tier === 'ELITE' ||
+      tier === 'BUSINESS' ||
+      tier === 'PREMIUM' ||
+      tier === 'BASIC' ||
+      user.accountStatus === 'ACTIVE'
+    );
+  }, [user]);
+
   return (
     <Tabs defaultValue={defaultTab} className='w-full'>
-      <TabsList className='w-full grid grid-cols-2 md:grid-cols-4 gap-1.5 md:gap-2 mb-6 md:mb-8 p-1.5 h-auto bg-card/40 border border-card-foreground/10 backdrop-blur-sm rounded-2xl bm-interactive shadow-none'>
+      <TabsList className={cn(
+        'w-full grid gap-1.5 md:gap-2 mb-6 md:mb-8 p-1.5 h-auto bg-card/40 border border-card-foreground/10 backdrop-blur-sm rounded-2xl bm-interactive shadow-none',
+        isPremium ? 'grid-cols-5' : 'grid-cols-4'
+      )}>
         <TabsTrigger
           value='listings'
-          className='text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md'
+          className='text-[9px] md:text-[11px] lg:text-xs px-1 md:px-2 h-10 md:h-11 font-black uppercase tracking-tighter sm:tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md'
         >
           {t('favorites_tab', { count: listingFavorites?.length ?? 0 })}
         </TabsTrigger>
         <TabsTrigger
           value='searches'
-          className='text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md'
+          className='text-[9px] md:text-[11px] lg:text-xs px-1 md:px-2 h-10 md:h-11 font-black uppercase tracking-tighter sm:tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md'
         >
           {t('searches_tab', { count: optimisticSearches.length })}
         </TabsTrigger>
         <TabsTrigger
-          value='stores'
-          className='text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md'
+          value='following'
+          className='text-[9px] md:text-[11px] lg:text-xs px-1 md:px-2 h-10 md:h-11 font-black uppercase tracking-tighter sm:tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md'
         >
-          {t('stores_tab', { count: (followedStores?.length ?? 0) })}
+          {t('following_tab')}
         </TabsTrigger>
+        {isPremium && (
+          <TabsTrigger
+            value='followers'
+            className='text-[9px] md:text-[11px] lg:text-xs px-1 md:px-2 h-10 md:h-11 font-black uppercase tracking-tighter sm:tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md'
+          >
+            {t('followers_tab', { count: followers?.length ?? 0 })}
+          </TabsTrigger>
+        )}
         <TabsTrigger
           value='visited'
-          className='text-[10px] md:text-[11px] lg:text-xs px-2 h-10 md:h-11 font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md'
+          className='text-[9px] md:text-[11px] lg:text-xs px-1 md:px-2 h-10 md:h-11 font-black uppercase tracking-tighter sm:tracking-widest rounded-xl transition-all whitespace-nowrap truncate data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md'
         >
           {t('history_tab')}
         </TabsTrigger>
@@ -266,26 +297,25 @@ function FavoritesTabs({
         )}
       </TabsContent>
 
-      {/* ── Stores & Followers ── */}
-      <TabsContent value='stores' className='space-y-6'>
-        {/* Section 1: Stores I Follow */}
+      {/* ── Following ── */}
+      <TabsContent value='following' className='space-y-6'>
         <div className='space-y-4'>
           <div className='flex items-center justify-between border-b border-border/50 pb-2'>
             <h3 className='font-bold text-lg md:text-xl text-foreground flex items-center gap-2'>
               <Store className='w-5 h-5 text-primary' />
-              {t('followed_stores', { count: followedStores?.length ?? 0 })}
+              {t('followed_stores')}
             </h3>
           </div>
 
           {!followedStores ? (
             <CenteredSpinner />
           ) : followedStores.length === 0 ? (
-            <div className='py-8 text-center bg-card/30 border border-dashed border-border rounded-2xl'>
-               <p className='text-xs text-muted-foreground font-medium'>{t('no_followed_stores')}</p>
-               <Link href='/listings' className='text-xs font-bold text-primary hover:underline mt-2 inline-block'>
-                 {t('discover_stores')}
-               </Link>
-            </div>
+            <EmptyState
+              icon={<Store className='w-8 h-8 md:w-10 md:h-10 text-muted-foreground/40' />}
+              title={t('no_followed_stores')}
+              description={t('discover_stores')}
+              action={{ label: t('discover_stores'), href: '/listings' }}
+            />
           ) : (
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3'>
               {followedStores.map(
@@ -313,7 +343,7 @@ function FavoritesTabs({
                               : store.name}
                           </h3>
                           <p className='text-[10px] md:text-xs text-muted-foreground font-medium uppercase tracking-wider'>
-                            Followed {formatDistanceToNow(store.followedAt)} ago
+                            {t('saved_ago', { time: formatDistanceToNow(store.followedAt) })}
                           </p>
                         </div>
                       </Link>
@@ -333,10 +363,73 @@ function FavoritesTabs({
             </div>
           )}
         </div>
-
-        {/* Section 2: My Store Followers (Only for Premium Users) */}
-        <StoreFollowersSection userId={userId} />
       </TabsContent>
+
+      {/* ── Followers ── */}
+      {isPremium && (
+        <TabsContent value='followers' className='space-y-6'>
+          <div className='space-y-4'>
+            <div className='flex items-center justify-between border-b border-border/50 pb-2'>
+              <h3 className='font-bold text-lg md:text-xl text-foreground flex items-center gap-2'>
+                <Users className='w-5 h-5 text-primary' />
+                {t('my_followers')}
+              </h3>
+            </div>
+
+            {!followers ? (
+              <CenteredSpinner />
+            ) : followers.length === 0 ? (
+              <EmptyState
+                icon={<Users className='w-8 h-8 md:w-10 md:h-10 text-muted-foreground/40' />}
+                title={t('no_followers')}
+                description={t('followers_desc')}
+                action={{ label: t('browse_listings'), href: '/listings' }}
+              />
+            ) : (
+              <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3'>
+                {followers.map((follower: any) => {
+                  if (!follower) return null;
+                  const isAlsoFollowing = followedStores?.some(s => s.externalId === follower.externalId);
+                  
+                  return (
+                    <div
+                      key={follower._id}
+                      className='flex items-center gap-3 bg-card p-3 rounded-2xl border border-border/50 hover:border-primary/20 transition-all'
+                    >
+                      <Avatar className='h-12 w-12 rounded-xl border border-border shrink-0'>
+                        <AvatarImage src={follower.image || ''} className='object-cover' />
+                        <AvatarFallback className='bg-muted text-muted-foreground font-bold text-sm'>
+                          {follower.name?.charAt(0).toUpperCase() || 'U'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className='flex-1 min-w-0'>
+                        <p className='font-bold text-xs truncate text-foreground leading-tight'>{follower.name}</p>
+                        <p className='text-[9px] text-muted-foreground font-medium uppercase tracking-tight mt-0.5'>
+                          {t('saved_ago', { time: formatDistanceToNow(follower.followedAt) })}
+                        </p>
+                        {isAlsoFollowing && (
+                           <span className="text-[8px] font-black tracking-widest text-primary uppercase mt-1 block">
+                            You follow each other
+                           </span>
+                        )}
+                      </div>
+                      <div className='shrink-0'>
+                        <FollowSellerButton 
+                           sellerId={follower.externalId} 
+                           sellerName={follower.name} 
+                           size='sm' 
+                           variant={isAlsoFollowing ? 'ghost' : 'outline'}
+                           className='h-7 px-3 text-[9px] font-bold uppercase tracking-wider'
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </TabsContent>
+      )}
 
       {/* ── History ── */}
       <TabsContent value='visited'>
@@ -452,76 +545,7 @@ const EmptyState = memo(function EmptyState({
   );
 });
 
-function StoreFollowersSection({ userId }: { userId: string }) {
-  const user = useQuery(api.users.getByExternalId, { externalId: userId });
-  const followers = useQuery(api.followedSellers.getStoreFollowers, { sellerId: userId });
-  const t = useTranslations('Favorites');
 
-  // While loading user data show spinner
-  if (user === undefined) return <CenteredSpinner />;
-
-  // null means not found — don't show section
-  if (!user) return null;
-
-  // Premium check — ADMIN always passes; non-FREE membership tier also passes
-  const tier = (user.membershipTier || 'FREE').toUpperCase();
-  const isPremium =
-    user.role === 'ADMIN' ||
-    tier === 'PRO' ||
-    tier === 'ELITE' ||
-    tier === 'BUSINESS' ||
-    tier === 'PREMIUM' ||
-    tier === 'BASIC' ||
-    user.accountStatus === 'ACTIVE'; // active account on this platform
-
-  if (!isPremium) return null;
-
-  return (
-    <div className='space-y-4 pt-6 border-t border-border/30 mt-6'>
-      <div className='flex items-center justify-between border-b border-border/50 pb-2'>
-        <h3 className='font-bold text-lg md:text-xl text-foreground flex items-center gap-2'>
-          <Users className='w-5 h-5 text-primary' />
-          {t('my_followers')} ({followers?.length ?? 0})
-        </h3>
-      </div>
-
-      {!followers ? (
-        <CenteredSpinner />
-      ) : followers.length === 0 ? (
-        <div className='py-12 text-center bg-card/10 border border-dashed border-border rounded-xl'>
-          <Users className='w-8 h-8 text-muted-foreground/30 mx-auto mb-2' />
-          <p className='text-xs text-muted-foreground font-medium'>{t('no_followers')}</p>
-          <p className='text-[10px] text-muted-foreground/60 mt-1 max-w-xs mx-auto'>{t('followers_desc')}</p>
-        </div>
-      ) : (
-        <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3'>
-          {followers.map((follower: any) => {
-            if (!follower) return null;
-            return (
-              <div
-                key={follower._id}
-                className='flex flex-col items-center gap-2 bg-card p-3 rounded-2xl border border-border/50 hover:border-primary/20 transition-all text-center'
-              >
-                <Avatar className='h-12 w-12 rounded-xl border border-border shrink-0'>
-                  <AvatarImage src={follower.image || ''} className='object-cover' />
-                  <AvatarFallback className='bg-muted text-muted-foreground font-bold text-sm'>
-                    {follower.name?.charAt(0).toUpperCase() || 'U'}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className='font-bold text-xs truncate text-foreground leading-tight'>{follower.name}</p>
-                  <p className='text-[9px] text-muted-foreground font-medium uppercase tracking-tight mt-0.5'>
-                    {formatDistanceToNow(follower.followedAt)} ago
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-}
 
 function CenteredSpinner() {
   return (

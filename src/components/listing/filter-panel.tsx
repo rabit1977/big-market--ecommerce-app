@@ -17,8 +17,9 @@ import {
 } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { MK_LOCATIONS } from '@/lib/locations';
-import { MapPin, X } from 'lucide-react';
+import { Heart, LayoutGrid, List, MapPin, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -83,6 +84,7 @@ export function FilterPanel({
   template,
 }: FilterPanelProps) {
   const t = useTranslations('FilterPanel');
+  const tNav = useTranslations('NavActions');
 
   // ── Translated option lists (must be inside component for hook) ──────────
   const CONDITIONS = useMemo(

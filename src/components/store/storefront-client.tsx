@@ -104,16 +104,14 @@ export function StorefrontClient({
               </div>
             </div>
 
-            {!isOwner && (
-              <div className='shrink-0'>
-                <FollowSellerButton
-                  sellerId={profile.externalId}
-                  sellerName={profile.name}
-                  showCount
-                  className='w-full sm:w-auto h-10 px-6'
-                />
-              </div>
-            )}
+            <div className='shrink-0'>
+              <FollowSellerButton
+                sellerId={profile.externalId}
+                sellerName={profile.name}
+                showCount
+                className='w-full sm:w-auto h-10 px-6'
+              />
+            </div>
           </div>
 
           {/* Simple Listings Grid */}
@@ -243,10 +241,7 @@ export function StorefrontClient({
               }
               showCount
               size='lg'
-              className={cn(
-                'h-12 border-2 px-6 sm:px-8 rounded-lg font-bold tracking-tight uppercase flex-1 md:flex-none',
-                isOwner && 'hidden', // Hide follow button for owner as per request
-              )}
+              className='h-12 border-2 px-6 sm:px-8 rounded-lg font-bold tracking-tight uppercase flex-1 md:flex-none'
             />
           </div>
         </div>

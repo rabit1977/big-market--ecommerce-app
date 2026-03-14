@@ -5,7 +5,7 @@ import { ListingGrid } from '@/components/listing/listing-grid';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
+import { ChevronLeft, ChevronRight, List, SlidersHorizontal } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useState, useTransition } from 'react';
@@ -129,7 +129,7 @@ export function ListingsClient({
   };
 
   return (
-    <div className="bg-background dark:bg-background grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8 relative pb-20">
+    <div className="bg-background dark:bg-background grid grid-cols-1 md:grid-cols-[260px_1fr] lg:grid-cols-[320px_1fr] gap-6 lg:gap-8 relative pb-20">
       <Sheet open={isMobileFiltersOpen} onOpenChange={setIsMobileFiltersOpen}>
          <SheetContent side="bottom" className="w-full h-[85vh] overflow-y-auto p-0 rounded-t-lg border-t border-border">
             <SheetTitle className="sr-only">Filter Listings</SheetTitle>
@@ -139,12 +139,12 @@ export function ListingsClient({
          </SheetContent>
       </Sheet>
 
-      <aside className="hidden lg:block lg:sticky lg:top-24 h-fit">
+      <aside className="hidden md:block md:sticky md:top-24 h-fit">
         <FilterPanel onFilterChange={handleFilterChange} categories={categories} initialFilters={initialFilters} idPrefix="desktop-filter" template={template} />
       </aside>
 
       <div className={cn("min-h-[800px] transition-opacity duration-300", isPending && "opacity-60 pointer-events-none")}>
-        <div className="lg:hidden mb-4 flex gap-2">
+        <div className="md:hidden mb-4 flex gap-2">
           <Button
             onClick={() => setIsMobileFiltersOpen(true)}
             variant="outline"

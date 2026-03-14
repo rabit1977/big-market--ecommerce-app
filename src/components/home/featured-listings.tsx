@@ -205,14 +205,7 @@ export function FeaturedListings({
           ))}
         </div>
 
-        {listings.length > 4 && (
-          <Link
-            href='/listings?featured=true'
-            className='flex items-center justify-center w-full py-3 text-sm font-bold uppercase tracking-widest text-muted-foreground transition-all shadow-none bm-interactive rounded-lg mt-2'
-          >
-            {tHome('see_all_premium')}
-          </Link>
-        )}
+        {/* Note: 'See all' link removed to avoid redundancy with navbar links on large screens */}
       </div>
     );
   }
