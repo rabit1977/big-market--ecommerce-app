@@ -6,8 +6,7 @@ import { SaveAdButton } from '@/components/listing/save-ad-button';
 import { getPromotionConfig } from '@/lib/constants/promotions';
 import { ListingWithRelations } from '@/lib/types/listing';
 import { cn } from '@/lib/utils';
-import { formatCurrency } from '@/lib/utils/formatters';
-import { MapPin } from 'lucide-react';
+import { formatCurrency, formatNumber } from '@/lib/utils/formatters';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -77,11 +76,11 @@ export const ListingCard = memo(
     return (
       <div
         className={cn(
-          'group relative bg-card rounded-xl flex bm-interactive overflow-hidden transition-all duration-200',
+          'group relative flex',
           isGrid || isCard
             ? 'flex-col h-full'
-            : 'flex-row h-40 sm:h-44 md:h-48',
-          isCard && 'mb-2 sm:mb-4',
+            : 'flex-row h-36 sm:h-40 md:h-44',
+          isCard && 'mb-4',
         )}
       >
         {/* Main Card Link - Higher Z-Index but below heart button */}
@@ -191,157 +190,160 @@ export const ListingCard = memo(
             </div>
           )}
 
-          {/* Heart Button Overlay - Top Right */}
-          <div className='absolute top-1.5 right-1.5 z-30 pointer-events-auto'>
-            {!isOwner && (
-              <SaveAdButton
-                listingId={listing.id || listing._id}
-                showText={false}
-              />
-            )}
-          </div>
+          {/* Heart Button Overlay - Moved to bottom row per user request */}
         </div>
 
-        {/* Content Section */}
         <div
           className={cn(
-            'flex flex-[2] flex-col justify-between relative z-20 pointer-events-none min-w-0 transition-all duration-300',
+            'flex flex-col relative z-20 pointer-events-none min-w-0 transition-all duration-300',
             isGrid || isCard
-              ? 'space-y-0.5 p-2'
-              : 'px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4',
+              ? ' flex-1'
+              : 'flex-[2] py-2 px-3.5 sm:px-5 sm:py-3',
           )}
         >
-          {isGrid || isCard ? (
-            <>
-              <div className='space-y-1'>
-                <div className='flex items-start justify-between gap-1.5'>
-                  <h3
-                    className={cn(
-                      'font-semibold text-xs sm:text-sm leading-snug line-clamp-2 text-foreground/70',
-                      isCard && 'text-base sm:text-lg',
-                    )}
-                  >
-                    <span className='group-hover:underline decoration-foreground/30 underline-offset-2 transition-all'>
-                      {listing.title}
+          {/* Title Row */}
+          <div className='mb-1'>
+            <h3
+              className={cn(
+                'font-bold leading-tight line-clamp-2 text-foreground group-hover:text-primary transition-colors tracking-tight',
+                isGrid ? 'text-sm' : 'text-lg sm:text-xl md:text-2xl',
+              )}
+            >
+              {listing.title}
+            </h3>
+          </div>
+
+          {/* Key Fields Descriptions */}
+          {(() => {
+            const specs = (listing as any).specifications || {};
+            const attributes: string[] = [];
+
+            // Always include city first
+            if (listing.city) {
+              attributes.push(listing.city.split(',')[0].split(' ')[0]);
+            }
+
+            const cat = (listing.category || '').toLowerCase();
+            const subCat = (listing.subCategory || '').toLowerCase();
+            const catName = (listing.categoryName || '').toLowerCase();
+
+            if (
+              cat.includes('motor') ||
+              subCat.includes('car') ||
+              catName.includes('motor')
+            ) {
+              if (specs.year) attributes.push(`${specs.year}`);
+              if (specs.mileage_km)
+                attributes.push(`${formatNumber(specs.mileage_km)} km`);
+              if (specs.engine_power_kw)
+                attributes.push(`${specs.engine_power_kw} kW`);
+              if (specs.fuel_type) attributes.push(specs.fuel_type);
+            } else if (
+              cat.includes('real') ||
+              subCat.includes('apart') ||
+              subCat.includes('hous') ||
+              catName.includes('real')
+            ) {
+              const condition = getConditionLabel(
+                listing.condition || specs.condition,
+              );
+              if (condition) attributes.push(condition as string);
+              if (specs.m2 || specs.area_m2)
+                attributes.push(`${specs.m2 || specs.area_m2} m²`);
+              if (specs.rooms)
+                attributes.push(
+                  `${specs.rooms}${typeof specs.rooms === 'number' ? ' rooms' : ''}`,
+                );
+            } else {
+              const condition = getConditionLabel(
+                listing.condition || specs.condition,
+              );
+              if (condition) attributes.push(condition as string);
+            }
+
+            if (attributes.length === 0) return null;
+
+            return (
+              <div className='flex flex-wrap items-center gap-x-2 gap-y-1 mb-1.5'>
+                {attributes.map((attr, i) => (
+                  <React.Fragment key={i}>
+                    <span className='text-[10px] sm:text-xs text-muted-foreground font-semibold capitalize tracking-wide'>
+                      {attr}
                     </span>
-                    <span className='flex items-center justify-between border-border/40 mt-1'>
-                      <span className='text-xs text-foreground/70 font-medium uppercase tracking-tight'>
-                        {getConditionLabel(listing.condition)}
+                    {i < attributes.length - 1 && (
+                      <span className='text-[10px] text-primary/30 font-black'>
+                        •
                       </span>
-                    </span>
-                  </h3>
-                  <div className='flex items-center gap-1.5 flex-wrap'>
-                    {/* Badge removed per user request */}
-                  </div>
-                </div>
+                    )}
+                  </React.Fragment>
+                ))}
               </div>
+            );
+          })()}
 
-              <div className='mt-auto space-y-1'>
-                <div className='flex items-baseline gap-1.5 flex-wrap'>
-                  <span
-                    className={cn(
-                      'font-bold text-foreground',
-                      isCard ? 'text-lg sm:text-xl' : 'text-base sm:text-lg',
-                    )}
-                    suppressHydrationWarning
-                  >
-                    {listing.price > 0
-                      ? formatCurrency(listing.price, (listing as any).currency)
-                      : 'Price on req'}
-                  </span>
-                  {listing.previousPrice &&
-                    listing.previousPrice > listing.price && (
-                      <span
-                        className='text-xs sm:text-sm text-muted-foreground line-through opacity-70'
-                        suppressHydrationWarning
-                      >
-                        {formatCurrency(
-                          listing.previousPrice as number,
-                          (listing as any).currency,
-                        )}
-                      </span>
-                    )}
-                </div>
-
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center gap-1 text-xs text-muted-foreground/80 font-medium capitalize'>
-                    <MapPin className='w-4 h-4 text-primary' />
-                    {listing.city ? listing.city.split(' ')[0] : 'Skopje'}
-                  </div>
-                </div>
-
-                {isCard && listing.description && (
-                  <p className='text-xs text-muted-foreground line-clamp-2 mt-2 font-normal'>
-                    {listing.description}
-                  </p>
+          {/* Price & Date Row */}
+          <div className='flex items-center justify-between mb-1'>
+            <div className='flex items-baseline gap-2 flex-wrap'>
+              <span
+                className={cn(
+                  'font-black text-foreground tracking-tight',
+                  isGrid ? 'text-base' : 'text-lg sm:text-xl',
                 )}
-              </div>
-            </>
-          ) : (
-            // List View Content - Redesigned for Responsive Excellence
-            <>
-              <div className='space-y-1.5 min-w-0'>
-                <div className='flex items-center justify-between mb-0.5'>
-                  <div className='flex items-center gap-1.5'>
-                    {/* Badge removed per user request */}
-                  </div>
-                  <span
-                    className='text-[10px] sm:text-[11px] text-muted-foreground font-medium uppercase tracking-wider opacity-60'
-                    suppressHydrationWarning
-                  >
-                    {listing.createdAt
-                      ? new Date(listing.createdAt).toLocaleDateString(
-                          'en-GB',
-                          { day: 'numeric', month: 'short' },
-                        )
-                      : 'Now'}
+                suppressHydrationWarning
+              >
+                {listing.price > 0
+                  ? formatCurrency(listing.price, (listing as any).currency)
+                  : 'Price on req'}
+              </span>
+              {listing.previousPrice &&
+                listing.previousPrice > listing.price && (
+                  <span className='text-[10px] sm:text-xs text-muted-foreground/60 line-through'>
+                    {formatCurrency(
+                      listing.previousPrice,
+                      (listing as any).currency,
+                    )}
                   </span>
-                </div>
+                )}
+            </div>
+            <span
+              className='text-[10px] text-muted-foreground/50 font-bold uppercase tracking-tighter'
+              suppressHydrationWarning
+            >
+              {listing.createdAt
+                ? new Date(listing.createdAt).toLocaleDateString('en-GB', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })
+                : 'Now'}
+            </span>
+          </div>
 
-                <h3 className='font-bold text-sm sm:text-base md:text-lg leading-tight line-clamp-2 group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground'>
-                  {listing.title}
-                </h3>
+          {/* Breadcrumb & Heart Button Row */}
+          <div className='flex items-center justify-between mt-1'>
+            <div className='flex items-center gap-1 text-[9px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wider truncate mr-4'>
+              <span className='truncate max-w-[140px] sm:max-w-none'>
+                {listing.categoryName || listing.category}
+              </span>
+              {listing.subCategoryName && (
+                <>
+                  <span className='opacity-40'>&gt;</span>
+                  <span className='truncate max-w-[140px] sm:max-w-none'>
+                    {listing.subCategoryName}
+                  </span>
+                </>
+              )}
+            </div>
 
-                <div className='hidden sm:block text-[11px] md:text-sm text-muted-foreground/80 line-clamp-2 opacity-70 font-medium mt-1'>
-                  {listing.description}
-                </div>
-              </div>
-
-              <div className='flex items-center justify-between mt-auto pt-2'>
-                <div className='flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4'>
-                  <div className='flex items-baseline gap-2'>
-                    <span
-                      className='text-base sm:text-lg md:text-xl font-bold text-foreground'
-                      suppressHydrationWarning
-                    >
-                      {listing.price > 0
-                        ? formatCurrency(
-                            listing.price,
-                            (listing as any).currency,
-                          )
-                        : 'Price on request'}
-                    </span>
-                    {listing.previousPrice &&
-                      listing.previousPrice > listing.price && (
-                        <span
-                          className='text-xs sm:text-sm text-muted-foreground line-through opacity-70'
-                          suppressHydrationWarning
-                        >
-                          {formatCurrency(
-                            listing.previousPrice as number,
-                            (listing as any).currency,
-                          )}
-                        </span>
-                      )}
-                  </div>
-                  <div className='flex items-center gap-1 text-[11px] sm:text-xs text-muted-foreground/80 font-semibold uppercase tracking-tight'>
-                    <MapPin className='w-3.5 h-3.5 text-primary/80' />
-                    {listing.city || 'Skopje'}
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
+            <div className='pointer-events-auto shrink-0 scale-90 -mr-1.5'>
+              {!isOwner && (
+                <SaveAdButton
+                  listingId={listing.id || listing._id}
+                  showText={false}
+                />
+              )}
+            </div>
+          </div>
         </div>
       </div>
     );

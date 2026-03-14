@@ -108,7 +108,7 @@ export function ListingGrid({
               <Button
                 variant="outline"
                 size="icon"
-                className="h-9 w-9 shrink-0 bg-card bm-interactive"
+                className="h-9 w-9 shrink-0 bm-interactive"
                 onClick={onOpenFilters}
                 aria-label={tListings('filters')}
               >
@@ -116,7 +116,7 @@ export function ListingGrid({
               </Button>
             )}
             <Select value={sortBy} onValueChange={handleSortChange} disabled={isPending}>
-              <SelectTrigger className="h-9 flex-1 sm:w-[180px] text-xs bg-card bm-interactive">
+              <SelectTrigger className="h-9 flex-1 sm:w-[180px] text-xs bm-interactive">
                 <div className="flex items-center gap-2">
                   <ArrowUpDown className="h-3.5 w-3.5 text-foreground" />
                   <SelectValue placeholder={tListings('sort_option')} />
@@ -155,7 +155,7 @@ export function ListingGrid({
         />
       ) : (
         <div className={cn(
-          'grid gap-2 sm:gap-3 md:gap-4',
+          'grid gap-4 sm:gap-6 md:gap-8',
           viewMode === 'grid' && 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
           viewMode === 'list' && 'grid-cols-1',
           viewMode === 'card' && 'grid-cols-1 max-w-2xl mx-auto',

@@ -207,7 +207,7 @@ export function FeaturedListings({
               <div key={listing._id} className='group relative'>
                 <Card
                   className={cn(
-                    'p-0 overflow-hidden transition-all duration-200 rounded-lg bg-card shadow-none',
+                    'p-0 overflow-hidden transition-all duration-200 rounded-lg shadow-none',
                     promoConfig &&
                       `ring-1 ring-inset ring-primary/10 ${bgColor.replace('bg-', 'bg-')}`,
                   )}
@@ -280,7 +280,7 @@ export function FeaturedListings({
                   </div>
 
                   {/* Simple Content */}
-                  <div className='p-3 bg-card flex-1 z-20 relative pointer-events-none'>
+                  <div className='p-3 flex-1 z-20 relative pointer-events-none'>
                     <h3 className='text-base sm:text-lg font-bold line-clamp-2 leading-snug group-hover:underline decoration-foreground/30 underline-offset-2 transition-all text-foreground mb-2 truncate'>
                       {listing.title}
                     </h3>
@@ -312,7 +312,7 @@ export function FeaturedListings({
         {listings.length > 4 && (
           <Link
             href='/listings?featured=true'
-            className='flex items-center justify-center w-full py-3 text-sm font-bold uppercase tracking-widest text-muted-foreground transition-all shadow-none bm-interactive rounded-lg bg-card mt-2'
+            className='flex items-center justify-center w-full py-3 text-sm font-bold uppercase tracking-widest text-muted-foreground transition-all shadow-none bm-interactive rounded-lg mt-2'
           >
             {tHome('see_all_premium')}
           </Link>
@@ -333,7 +333,7 @@ export function FeaturedListings({
             }}
             className='w-full'
           >
-            <CarouselContent className='-ml-2'>
+            <CarouselContent className='-ml-4 sm:-ml-6 md:-ml-8'>
               {featuredListings.map((listing) => {
                 const hasDiscount =
                   listing.previousPrice &&
@@ -349,9 +349,9 @@ export function FeaturedListings({
                 return (
                   <CarouselItem
                     key={listing._id}
-                    className='basis-[50%] pl-2 sm:basis-[40%] md:basis-[32%] lg:basis-[25%]'
+                    className='basis-[70%] pl-4 sm:basis-[40%] sm:pl-6 md:basis-[32%] md:pl-8 lg:basis-[25%]'
                   >
-                    <div className='group relative block h-full bm-interactive rounded-2xl bg-card transition-all duration-200 '>
+                    <div className='group relative block h-full bm-interactive rounded-2xl transition-all duration-200 '>
                       <Link
                         href={`/listings/${listing._id}`}
                         className='absolute inset-0 z-10'

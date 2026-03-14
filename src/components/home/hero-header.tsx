@@ -40,7 +40,7 @@ export const HeroHeader = () => {
                 <CarouselItem className='basis-auto pl-1 sm:pl-2 first:pl-0'>
                   <Link
                     href='/my-listings'
-                    className='group flex items-center justify-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-card bm-interactive transition-all duration-200 shrink-0 shadow-none'
+                    className='group flex items-center justify-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bm-interactive transition-all duration-200 shrink-0 shadow-none'
                   >
                     <div className='w-5 h-5 rounded-full bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-200'>
                       <User className='w-3 h-3' />
@@ -55,7 +55,7 @@ export const HeroHeader = () => {
                 <CarouselItem className='basis-auto pl-1 sm:pl-2'>
                   <Link
                     href='/store'
-                    className='group flex items-center justify-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-card bm-interactive transition-all duration-200 shrink-0 shadow-none'
+                    className='group flex items-center justify-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bm-interactive transition-all duration-200 shrink-0 shadow-none'
                   >
                     <div className='w-5 h-5 rounded-full bg-muted/20 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-200'>
                       <Users className='w-3 h-3' />
@@ -91,7 +91,7 @@ export const HeroHeader = () => {
                     >
                       <Link
                         href={href}
-                        className='inline-flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] md:text-[11px] font-bold tracking-widest uppercase transition-all duration-200 active:scale-95 whitespace-nowrap shrink-0 shadow-none bg-card bm-interactive text-foreground hover:bg-primary hover:text-white'
+                        className='inline-flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] md:text-[11px] font-bold tracking-widest uppercase transition-all duration-200 active:scale-95 whitespace-nowrap shrink-0 shadow-none bm-interactive text-foreground hover:bg-primary hover:text-white'
                       >
                         {tFilters(filter.id)}
                       </Link>

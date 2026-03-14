@@ -79,35 +79,35 @@
 
   /* ===== BM Light Mode Palette (Modern Minimalism) ===== */
   /* User Specific: Page background -> Slate 100, Elements -> Slate 50 */
-  --background: #f1f5f9; /* Slate 100 - Page Background */
+  --background: #ffffff; /* White - Page Background */
   --foreground: #0f0f0f; /* BM Spec Text Primary */
 
-  --card: #ffffff; /* Slate 50 - Card/Surface Background */
+  --card: #ffffff; /* Card/Surface Background */
   --card-foreground: #0f0f0f;
 
   --popover: #ffffff;
   --popover-foreground: #0f0f0f;
 
   --primary: #ff0000; /* BM Red */
-  --primary-foreground: #f1f5f9;
+  --primary-foreground: #ffffff;
 
-  --secondary: #f1f5f9; /* Slate 100 */
+  --secondary: #f8fafc; /* Light Slate for subtle contrast */
   --secondary-foreground: #0f0f0f;
 
-  --muted: #e2e8f0; /* Slate 200 */
+  --muted: #f1f5f9; /* Slate 100 for muted elements */
   --muted-foreground: #606060;
 
-  --accent: #f8fafc; /* Slate 50 */
+  --accent: #f8fafc;
   --accent-foreground: #0f0f0f;
 
   --destructive: #ff0000;
   --destructive-foreground: #ffffff;
 
-  --border: rgba(0, 0, 0, 0.08); /* Minimal linear border */
-  --input: #f8fafc; /* Slate 50 */
+  --border: rgba(0, 0, 0, 0.06); /* Lighter border for white background */
+  --input: #ffffff;
   --ring: #065fd4;
 
-  --bm-bg: #f1f5f9;
+  --bm-bg: #ffffff;
   --bm-hover: rgba(0, 0, 0, 0.05);
   --bm-border: rgba(0, 0, 0, 0.08);
   --bm-text: #0f0f0f;
@@ -274,7 +274,7 @@
 
 @layer utilities {
   .container-wide {
-    @apply mx-auto px-1 sm:px-3 md:px-4 lg:px-6 2xl:px-8 max-w-[1920px] w-full;
+    @apply mx-auto px-4 sm:px-8 md:px-12 lg:px-16 2xl:px-24 max-w-[1920px] w-full;
   }
 
   .no-scrollbar {
