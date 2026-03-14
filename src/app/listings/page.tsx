@@ -74,7 +74,6 @@ export default async function ListingsPage({
     }
 
     // If we are here, listingNumber was provided but NOT found.
-    // We should return empty results instead of showing everything.
     return (
       <div className='bg-background dark:bg-background min-h-screen pb-10'>
         <div className='border-border/50 py-2 md:py-4'>
@@ -108,120 +107,29 @@ export default async function ListingsPage({
 
   // Sort mapping
   let sort = ensureString(params.sort) || 'newest';
-  if (sort === 'price-low') sort = 'price-asc'; // Align with Convex
+  if (sort === 'price-low') sort = 'price-asc';
   if (sort === 'price-high') sort = 'price-desc';
 
-  // Check if we are in "Hub" mode (no major filters)
-  const isHubView =
-    !query &&
-    !category &&
-    !city &&
-    !params.subCategory &&
-    !params.minPrice &&
-    !params.maxPrice &&
-    !params.listingNumber;
-
-  // Fetch data directly with filters
-  const [
-    categories,
-    listingsResult,
-    carsListings,
-    realEstateListings,
-    electronicsListings,
-    motorVehiclesListings,
-    mobilePhonesListings,
-    homeAppliancesListings,
-    computersListings,
-    diyListings,
-    homeAndGardenListings,
-  ] = await Promise.all([
+  // Fetch main categories and listings result
+  const [categories, listingsResult] = await Promise.all([
     fetchQuery(api.categories.list),
     fetchQuery(api.listings.list, {
       category: category !== 'all' ? category : undefined,
       subCategory: ensureString(params.subCategory),
       city: city !== 'all' ? city : undefined,
-      minPrice: ensureString(params.minPrice)
-        ? Number(ensureString(params.minPrice))
-        : undefined,
-      maxPrice: ensureString(params.maxPrice)
-        ? Number(ensureString(params.maxPrice))
-        : undefined,
-      condition:
-        params.condition !== 'all' ? ensureString(params.condition) : undefined,
+      minPrice: ensureString(params.minPrice) ? Number(ensureString(params.minPrice)) : undefined,
+      maxPrice: ensureString(params.maxPrice) ? Number(ensureString(params.maxPrice)) : undefined,
+      condition: params.condition !== 'all' ? ensureString(params.condition) : undefined,
       sort,
       status: 'ACTIVE',
       userType: ensureString(params.userType),
       adType: ensureString(params.adType),
       isTradePossible: ensureString(params.trade) === 'true' ? true : undefined,
       isVatIncluded: ensureString(params.vat) === 'true' ? true : undefined,
-      isAffordable:
-        ensureString(params.affordable) === 'true' ? true : undefined,
+      isAffordable: ensureString(params.affordable) === 'true' ? true : undefined,
       dateRange: ensureString(params.date),
       dynamicFilters: ensureString(params.filters),
     }),
-    isHubView
-      ? fetchQuery(api.listings.list, {
-          category: 'cars',
-          limit: 12,
-          status: 'ACTIVE',
-        })
-      : Promise.resolve([]), // Specific for Cars
-    isHubView
-      ? fetchQuery(api.listings.list, {
-          category: 'real-estate',
-          limit: 12,
-          status: 'ACTIVE',
-        })
-      : Promise.resolve([]),
-    isHubView
-      ? fetchQuery(api.listings.list, {
-          category: 'electronics',
-          limit: 12,
-          status: 'ACTIVE',
-        })
-      : Promise.resolve([]),
-    isHubView
-      ? fetchQuery(api.listings.list, {
-          category: 'vehicles',
-          limit: 12,
-          status: 'ACTIVE',
-        })
-      : Promise.resolve([]), // Parent for Motor Vehicles
-    isHubView
-      ? fetchQuery(api.listings.list, {
-          category: 'mobile-phones',
-          limit: 12,
-          status: 'ACTIVE',
-        })
-      : Promise.resolve([]),
-    isHubView
-      ? fetchQuery(api.listings.list, {
-          category: 'appliances',
-          limit: 12,
-          status: 'ACTIVE',
-        })
-      : Promise.resolve([]),
-    isHubView
-      ? fetchQuery(api.listings.list, {
-          category: 'computers-laptops',
-          limit: 12,
-          status: 'ACTIVE',
-        })
-      : Promise.resolve([]),
-    isHubView
-      ? fetchQuery(api.listings.list, {
-          category: 'home-services',
-          limit: 12,
-          status: 'ACTIVE',
-        })
-      : Promise.resolve([]), // Using home-services for DIY
-    isHubView
-      ? fetchQuery(api.listings.list, {
-          category: 'home-garden',
-          limit: 12,
-          status: 'ACTIVE',
-        })
-      : Promise.resolve([]),
   ]);
 
   const listings = listingsResult;
@@ -231,18 +139,13 @@ export default async function ListingsPage({
   if (category && category !== 'all') {
     const catObj = categories.find((c) => c.slug === category);
     if (catObj?.template) activeTemplate = catObj.template;
-    // Check subcategory if main category template is generic or we want more specificity
     if (params.subCategory) {
-      // Subcategories are flattened if in top level list? No, Convex returns flat list.
-      // We need to look up subcategory object but api.categories.list returns all.
       const subCatObj = categories.find((c) => c.slug === params.subCategory);
       if (subCatObj?.template) activeTemplate = subCatObj.template;
     }
   }
 
-  // Search filtering (if query exists, further filter result, or ideally use search index query if query is dominant)
-  // For now, if query exists, we filter in memory since api.listings.list is optimizing for category/filters
-  // TODO: Combined search+filter query in Convex
+  // Search filtering
   let filteredListings = listings;
   if (query) {
     const q = query.toLowerCase();
@@ -258,40 +161,15 @@ export default async function ListingsPage({
   const start = (page - 1) * limit;
   const rawPaginatedListings = filteredListings.slice(start, start + limit);
 
-  // Batch fetch users for all displayed listings (Main list + all Hub rows)
-  const allIdsForUsers = Array.from(
-    new Set([
-      ...rawPaginatedListings.map((l) => l.userId),
-      ...carsListings.map((l) => (l as any).userId),
-      ...realEstateListings.map((l) => (l as any).userId),
-      ...electronicsListings.map((l) => (l as any).userId),
-      ...motorVehiclesListings.map((l) => (l as any).userId),
-      ...mobilePhonesListings.map((l) => (l as any).userId),
-      ...homeAppliancesListings.map((l) => (l as any).userId),
-      ...computersListings.map((l) => (l as any).userId),
-      ...diyListings.map((l) => (l as any).userId),
-      ...homeAndGardenListings.map((l) => (l as any).userId),
-    ]),
-  );
+  // Batch fetch users
+  const allIdsForUsers = Array.from(new Set(rawPaginatedListings.map((l) => l.userId)));
 
   const users = await fetchQuery(api.users.getByExternalIds, {
     ids: allIdsForUsers,
   });
   const userMap = new Map(users.map((u: any) => [u.externalId, u]));
-
-  // Attach users helper
   const attachUser = (l: any) => ({ ...l, user: userMap.get(l.userId) });
-
   const paginatedListings = rawPaginatedListings.map(attachUser);
-  const carsWithUsers = carsListings.map(attachUser);
-  const realEstateWithUsers = realEstateListings.map(attachUser);
-  const electronicsWithUsers = electronicsListings.map(attachUser);
-  const motorVehiclesWithUsers = motorVehiclesListings.map(attachUser);
-  const mobilePhonesWithUsers = mobilePhonesListings.map(attachUser);
-  const homeAppliancesWithUsers = homeAppliancesListings.map(attachUser);
-  const computersWithUsers = computersListings.map(attachUser);
-  const diyWithUsers = diyListings.map(attachUser);
-  const homeAndGardenWithUsers = homeAndGardenListings.map(attachUser);
 
   const pagination = {
     page,
@@ -321,22 +199,6 @@ export default async function ListingsPage({
             categories={categories}
             pagination={pagination}
             template={activeTemplate}
-            hubData={
-              isHubView
-                ? {
-                    all: paginatedListings,
-                    cars: carsWithUsers,
-                    realEstate: realEstateWithUsers,
-                    electronics: electronicsWithUsers,
-                    motorVehicles: motorVehiclesWithUsers,
-                    mobilePhones: mobilePhonesWithUsers,
-                    homeAppliances: homeAppliancesWithUsers,
-                    computers: computersWithUsers,
-                    diy: diyWithUsers,
-                    homeAndGarden: homeAndGardenWithUsers,
-                  }
-                : undefined
-            }
           />
         </Suspense>
       </div>

@@ -5,11 +5,10 @@ import { ListingGrid } from '@/components/listing/listing-grid';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight, LayoutGrid, SlidersHorizontal } from 'lucide-react';
+import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useState, useTransition } from 'react';
-import { ListingRowCarousel } from './listing-row-carousel';
+import { useMemo, useState, useTransition } from 'react';
 
 interface ListingsClientProps {
   initialListings: any[];
@@ -20,18 +19,7 @@ interface ListingsClientProps {
     total: number;
   };
   template?: any;
-  hubData?: {
-    all: any[];
-    cars: any[];
-    realEstate: any[];
-    electronics: any[];
-    motorVehicles: any[];
-    mobilePhones: any[];
-    homeAppliances: any[];
-    computers: any[];
-    diy: any[];
-    homeAndGarden: any[];
-  };
+  hubData?: any;
 }
 
 export function ListingsClient({
@@ -39,7 +27,6 @@ export function ListingsClient({
   categories,
   pagination,
   template,
-  hubData
 }: ListingsClientProps) {
   const t = useTranslations('Listings');
   const router = useRouter();
@@ -47,23 +34,6 @@ export function ListingsClient({
   
   const [isPending, startTransition] = useTransition();
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
-  const [showHub, setShowHub] = useState(!!hubData);
-
-  // If search params change, and we have filters, we should probably hide hub
-  const hasActiveFilters = useMemo(() => {
-    return searchParams.has('search') || 
-           searchParams.has('category') || 
-           searchParams.has('city') || 
-           searchParams.has('minPrice') || 
-           searchParams.has('maxPrice') ||
-           searchParams.has('listingNumber');
-  }, [searchParams]);
-
-  // Sync hub visibility with filters
-  useEffect(() => {
-    if (hasActiveFilters) setShowHub(false);
-    else if (hubData) setShowHub(true);
-  }, [hasActiveFilters, hubData]);
 
   // Derive initial filters from URL params
   const initialFilters = useMemo<FilterState>(() => ({
@@ -161,54 +131,20 @@ export function ListingsClient({
         <FilterPanel onFilterChange={handleFilterChange} categories={categories} initialFilters={initialFilters} idPrefix="desktop-filter" template={template} />
       </aside>
 
-      <div className={cn(" min-h-[800px] transition-opacity duration-300", isPending && "opacity-60 pointer-events-none")}>
-        {/* Mobile top bar — only shown in hub mode; grid mode has its own filter button inside ListingGrid */}
-        {showHub && hubData && (
-          <div className="lg:hidden flex items-center w-full gap-2 mb-2">
-            <Button
-              onClick={() => setIsMobileFiltersOpen(true)}
-              variant="outline"
-              className="flex-1 h-9 sm:h-10 text-[10px] sm:text-sm font-medium tracking-tight border border-border text-foreground hover:bg-secondary flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg active:scale-95 transition-all overflow-hidden"
-            >
-              <SlidersHorizontal className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-              <span className="truncate">{t('filters_sort')}</span>
-            </Button>
-            <Button
-              onClick={() => setShowHub(false)}
-              variant="outline"
-              className="flex-1 h-9 sm:h-10 text-[10px] sm:text-sm font-medium tracking-tight border border-border text-foreground hover:bg-secondary flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg active:scale-95 transition-all overflow-hidden"
-            >
-              <LayoutGrid className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-              <span className="truncate">{t('view_all_grid')}</span>
-            </Button>
-          </div>
-        )}
+      <div className={cn("min-h-[800px] transition-opacity duration-300", isPending && "opacity-60 pointer-events-none")}>
+        {/* Mobile top bar — simplified to just filters button */}
+        <div className="lg:hidden flex items-center w-full gap-2 mb-4">
+          <Button
+            onClick={() => setIsMobileFiltersOpen(true)}
+            variant="outline"
+            className="flex-1 h-10 border border-border text-foreground hover:bg-secondary flex items-center justify-center gap-2 rounded-lg active:scale-95 transition-all"
+          >
+            <SlidersHorizontal className="h-4 w-4" />
+            <span className="font-bold">{t('filters_sort')}</span>
+          </Button>
+        </div>
 
-        {showHub && hubData ? (
-          <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-             <ListingRowCarousel title={t('hub_latest')} listings={hubData.all} viewAllHref="/listings?sort=newest" />
-             <ListingRowCarousel title={t('hub_cars')} listings={hubData.cars} viewAllHref="/listings?category=cars" />
-             <ListingRowCarousel title={t('hub_real_estate')} listings={hubData.realEstate} viewAllHref="/listings?category=real-estate" />
-             <ListingRowCarousel title={t('hub_electronics')} listings={hubData.electronics} viewAllHref="/listings?category=electronics" />
-             <ListingRowCarousel title={t('hub_motor_vehicles')} listings={hubData.motorVehicles} viewAllHref="/listings?category=vehicles" />
-             <ListingRowCarousel title={t('hub_mobile_phones')} listings={hubData.mobilePhones} viewAllHref="/listings?category=mobile-phones" />
-             <ListingRowCarousel title={t('hub_home_appliances')} listings={hubData.homeAppliances} viewAllHref="/listings?category=appliances" />
-             <ListingRowCarousel title={t('hub_computers')} listings={hubData.computers} viewAllHref="/listings?category=computers-laptops" />
-             <ListingRowCarousel title={t('hub_diy')} listings={hubData.diy} viewAllHref="/listings?category=home-services" />
-             <ListingRowCarousel title={t('hub_home_garden')} listings={hubData.homeAndGarden} viewAllHref="/listings?category=home-garden" />
-             
-             {/* Desktop-only bottom button */}
-             <div className="hidden lg:flex pt-8 pb-12 justify-center">
-                <Button
-                  onClick={() => setShowHub(false)}
-                  variant="outline"
-                  className="rounded-lg px-8 h-12 font-medium border hover:bg-secondary transition-all"
-                >
-                    {t('view_all_grid')}
-                </Button>
-             </div>
-          </div>
-        ) : initialListings.length > 0 ? (
+        {initialListings.length > 0 ? (
           <div className="relative">
             <ListingGrid 
                listings={initialListings as any} 
@@ -219,7 +155,7 @@ export function ListingsClient({
             />
           </div>
         ) : (
-          <div className="text-center py-20 bg-background rounded-lg">
+          <div className="text-center py-20 bg-background rounded-lg border-2 border-dashed border-border/40">
             <div className="text-6xl mb-4">🔍</div>
             <h2 className="text-2xl font-bold mb-2 text-foreground">{t('no_listings_found')}</h2>
             <p className="text-muted-foreground mb-8">
