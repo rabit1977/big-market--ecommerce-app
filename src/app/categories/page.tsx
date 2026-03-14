@@ -31,69 +31,85 @@ export async function generateMetadata(): Promise<Metadata> {
 // Map category slugs to high-quality images (Unsplash)
 // Keys MUST match the exact 'slug' field from the seed data
 const CATEGORY_IMAGES: Record<string, string> = {
-  // 1. Real Estate
+  // 1. Real Estate & Home
   'real-estate': 'https://cdn.pixabay.com/photo/2016/11/18/17/46/house-1836070_1280.jpg',
   'flats-apartments': 'https://cdn.pixabay.com/photo/2014/08/11/21/40/bedroom-416062_1280.jpg',
   'houses-villas': 'https://cdn.pixabay.com/photo/2017/04/10/22/28/residence-2219972_1280.jpg',
   land: 'https://cdn.pixabay.com/photo/2015/03/26/09/41/tielet-690084_1280.jpg',
   'commercial-property': 'https://cdn.pixabay.com/photo/2014/11/11/22/50/architecture-527633_1280.jpg',
+  'home-and-garden': 'https://cdn.pixabay.com/photo/2017/08/27/10/16/interior-2685521_1280.jpg',
+  'home-appliances': 'https://cdn.pixabay.com/photo/2015/12/03/17/19/washing-machine-1075253_1280.jpg',
 
   // 2. Vehicles
+  'motor-vehicles': 'https://cdn.pixabay.com/photo/2012/05/29/00/43/car-49278_1280.jpg',
   vehicles: 'https://cdn.pixabay.com/photo/2012/05/29/00/43/car-49278_1280.jpg',
   cars: 'https://cdn.pixabay.com/photo/2014/09/07/22/34/car-race-438467_1280.jpg',
   motorcycles: 'https://cdn.pixabay.com/photo/2016/04/07/06/53/bmw-1313343_1280.jpg',
   'trucks-vans': 'https://cdn.pixabay.com/photo/2015/09/25/11/12/truck-957173_1280.jpg',
   boats: 'https://cdn.pixabay.com/photo/2016/11/23/18/28/boat-1854271_1280.jpg',
 
-  // 3. Electronics
+  // 3. Electronics & Tech
   electronics: 'https://cdn.pixabay.com/photo/2015/01/08/18/25/desk-593327_1280.jpg',
   'mobile-phones': 'https://cdn.pixabay.com/photo/2014/08/05/10/27/iphone-410311_1280.jpg',
+  'mobile-phones-accessories': 'https://cdn.pixabay.com/photo/2014/08/05/10/27/iphone-410311_1280.jpg',
   'computers-laptops': 'https://cdn.pixabay.com/photo/2015/05/31/10/55/man-791049_1280.jpg',
+  computers: 'https://cdn.pixabay.com/photo/2015/05/31/10/55/man-791049_1280.jpg',
+  laptops: 'https://cdn.pixabay.com/photo/2015/05/31/10/55/man-791049_1280.jpg',
   tablets: 'https://cdn.pixabay.com/photo/2014/08/05/10/27/iphone-410311_1280.jpg',
   'tvs-audio': 'https://cdn.pixabay.com/photo/2017/04/24/09/35/sound-2255760_1280.jpg',
+  'tv-audio-video': 'https://cdn.pixabay.com/photo/2017/04/24/09/35/sound-2255760_1280.jpg',
+  tv: 'https://cdn.pixabay.com/photo/2017/04/24/09/35/sound-2255760_1280.jpg',
   cameras: 'https://cdn.pixabay.com/photo/2014/08/29/14/53/camera-431119_1280.jpg',
 
-  // 4. Jobs  
-  jobs: 'https://cdn.pixabay.com/photo/2018/02/16/10/52/industry-3157431_1280.jpg',
-  'full-time': 'https://cdn.pixabay.com/photo/2018/02/16/10/52/industry-3157431_1280.jpg',
-  'part-time': 'https://cdn.pixabay.com/photo/2015/07/17/22/43/student-849825_1280.jpg',
-  freelance: 'https://cdn.pixabay.com/photo/2015/01/08/18/25/desk-593327_1280.jpg',
-  internships: 'https://cdn.pixabay.com/photo/2015/07/17/22/43/student-849825_1280.jpg',
-
-  // 5. Services
-  services: 'https://cdn.pixabay.com/photo/2015/12/08/10/37/hands-1082596_1280.jpg',
-  'home-services': 'https://cdn.pixabay.com/photo/2016/08/26/15/06/home-1622401_1280.jpg',
-  'business-services': 'https://cdn.pixabay.com/photo/2018/02/16/10/52/industry-3157431_1280.jpg',
-  'personal-services': 'https://cdn.pixabay.com/photo/2014/12/16/22/25/youth-570881_1280.jpg',
-
-  // 6. Fashion
+  // 4. Fashion & Lifestyle
   fashion: 'https://cdn.pixabay.com/photo/2016/11/22/19/08/hangers-1850082_1280.jpg',
+  'fashion-clothing': 'https://cdn.pixabay.com/photo/2016/11/22/19/08/hangers-1850082_1280.jpg',
   'mens-clothing': 'https://cdn.pixabay.com/photo/2015/09/02/13/24/man-919045_1280.jpg',
   'womens-clothing': 'https://cdn.pixabay.com/photo/2017/08/01/11/48/woman-2564660_1280.jpg',
   shoes: 'https://cdn.pixabay.com/photo/2014/10/22/16/23/shoes-489958_1280.jpg',
   accessories: 'https://cdn.pixabay.com/photo/2015/08/25/11/58/sunglasses-906532_1280.jpg',
+  'watches-jewelry': 'https://cdn.pixabay.com/photo/2017/01/12/17/30/warm-shades-1975214_1280.jpg',
+  jewelry: 'https://cdn.pixabay.com/photo/2017/01/12/17/30/warm-shades-1975214_1280.jpg',
+  'health-beauty': 'https://cdn.pixabay.com/photo/2016/11/22/19/15/hand-1850120_1280.jpg',
+  'makeup-cosmetics': 'https://cdn.pixabay.com/photo/2016/11/22/19/15/hand-1850120_1280.jpg',
 
-  // 7. Home & Garden
-  'home-garden': 'https://cdn.pixabay.com/photo/2016/08/26/15/06/home-1622401_1280.jpg',
-  furniture: 'https://cdn.pixabay.com/photo/2017/08/27/10/16/interior-2685521_1280.jpg',
-  appliances: 'https://cdn.pixabay.com/photo/2014/07/10/17/17/washing-machine-389273_1280.jpg',
-  'home-decor': 'https://cdn.pixabay.com/photo/2015/04/10/17/03/pots-716579_1280.jpg',
-  'garden-outdoor': 'https://cdn.pixabay.com/photo/2017/05/19/22/41/gardening-2327666_1280.jpg',
-
-  // 8. Sports & Leisure
-  'sports-leisure': 'https://cdn.pixabay.com/photo/2015/01/26/22/40/child-613199_1280.jpg',
-  'sports-equipment': 'https://cdn.pixabay.com/photo/2014/04/17/23/26/tennis-326523_1280.jpg',
+  // 5. Sports & Hobbies
+  'sports-leisure': 'https://cdn.pixabay.com/photo/2014/06/11/17/00/basketball-366925_1280.jpg',
+  'sports-hobbies': 'https://cdn.pixabay.com/photo/2014/06/11/17/00/basketball-366925_1280.jpg',
   bicycles: 'https://cdn.pixabay.com/photo/2016/11/18/12/46/bicycle-1834265_1280.jpg',
   'gym-fitness': 'https://cdn.pixabay.com/photo/2016/11/22/22/25/abs-1850926_1280.jpg',
 
-  // 9. Pets
+  // 6. Animals & Pets
   pets: 'https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_1280.jpg',
+  'animals-pets': 'https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_1280.jpg',
   dogs: 'https://cdn.pixabay.com/photo/2016/02/19/15/46/labrador-retriever-1210559_1280.jpg',
   cats: 'https://cdn.pixabay.com/photo/2014/03/29/09/17/cat-300572_1280.jpg',
-  'pet-accessories': 'https://cdn.pixabay.com/photo/2016/10/15/12/01/dog-1742295_1280.jpg',
 
-  // 10. Education
+  // 7. Work & Education
+  jobs: 'https://cdn.pixabay.com/photo/2018/02/16/11/24/office-3157521_1280.jpg',
+  'jobs-services': 'https://cdn.pixabay.com/photo/2018/02/16/11/24/office-3157521_1280.jpg',
   education: 'https://cdn.pixabay.com/photo/2015/11/19/21/10/glasses-1052010_1280.jpg',
+  'books-literature': 'https://cdn.pixabay.com/photo/2015/11/19/21/10/glasses-1052010_1280.jpg',
+  'fiction-books': 'https://cdn.pixabay.com/photo/2015/11/19/21/10/glasses-1052010_1280.jpg',
+  'office-school-supplies': 'https://cdn.pixabay.com/photo/2015/01/08/18/25/desk-593327_1280.jpg',
+  'do-it-yourself': 'https://cdn.pixabay.com/photo/2017/08/10/05/18/tools-2618053_1280.jpg',
+  'cordless-tools': 'https://cdn.pixabay.com/photo/2017/08/10/05/18/tools-2618053_1280.jpg',
+
+  // 8. Other
+  'food-agriculture': 'https://cdn.pixabay.com/photo/2017/05/19/22/41/gardening-2327666_1280.jpg',
+  'fresh-produce': 'https://cdn.pixabay.com/photo/2017/05/19/22/41/gardening-2327666_1280.jpg',
+  'business-equipment': 'https://cdn.pixabay.com/photo/2014/11/11/22/50/architecture-527633_1280.jpg',
+  'baby-children': 'https://cdn.pixabay.com/photo/2016/11/29/11/32/baby-1869213_1280.jpg',
+
+  // 9. Services & Other
+  services: 'https://cdn.pixabay.com/photo/2015/12/08/10/37/hands-1082596_1280.jpg',
+  'home-services': 'https://cdn.pixabay.com/photo/2016/08/26/15/06/home-1622401_1280.jpg',
+  'business-services': 'https://cdn.pixabay.com/photo/2018/02/16/10/52/industry-3157431_1280.jpg',
+  'personal-services': 'https://cdn.pixabay.com/photo/2014/12/16/22/25/youth-570881_1280.jpg',
+  'home-decor': 'https://cdn.pixabay.com/photo/2015/04/10/17/03/pots-716579_1280.jpg',
+  'garden-outdoor': 'https://cdn.pixabay.com/photo/2017/05/19/22/41/gardening-2327666_1280.jpg',
+  'sports-equipment': 'https://cdn.pixabay.com/photo/2014/04/17/23/26/tennis-326523_1280.jpg',
+  'pet-accessories': 'https://cdn.pixabay.com/photo/2016/10/15/12/01/dog-1742295_1280.jpg',
   tutoring: 'https://cdn.pixabay.com/photo/2015/07/17/22/43/student-849825_1280.jpg',
   courses: 'https://cdn.pixabay.com/photo/2015/07/19/10/00/school-work-851328_1280.jpg',
 };

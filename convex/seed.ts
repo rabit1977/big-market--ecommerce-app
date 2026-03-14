@@ -9846,8 +9846,8 @@ const categoriesData = [
     },
   },
   {
-    name: 'Do It Yourself (DIY)',
-    slug: 'napravete-sami',
+    name: 'Do It Yourself',
+    slug: 'do-it-yourself',
     description: '',
     image: '',
     isActive: true,
