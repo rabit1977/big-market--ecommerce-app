@@ -220,7 +220,7 @@ function GooglePlayButton({ onClick }: { onClick: () => void }) {
   return (
     <button 
       onClick={onClick}
-      className="flex items-center gap-2 bg-card hover:bg-muted text-foreground border border-border transition-all duration-300 rounded-lg px-3 py-2 min-w-[130px] group shadow-sm hover:shadow-md"
+      className="flex items-center gap-2 hover:bg-muted text-foreground border border-border transition-all duration-300 rounded-lg px-3 py-2 min-w-[130px] group shadow-sm hover:shadow-md"
     >
       <svg className="h-5 w-5 fill-current group-hover:scale-105 transition-transform duration-300" viewBox="0 0 24 24">
         <path d="M3.609 1.814L13.792 12 3.610 22.186a.996.996 0 01-.1-.12c-.172-.257-.27-.565-.27-.899V2.833c0-.334.098-.642.27-.899.027-.04.062-.081.1-.12zM15.632 13.84l3.125-1.764c.594-.335.594-.881 0-1.216l-3.125-1.764-2.128 2.128 2.128 2.128zM14.246 12.454l1.832-1.832L12.016 8.35c-.443-.25-.852-.25-1.295 0L3.896 12l6.825 3.65c.443.25.852.25 1.295 0l2.23-1.259z" />

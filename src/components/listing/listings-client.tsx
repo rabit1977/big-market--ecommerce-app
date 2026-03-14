@@ -168,7 +168,7 @@ export function ListingsClient({
             <Button
               onClick={() => setIsMobileFiltersOpen(true)}
               variant="outline"
-              className="flex-1 h-9 sm:h-10 text-[10px] sm:text-sm font-medium tracking-tight border border-border bg-card text-foreground hover:bg-secondary flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg active:scale-95 transition-all overflow-hidden"
+              className="flex-1 h-9 sm:h-10 text-[10px] sm:text-sm font-medium tracking-tight border border-border text-foreground hover:bg-secondary flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg active:scale-95 transition-all overflow-hidden"
             >
               <SlidersHorizontal className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
               <span className="truncate">{t('filters_sort')}</span>
@@ -176,7 +176,7 @@ export function ListingsClient({
             <Button
               onClick={() => setShowHub(false)}
               variant="outline"
-              className="flex-1 h-9 sm:h-10 text-[10px] sm:text-sm font-medium tracking-tight border border-border bg-card text-foreground hover:bg-secondary flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg active:scale-95 transition-all overflow-hidden"
+              className="flex-1 h-9 sm:h-10 text-[10px] sm:text-sm font-medium tracking-tight border border-border text-foreground hover:bg-secondary flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg active:scale-95 transition-all overflow-hidden"
             >
               <LayoutGrid className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
               <span className="truncate">{t('view_all_grid')}</span>
@@ -202,7 +202,7 @@ export function ListingsClient({
                 <Button
                   onClick={() => setShowHub(false)}
                   variant="outline"
-                  className="rounded-lg px-8 h-12 font-medium border border-border hover:bg-secondary transition-all"
+                  className="rounded-lg px-8 h-12 font-medium border hover:bg-secondary transition-all"
                 >
                     {t('view_all_grid')}
                 </Button>
@@ -219,7 +219,7 @@ export function ListingsClient({
             />
           </div>
         ) : (
-          <div className="text-center py-20 bg-background rounded-lg border border-border">
+          <div className="text-center py-20 bg-background rounded-lg">
             <div className="text-6xl mb-4">🔍</div>
             <h2 className="text-2xl font-bold mb-2 text-foreground">{t('no_listings_found')}</h2>
             <p className="text-muted-foreground mb-8">
