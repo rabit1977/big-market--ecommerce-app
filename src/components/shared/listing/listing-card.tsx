@@ -359,7 +359,7 @@ export const ListingCard = memo(
 
             <div className={cn(
               'pointer-events-auto shrink-0',
-              isGrid ? 'scale-[0.8] sm:scale-90 -mr-1' : 'scale-90 sm:scale-100 -mr-0.5'
+              isGrid ? 'scale-100 sm:scale-110 -mr-1' : 'scale-105 sm:scale-125 -mr-0.5'
             )}>
               {!isOwner && (
                 <SaveAdButton

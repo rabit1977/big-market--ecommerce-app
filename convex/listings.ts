@@ -203,105 +203,129 @@ export const list = query({
         .collect();
     }
 
-    // 2. Filter Loops
+    if (results.length === 0) {
+      const allCount = await ctx.db.query('listings').collect();
+      console.log(`Diagnostic: Total listings in DB (any status): ${allCount.length}`);
+      if (allCount.length > 0) {
+        const statuses = [...new Set(allCount.map(l => l.status))];
+        console.log(`Existing statuses in DB: ${statuses.join(', ')}`);
+        console.log('Sample listing [0]:', { 
+           title: allCount[0].title, 
+           city: allCount[0].city, 
+           status: allCount[0].status 
+        });
+      }
+    }
 
-    // Category - exact match or hierarchical match (case-insensitive)
-    if (args.category && args.category !== 'all') {
-      const filterCategory = args.category.toLowerCase();
-      results = results.filter((r) => {
-        if (!r.category) return false;
-        const listingCat = r.category.toLowerCase();
-
-        // Exact match on category (case-insensitive)
-        if (listingCat === filterCategory) return true;
-
-        // If subCategory contains the category slug, it's a child category
-        if (
-          r.subCategory &&
-          r.subCategory.toLowerCase().includes(filterCategory)
-        )
-          return true;
-
-        return false;
+    console.log(`Fetched ${results.length} listings with status ${statusFilter}`);
+    if (results.length > 0) {
+      console.log('Sample listing match [0]:', { 
+        title: results[0].title, 
+        city: results[0].city, 
+        status: results[0].status 
       });
     }
 
-    // SubCategory - exact match or hierarchical match (case-insensitive)
-    if (
-      args.subCategory &&
-      args.subCategory !== '' &&
-      args.subCategory !== 'all'
-    ) {
-      const filterSub = args.subCategory.toLowerCase();
-      console.log('Filtering by subCategory:', filterSub);
+    // 2. Filter Loops
+    const normalize = (s?: string) => {
+      if (!s) return '';
+      let result = s.toLowerCase().trim();
+      
+      const cyrToLat: Record<string, string> = {
+        'а':'a', 'б':'b', 'в':'v', 'г':'g', 'д':'d', 'ѓ':'gj', 'е':'e', 'ж':'zh', 'з':'z', 'ѕ':'dz', 
+        'и':'i', 'ј':'j', 'к':'k', 'л':'l', 'љ':'lj', 'м':'m', 'н':'n', 'њ':'nj', 'о':'o', 'п':'p', 
+        'р':'r', 'с':'s', 'т':'t', 'ќ':'kj', 'у':'u', 'ф':'f', 'х':'h', 'ц':'c', 'ч':'ch', 'џ':'dzh', 'ш':'sh',
+        'č':'c', 'ć':'c', 'š':'s', 'ž':'z', 'đ':'d', 'gj':'g', 'kj':'k'
+      };
 
+      return result.split('').map(char => cyrToLat[char] || char).join('')
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    };
+
+    // Category & SubCategory Unified filtering
+    const categoryFilter = args.subCategory && args.subCategory !== 'all' ? args.subCategory : args.category;
+    
+    if (categoryFilter && categoryFilter !== 'all') {
+      const filterSlug = categoryFilter.toLowerCase();
+      
       // Get all categories to check hierarchy
       const allCategories = await ctx.db.query('categories').collect();
-      const categoryMap = new Map(
-        allCategories.map((c) => [c.slug.toLowerCase(), c]),
-      );
+      const categoryMap = new Map(allCategories.map((c) => [c.slug.toLowerCase(), c]));
 
       // Helper function to check if a category is an ancestor of another
-      const isAncestor = (
-        potentialAncestorSlug: string,
-        childSlug: string,
-      ): boolean => {
-        const child = categoryMap.get(childSlug);
-        if (!child || !child.parentId) return false;
-
-        const parent = allCategories.find((c) => c._id === child.parentId);
-        if (!parent) return false;
-
-        // Check if parent matches
-        if (parent.slug.toLowerCase() === potentialAncestorSlug) return true;
-
-        // Recursively check grandparents
-        return isAncestor(potentialAncestorSlug, parent.slug.toLowerCase());
+      const isAncestor = (ancestorSlug: string, childSlug: string): boolean => {
+        let current = categoryMap.get(childSlug);
+        while (current && current.parentId) {
+          const parent = allCategories.find(c => c._id === current!.parentId);
+          if (!parent) break;
+          if (parent.slug.toLowerCase() === ancestorSlug) return true;
+          current = parent;
+        }
+        return false;
       };
 
       results = results.filter((r) => {
-        if (!r.subCategory) return false;
-        const listingSub = r.subCategory.toLowerCase();
-        console.log(
-          `  Comparing filter "${filterSub}" with listing "${listingSub}"`,
-        );
+        const rCat = normalize(r.category);
+        const rSub = normalize(r.subCategory);
+        
+        // Match if direct category match
+        if (rCat === filterSlug || rSub === filterSlug) return true;
+        
+        // Match if hierarchical ancestor
+        if (rSub && isAncestor(filterSlug, rSub)) return true;
+        if (rCat && isAncestor(filterSlug, rCat)) return true;
 
-        // Exact match (case-insensitive)
-        if (listingSub === filterSub) {
-          console.log('    ✓ Exact match!');
-          return true;
-        }
-
-        // Check if filter is an ancestor of the listing's subcategory
-        if (isAncestor(filterSub, listingSub)) {
-          console.log('    ✓ Ancestor match!');
-          return true;
-        }
-
-        // Check path-based matching for deeper hierarchies (fallback)
-        if (listingSub.startsWith(filterSub + '/')) {
-          console.log('    ✓ Path match!');
-          return true;
-        }
-
-        // Check if filter is more specific and listing matches the parent
-        if (filterSub.startsWith(listingSub + '/')) {
-          console.log('    ✓ Parent match!');
-          return true;
-        }
-
-        console.log('    ✗ No match');
         return false;
       });
     }
 
-    // Location
+    // Location Mapping for "Smart" filtering (Major City/Region -> Municipalities)
+    // This handles older listings that might only have 'city' set but no 'region'
+    const LOCATION_MAPPING: Record<string, string[]> = {
+      'скопје': ['скопје', 'аеродром', 'бутел', 'гази баба', 'ѓорче петров', 'зелениково', 'карпош', 'кисела вода', 'петровец', 'сарај', 'сопиште', 'студеничани', 'центар', 'чаир', 'шуто оризари'],
+      'битола': ['битола', 'новаци', 'могила', 'демир хисар'],
+      'куманово': ['куманово', 'липково', 'старо нагоричане'],
+      'прилеп': ['прилеп', 'долнени', 'кривогаштани'],
+      'тетово': ['тетово', 'брвеница', 'јегуновце', 'теарце', 'желино', 'боговиње'],
+      'велес': ['велес', 'чашка'],
+      'охрид': ['охрид', 'дебрца'],
+      'гостивар': ['гостивар', 'врапчиште', 'маврово и ростуше'],
+      'штип': ['штип', 'карбинци', 'лесново'],
+      'струмица': ['струмица', 'василево', 'босилово', 'ново село', 'радовиш', 'конче'],
+      'кавадарци': ['кавадарци', 'росоман', 'неготино'],
+      'кочани': ['кочани', 'чешиново-облешево', 'зрновци', 'виница'],
+      'кичево': ['кичево', 'осломеј', 'вранештица', 'зајас', 'пласница', 'другово'],
+      'струга': ['струга', 'вевчани'],
+      'гевгелија': ['гевгелија', 'богданци', 'дојран', 'валандово'],
+      'дебар': ['дебар', 'центар жупа', 'маврово и ростуше'],
+      'крива паланка': ['крива паланка', 'кратово', 'ранковце'],
+      'свети николе': ['свети николе', 'лозово'],
+      'берово': ['берово', 'пехчево', 'делчево', 'македонска каменица']
+    };
+
     if (args.city && args.city !== 'all') {
-      const searchCity = args.city.toLowerCase().trim();
-      results = results.filter((r) => 
-        (r.city?.toLowerCase().trim() === searchCity) || 
-        (r.region?.toLowerCase().trim() === searchCity)
-      );
+      const searchCity = normalize(args.city);
+      
+      // Normalized version of mappings
+      const normalizedMapping: Record<string, string[]> = {};
+      Object.entries(LOCATION_MAPPING).forEach(([k, v]) => {
+        normalizedMapping[normalize(k)] = v.map(municipal => normalize(municipal));
+      });
+
+      const relatedMunicipalities = normalizedMapping[searchCity] || [searchCity];
+
+      results = results.filter((r) => {
+        const lCity = normalize(r.city);
+        const lRegion = normalize(r.region);
+        
+        // 1. Direct match on city or region
+        if (lCity === searchCity || lRegion === searchCity) return true;
+        
+        // 2. If we are searching for a MAJOR city (Region), match all its municipalities
+        if (lCity && relatedMunicipalities.includes(lCity)) return true;
+        
+        return false;
+      });
     }
 
     // Price
@@ -311,21 +335,25 @@ export const list = query({
       results = results.filter((r) => r.price <= args.maxPrice!);
 
     // Other filters
-    if (args.userType)
-      results = results.filter((r) => r.userType === args.userType);
+    if (args.userType) {
+      const uType = normalize(args.userType);
+      results = results.filter((r) => normalize(r.userType) === uType);
+    }
 
     // Multi-value adType filter (comma-separated)
     if (args.adType) {
-      const types = args.adType.split(',').map((t) => t.trim());
-      results = results.filter((r) => r.adType && types.includes(r.adType));
+      const types = args.adType.split(',').map((t) => t.trim().toLowerCase());
+      results = results.filter((r) => r.adType && types.includes(r.adType.toLowerCase()));
     }
 
     // Multi-value condition filter (comma-separated)
     if (args.condition && args.condition !== 'all') {
-      const conditions = args.condition.split(',').map((c) => c.trim());
-      results = results.filter(
-        (r) => r.condition && conditions.includes(r.condition),
-      );
+      const conditions = args.condition.split(',').map((c) => c.trim().toLowerCase());
+      results = results.filter((r) => {
+        if (!r.condition) return false;
+        const rCond = r.condition.toLowerCase().replace(/_/g, '-');
+        return conditions.some(c => rCond.includes(c) || c.includes(rCond));
+      });
     }
 
     if (args.isTradePossible !== undefined)

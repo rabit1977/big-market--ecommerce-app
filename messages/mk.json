@@ -146,7 +146,8 @@
     "cond_new_construction": "Нова Градба",
     "cond_old_construction": "Стара Градба",
     "active_controls": "Активни Контроли",
-    "search_cities": "Пребарај градови..."
+    "search_cities": "Пребарај градови...",
+    "select_city": "Избери Град"
   },
   "Common": {
     "mkd": "МКД",

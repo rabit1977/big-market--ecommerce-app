@@ -150,7 +150,8 @@ export default async function ListingsPage({
   if (query) {
     const q = query.toLowerCase();
     filteredListings = filteredListings.filter((l) =>
-      l.title.toLowerCase().includes(q),
+      l.title.toLowerCase().includes(q) ||
+      (l.listingNumber && l.listingNumber.toString().includes(q))
     );
   }
 

@@ -15,6 +15,7 @@ import {
     SelectGroup,
     SelectItem,
     SelectLabel,
+    SelectSeparator,
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
@@ -119,7 +120,14 @@ export function FilterPanel({
     if (!initialFilters?.dynamicFilters) return {};
     try { return JSON.parse(initialFilters.dynamicFilters); } catch { return {}; }
   });
-
+  const [region, setRegion] = useState<string | undefined>(() => {
+    if (initialFilters?.city) {
+        for (const [r, muns] of Object.entries(MK_LOCATIONS)) {
+            if (r === initialFilters.city || muns.includes(initialFilters.city)) return r;
+        }
+    }
+    return undefined;
+  });
   const [expandedRegions, setExpandedRegions] = useState<Record<string, boolean>>({});
   const [citySearch, setCitySearch] = useState('');
 
@@ -496,89 +504,48 @@ export function FilterPanel({
               <MapPin className="h-2.5 w-2.5" /> {t('location')}
             </Label>
             
-            <div className="space-y-2">
-              <div className="relative">
-                <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
-                <Input 
-                  placeholder={t('search_cities')}
-                  value={citySearch}
-                  onChange={(e) => setCitySearch(e.target.value)}
-                  className="h-8 pl-7 text-[11px] rounded-md bg-background border-border"
-                />
-              </div>
+            <div className="space-y-2 pt-2">
+              <Select 
+                value={region || 'all'} 
+                onValueChange={(v) => {
+                  const val = v === 'all' ? undefined : v;
+                  setRegion(val);
+                  updateFilter('city', val);
+                }}
+              >
+                <SelectTrigger className="h-8 text-xs rounded-md bg-background border-border bm-interactive">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-3 w-3 text-primary" />
+                    <SelectValue placeholder={t('select_city')} />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('all_cities')}</SelectItem>
+                  {Object.keys(MK_LOCATIONS).map((r) => (
+                    <SelectItem key={r} value={r} className={r === 'Скопје' ? "font-bold" : ""}>
+                      {r}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-              <ScrollArea className="h-[200px] w-full rounded-md border border-border bg-background p-1">
-                <div className="space-y-1">
-                   <button
-                    onClick={() => updateFilter('city', 'all')}
-                    className={cn(
-                      "w-full flex items-center gap-2 px-3 py-1.5 rounded-md text-[11px] font-medium transition-colors",
-                      filters.city === 'all' || !filters.city 
-                        ? "bg-primary text-primary-foreground" 
-                        : "hover:bg-muted text-foreground"
-                    )}
-                  >
-                    <div className={cn("w-1.5 h-1.5 rounded-full", (filters.city === 'all' || !filters.city) ? "bg-primary-foreground" : "bg-primary/30")} />
-                    {t('all_cities')}
-                  </button>
-
-                  {Object.entries(MK_LOCATIONS).map(([region, municipalities]) => {
-                    const q = citySearch.toLowerCase();
-                    const filteredMuns = municipalities.filter(m => m.toLowerCase().includes(q));
-                    const isRegionMatch = region.toLowerCase().includes(q);
-                    
-                    if (citySearch && !isRegionMatch && filteredMuns.length === 0) return null;
-                    
-                    const isExpanded = !!expandedRegions[region] || citySearch.length > 0;
-                    const citiesToShow = isRegionMatch ? municipalities : filteredMuns;
-
-                    return (
-                      <div key={region} className="space-y-0.5">
-                        <button
-                          onClick={() => setExpandedRegions(prev => ({ ...prev, [region]: !prev[region] }))}
-                          className="w-full flex items-center justify-between px-3 py-1.5 rounded-md text-[11px] font-bold uppercase tracking-tight text-muted-foreground hover:bg-muted hover:text-foreground transition-all"
-                        >
-                          <span>{region}</span>
-                          <ChevronDown className={cn("h-3 w-3 transition-transform", isExpanded && "rotate-180")} />
-                        </button>
-                        
-                        <AnimatePresence initial={false}>
-                          {isExpanded && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.2 }}
-                              className="overflow-hidden"
-                            >
-                              <div className="space-y-0.5 pl-2">
-                                {citiesToShow.map((city) => {
-                                  const isActive = filters.city?.toLowerCase() === city.toLowerCase();
-                                  return (
-                                    <button
-                                      key={city}
-                                      onClick={() => updateFilter('city', city)}
-                                      className={cn(
-                                        "w-full flex items-center gap-2 px-3 py-1.5 rounded-md text-[11px] transition-all",
-                                        isActive
-                                          ? "bg-primary text-primary-foreground font-bold"
-                                          : "hover:bg-muted text-muted-foreground hover:text-foreground"
-                                      )}
-                                    >
-                                      {isActive && <div className="w-1 h-1 rounded-full bg-primary-foreground" />}
-                                      {city}
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    );
-                  })}
-                </div>
-              </ScrollArea>
+              {region && region !== 'Друго' && MK_LOCATIONS[region] && MK_LOCATIONS[region].length > 1 && (
+                <Select 
+                  value={filters.city || region} 
+                  onValueChange={(v) => updateFilter('city', v)}
+                >
+                  <SelectTrigger className="h-8 text-xs rounded-md bg-background border-border animate-in fade-in slide-in-from-top-1 bm-interactive">
+                    <SelectValue placeholder={t('subcategory')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {MK_LOCATIONS[region].map((mun) => (
+                      <SelectItem key={mun} value={mun}>
+                        {mun}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             </div>
           </div>
         </div>

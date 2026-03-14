@@ -256,13 +256,25 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                           
                           return (
                           <div key={region} className="mb-2">
-                            <button
-                              onClick={() => setExpandedRegions(prev => ({ ...prev, [region]: !prev[region] }))}
-                              className="w-full flex items-center justify-between px-3 py-2 group text-left text-sm font-bold uppercase tracking-wider text-foreground hover:text-primary transition-colors"
-                            >
-                              <span>{region}</span>
-                              <ChevronDown className={cn("h-4 w-4 transition-transform text-muted-foreground group-hover:text-primary", isExpanded && "rotate-180")} />
-                            </button>
+                            <div className="flex items-center">
+                              <button
+                                onClick={() => handleCitySelect(region)}
+                                className={cn(
+                                  "flex-1 text-left px-3 py-2 text-sm font-bold uppercase tracking-wider transition-colors rounded-l-xl",
+                                  selectedCity?.toLowerCase() === region.toLowerCase()
+                                    ? "bg-primary/10 text-primary"
+                                    : "text-foreground hover:bg-muted/50"
+                                )}
+                              >
+                                {region}
+                              </button>
+                              <button
+                                onClick={() => setExpandedRegions(prev => ({ ...prev, [region]: !prev[region] }))}
+                                className="px-3 py-2 rounded-r-xl hover:bg-muted/50 text-muted-foreground transition-all"
+                              >
+                                <ChevronDown className={cn("h-4 w-4 transition-transform group-hover:text-primary", isExpanded && "rotate-180")} />
+                              </button>
+                            </div>
                             
                             <AnimatePresence initial={false}>
                               {isExpanded && (
@@ -281,12 +293,12 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                                         onClick={() => handleCitySelect(city)}
                                         className={cn(
                                           'w-full flex items-center gap-3 py-2 px-4 rounded-(--bm-button-border-radius) text-sm transition-all',
-                                          selectedCity === city
+                                          selectedCity?.toLowerCase() === city.toLowerCase()
                                             ? 'bg-primary/10 text-primary font-bold ml-1'
                                             : 'text-muted-foreground hover:text-foreground hover:bg-secondary pl-6 text-sm'
                                         )}
                                       >
-                                        {selectedCity === city && (
+                                        {selectedCity?.toLowerCase() === city.toLowerCase() && (
                                           <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                                         )}
                                         {city}

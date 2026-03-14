@@ -50,7 +50,7 @@ export function SaveAdButton({
     >
       <Heart
         className={cn(
-          showText ? 'w-4.5 h-4.5' : 'w-4.5 h-4.5 sm:w-[20px] sm:h-[20px]',
+          showText ? 'w-5 h-5' : 'w-5 h-5 sm:w-[24px] sm:h-[24px]',
           'transition-transform duration-200 group-hover/heart:scale-110',
           isFavorite && 'fill-current',
           iconClassName,
