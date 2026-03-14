@@ -220,7 +220,7 @@ export function FeaturedListings({
   // Horizontal (Default) Layout - Repurposed to look like eBay
   return (
     <div className='w-full overflow-hidden'>
-      <div className='container-wide py-3 sm:py-5'>
+      <div className='container-wide py-2 sm:py-3.5'>
         <div className='relative group/carousel'>
           <Carousel
             opts={{
@@ -229,7 +229,7 @@ export function FeaturedListings({
             }}
             className='w-full'
           >
-            <CarouselContent className='-ml-4 sm:-ml-6 md:-ml-8'>
+            <CarouselContent className='-ml-2.5 sm:-ml-4 md:-ml-6'>
               {featuredListings.map((listing) => {
                 const hasDiscount =
                   listing.previousPrice &&
@@ -245,7 +245,7 @@ export function FeaturedListings({
                 return (
                   <CarouselItem
                     key={listing._id}
-                    className='basis-[70%] pl-4 sm:basis-[40%] sm:pl-6 md:basis-[32%] md:pl-8 lg:basis-[25%]'
+                    className='basis-[70%] pl-2.5 sm:basis-[40%] sm:pl-4 md:basis-[32%] md:pl-6 lg:basis-[25%]'
                   >
                     <div className='h-full px-0.5'>
                       <ListingCard 

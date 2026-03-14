@@ -26,7 +26,7 @@ export const HeroHeader = () => {
 
   return (
     <div className=''>
-      <div className='container-wide py-3 md:py-4'>
+      <div className='container-wide py-2 sm:py-3.5'>
         {/* Navigation & Filters Container */}
         <div className='flex items-center justify-between gap-3 md:gap-4 w-full relative'>
           {/* Left Side: Navigation Links & Stores Carousel */}

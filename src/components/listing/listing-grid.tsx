@@ -156,9 +156,11 @@ export function ListingGrid({
       ) : (
         <div className={cn(
           "grid w-full",
-          viewMode === "grid" || viewMode === "card"
-            ? "grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-2.5 sm:gap-3.5 md:gap-5"
-            : "grid-cols-1 gap-4"
+          viewMode === "grid" 
+            ? "grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3.5 md:gap-5"
+            : viewMode === "card"
+              ? "grid-cols-1 md:grid-cols-2 gap-6"
+              : "grid-cols-1 gap-4"
         )}>
           {listings.map((listing) => (
             <ListingCard key={listing._id} listing={listing as any} viewMode={viewMode} />

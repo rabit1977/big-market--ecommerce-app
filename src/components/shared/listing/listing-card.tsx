@@ -196,9 +196,11 @@ export const ListingCard = memo(
         <div
           className={cn(
             'flex flex-col relative z-20 pointer-events-none min-w-0 transition-all duration-300',
-            isGrid || isCard
-              ? 'flex-1 p-2 sm:p-3'
-              : 'flex-[2] py-2 px-3.5 sm:px-5 sm:py-3',
+            isGrid 
+              ? 'flex-1 p-1 sm:p-1.5' 
+              : isCard
+                ? 'flex-1 p-2 sm:p-3'
+                : 'flex-[2] py-2 px-3 sm:px-4 sm:py-2.5',
           )}
         >
           {/* Title Row */}
@@ -206,7 +208,7 @@ export const ListingCard = memo(
             <h3
               className={cn(
                 'font-bold leading-tight line-clamp-2 text-foreground group-hover:text-primary transition-colors tracking-tight',
-                isGrid ? 'text-xs sm:text-sm' : 'text-lg sm:text-xl md:text-2xl',
+                isGrid ? 'text-xs sm:text-sm' : isCard ? 'text-lg sm:text-xl' : 'text-lg sm:text-xl md:text-2xl',
               )}
             >
               {listing.title}
@@ -265,8 +267,8 @@ export const ListingCard = memo(
 
             return (
               <div className={cn(
-                'flex flex-wrap items-center gap-x-1.5 gap-y-0.5',
-                isGrid ? 'mb-1' : 'mb-1.5'
+                'flex flex-wrap items-center gap-x-1 gap-y-0.5',
+                isGrid ? 'mb-0.5' : 'mb-1'
               )}>
                 {attributes.map((attr, i) => (
                   <React.Fragment key={i}>
@@ -334,11 +336,11 @@ export const ListingCard = memo(
           <div className='flex items-center justify-between mt-auto pt-1'>
             <div className={cn(
               'flex items-center gap-1 text-muted-foreground font-semibold uppercase tracking-wider truncate mr-1',
-              isGrid ? 'text-[7px] leading-none' : 'text-[9px] sm:text-[10px]'
+              isGrid ? 'text-[7px] leading-none' : isCard ? 'text-[9px] sm:text-[10px]' : 'text-[9px] sm:text-[10px]'
             )}>
               <span className={cn(
                 'truncate',
-                isGrid ? 'max-w-[35px] sm:max-w-[60px]' : 'max-w-[80px] sm:max-w-none'
+                isGrid ? 'max-w-[35px] sm:max-w-[60px]' : isCard ? 'max-w-none' : 'max-w-[80px] sm:max-w-none'
               )}>
                 {listing.categoryName || listing.category}
               </span>
@@ -347,7 +349,7 @@ export const ListingCard = memo(
                   <span className='opacity-40'>&gt;</span>
                   <span className={cn(
                     'truncate',
-                    isGrid ? 'max-w-[35px] sm:max-w-[60px]' : 'max-w-[80px] sm:max-w-none'
+                    isGrid ? 'max-w-[35px] sm:max-w-[60px]' : isCard ? 'max-w-none' : 'max-w-[80px] sm:max-w-none'
                   )}>
                     {listing.subCategoryName}
                   </span>

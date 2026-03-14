@@ -33,17 +33,17 @@ export function SaveAdButton({
         toggleFavorite(listingId);
       }}
       className={cn(
-        'flex items-center justify-center transition-all duration-200 group/heart active:scale-95',
+        'flex items-center justify-center transition-all duration-300 group/heart active:scale-90',
         showText
           ? 'gap-2 px-4 py-2 border rounded-full text-sm font-bold shadow-sm'
-          : 'p-1.5 rounded-full shadow-lg backdrop-blur-md border border-white/20',
+          : 'p-1.5 rounded-full shadow-sm hover:shadow-md backdrop-blur-md border border-border/50',
         isFavorite
           ? showText
             ? 'bg-primary/10 border-primary/30 text-primary'
-            : 'bg-slate-500/40 text-red-500 shadow-md shadow-red-500/5'
+            : 'bg-white dark:bg-zinc-900 text-red-500 border-red-500/20'
           : showText
-            ? 'bg-card border-border text-foreground hover:bg-accent'
-            : 'bg-white/80 hover:bg-white/100 dark:bg-black/10 dark:hover:bg-black/40 text-slate-900 dark:text-white',
+            ? 'bg-white border-border text-foreground hover:bg-accent'
+            : 'bg-white dark:bg-black/20 text-muted-foreground/60 hover:text-primary hover:border-primary/30 transition-all',
         className,
         buttonClassName,
       )}
