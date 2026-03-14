@@ -44,6 +44,7 @@ export interface FilterState {
   subCategory?: string;
   dynamicFilters?: string;
   listingNumber?: number;
+  hasShipping?: boolean;
 }
 
 interface Category {
@@ -589,7 +590,7 @@ export function FilterPanel({
         {/* Date Posted */}
         <div className="space-y-1.5 pb-2 border-b border-border">
           <Label htmlFor={`${idPrefix}-date`} className="text-[10px] uppercase text-muted-foreground font-medium">{t('date_posted')}</Label>
-          <Select value={filters.dateRange || 'all'} onValueChange={(val) => updateFilter('dateRange', val)}>
+          <Select value={filters.dateRange || 'all'} onValueChange={(val) => updateFilter('dateRange', val === 'all' ? undefined : val)}>
             <SelectTrigger id={`${idPrefix}-date`} className="h-8 text-xs rounded-md bm-interactive">
               <SelectValue placeholder={t('anytime')} />
             </SelectTrigger>
@@ -603,9 +604,9 @@ export function FilterPanel({
         </div>
 
         {/* Condition */}
-        <div className="space-y-1.5">
+        <div className="space-y-1.5 pb-2 border-b border-border">
           <Label htmlFor={`${idPrefix}-condition`} className="text-[10px] uppercase text-muted-foreground font-medium">{t('condition')}</Label>
-          <Select value={filters.condition} onValueChange={(val) => updateFilter('condition', val)}>
+          <Select value={filters.condition || 'all'} onValueChange={(val) => updateFilter('condition', val === 'all' ? undefined : val)}>
             <SelectTrigger id={`${idPrefix}-condition`} className="h-8 text-xs rounded-md bm-interactive">
               <SelectValue placeholder={t('any_condition')} />
             </SelectTrigger>
@@ -614,6 +615,89 @@ export function FilterPanel({
               {CONDITIONS.map((c) => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}
             </SelectContent>
           </Select>
+        </div>
+
+        {/* Other Filters (Buy/Sell, User Type, Trade) */}
+        <div className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <div className="space-y-1">
+              <Label htmlFor={`${idPrefix}-adType`} className="text-[10px] uppercase text-muted-foreground font-medium">{t('ad_type') || 'Тип на оглас'}</Label>
+              <Select value={filters.adType || 'all'} onValueChange={(val) => updateFilter('adType', val === 'all' ? undefined : val)}>
+                <SelectTrigger id={`${idPrefix}-adType`} className="h-8 text-xs rounded-md bm-interactive">
+                  <SelectValue placeholder={t('all')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('all')}</SelectItem>
+                  <SelectItem value="SALE">{t('sale') || 'Продажба'}</SelectItem>
+                  <SelectItem value="BUYING">{t('buying') || 'Купувам'}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-1">
+              <Label htmlFor={`${idPrefix}-userType`} className="text-[10px] uppercase text-muted-foreground font-medium">{t('user_type') || 'Продавач'}</Label>
+              <Select value={filters.userType || 'all'} onValueChange={(val) => updateFilter('userType', val === 'all' ? undefined : val)}>
+                <SelectTrigger id={`${idPrefix}-userType`} className="h-8 text-xs rounded-md bm-interactive">
+                  <SelectValue placeholder={t('all')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('all')}</SelectItem>
+                  <SelectItem value="PRIVATE">{t('private') || 'Приватен'}</SelectItem>
+                  <SelectItem value="COMPANY">{t('company') || 'Компанија'}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-x-4 gap-y-2 pt-1 border-t border-border/50 mt-1">
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id={`${idPrefix}-trade`} 
+                checked={filters.isTradePossible === true} 
+                onCheckedChange={(checked) => updateFilter('isTradePossible', checked === true ? true : undefined)}
+                className="h-4 w-4"
+              />
+              <Label htmlFor={`${idPrefix}-trade`} className="text-[11px] font-medium cursor-pointer">
+                {t('trade_possible') || 'Замена'}
+              </Label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id={`${idPrefix}-shipping`} 
+                checked={filters.hasShipping === true} 
+                onCheckedChange={(checked) => updateFilter('hasShipping', checked === true ? true : undefined)}
+                className="h-4 w-4"
+              />
+              <Label htmlFor={`${idPrefix}-shipping`} className="text-[11px] font-medium cursor-pointer">
+                {t('has_shipping') || 'Испорака'}
+              </Label>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id={`${idPrefix}-vat`} 
+                checked={filters.isVatIncluded === true} 
+                onCheckedChange={(checked) => updateFilter('isVatIncluded', checked === true ? true : undefined)}
+                className="h-4 w-4"
+              />
+              <Label htmlFor={`${idPrefix}-vat`} className="text-[11px] font-medium cursor-pointer">
+                {t('is_vat_included') || 'Со ДДВ'}
+              </Label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id={`${idPrefix}-affordable`} 
+                checked={filters.isAffordable === true} 
+                onCheckedChange={(checked) => updateFilter('isAffordable', checked === true ? true : undefined)}
+                className="h-4 w-4"
+              />
+              <Label htmlFor={`${idPrefix}-affordable`} className="text-[11px] font-medium cursor-pointer">
+                {t('is_affordable') || 'Поволно'}
+              </Label>
+            </div>
+          </div>
         </div>
 
         {/* Active Filter Badges */}
@@ -641,6 +725,24 @@ export function FilterPanel({
               )}
               {filters.dateRange && filters.dateRange !== 'all' && (
                 <FilterBadge label={DATE_RANGE_LABELS[filters.dateRange]} onRemove={() => updateFilter('dateRange', 'all')} />
+              )}
+              {filters.adType && (
+                <FilterBadge label={filters.adType === 'SALE' ? (t('sale') || 'Продажба') : (t('buying') || 'Купувам')} onRemove={() => updateFilter('adType', undefined)} />
+              )}
+              {filters.userType && (
+                <FilterBadge label={filters.userType === 'PRIVATE' ? (t('private') || 'Приватен') : (t('company') || 'Компанија')} onRemove={() => updateFilter('userType', undefined)} />
+              )}
+              {filters.isTradePossible && (
+                <FilterBadge label={t('trade_possible') || 'Замена'} onRemove={() => updateFilter('isTradePossible', undefined)} />
+              )}
+              {filters.hasShipping && (
+                <FilterBadge label={t('has_shipping') || 'Испорака'} onRemove={() => updateFilter('hasShipping', undefined)} />
+              )}
+              {filters.isVatIncluded && (
+                <FilterBadge label={t('is_vat_included') || 'Со ДДВ'} onRemove={() => updateFilter('isVatIncluded', undefined)} />
+              )}
+              {filters.isAffordable && (
+                <FilterBadge label={t('is_affordable') || 'Поволно'} onRemove={() => updateFilter('isAffordable', undefined)} />
               )}
               {(filters.priceMin !== undefined || filters.priceMax !== undefined) && (filters.priceMin !== PRICE_MIN_DEFAULT || filters.priceMax !== PRICE_MAX_DEFAULT) && (
                 <FilterBadge

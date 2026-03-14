@@ -4,14 +4,14 @@ import { Button } from '@/components/ui/button';
 import { api } from '@/convex/_generated/api';
 import { cn } from '@/lib/utils';
 import { useMutation, useQuery } from 'convex/react';
-import { Bell, Loader2 } from 'lucide-react';
+import { Heart, Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 
-export function SaveSearchButton() {
+export function SaveSearchButton({ className }: { className?: string }) {
   const { data: session } = useSession();
   const t = useTranslations('ListingGrid');
   const pathname = usePathname();
@@ -73,7 +73,7 @@ export function SaveSearchButton() {
 
           if (res.success) {
              toast.success('Search saved! You will be alerted of new listings.', {
-                icon: '🔔',
+                icon: '❤️',
              });
           } else {
              toast.error((res as any).message || 'Could not save search.');
@@ -86,28 +86,26 @@ export function SaveSearchButton() {
     });
   };
 
-  // Only show button if there are actual active filters or searches
-  if (!searchParams.toString()) return null;
-
   return (
     <Button
       variant={isSaved ? "secondary" : "outline"}
       size="sm"
       className={cn(
-        "gap-2 rounded-xl font-bold transition-all h-9",
+        "gap-2 rounded-xl font-bold transition-all min-w-[40px]",
         isSaved 
           ? 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20' 
-          : 'bg-background border-border hover:bg-muted/50'
+          : 'bg-background border-border hover:bg-muted/50',
+        className
       )}
       onClick={handleToggleSave}
       disabled={isPending || savedState === undefined}
     >
       {isPending ? (
-         <Loader2 className="w-4 h-4 animate-spin" />
+         <Loader2 className="w-4.5 h-4.5 animate-spin" />
       ) : isSaved ? (
-         <Bell className="w-4 h-4 fill-current" />
+         <Heart className="w-4.5 h-4.5 fill-current text-primary" />
       ) : (
-         <Bell className="w-4 h-4" />
+         <Heart className="w-4.5 h-4.5 text-muted-foreground/60" />
       )}
       <span className="hidden sm:inline">{isSaved ? t('alerts_label') : t('save_label')}</span>
     </Button>

@@ -155,7 +155,7 @@ export const ListingCard = memo(
                     'w-2 h-2 rounded-full transition-all duration-300',
                     i === activeImageIndex
                       ? 'bg-white scale-110 shadow-sm'
-                      : 'bg-white/50 scale-90',
+                      : 'bg-white/50 scale-85',
                   )}
                   aria-label={`Go to image ${i + 1}`}
                 />
@@ -359,7 +359,7 @@ export const ListingCard = memo(
 
             <div className={cn(
               'pointer-events-auto shrink-0',
-              isGrid ? 'scale-100 sm:scale-110 -mr-1' : 'scale-105 sm:scale-125 -mr-0.5'
+              isGrid ? 'scale-[0.85] sm:scale-110 -mr-1' : 'scale-[0.85] sm:scale-125 -mr-0.5'
             )}>
               {!isOwner && (
                 <SaveAdButton

@@ -9,6 +9,7 @@ import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useState, useTransition } from 'react';
+import { SaveSearchButton } from './save-search-button';
 import dynamic from 'next/dynamic';
 
 // Lazy load FilterPanel to avoid hydration issues with dynamic parts
@@ -44,18 +45,19 @@ export function ListingsClient({
 
   // Derive initial filters from URL params
   const initialFilters = useMemo<FilterState>(() => ({
-    category: searchParams.get('category') || 'all',
-    subCategory: searchParams.get('subCategory') || 'all',
-    city: searchParams.get('city') || 'all',
-    priceMin: searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : 0,
-    priceMax: searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : 1000000,
-    condition: searchParams.get('condition') || 'all',
+    category: searchParams.get('category') || undefined,
+    subCategory: searchParams.get('subCategory') || undefined,
+    city: searchParams.get('city') || undefined,
+    priceMin: searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : undefined,
+    priceMax: searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined,
+    condition: searchParams.get('condition') || undefined,
     sortBy: searchParams.get('sort') || 'newest',
     userType: searchParams.get('userType') || undefined,
     adType: searchParams.get('adType') || undefined,
-    isTradePossible: searchParams.get('trade') === 'true',
-    isVatIncluded: searchParams.get('vat') === 'true',
-    isAffordable: searchParams.get('affordable') === 'true',
+    isTradePossible: searchParams.get('trade') === 'true' ? true : undefined,
+    hasShipping: searchParams.get('shipping') === 'true' ? true : undefined,
+    isVatIncluded: searchParams.get('vat') === 'true' ? true : undefined,
+    isAffordable: searchParams.get('affordable') === 'true' ? true : undefined,
     dateRange: searchParams.get('date') || undefined,
     dynamicFilters: searchParams.get('filters') || undefined,
   }), [searchParams]);
@@ -91,6 +93,9 @@ export function ListingsClient({
 
     if (filters.isTradePossible) params.set('trade', 'true');
     else params.delete('trade');
+
+    if (filters.hasShipping) params.set('shipping', 'true');
+    else params.delete('shipping');
 
     if (filters.isVatIncluded) params.set('vat', 'true');
     else params.delete('vat');
@@ -139,16 +144,16 @@ export function ListingsClient({
       </aside>
 
       <div className={cn("min-h-[800px] transition-opacity duration-300", isPending && "opacity-60 pointer-events-none")}>
-        {/* Mobile top filter button — prominent as requested */}
-        <div className="lg:hidden mb-4">
+        <div className="lg:hidden mb-4 flex gap-2">
           <Button
             onClick={() => setIsMobileFiltersOpen(true)}
             variant="outline"
-            className="w-full h-11 border border-border text-foreground hover:bg-secondary flex gap-2 rounded-xl active:scale-[0.98] transition-all shadow-sm"
+            className="flex-1 h-11 border border-border text-foreground hover:bg-secondary flex gap-2 rounded-xl active:scale-[0.98] transition-all shadow-sm"
           >
             <SlidersHorizontal className="h-4.5 w-4.5 text-primary" />
             <span className="font-bold text-sm tracking-tight">{t('filters_sort')}</span>
           </Button>
+          <SaveSearchButton className="h-11" />
         </div>
         {initialListings.length > 0 ? (
           <div className="relative">

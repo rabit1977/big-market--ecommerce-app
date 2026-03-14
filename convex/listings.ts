@@ -184,8 +184,6 @@ export const list = query({
     userId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    console.log('API list called with args:', args);
-
     // 1. Fetch data based on status (default to ACTIVE)
     const statusFilter = args.status || 'ACTIVE';
     let results;
@@ -201,29 +199,6 @@ export const list = query({
         .withIndex('by_status_createdAt', (q) => q.eq('status', statusFilter))
         .order('desc')
         .collect();
-    }
-
-    if (results.length === 0) {
-      const allCount = await ctx.db.query('listings').collect();
-      console.log(`Diagnostic: Total listings in DB (any status): ${allCount.length}`);
-      if (allCount.length > 0) {
-        const statuses = [...new Set(allCount.map(l => l.status))];
-        console.log(`Existing statuses in DB: ${statuses.join(', ')}`);
-        console.log('Sample listing [0]:', { 
-           title: allCount[0].title, 
-           city: allCount[0].city, 
-           status: allCount[0].status 
-        });
-      }
-    }
-
-    console.log(`Fetched ${results.length} listings with status ${statusFilter}`);
-    if (results.length > 0) {
-      console.log('Sample listing match [0]:', { 
-        title: results[0].title, 
-        city: results[0].city, 
-        status: results[0].status 
-      });
     }
 
     // 2. Filter Loops
@@ -347,25 +322,36 @@ export const list = query({
     }
 
     // Multi-value condition filter (comma-separated)
+    // Condition (Sostojba)
     if (args.condition && args.condition !== 'all') {
       const conditions = args.condition.split(',').map((c) => c.trim().toLowerCase());
       results = results.filter((r) => {
-        if (!r.condition) return false;
-        const rCond = r.condition.toLowerCase().replace(/_/g, '-');
-        return conditions.some(c => rCond.includes(c) || c.includes(rCond));
+        // Check root condition field
+        const rootCond = r.condition ? r.condition.toLowerCase().replace(/_/g, '-') : '';
+        // Check specifications condition field (many templates save it here)
+        const specCond = (r.specifications as any)?.condition ? (r.specifications as any).condition.toString().toLowerCase().replace(/_/g, '-') : '';
+        
+        return conditions.some(c => 
+          (rootCond && (rootCond.includes(c) || c.includes(rootCond))) ||
+          (specCond && (specCond.includes(c) || c.includes(specCond)))
+        );
       });
     }
 
-    if (args.isTradePossible !== undefined)
-      results = results.filter(
-        (r) => r.isTradePossible === args.isTradePossible,
-      );
+    // Boolean filters — normalize stored value to boolean to handle legacy string "true"
+    if (args.isTradePossible !== undefined) {
+      const wantTrade = args.isTradePossible === true || args.isTradePossible === 'true';
+      results = results.filter((r) => {
+        const val = r.isTradePossible;
+        return (val === true || val === 'true') === wantTrade;
+      });
+    }
     if (args.hasShipping !== undefined)
-      results = results.filter((r) => r.hasShipping === args.hasShipping);
+      results = results.filter((r) => !!r.hasShipping === args.hasShipping);
     if (args.isVatIncluded !== undefined)
-      results = results.filter((r) => r.isVatIncluded === args.isVatIncluded);
+      results = results.filter((r) => !!r.isVatIncluded === args.isVatIncluded);
     if (args.isAffordable !== undefined)
-      results = results.filter((r) => r.isAffordable === args.isAffordable);
+      results = results.filter((r) => !!r.isAffordable === args.isAffordable);
 
     // Date Range
     if (args.dateRange && args.dateRange !== 'all') {
@@ -415,16 +401,20 @@ export const list = query({
       }
     }
 
-    console.log(`Returning ${results.length} listings`);
 
     // 3. User Filter
     if (args.userId) {
       results = results.filter((r) => r.userId === args.userId);
     }
 
-    // 4. Final sorting: Promoted (Top Positioning) first, then by user choice
+    // 4. Final sorting: 
+    // If user chose PRICE sorting, we respect that as primary.
+    // Otherwise, we prioritize Promoted (Top Positioning) first.
     const now = Date.now();
     const sortedResults = results.sort((a, b) => {
+      const sortMode = args.sort || 'newest';
+      const isPriceSort = sortMode.startsWith('price');
+
       // Helper to check if a listing has an active TOP_POSITIONING promotion
       const isTopA =
         a.isPromoted &&
@@ -435,10 +425,7 @@ export const list = query({
         b.promotionTier === 'TOP_POSITIONING' &&
         (!b.promotionExpiresAt || b.promotionExpiresAt > now);
 
-      if (isTopA && !isTopB) return -1;
-      if (!isTopA && isTopB) return 1;
-
-      // General promoted (any tier) next, EXCEPT non-featured tiers
+      // General promoted (any tier)
       const featuredTiers = ['AUTO_DAILY_REFRESH', 'LISTING_HIGHLIGHT'];
       const isPromotedA =
         a.isPromoted &&
@@ -449,20 +436,39 @@ export const list = query({
         !featuredTiers.includes(b.promotionTier || '') &&
         (!b.promotionExpiresAt || b.promotionExpiresAt > now);
 
+      // If Price Sort is active, sort by price FIRST
+      if (isPriceSort) {
+        const pA = a.price || 0;
+        const pB = b.price || 0;
+        if (pA !== pB) {
+          return sortMode === 'price-low' || sortMode === 'price-asc' 
+            ? pA - pB 
+            : pB - pA;
+        }
+        // If prices are identical, tie-break with promotions
+      }
+
+      // Tier-based sorting (Promotion Hierarchy)
+      if (isTopA && !isTopB) return -1;
+      if (!isTopA && isTopB) return 1;
+
       if (isPromotedA && !isPromotedB) return -1;
       if (!isPromotedA && isPromotedB) return 1;
 
-      // Standard sorting
-      switch (args.sort) {
-        case 'price-asc': // Low to High
-          return a.price - b.price;
-        case 'price-desc': // High to Low
-          return b.price - a.price;
+      // Standard sorting (if tie or no price sort)
+      switch (sortMode) {
+        case 'price-low':
+        case 'price-asc':
+          return (a.price || 0) - (b.price || 0);
+        case 'price-high':
+        case 'price-desc':
+          return (b.price || 0) - (a.price || 0);
         case 'oldest':
           return (a.createdAt || 0) - (b.createdAt || 0);
+        case 'popular':
+          return (b.viewCount || 0) - (a.viewCount || 0);
         case 'newest':
         default:
-          // Fallback to Date
           return (
             (b.createdAt || b._creationTime) - (a.createdAt || a._creationTime)
           );

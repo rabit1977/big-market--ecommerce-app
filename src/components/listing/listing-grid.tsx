@@ -119,7 +119,11 @@ export function ListingGrid({
                 ))}
               </SelectContent>
             </Select>
-            {showSaveSearch && <SaveSearchButton />}
+            {showSaveSearch && (
+              <div className="hidden sm:block">
+                <SaveSearchButton />
+              </div>
+            )}
           </div>
 
           <div className="bg-muted/10 flex items-center bm-interactive rounded-lg p-1 h-9 shrink-0" role="group" aria-label="View mode">

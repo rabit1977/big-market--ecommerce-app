@@ -1,10 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { MK_LOCATIONS } from '@/lib/locations';
-import { useSidebar } from '@/lib/context/sidebar-context';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown, Loader2, MapPin, Menu, Search, X } from 'lucide-react';
+import { ChevronDown, Loader2, MapPin, Search, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -38,7 +37,6 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     },
     ref
   ) => {
-    const { toggle } = useSidebar();
     const [isCityPanelOpen, setIsCityPanelOpen] = useState(false);
     const [citySearch, setCitySearch] = useState('');
     const [expandedRegions, setExpandedRegions] = useState<Record<string, boolean>>({});
@@ -105,18 +103,9 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     return (
       <>
         <div className="relative group ">
-          {/* Left: Menu + Search icon */}
-          <div className="absolute left-1 top-1/2 -translate-y-1/2 flex items-center z-20 bg-background">
-            <button
-              type="button"
-              onClick={toggle}
-              className="p-1.5 md:p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-150"
-              aria-label="Open categories menu"
-            >
-              <Menu className="h-4 w-4" />
-            </button>
-            <div className="w-px h-4 bg-border mx-0.5 hidden sm:block" />
-            <div className="hidden sm:flex items-center text-muted-foreground pl-1">
+          {/* Left: Search icon */}
+          <div className="absolute left-1 top-1/2 -translate-y-1/2 flex items-center z-20 bg-background pl-2">
+            <div className="flex items-center text-muted-foreground">
               {isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
@@ -129,7 +118,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             ref={ref}
             type="search"
             placeholder={tNav('search_placeholder')}
-            className="h-9 md:h-10 rounded-lg pl-10 sm:pl-16 pr-24 sm:pr-32 bg-background
+            className="h-9 md:h-10 rounded-lg pl-9 sm:pl-10 pr-24 sm:pr-32 bg-background
                        focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary
                        text-sm placeholder:text-muted-foreground/60
                        [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden

@@ -147,7 +147,17 @@
     "cond_old_construction": "Стара Градба",
     "active_controls": "Активни Контроли",
     "search_cities": "Пребарај градови...",
-    "select_city": "Избери Град"
+    "select_city": "Избери Град",
+    "ad_type": "Тип на Оглас",
+    "sale": "Продажба",
+    "buying": "Се Купува",
+    "user_type": "Тип на Продавач",
+    "private": "Физичко Лице",
+    "company": "Бизнис / Продавница",
+    "trade_possible": "Можна е замена",
+    "has_shipping": "Дистрибуција / Испорака",
+    "is_vat_included": "Со вклучен ДДВ",
+    "is_affordable": "Буџет Понуда (Поволно)"
   },
   "Common": {
     "mkd": "МКД",

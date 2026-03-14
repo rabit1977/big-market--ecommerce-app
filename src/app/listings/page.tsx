@@ -30,6 +30,7 @@ interface ListingsPageProps {
     userType?: string;
     adType?: string;
     trade?: string;
+    shipping?: string;
     vat?: string;
     affordable?: string;
     date?: string;
@@ -114,9 +115,9 @@ export default async function ListingsPage({
   const [categories, listingsResult] = await Promise.all([
     fetchQuery(api.categories.list),
     fetchQuery(api.listings.list, {
-      category: category !== 'all' ? category : undefined,
-      subCategory: ensureString(params.subCategory),
-      city: city !== 'all' ? city : undefined,
+      category: category !== 'all' && category ? category : undefined,
+      subCategory: ensureString(params.subCategory) !== 'all' ? ensureString(params.subCategory) : undefined,
+      city: city !== 'all' && city ? city : undefined,
       minPrice: ensureString(params.minPrice) ? Number(ensureString(params.minPrice)) : undefined,
       maxPrice: ensureString(params.maxPrice) ? Number(ensureString(params.maxPrice)) : undefined,
       condition: params.condition !== 'all' ? ensureString(params.condition) : undefined,
@@ -125,9 +126,10 @@ export default async function ListingsPage({
       userType: ensureString(params.userType),
       adType: ensureString(params.adType),
       isTradePossible: ensureString(params.trade) === 'true' ? true : undefined,
+      hasShipping: ensureString(params.shipping) === 'true' ? true : undefined,
       isVatIncluded: ensureString(params.vat) === 'true' ? true : undefined,
       isAffordable: ensureString(params.affordable) === 'true' ? true : undefined,
-      dateRange: ensureString(params.date),
+      dateRange: ensureString(params.date) !== 'all' ? ensureString(params.date) : undefined,
       dynamicFilters: ensureString(params.filters),
     }),
   ]);
