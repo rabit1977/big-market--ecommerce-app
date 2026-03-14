@@ -22,9 +22,9 @@ export const ListingRowCarousel = ({ title, listings, viewAllHref }: ListingRowC
   };
 
   return (
-    <div className="space-y-4 py-6">
+    <div className="space-y-4 py-2">
       <div className="flex items-center justify-between px-1">
-        <h2 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">{title}</h2>
+        <h2 className="text-base md:text-lg font-bold tracking-tight text-foreground">{title}</h2>
         <button
           onClick={handleViewAll}
           className="flex items-center gap-1 text-[11px] sm:text-sm font-bold text-muted-foreground hover:text-foreground transition-colors px-2 sm:px-3 py-1.5 rounded-lg hover:bg-muted/50 truncate max-w-[120px] sm:max-w-none"
@@ -40,20 +40,20 @@ export const ListingRowCarousel = ({ title, listings, viewAllHref }: ListingRowC
         }}
         className="w-full"
       >
-        <CarouselContent className="-ml-2.5">
+        <CarouselContent className="-ml-2">
           {listings.map((listing) => (
             <CarouselItem
               key={listing._id}
-              className="pl-2.5 basis-[70%] xs:basis-[48%] sm:basis-[40%] md:basis-[32%] lg:basis-[25%]"
+              className="pl-2 basis-[50%] xs:basis-[35%] sm:basis-[28%] md:basis-[22%] lg:basis-[18%] xl:basis-[15%]"
             >
               <ListingCard listing={listing} viewMode="grid" />
             </CarouselItem>
           ))}
 
           {/* Last Item: "View All" peek card */}
-          <CarouselItem className="pl-2.5 basis-[70%] xs:basis-[48%] sm:basis-[40%] md:basis-[32%] lg:basis-[25%]">
+          <CarouselItem className="pl-2 basis-[50%] xs:basis-[35%] sm:basis-[28%] md:basis-[22%] lg:basis-[18%] xl:basis-[15%]">
             <button
-              className="flex flex-col items-center justify-center w-full h-full aspect-[4/3] rounded-2xl border-2 border-dashed border-border hover:border-primary/30 hover:bg-muted/30 transition-all group cursor-pointer"
+              className="flex flex-col items-center justify-center w-full aspect-[3/2] rounded-xl border border-dashed border-card-foreground/20 hover:border-primary/50 hover:bg-muted/30 transition-all group cursor-pointer"
               onClick={handleViewAll}
             >
               <div className="w-9 h-9 rounded-full bg-background shadow-sm flex items-center justify-center mb-2 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all">
