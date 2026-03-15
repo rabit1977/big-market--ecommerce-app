@@ -64,18 +64,32 @@ export function PostListingWizard({
 }: PostListingWizardProps) {
   const t = useTranslations('Sell');
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<ListingFormData>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('listing_form_data');
-      return saved ? JSON.parse(saved) : {};
-    }
-    return {};
-  });
+  const [formData, setFormData] = useState<ListingFormData>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
+  // Use a unique key for this user's draft
+  const STORAGE_KEY = `sell_draft_${userId}`;
+
+  // 1. Initial Load (Client side only)
   useEffect(() => {
-    localStorage.setItem('listing_form_data', JSON.stringify(formData));
-  }, [formData]);
+    const saved = sessionStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        setFormData(JSON.parse(saved));
+      } catch (e) {
+        console.error('Failed to parse draft:', e);
+      }
+    }
+    setIsLoaded(true);
+  }, [STORAGE_KEY]);
+
+  // 2. Auto-save whenever formData changes
+  useEffect(() => {
+    if (isLoaded) {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+    }
+  }, [formData, isLoaded, STORAGE_KEY]);
 
   const [clientNonce] = useState(
     () =>
@@ -125,9 +139,8 @@ export function PostListingWizard({
       const stepParam = url.searchParams.get('step');
       const step = stepParam ? parseInt(stepParam, 10) : 1;
       
-      // If we're on step > 1 but don't have a category, only reset if we don't have it in state
-      // (State is now persisted from localStorage)
-      if (step > 1 && !formData.category) {
+      // Only enforce step 1 transition if we are fully loaded and category is missing
+      if (isLoaded && step > 1 && !formData.category) {
          setCurrentStep(1);
          const resetUrl = new URL(window.location.href);
          resetUrl.searchParams.delete('step');
@@ -141,7 +154,7 @@ export function PostListingWizard({
     handlePopState();
 
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [formData.category]);
+  }, [formData.category, isLoaded]);
 
   const canProceed = () => {
     switch (currentStep) {
@@ -223,7 +236,7 @@ export function PostListingWizard({
       };
 
       const listingId = await createListing(listingData);
-      localStorage.removeItem('listing_form_data');
+      sessionStorage.removeItem(STORAGE_KEY);
       import('sonner').then(({ toast }) => toast.success(t('submit_success')));
       router.push(`/listings/${listingId}/success`);
     } catch (error: any) {
