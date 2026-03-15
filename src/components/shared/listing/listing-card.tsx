@@ -77,7 +77,7 @@ export const ListingCard = memo(
           isGrid || isCard
             ? 'flex-col h-full'
             : 'flex-row h-36 sm:h-40 md:h-44',
-          isCard && 'mb-4',
+          isCard && 'mb-1',
         )}
       >
         {/* Main Card Link - Higher Z-Index but below heart button */}
@@ -95,10 +95,10 @@ export const ListingCard = memo(
               ? 'pointer-events-auto'
               : 'pointer-events-none',
             isGrid
-              ? 'aspect-[3/2] w-full rounded-t-xl shrink-0'
+              ? 'aspect-3/2 w-full rounded-t-xl shrink-0 mb-1'
               : isCard
-                ? 'aspect-[3/2] w-full rounded-t-xl shrink-0'
-                : 'flex-grow flex-shrink basis-10 min-w-10 max-w-54 h-full rounded-l-xl',
+                ? 'aspect-3/2 w-full rounded-t-xl shrink-0 mb-1'
+                : 'grow shrink basis-10 min-w-10 max-w-54 h-full rounded-l-xl',
           )}
         >
           <div
@@ -111,7 +111,7 @@ export const ListingCard = memo(
                 <Link
                   key={i}
                   href={`/listings/${listing.id || listing._id}`}
-                  className='relative w-full h-full flex-shrink-0 snap-center pointer-events-auto overflow-hidden'
+                  className='relative w-full h-full shrink-0 snap-center pointer-events-auto overflow-hidden'
                   aria-label={`View ${listing.title}`}
                 >
                   <Image
@@ -194,10 +194,10 @@ export const ListingCard = memo(
           className={cn(
             'flex flex-col relative z-20 pointer-events-none min-w-0 transition-all duration-300',
             isGrid
-              ? 'flex-1 p-1'
+              ? 'flex-1'
               : isCard
-                ? 'flex-1 p-2 sm:p-2.5'
-                : 'flex-[2] py-2 px-3 sm:px-4 sm:py-2.5',
+                ? 'flex-1'
+                : 'flex-2 pl-2 sm:pl-3',
           )}
         >
           {/* Title Row */}
@@ -209,7 +209,7 @@ export const ListingCard = memo(
                   ? 'text-[11px] sm:text-[13px]'
                   : isCard
                     ? 'text-xl sm:text-2xl'
-                    : 'text-xl sm:text-2xl md:text-3xl',
+                    : 'text-sm sm:text-base md:text-lg truncate',
               )}
             >
               {listing.title}
@@ -269,40 +269,40 @@ export const ListingCard = memo(
             return (
               <div
                 className={cn(
-                  'flex flex-wrap items-center gap-x-0.5 gap-y-0',
+                  'flex items-center truncate gap-1',
                   isGrid ? 'mb-0' : 'mb-1',
                 )}
               >
                 {attributes.map((attr, i) => (
-                  <React.Fragment key={i}>
+                  <div key={i}>
                     <span
                       className={cn(
                         'text-muted-foreground font-semibold capitalize tracking-wide',
                         isGrid
                           ? 'text-[10px] sm:text-[11.5px]'
-                          : 'text-xs sm:text-[13px]',
+                          : 'text-[11px] sm:text-[12.5px] ',
                       )}
                     >
                       {attr}
                     </span>
                     {i < attributes.length - 1 && (
-                      <span className='text-[10px] text-primary/30 font-black'>
+                      <span className='text-[12px] text-foreground/80 font-black'>
                         •
                       </span>
                     )}
-                  </React.Fragment>
+                  </div>
                 ))}
               </div>
             );
           })()}
 
           {/* Price & Date Row */}
-          <div className='flex items-center justify-between my-1'>
+          <div className='flex items-center justify-between mt-3'>
             <div className='flex items-baseline gap-1.5 flex-wrap min-w-0'>
               <span
                 className={cn(
-                  'font-black text-foreground tracking-tight truncate max-w-[80px] sm:max-w-none',
-                  isGrid ? 'text-[11px] sm:text-[13.5px]' : 'text-xl sm:text-2xl',
+                  'font-black text-foreground tracking-tight truncate max-w-[150px] sm:max-w-fit',
+                  isGrid ? 'text-[11px] sm:text-[13.5px]' : 'text-lg sm:text-xl ',
                 )}
                 suppressHydrationWarning
               >
@@ -344,14 +344,14 @@ export const ListingCard = memo(
           </div>
 
           {/* Breadcrumb & Heart Button Row */}
-          <div className='flex items-center justify-between mt-auto pt-1'>
+          <div className='flex items-center justify-between mt-auto gap-2'>
             <div
               className={cn(
-                'flex items-center gap-1 text-muted-foreground font-semibold uppercase tracking-wider truncate mr-1',
+                'flex items-center gap-1 text-muted-foreground font-semibold uppercase tracking-wider truncate',
                 isGrid
-                  ? 'text-[9px] leading-none'
+                  ? 'text-[9px] leading-tight mt-2'
                   : isCard
-                    ? 'text-[11px] sm:text-[12px]'
+                    ? 'text-[11px] sm:text-[12px] mt-2'
                     : 'text-[11px] sm:text-[12px]',
               )}
             >
@@ -369,7 +369,7 @@ export const ListingCard = memo(
               </span>
               {listing.subCategoryName && (
                 <>
-                  <span className='opacity-40'>&gt;</span>
+                  <span className='opacity-80'>&gt;</span>
                   <span
                     className={cn(
                       'truncate',
@@ -377,7 +377,7 @@ export const ListingCard = memo(
                         ? 'max-w-[35px] sm:max-w-[60px]'
                         : isCard
                           ? 'max-w-none'
-                          : 'max-w-[80px] sm:max-w-none',
+                          : 'max-w-[80px] sm:max-w-none ml-1',
                     )}
                   >
                     {listing.subCategoryName}
@@ -389,7 +389,7 @@ export const ListingCard = memo(
             <div
               className={cn(
                 'pointer-events-auto shrink-0',
-                isGrid ? 'scale-[0.85] -mr-1' : 'scale-[0.85] -mr-0.5',
+                isGrid ? 'scale-[0.85]' : 'scale-[0.85] -mr-0.5',
               )}
             >
               {!isOwner && (

@@ -182,7 +182,7 @@ export function FeaturedListings({
   // Vertical (Sidebar) Layout
   if (variant === 'vertical') {
     return (
-      <div className='space-y-3 sticky top-24'>
+      <div className='space-y-3 sticky top-24 border-l border-border pl-4'>
         <div className='flex items-center justify-between px-1 mb-2'>
           <div className='flex items-center gap-2'>
             <div className='relative flex items-center justify-center'>
@@ -222,7 +222,7 @@ export function FeaturedListings({
             }}
             className='w-full'
           >
-            <CarouselContent className='-ml-2.5 sm:-ml-4 md:-ml-6'>
+            <CarouselContent className=''>
               {featuredListings.map((listing) => {
                 const hasDiscount =
                   listing.previousPrice &&
@@ -238,7 +238,7 @@ export function FeaturedListings({
                 return (
                   <CarouselItem
                     key={listing._id}
-                    className='basis-[52%] pl-2 sm:basis-[40%] sm:pl-3 md:basis-[30%] md:pl-4 lg:basis-[23%] xl:basis-[16.6%]'
+                    className='basis-[56%]  sm:basis-[45%]  md:basis-[35%] lg:basis-[28%] xl:basis-[25%]'
                   >
                     <div className='h-full'>
                       <ListingCard 
