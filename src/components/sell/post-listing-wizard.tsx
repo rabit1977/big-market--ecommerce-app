@@ -64,8 +64,19 @@ export function PostListingWizard({
 }: PostListingWizardProps) {
   const t = useTranslations('Sell');
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<ListingFormData>({});
+  const [formData, setFormData] = useState<ListingFormData>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('listing_form_data');
+      return saved ? JSON.parse(saved) : {};
+    }
+    return {};
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('listing_form_data', JSON.stringify(formData));
+  }, [formData]);
+
   const [clientNonce] = useState(
     () =>
       Math.random().toString(36).substring(2, 15) +
@@ -114,6 +125,8 @@ export function PostListingWizard({
       const stepParam = url.searchParams.get('step');
       const step = stepParam ? parseInt(stepParam, 10) : 1;
       
+      // If we're on step > 1 but don't have a category, only reset if we don't have it in state
+      // (State is now persisted from localStorage)
       if (step > 1 && !formData.category) {
          setCurrentStep(1);
          const resetUrl = new URL(window.location.href);
@@ -210,6 +223,7 @@ export function PostListingWizard({
       };
 
       const listingId = await createListing(listingData);
+      localStorage.removeItem('listing_form_data');
       import('sonner').then(({ toast }) => toast.success(t('submit_success')));
       router.push(`/listings/${listingId}/success`);
     } catch (error: any) {
