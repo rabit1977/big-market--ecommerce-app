@@ -12,6 +12,7 @@ import {
   Dog,
   Dumbbell,
   Shirt as Fashion,
+  Hammer,
   Heart,
   Home,
   LucideIcon,
@@ -50,6 +51,7 @@ const categoryIcons: Record<string, LucideIcon> = {
   'services-repairs': Wrench,
   'books-literature': Book,
   'health-beauty': Heart,
+  'do-it-yourself': Hammer,
 };
 
 export function CategoryStep({

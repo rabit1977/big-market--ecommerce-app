@@ -2,1748 +2,2147 @@ import { internalMutation } from './_generated/server';
 
 const categoriesData = [
   {
-    "name": "Motor Vehicles",
-    "slug": "motor-vehicles",
-    "description": "All motorized vehicles, parts, and related services.",
-    "image": "",
-    "isActive": true,
-    "isFeatured": true,
-    "parentSlug": null,
-    "template": {
-      "fields": [],
-      "titlePlaceholder": "e.g. Motor Vehicles"
-    }
+    name: 'Motor Vehicles',
+    slug: 'motor-vehicles',
+    description: 'All motorized vehicles, parts, and related services.',
+    image: '',
+    isActive: true,
+    isFeatured: true,
+    parentSlug: null,
+    template: {
+      fields: [],
+      titlePlaceholder: 'e.g. Motor Vehicles',
+    },
   },
   {
-    "name": "Cars",
-    "slug": "cars",
-    "description": "Passenger cars and light motor vehicles.",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "motor-vehicles",
-    "template": {
-      "fields": [
-        {
-          "key": "vin",
-          "label": "VIN",
-          "placeholder": "17-character VIN",
-          "type": "text"
-        },
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used", "Damaged / For Parts"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Audi", "BMW", "Mercedes-Benz", "Volkswagen", "Toyota", "Nissan", "Ford", "Peugeot", "Renault", "Fiat", "Opel", "Hyundai", "Kia", "Skoda", "Seat", "Mazda", "Honda", "Volvo", "Porsche", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "model",
-          "label": "Model",
-          "placeholder": "e.g. Golf, 320d, A4",
-          "type": "text"
-        },
-        {
-          "key": "year",
-          "label": "Year of Manufacture",
-          "placeholder": "YYYY",
-          "type": "number"
-        },
-        {
-          "key": "mileage_km",
-          "label": "Mileage (km)",
-          "placeholder": "km",
-          "type": "number"
-        },
-        {
-          "key": "fuel_type",
-          "label": "Fuel Type",
-          "options": ["Diesel", "Petrol", "Petrol + LPG", "Hybrid", "Plug-in Hybrid", "Electric"],
-          "type": "select"
-        },
-        {
-          "key": "transmission",
-          "label": "Transmission",
-          "options": ["Manual", "Automatic", "Semi-Automatic / DSG"],
-          "type": "select"
-        },
-        {
-          "key": "body_type",
-          "label": "Body Type",
-          "options": ["Sedan", "Hatchback", "SUV / Off-Road", "Station Wagon", "Coupe", "Convertible", "Minivan / MPV", "Pickup"],
-          "type": "select"
-        },
-        {
-          "key": "engine_capacity_ccm",
-          "label": "Engine Capacity (ccm)",
-          "placeholder": "e.g. 1968",
-          "type": "number"
-        },
-        {
-          "key": "engine_power_kw",
-          "label": "Engine Power (kW)",
-          "placeholder": "kW",
-          "type": "number"
-        },
-        {
-          "key": "registration",
-          "label": "Registration Status",
-          "options": ["Macedonian Plates", "Foreign Plates", "Customs Cleared", "Unregistered"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. VW Golf 2.0 TDI 2018"
-    }
-  },
-  {
-    "name": "Motorcycles & Scooters",
-    "slug": "motorcycles-scooters",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "motor-vehicles",
-    "template": {
-      "fields": [],
-      "titlePlaceholder": "e.g. Motorcycles"
-    }
-  },
-  {
-    "name": "Motorcycles (Above 50cc)",
-    "slug": "motorcycles-above-50cc",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "motorcycles-scooters",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used", "Damaged / For Parts"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Yamaha", "Honda", "Suzuki", "Kawasaki", "BMW", "Ducati", "KTM", "Aprilia", "Harley-Davidson", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "model",
-          "label": "Model",
-          "placeholder": "e.g. YZF-R6",
-          "type": "text"
-        },
-        {
-          "key": "year",
-          "label": "Year",
-          "placeholder": "YYYY",
-          "type": "number"
-        },
-        {
-          "key": "mileage_km",
-          "label": "Mileage (km)",
-          "placeholder": "km",
-          "type": "number"
-        },
-        {
-          "key": "engine_capacity_ccm",
-          "label": "Engine Capacity (ccm)",
-          "placeholder": "ccm",
-          "type": "number"
-        },
-        {
-          "key": "motorcycle_type",
-          "label": "Type",
-          "options": ["Sport", "Naked", "Cruiser / Chopper", "Touring", "Enduro / Motocross", "Custom", "Other"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Yamaha R6 2015"
-    }
-  },
-  {
-    "name": "Mopeds & Scooters (Under 50cc)",
-    "slug": "mopeds-under-50cc",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "motorcycles-scooters",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used", "Damaged"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Vespa", "Piaggio", "Aprilia", "Peugeot", "Yamaha", "Honda", "KYMCO", "SYM", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "model",
-          "label": "Model",
-          "placeholder": "e.g. Primavera 50",
-          "type": "text"
-        },
-        {
-          "key": "year",
-          "label": "Year",
-          "placeholder": "YYYY",
-          "type": "number"
-        }
-      ],
-      "titlePlaceholder": "e.g. Vespa Primavera 50"
-    }
-  },
-  {
-    "name": "Electric Scooters & Bikes",
-    "slug": "electric-scooters-bikes",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "motorcycles-scooters",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Like New", "Used", "Damaged"],
-          "type": "select"
-        },
-        {
-          "key": "type",
-          "label": "Vehicle Type",
-          "options": ["Electric Kick Scooter", "Electric Bicycle (e-Bike)", "Electric Moped"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Xiaomi", "Ninebot / Segway", "Dualtron", "Kugoo", "MS Energy", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "model",
-          "label": "Model",
-          "placeholder": "e.g. Pro 2",
-          "type": "text"
-        }
-      ],
-      "titlePlaceholder": "e.g. Xiaomi Pro 2"
-    }
-  },
-  {
-    "name": "Quads & ATVs",
-    "slug": "quads-atvs",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "motorcycles-scooters",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Yamaha", "Polaris", "Can-Am", "Honda", "Suzuki", "CFMoto", "Odes", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "model",
-          "label": "Model",
-          "placeholder": "e.g. CForce 450",
-          "type": "text"
-        },
-        {
-          "key": "engine_capacity_ccm",
-          "label": "Engine Capacity (ccm)",
-          "placeholder": "ccm",
-          "type": "number"
-        }
-      ],
-      "titlePlaceholder": "e.g. CFMoto CForce 450"
-    }
-  },
-  {
-    "name": "Parts, Tires & Accessories",
-    "slug": "parts-tires-accessories-root",
-    "description": "Unified category for all vehicle parts, tires, and accessories.",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "motor-vehicles",
-    "template": {
-      "fields": [],
-      "titlePlaceholder": "e.g. Parts & Accessories"
-    }
-  },
-  {
-    "name": "Tires & Rims",
-    "slug": "tires-rims",
-    "description": "Tires, rims, and complete wheels for all types of vehicles.",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "parts-tires-accessories-root",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "vehicle_type",
-          "label": "Intended For",
-          "options": ["Cars & SUVs", "Motorcycles & Scooters", "Vans & Minibuses", "Trucks & Buses", "Agricultural & Heavy Machinery", "ATVs / Quads", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "item_type",
-          "label": "Item Type",
-          "options": ["Tires Only", "Rims/Alloys Only", "Complete Set (Tires + Rims)"],
-          "type": "select"
-        },
-        {
-          "key": "tire_season",
-          "label": "Tire Season",
-          "options": ["Summer", "Winter", "All-Season", "Off-Road / M/T", "Not Applicable"],
-          "type": "select"
-        },
-        {
-          "key": "tire_width",
-          "label": "Tire Width",
-          "placeholder": "e.g. 205",
-          "type": "number"
-        },
-        {
-          "key": "tire_profile",
-          "label": "Tire Profile",
-          "placeholder": "e.g. 55",
-          "type": "number"
-        },
-        {
-          "key": "rim_diameter",
-          "label": "Diameter (Inches)",
-          "placeholder": "e.g. 16",
-          "type": "number"
-        },
-        {
-          "key": "rim_material",
-          "label": "Rim Material",
-          "options": ["Alloy (Aluminium)", "Steel", "Not Applicable"],
-          "type": "select"
-        },
-        {
-          "key": "rim_bolt_pattern",
-          "label": "Bolt Pattern (Raspon)",
-          "placeholder": "e.g. 5x112",
-          "type": "text"
-        }
-      ],
-      "titlePlaceholder": "e.g. 4x Michelin 205/55 R16 Winter"
-    }
-  },
-  {
-    "name": "Car Spare Parts",
-    "slug": "car-spare-parts",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "parts-tires-accessories-root",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "part_category",
-          "label": "Category",
-          "options": ["Engine & Components", "Body / Exterior", "Interior", "Electrical & Lighting", "Suspension & Steering", "Brakes", "Exhaust", "Transmission / Drivetrain", "Cooling / Heating", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "compatible_make",
-          "label": "Compatible Make",
-          "placeholder": "e.g. VW, Audi",
-          "type": "text"
-        },
-        {
-          "key": "compatible_model",
-          "label": "Compatible Model",
-          "placeholder": "e.g. Golf 5",
-          "type": "text"
-        }
-      ],
-      "titlePlaceholder": "e.g. VW Golf 5 Front Bumper OEM"
-    }
-  },
-  {
-    "name": "Motorcycle Spare Parts",
-    "slug": "moto-spare-parts",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "parts-tires-accessories-root",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "part_category",
-          "label": "Category",
-          "options": ["Engine", "Fairings / Plastics", "Electrical", "Brakes", "Exhaust", "Suspension", "Chains & Sprockets", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "compatible_make",
-          "label": "Compatible Make",
-          "placeholder": "e.g. Yamaha",
-          "type": "text"
-        }
-      ],
-      "titlePlaceholder": "e.g. Yamaha R6 Akrapovic Exhaust"
-    }
-  },
-  {
-    "name": "Machinery & Transport Spare Parts",
-    "slug": "machinery-transport-parts",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "parts-tires-accessories-root",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "vehicle_type",
-          "label": "Part For",
-          "options": ["Trucks", "Buses", "Tractors", "Construction Machinery", "Trailers", "Other"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Scania R450 Headlight"
-    }
-  },
-  {
-    "name": "Marine Parts & Accessories",
-    "slug": "marine-parts-accessories",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "parts-tires-accessories-root",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "category",
-          "label": "Category",
-          "options": ["Outboard Motors", "Inboard Engines", "Propellers", "Navigation & Electronics", "Safety Gear", "Boat Trailers", "Other"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Yamaha 15HP Outboard Motor"
-    }
-  },
-  {
-    "name": "Car Audio & Navigation",
-    "slug": "car-audio-navigation",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "parts-tires-accessories-root",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "type",
-          "label": "Type",
-          "options": ["Car Radio / Android Multimedia", "Speakers", "Amplifiers", "Subwoofers", "GPS Navigation", "Dash Cams"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Android 10 Multimedia for VW"
-    }
-  },
-  {
-    "name": "Car Care & Cosmetics",
-    "slug": "car-care-cosmetics",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "parts-tires-accessories-root",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New (Sealed)"],
-          "type": "select"
-        },
-        {
-          "key": "type",
-          "label": "Type",
-          "options": ["Polish & Wax", "Interior Cleaners", "Shampoos", "Motor Oils & Fluids", "Other"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Castrol 5W-30 Motor Oil"
-    }
-  },
-  {
-    "name": "Motorcycle Clothing & Helmets",
-    "slug": "moto-clothing-helmets",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "parts-tires-accessories-root",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "type",
-          "label": "Type",
-          "options": ["Helmets", "Jackets", "Pants", "Full Suits", "Gloves", "Boots", "Protectors"],
-          "type": "select"
-        },
-        {
-          "key": "size",
-          "label": "Size",
-          "placeholder": "e.g. M, L, XL, 44",
-          "type": "text"
-        }
-      ],
-      "titlePlaceholder": "e.g. Shoei NXR 2 Helmet Size L"
-    }
-  },
-  {
-    "name": "Automotive Tools & Diagnostics",
-    "slug": "automotive-tools-diag",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "parts-tires-accessories-root",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "type",
-          "label": "Type",
-          "options": ["OBD2 Diagnostic Tools", "Hand Tool Sets", "Jacks & Lifts", "Air Compressors", "Specialized Tools", "Other"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. VCDS Diagnostic Cable / Gedore Set"
-    }
-  },
-  {
-    "name": "Boats & Watercraft",
-    "slug": "boats-watercraft",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "motor-vehicles",
-    "template": {
-      "fields": [],
-      "titlePlaceholder": "e.g. Boats"
-    }
-  },
-  {
-    "name": "Motor Boats & Yachts",
-    "slug": "motor-boats-yachts",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "boats-watercraft",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "placeholder": "e.g. Bayliner",
-          "type": "text"
-        },
-        {
-          "key": "engine_type",
-          "label": "Engine Type",
-          "options": ["Outboard (Vanbrodski)", "Inboard (Vgraden)", "Inboard/Outboard", "No Engine"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Bayliner 175 with Mercury 135HP"
-    }
-  },
-  {
-    "name": "Sailing Boats",
-    "slug": "sailing-boats",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "boats-watercraft",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "placeholder": "e.g. Bavaria",
-          "type": "text"
-        },
-        {
-          "key": "length_meters",
-          "label": "Length (m)",
-          "placeholder": "m",
-          "type": "number"
-        }
-      ],
-      "titlePlaceholder": "e.g. Bavaria 38 Cruiser"
-    }
-  },
-  {
-    "name": "Jet Skis",
-    "slug": "jet-skis",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "boats-watercraft",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Sea-Doo", "Yamaha", "Kawasaki", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "engine_power_hp",
-          "label": "Engine Power (HP)",
-          "placeholder": "HP",
-          "type": "number"
-        }
-      ],
-      "titlePlaceholder": "e.g. Sea-Doo Spark 90HP"
-    }
-  },
-  {
-    "name": "Rowing & Rubber Boats",
-    "slug": "rowing-rubber-boats",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "boats-watercraft",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "type",
-          "label": "Type",
-          "options": ["Rubber / Inflatable Boat", "RIB", "Kayak", "Canoe", "Rowing Boat", "SUP Board", "Other"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Zodiac Inflatable Boat 3.2m"
-    }
-  },
-  {
-    "name": "Camping & Caravans",
-    "slug": "camping-caravans",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "motor-vehicles",
-    "template": {
-      "fields": [],
-      "titlePlaceholder": "e.g. Campers"
-    }
-  },
-  {
-    "name": "Motorhomes / Campers",
-    "slug": "motorhomes",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "camping-caravans",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used", "Damaged"],
-          "type": "select"
-        },
-        {
-          "key": "camper_brand",
-          "label": "Camper Manufacturer",
-          "placeholder": "e.g. Adria, Hymer",
-          "type": "text"
-        },
-        {
-          "key": "sleeping_capacity",
-          "label": "Sleeping Capacity",
-          "options": ["1", "2", "3", "4", "5", "6+"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Fiat Ducato Adria Camper"
-    }
-  },
-  {
-    "name": "Caravans / Towable Campers",
-    "slug": "towable-caravans",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "camping-caravans",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "placeholder": "e.g. Hobby, Knaus",
-          "type": "text"
-        },
-        {
-          "key": "length_meters",
-          "label": "Length (m)",
-          "placeholder": "m",
-          "type": "number"
-        }
-      ],
-      "titlePlaceholder": "e.g. Hobby Premium 560"
-    }
-  },
-  {
-    "name": "Commercial & Transport Vehicles",
-    "slug": "commercial-transport-vehicles",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "motor-vehicles",
-    "template": {
-      "fields": [],
-      "titlePlaceholder": "e.g. Transport"
-    }
-  },
-  {
-    "name": "Vans & Minibuses",
-    "slug": "vans-minibuses",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "commercial-transport-vehicles",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used", "Damaged"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Mercedes-Benz", "VW", "Ford", "Renault", "Fiat", "Peugeot", "Citroen", "Iveco", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "model",
-          "label": "Model",
-          "placeholder": "e.g. Sprinter, Transit",
-          "type": "text"
-        },
-        {
-          "key": "vehicle_configuration",
-          "label": "Configuration",
-          "options": ["Panel Van (Cargo)", "Minibus (Passenger)", "Crew Cab (Mixto)", "Dropside / Flatbed", "Refrigerated"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Mercedes Sprinter 316 CDI"
-    }
-  },
-  {
-    "name": "Trucks (Up to 7.5t)",
-    "slug": "trucks-light",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "commercial-transport-vehicles",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used", "Damaged"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Iveco", "Mercedes-Benz", "MAN", "Renault", "Fuso", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "model",
-          "label": "Model",
-          "placeholder": "e.g. Daily",
-          "type": "text"
-        },
-        {
-          "key": "truck_body_type",
-          "label": "Body Type",
-          "options": ["Box / Closed", "Curtainsider", "Tipper / Dumper", "Flatbed", "Refrigerated", "Other"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Iveco Daily 35C15 Tipper"
-    }
-  },
-  {
-    "name": "Heavy Trucks (Over 7.5t)",
-    "slug": "trucks-heavy",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "commercial-transport-vehicles",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used", "Damaged"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["MAN", "Mercedes-Benz", "Volvo", "Scania", "DAF", "Renault", "Iveco", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "model",
-          "label": "Model",
-          "placeholder": "e.g. R450, Actros",
-          "type": "text"
-        },
-        {
-          "key": "truck_type",
-          "label": "Type",
-          "options": ["Tractor Unit (Glava)", "Tipper", "Box", "Curtainsider", "Refrigerated", "Chassis Cab", "Other"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Scania R450 Tractor Unit"
-    }
-  },
-  {
-    "name": "Buses & Coaches",
-    "slug": "buses-coaches",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "commercial-transport-vehicles",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Mercedes-Benz", "Setra", "MAN", "Neoplan", "Volvo", "Scania", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "seats",
-          "label": "Number of Seats",
-          "placeholder": "e.g. 50+1+1",
-          "type": "text"
-        }
-      ],
-      "titlePlaceholder": "e.g. Setra S 415 HD Coach"
-    }
-  },
-  {
-    "name": "Trailers & Semi-Trailers",
-    "slug": "trailers-semitrailers",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "commercial-transport-vehicles",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Schmitz Cargobull", "Krone", "Kögel", "Schwarzmüller", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "type",
-          "label": "Type",
-          "options": ["Curtainsider Semi", "Refrigerated Semi", "Tipper Semi", "Low Loader", "Car Transporter", "Light Car Trailer", "Other"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Schmitz Cargobull Curtainsider"
-    }
-  },
-  {
-    "name": "Agricultural & Heavy Machinery",
-    "slug": "agri-heavy-machinery",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "motor-vehicles",
-    "template": {
-      "fields": [],
-      "titlePlaceholder": "e.g. Tractors"
-    }
-  },
-  {
-    "name": "Tractors",
-    "slug": "tractors-agri",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "agri-heavy-machinery",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["John Deere", "Massey Ferguson", "New Holland", "IMT", "Fendt", "Deutz-Fahr", "Case IH", "Zetor", "Belarus", "Kubota", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "model",
-          "label": "Model",
-          "placeholder": "e.g. 6120M, 539",
-          "type": "text"
-        },
-        {
-          "key": "engine_power_hp",
-          "label": "Engine Power (HP)",
-          "placeholder": "HP",
-          "type": "number"
-        }
-      ],
-      "titlePlaceholder": "e.g. John Deere 6120M"
-    }
-  },
-  {
-    "name": "Harvesters & Combines",
-    "slug": "harvesters-combines",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "agri-heavy-machinery",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["CLAAS", "John Deere", "New Holland", "Zmaj", "Case IH", "Fendt", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "model",
-          "label": "Model",
-          "placeholder": "e.g. Lexion 600",
-          "type": "text"
-        }
-      ],
-      "titlePlaceholder": "e.g. CLAAS Lexion 600"
-    }
-  },
-  {
-    "name": "Construction Machinery",
-    "slug": "construction-machinery",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "agri-heavy-machinery",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "machinery_type",
-          "label": "Type",
-          "options": ["Excavator", "Mini Excavator", "Backhoe Loader (Kombinirka)", "Wheel Loader", "Bulldozer", "Grader", "Roller", "Skid Steer (Bobcat)", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Caterpillar", "JCB", "Komatsu", "Volvo", "Liebherr", "Bobcat", "Hitachi", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "model",
-          "label": "Model",
-          "placeholder": "e.g. 4CX",
-          "type": "text"
-        }
-      ],
-      "titlePlaceholder": "e.g. JCB 4CX Backhoe Loader"
-    }
-  },
-  {
-    "name": "Forklifts & Handling",
-    "slug": "forklifts-handling-machinery",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "agri-heavy-machinery",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "options": ["Linde", "Toyota", "Jungheinrich", "Hyster", "Still", "Clark", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "lifting_capacity_kg",
-          "label": "Lifting Capacity (kg)",
-          "placeholder": "kg",
-          "type": "number"
-        }
-      ],
-      "titlePlaceholder": "e.g. Linde H25D Diesel Forklift"
-    }
-  },
-  {
-    "name": "Forestry Machinery",
-    "slug": "forestry-machinery",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "agri-heavy-machinery",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "machinery_type",
-          "label": "Type",
-          "options": ["Skidder", "Forwarder", "Harvester", "Wood Chipper", "Other"],
-          "type": "select"
-        },
-        {
-          "key": "make",
-          "label": "Make",
-          "placeholder": "e.g. Timberjack",
-          "type": "text"
-        }
-      ],
-      "titlePlaceholder": "e.g. Timberjack 460 Skidder"
-    }
-  },
-  {
-    "name": "Attachment Machines / Implements",
-    "slug": "attachment-implements",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "agri-heavy-machinery",
-    "template": {
-      "fields": [
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Used"],
-          "type": "select"
-        },
-        {
-          "key": "implement_type",
-          "label": "Type",
-          "options": ["Plough", "Seeder", "Sprayer", "Baler", "Mower", "Loader Bucket", "Hydraulic Hammer", "Other"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Lemken 3-Furrow Reversible Plough"
-    }
-  },
-  {
-    "name": "Vehicle Services",
-    "slug": "vehicle-services",
-    "description": "",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "motor-vehicles",
-    "template": {
-      "fields": [
-        {
-          "key": "service_type",
-          "label": "Service Type",
-          "options": [
-            "Towing & Recovery (Slep Sluzba)", 
-            "Mechanic / Garage", 
-            "Auto Body & Paint (Limar/Farbar)", 
-            "Auto Glass", 
-            "Detailing & Wash", 
-            "Diagnostic & Electrical", 
-            "Tire Services (Vulkanizer)",
-            "Vehicle Buying (Scrap / Used)", 
-            "Other"
+    name: 'Cars',
+    slug: 'cars',
+    description: 'Passenger cars and light motor vehicles.',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'motor-vehicles',
+    template: {
+      fields: [
+        {
+          key: 'vin',
+          label: 'VIN',
+          placeholder: '17-character VIN',
+          type: 'text',
+        },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'make',
+          label: 'Make',
+          options: [
+            'Audi',
+            'BMW',
+            'Mercedes-Benz',
+            'Volkswagen',
+            'Toyota',
+            'Nissan',
+            'Ford',
+            'Peugeot',
+            'Renault',
+            'Fiat',
+            'Opel',
+            'Hyundai',
+            'Kia',
+            'Skoda',
+            'Seat',
+            'Mazda',
+            'Honda',
+            'Volvo',
+            'Porsche',
+            'Other',
           ],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. 24/7 Towing Service"
-    }
-  },
-  {
-    "name": "Real Estate",
-    "slug": "real-estate",
-    "description": "Apartments, houses, commercial spaces, and land for sale or rent.",
-    "image": "",
-    "isActive": true,
-    "isFeatured": true,
-    "parentSlug": null,
-    "template": {
-      "fields": [],
-      "titlePlaceholder": "e.g. Real Estate"
-    }
-  },
-  {
-    "name": "Apartments",
-    "slug": "apartments",
-    "description": "Flats, studios, and penthouses.",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "real-estate",
-    "template": {
-      "fields": [
-        {
-          "key": "transaction_type",
-          "label": "Ad Type",
-          "options": ["For Sale", "For Rent", "Wanted to Buy", "Wanted to Rent"],
-          "type": "select"
+          type: 'select',
         },
         {
-          "key": "isTradePossible",
-          "label": "Open to Exchange/Trade",
-          "options": ["Yes", "No"],
-          "type": "select"
+          key: 'model',
+          label: 'Model',
+          placeholder: 'e.g. Golf, 320d, A4',
+          type: 'text',
         },
         {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New Construction (Under Construction)", "New (Finished)", "Renovated", "Good / Maintained", "Needs Renovation"],
-          "type": "select"
+          key: 'year',
+          label: 'Year of Manufacture',
+          placeholder: 'YYYY',
+          type: 'number',
         },
         {
-          "key": "m2",
-          "label": "Area (m2)",
-          "placeholder": "e.g. 65",
-          "type": "number"
+          key: 'mileage_km',
+          label: 'Mileage (km)',
+          placeholder: 'km',
+          type: 'number',
         },
         {
-          "key": "rooms",
-          "label": "Number of Rooms",
-          "options": ["Garsonjera (Studio)", "1 Bedroom", "2 Bedrooms", "3 Bedrooms", "4+ Bedrooms"],
-          "type": "select"
-        },
-        {
-          "key": "floor",
-          "label": "Floor",
-          "placeholder": "e.g. 3",
-          "type": "number"
-        },
-        {
-          "key": "total_floors",
-          "label": "Total Floors in Building",
-          "placeholder": "e.g. 5",
-          "type": "number"
-        },
-        {
-          "key": "elevator",
-          "label": "Elevator",
-          "options": ["Yes", "No"],
-          "type": "select"
-        },
-        {
-          "key": "balcony",
-          "label": "Balcony / Terrace",
-          "options": ["Yes", "No", "French Balcony"],
-          "type": "select"
-        },
-        {
-          "key": "heating",
-          "label": "Heating System",
-          "options": ["Central City Heating", "Electricity / Inverter AC", "Private Central (Wood/Pellet)", "Heat Pump", "None"],
-          "type": "select"
-        },
-        {
-          "key": "furnished",
-          "label": "Furnished Status",
-          "options": ["Fully Furnished", "Empty (Unfurnished)", "Kitchen Only"],
-          "type": "select"
-        },
-        {
-          "key": "parking",
-          "label": "Parking",
-          "options": ["Free Public Parking", "Zoned Parking", "Underground Garage", "Private Parking Spot", "None"],
-          "type": "select"
-        },
-        {
-          "key": "title_deed",
-          "label": "Title Deed (Имотен лист)",
-          "options": ["Yes (Clear)", "In Process", "No"],
-          "type": "select"
-        },
-        {
-          "key": "year_built",
-          "label": "Year Built",
-          "placeholder": "YYYY",
-          "type": "number"
-        }
-      ],
-      "titlePlaceholder": "e.g. 2-Bedroom Apartment in Centar"
-    }
-  },
-  {
-    "name": "Houses & Villas",
-    "slug": "houses",
-    "description": "Family houses, townhouses, and luxury villas.",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "real-estate",
-    "template": {
-      "fields": [
-        {
-          "key": "transaction_type",
-          "label": "Ad Type",
-          "options": ["For Sale", "For Rent", "Wanted to Buy", "Wanted to Rent"],
-          "type": "select"
-        },
-        {
-          "key": "isTradePossible",
-          "label": "Open to Exchange/Trade",
-          "options": ["Yes", "No"],
-          "type": "select"
-        },
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New Construction", "Renovated", "Good / Maintained", "Needs Renovation"],
-          "type": "select"
-        },
-        {
-          "key": "m2",
-          "label": "House Area (m2)",
-          "placeholder": "m2",
-          "type": "number"
-        },
-        {
-          "key": "yard_m2",
-          "label": "Yard Area (m2)",
-          "placeholder": "m2",
-          "type": "number"
-        },
-        {
-          "key": "rooms",
-          "label": "Total Rooms",
-          "placeholder": "e.g. 5",
-          "type": "number"
-        },
-        {
-          "key": "floors",
-          "label": "Number of Floors",
-          "options": ["1 (Single Story)", "2", "3", "4+"],
-          "type": "select"
-        },
-        {
-          "key": "heating",
-          "label": "Heating",
-          "options": ["Central City Heating", "Electricity / Inverter AC", "Heat Pump", "Wood / Pellets", "Solar"],
-          "type": "select"
-        },
-        {
-          "key": "furnished",
-          "label": "Furnished Status",
-          "options": ["Fully Furnished", "Empty", "Partially Furnished"],
-          "type": "select"
-        },
-        {
-          "key": "title_deed",
-          "label": "Title Deed (Имотен лист)",
-          "options": ["Yes (Clear)", "In Process", "No"],
-          "type": "select"
-        },
-        {
-          "key": "year_built",
-          "label": "Year Built",
-          "placeholder": "YYYY",
-          "type": "number"
-        }
-      ],
-      "titlePlaceholder": "e.g. Modern Family House with Garden"
-    }
-  },
-  {
-    "name": "Commercial & Business Space",
-    "slug": "commercial-space",
-    "description": "Offices, shops, warehouses, and industrial plants.",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "real-estate",
-    "template": {
-      "fields": [
-        {
-          "key": "transaction_type",
-          "label": "Ad Type",
-          "options": ["For Sale", "For Rent", "Wanted"],
-          "type": "select"
-        },
-        {
-          "key": "commercial_type",
-          "label": "Type of Space",
-          "options": [
-            "Office Space", 
-            "Retail Shop / Store", 
-            "Warehouse / Storage", 
-            "Industrial Plant / Factory", 
-            "Restaurant / Café / Bar", 
-            "Hotel / Motel / Hostel", 
-            "Other"
+          key: 'fuel_type',
+          label: 'Fuel Type',
+          options: [
+            'Diesel',
+            'Petrol',
+            'Petrol + LPG',
+            'Hybrid',
+            'Plug-in Hybrid',
+            'Electric',
           ],
-          "type": "select"
+          type: 'select',
         },
         {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New Construction", "Renovated", "Good", "Needs Renovation"],
-          "type": "select"
+          key: 'transmission',
+          label: 'Transmission',
+          options: ['Manual', 'Automatic', 'Semi-Automatic / DSG'],
+          type: 'select',
         },
         {
-          "key": "m2",
-          "label": "Total Area (m2)",
-          "placeholder": "m2",
-          "type": "number"
-        },
-        {
-          "key": "floor",
-          "label": "Floor",
-          "placeholder": "0 = Ground floor",
-          "type": "number"
-        },
-        {
-          "key": "heating",
-          "label": "Heating / Cooling",
-          "options": ["Central HVAC", "Electricity/AC", "None"],
-          "type": "select"
-        },
-        {
-          "key": "parking",
-          "label": "Parking",
-          "options": ["Private Parking", "Public Parking Nearby", "No Parking", "Loading Dock Available"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. 80m2 Office Space in Business Center"
-    }
-  },
-  {
-    "name": "Land & Plots",
-    "slug": "land",
-    "description": "Construction, agricultural, and industrial land.",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "real-estate",
-    "template": {
-      "fields": [
-        {
-          "key": "transaction_type",
-          "label": "Ad Type",
-          "options": ["For Sale", "For Rent", "Wanted"],
-          "type": "select"
-        },
-        {
-          "key": "land_type",
-          "label": "Type of Land",
-          "options": [
-            "Construction Land (Градежно)", 
-            "Agricultural Land (Земјоделско)", 
-            "Industrial Land", 
-            "Forest", 
-            "Other"
+          key: 'body_type',
+          label: 'Body Type',
+          options: [
+            'Sedan',
+            'Hatchback',
+            'SUV / Off-Road',
+            'Station Wagon',
+            'Coupe',
+            'Convertible',
+            'Minivan / MPV',
+            'Pickup',
           ],
-          "type": "select"
+          type: 'select',
         },
         {
-          "key": "isTradePossible",
-          "label": "Open to Exchange (npr. so kompenzacija)",
-          "options": ["Yes", "No"],
-          "type": "select"
+          key: 'engine_capacity_ccm',
+          label: 'Engine Capacity (ccm)',
+          placeholder: 'e.g. 1968',
+          type: 'number',
         },
         {
-          "key": "m2",
-          "label": "Area (m2)",
-          "placeholder": "m2",
-          "type": "number"
+          key: 'engine_power_kw',
+          label: 'Engine Power (kW)',
+          placeholder: 'kW',
+          type: 'number',
         },
         {
-          "key": "electricity",
-          "label": "Electricity Access",
-          "options": ["Yes (Connected)", "Nearby", "No"],
-          "type": "select"
+          key: 'registration',
+          label: 'Registration Status',
+          options: [
+            'Macedonian Plates',
+            'Foreign Plates',
+            'Customs Cleared',
+            'Unregistered',
+          ],
+          type: 'select',
         },
-        {
-          "key": "water",
-          "label": "Water / Sewage Access",
-          "options": ["Yes (Connected)", "Nearby", "No"],
-          "type": "select"
-        },
-        {
-          "key": "road",
-          "label": "Road Access",
-          "options": ["Asphalt", "Dirt Road", "None"],
-          "type": "select"
-        },
-        {
-          "key": "title_deed",
-          "label": "Title Deed / Urban Plan (DUP)",
-          "options": ["Clear Title & DUP", "Clear Title (No DUP)", "In Process"],
-          "type": "select"
-        }
       ],
-      "titlePlaceholder": "e.g. 500m2 Construction Plot with DUP"
-    }
+      titlePlaceholder: 'e.g. VW Golf 2.0 TDI 2018',
+    },
   },
   {
-    "name": "Holiday Homes / Cabins",
-    "slug": "holiday-homes",
-    "description": "Weekend houses, lake houses, and mountain cabins.",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "real-estate",
-    "template": {
-      "fields": [
-        {
-          "key": "transaction_type",
-          "label": "Ad Type",
-          "options": ["For Sale", "For Rent (Short Term)", "For Rent (Long Term)", "Wanted"],
-          "type": "select"
-        },
-        {
-          "key": "condition",
-          "label": "Condition",
-          "options": ["New", "Renovated", "Good", "Needs Renovation"],
-          "type": "select"
-        },
-        {
-          "key": "m2",
-          "label": "Cabin Area (m2)",
-          "placeholder": "m2",
-          "type": "number"
-        },
-        {
-          "key": "yard_m2",
-          "label": "Yard Area (m2)",
-          "placeholder": "m2",
-          "type": "number"
-        },
-        {
-          "key": "rooms",
-          "label": "Total Rooms",
-          "placeholder": "Rooms",
-          "type": "number"
-        },
-        {
-          "key": "heating",
-          "label": "Heating",
-          "options": ["Wood / Fireplace", "Electricity", "Pellets", "None"],
-          "type": "select"
-        },
-        {
-          "key": "utilities",
-          "label": "Utilities (Water/Electricity)",
-          "options": ["Both Connected", "Only Electricity", "Only Water / Well", "Off-grid / Solar"],
-          "type": "select"
-        }
-      ],
-      "titlePlaceholder": "e.g. Weekend House near Lake"
-    }
+    name: 'Motorcycles & Scooters',
+    slug: 'motorcycles-scooters',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'motor-vehicles',
+    template: {
+      fields: [],
+      titlePlaceholder: 'e.g. Motorcycles',
+    },
   },
   {
-    "name": "Garages & Parking",
-    "slug": "garages",
-    "description": "Garages, parking spots, and storage units.",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "real-estate",
-    "template": {
-      "fields": [
+    name: 'Motorcycles (Above 50cc)',
+    slug: 'motorcycles-above-50cc',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'motorcycles-scooters',
+    template: {
+      fields: [
         {
-          "key": "transaction_type",
-          "label": "Ad Type",
-          "options": ["For Sale", "For Rent", "Wanted"],
-          "type": "select"
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
         },
         {
-          "key": "garage_type",
-          "label": "Type",
-          "options": ["Underground Garage", "Street Garage", "Parking Spot", "Storage Room (Podrum)"],
-          "type": "select"
+          key: 'make',
+          label: 'Make',
+          options: [
+            'Yamaha',
+            'Honda',
+            'Suzuki',
+            'Kawasaki',
+            'BMW',
+            'Ducati',
+            'KTM',
+            'Aprilia',
+            'Harley-Davidson',
+            'Other',
+          ],
+          type: 'select',
         },
         {
-          "key": "m2",
-          "label": "Area (m2)",
-          "placeholder": "m2",
-          "type": "number"
+          key: 'model',
+          label: 'Model',
+          placeholder: 'e.g. YZF-R6',
+          type: 'text',
         },
         {
-          "key": "security",
-          "label": "Security Features",
-          "options": ["Standard Lock", "Remote Roll-door", "Camera / Guard", "Open Air"],
-          "type": "select"
-        }
+          key: 'year',
+          label: 'Year',
+          placeholder: 'YYYY',
+          type: 'number',
+        },
+        {
+          key: 'mileage_km',
+          label: 'Mileage (km)',
+          placeholder: 'km',
+          type: 'number',
+        },
+        {
+          key: 'engine_capacity_ccm',
+          label: 'Engine Capacity (ccm)',
+          placeholder: 'ccm',
+          type: 'number',
+        },
+        {
+          key: 'motorcycle_type',
+          label: 'Type',
+          options: [
+            'Sport',
+            'Naked',
+            'Cruiser / Chopper',
+            'Touring',
+            'Enduro / Motocross',
+            'Custom',
+            'Other',
+          ],
+          type: 'select',
+        },
       ],
-      "titlePlaceholder": "e.g. 18m2 Garage in Centar"
-    }
+      titlePlaceholder: 'e.g. Yamaha R6 2015',
+    },
   },
   {
-    "name": "Rooms & Roommates",
-    "slug": "rooms-accommodation",
-    "description": "Single rooms and shared apartment listings.",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "real-estate",
-    "template": {
-      "fields": [
+    name: 'Mopeds & Scooters (Under 50cc)',
+    slug: 'mopeds-under-50cc',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'motorcycles-scooters',
+    template: {
+      fields: [
         {
-          "key": "transaction_type",
-          "label": "Ad Type",
-          "options": ["Offering Room", "Looking for Room (Roommate)"],
-          "type": "select"
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
         },
         {
-          "key": "m2",
-          "label": "Room Area (m2)",
-          "placeholder": "m2",
-          "type": "number"
+          key: 'make',
+          label: 'Make',
+          options: [
+            'Vespa',
+            'Piaggio',
+            'Aprilia',
+            'Peugeot',
+            'Yamaha',
+            'Honda',
+            'KYMCO',
+            'SYM',
+            'Other',
+          ],
+          type: 'select',
         },
         {
-          "key": "bills_included",
-          "label": "Are utilities/bills included?",
-          "options": ["Yes", "No", "Partially"],
-          "type": "select"
+          key: 'model',
+          label: 'Model',
+          placeholder: 'e.g. Primavera 50',
+          type: 'text',
         },
         {
-          "key": "bathroom",
-          "label": "Bathroom",
-          "options": ["Private (En-suite)", "Shared"],
-          "type": "select"
+          key: 'year',
+          label: 'Year',
+          placeholder: 'YYYY',
+          type: 'number',
         },
-        {
-          "key": "gender_preference",
-          "label": "Roommate Preference",
-          "options": ["Any", "Male Only", "Female Only", "Students Only"],
-          "type": "select"
-        }
       ],
-      "titlePlaceholder": "e.g. Furnished Room for Student"
-    }
+      titlePlaceholder: 'e.g. Vespa Primavera 50',
+    },
   },
   {
-    "name": "Real Estate Abroad",
-    "slug": "real-estate-abroad",
-    "description": "Properties located outside the country.",
-    "image": "",
-    "isActive": true,
-    "isFeatured": false,
-    "parentSlug": "real-estate",
-    "template": {
-      "fields": [
+    name: 'Electric Scooters & Bikes',
+    slug: 'electric-scooters-bikes',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'motorcycles-scooters',
+    template: {
+      fields: [
         {
-          "key": "transaction_type",
-          "label": "Ad Type",
-          "options": ["For Sale", "For Rent (Vacation)", "For Rent (Long Term)"],
-          "type": "select"
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Like New', 'Used', 'Damaged'],
+          type: 'select',
         },
         {
-          "key": "country",
-          "label": "Country",
-          "options": ["Greece", "Turkey", "Bulgaria", "Albania", "Serbia", "Montenegro", "Croatia", "Germany", "UAE / Dubai", "Other"],
-          "type": "select"
+          key: 'type',
+          label: 'Vehicle Type',
+          options: [
+            'Electric Kick Scooter',
+            'Electric Bicycle (e-Bike)',
+            'Electric Moped',
+          ],
+          type: 'select',
         },
         {
-          "key": "property_type",
-          "label": "Property Type",
-          "options": ["Apartment / Studio", "House / Villa", "Land", "Commercial Space"],
-          "type": "select"
+          key: 'make',
+          label: 'Make',
+          options: [
+            'Xiaomi',
+            'Ninebot / Segway',
+            'Dualtron',
+            'Kugoo',
+            'MS Energy',
+            'Other',
+          ],
+          type: 'select',
         },
         {
-          "key": "m2",
-          "label": "Area (m2)",
-          "placeholder": "m2",
-          "type": "number"
+          key: 'model',
+          label: 'Model',
+          placeholder: 'e.g. Pro 2',
+          type: 'text',
         },
-        {
-          "key": "distance_to_sea",
-          "label": "Distance to Sea/Beach (Meters)",
-          "placeholder": "e.g. 50, 500 (Leave blank if not applicable)",
-          "type": "number"
-        }
       ],
-      "titlePlaceholder": "e.g. Seaside Studio in Halkidiki"
-    }
+      titlePlaceholder: 'e.g. Xiaomi Pro 2',
+    },
+  },
+  {
+    name: 'Quads & ATVs',
+    slug: 'quads-atvs',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'motorcycles-scooters',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'make',
+          label: 'Make',
+          options: [
+            'Yamaha',
+            'Polaris',
+            'Can-Am',
+            'Honda',
+            'Suzuki',
+            'CFMoto',
+            'Odes',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          placeholder: 'e.g. CForce 450',
+          type: 'text',
+        },
+        {
+          key: 'engine_capacity_ccm',
+          label: 'Engine Capacity (ccm)',
+          placeholder: 'ccm',
+          type: 'number',
+        },
+      ],
+      titlePlaceholder: 'e.g. CFMoto CForce 450',
+    },
+  },
+  {
+    name: 'Parts, Tires & Accessories',
+    slug: 'parts-tires-accessories-root',
+    description:
+      'Unified category for all vehicle parts, tires, and accessories.',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'motor-vehicles',
+    template: {
+      fields: [],
+      titlePlaceholder: 'e.g. Parts & Accessories',
+    },
+  },
+  {
+    name: 'Tires & Rims',
+    slug: 'tires-rims',
+    description: 'Tires, rims, and complete wheels for all types of vehicles.',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'parts-tires-accessories-root',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'vehicle_type',
+          label: 'Intended For',
+          options: [
+            'Cars & SUVs',
+            'Motorcycles & Scooters',
+            'Vans & Minibuses',
+            'Trucks & Buses',
+            'Agricultural & Heavy Machinery',
+            'ATVs / Quads',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'item_type',
+          label: 'Item Type',
+          options: [
+            'Tires Only',
+            'Rims/Alloys Only',
+            'Complete Set (Tires + Rims)',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'tire_season',
+          label: 'Tire Season',
+          options: [
+            'Summer',
+            'Winter',
+            'All-Season',
+            'Off-Road / M/T',
+            'Not Applicable',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'tire_width',
+          label: 'Tire Width',
+          placeholder: 'e.g. 205',
+          type: 'number',
+        },
+        {
+          key: 'tire_profile',
+          label: 'Tire Profile',
+          placeholder: 'e.g. 55',
+          type: 'number',
+        },
+        {
+          key: 'rim_diameter',
+          label: 'Diameter (Inches)',
+          placeholder: 'e.g. 16',
+          type: 'number',
+        },
+        {
+          key: 'rim_material',
+          label: 'Rim Material',
+          options: ['Alloy (Aluminium)', 'Steel', 'Not Applicable'],
+          type: 'select',
+        },
+        {
+          key: 'rim_bolt_pattern',
+          label: 'Bolt Pattern (Raspon)',
+          placeholder: 'e.g. 5x112',
+          type: 'text',
+        },
+      ],
+      titlePlaceholder: 'e.g. 4x Michelin 205/55 R16 Winter',
+    },
+  },
+  {
+    name: 'Car Spare Parts',
+    slug: 'car-spare-parts',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'parts-tires-accessories-root',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'part_category',
+          label: 'Category',
+          options: [
+            'Engine & Components',
+            'Body / Exterior',
+            'Interior',
+            'Electrical & Lighting',
+            'Suspension & Steering',
+            'Brakes',
+            'Exhaust',
+            'Transmission / Drivetrain',
+            'Cooling / Heating',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'compatible_make',
+          label: 'Compatible Make',
+          placeholder: 'e.g. VW, Audi',
+          type: 'text',
+        },
+        {
+          key: 'compatible_model',
+          label: 'Compatible Model',
+          placeholder: 'e.g. Golf 5',
+          type: 'text',
+        },
+      ],
+      titlePlaceholder: 'e.g. VW Golf 5 Front Bumper OEM',
+    },
+  },
+  {
+    name: 'Motorcycle Spare Parts',
+    slug: 'moto-spare-parts',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'parts-tires-accessories-root',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'part_category',
+          label: 'Category',
+          options: [
+            'Engine',
+            'Fairings / Plastics',
+            'Electrical',
+            'Brakes',
+            'Exhaust',
+            'Suspension',
+            'Chains & Sprockets',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'compatible_make',
+          label: 'Compatible Make',
+          placeholder: 'e.g. Yamaha',
+          type: 'text',
+        },
+      ],
+      titlePlaceholder: 'e.g. Yamaha R6 Akrapovic Exhaust',
+    },
+  },
+  {
+    name: 'Machinery & Transport Spare Parts',
+    slug: 'machinery-transport-parts',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'parts-tires-accessories-root',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'vehicle_type',
+          label: 'Part For',
+          options: [
+            'Trucks',
+            'Buses',
+            'Tractors',
+            'Construction Machinery',
+            'Trailers',
+            'Other',
+          ],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. Scania R450 Headlight',
+    },
+  },
+  {
+    name: 'Marine Parts & Accessories',
+    slug: 'marine-parts-accessories',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'parts-tires-accessories-root',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'category',
+          label: 'Category',
+          options: [
+            'Outboard Motors',
+            'Inboard Engines',
+            'Propellers',
+            'Navigation & Electronics',
+            'Safety Gear',
+            'Boat Trailers',
+            'Other',
+          ],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. Yamaha 15HP Outboard Motor',
+    },
+  },
+  {
+    name: 'Car Audio & Navigation',
+    slug: 'car-audio-navigation',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'parts-tires-accessories-root',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'type',
+          label: 'Type',
+          options: [
+            'Car Radio / Android Multimedia',
+            'Speakers',
+            'Amplifiers',
+            'Subwoofers',
+            'GPS Navigation',
+            'Dash Cams',
+          ],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. Android 10 Multimedia for VW',
+    },
+  },
+  {
+    name: 'Car Care & Cosmetics',
+    slug: 'car-care-cosmetics',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'parts-tires-accessories-root',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New (Sealed)'],
+          type: 'select',
+        },
+        {
+          key: 'type',
+          label: 'Type',
+          options: [
+            'Polish & Wax',
+            'Interior Cleaners',
+            'Shampoos',
+            'Motor Oils & Fluids',
+            'Other',
+          ],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. Castrol 5W-30 Motor Oil',
+    },
+  },
+  {
+    name: 'Motorcycle Clothing & Helmets',
+    slug: 'moto-clothing-helmets',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'parts-tires-accessories-root',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'type',
+          label: 'Type',
+          options: [
+            'Helmets',
+            'Jackets',
+            'Pants',
+            'Full Suits',
+            'Gloves',
+            'Boots',
+            'Protectors',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'size',
+          label: 'Size',
+          placeholder: 'e.g. M, L, XL, 44',
+          type: 'text',
+        },
+      ],
+      titlePlaceholder: 'e.g. Shoei NXR 2 Helmet Size L',
+    },
+  },
+  {
+    name: 'Automotive Tools & Diagnostics',
+    slug: 'automotive-tools-diag',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'parts-tires-accessories-root',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'type',
+          label: 'Type',
+          options: [
+            'OBD2 Diagnostic Tools',
+            'Hand Tool Sets',
+            'Jacks & Lifts',
+            'Air Compressors',
+            'Specialized Tools',
+            'Other',
+          ],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. VCDS Diagnostic Cable / Gedore Set',
+    },
+  },
+  {
+    name: 'Boats & Watercraft',
+    slug: 'boats-watercraft',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'motor-vehicles',
+    template: {
+      fields: [],
+      titlePlaceholder: 'e.g. Boats',
+    },
+  },
+  {
+    name: 'Motor Boats & Yachts',
+    slug: 'motor-boats-yachts',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'boats-watercraft',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'make',
+          label: 'Make',
+          placeholder: 'e.g. Bayliner',
+          type: 'text',
+        },
+        {
+          key: 'engine_type',
+          label: 'Engine Type',
+          options: [
+            'Outboard (Vanbrodski)',
+            'Inboard (Vgraden)',
+            'Inboard/Outboard',
+            'No Engine',
+          ],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. Bayliner 175 with Mercury 135HP',
+    },
+  },
+  {
+    name: 'Sailing Boats',
+    slug: 'sailing-boats',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'boats-watercraft',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'make',
+          label: 'Make',
+          placeholder: 'e.g. Bavaria',
+          type: 'text',
+        },
+        {
+          key: 'length_meters',
+          label: 'Length (m)',
+          placeholder: 'm',
+          type: 'number',
+        },
+      ],
+      titlePlaceholder: 'e.g. Bavaria 38 Cruiser',
+    },
+  },
+  {
+    name: 'Jet Skis',
+    slug: 'jet-skis',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'boats-watercraft',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'make',
+          label: 'Make',
+          options: ['Sea-Doo', 'Yamaha', 'Kawasaki', 'Other'],
+          type: 'select',
+        },
+        {
+          key: 'engine_power_hp',
+          label: 'Engine Power (HP)',
+          placeholder: 'HP',
+          type: 'number',
+        },
+      ],
+      titlePlaceholder: 'e.g. Sea-Doo Spark 90HP',
+    },
+  },
+  {
+    name: 'Rowing & Rubber Boats',
+    slug: 'rowing-rubber-boats',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'boats-watercraft',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'type',
+          label: 'Type',
+          options: [
+            'Rubber / Inflatable Boat',
+            'RIB',
+            'Kayak',
+            'Canoe',
+            'Rowing Boat',
+            'SUP Board',
+            'Other',
+          ],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. Zodiac Inflatable Boat 3.2m',
+    },
+  },
+  {
+    name: 'Camping & Caravans',
+    slug: 'camping-caravans',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'motor-vehicles',
+    template: {
+      fields: [],
+      titlePlaceholder: 'e.g. Campers',
+    },
+  },
+  {
+    name: 'Motorhomes / Campers',
+    slug: 'motorhomes',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'camping-caravans',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
+        {
+          key: 'camper_brand',
+          label: 'Camper Manufacturer',
+          placeholder: 'e.g. Adria, Hymer',
+          type: 'text',
+        },
+        {
+          key: 'sleeping_capacity',
+          label: 'Sleeping Capacity',
+          options: ['1', '2', '3', '4', '5', '6+'],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. Fiat Ducato Adria Camper',
+    },
+  },
+  {
+    name: 'Caravans / Towable Campers',
+    slug: 'towable-caravans',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'camping-caravans',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'make',
+          label: 'Make',
+          placeholder: 'e.g. Hobby, Knaus',
+          type: 'text',
+        },
+        {
+          key: 'length_meters',
+          label: 'Length (m)',
+          placeholder: 'm',
+          type: 'number',
+        },
+      ],
+      titlePlaceholder: 'e.g. Hobby Premium 560',
+    },
+  },
+  {
+    name: 'Commercial & Transport Vehicles',
+    slug: 'commercial-transport-vehicles',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'motor-vehicles',
+    template: {
+      fields: [],
+      titlePlaceholder: 'e.g. Transport',
+    },
+  },
+  {
+    name: 'Vans & Minibuses',
+    slug: 'vans-minibuses',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'commercial-transport-vehicles',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
+        {
+          key: 'make',
+          label: 'Make',
+          options: [
+            'Mercedes-Benz',
+            'VW',
+            'Ford',
+            'Renault',
+            'Fiat',
+            'Peugeot',
+            'Citroen',
+            'Iveco',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          placeholder: 'e.g. Sprinter, Transit',
+          type: 'text',
+        },
+        {
+          key: 'vehicle_configuration',
+          label: 'Configuration',
+          options: [
+            'Panel Van (Cargo)',
+            'Minibus (Passenger)',
+            'Crew Cab (Mixto)',
+            'Dropside / Flatbed',
+            'Refrigerated',
+          ],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. Mercedes Sprinter 316 CDI',
+    },
+  },
+  {
+    name: 'Trucks (Up to 7.5t)',
+    slug: 'trucks-light',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'commercial-transport-vehicles',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
+        {
+          key: 'make',
+          label: 'Make',
+          options: [
+            'Iveco',
+            'Mercedes-Benz',
+            'MAN',
+            'Renault',
+            'Fuso',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          placeholder: 'e.g. Daily',
+          type: 'text',
+        },
+        {
+          key: 'truck_body_type',
+          label: 'Body Type',
+          options: [
+            'Box / Closed',
+            'Curtainsider',
+            'Tipper / Dumper',
+            'Flatbed',
+            'Refrigerated',
+            'Other',
+          ],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. Iveco Daily 35C15 Tipper',
+    },
+  },
+  {
+    name: 'Heavy Trucks (Over 7.5t)',
+    slug: 'trucks-heavy',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'commercial-transport-vehicles',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
+        {
+          key: 'make',
+          label: 'Make',
+          options: [
+            'MAN',
+            'Mercedes-Benz',
+            'Volvo',
+            'Scania',
+            'DAF',
+            'Renault',
+            'Iveco',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          placeholder: 'e.g. R450, Actros',
+          type: 'text',
+        },
+        {
+          key: 'truck_type',
+          label: 'Type',
+          options: [
+            'Tractor Unit (Glava)',
+            'Tipper',
+            'Box',
+            'Curtainsider',
+            'Refrigerated',
+            'Chassis Cab',
+            'Other',
+          ],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. Scania R450 Tractor Unit',
+    },
+  },
+  {
+    name: 'Buses & Coaches',
+    slug: 'buses-coaches',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'commercial-transport-vehicles',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'make',
+          label: 'Make',
+          options: [
+            'Mercedes-Benz',
+            'Setra',
+            'MAN',
+            'Neoplan',
+            'Volvo',
+            'Scania',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'seats',
+          label: 'Number of Seats',
+          placeholder: 'e.g. 50+1+1',
+          type: 'text',
+        },
+      ],
+      titlePlaceholder: 'e.g. Setra S 415 HD Coach',
+    },
+  },
+  {
+    name: 'Trailers & Semi-Trailers',
+    slug: 'trailers-semitrailers',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'commercial-transport-vehicles',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'make',
+          label: 'Make',
+          options: [
+            'Schmitz Cargobull',
+            'Krone',
+            'Kögel',
+            'Schwarzmüller',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'type',
+          label: 'Type',
+          options: [
+            'Curtainsider Semi',
+            'Refrigerated Semi',
+            'Tipper Semi',
+            'Low Loader',
+            'Car Transporter',
+            'Light Car Trailer',
+            'Other',
+          ],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. Schmitz Cargobull Curtainsider',
+    },
+  },
+  {
+    name: 'Agricultural & Heavy Machinery',
+    slug: 'agri-heavy-machinery',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'motor-vehicles',
+    template: {
+      fields: [],
+      titlePlaceholder: 'e.g. Tractors',
+    },
+  },
+  {
+    name: 'Tractors',
+    slug: 'tractors-agri',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'agri-heavy-machinery',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'make',
+          label: 'Make',
+          options: [
+            'John Deere',
+            'Massey Ferguson',
+            'New Holland',
+            'IMT',
+            'Fendt',
+            'Deutz-Fahr',
+            'Case IH',
+            'Zetor',
+            'Belarus',
+            'Kubota',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          placeholder: 'e.g. 6120M, 539',
+          type: 'text',
+        },
+        {
+          key: 'engine_power_hp',
+          label: 'Engine Power (HP)',
+          placeholder: 'HP',
+          type: 'number',
+        },
+      ],
+      titlePlaceholder: 'e.g. John Deere 6120M',
+    },
+  },
+  {
+    name: 'Harvesters & Combines',
+    slug: 'harvesters-combines',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'agri-heavy-machinery',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'make',
+          label: 'Make',
+          options: [
+            'CLAAS',
+            'John Deere',
+            'New Holland',
+            'Zmaj',
+            'Case IH',
+            'Fendt',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          placeholder: 'e.g. Lexion 600',
+          type: 'text',
+        },
+      ],
+      titlePlaceholder: 'e.g. CLAAS Lexion 600',
+    },
+  },
+  {
+    name: 'Construction Machinery',
+    slug: 'construction-machinery',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'agri-heavy-machinery',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'machinery_type',
+          label: 'Type',
+          options: [
+            'Excavator',
+            'Mini Excavator',
+            'Backhoe Loader (Kombinirka)',
+            'Wheel Loader',
+            'Bulldozer',
+            'Grader',
+            'Roller',
+            'Skid Steer (Bobcat)',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'make',
+          label: 'Make',
+          options: [
+            'Caterpillar',
+            'JCB',
+            'Komatsu',
+            'Volvo',
+            'Liebherr',
+            'Bobcat',
+            'Hitachi',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          placeholder: 'e.g. 4CX',
+          type: 'text',
+        },
+      ],
+      titlePlaceholder: 'e.g. JCB 4CX Backhoe Loader',
+    },
+  },
+  {
+    name: 'Forklifts & Handling',
+    slug: 'forklifts-handling-machinery',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'agri-heavy-machinery',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'make',
+          label: 'Make',
+          options: [
+            'Linde',
+            'Toyota',
+            'Jungheinrich',
+            'Hyster',
+            'Still',
+            'Clark',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'lifting_capacity_kg',
+          label: 'Lifting Capacity (kg)',
+          placeholder: 'kg',
+          type: 'number',
+        },
+      ],
+      titlePlaceholder: 'e.g. Linde H25D Diesel Forklift',
+    },
+  },
+  {
+    name: 'Forestry Machinery',
+    slug: 'forestry-machinery',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'agri-heavy-machinery',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'machinery_type',
+          label: 'Type',
+          options: [
+            'Skidder',
+            'Forwarder',
+            'Harvester',
+            'Wood Chipper',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'make',
+          label: 'Make',
+          placeholder: 'e.g. Timberjack',
+          type: 'text',
+        },
+      ],
+      titlePlaceholder: 'e.g. Timberjack 460 Skidder',
+    },
+  },
+  {
+    name: 'Attachment Machines / Implements',
+    slug: 'attachment-implements',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'agri-heavy-machinery',
+    template: {
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used'],
+          type: 'select',
+        },
+        {
+          key: 'implement_type',
+          label: 'Type',
+          options: [
+            'Plough',
+            'Seeder',
+            'Sprayer',
+            'Baler',
+            'Mower',
+            'Loader Bucket',
+            'Hydraulic Hammer',
+            'Other',
+          ],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. Lemken 3-Furrow Reversible Plough',
+    },
+  },
+  {
+    name: 'Vehicle Services',
+    slug: 'vehicle-services',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'motor-vehicles',
+    template: {
+      fields: [
+        {
+          key: 'service_type',
+          label: 'Service Type',
+          options: [
+            'Towing & Recovery (Slep Sluzba)',
+            'Mechanic / Garage',
+            'Auto Body & Paint (Limar/Farbar)',
+            'Auto Glass',
+            'Detailing & Wash',
+            'Diagnostic & Electrical',
+            'Tire Services (Vulkanizer)',
+            'Vehicle Buying (Scrap / Used)',
+            'Other',
+          ],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. 24/7 Towing Service',
+    },
+  },
+  {
+    name: 'Real Estate',
+    slug: 'real-estate',
+    description:
+      'Apartments, houses, commercial spaces, and land for sale or rent.',
+    image: '',
+    isActive: true,
+    isFeatured: true,
+    parentSlug: null,
+    template: {
+      fields: [],
+      titlePlaceholder: 'e.g. Real Estate',
+    },
+  },
+  {
+    name: 'Apartments',
+    slug: 'apartments',
+    description: 'Flats, studios, and penthouses.',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'real-estate',
+    template: {
+      fields: [
+        {
+          key: 'transaction_type',
+          label: 'Ad Type',
+          options: ['For Sale', 'For Rent', 'Wanted to Buy', 'Wanted to Rent'],
+          type: 'select',
+        },
+        {
+          key: 'isTradePossible',
+          label: 'Open to Exchange/Trade',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: [
+            'New Construction (Under Construction)',
+            'New (Finished)',
+            'Renovated',
+            'Good / Maintained',
+            'Needs Renovation',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'm2',
+          label: 'Area (m2)',
+          placeholder: 'e.g. 65',
+          type: 'number',
+        },
+        {
+          key: 'rooms',
+          label: 'Number of Rooms',
+          options: [
+            'Garsonjera (Studio)',
+            '1 Bedroom',
+            '2 Bedrooms',
+            '3 Bedrooms',
+            '4+ Bedrooms',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'floor',
+          label: 'Floor',
+          placeholder: 'e.g. 3',
+          type: 'number',
+        },
+        {
+          key: 'total_floors',
+          label: 'Total Floors in Building',
+          placeholder: 'e.g. 5',
+          type: 'number',
+        },
+        {
+          key: 'elevator',
+          label: 'Elevator',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'balcony',
+          label: 'Balcony / Terrace',
+          options: ['Yes', 'No', 'French Balcony'],
+          type: 'select',
+        },
+        {
+          key: 'heating',
+          label: 'Heating System',
+          options: [
+            'Central City Heating',
+            'Electricity / Inverter AC',
+            'Private Central (Wood/Pellet)',
+            'Heat Pump',
+            'None',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'furnished',
+          label: 'Furnished Status',
+          options: ['Fully Furnished', 'Empty (Unfurnished)', 'Kitchen Only'],
+          type: 'select',
+        },
+        {
+          key: 'parking',
+          label: 'Parking',
+          options: [
+            'Free Public Parking',
+            'Zoned Parking',
+            'Underground Garage',
+            'Private Parking Spot',
+            'None',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'title_deed',
+          label: 'Title Deed (Имотен лист)',
+          options: ['Yes (Clear)', 'In Process', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'year_built',
+          label: 'Year Built',
+          placeholder: 'YYYY',
+          type: 'number',
+        },
+      ],
+      titlePlaceholder: 'e.g. 2-Bedroom Apartment in Centar',
+    },
+  },
+  {
+    name: 'Houses & Villas',
+    slug: 'houses',
+    description: 'Family houses, townhouses, and luxury villas.',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'real-estate',
+    template: {
+      fields: [
+        {
+          key: 'transaction_type',
+          label: 'Ad Type',
+          options: ['For Sale', 'For Rent', 'Wanted to Buy', 'Wanted to Rent'],
+          type: 'select',
+        },
+        {
+          key: 'isTradePossible',
+          label: 'Open to Exchange/Trade',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: [
+            'New Construction',
+            'Renovated',
+            'Good / Maintained',
+            'Needs Renovation',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'm2',
+          label: 'House Area (m2)',
+          placeholder: 'm2',
+          type: 'number',
+        },
+        {
+          key: 'yard_m2',
+          label: 'Yard Area (m2)',
+          placeholder: 'm2',
+          type: 'number',
+        },
+        {
+          key: 'rooms',
+          label: 'Total Rooms',
+          placeholder: 'e.g. 5',
+          type: 'number',
+        },
+        {
+          key: 'floors',
+          label: 'Number of Floors',
+          options: ['1 (Single Story)', '2', '3', '4+'],
+          type: 'select',
+        },
+        {
+          key: 'heating',
+          label: 'Heating',
+          options: [
+            'Central City Heating',
+            'Electricity / Inverter AC',
+            'Heat Pump',
+            'Wood / Pellets',
+            'Solar',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'furnished',
+          label: 'Furnished Status',
+          options: ['Fully Furnished', 'Empty', 'Partially Furnished'],
+          type: 'select',
+        },
+        {
+          key: 'title_deed',
+          label: 'Title Deed (Имотен лист)',
+          options: ['Yes (Clear)', 'In Process', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'year_built',
+          label: 'Year Built',
+          placeholder: 'YYYY',
+          type: 'number',
+        },
+      ],
+      titlePlaceholder: 'e.g. Modern Family House with Garden',
+    },
+  },
+  {
+    name: 'Commercial & Business Space',
+    slug: 'commercial-space',
+    description: 'Offices, shops, warehouses, and industrial plants.',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'real-estate',
+    template: {
+      fields: [
+        {
+          key: 'transaction_type',
+          label: 'Ad Type',
+          options: ['For Sale', 'For Rent', 'Wanted'],
+          type: 'select',
+        },
+        {
+          key: 'commercial_type',
+          label: 'Type of Space',
+          options: [
+            'Office Space',
+            'Retail Shop / Store',
+            'Warehouse / Storage',
+            'Industrial Plant / Factory',
+            'Restaurant / Café / Bar',
+            'Hotel / Motel / Hostel',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: [
+            'New Construction',
+            'Renovated',
+            'Good',
+            'Needs Renovation',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'm2',
+          label: 'Total Area (m2)',
+          placeholder: 'm2',
+          type: 'number',
+        },
+        {
+          key: 'floor',
+          label: 'Floor',
+          placeholder: '0 = Ground floor',
+          type: 'number',
+        },
+        {
+          key: 'heating',
+          label: 'Heating / Cooling',
+          options: ['Central HVAC', 'Electricity/AC', 'None'],
+          type: 'select',
+        },
+        {
+          key: 'parking',
+          label: 'Parking',
+          options: [
+            'Private Parking',
+            'Public Parking Nearby',
+            'No Parking',
+            'Loading Dock Available',
+          ],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. 80m2 Office Space in Business Center',
+    },
+  },
+  {
+    name: 'Land & Plots',
+    slug: 'land',
+    description: 'Construction, agricultural, and industrial land.',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'real-estate',
+    template: {
+      fields: [
+        {
+          key: 'transaction_type',
+          label: 'Ad Type',
+          options: ['For Sale', 'For Rent', 'Wanted'],
+          type: 'select',
+        },
+        {
+          key: 'land_type',
+          label: 'Type of Land',
+          options: [
+            'Construction Land (Градежно)',
+            'Agricultural Land (Земјоделско)',
+            'Industrial Land',
+            'Forest',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'isTradePossible',
+          label: 'Open to Exchange (npr. so kompenzacija)',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'm2',
+          label: 'Area (m2)',
+          placeholder: 'm2',
+          type: 'number',
+        },
+        {
+          key: 'electricity',
+          label: 'Electricity Access',
+          options: ['Yes (Connected)', 'Nearby', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'water',
+          label: 'Water / Sewage Access',
+          options: ['Yes (Connected)', 'Nearby', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'road',
+          label: 'Road Access',
+          options: ['Asphalt', 'Dirt Road', 'None'],
+          type: 'select',
+        },
+        {
+          key: 'title_deed',
+          label: 'Title Deed / Urban Plan (DUP)',
+          options: ['Clear Title & DUP', 'Clear Title (No DUP)', 'In Process'],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. 500m2 Construction Plot with DUP',
+    },
+  },
+  {
+    name: 'Holiday Homes / Cabins',
+    slug: 'holiday-homes',
+    description: 'Weekend houses, lake houses, and mountain cabins.',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'real-estate',
+    template: {
+      fields: [
+        {
+          key: 'transaction_type',
+          label: 'Ad Type',
+          options: [
+            'For Sale',
+            'For Rent (Short Term)',
+            'For Rent (Long Term)',
+            'Wanted',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Renovated', 'Good', 'Needs Renovation'],
+          type: 'select',
+        },
+        {
+          key: 'm2',
+          label: 'Cabin Area (m2)',
+          placeholder: 'm2',
+          type: 'number',
+        },
+        {
+          key: 'yard_m2',
+          label: 'Yard Area (m2)',
+          placeholder: 'm2',
+          type: 'number',
+        },
+        {
+          key: 'rooms',
+          label: 'Total Rooms',
+          placeholder: 'Rooms',
+          type: 'number',
+        },
+        {
+          key: 'heating',
+          label: 'Heating',
+          options: ['Wood / Fireplace', 'Electricity', 'Pellets', 'None'],
+          type: 'select',
+        },
+        {
+          key: 'utilities',
+          label: 'Utilities (Water/Electricity)',
+          options: [
+            'Both Connected',
+            'Only Electricity',
+            'Only Water / Well',
+            'Off-grid / Solar',
+          ],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. Weekend House near Lake',
+    },
+  },
+  {
+    name: 'Garages & Parking',
+    slug: 'garages',
+    description: 'Garages, parking spots, and storage units.',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'real-estate',
+    template: {
+      fields: [
+        {
+          key: 'transaction_type',
+          label: 'Ad Type',
+          options: ['For Sale', 'For Rent', 'Wanted'],
+          type: 'select',
+        },
+        {
+          key: 'garage_type',
+          label: 'Type',
+          options: [
+            'Underground Garage',
+            'Street Garage',
+            'Parking Spot',
+            'Storage Room (Podrum)',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'm2',
+          label: 'Area (m2)',
+          placeholder: 'm2',
+          type: 'number',
+        },
+        {
+          key: 'security',
+          label: 'Security Features',
+          options: [
+            'Standard Lock',
+            'Remote Roll-door',
+            'Camera / Guard',
+            'Open Air',
+          ],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. 18m2 Garage in Centar',
+    },
+  },
+  {
+    name: 'Rooms & Roommates',
+    slug: 'rooms-accommodation',
+    description: 'Single rooms and shared apartment listings.',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'real-estate',
+    template: {
+      fields: [
+        {
+          key: 'transaction_type',
+          label: 'Ad Type',
+          options: ['Offering Room', 'Looking for Room (Roommate)'],
+          type: 'select',
+        },
+        {
+          key: 'm2',
+          label: 'Room Area (m2)',
+          placeholder: 'm2',
+          type: 'number',
+        },
+        {
+          key: 'bills_included',
+          label: 'Are utilities/bills included?',
+          options: ['Yes', 'No', 'Partially'],
+          type: 'select',
+        },
+        {
+          key: 'bathroom',
+          label: 'Bathroom',
+          options: ['Private (En-suite)', 'Shared'],
+          type: 'select',
+        },
+        {
+          key: 'gender_preference',
+          label: 'Roommate Preference',
+          options: ['Any', 'Male Only', 'Female Only', 'Students Only'],
+          type: 'select',
+        },
+      ],
+      titlePlaceholder: 'e.g. Furnished Room for Student',
+    },
+  },
+  {
+    name: 'Real Estate Abroad',
+    slug: 'real-estate-abroad',
+    description: 'Properties located outside the country.',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'real-estate',
+    template: {
+      fields: [
+        {
+          key: 'transaction_type',
+          label: 'Ad Type',
+          options: ['For Sale', 'For Rent (Vacation)', 'For Rent (Long Term)'],
+          type: 'select',
+        },
+        {
+          key: 'country',
+          label: 'Country',
+          options: [
+            'Greece',
+            'Turkey',
+            'Bulgaria',
+            'Albania',
+            'Serbia',
+            'Montenegro',
+            'Croatia',
+            'Germany',
+            'UAE / Dubai',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'property_type',
+          label: 'Property Type',
+          options: [
+            'Apartment / Studio',
+            'House / Villa',
+            'Land',
+            'Commercial Space',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'm2',
+          label: 'Area (m2)',
+          placeholder: 'm2',
+          type: 'number',
+        },
+        {
+          key: 'distance_to_sea',
+          label: 'Distance to Sea/Beach (Meters)',
+          placeholder: 'e.g. 50, 500 (Leave blank if not applicable)',
+          type: 'number',
+        },
+      ],
+      titlePlaceholder: 'e.g. Seaside Studio in Halkidiki',
+    },
   },
 
   {
@@ -1756,14 +2155,24 @@ const categoriesData = [
     parentSlug: null,
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Home Appliance',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // AIR CONDITIONERS
   // ─────────────────────────────────────────────
@@ -1777,11 +2186,36 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Gree, Vivax, Daikin', type: 'text' },
-        { key: 'ac_type', label: 'Type', options: ['Inverter', 'Standard', 'Portable', 'Multi Split'], type: 'select' },
-        { key: 'power_cooling', label: 'Power Cooling (kW)', placeholder: 'kW', type: 'number' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C', 'D'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Gree, Vivax, Daikin',
+          type: 'text',
+        },
+        {
+          key: 'ac_type',
+          label: 'Type',
+          options: ['Inverter', 'Standard', 'Portable', 'Multi Split'],
+          type: 'select',
+        },
+        {
+          key: 'power_cooling',
+          label: 'Power Cooling (kW)',
+          placeholder: 'kW',
+          type: 'number',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C', 'D'],
+          type: 'select',
+        },
       ],
       titlePlaceholder: 'e.g. Air Conditioner',
     },
@@ -1796,15 +2230,55 @@ const categoriesData = [
     parentSlug: 'air-conditioners',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Gree, Vivax, Daikin', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Gree, Vivax, Daikin',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'power_cooling', label: 'Power Cooling (kW)', placeholder: 'kW', type: 'number' },
-        { key: 'power_heating', label: 'Power Heating (kW)', placeholder: 'kW', type: 'number' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C', 'D'], type: 'select' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2022', type: 'number' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. White', type: 'text' },
+        {
+          key: 'power_cooling',
+          label: 'Power Cooling (kW)',
+          placeholder: 'kW',
+          type: 'number',
+        },
+        {
+          key: 'power_heating',
+          label: 'Power Heating (kW)',
+          placeholder: 'kW',
+          type: 'number',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C', 'D'],
+          type: 'select',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2022',
+          type: 'number',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. White',
+          type: 'text',
+        },
       ],
       titlePlaceholder: 'e.g. Gree Inverter 3.5kW',
     },
@@ -1819,14 +2293,49 @@ const categoriesData = [
     parentSlug: 'air-conditioners',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Gree, Vivax, Daikin', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Gree, Vivax, Daikin',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'power_cooling', label: 'Power Cooling (kW)', placeholder: 'kW', type: 'number' },
-        { key: 'power_heating', label: 'Power Heating (kW)', placeholder: 'kW', type: 'number' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C', 'D'], type: 'select' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2022', type: 'number' },
+        {
+          key: 'power_cooling',
+          label: 'Power Cooling (kW)',
+          placeholder: 'kW',
+          type: 'number',
+        },
+        {
+          key: 'power_heating',
+          label: 'Power Heating (kW)',
+          placeholder: 'kW',
+          type: 'number',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C', 'D'],
+          type: 'select',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2022',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Gree Standard 2.5kW',
     },
@@ -1841,12 +2350,37 @@ const categoriesData = [
     parentSlug: 'air-conditioners',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Gree, Vivax, Daikin', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Gree, Vivax, Daikin',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'power_cooling', label: 'Power Cooling (kW)', placeholder: 'kW', type: 'number' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C', 'D'], type: 'select' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'power_cooling',
+          label: 'Power Cooling (kW)',
+          placeholder: 'kW',
+          type: 'number',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C', 'D'],
+          type: 'select',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Vivax Portable 2.6kW',
     },
@@ -1861,13 +2395,43 @@ const categoriesData = [
     parentSlug: 'air-conditioners',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Gree, Vivax, Daikin', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Gree, Vivax, Daikin',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'num_indoor_units', label: 'Number of Indoor Units', placeholder: 'e.g. 2', type: 'number' },
-        { key: 'power_cooling', label: 'Total Power Cooling (kW)', placeholder: 'kW', type: 'number' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C', 'D'], type: 'select' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'num_indoor_units',
+          label: 'Number of Indoor Units',
+          placeholder: 'e.g. 2',
+          type: 'number',
+        },
+        {
+          key: 'power_cooling',
+          label: 'Total Power Cooling (kW)',
+          placeholder: 'kW',
+          type: 'number',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C', 'D'],
+          type: 'select',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Daikin Multi Split 2x3kW',
     },
@@ -1882,11 +2446,38 @@ const categoriesData = [
     parentSlug: 'air-conditioners',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'fan_type', label: 'Type', options: ['Stand', 'Tower', 'Table', 'Ceiling', 'Window', 'Industrial'], type: 'select' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'fan_type',
+          label: 'Type',
+          options: [
+            'Stand',
+            'Tower',
+            'Table',
+            'Ceiling',
+            'Window',
+            'Industrial',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Stand Fan 50W',
     },
@@ -1901,14 +2492,24 @@ const categoriesData = [
     parentSlug: 'air-conditioners',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. AC Remote Control',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // REFRIGERATORS
   // ─────────────────────────────────────────────
@@ -1922,11 +2523,42 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Samsung, Beko, Gorenje', type: 'text' },
-        { key: 'fridge_type', label: 'Type', options: ['Combined', 'Double Door', 'Single Door', 'Built-in', 'Mini'], type: 'select' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Samsung, Beko, Gorenje',
+          type: 'text',
+        },
+        {
+          key: 'fridge_type',
+          label: 'Type',
+          options: [
+            'Combined',
+            'Double Door',
+            'Single Door',
+            'Built-in',
+            'Mini',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'],
+          type: 'select',
+        },
       ],
       titlePlaceholder: 'e.g. Refrigerator',
     },
@@ -1941,17 +2573,67 @@ const categoriesData = [
     parentSlug: 'refrigerators',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Samsung, Beko, Gorenje, LG', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Samsung, Beko, Gorenje, LG',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'capacity_liters', label: 'Total Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'freezer_capacity_liters', label: 'Freezer Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'height', label: 'Height (cm)', placeholder: 'cm', type: 'number' },
-        { key: 'no_frost', label: 'No Frost', options: ['Yes', 'No'], type: 'select' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Inox, White, Black', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2021', type: 'number' },
+        {
+          key: 'capacity_liters',
+          label: 'Total Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'freezer_capacity_liters',
+          label: 'Freezer Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'height',
+          label: 'Height (cm)',
+          placeholder: 'cm',
+          type: 'number',
+        },
+        {
+          key: 'no_frost',
+          label: 'No Frost',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Inox, White, Black',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2021',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Samsung Combined 350L',
     },
@@ -1966,16 +2648,61 @@ const categoriesData = [
     parentSlug: 'refrigerators',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Samsung, Beko, Gorenje, LG', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Samsung, Beko, Gorenje, LG',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'height', label: 'Height (cm)', placeholder: 'cm', type: 'number' },
-        { key: 'no_frost', label: 'No Frost', options: ['Yes', 'No'], type: 'select' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Inox, White', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2021', type: 'number' },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'height',
+          label: 'Height (cm)',
+          placeholder: 'cm',
+          type: 'number',
+        },
+        {
+          key: 'no_frost',
+          label: 'No Frost',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Inox, White',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2021',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. LG Double Door 500L',
     },
@@ -1990,16 +2717,61 @@ const categoriesData = [
     parentSlug: 'refrigerators',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Samsung, Beko, Gorenje, LG', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Samsung, Beko, Gorenje, LG',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'height', label: 'Height (cm)', placeholder: 'cm', type: 'number' },
-        { key: 'no_frost', label: 'No Frost', options: ['Yes', 'No'], type: 'select' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. White, Inox', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2021', type: 'number' },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'height',
+          label: 'Height (cm)',
+          placeholder: 'cm',
+          type: 'number',
+        },
+        {
+          key: 'no_frost',
+          label: 'No Frost',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. White, Inox',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2021',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Gorenje Single Door 250L',
     },
@@ -2014,15 +2786,55 @@ const categoriesData = [
     parentSlug: 'refrigerators',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Samsung, Beko, Gorenje, LG', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Samsung, Beko, Gorenje, LG',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'height', label: 'Height (cm)', placeholder: 'cm', type: 'number' },
-        { key: 'width', label: 'Width (cm)', placeholder: 'cm', type: 'number' },
-        { key: 'no_frost', label: 'No Frost', options: ['Yes', 'No'], type: 'select' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'], type: 'select' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'height',
+          label: 'Height (cm)',
+          placeholder: 'cm',
+          type: 'number',
+        },
+        {
+          key: 'width',
+          label: 'Width (cm)',
+          placeholder: 'cm',
+          type: 'number',
+        },
+        {
+          key: 'no_frost',
+          label: 'No Frost',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'],
+          type: 'select',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Bosch Built-in Fridge 200L',
     },
@@ -2037,13 +2849,43 @@ const categoriesData = [
     parentSlug: 'refrigerators',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Samsung, Beko, Gorenje, LG', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Samsung, Beko, Gorenje, LG',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. White, Black', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. White, Black',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Mini Fridge 50L',
     },
@@ -2058,10 +2900,25 @@ const categoriesData = [
     parentSlug: 'refrigerators',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Portable Fridge 30L',
     },
@@ -2076,14 +2933,24 @@ const categoriesData = [
     parentSlug: 'refrigerators',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Refrigerator Shelf / Drawer',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // FREEZERS
   // ─────────────────────────────────────────────
@@ -2097,15 +2964,55 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'freezer_type', label: 'Type', options: ['Vertical', 'Horizontal / Chest', 'Built-in'], type: 'select' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'no_frost', label: 'No Frost', options: ['Yes', 'No'], type: 'select' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. White, Inox', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2021', type: 'number' },
+        {
+          key: 'freezer_type',
+          label: 'Type',
+          options: ['Vertical', 'Horizontal / Chest', 'Built-in'],
+          type: 'select',
+        },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'no_frost',
+          label: 'No Frost',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. White, Inox',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2021',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Vertical Freezer 200L',
     },
@@ -2120,15 +3027,50 @@ const categoriesData = [
     parentSlug: 'freezers',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'no_frost', label: 'No Frost', options: ['Yes', 'No'], type: 'select' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. White, Inox', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2021', type: 'number' },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'no_frost',
+          label: 'No Frost',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. White, Inox',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2021',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Beko Vertical Freezer 180L',
     },
@@ -2143,14 +3085,44 @@ const categoriesData = [
     parentSlug: 'freezers',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'no_frost', label: 'No Frost', options: ['Yes', 'No'], type: 'select' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'], type: 'select' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2021', type: 'number' },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'no_frost',
+          label: 'No Frost',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'],
+          type: 'select',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2021',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Chest Freezer 300L',
     },
@@ -2165,19 +3137,49 @@ const categoriesData = [
     parentSlug: 'freezers',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'no_frost', label: 'No Frost', options: ['Yes', 'No'], type: 'select' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'], type: 'select' },
-        { key: 'height', label: 'Height (cm)', placeholder: 'cm', type: 'number' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'no_frost',
+          label: 'No Frost',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'],
+          type: 'select',
+        },
+        {
+          key: 'height',
+          label: 'Height (cm)',
+          placeholder: 'cm',
+          type: 'number',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Built-in Freezer 100L',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // WASHING MACHINES
   // ─────────────────────────────────────────────
@@ -2191,11 +3193,31 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'type', label: 'Type', options: ['Washing Machine', 'Dryer', 'Washer-Dryer Combo'], type: 'select' },
-        { key: 'capacity_kg', label: 'Load Capacity (kg)', placeholder: 'kg', type: 'number' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A'], type: 'select' },
+        {
+          key: 'type',
+          label: 'Type',
+          options: ['Washing Machine', 'Dryer', 'Washer-Dryer Combo'],
+          type: 'select',
+        },
+        {
+          key: 'capacity_kg',
+          label: 'Load Capacity (kg)',
+          placeholder: 'kg',
+          type: 'number',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A'],
+          type: 'select',
+        },
       ],
       titlePlaceholder: 'e.g. Washing Machine 7kg',
     },
@@ -2210,18 +3232,73 @@ const categoriesData = [
     parentSlug: 'washing-machines',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Beko, Whirlpool, Samsung', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Beko, Whirlpool, Samsung',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'installation', label: 'Installation', options: ['Front Load', 'Top Load'], type: 'select' },
-        { key: 'capacity_kg', label: 'Load Capacity (kg)', placeholder: 'kg', type: 'number' },
-        { key: 'rpm', label: 'Spin Speed (RPM)', placeholder: 'RPM', type: 'number' },
-        { key: 'noise_level_db', label: 'Noise Level (dB)', placeholder: 'dB', type: 'number' },
-        { key: 'steam_function', label: 'Steam Function', options: ['Yes', 'No'], type: 'select' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. White, Inox', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2022', type: 'number' },
+        {
+          key: 'installation',
+          label: 'Installation',
+          options: ['Front Load', 'Top Load'],
+          type: 'select',
+        },
+        {
+          key: 'capacity_kg',
+          label: 'Load Capacity (kg)',
+          placeholder: 'kg',
+          type: 'number',
+        },
+        {
+          key: 'rpm',
+          label: 'Spin Speed (RPM)',
+          placeholder: 'RPM',
+          type: 'number',
+        },
+        {
+          key: 'noise_level_db',
+          label: 'Noise Level (dB)',
+          placeholder: 'dB',
+          type: 'number',
+        },
+        {
+          key: 'steam_function',
+          label: 'Steam Function',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. White, Inox',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2022',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Beko 7kg Front Load',
     },
@@ -2236,16 +3313,61 @@ const categoriesData = [
     parentSlug: 'washing-machines',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Beko, Whirlpool, Samsung', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Beko, Whirlpool, Samsung',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'dryer_type', label: 'Dryer Type', options: ['Condenser', 'Heat Pump', 'Vented'], type: 'select' },
-        { key: 'capacity_kg', label: 'Load Capacity (kg)', placeholder: 'kg', type: 'number' },
-        { key: 'noise_level_db', label: 'Noise Level (dB)', placeholder: 'dB', type: 'number' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. White, Inox', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2022', type: 'number' },
+        {
+          key: 'dryer_type',
+          label: 'Dryer Type',
+          options: ['Condenser', 'Heat Pump', 'Vented'],
+          type: 'select',
+        },
+        {
+          key: 'capacity_kg',
+          label: 'Load Capacity (kg)',
+          placeholder: 'kg',
+          type: 'number',
+        },
+        {
+          key: 'noise_level_db',
+          label: 'Noise Level (dB)',
+          placeholder: 'dB',
+          type: 'number',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. White, Inox',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2022',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Samsung Heat Pump Dryer 8kg',
     },
@@ -2260,20 +3382,60 @@ const categoriesData = [
     parentSlug: 'washing-machines',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Beko, Whirlpool, Samsung', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Beko, Whirlpool, Samsung',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'wash_capacity_kg', label: 'Wash Capacity (kg)', placeholder: 'kg', type: 'number' },
-        { key: 'dry_capacity_kg', label: 'Dry Capacity (kg)', placeholder: 'kg', type: 'number' },
-        { key: 'rpm', label: 'Spin Speed (RPM)', placeholder: 'RPM', type: 'number' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'], type: 'select' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2022', type: 'number' },
+        {
+          key: 'wash_capacity_kg',
+          label: 'Wash Capacity (kg)',
+          placeholder: 'kg',
+          type: 'number',
+        },
+        {
+          key: 'dry_capacity_kg',
+          label: 'Dry Capacity (kg)',
+          placeholder: 'kg',
+          type: 'number',
+        },
+        {
+          key: 'rpm',
+          label: 'Spin Speed (RPM)',
+          placeholder: 'RPM',
+          type: 'number',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A', 'B', 'C'],
+          type: 'select',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2022',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. LG Washer-Dryer Combo 8/5kg',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // DISHWASHERS
   // ─────────────────────────────────────────────
@@ -2287,11 +3449,31 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'type', label: 'Type', options: ['Built-in', 'Freestanding'], type: 'select' },
-        { key: 'place_settings', label: 'Place Settings', placeholder: '12, 14, etc.', type: 'number' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A'], type: 'select' },
+        {
+          key: 'type',
+          label: 'Type',
+          options: ['Built-in', 'Freestanding'],
+          type: 'select',
+        },
+        {
+          key: 'place_settings',
+          label: 'Place Settings',
+          placeholder: '12, 14, etc.',
+          type: 'number',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A'],
+          type: 'select',
+        },
       ],
       titlePlaceholder: 'e.g. Dishwasher 14 Place',
     },
@@ -2306,16 +3488,61 @@ const categoriesData = [
     parentSlug: 'dishwashers',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Bosch, Beko, Gorenje', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Bosch, Beko, Gorenje',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'place_settings', label: 'Place Settings', placeholder: '12, 14, etc.', type: 'number' },
-        { key: 'width', label: 'Width (cm)', placeholder: '45 or 60', type: 'number' },
-        { key: 'noise_level_db', label: 'Noise Level (dB)', placeholder: 'dB', type: 'number' },
-        { key: 'drying_type', label: 'Drying Type', options: ['Heat', 'Zeolite', 'Auto Open', 'Fan'], type: 'select' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A'], type: 'select' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2022', type: 'number' },
+        {
+          key: 'place_settings',
+          label: 'Place Settings',
+          placeholder: '12, 14, etc.',
+          type: 'number',
+        },
+        {
+          key: 'width',
+          label: 'Width (cm)',
+          placeholder: '45 or 60',
+          type: 'number',
+        },
+        {
+          key: 'noise_level_db',
+          label: 'Noise Level (dB)',
+          placeholder: 'dB',
+          type: 'number',
+        },
+        {
+          key: 'drying_type',
+          label: 'Drying Type',
+          options: ['Heat', 'Zeolite', 'Auto Open', 'Fan'],
+          type: 'select',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A'],
+          type: 'select',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2022',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Bosch Built-in 13 Place 44dB',
     },
@@ -2330,22 +3557,72 @@ const categoriesData = [
     parentSlug: 'dishwashers',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Bosch, Beko, Gorenje', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Bosch, Beko, Gorenje',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'place_settings', label: 'Place Settings', placeholder: '12, 14, etc.', type: 'number' },
-        { key: 'width', label: 'Width (cm)', placeholder: '45 or 60', type: 'number' },
-        { key: 'noise_level_db', label: 'Noise Level (dB)', placeholder: 'dB', type: 'number' },
-        { key: 'drying_type', label: 'Drying Type', options: ['Heat', 'Zeolite', 'Auto Open', 'Fan'], type: 'select' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A+++', 'A++', 'A+', 'A'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. White, Inox', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2022', type: 'number' },
+        {
+          key: 'place_settings',
+          label: 'Place Settings',
+          placeholder: '12, 14, etc.',
+          type: 'number',
+        },
+        {
+          key: 'width',
+          label: 'Width (cm)',
+          placeholder: '45 or 60',
+          type: 'number',
+        },
+        {
+          key: 'noise_level_db',
+          label: 'Noise Level (dB)',
+          placeholder: 'dB',
+          type: 'number',
+        },
+        {
+          key: 'drying_type',
+          label: 'Drying Type',
+          options: ['Heat', 'Zeolite', 'Auto Open', 'Fan'],
+          type: 'select',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A+++', 'A++', 'A+', 'A'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. White, Inox',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2022',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Gorenje Freestanding 14 Place',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // STOVES, OVENS & HOBS
   // ─────────────────────────────────────────────
@@ -2359,9 +3636,19 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Gas Stove 4-Burner',
     },
@@ -2376,17 +3663,67 @@ const categoriesData = [
     parentSlug: 'stoves-ovens',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Gorenje, Beko', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Gorenje, Beko',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'installation_type', label: 'Installation', options: ['Freestanding', 'Built-in'], type: 'select' },
-        { key: 'burners', label: 'Number of Burners', placeholder: '4', type: 'number' },
-        { key: 'hob_type', label: 'Hob Type', options: ['Ceramic', 'Induction', 'Radiant'], type: 'select' },
-        { key: 'oven_volume', label: 'Oven Volume (L)', placeholder: 'Liters', type: 'number' },
-        { key: 'energy_class', label: 'Energy Class', options: ['A', 'B', 'C', 'D'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Inox, White, Black', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2021', type: 'number' },
+        {
+          key: 'installation_type',
+          label: 'Installation',
+          options: ['Freestanding', 'Built-in'],
+          type: 'select',
+        },
+        {
+          key: 'burners',
+          label: 'Number of Burners',
+          placeholder: '4',
+          type: 'number',
+        },
+        {
+          key: 'hob_type',
+          label: 'Hob Type',
+          options: ['Ceramic', 'Induction', 'Radiant'],
+          type: 'select',
+        },
+        {
+          key: 'oven_volume',
+          label: 'Oven Volume (L)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'energy_class',
+          label: 'Energy Class',
+          options: ['A', 'B', 'C', 'D'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Inox, White, Black',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2021',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Gorenje Electric Stove 4-Burner',
     },
@@ -2401,16 +3738,61 @@ const categoriesData = [
     parentSlug: 'stoves-ovens',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Gorenje, Beko', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Gorenje, Beko',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'installation_type', label: 'Installation', options: ['Freestanding', 'Built-in'], type: 'select' },
-        { key: 'burners', label: 'Number of Burners', placeholder: '4', type: 'number' },
-        { key: 'oven_volume', label: 'Oven Volume (L)', placeholder: 'Liters', type: 'number' },
-        { key: 'oven_type', label: 'Oven Type', options: ['Gas', 'Electric', 'None'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Inox, White', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2021', type: 'number' },
+        {
+          key: 'installation_type',
+          label: 'Installation',
+          options: ['Freestanding', 'Built-in'],
+          type: 'select',
+        },
+        {
+          key: 'burners',
+          label: 'Number of Burners',
+          placeholder: '4',
+          type: 'number',
+        },
+        {
+          key: 'oven_volume',
+          label: 'Oven Volume (L)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'oven_type',
+          label: 'Oven Type',
+          options: ['Gas', 'Electric', 'None'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Inox, White',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2021',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Beko Gas Stove 4-Burner',
     },
@@ -2425,15 +3807,55 @@ const categoriesData = [
     parentSlug: 'stoves-ovens',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Gorenje, Beko', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Gorenje, Beko',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'installation_type', label: 'Installation', options: ['Freestanding', 'Built-in'], type: 'select' },
-        { key: 'burners', label: 'Number of Burners', placeholder: '4', type: 'number' },
-        { key: 'oven_volume', label: 'Oven Volume (L)', placeholder: 'Liters', type: 'number' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Inox, White', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2021', type: 'number' },
+        {
+          key: 'installation_type',
+          label: 'Installation',
+          options: ['Freestanding', 'Built-in'],
+          type: 'select',
+        },
+        {
+          key: 'burners',
+          label: 'Number of Burners',
+          placeholder: '4',
+          type: 'number',
+        },
+        {
+          key: 'oven_volume',
+          label: 'Oven Volume (L)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Inox, White',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2021',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Combined Stove Gas/Electric 4-Burner',
     },
@@ -2448,15 +3870,50 @@ const categoriesData = [
     parentSlug: 'stoves-ovens',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'fuel_type', label: 'Fuel Type', options: ['Electric', 'Gas', 'Steam'], type: 'select' },
-        { key: 'oven_volume', label: 'Oven Volume (L)', placeholder: 'Liters', type: 'number' },
-        { key: 'functions', label: 'Functions', placeholder: 'e.g. fan, grill, pyrolysis', type: 'text' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Inox, Black', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2021', type: 'number' },
+        {
+          key: 'fuel_type',
+          label: 'Fuel Type',
+          options: ['Electric', 'Gas', 'Steam'],
+          type: 'select',
+        },
+        {
+          key: 'oven_volume',
+          label: 'Oven Volume (L)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'functions',
+          label: 'Functions',
+          placeholder: 'e.g. fan, grill, pyrolysis',
+          type: 'text',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Inox, Black',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2021',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Bosch Built-in Oven 71L',
     },
@@ -2471,14 +3928,44 @@ const categoriesData = [
     parentSlug: 'stoves-ovens',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'hob_type', label: 'Hob Type', options: ['Induction', 'Ceramic', 'Gas', 'Mixed'], type: 'select' },
-        { key: 'burners', label: 'Number of Burners/Zones', placeholder: '4', type: 'number' },
-        { key: 'width', label: 'Width (cm)', placeholder: 'e.g. 60, 90', type: 'number' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Black, Inox', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'hob_type',
+          label: 'Hob Type',
+          options: ['Induction', 'Ceramic', 'Gas', 'Mixed'],
+          type: 'select',
+        },
+        {
+          key: 'burners',
+          label: 'Number of Burners/Zones',
+          placeholder: '4',
+          type: 'number',
+        },
+        {
+          key: 'width',
+          label: 'Width (cm)',
+          placeholder: 'e.g. 60, 90',
+          type: 'number',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Black, Inox',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Induction Hob 60cm 4-Zone',
     },
@@ -2493,12 +3980,37 @@ const categoriesData = [
     parentSlug: 'stoves-ovens',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged / For Parts'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged / For Parts'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'hob_type', label: 'Hob Type', options: ['Induction', 'Ceramic', 'Gas', 'Mixed'], type: 'select' },
-        { key: 'oven_volume', label: 'Oven Volume (L)', placeholder: 'Liters', type: 'number' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'hob_type',
+          label: 'Hob Type',
+          options: ['Induction', 'Ceramic', 'Gas', 'Mixed'],
+          type: 'select',
+        },
+        {
+          key: 'oven_volume',
+          label: 'Oven Volume (L)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Siemens Oven + Induction Hob Set',
     },
@@ -2513,10 +4025,25 @@ const categoriesData = [
     parentSlug: 'stoves-ovens',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'burners', label: 'Number of Burners', placeholder: '2', type: 'number' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'burners',
+          label: 'Number of Burners',
+          placeholder: '2',
+          type: 'number',
+        },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Mini Gas Stove 2-Burner',
     },
@@ -2531,14 +4058,24 @@ const categoriesData = [
     parentSlug: 'stoves-ovens',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Oven Tray / Grill Rack',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // MICROWAVES
   // ─────────────────────────────────────────────
@@ -2552,13 +4089,43 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'microwave_type', label: 'Type', options: ['Freestanding', 'Built-in', 'Combination'], type: 'select' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. White, Inox, Black', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'microwave_type',
+          label: 'Type',
+          options: ['Freestanding', 'Built-in', 'Combination'],
+          type: 'select',
+        },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. White, Inox, Black',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Samsung Microwave 23L 800W',
     },
@@ -2573,14 +4140,44 @@ const categoriesData = [
     parentSlug: 'microwaves',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'has_grill', label: 'Grill Function', options: ['Yes', 'No'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. White, Black, Inox', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'has_grill',
+          label: 'Grill Function',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. White, Black, Inox',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. LG Microwave 25L 900W',
     },
@@ -2595,19 +4192,49 @@ const categoriesData = [
     parentSlug: 'microwaves',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'has_grill', label: 'Grill Function', options: ['Yes', 'No'], type: 'select' },
-        { key: 'width', label: 'Width (cm)', placeholder: 'cm', type: 'number' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'has_grill',
+          label: 'Grill Function',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'width',
+          label: 'Width (cm)',
+          placeholder: 'cm',
+          type: 'number',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Bosch Built-in Microwave 21L',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // HOODS
   // ─────────────────────────────────────────────
@@ -2621,14 +4248,55 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'hood_type', label: 'Type', options: ['Built-in', 'Wall-mounted', 'Island', 'Ceiling', 'Downdraft'], type: 'select' },
-        { key: 'width', label: 'Width (cm)', placeholder: 'e.g. 60, 90', type: 'number' },
-        { key: 'suction_m3h', label: 'Suction Power (m³/h)', placeholder: 'm³/h', type: 'number' },
-        { key: 'noise_level_db', label: 'Noise Level (dB)', placeholder: 'dB', type: 'number' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Inox, White, Black', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'hood_type',
+          label: 'Type',
+          options: [
+            'Built-in',
+            'Wall-mounted',
+            'Island',
+            'Ceiling',
+            'Downdraft',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'width',
+          label: 'Width (cm)',
+          placeholder: 'e.g. 60, 90',
+          type: 'number',
+        },
+        {
+          key: 'suction_m3h',
+          label: 'Suction Power (m³/h)',
+          placeholder: 'm³/h',
+          type: 'number',
+        },
+        {
+          key: 'noise_level_db',
+          label: 'Noise Level (dB)',
+          placeholder: 'dB',
+          type: 'number',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Inox, White, Black',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Inox Hood 60cm 650m³/h',
     },
@@ -2643,13 +4311,38 @@ const categoriesData = [
     parentSlug: 'hoods',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'width', label: 'Width (cm)', placeholder: 'e.g. 60, 90', type: 'number' },
-        { key: 'suction_m3h', label: 'Suction Power (m³/h)', placeholder: 'm³/h', type: 'number' },
-        { key: 'noise_level_db', label: 'Noise Level (dB)', placeholder: 'dB', type: 'number' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'width',
+          label: 'Width (cm)',
+          placeholder: 'e.g. 60, 90',
+          type: 'number',
+        },
+        {
+          key: 'suction_m3h',
+          label: 'Suction Power (m³/h)',
+          placeholder: 'm³/h',
+          type: 'number',
+        },
+        {
+          key: 'noise_level_db',
+          label: 'Noise Level (dB)',
+          placeholder: 'dB',
+          type: 'number',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Elica Built-in Hood 60cm',
     },
@@ -2664,19 +4357,49 @@ const categoriesData = [
     parentSlug: 'hoods',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'width', label: 'Width (cm)', placeholder: 'e.g. 60, 90', type: 'number' },
-        { key: 'suction_m3h', label: 'Suction Power (m³/h)', placeholder: 'm³/h', type: 'number' },
-        { key: 'noise_level_db', label: 'Noise Level (dB)', placeholder: 'dB', type: 'number' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Inox, White', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'width',
+          label: 'Width (cm)',
+          placeholder: 'e.g. 60, 90',
+          type: 'number',
+        },
+        {
+          key: 'suction_m3h',
+          label: 'Suction Power (m³/h)',
+          placeholder: 'm³/h',
+          type: 'number',
+        },
+        {
+          key: 'noise_level_db',
+          label: 'Noise Level (dB)',
+          placeholder: 'dB',
+          type: 'number',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Inox, White',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Pyramida Hood 60cm 650m³/h',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // WATER HEATERS
   // ─────────────────────────────────────────────
@@ -2690,12 +4413,37 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'fuel_type', label: 'Fuel Type', options: ['Electric', 'Gas', 'Solar', 'Heat Pump'], type: 'select' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'power_kw', label: 'Power (kW)', placeholder: 'kW', type: 'number' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'fuel_type',
+          label: 'Fuel Type',
+          options: ['Electric', 'Gas', 'Solar', 'Heat Pump'],
+          type: 'select',
+        },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'power_kw',
+          label: 'Power (kW)',
+          placeholder: 'kW',
+          type: 'number',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Electric Water Heater 80L',
     },
@@ -2710,15 +4458,50 @@ const categoriesData = [
     parentSlug: 'water-heaters',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'fuel_type', label: 'Fuel Type', options: ['Electric', 'Gas', 'Solar', 'Heat Pump'], type: 'select' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'power_kw', label: 'Power (kW)', placeholder: 'kW', type: 'number' },
-        { key: 'mounting', label: 'Mounting', options: ['Wall', 'Floor'], type: 'select' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2020', type: 'number' },
+        {
+          key: 'fuel_type',
+          label: 'Fuel Type',
+          options: ['Electric', 'Gas', 'Solar', 'Heat Pump'],
+          type: 'select',
+        },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'power_kw',
+          label: 'Power (kW)',
+          placeholder: 'kW',
+          type: 'number',
+        },
+        {
+          key: 'mounting',
+          label: 'Mounting',
+          options: ['Wall', 'Floor'],
+          type: 'select',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2020',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Ariston 80L Electric Wall Heater',
     },
@@ -2733,13 +4516,38 @@ const categoriesData = [
     parentSlug: 'water-heaters',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'fuel_type', label: 'Fuel Type', options: ['Electric', 'Gas'], type: 'select' },
-        { key: 'power_kw', label: 'Power (kW)', placeholder: 'kW', type: 'number' },
-        { key: 'flow_rate', label: 'Flow Rate (L/min)', placeholder: 'L/min', type: 'number' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'fuel_type',
+          label: 'Fuel Type',
+          options: ['Electric', 'Gas'],
+          type: 'select',
+        },
+        {
+          key: 'power_kw',
+          label: 'Power (kW)',
+          placeholder: 'kW',
+          type: 'number',
+        },
+        {
+          key: 'flow_rate',
+          label: 'Flow Rate (L/min)',
+          placeholder: 'L/min',
+          type: 'number',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Vaillant Instant Heater 21kW',
     },
@@ -2754,17 +4562,42 @@ const categoriesData = [
     parentSlug: 'water-heaters',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'power_kw', label: 'Power (kW)', placeholder: 'kW', type: 'number' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'power_kw',
+          label: 'Power (kW)',
+          placeholder: 'kW',
+          type: 'number',
+        },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Combined Water Heater 100L',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // HEATERS
   // ─────────────────────────────────────────────
@@ -2778,12 +4611,45 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'heater_type', label: 'Type', options: ['Oil Radiator', 'Fan Heater', 'Panel Heater', 'Convector', 'Fireplace', 'Stove', 'Infrared'], type: 'select' },
-        { key: 'fuel_type', label: 'Fuel Type', options: ['Electric', 'Gas', 'Wood', 'Pellet', 'Oil'], type: 'select' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'heater_type',
+          label: 'Type',
+          options: [
+            'Oil Radiator',
+            'Fan Heater',
+            'Panel Heater',
+            'Convector',
+            'Fireplace',
+            'Stove',
+            'Infrared',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'fuel_type',
+          label: 'Fuel Type',
+          options: ['Electric', 'Gas', 'Wood', 'Pellet', 'Oil'],
+          type: 'select',
+        },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Oil Radiator 2500W',
     },
@@ -2798,12 +4664,37 @@ const categoriesData = [
     parentSlug: 'heaters',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'radiator_type', label: 'Type', options: ['Oil', 'Electric Panel', 'Water/Central Heating'], type: 'select' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'sections', label: 'Number of Sections', placeholder: 'e.g. 9', type: 'number' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'radiator_type',
+          label: 'Type',
+          options: ['Oil', 'Electric Panel', 'Water/Central Heating'],
+          type: 'select',
+        },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'sections',
+          label: 'Number of Sections',
+          placeholder: 'e.g. 9',
+          type: 'number',
+        },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Oil Radiator 9-Section 2000W',
     },
@@ -2818,11 +4709,37 @@ const categoriesData = [
     parentSlug: 'heaters',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'heater_type', label: 'Type', options: ['Fan Heater', 'Convector', 'Infrared', 'Ceramic', 'Halogen'], type: 'select' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'heater_type',
+          label: 'Type',
+          options: [
+            'Fan Heater',
+            'Convector',
+            'Infrared',
+            'Ceramic',
+            'Halogen',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Ceramic Fan Heater 2000W',
     },
@@ -2837,12 +4754,37 @@ const categoriesData = [
     parentSlug: 'heaters',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'fuel_type', label: 'Fuel Type', options: ['Wood', 'Pellet', 'Gas', 'Electric', 'Ethanol'], type: 'select' },
-        { key: 'power_kw', label: 'Heating Power (kW)', placeholder: 'kW', type: 'number' },
-        { key: 'room_size_m2', label: 'Suitable Room Size (m²)', placeholder: 'm²', type: 'number' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'fuel_type',
+          label: 'Fuel Type',
+          options: ['Wood', 'Pellet', 'Gas', 'Electric', 'Ethanol'],
+          type: 'select',
+        },
+        {
+          key: 'power_kw',
+          label: 'Heating Power (kW)',
+          placeholder: 'kW',
+          type: 'number',
+        },
+        {
+          key: 'room_size_m2',
+          label: 'Suitable Room Size (m²)',
+          placeholder: 'm²',
+          type: 'number',
+        },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Wood Fireplace Insert 10kW',
     },
@@ -2857,17 +4799,42 @@ const categoriesData = [
     parentSlug: 'heaters',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'fuel_type', label: 'Fuel Type', options: ['Wood', 'Coal', 'Pellet', 'Combined'], type: 'select' },
-        { key: 'power_kw', label: 'Heating Power (kW)', placeholder: 'kW', type: 'number' },
-        { key: 'room_size_m2', label: 'Suitable Room Size (m²)', placeholder: 'm²', type: 'number' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'fuel_type',
+          label: 'Fuel Type',
+          options: ['Wood', 'Coal', 'Pellet', 'Combined'],
+          type: 'select',
+        },
+        {
+          key: 'power_kw',
+          label: 'Heating Power (kW)',
+          placeholder: 'kW',
+          type: 'number',
+        },
+        {
+          key: 'room_size_m2',
+          label: 'Suitable Room Size (m²)',
+          placeholder: 'm²',
+          type: 'number',
+        },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Pellet Stove 12kW',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // COOLING & WINE DISPLAYS
   // ─────────────────────────────────────────────
@@ -2881,9 +4848,19 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Wine Cooler 12 Bottles',
     },
@@ -2898,17 +4875,42 @@ const categoriesData = [
     parentSlug: 'cooling-displays',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'capacity_bottles', label: 'Capacity (Bottles)', placeholder: 'e.g. 12, 24', type: 'number' },
-        { key: 'zones', label: 'Temperature Zones', options: ['1 Zone', '2 Zones', '3 Zones'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Black, Inox', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'capacity_bottles',
+          label: 'Capacity (Bottles)',
+          placeholder: 'e.g. 12, 24',
+          type: 'number',
+        },
+        {
+          key: 'zones',
+          label: 'Temperature Zones',
+          options: ['1 Zone', '2 Zones', '3 Zones'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Black, Inox',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Wine Cooler 24 Bottles 2-Zone',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // AIR PURIFIERS
   // ─────────────────────────────────────────────
@@ -2922,18 +4924,48 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'room_size_m2', label: 'Suitable Room Size (m²)', placeholder: 'm²', type: 'number' },
-        { key: 'filter_type', label: 'Filter Type', options: ['HEPA', 'Carbon', 'HEPA + Carbon', 'UV', 'Ionizer'], type: 'select' },
-        { key: 'cadr', label: 'CADR (m³/h)', placeholder: 'm³/h', type: 'number' },
-        { key: 'noise_level_db', label: 'Noise Level (dB)', placeholder: 'dB', type: 'number' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'room_size_m2',
+          label: 'Suitable Room Size (m²)',
+          placeholder: 'm²',
+          type: 'number',
+        },
+        {
+          key: 'filter_type',
+          label: 'Filter Type',
+          options: ['HEPA', 'Carbon', 'HEPA + Carbon', 'UV', 'Ionizer'],
+          type: 'select',
+        },
+        {
+          key: 'cadr',
+          label: 'CADR (m³/h)',
+          placeholder: 'm³/h',
+          type: 'number',
+        },
+        {
+          key: 'noise_level_db',
+          label: 'Noise Level (dB)',
+          placeholder: 'dB',
+          type: 'number',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Xiaomi Air Purifier 4 Pro',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // ★ NEW: SMALL KITCHEN APPLIANCES
   // ─────────────────────────────────────────────
@@ -2947,9 +4979,19 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Small Kitchen Appliance',
     },
@@ -2964,13 +5006,43 @@ const categoriesData = [
     parentSlug: 'small-kitchen-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'e.g. 1.7', type: 'number' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'kettle_type', label: 'Type', options: ['Standard', 'Temperature Control', 'Glass', 'Travel'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. White, Black, Chrome', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'e.g. 1.7',
+          type: 'number',
+        },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'kettle_type',
+          label: 'Type',
+          options: ['Standard', 'Temperature Control', 'Glass', 'Travel'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. White, Black, Chrome',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Philips Kettle 1.7L 2400W',
     },
@@ -2985,12 +5057,37 @@ const categoriesData = [
     parentSlug: 'small-kitchen-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'slots', label: 'Number of Slots', options: ['2', '4'], type: 'select' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. White, Black', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'slots',
+          label: 'Number of Slots',
+          options: ['2', '4'],
+          type: 'select',
+        },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. White, Black',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Tefal 4-Slot Toaster 1500W',
     },
@@ -3005,14 +5102,55 @@ const categoriesData = [
     parentSlug: 'small-kitchen-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'appliance_type', label: 'Type', options: ['Jug Blender', 'Hand Blender', 'Stand Mixer', 'Hand Mixer', 'Smoothie Maker'], type: 'select' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'speed_settings', label: 'Speed Settings', placeholder: 'e.g. 5', type: 'number' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. White, Black', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'appliance_type',
+          label: 'Type',
+          options: [
+            'Jug Blender',
+            'Hand Blender',
+            'Stand Mixer',
+            'Hand Mixer',
+            'Smoothie Maker',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'speed_settings',
+          label: 'Speed Settings',
+          placeholder: 'e.g. 5',
+          type: 'number',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. White, Black',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Bosch Hand Blender 700W',
     },
@@ -3027,12 +5165,37 @@ const categoriesData = [
     parentSlug: 'small-kitchen-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'bowl_capacity_liters', label: 'Bowl Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'description', label: 'Description', placeholder: 'Included attachments, functions...', type: 'textarea' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'bowl_capacity_liters',
+          label: 'Bowl Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Included attachments, functions...',
+          type: 'textarea',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Kenwood Food Processor 1000W',
     },
@@ -3047,11 +5210,36 @@ const categoriesData = [
     parentSlug: 'small-kitchen-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'juicer_type', label: 'Type', options: ['Centrifugal', 'Slow / Masticating', 'Citrus Press', 'Cold Press'], type: 'select' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'juicer_type',
+          label: 'Type',
+          options: [
+            'Centrifugal',
+            'Slow / Masticating',
+            'Citrus Press',
+            'Cold Press',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Hurom Slow Juicer',
     },
@@ -3066,13 +5254,43 @@ const categoriesData = [
     parentSlug: 'small-kitchen-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'has_rotisserie', label: 'Rotisserie', options: ['Yes', 'No'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Black, White', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'has_rotisserie',
+          label: 'Rotisserie',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Black, White',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Tefal Air Fryer 4.2L 1500W',
     },
@@ -3087,11 +5305,36 @@ const categoriesData = [
     parentSlug: 'small-kitchen-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'appliance_type', label: 'Type', options: ['Sandwich Maker', 'Contact Grill', 'Waffle Maker', 'Panini Press'], type: 'select' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'appliance_type',
+          label: 'Type',
+          options: [
+            'Sandwich Maker',
+            'Contact Grill',
+            'Waffle Maker',
+            'Panini Press',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Tefal Contact Grill 2000W',
     },
@@ -3106,17 +5349,47 @@ const categoriesData = [
     parentSlug: 'small-kitchen-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'appliance_type', label: 'Type', options: ['Rice Cooker', 'Multi Cooker', 'Pressure Cooker', 'Slow Cooker'], type: 'select' },
-        { key: 'capacity_liters', label: 'Capacity (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'appliance_type',
+          label: 'Type',
+          options: [
+            'Rice Cooker',
+            'Multi Cooker',
+            'Pressure Cooker',
+            'Slow Cooker',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'capacity_liters',
+          label: 'Capacity (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Instant Pot Multi Cooker 6L',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // ★ NEW: COFFEE MACHINES
   // ─────────────────────────────────────────────
@@ -3130,10 +5403,33 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'coffee_type', label: 'Type', options: ['Espresso Manual', 'Espresso Semi-Auto', 'Bean-to-Cup', 'Capsule / Pod', 'Filter / Drip', 'French Press', 'Moka Pot'], type: 'select' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'coffee_type',
+          label: 'Type',
+          options: [
+            'Espresso Manual',
+            'Espresso Semi-Auto',
+            'Bean-to-Cup',
+            'Capsule / Pod',
+            'Filter / Drip',
+            'French Press',
+            'Moka Pot',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Coffee Machine',
     },
@@ -3148,17 +5444,67 @@ const categoriesData = [
     parentSlug: 'coffee-machines',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. DeLonghi, Breville, Sage', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. DeLonghi, Breville, Sage',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'machine_type', label: 'Type', options: ['Manual', 'Semi-Automatic', 'Automatic'], type: 'select' },
-        { key: 'pump_bar', label: 'Pump Pressure (bar)', placeholder: 'e.g. 15', type: 'number' },
-        { key: 'boiler_type', label: 'Boiler', options: ['Single', 'Dual', 'Heat Exchange', 'Thermoblock'], type: 'select' },
-        { key: 'has_grinder', label: 'Built-in Grinder', options: ['Yes', 'No'], type: 'select' },
-        { key: 'tank_capacity_liters', label: 'Water Tank (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Black, Chrome, White', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2022', type: 'number' },
+        {
+          key: 'machine_type',
+          label: 'Type',
+          options: ['Manual', 'Semi-Automatic', 'Automatic'],
+          type: 'select',
+        },
+        {
+          key: 'pump_bar',
+          label: 'Pump Pressure (bar)',
+          placeholder: 'e.g. 15',
+          type: 'number',
+        },
+        {
+          key: 'boiler_type',
+          label: 'Boiler',
+          options: ['Single', 'Dual', 'Heat Exchange', 'Thermoblock'],
+          type: 'select',
+        },
+        {
+          key: 'has_grinder',
+          label: 'Built-in Grinder',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'tank_capacity_liters',
+          label: 'Water Tank (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Black, Chrome, White',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2022',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. DeLonghi La Specialista',
     },
@@ -3173,15 +5519,55 @@ const categoriesData = [
     parentSlug: 'coffee-machines',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. DeLonghi, Philips, Jura', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. DeLonghi, Philips, Jura',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'drinks', label: 'One-Touch Drinks', placeholder: 'e.g. Espresso, Latte, Cappuccino', type: 'text' },
-        { key: 'pump_bar', label: 'Pump Pressure (bar)', placeholder: 'e.g. 15', type: 'number' },
-        { key: 'tank_capacity_liters', label: 'Water Tank (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Black, Silver', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2023', type: 'number' },
+        {
+          key: 'drinks',
+          label: 'One-Touch Drinks',
+          placeholder: 'e.g. Espresso, Latte, Cappuccino',
+          type: 'text',
+        },
+        {
+          key: 'pump_bar',
+          label: 'Pump Pressure (bar)',
+          placeholder: 'e.g. 15',
+          type: 'number',
+        },
+        {
+          key: 'tank_capacity_liters',
+          label: 'Water Tank (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Black, Silver',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2023',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Philips 3200 Bean-to-Cup',
     },
@@ -3196,14 +5582,56 @@ const categoriesData = [
     parentSlug: 'coffee-machines',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Nespresso, Dolce Gusto', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Nespresso, Dolce Gusto',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'capsule_system', label: 'Capsule System', options: ['Nespresso Original', 'Nespresso Vertuo', 'Dolce Gusto', 'Tassimo', 'Lavazza', 'Other'], type: 'select' },
-        { key: 'tank_capacity_liters', label: 'Water Tank (Liters)', placeholder: 'Liters', type: 'number' },
-        { key: 'has_milk_frother', label: 'Milk Frother', options: ['Built-in', 'Separate', 'None'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Black, Red, White', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'capsule_system',
+          label: 'Capsule System',
+          options: [
+            'Nespresso Original',
+            'Nespresso Vertuo',
+            'Dolce Gusto',
+            'Tassimo',
+            'Lavazza',
+            'Other',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'tank_capacity_liters',
+          label: 'Water Tank (Liters)',
+          placeholder: 'Liters',
+          type: 'number',
+        },
+        {
+          key: 'has_milk_frother',
+          label: 'Milk Frother',
+          options: ['Built-in', 'Separate', 'None'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Black, Red, White',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Nespresso Vertuo Pop',
     },
@@ -3218,18 +5646,48 @@ const categoriesData = [
     parentSlug: 'coffee-machines',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'capacity_cups', label: 'Capacity (Cups)', placeholder: 'e.g. 12', type: 'number' },
-        { key: 'has_grinder', label: 'Built-in Grinder', options: ['Yes', 'No'], type: 'select' },
-        { key: 'has_thermal_carafe', label: 'Thermal Carafe', options: ['Yes', 'No'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Black, Silver', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'capacity_cups',
+          label: 'Capacity (Cups)',
+          placeholder: 'e.g. 12',
+          type: 'number',
+        },
+        {
+          key: 'has_grinder',
+          label: 'Built-in Grinder',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'has_thermal_carafe',
+          label: 'Thermal Carafe',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Black, Silver',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Moccamaster Filter Coffee 12 Cup',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // ★ NEW: FLOOR CARE
   // ─────────────────────────────────────────────
@@ -3243,9 +5701,19 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Vacuum Cleaner',
     },
@@ -3260,15 +5728,55 @@ const categoriesData = [
     parentSlug: 'floor-care',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Dyson, Bosch, Philips', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Dyson, Bosch, Philips',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'vacuum_type', label: 'Type', options: ['Canister', 'Upright', 'Stick', 'Handheld', 'Wet & Dry'], type: 'select' },
-        { key: 'suction_w', label: 'Suction Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'filtration', label: 'Filtration', options: ['HEPA', 'Bagless', 'Bagged', 'Water Filter'], type: 'select' },
-        { key: 'noise_level_db', label: 'Noise Level (dB)', placeholder: 'dB', type: 'number' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Red, Black', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'vacuum_type',
+          label: 'Type',
+          options: ['Canister', 'Upright', 'Stick', 'Handheld', 'Wet & Dry'],
+          type: 'select',
+        },
+        {
+          key: 'suction_w',
+          label: 'Suction Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'filtration',
+          label: 'Filtration',
+          options: ['HEPA', 'Bagless', 'Bagged', 'Water Filter'],
+          type: 'select',
+        },
+        {
+          key: 'noise_level_db',
+          label: 'Noise Level (dB)',
+          placeholder: 'dB',
+          type: 'number',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Red, Black',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Dyson V15 Detect Stick Vacuum',
     },
@@ -3283,16 +5791,61 @@ const categoriesData = [
     parentSlug: 'floor-care',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Roborock, iRobot, Xiaomi', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Roborock, iRobot, Xiaomi',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'suction_pa', label: 'Suction (Pa)', placeholder: 'e.g. 3000', type: 'number' },
-        { key: 'has_mop', label: 'Mop Function', options: ['Yes', 'No'], type: 'select' },
-        { key: 'has_auto_empty', label: 'Auto Empty Base', options: ['Yes', 'No'], type: 'select' },
-        { key: 'battery_minutes', label: 'Battery Life (min)', placeholder: 'minutes', type: 'number' },
-        { key: 'mapping', label: 'Mapping', options: ['Laser (LiDAR)', 'Camera', 'Gyroscope', 'None'], type: 'select' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
-        { key: 'year', label: 'Year', placeholder: 'e.g. 2023', type: 'number' },
+        {
+          key: 'suction_pa',
+          label: 'Suction (Pa)',
+          placeholder: 'e.g. 3000',
+          type: 'number',
+        },
+        {
+          key: 'has_mop',
+          label: 'Mop Function',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'has_auto_empty',
+          label: 'Auto Empty Base',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'battery_minutes',
+          label: 'Battery Life (min)',
+          placeholder: 'minutes',
+          type: 'number',
+        },
+        {
+          key: 'mapping',
+          label: 'Mapping',
+          options: ['Laser (LiDAR)', 'Camera', 'Gyroscope', 'None'],
+          type: 'select',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
+        {
+          key: 'year',
+          label: 'Year',
+          placeholder: 'e.g. 2023',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Roborock S7 MaxV Ultra',
     },
@@ -3307,17 +5860,47 @@ const categoriesData = [
     parentSlug: 'floor-care',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'appliance_type', label: 'Type', options: ['Steam Mop', 'Steam Cleaner', 'Carpet Cleaner', 'Wet & Dry Vacuum'], type: 'select' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'tank_capacity_ml', label: 'Water Tank (ml)', placeholder: 'ml', type: 'number' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'appliance_type',
+          label: 'Type',
+          options: [
+            'Steam Mop',
+            'Steam Cleaner',
+            'Carpet Cleaner',
+            'Wet & Dry Vacuum',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'tank_capacity_ml',
+          label: 'Water Tank (ml)',
+          placeholder: 'ml',
+          type: 'number',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Kärcher SC 3 Steam Cleaner',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // ★ NEW: PERSONAL CARE APPLIANCES
   // ─────────────────────────────────────────────
@@ -3331,9 +5914,19 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Hair Dryer',
     },
@@ -3348,14 +5941,49 @@ const categoriesData = [
     parentSlug: 'personal-care',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Dyson, Rowenta, Remington', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Dyson, Rowenta, Remington',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'speed_settings', label: 'Speed Settings', placeholder: 'e.g. 2', type: 'number' },
-        { key: 'has_diffuser', label: 'Diffuser Included', options: ['Yes', 'No'], type: 'select' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Black, Rose Gold', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'speed_settings',
+          label: 'Speed Settings',
+          placeholder: 'e.g. 2',
+          type: 'number',
+        },
+        {
+          key: 'has_diffuser',
+          label: 'Diffuser Included',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Black, Rose Gold',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Dyson Supersonic Hair Dryer',
     },
@@ -3370,13 +5998,54 @@ const categoriesData = [
     parentSlug: 'personal-care',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. GHD, Dyson, Babyliss', type: 'text' },
-        { key: 'appliance_type', label: 'Type', options: ['Straightener', 'Curling Iron', 'Curling Wand', 'Multistyler', 'Hot Brush'], type: 'select' },
-        { key: 'plate_material', label: 'Plate / Barrel Material', options: ['Ceramic', 'Titanium', 'Tourmaline', 'Gold'], type: 'select' },
-        { key: 'max_temp', label: 'Max Temperature (°C)', placeholder: '°C', type: 'number' },
-        { key: 'color', label: 'Color', placeholder: 'e.g. Black, Rose Gold', type: 'text' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. GHD, Dyson, Babyliss',
+          type: 'text',
+        },
+        {
+          key: 'appliance_type',
+          label: 'Type',
+          options: [
+            'Straightener',
+            'Curling Iron',
+            'Curling Wand',
+            'Multistyler',
+            'Hot Brush',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'plate_material',
+          label: 'Plate / Barrel Material',
+          options: ['Ceramic', 'Titanium', 'Tourmaline', 'Gold'],
+          type: 'select',
+        },
+        {
+          key: 'max_temp',
+          label: 'Max Temperature (°C)',
+          placeholder: '°C',
+          type: 'number',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          placeholder: 'e.g. Black, Rose Gold',
+          type: 'text',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. GHD Platinum+ Straightener',
     },
@@ -3391,13 +6060,54 @@ const categoriesData = [
     parentSlug: 'personal-care',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Philips, Braun, Panasonic', type: 'text' },
-        { key: 'appliance_type', label: 'Type', options: ['Electric Shaver', 'Beard Trimmer', 'Body Groomer', 'Hair Clipper', 'Nose / Ear Trimmer'], type: 'select' },
-        { key: 'for_gender', label: 'For', options: ['Men', 'Women', 'Unisex'], type: 'select' },
-        { key: 'is_waterproof', label: 'Waterproof', options: ['Yes', 'No'], type: 'select' },
-        { key: 'battery_type', label: 'Battery', options: ['Rechargeable', 'AA/AAA', 'Corded Only'], type: 'select' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Philips, Braun, Panasonic',
+          type: 'text',
+        },
+        {
+          key: 'appliance_type',
+          label: 'Type',
+          options: [
+            'Electric Shaver',
+            'Beard Trimmer',
+            'Body Groomer',
+            'Hair Clipper',
+            'Nose / Ear Trimmer',
+          ],
+          type: 'select',
+        },
+        {
+          key: 'for_gender',
+          label: 'For',
+          options: ['Men', 'Women', 'Unisex'],
+          type: 'select',
+        },
+        {
+          key: 'is_waterproof',
+          label: 'Waterproof',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'battery_type',
+          label: 'Battery',
+          options: ['Rechargeable', 'AA/AAA', 'Corded Only'],
+          type: 'select',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Philips Series 9000 Shaver',
     },
@@ -3412,17 +6122,42 @@ const categoriesData = [
     parentSlug: 'personal-care',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Braun, Philips, Panasonic', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Braun, Philips, Panasonic',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'is_waterproof', label: 'Waterproof', options: ['Yes', 'No'], type: 'select' },
-        { key: 'has_shaver_head', label: 'Shaver Head', options: ['Yes', 'No'], type: 'select' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'is_waterproof',
+          label: 'Waterproof',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'has_shaver_head',
+          label: 'Shaver Head',
+          options: ['Yes', 'No'],
+          type: 'select',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Braun Silk-épil 9 Epilator',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // ★ NEW: IRONS & GARMENT CARE
   // ─────────────────────────────────────────────
@@ -3436,9 +6171,19 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Steam Iron',
     },
@@ -3453,13 +6198,43 @@ const categoriesData = [
     parentSlug: 'irons-garment',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Rowenta, Philips, Tefal', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Rowenta, Philips, Tefal',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'steam_g_min', label: 'Steam Output (g/min)', placeholder: 'g/min', type: 'number' },
-        { key: 'soleplate', label: 'Soleplate', options: ['Stainless Steel', 'Ceramic', 'Titanium', 'Anodized'], type: 'select' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'steam_g_min',
+          label: 'Steam Output (g/min)',
+          placeholder: 'g/min',
+          type: 'number',
+        },
+        {
+          key: 'soleplate',
+          label: 'Soleplate',
+          options: ['Stainless Steel', 'Ceramic', 'Titanium', 'Anodized'],
+          type: 'select',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Rowenta Steam Iron 2800W',
     },
@@ -3474,13 +6249,43 @@ const categoriesData = [
     parentSlug: 'irons-garment',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
-        { key: 'brand', label: 'Brand', placeholder: 'e.g. Philips, Tefal, Rowenta', type: 'text' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          placeholder: 'e.g. Philips, Tefal, Rowenta',
+          type: 'text',
+        },
         { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'steam_bar', label: 'Steam Pressure (bar)', placeholder: 'bar', type: 'number' },
-        { key: 'tank_capacity_ml', label: 'Tank Capacity (ml)', placeholder: 'ml', type: 'number' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'steam_bar',
+          label: 'Steam Pressure (bar)',
+          placeholder: 'bar',
+          type: 'number',
+        },
+        {
+          key: 'tank_capacity_ml',
+          label: 'Tank Capacity (ml)',
+          placeholder: 'ml',
+          type: 'number',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Philips PerfectCare Steam Station',
     },
@@ -3495,17 +6300,42 @@ const categoriesData = [
     parentSlug: 'irons-garment',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'steamer_type', label: 'Type', options: ['Handheld', 'Standing'], type: 'select' },
-        { key: 'power_w', label: 'Power (W)', placeholder: 'Watts', type: 'number' },
-        { key: 'tank_capacity_ml', label: 'Tank Capacity (ml)', placeholder: 'ml', type: 'number' },
-        { key: 'warranty', label: 'Warranty (Months)', placeholder: 'Months', type: 'number' },
+        {
+          key: 'steamer_type',
+          label: 'Type',
+          options: ['Handheld', 'Standing'],
+          type: 'select',
+        },
+        {
+          key: 'power_w',
+          label: 'Power (W)',
+          placeholder: 'Watts',
+          type: 'number',
+        },
+        {
+          key: 'tank_capacity_ml',
+          label: 'Tank Capacity (ml)',
+          placeholder: 'ml',
+          type: 'number',
+        },
+        {
+          key: 'warranty',
+          label: 'Warranty (Months)',
+          placeholder: 'Months',
+          type: 'number',
+        },
       ],
       titlePlaceholder: 'e.g. Conair Handheld Garment Steamer',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // ACCESSORIES (all sub-accessory categories)
   // ─────────────────────────────────────────────
@@ -3519,9 +6349,19 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Appliance Accessory',
     },
@@ -3536,9 +6376,19 @@ const categoriesData = [
     parentSlug: 'appliances-accessories',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Fridge Shelf / Ice Tray',
     },
@@ -3553,9 +6403,19 @@ const categoriesData = [
     parentSlug: 'appliances-accessories',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Washing Machine Drain Hose',
     },
@@ -3570,9 +6430,19 @@ const categoriesData = [
     parentSlug: 'appliances-accessories',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. AC Remote / Hood Filter',
     },
@@ -3587,9 +6457,19 @@ const categoriesData = [
     parentSlug: 'appliances-accessories',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. HEPA Replacement Filter',
     },
@@ -3604,14 +6484,24 @@ const categoriesData = [
     parentSlug: 'appliances-accessories',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Washing Machine Door Seal',
     },
   },
- 
+
   // ─────────────────────────────────────────────
   // CLEANING & PROTECTION
   // ─────────────────────────────────────────────
@@ -3625,9 +6515,19 @@ const categoriesData = [
     parentSlug: 'home-appliances',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Appliance Cleaner',
     },
@@ -3642,9 +6542,19 @@ const categoriesData = [
     parentSlug: 'cleaning-protection',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Used', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Used', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Stainless Steel Cleaning Wipes',
     },
@@ -3659,9 +6569,19 @@ const categoriesData = [
     parentSlug: 'cleaning-protection',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Oven Cleaning Spray',
     },
@@ -3676,9 +6596,19 @@ const categoriesData = [
     parentSlug: 'cleaning-protection',
     template: {
       fields: [
-        { key: 'condition', label: 'Condition', options: ['New', 'Damaged'], type: 'select' },
+        {
+          key: 'condition',
+          label: 'Condition',
+          options: ['New', 'Damaged'],
+          type: 'select',
+        },
         { key: 'brand', label: 'Brand', placeholder: 'Brand', type: 'text' },
-        { key: 'description', label: 'Description', placeholder: 'Details...', type: 'textarea' },
+        {
+          key: 'description',
+          label: 'Description',
+          placeholder: 'Details...',
+          type: 'textarea',
+        },
       ],
       titlePlaceholder: 'e.g. Descaling Tablets',
     },
@@ -6429,7 +9359,8 @@ const categoriesData = [
   {
     name: 'Mobile Phones and Accessories',
     slug: 'mobile-phones-accessories',
-    description: 'Smartphones, tablets, wearables, accessories and hardware spare parts.',
+    description:
+      'Smartphones, tablets, wearables, accessories and hardware spare parts.',
     image: '',
     isActive: true,
     isFeatured: true,
@@ -6513,7 +9444,12 @@ const categoriesData = [
         {
           key: 'sim_type',
           label: 'SIM Slot',
-          options: ['Single SIM', 'Dual SIM', 'Dual SIM (Nano + eSIM)', 'eSIM Only'],
+          options: [
+            'Single SIM',
+            'Dual SIM',
+            'Dual SIM (Nano + eSIM)',
+            'eSIM Only',
+          ],
           type: 'select',
         },
         {
@@ -6593,7 +9529,13 @@ const categoriesData = [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Used - Like New', 'Used - Good', 'Used - Fair', 'For Parts'],
+          options: [
+            'New',
+            'Used - Like New',
+            'Used - Good',
+            'Used - Fair',
+            'For Parts',
+          ],
           type: 'select',
         },
         {
@@ -6728,7 +9670,15 @@ const categoriesData = [
         {
           key: 'type',
           label: 'Type',
-          options: ['Silicone Case', 'Leather Case', 'Hard Case', 'Wallet Cover', 'Screen Protector (Glass)', 'Screen Protector (Foil)', 'Full Body Skin'],
+          options: [
+            'Silicone Case',
+            'Leather Case',
+            'Hard Case',
+            'Wallet Cover',
+            'Screen Protector (Glass)',
+            'Screen Protector (Foil)',
+            'Full Body Skin',
+          ],
           type: 'select',
         },
         {
@@ -6759,13 +9709,26 @@ const categoriesData = [
         {
           key: 'type',
           label: 'Type',
-          options: ['Wall Charger', 'Car Charger', 'Power Bank', 'Wireless Charger', 'Charging Cable', 'Docking Station'],
+          options: [
+            'Wall Charger',
+            'Car Charger',
+            'Power Bank',
+            'Wireless Charger',
+            'Charging Cable',
+            'Docking Station',
+          ],
           type: 'select',
         },
         {
           key: 'connector_type',
           label: 'Connector',
-          options: ['USB-C', 'Lightning (Apple)', 'Micro-USB', 'Wireless (Qi)', 'MagSafe'],
+          options: [
+            'USB-C',
+            'Lightning (Apple)',
+            'Micro-USB',
+            'Wireless (Qi)',
+            'MagSafe',
+          ],
           type: 'select',
         },
         {
@@ -6796,7 +9759,13 @@ const categoriesData = [
         {
           key: 'type',
           label: 'Type',
-          options: ['Wireless Earbuds (TWS)', 'Over-Ear Headphones', 'Bluetooth Speaker', 'Wired Earphones', 'Bluetooth Headset (Mono)'],
+          options: [
+            'Wireless Earbuds (TWS)',
+            'Over-Ear Headphones',
+            'Bluetooth Speaker',
+            'Wired Earphones',
+            'Bluetooth Headset (Mono)',
+          ],
           type: 'select',
         },
         {
@@ -6837,7 +9806,13 @@ const categoriesData = [
         {
           key: 'part_quality',
           label: 'Part Quality',
-          options: ['Original (Service Pack)', 'Original (Pulled/Used)', 'OEM High Quality', 'Aftermarket (Standard)', 'Incell / TFT'],
+          options: [
+            'Original (Service Pack)',
+            'Original (Pulled/Used)',
+            'OEM High Quality',
+            'Aftermarket (Standard)',
+            'Incell / TFT',
+          ],
           type: 'select',
         },
         {
@@ -6862,7 +9837,12 @@ const categoriesData = [
         {
           key: 'part_quality',
           label: 'Battery Quality',
-          options: ['Original', 'High Capacity / Gold', 'Standard Replacement', 'Used (Good Health)'],
+          options: [
+            'Original',
+            'High Capacity / Gold',
+            'Standard Replacement',
+            'Used (Good Health)',
+          ],
           type: 'select',
         },
         {
@@ -6920,7 +9900,13 @@ const categoriesData = [
         {
           key: 'part_type',
           label: 'Part Type',
-          options: ['Full Housing Chassis', 'Back Glass Only', 'Middle Frame / Bezel', 'Sim Tray', 'Button Set'],
+          options: [
+            'Full Housing Chassis',
+            'Back Glass Only',
+            'Middle Frame / Bezel',
+            'Sim Tray',
+            'Button Set',
+          ],
           type: 'select',
         },
         {
@@ -6985,7 +9971,13 @@ const categoriesData = [
         {
           key: 'number_pattern',
           label: 'Pattern Type',
-          options: ['Platinum (XXXXX)', 'Gold (XY XY XY)', 'Silver / Nice Number', 'Triple (XXX)', 'Consecutive Numbers'],
+          options: [
+            'Platinum (XXXXX)',
+            'Gold (XY XY XY)',
+            'Silver / Nice Number',
+            'Triple (XXX)',
+            'Consecutive Numbers',
+          ],
           type: 'select',
         },
       ],
@@ -7042,7 +10034,12 @@ const categoriesData = [
         {
           key: 'type',
           label: 'Phone Type',
-          options: ['Wireless (DECT)', 'Wired / Corded Desktop', 'IP / VoIP / SIP Phone', 'Hotel Phones'],
+          options: [
+            'Wireless (DECT)',
+            'Wired / Corded Desktop',
+            'IP / VoIP / SIP Phone',
+            'Hotel Phones',
+          ],
           type: 'select',
         },
       ],
@@ -7112,7 +10109,8 @@ const categoriesData = [
   {
     name: 'Computers & Hardware',
     slug: 'computers',
-    description: 'Laptops, desktops, gaming rigs, hardware components and peripherals.',
+    description:
+      'Laptops, desktops, gaming rigs, hardware components and peripherals.',
     image: '',
     isActive: true,
     isFeatured: true,
@@ -7142,25 +10140,63 @@ const categoriesData = [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New (Sealed)', 'New (Open Box)', 'Used (As New)', 'Used (Normal)', 'For Parts'],
+          options: [
+            'New (Sealed)',
+            'New (Open Box)',
+            'Used (As New)',
+            'Used (Normal)',
+            'For Parts',
+          ],
           type: 'select',
         },
         {
           key: 'category',
           label: 'Laptop Category',
-          options: ['Ultrabook / Business', 'Gaming Laptop', 'Student / Home', '2-in-1 / Touchscreen', 'Workstation (Pro)', 'Other'],
+          options: [
+            'Ultrabook / Business',
+            'Gaming Laptop',
+            'Student / Home',
+            '2-in-1 / Touchscreen',
+            'Workstation (Pro)',
+            'Other',
+          ],
           type: 'select',
         },
         {
           key: 'brand',
           label: 'Brand',
-          options: ['Apple (MacBook)', 'Lenovo', 'HP', 'Dell', 'ASUS', 'Acer', 'MSI', 'Razer', 'Samsung', 'Microsoft Surface', 'Gigabyte', 'Other'],
+          options: [
+            'Apple (MacBook)',
+            'Lenovo',
+            'HP',
+            'Dell',
+            'ASUS',
+            'Acer',
+            'MSI',
+            'Razer',
+            'Samsung',
+            'Microsoft Surface',
+            'Gigabyte',
+            'Other',
+          ],
           type: 'select',
         },
         {
           key: 'processor',
           label: 'Processor Family',
-          options: ['Intel Core i3', 'Intel Core i5', 'Intel Core i7', 'Intel Core i9', 'Intel Ultra', 'AMD Ryzen 3', 'AMD Ryzen 5', 'AMD Ryzen 7', 'AMD Ryzen 9', 'Apple M1 / M2 / M3', 'Other'],
+          options: [
+            'Intel Core i3',
+            'Intel Core i5',
+            'Intel Core i7',
+            'Intel Core i9',
+            'Intel Ultra',
+            'AMD Ryzen 3',
+            'AMD Ryzen 5',
+            'AMD Ryzen 7',
+            'AMD Ryzen 9',
+            'Apple M1 / M2 / M3',
+            'Other',
+          ],
           type: 'select',
         },
         {
@@ -7172,7 +10208,15 @@ const categoriesData = [
         {
           key: 'storage_gb',
           label: 'Storage (GB)',
-          options: ['128', '256', '512', '1TB (1024)', '2TB', 'Over 2TB', 'Other'],
+          options: [
+            '128',
+            '256',
+            '512',
+            '1TB (1024)',
+            '2TB',
+            'Over 2TB',
+            'Other',
+          ],
           type: 'select',
         },
         {
@@ -7184,7 +10228,14 @@ const categoriesData = [
         {
           key: 'gpu',
           label: 'Dedicated Graphics',
-          options: ['Integrated', 'NVIDIA RTX Series', 'NVIDIA GTX Series', 'AMD Radeon RX Series', 'Workstation (Quadro/A-Series)', 'Other'],
+          options: [
+            'Integrated',
+            'NVIDIA RTX Series',
+            'NVIDIA GTX Series',
+            'AMD Radeon RX Series',
+            'Workstation (Quadro/A-Series)',
+            'Other',
+          ],
           type: 'select',
         },
         {
@@ -7196,7 +10247,11 @@ const categoriesData = [
         {
           key: 'warranty',
           label: 'Warranty Status',
-          options: ['No Warranty', 'International Warranty', 'Local Warranty (Active)'],
+          options: [
+            'No Warranty',
+            'International Warranty',
+            'Local Warranty (Active)',
+          ],
           type: 'select',
         },
       ],
@@ -7222,7 +10277,15 @@ const categoriesData = [
         {
           key: 'pc_type',
           label: 'Form Factor',
-          options: ['Full Tower / Tower', 'Gaming Build (Custom)', 'Mini PC / ITX', 'All-in-One (AiO)', 'Mac Studio / Mac Mini', 'Workstation', 'Other'],
+          options: [
+            'Full Tower / Tower',
+            'Gaming Build (Custom)',
+            'Mini PC / ITX',
+            'All-in-One (AiO)',
+            'Mac Studio / Mac Mini',
+            'Workstation',
+            'Other',
+          ],
           type: 'select',
         },
         {
@@ -7252,7 +10315,14 @@ const categoriesData = [
         {
           key: 'os',
           label: 'Operating System',
-          options: ['Windows 11', 'Windows 10', 'macOS', 'Linux', 'No OS (FreeDOS)', 'Other'],
+          options: [
+            'Windows 11',
+            'Windows 10',
+            'macOS',
+            'Linux',
+            'No OS (FreeDOS)',
+            'Other',
+          ],
           type: 'select',
         },
       ],
@@ -7284,7 +10354,14 @@ const categoriesData = [
         {
           key: 'resolution',
           label: 'Resolution',
-          options: ['FHD (1920x1080)', 'QHD / 2K (2560x1440)', '4K / UHD (3840x2160)', 'Ultrawide (21:9/32:9)', 'Apple Studio / Pro Display', 'Other'],
+          options: [
+            'FHD (1920x1080)',
+            'QHD / 2K (2560x1440)',
+            '4K / UHD (3840x2160)',
+            'Ultrawide (21:9/32:9)',
+            'Apple Studio / Pro Display',
+            'Other',
+          ],
           type: 'select',
         },
         {
@@ -7326,7 +10403,12 @@ const categoriesData = [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Used (Never Mined)', 'Used (Mining History)', 'Refurbished'],
+          options: [
+            'New',
+            'Used (Never Mined)',
+            'Used (Mining History)',
+            'Refurbished',
+          ],
           type: 'select',
         },
         {
@@ -7351,7 +10433,19 @@ const categoriesData = [
         {
           key: 'vram_gb',
           label: 'VRAM (GB)',
-          options: ['2', '4', '6', '8', '10', '12', '16', '20', '24', 'Over 24', 'Other'],
+          options: [
+            '2',
+            '4',
+            '6',
+            '8',
+            '10',
+            '12',
+            '16',
+            '20',
+            '24',
+            'Over 24',
+            'Other',
+          ],
           type: 'select',
         },
         {
@@ -7447,13 +10541,28 @@ const categoriesData = [
         {
           key: 'type',
           label: 'Type',
-          options: ['DDR5', 'DDR4', 'DDR3', 'DDR2 / Legacy', 'Laptop (SO-DIMM)', 'Other'],
+          options: [
+            'DDR5',
+            'DDR4',
+            'DDR3',
+            'DDR2 / Legacy',
+            'Laptop (SO-DIMM)',
+            'Other',
+          ],
           type: 'select',
         },
         {
           key: 'capacity_gb',
           label: 'Total Capacity',
-          options: ['4GB', '8GB', '16GB', '32GB', '64GB+', 'Single Stick', 'Other'],
+          options: [
+            '4GB',
+            '8GB',
+            '16GB',
+            '32GB',
+            '64GB+',
+            'Single Stick',
+            'Other',
+          ],
           type: 'select',
         },
         {
@@ -7478,7 +10587,13 @@ const categoriesData = [
         {
           key: 'type',
           label: 'Drive Type',
-          options: ['NVMe M.2 SSD', 'SATA SSD (2.5")', 'HDD (3.5" Desktop)', 'HDD (2.5" Laptop)', 'External Drive'],
+          options: [
+            'NVMe M.2 SSD',
+            'SATA SSD (2.5")',
+            'HDD (3.5" Desktop)',
+            'HDD (2.5" Laptop)',
+            'External Drive',
+          ],
           type: 'select',
         },
         {
@@ -7509,7 +10624,12 @@ const categoriesData = [
         {
           key: 'rating',
           label: 'Efficiency Rating',
-          options: ['80+ Bronze', '80+ Gold', '80+ Platinum / Titanium', 'Standard'],
+          options: [
+            '80+ Bronze',
+            '80+ Gold',
+            '80+ Platinum / Titanium',
+            'Standard',
+          ],
           type: 'select',
         },
         {
@@ -7534,7 +10654,13 @@ const categoriesData = [
         {
           key: 'category',
           label: 'Item Category',
-          options: ['PC Case', 'AIO Liquid Cooler', 'Air Cooler', 'Fans (RGB/Standard)', 'Custom Loop Parts'],
+          options: [
+            'PC Case',
+            'AIO Liquid Cooler',
+            'Air Cooler',
+            'Fans (RGB/Standard)',
+            'Custom Loop Parts',
+          ],
           type: 'select',
         },
       ],
@@ -7589,7 +10715,14 @@ const categoriesData = [
         {
           key: 'type',
           label: 'Equipment Type',
-          options: ['Laser Printer', 'Inkjet / Tank Printer', '3D Printer', 'Scanner', 'Multi-function (All-in-One)', 'Consumables (Ink/Toner)'],
+          options: [
+            'Laser Printer',
+            'Inkjet / Tank Printer',
+            '3D Printer',
+            'Scanner',
+            'Multi-function (All-in-One)',
+            'Consumables (Ink/Toner)',
+          ],
           type: 'select',
         },
       ],
@@ -7608,7 +10741,14 @@ const categoriesData = [
         {
           key: 'category',
           label: 'Category',
-          options: ['Wi-Fi 6/7 Routers', 'Pocket / 4G Routers', 'Network Switches', 'Access Points / Mesh', 'NAS (Network Storage)', 'Server Rack Gear'],
+          options: [
+            'Wi-Fi 6/7 Routers',
+            'Pocket / 4G Routers',
+            'Network Switches',
+            'Access Points / Mesh',
+            'NAS (Network Storage)',
+            'Server Rack Gear',
+          ],
           type: 'select',
         },
         {
@@ -7633,13 +10773,23 @@ const categoriesData = [
         {
           key: 'type',
           label: 'Software Type',
-          options: ['PC Games (Physical/Keys)', 'Operating Systems', 'Office & Productivity', 'Antivirus & Security', 'Professional Design / Engineering'],
+          options: [
+            'PC Games (Physical/Keys)',
+            'Operating Systems',
+            'Office & Productivity',
+            'Antivirus & Security',
+            'Professional Design / Engineering',
+          ],
           type: 'select',
         },
         {
           key: 'format',
           label: 'Product Format',
-          options: ['Digital Key / License', 'Physical Box / Disc', 'Subscription Account'],
+          options: [
+            'Digital Key / License',
+            'Physical Box / Disc',
+            'Subscription Account',
+          ],
           type: 'select',
         },
       ],
@@ -7658,7 +10808,12 @@ const categoriesData = [
         {
           key: 'type',
           label: 'Type',
-          options: ['Rack Server', 'Tower Server', 'Precision Workstation', 'Server Components (Xeon/EPYC)'],
+          options: [
+            'Rack Server',
+            'Tower Server',
+            'Precision Workstation',
+            'Server Components (Xeon/EPYC)',
+          ],
           type: 'select',
         },
       ],
@@ -7677,7 +10832,8 @@ const categoriesData = [
         {
           key: 'era',
           label: 'Era / Brand',
-          placeholder: 'e.g. Commodore 64, Amiga, IBM PC 5150, Windows 95/98 Era',
+          placeholder:
+            'e.g. Commodore 64, Amiga, IBM PC 5150, Windows 95/98 Era',
           type: 'text',
         },
       ],
@@ -8866,37 +12022,34 @@ const categoriesData = [
     },
   },
   {
-    name: 'Watches and Jewelry',
+    name: 'Watches & Jewelry',
     slug: 'watches-jewelry',
-    description: '',
+    description: 'Watches, jewelry, and accessories.',
     image: '',
     isActive: true,
     isFeatured: true,
     parentSlug: null,
     template: {
+      titlePlaceholder: 'e.g. Rolex Submariner, 14k Gold Necklace…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Used', 'Damaged'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Used', 'Damaged'],
         },
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
           type: 'text',
-        },
-        {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          placeholder: 'e.g. Rolex, Casio, Swarovski…',
         },
       ],
-      titlePlaceholder: 'e.g. Watches and Jewelry',
     },
   },
+
+  // ── Men's Watches ─────────────────────────────────────────────────────────
   {
     name: "Men's Watches",
     slug: 'mens-watches',
@@ -8906,39 +12059,106 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'watches-jewelry',
     template: {
+      titlePlaceholder: 'e.g. Casio G-Shock GA-2100, Black…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Like New', 'Used'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Used', 'Damaged'],
         },
         {
           key: 'brand',
           label: 'Brand',
+          type: 'select',
+          required: true,
           options: [
-            'Rolex',
             'Casio',
-            'Seiko',
-            'Fossil',
             'Citizen',
-            'Tissot',
+            'Fossil',
             'Omega',
+            'Rolex',
+            'Seiko',
             'Tag Heuer',
+            'Tissot',
+            'Orient',
+            'Longines',
+            'Breitling',
+            'IWC',
+            'Panerai',
             'Other',
           ],
-          type: 'select',
         },
         {
           key: 'movement',
           label: 'Movement',
-          options: ['Automatic', 'Quartz', 'Manual', 'Smartwatch'],
           type: 'select',
+          required: true,
+          options: [
+            'Automatic',
+            'Manual / Hand-wind',
+            'Quartz',
+            'Solar',
+            'Kinetic',
+          ],
+        },
+        {
+          key: 'case_material',
+          label: 'Case Material',
+          type: 'select',
+          options: [
+            'Stainless Steel',
+            'Titanium',
+            'Gold',
+            'Gold-plated',
+            'Ceramic',
+            'Plastic / Resin',
+            'Other',
+          ],
+        },
+        {
+          key: 'case_diameter_mm',
+          label: 'Case Diameter (mm)',
+          type: 'number',
+          placeholder: 'e.g. 42',
+        },
+        {
+          key: 'strap_material',
+          label: 'Strap / Bracelet',
+          type: 'select',
+          options: [
+            'Leather',
+            'Rubber / Silicone',
+            'Metal Bracelet',
+            'NATO / Fabric',
+            'Ceramic',
+            'Other',
+          ],
+        },
+        {
+          key: 'water_resistance',
+          label: 'Water Resistance',
+          type: 'select',
+          options: ['None', '30m', '50m', '100m', '200m', '300m+'],
+        },
+        {
+          key: 'includes_box_papers',
+          label: 'Box & Papers',
+          type: 'select',
+          options: ['Box & Papers', 'Box Only', 'Papers Only', 'Neither'],
+        },
+        {
+          key: 'year',
+          label: 'Year / Reference',
+          type: 'text',
+          placeholder: 'e.g. 2021 / Ref. 116610LN',
         },
       ],
-      titlePlaceholder: 'e.g. Casio G-Shock',
     },
   },
+
+  // ── Women's Watches ───────────────────────────────────────────────────────
   {
     name: "Women's Watches",
     slug: 'womens-watches',
@@ -8948,83 +12168,76 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'watches-jewelry',
     template: {
+      titlePlaceholder: 'e.g. Michael Kors Rose Gold MK3197…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Like New', 'Used'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Used', 'Damaged'],
         },
         {
           key: 'brand',
           label: 'Brand',
+          type: 'select',
+          required: true,
           options: [
-            'Michael Kors',
             'Casio',
-            'Fossil',
-            'Swarovski',
-            'Guess',
             'DKNY',
+            'Emporio Armani',
+            'Fossil',
+            'Guess',
+            'Michael Kors',
+            'Seiko',
+            'Swarovski',
+            'Tissot',
+            'Versace',
             'Other',
           ],
-          type: 'select',
         },
         {
           key: 'movement',
           label: 'Movement',
-          options: ['Automatic', 'Quartz', 'Manual', 'Smartwatch'],
           type: 'select',
-        },
-      ],
-      titlePlaceholder: 'e.g. Michael Kors Rose Gold Watch',
-    },
-  },
-  {
-    name: 'Jewelry',
-    slug: 'jewelry',
-    description: '',
-    image: '',
-    isActive: true,
-    isFeatured: false,
-    parentSlug: 'watches-jewelry',
-    template: {
-      fields: [
-        {
-          key: 'condition',
-          label: 'Condition',
-          options: ['New', 'Used'],
-          type: 'select',
+          options: ['Quartz', 'Automatic', 'Solar', 'Manual / Hand-wind'],
         },
         {
-          key: 'item_type',
-          label: 'Type',
+          key: 'case_material',
+          label: 'Case Material',
+          type: 'select',
           options: [
-            'Rings',
-            'Necklaces & Pendants',
-            'Earrings',
-            'Bracelets',
-            'Brooches',
+            'Stainless Steel',
+            'Gold-plated',
+            'Rose Gold-plated',
+            'Ceramic',
+            'Plastic',
             'Other',
           ],
-          type: 'select',
         },
         {
-          key: 'material',
-          label: 'Material',
+          key: 'strap_material',
+          label: 'Strap',
+          type: 'select',
           options: [
-            'Gold',
-            'Silver',
-            'Platinum',
-            'Steel',
-            'Costume / Fashion',
+            'Leather',
+            'Metal Bracelet',
+            'Rubber / Silicone',
+            'Fabric',
             'Other',
           ],
+        },
+        {
+          key: 'includes_box_papers',
+          label: 'Box & Papers',
           type: 'select',
+          options: ['Box & Papers', 'Box Only', 'Papers Only', 'Neither'],
         },
       ],
-      titlePlaceholder: 'e.g. 14k Gold Necklace',
     },
   },
+
+  // ── Smartwatches ──────────────────────────────────────────────────────────
   {
     name: 'Smartwatches',
     slug: 'smartwatches-jewelry',
@@ -9034,46 +12247,370 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'watches-jewelry',
     template: {
+      titlePlaceholder: 'e.g. Apple Watch Series 9, 45mm, Midnight…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Like New', 'Used', 'Damaged'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Used', 'Damaged'],
         },
         {
           key: 'brand',
           label: 'Brand',
+          type: 'select',
+          required: true,
           options: [
             'Apple',
-            'Samsung',
-            'Garmin',
-            'Xiaomi',
-            'Fitbit',
-            'Huawei',
             'Amazfit',
+            'Fitbit',
+            'Garmin',
+            'Google',
+            'Huawei',
+            'OnePlus',
+            'Samsung',
+            'Xiaomi',
             'Other',
           ],
-          type: 'select',
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          type: 'text',
+          placeholder: 'e.g. Watch Series 9, Galaxy Watch 6…',
         },
         {
           key: 'compatibility',
           label: 'Compatibility',
-          options: ['iOS', 'Android', 'Both'],
           type: 'select',
+          required: true,
+          options: ['iOS (iPhone)', 'Android', 'iOS & Android'],
+        },
+        {
+          key: 'case_size_mm',
+          label: 'Case Size (mm)',
+          type: 'select',
+          options: [
+            '38mm',
+            '40mm',
+            '41mm',
+            '42mm',
+            '44mm',
+            '45mm',
+            '46mm',
+            '47mm',
+            '49mm',
+            'Other',
+          ],
+        },
+        {
+          key: 'connectivity',
+          label: 'Connectivity',
+          type: 'select',
+          options: ['GPS Only', 'GPS + Cellular (LTE)', 'Bluetooth Only'],
         },
         {
           key: 'color',
           label: 'Color',
-          placeholder: 'Color',
           type: 'text',
+          placeholder: 'e.g. Midnight, Starlight, Graphite…',
+        },
+        {
+          key: 'includes_charger',
+          label: 'Includes Charger',
+          type: 'select',
+          options: ['Yes', 'No'],
+        },
+        {
+          key: 'includes_box',
+          label: 'Original Box',
+          type: 'select',
+          options: ['Yes', 'No'],
         },
       ],
-      titlePlaceholder: 'e.g. Apple Watch Series 9 45mm',
     },
   },
+
+  // ── Jewelry ───────────────────────────────────────────────────────────────
   {
-    name: 'Other Watch/Jewelry',
+    name: 'Jewelry',
+    slug: 'jewelry',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'watches-jewelry',
+    template: {
+      titlePlaceholder: 'e.g. 14k Yellow Gold Diamond Ring, Size 7…',
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Used'],
+        },
+        {
+          key: 'item_type',
+          label: 'Type',
+          type: 'select',
+          required: true,
+          options: [
+            'Ring',
+            'Necklace',
+            'Pendant',
+            'Earrings',
+            'Bracelet',
+            'Bangle',
+            'Brooch / Pin',
+            'Anklet',
+            'Set',
+            'Other',
+          ],
+        },
+        {
+          key: 'material',
+          label: 'Material',
+          type: 'select',
+          required: true,
+          options: [
+            'Yellow Gold',
+            'White Gold',
+            'Rose Gold',
+            'Silver (925)',
+            'Platinum',
+            'Titanium',
+            'Stainless Steel',
+            'Costume / Fashion',
+            'Other',
+          ],
+        },
+        {
+          key: 'gold_karat',
+          label: 'Gold Karat',
+          type: 'select',
+          options: [
+            '8k',
+            '9k',
+            '10k',
+            '14k',
+            '18k',
+            '21k',
+            '22k',
+            '24k',
+            'N/A',
+          ],
+        },
+        {
+          key: 'gemstone',
+          label: 'Gemstone',
+          type: 'select',
+          options: [
+            'None',
+            'Diamond',
+            'Ruby',
+            'Emerald',
+            'Sapphire',
+            'Pearl',
+            'Amethyst',
+            'Topaz',
+            'Zircon / CZ',
+            'Other',
+          ],
+        },
+        {
+          key: 'brand',
+          label: 'Brand / Maker',
+          type: 'text',
+          placeholder: 'e.g. Pandora, Tiffany & Co., handmade…',
+        },
+        {
+          key: 'ring_size',
+          label: 'Ring Size',
+          type: 'text',
+          placeholder: 'e.g. 7 (US) / 54 (EU)',
+        },
+        {
+          key: 'weight_grams',
+          label: 'Weight (g)',
+          type: 'number',
+          placeholder: 'e.g. 5.2',
+        },
+        {
+          key: 'certificate',
+          label: 'Certificate',
+          type: 'select',
+          options: [
+            'None',
+            'GIA',
+            'IGI',
+            'HRD',
+            'EGL',
+            'Local Certificate',
+            'Other',
+          ],
+        },
+      ],
+    },
+  },
+
+  // ── Vintage Watches ───────────────────────────────────────────────────────
+  {
+    name: 'Vintage Watches',
+    slug: 'vintage-watches',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'watches-jewelry',
+    template: {
+      titlePlaceholder: 'e.g. Omega Constellation 1965, Cal. 561…',
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          type: 'select',
+          required: true,
+          options: ['Excellent', 'Good', 'Fair', 'Parts / Repair'],
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          type: 'text',
+          required: true,
+          placeholder: 'e.g. Omega, Longines, Seiko…',
+        },
+        {
+          key: 'decade',
+          label: 'Decade',
+          type: 'select',
+          required: true,
+          options: ['Pre-1950s', '1950s', '1960s', '1970s', '1980s', '1990s'],
+        },
+        {
+          key: 'movement',
+          label: 'Movement',
+          type: 'select',
+          options: ['Manual / Hand-wind', 'Automatic', 'Quartz', 'Unknown'],
+        },
+        {
+          key: 'case_material',
+          label: 'Case Material',
+          type: 'select',
+          options: [
+            'Stainless Steel',
+            'Gold-filled',
+            'Solid Gold',
+            'Chrome',
+            'Base Metal',
+            'Other',
+          ],
+        },
+        {
+          key: 'caliber',
+          label: 'Caliber / Reference',
+          type: 'text',
+          placeholder: 'e.g. Cal. 1120 / Ref. 2500',
+        },
+        {
+          key: 'service_history',
+          label: 'Service History',
+          type: 'select',
+          options: [
+            'Recently Serviced',
+            'Running — Not Serviced',
+            'Needs Service',
+            'Unknown',
+          ],
+        },
+        {
+          key: 'includes_box_papers',
+          label: 'Box & Papers',
+          type: 'select',
+          options: ['Box & Papers', 'Box Only', 'Papers Only', 'Neither'],
+        },
+      ],
+    },
+  },
+
+  // ── Watch Accessories ─────────────────────────────────────────────────────
+  {
+    name: 'Watch Accessories',
+    slug: 'watch-accessories',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'watches-jewelry',
+    template: {
+      titlePlaceholder: 'e.g. Leather NATO Strap 20mm, Brown…',
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Used'],
+        },
+        {
+          key: 'accessory_type',
+          label: 'Type',
+          type: 'select',
+          required: true,
+          options: [
+            'Strap / Bracelet',
+            'Watch Box / Case',
+            'Watch Winder',
+            'Watch Tool / Parts',
+            'Watch Glass / Crystal',
+            'Crown / Pushers',
+            'Display Stand',
+            'Other',
+          ],
+        },
+        {
+          key: 'lug_width_mm',
+          label: 'Lug Width (mm)',
+          type: 'select',
+          options: [
+            '16mm',
+            '17mm',
+            '18mm',
+            '19mm',
+            '20mm',
+            '21mm',
+            '22mm',
+            '24mm',
+            'Other / Universal',
+          ],
+        },
+        {
+          key: 'material',
+          label: 'Material',
+          type: 'select',
+          options: [
+            'Leather',
+            'Rubber / Silicone',
+            'Nylon / NATO',
+            'Metal',
+            'Ceramic',
+            'Other',
+          ],
+        },
+        {
+          key: 'compatible_brand',
+          label: 'Compatible Brand / Model',
+          type: 'text',
+          placeholder: 'e.g. Apple Watch 45mm, Universal…',
+        },
+      ],
+    },
+  },
+
+  // ── Other ─────────────────────────────────────────────────────────────────
+  {
+    name: 'Other Watches & Jewelry',
     slug: 'other-watches-jewelry',
     description: '',
     image: '',
@@ -9081,55 +12618,60 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'watches-jewelry',
     template: {
+      titlePlaceholder: 'Describe your item…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Used'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Used', 'Damaged'],
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'item_type',
+          label: 'Item Type',
+          type: 'text',
+          placeholder: 'What is this item?',
         },
       ],
-      titlePlaceholder: 'e.g. Other Watch/Jewelry',
     },
   },
   {
-    name: 'Health, Beauty and Equipment',
+    name: 'Health, Beauty & Equipment',
     slug: 'health-beauty',
-    description: '',
+    description:
+      'Beauty products, personal care, medical and fitness equipment.',
     image: '',
     isActive: true,
     isFeatured: true,
     parentSlug: null,
     template: {
+      titlePlaceholder: 'e.g. Dyson Airwrap, Omron Blood Pressure Monitor…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Used', 'Damaged'],
           type: 'select',
+          required: true,
+          options: [
+            'New (Sealed)',
+            'New (Open Box)',
+            'Like New',
+            'Used',
+            'Damaged',
+          ],
         },
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
           type: 'text',
-        },
-        {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          placeholder: "e.g. Dyson, L'Oréal, Omron…",
         },
       ],
-      titlePlaceholder: 'e.g. Health, Beauty and Equipment',
     },
   },
+
+  // ── Makeup & Cosmetics ────────────────────────────────────────────────────
   {
     name: 'Makeup & Cosmetics',
     slug: 'makeup-cosmetics',
@@ -9139,36 +12681,65 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'health-beauty',
     template: {
+      titlePlaceholder:
+        'e.g. MAC Ruby Woo Lipstick, Charlotte Tilbury Palette…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New (Sealed)', 'New (Open Box)'],
           type: 'select',
+          required: true,
+          options: ['New (Sealed)', 'New (Open Box)'],
         },
         {
           key: 'item_type',
-          label: 'Type',
+          label: 'Category',
+          type: 'select',
+          required: true,
           options: [
-            'Face',
-            'Eyes',
-            'Lips',
-            'Nails',
-            'Sets & Palettes',
+            'Foundation & Concealer',
+            'Blush, Bronzer & Highlighter',
+            'Eyeshadow & Palettes',
+            'Eyeliner & Mascara',
+            'Lipstick & Lip Gloss',
+            'Lip Liner',
+            'Setting Spray & Powder',
+            'Brushes & Tools',
+            'Nail Polish & Gel',
+            'Sets & Gift Sets',
             'Other',
           ],
-          type: 'select',
         },
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
           type: 'text',
+          placeholder: 'e.g. MAC, Charlotte Tilbury, NYX, Fenty…',
+        },
+        {
+          key: 'skin_type',
+          label: 'Skin Type',
+          type: 'select',
+          options: [
+            'All Skin Types',
+            'Dry',
+            'Oily',
+            'Combination',
+            'Sensitive',
+            'Mature',
+          ],
+        },
+        {
+          key: 'expiry',
+          label: 'Expiry Date',
+          type: 'text',
+          placeholder: 'e.g. 06/2026',
         },
       ],
-      titlePlaceholder: 'e.g. MAC Lipstick Red',
     },
   },
+
+  // ── Perfumes & Fragrances ─────────────────────────────────────────────────
   {
     name: 'Perfumes & Fragrances',
     slug: 'perfumes',
@@ -9178,74 +12749,70 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'health-beauty',
     template: {
+      titlePlaceholder: 'e.g. Chanel No.5 EDP 100ml, Dior Sauvage 60ml…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New (Sealed)', 'New (Open Box)', 'Used'],
           type: 'select',
-        },
-        {
-          key: 'gender',
-          label: 'Gender',
-          options: ['Women', 'Men', 'Unisex'],
-          type: 'select',
+          required: true,
+          options: [
+            'New (Sealed)',
+            'New (Open Box)',
+            'Used — Full',
+            'Used — Partial',
+          ],
         },
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
           type: 'text',
+          required: true,
+          placeholder: 'e.g. Chanel, Dior, Versace, Jo Malone…',
+        },
+        {
+          key: 'gender',
+          label: 'For',
+          type: 'select',
+          required: true,
+          options: ['Women', 'Men', 'Unisex'],
+        },
+        {
+          key: 'concentration',
+          label: 'Concentration',
+          type: 'select',
+          required: true,
+          options: [
+            'Parfum (Extrait)',
+            'Eau de Parfum (EDP)',
+            'Eau de Toilette (EDT)',
+            'Eau de Cologne (EDC)',
+            'Body Mist',
+          ],
         },
         {
           key: 'volume_ml',
           label: 'Volume (ml)',
-          placeholder: 'ml',
           type: 'number',
+          placeholder: 'e.g. 100',
+        },
+        {
+          key: 'fill_level',
+          label: 'Fill Level',
+          type: 'select',
+          options: ['100% Full', '90–99%', '75–89%', '50–74%', 'Under 50%'],
+        },
+        {
+          key: 'is_original',
+          label: 'Authenticity',
+          type: 'select',
+          options: ['100% Original', 'Inspired / Dupe', 'Unknown'],
         },
       ],
-      titlePlaceholder: 'e.g. Chanel No.5 100ml',
     },
   },
-  {
-    name: 'Hair Care',
-    slug: 'hair-care',
-    description: '',
-    image: '',
-    isActive: true,
-    isFeatured: false,
-    parentSlug: 'health-beauty',
-    template: {
-      fields: [
-        {
-          key: 'condition',
-          label: 'Condition',
-          options: ['New'],
-          type: 'select',
-        },
-        {
-          key: 'item_type',
-          label: 'Type',
-          options: [
-            'Shampoo & Conditioner',
-            'Treatments & Masks',
-            'Styling Products',
-            'Hair Dye',
-            'Hair Extensions & Wigs',
-            'Other',
-          ],
-          type: 'select',
-        },
-        {
-          key: 'brand',
-          label: 'Brand',
-          placeholder: 'Brand',
-          type: 'text',
-        },
-      ],
-      titlePlaceholder: 'e.g. Kerastase Hair Mask',
-    },
-  },
+
+  // ── Skincare ──────────────────────────────────────────────────────────────
   {
     name: 'Skincare',
     slug: 'skincare',
@@ -9255,37 +12822,144 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'health-beauty',
     template: {
+      titlePlaceholder:
+        'e.g. La Roche-Posay SPF 50+ 50ml, The Ordinary Niacinamide…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New'],
           type: 'select',
+          required: true,
+          options: ['New (Sealed)', 'New (Open Box)'],
         },
         {
           key: 'item_type',
-          label: 'Type',
+          label: 'Category',
+          type: 'select',
+          required: true,
           options: [
-            'Face Cream',
-            'Serums & Oils',
-            'Cleansers & Toners',
-            'Masks',
-            'Body Care',
-            'Sunscreen',
+            'Moisturiser & Cream',
+            'Serum & Ampoule',
+            'Face Oil',
+            'Cleanser & Micellar Water',
+            'Toner & Essence',
+            'Eye Cream',
+            'Face Mask',
+            'Exfoliant & Scrub',
+            'Sunscreen (SPF)',
+            'Body Lotion & Oil',
+            'Lip Balm & Treatments',
+            'Sets & Kits',
             'Other',
           ],
-          type: 'select',
         },
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
           type: 'text',
+          placeholder: 'e.g. La Roche-Posay, The Ordinary, CeraVe…',
+        },
+        {
+          key: 'skin_type',
+          label: 'Skin Type',
+          type: 'select',
+          options: [
+            'All Skin Types',
+            'Dry',
+            'Oily',
+            'Combination',
+            'Sensitive',
+            'Acne-Prone',
+            'Mature',
+          ],
+        },
+        {
+          key: 'volume_ml',
+          label: 'Size (ml / g)',
+          type: 'number',
+          placeholder: 'e.g. 50',
+        },
+        {
+          key: 'expiry',
+          label: 'Expiry Date',
+          type: 'text',
+          placeholder: 'e.g. 12/2026',
         },
       ],
-      titlePlaceholder: 'e.g. La Roche-Posay Sunscreen',
     },
   },
+
+  // ── Hair Care ─────────────────────────────────────────────────────────────
+  {
+    name: 'Hair Care',
+    slug: 'hair-care',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'health-beauty',
+    template: {
+      titlePlaceholder: 'e.g. Kérastase Nutritive Masque, Olaplex No.3…',
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          type: 'select',
+          required: true,
+          options: ['New (Sealed)', 'New (Open Box)'],
+        },
+        {
+          key: 'item_type',
+          label: 'Category',
+          type: 'select',
+          required: true,
+          options: [
+            'Shampoo',
+            'Conditioner',
+            'Hair Mask & Treatment',
+            'Hair Oil & Serum',
+            'Styling Cream & Gel',
+            'Hairspray & Mousse',
+            'Hair Dye & Color',
+            'Scalp Treatment',
+            'Hair Extensions',
+            'Wigs',
+            'Sets & Kits',
+            'Other',
+          ],
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          type: 'text',
+          placeholder: "e.g. Kérastase, Olaplex, L'Oréal Professionnel…",
+        },
+        {
+          key: 'hair_type',
+          label: 'Hair Type',
+          type: 'select',
+          options: [
+            'All Hair Types',
+            'Fine',
+            'Thick',
+            'Curly / Wavy',
+            'Damaged / Treated',
+            'Color-treated',
+            'Dry',
+            'Oily',
+          ],
+        },
+        {
+          key: 'volume_ml',
+          label: 'Size (ml / g)',
+          type: 'number',
+          placeholder: 'e.g. 200',
+        },
+      ],
+    },
+  },
+
+  // ── Beauty Appliances ─────────────────────────────────────────────────────
   {
     name: 'Beauty Appliances',
     slug: 'beauty-appliances',
@@ -9295,77 +12969,323 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'health-beauty',
     template: {
+      titlePlaceholder: 'e.g. Dyson Airwrap Complete, GHD Platinum+…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Like New', 'Used'],
           type: 'select',
+          required: true,
+          options: ['New (Sealed)', 'Like New', 'Used', 'Damaged'],
         },
         {
           key: 'item_type',
           label: 'Type',
+          type: 'select',
+          required: true,
           options: [
-            'Hair Dryers',
-            'Straighteners & Curlers',
-            'Epilators',
-            'Trimmers & Clippers',
-            'Facial Tool',
+            'Hair Dryer',
+            'Hair Straightener',
+            'Curling Wand / Tongs',
+            'Hair Styler (Multi-tool)',
+            'Electric Shaver',
+            'Epilator',
+            'Body & Beard Trimmer',
+            'Face Shaver',
+            'IPL / Laser Hair Removal',
+            'Facial Cleansing Device',
+            'LED Face Mask',
+            'Microneedling / RF Device',
+            'Nail Lamp (UV/LED)',
+            'Electric Toothbrush',
+            'Water Flosser',
             'Other',
           ],
-          type: 'select',
         },
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
           type: 'text',
+          placeholder: 'e.g. Dyson, GHD, Braun, Philips…',
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          type: 'text',
+          placeholder: 'e.g. Airwrap HS05, Oral-B iO Series 9…',
+        },
+        {
+          key: 'voltage',
+          label: 'Voltage',
+          type: 'select',
+          options: [
+            '220–240V (EU)',
+            '110–120V (US)',
+            'Dual Voltage (Universal)',
+            'Battery / Rechargeable',
+          ],
+        },
+        {
+          key: 'includes_original_box',
+          label: 'Original Box',
+          type: 'select',
+          options: ['Yes', 'No'],
+        },
+        {
+          key: 'includes_attachments',
+          label: 'Attachments Included',
+          type: 'text',
+          placeholder: 'e.g. 5 barrels, diffuser, smoothing brush…',
         },
       ],
-      titlePlaceholder: 'e.g. Dyson Airwrap',
     },
   },
+
+  // ── Personal Care ─────────────────────────────────────────────────────────
   {
-    name: 'Medical & Massage Equipment',
-    slug: 'medical-massage',
+    name: 'Personal Care',
+    slug: 'personal-care',
     description: '',
     image: '',
     isActive: true,
     isFeatured: false,
     parentSlug: 'health-beauty',
     template: {
+      titlePlaceholder:
+        'e.g. Oral-B Pro 3 Electric Toothbrush, Gillette Razor…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Like New', 'Used'],
           type: 'select',
+          required: true,
+          options: ['New (Sealed)', 'New (Open Box)', 'Used'],
         },
         {
           key: 'item_type',
-          label: 'Type',
+          label: 'Category',
+          type: 'select',
+          required: true,
           options: [
-            'Massage Chairs',
-            'Handheld Massagers',
-            'Blood Pressure Monitors',
-            'Thermometers',
-            'Mobility Aids',
+            'Oral Care',
+            'Deodorant & Antiperspirant',
+            'Soap & Shower Gel',
+            'Bath & Body',
+            'Feminine Hygiene',
+            "Men's Grooming",
+            'Shaving & Waxing',
+            'Contact Lens Care',
+            'Ear Care',
             'Other',
           ],
-          type: 'select',
         },
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
           type: 'text',
+          placeholder: 'e.g. Oral-B, Gillette, Dove…',
         },
       ],
-      titlePlaceholder: 'e.g. Omron Blood Pressure Monitor',
     },
   },
+
+  // ── Medical & Monitoring Devices ──────────────────────────────────────────
   {
-    name: 'Other Health/Beauty',
+    name: 'Medical & Monitoring Devices',
+    slug: 'medical-devices',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'health-beauty',
+    template: {
+      titlePlaceholder: 'e.g. Omron M6 Blood Pressure Monitor, Withings Scale…',
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          type: 'select',
+          required: true,
+          options: ['New (Sealed)', 'Like New', 'Used', 'For Parts'],
+        },
+        {
+          key: 'item_type',
+          label: 'Device Type',
+          type: 'select',
+          required: true,
+          options: [
+            'Blood Pressure Monitor',
+            'Thermometer',
+            'Pulse Oximeter',
+            'Blood Glucose Monitor',
+            'Smart Scale',
+            'CPAP / BIPAP Device',
+            'Nebulizer',
+            'Hearing Aid',
+            'Tens / EMS Unit',
+            'Infrared Lamp',
+            'Mobility Aid',
+            'Wheelchair',
+            'Crutches / Walker',
+            'Other',
+          ],
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          type: 'text',
+          placeholder: 'e.g. Omron, Withings, Beurer, Philips…',
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          type: 'text',
+          placeholder: 'e.g. M6 Comfort, Body+ Scale…',
+        },
+        {
+          key: 'includes_accessories',
+          label: 'Includes Accessories',
+          type: 'text',
+          placeholder: 'e.g. cuff size L, AC adapter, app connectivity…',
+        },
+      ],
+    },
+  },
+
+  // ── Massage & Relaxation ──────────────────────────────────────────────────
+  {
+    name: 'Massage & Relaxation',
+    slug: 'massage-relaxation',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'health-beauty',
+    template: {
+      titlePlaceholder: 'e.g. Theragun Pro, Massage Chair Inada Flex 3S…',
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          type: 'select',
+          required: true,
+          options: ['New (Sealed)', 'Like New', 'Used', 'Damaged'],
+        },
+        {
+          key: 'item_type',
+          label: 'Type',
+          type: 'select',
+          required: true,
+          options: [
+            'Massage Chair',
+            'Massage Table / Bed',
+            'Percussion Massager',
+            'Handheld Massager',
+            'Foot Massager',
+            'Back & Neck Massager',
+            'Eye Massager',
+            'Sauna Blanket',
+            'Hot Tub / Spa',
+            'Foam Roller & Accessories',
+            'Other',
+          ],
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          type: 'text',
+          placeholder: 'e.g. Theragun, Hyperice, Beurer, HoMedics…',
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          type: 'text',
+          placeholder: 'e.g. Theragun Pro Gen 5…',
+        },
+        {
+          key: 'power_source',
+          label: 'Power Source',
+          type: 'select',
+          options: [
+            'Battery / Rechargeable',
+            'Corded (Plug-in)',
+            'Manual / Non-electric',
+          ],
+        },
+      ],
+    },
+  },
+
+  // ── Vitamins & Supplements ────────────────────────────────────────────────
+  {
+    name: 'Vitamins & Supplements',
+    slug: 'vitamins-supplements',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'health-beauty',
+    template: {
+      titlePlaceholder:
+        'e.g. Optimum Nutrition Gold Standard Whey 2kg, Vitamin D3…',
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          type: 'select',
+          required: true,
+          options: ['New (Sealed)', 'New (Open Box)'],
+        },
+        {
+          key: 'item_type',
+          label: 'Category',
+          type: 'select',
+          required: true,
+          options: [
+            'Protein Powder',
+            'Creatine',
+            'Pre-Workout',
+            'Vitamins & Minerals',
+            'Omega / Fish Oil',
+            'Probiotics',
+            'Collagen',
+            'Weight Loss',
+            'Energy & Nootropics',
+            'Herbal & Natural',
+            'Other',
+          ],
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          type: 'text',
+          placeholder: 'e.g. Optimum Nutrition, MyProtein, NOW Foods…',
+        },
+        {
+          key: 'flavor',
+          label: 'Flavor / Variant',
+          type: 'text',
+          placeholder: 'e.g. Chocolate, Unflavored, Berry Blast…',
+        },
+        {
+          key: 'weight_g',
+          label: 'Net Weight (g)',
+          type: 'number',
+          placeholder: 'e.g. 2000',
+        },
+        {
+          key: 'expiry',
+          label: 'Best Before',
+          type: 'text',
+          placeholder: 'e.g. 09/2026',
+        },
+      ],
+    },
+  },
+
+  // ── Other Health & Beauty ─────────────────────────────────────────────────
+  {
+    name: 'Other Health & Beauty',
     slug: 'other-health-beauty',
     description: '',
     image: '',
@@ -9373,55 +13293,82 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'health-beauty',
     template: {
+      titlePlaceholder: 'Describe your item…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Used'],
           type: 'select',
+          required: true,
+          options: [
+            'New (Sealed)',
+            'New (Open Box)',
+            'Like New',
+            'Used',
+            'Damaged',
+          ],
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'item_type',
+          label: 'Item Type',
+          type: 'text',
+          placeholder: 'What is this item?',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          type: 'text',
+          placeholder: 'Brand or manufacturer…',
         },
       ],
-      titlePlaceholder: 'e.g. Other Health/Beauty',
     },
   },
   {
-    name: 'Books and Literature',
+    name: 'Books & Literature',
     slug: 'books-literature',
-    description: '',
+    description:
+      'Books, textbooks, comics, magazines and other printed literature.',
     image: '',
     isActive: true,
     isFeatured: true,
     parentSlug: null,
     template: {
+      titlePlaceholder:
+        'e.g. Atomic Habits by James Clear, Harry Potter Vol. 1…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Used', 'Damaged'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Good', 'Acceptable', 'Damaged'],
         },
         {
-          key: 'brand',
-          label: 'Brand',
-          placeholder: 'Brand',
+          key: 'language',
+          label: 'Language',
+          type: 'select',
+          options: [
+            'Macedonian',
+            'English',
+            'Albanian',
+            'Serbian',
+            'Bulgarian',
+            'German',
+            'French',
+            'Other',
+          ],
+        },
+        {
+          key: 'author',
+          label: 'Author',
           type: 'text',
-        },
-        {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          placeholder: 'e.g. James Clear, J.K. Rowling…',
         },
       ],
-      titlePlaceholder: 'e.g. Books and Literature',
     },
   },
+
+  // ── Fiction ───────────────────────────────────────────────────────────────
   {
     name: 'Fiction',
     slug: 'fiction-books',
@@ -9431,36 +13378,87 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'books-literature',
     template: {
+      titlePlaceholder:
+        "e.g. Harry Potter and the Philosopher's Stone — J.K. Rowling",
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Like New', 'Good', 'Acceptable'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Good', 'Acceptable', 'Damaged'],
         },
         {
           key: 'genre',
           label: 'Genre',
+          type: 'select',
+          required: true,
           options: [
+            'Literary Fiction',
             'Romance',
-            'Thriller & Mystery',
-            'Sci-Fi & Fantasy',
+            'Thriller & Crime',
+            'Mystery & Detective',
+            'Horror',
+            'Science Fiction',
+            'Fantasy',
             'Historical Fiction',
-            'Literature',
+            'Adventure',
+            'Short Stories',
+            'Graphic Novel',
             'Other',
           ],
-          type: 'select',
         },
         {
           key: 'language',
           label: 'Language',
-          options: ['Macedonian', 'English', 'Albanian', 'Serbian', 'Other'],
           type: 'select',
+          required: true,
+          options: [
+            'Macedonian',
+            'English',
+            'Albanian',
+            'Serbian',
+            'Bulgarian',
+            'German',
+            'French',
+            'Other',
+          ],
+        },
+        {
+          key: 'author',
+          label: 'Author',
+          type: 'text',
+          placeholder: 'e.g. J.K. Rowling, Stephen King…',
+        },
+        {
+          key: 'publisher',
+          label: 'Publisher',
+          type: 'text',
+          placeholder: 'e.g. Penguin, Bloomsbury…',
+        },
+        {
+          key: 'year',
+          label: 'Year Published',
+          type: 'number',
+          placeholder: 'e.g. 2003',
+        },
+        {
+          key: 'format',
+          label: 'Format',
+          type: 'select',
+          options: [
+            'Hardcover',
+            'Paperback',
+            'Pocket Edition',
+            'Illustrated Edition',
+            "Collector's Edition",
+          ],
         },
       ],
-      titlePlaceholder: 'e.g. Harry Potter by J.K. Rowling',
     },
   },
+
+  // ── Non-Fiction ───────────────────────────────────────────────────────────
   {
     name: 'Non-Fiction',
     slug: 'non-fiction-books',
@@ -9470,37 +13468,90 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'books-literature',
     template: {
+      titlePlaceholder: 'e.g. Atomic Habits — James Clear',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Like New', 'Good', 'Acceptable'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Good', 'Acceptable', 'Damaged'],
         },
         {
           key: 'topic',
           label: 'Topic',
+          type: 'select',
+          required: true,
           options: [
-            'Biography & Autobiography',
+            'Biography & Memoir',
+            'Autobiography',
             'History',
-            'Self-Help & Psychology',
-            'Business & Economics',
-            'Cooking',
+            'Politics & Society',
+            'Philosophy',
+            'Psychology',
+            'Self-Help & Personal Development',
+            'Business & Entrepreneurship',
+            'Economics & Finance',
+            'Science & Nature',
+            'Technology',
+            'Travel',
+            'Cooking & Food',
             'Art & Photography',
+            'Religion & Spirituality',
+            'True Crime',
             'Other',
           ],
-          type: 'select',
         },
         {
           key: 'language',
           label: 'Language',
-          options: ['Macedonian', 'English', 'Albanian', 'Serbian', 'Other'],
           type: 'select',
+          required: true,
+          options: [
+            'Macedonian',
+            'English',
+            'Albanian',
+            'Serbian',
+            'Bulgarian',
+            'German',
+            'French',
+            'Other',
+          ],
+        },
+        {
+          key: 'author',
+          label: 'Author',
+          type: 'text',
+          placeholder: 'e.g. James Clear, Malcolm Gladwell…',
+        },
+        {
+          key: 'publisher',
+          label: 'Publisher',
+          type: 'text',
+          placeholder: 'e.g. Penguin, HarperCollins…',
+        },
+        {
+          key: 'year',
+          label: 'Year Published',
+          type: 'number',
+          placeholder: 'e.g. 2018',
+        },
+        {
+          key: 'format',
+          label: 'Format',
+          type: 'select',
+          options: [
+            'Hardcover',
+            'Paperback',
+            'Pocket Edition',
+            'Illustrated Edition',
+          ],
         },
       ],
-      titlePlaceholder: 'e.g. Atomic Habits by James Clear',
     },
   },
+
+  // ── Educational & Textbooks ───────────────────────────────────────────────
   {
     name: 'Educational & Textbooks',
     slug: 'textbooks',
@@ -9510,36 +13561,82 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'books-literature',
     template: {
+      titlePlaceholder:
+        "e.g. Mathematics Grade 10, Oxford Advanced Learner's Dictionary…",
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Like New', 'Good', 'Acceptable'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Good', 'Acceptable', 'Damaged'],
         },
         {
           key: 'level',
           label: 'Education Level',
+          type: 'select',
+          required: true,
           options: [
-            'Primary School',
-            'High School',
-            'University',
+            'Primary School (Grades 1–5)',
+            'Middle School (Grades 6–9)',
+            'High School (Grades 10–12)',
+            'University / College',
             'Language Learning',
             'Professional Certification',
+            'Adult Education',
             'Other',
           ],
-          type: 'select',
         },
         {
           key: 'subject',
           label: 'Subject',
-          placeholder: 'e.g. Math, Programming, Medical',
           type: 'text',
+          placeholder: 'e.g. Mathematics, Biology, Programming, Law…',
+        },
+        {
+          key: 'language',
+          label: 'Language',
+          type: 'select',
+          options: [
+            'Macedonian',
+            'English',
+            'Albanian',
+            'Serbian',
+            'Bulgarian',
+            'German',
+            'French',
+            'Other',
+          ],
+        },
+        {
+          key: 'author',
+          label: 'Author / Editor',
+          type: 'text',
+          placeholder: 'e.g. Prof. Dr. Petrovski…',
+        },
+        {
+          key: 'edition',
+          label: 'Edition',
+          type: 'text',
+          placeholder: 'e.g. 3rd Edition, 2022 Edition…',
+        },
+        {
+          key: 'isbn',
+          label: 'ISBN',
+          type: 'text',
+          placeholder: 'e.g. 978-3-16-148410-0',
+        },
+        {
+          key: 'has_highlights',
+          label: 'Notes / Highlights',
+          type: 'select',
+          options: ['None', 'Minimal', 'Moderate', 'Heavy'],
         },
       ],
-      titlePlaceholder: 'e.g. High School Math Textbook',
     },
   },
+
+  // ── Children's Books ──────────────────────────────────────────────────────
   {
     name: "Children's Books",
     slug: 'childrens-books',
@@ -9549,69 +13646,299 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'books-literature',
     template: {
+      titlePlaceholder: 'e.g. The Very Hungry Caterpillar — Eric Carle',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Like New', 'Good', 'Acceptable'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Good', 'Acceptable'],
         },
         {
           key: 'age_group',
           label: 'Age Group',
-          options: [
-            '0-3 Years',
-            '3-5 Years',
-            '6-8 Years',
-            '9-12 Years',
-            'Teens',
-          ],
           type: 'select',
+          required: true,
+          options: [
+            '0–2 Years (Board Books)',
+            '3–5 Years (Picture Books)',
+            '6–8 Years (Early Readers)',
+            '9–12 Years (Middle Grade)',
+            '13+ Years (Young Adult)',
+          ],
         },
         {
           key: 'language',
           label: 'Language',
-          options: ['Macedonian', 'English', 'Albanian', 'Serbian', 'Other'],
           type: 'select',
+          required: true,
+          options: [
+            'Macedonian',
+            'English',
+            'Albanian',
+            'Serbian',
+            'Bulgarian',
+            'Other',
+          ],
+        },
+        {
+          key: 'author',
+          label: 'Author',
+          type: 'text',
+          placeholder: 'e.g. Eric Carle, Roald Dahl…',
+        },
+        {
+          key: 'format',
+          label: 'Format',
+          type: 'select',
+          options: [
+            'Board Book',
+            'Picture Book',
+            'Hardcover',
+            'Paperback',
+            'Activity / Workbook',
+            'Pop-Up Book',
+          ],
+        },
+        {
+          key: 'quantity',
+          label: 'Number of Books',
+          type: 'number',
+          placeholder: 'e.g. 1',
         },
       ],
-      titlePlaceholder: 'e.g. Peppa Pig Storybook',
     },
   },
+
+  // ── Comics & Manga ────────────────────────────────────────────────────────
   {
-    name: 'Magazines & Comics',
-    slug: 'magazines-comics',
+    name: 'Comics & Manga',
+    slug: 'comics-manga',
     description: '',
     image: '',
     isActive: true,
     isFeatured: false,
     parentSlug: 'books-literature',
     template: {
+      titlePlaceholder:
+        'e.g. Batman: The Dark Knight Returns, Naruto Vol. 1–72…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Like New', 'Good', 'Acceptable'],
           type: 'select',
+          required: true,
+          options: [
+            'Near Mint',
+            'Very Fine',
+            'Fine',
+            'Good',
+            'Acceptable',
+            'Poor',
+          ],
         },
         {
           key: 'item_type',
           label: 'Type',
+          type: 'select',
+          required: true,
           options: [
-            'Comics / Manga',
-            'Magazines',
-            'Journals',
-            'Newspapers',
+            'Single Issue',
+            'Trade Paperback (TPB)',
+            'Hardcover Collection',
+            'Manga Volume',
+            'Manga Box Set',
+            'Graphic Novel',
             'Other',
           ],
+        },
+        {
+          key: 'publisher',
+          label: 'Publisher',
           type: 'select',
+          options: [
+            'Marvel',
+            'DC Comics',
+            'Image',
+            'Dark Horse',
+            'IDW',
+            'Shonen Jump / Viz',
+            'Kodansha',
+            'Vertical',
+            'Yen Press',
+            'Other',
+          ],
+        },
+        {
+          key: 'language',
+          label: 'Language',
+          type: 'select',
+          options: ['English', 'Macedonian', 'Serbian', 'Japanese', 'Other'],
+        },
+        {
+          key: 'issue_numbers',
+          label: 'Issue / Volume Numbers',
+          type: 'text',
+          placeholder: 'e.g. #1–12, Vol. 1–10…',
+        },
+        {
+          key: 'year',
+          label: 'Year / Era',
+          type: 'text',
+          placeholder: 'e.g. 1986, Modern Age, 1st Print…',
+        },
+        {
+          key: 'quantity',
+          label: 'Number of Items',
+          type: 'number',
+          placeholder: 'e.g. 3',
         },
       ],
-      titlePlaceholder: 'e.g. Spider-Man Comic 1999',
     },
   },
+
+  // ── Magazines & Periodicals ───────────────────────────────────────────────
   {
-    name: 'Other Books/Literature',
+    name: 'Magazines & Periodicals',
+    slug: 'magazines',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'books-literature',
+    template: {
+      titlePlaceholder:
+        'e.g. National Geographic 2019 Collection, Vogue Italia…',
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Good', 'Acceptable'],
+        },
+        {
+          key: 'item_type',
+          label: 'Type',
+          type: 'select',
+          required: true,
+          options: [
+            'Magazine',
+            'Journal / Academic',
+            'Newspaper',
+            'Catalogue',
+            'Yearbook',
+            'Other',
+          ],
+        },
+        {
+          key: 'topic',
+          label: 'Topic',
+          type: 'select',
+          options: [
+            'News & Politics',
+            'Fashion & Lifestyle',
+            'Science & Nature',
+            'Technology',
+            'Sports',
+            'Cars & Motoring',
+            'Cooking',
+            'Art & Design',
+            'Health',
+            'Business',
+            'Other',
+          ],
+        },
+        {
+          key: 'language',
+          label: 'Language',
+          type: 'select',
+          options: ['Macedonian', 'English', 'Serbian', 'Other'],
+        },
+        {
+          key: 'quantity',
+          label: 'Number of Issues',
+          type: 'number',
+          placeholder: 'e.g. 12',
+        },
+      ],
+    },
+  },
+
+  // ── Rare & Collectible Books ──────────────────────────────────────────────
+  {
+    name: 'Rare & Collectible Books',
+    slug: 'rare-books',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'books-literature',
+    template: {
+      titlePlaceholder:
+        'e.g. First Edition Hemingway, Signed copy — Paulo Coelho…',
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          type: 'select',
+          required: true,
+          options: ['Fine / As New', 'Very Good', 'Good', 'Fair', 'Poor'],
+        },
+        {
+          key: 'author',
+          label: 'Author',
+          type: 'text',
+          required: true,
+          placeholder: 'e.g. Ernest Hemingway…',
+        },
+        {
+          key: 'year',
+          label: 'Year / Edition',
+          type: 'text',
+          placeholder: 'e.g. 1952, First Edition, 3rd Printing…',
+        },
+        {
+          key: 'language',
+          label: 'Language',
+          type: 'select',
+          options: [
+            'Macedonian',
+            'English',
+            'Serbian',
+            'Bulgarian',
+            'German',
+            'French',
+            'Latin',
+            'Other',
+          ],
+        },
+        {
+          key: 'is_signed',
+          label: 'Signed / Inscribed',
+          type: 'select',
+          options: ['Not Signed', 'Signed by Author', 'Inscribed', 'Ex-Libris'],
+        },
+        {
+          key: 'has_dust_jacket',
+          label: 'Dust Jacket',
+          type: 'select',
+          options: ['Present — Fine', 'Present — Worn', 'Missing', 'N/A'],
+        },
+        {
+          key: 'publisher',
+          label: 'Publisher',
+          type: 'text',
+          placeholder: 'e.g. Scribner, Random House…',
+        },
+      ],
+    },
+  },
+
+  // ── Other ─────────────────────────────────────────────────────────────────
+  {
+    name: 'Other Books & Literature',
     slug: 'other-books-literature',
     description: '',
     image: '',
@@ -9619,55 +13946,67 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'books-literature',
     template: {
+      titlePlaceholder: 'Describe your book or printed item…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Used'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Good', 'Acceptable', 'Damaged'],
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'language',
+          label: 'Language',
+          type: 'select',
+          options: [
+            'Macedonian',
+            'English',
+            'Albanian',
+            'Serbian',
+            'Bulgarian',
+            'Other',
+          ],
+        },
+        {
+          key: 'author',
+          label: 'Author',
+          type: 'text',
+          placeholder: 'Author name…',
         },
       ],
-      titlePlaceholder: 'e.g. Other Books/Literature',
     },
   },
   {
-    name: 'Office and School Supplies',
+    name: 'Office & School Supplies',
     slug: 'office-school-supplies',
-    description: '',
+    description:
+      'Office supplies, school essentials, printers, and stationery.',
     image: '',
     isActive: true,
     isFeatured: true,
     parentSlug: null,
     template: {
+      titlePlaceholder: 'e.g. HP LaserJet Pro, Casio FX-991, A4 Paper Ream…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Used', 'Damaged'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Used', 'Damaged'],
         },
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
           type: 'text',
-        },
-        {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          placeholder: 'e.g. HP, Canon, Staedtler…',
         },
       ],
-      titlePlaceholder: 'e.g. Office and School Supplies',
     },
   },
+
+  // ── Office Supplies ───────────────────────────────────────────────────────
   {
     name: 'Office Supplies',
     slug: 'office-supplies-cat',
@@ -9677,30 +14016,55 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'office-school-supplies',
     template: {
+      titlePlaceholder:
+        'e.g. A4 Paper 500 Sheets, Stapler Set, Document Folders…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Used'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Used'],
         },
         {
           key: 'item_type',
-          label: 'Type',
+          label: 'Category',
+          type: 'select',
+          required: true,
           options: [
             'Paper & Notebooks',
-            'Archiving & Folders',
-            'Desk Accessories',
-            'Markers & Pens',
-            'Envelopes & Shipping',
+            'Pens, Pencils & Markers',
+            'Highlighters & Correction',
+            'Staplers & Punches',
+            'Scissors & Cutters',
+            'Tape & Adhesives',
+            'Folders & Binders',
+            'Archiving & Filing',
+            'Desk Organizers & Accessories',
+            'Whiteboards & Flipcharts',
+            'Envelopes & Packaging',
+            'Stamps & Ink Pads',
+            'Labels & Stickers',
             'Other',
           ],
-          type: 'select',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          type: 'text',
+          placeholder: 'e.g. Staedtler, Leitz, Avery…',
+        },
+        {
+          key: 'quantity',
+          label: 'Quantity / Pack Size',
+          type: 'text',
+          placeholder: 'e.g. 10 pcs, 500 sheets, Box of 12…',
         },
       ],
-      titlePlaceholder: 'e.g. A4 Printer Paper 500 sheets',
     },
   },
+
+  // ── School Supplies ───────────────────────────────────────────────────────
   {
     name: 'School Supplies',
     slug: 'school-supplies',
@@ -9710,78 +14074,249 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'office-school-supplies',
     template: {
+      titlePlaceholder:
+        'e.g. Ergonomic School Backpack Grade 1–4, Geometry Set…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Used'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Used'],
         },
         {
           key: 'item_type',
-          label: 'Type',
+          label: 'Category',
+          type: 'select',
+          required: true,
           options: [
-            'Backpacks & Bags',
-            'Pencil Cases',
-            'Notebooks & Diaries',
-            'Drawing & Art Supplies',
-            'Geometry Sets',
+            'School Backpack',
+            'Pencil Case',
+            'Notebooks & Exercise Books',
+            'Diary & Planner',
+            'Drawing & Painting Supplies',
+            'Geometry & Maths Set',
+            'Coloring Books & Activity',
+            'Craft Supplies',
+            'Lunch Box & Water Bottle',
             'Other',
           ],
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          type: 'text',
+          placeholder: 'e.g. Herlitz, Topgal, Schneider…',
+        },
+        {
+          key: 'age_group',
+          label: 'Age / Grade',
           type: 'select',
+          options: [
+            'Kindergarten (Ages 3–6)',
+            'Primary (Grades 1–5)',
+            'Middle School (Grades 6–9)',
+            'High School (Grades 10–12)',
+            'University',
+            'All Ages',
+          ],
+        },
+        {
+          key: 'quantity',
+          label: 'Quantity / Pack Size',
+          type: 'text',
+          placeholder: 'e.g. 1 set, 10 notebooks…',
         },
       ],
-      titlePlaceholder: 'e.g. Anatomical School Backpack',
     },
   },
+
+  // ── Printers, Scanners & Copiers ──────────────────────────────────────────
   {
-    name: 'Printers, Ink & Toner',
-    slug: 'printers-ink',
+    name: 'Printers, Scanners & Copiers',
+    slug: 'printers-scanners',
     description: '',
     image: '',
     isActive: true,
     isFeatured: false,
     parentSlug: 'office-school-supplies',
     template: {
+      titlePlaceholder: 'e.g. HP LaserJet Pro M15w, Canon PIXMA TS3450…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Used'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Used', 'For Parts'],
         },
         {
           key: 'item_type',
-          label: 'Type',
+          label: 'Device Type',
+          type: 'select',
+          required: true,
           options: [
-            'Printers',
-            'Scanners',
-            'Ink Cartridges',
-            'Toner Cartridges',
+            'Inkjet Printer',
+            'Laser Printer',
+            'All-in-One (Print/Scan/Copy)',
+            'Photo Printer',
+            'Label Printer',
+            'Scanner',
+            'Copier',
+            'Plotter / Large Format',
             'Other',
           ],
-          type: 'select',
         },
         {
           key: 'brand',
           label: 'Brand',
+          type: 'select',
+          required: true,
           options: [
-            'HP',
+            'Brother',
             'Canon',
             'Epson',
-            'Brother',
-            'Samsung',
+            'HP',
+            'Kyocera',
             'Lexmark',
+            'OKI',
+            'Ricoh',
+            'Samsung',
+            'Xerox',
             'Other',
           ],
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          type: 'text',
+          placeholder: 'e.g. LaserJet Pro M15w, PIXMA TS3450…',
+        },
+        {
+          key: 'connectivity',
+          label: 'Connectivity',
           type: 'select',
+          options: [
+            'USB Only',
+            'Wi-Fi',
+            'Wi-Fi + Ethernet',
+            'Bluetooth',
+            'Wi-Fi + Bluetooth',
+          ],
+        },
+        {
+          key: 'print_color',
+          label: 'Print Type',
+          type: 'select',
+          options: ['Color', 'Black & White', 'Both'],
+        },
+        {
+          key: 'page_count',
+          label: 'Approx. Pages Printed',
+          type: 'text',
+          placeholder: 'e.g. ~500, ~5000, Unknown…',
+        },
+        {
+          key: 'includes_cartridges',
+          label: 'Includes Cartridges / Toner',
+          type: 'select',
+          options: ['Yes — Full', 'Yes — Partial', 'No'],
         },
       ],
-      titlePlaceholder: 'e.g. HP LaserJet Pro M15w',
     },
   },
+
+  // ── Ink, Toner & Consumables ──────────────────────────────────────────────
   {
-    name: 'Calculators & Electronics',
+    name: 'Ink, Toner & Consumables',
+    slug: 'ink-toner',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'office-school-supplies',
+    template: {
+      titlePlaceholder: 'e.g. HP 305 Black Ink Cartridge, Canon 057 Toner…',
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          type: 'select',
+          required: true,
+          options: ['New (Sealed)', 'New (Open Box)', 'Used — Partial'],
+        },
+        {
+          key: 'item_type',
+          label: 'Type',
+          type: 'select',
+          required: true,
+          options: [
+            'Ink Cartridge',
+            'Toner Cartridge',
+            'Drum Unit',
+            'Ink Bottle (EcoTank)',
+            'Ribbon',
+            'Label Roll',
+            'Other',
+          ],
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          type: 'select',
+          required: true,
+          options: [
+            'Brother',
+            'Canon',
+            'Epson',
+            'HP',
+            'Kyocera',
+            'Lexmark',
+            'Samsung',
+            'Xerox',
+            'Compatible / Generic',
+            'Other',
+          ],
+        },
+        {
+          key: 'cartridge_number',
+          label: 'Cartridge / Model Number',
+          type: 'text',
+          placeholder: 'e.g. HP 305, Canon PG-545, TN-2420…',
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          type: 'select',
+          options: [
+            'Black',
+            'Cyan',
+            'Magenta',
+            'Yellow',
+            'Multipack (CMYK)',
+            'Photo Black',
+            'Other',
+          ],
+        },
+        {
+          key: 'is_original',
+          label: 'Original or Compatible',
+          type: 'select',
+          options: ['Original (OEM)', 'Compatible / Third-party', 'Refilled'],
+        },
+        {
+          key: 'quantity',
+          label: 'Quantity',
+          type: 'number',
+          placeholder: 'e.g. 1',
+        },
+      ],
+    },
+  },
+
+  // ── Calculators & Office Electronics ─────────────────────────────────────
+  {
+    name: 'Calculators & Office Electronics',
     slug: 'office-electronics',
     description: '',
     image: '',
@@ -9789,38 +14324,207 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'office-school-supplies',
     template: {
+      titlePlaceholder: 'e.g. Casio FX-991EX ClassWiz, Fellowes Laminator A4…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Used'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Used', 'Damaged'],
         },
         {
           key: 'item_type',
-          label: 'Type',
+          label: 'Device Type',
+          type: 'select',
+          required: true,
           options: [
-            'Scientific Calculators',
-            'Basic Calculators',
-            'Laminators',
-            'Paper Shredders',
-            'Binding Machines',
+            'Scientific Calculator',
+            'Graphing Calculator',
+            'Basic / Desktop Calculator',
+            'Printing Calculator',
+            'Laminator',
+            'Paper Shredder',
+            'Binding Machine',
+            'Label Maker',
+            'Dictaphone / Voice Recorder',
+            'Digital Pen / Stylus',
+            'Projector',
+            'Presentation Remote',
             'Other',
           ],
-          type: 'select',
         },
         {
           key: 'brand',
           label: 'Brand',
-          placeholder: 'Brand',
           type: 'text',
+          placeholder: 'e.g. Casio, Texas Instruments, Fellowes…',
+        },
+        {
+          key: 'model',
+          label: 'Model',
+          type: 'text',
+          placeholder: 'e.g. FX-991EX, TI-84 Plus CE…',
+        },
+        {
+          key: 'power_source',
+          label: 'Power Source',
+          type: 'select',
+          options: [
+            'Battery',
+            'Solar + Battery',
+            'Rechargeable (USB)',
+            'Mains (Plug-in)',
+          ],
         },
       ],
-      titlePlaceholder: 'e.g. Casio Scientific Calculator',
     },
   },
+
+  // ── Furniture & Ergonomics ────────────────────────────────────────────────
   {
-    name: 'Other Office/School',
+    name: 'Office Furniture & Ergonomics',
+    slug: 'office-furniture',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'office-school-supplies',
+    template: {
+      titlePlaceholder: 'e.g. Ergonomic Office Chair, Standing Desk 120×60cm…',
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Used', 'Damaged'],
+        },
+        {
+          key: 'item_type',
+          label: 'Type',
+          type: 'select',
+          required: true,
+          options: [
+            'Office Chair',
+            'Gaming / Ergonomic Chair',
+            'Desk',
+            'Standing Desk',
+            'Desk Converter',
+            'Bookcase / Shelving',
+            'Filing Cabinet',
+            'Pedestal / Drawer Unit',
+            'Monitor Arm',
+            'Laptop Stand',
+            'Footrest',
+            'Other',
+          ],
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          type: 'text',
+          placeholder: 'e.g. IKEA, Markus, Herman Miller, Steelcase…',
+        },
+        {
+          key: 'material',
+          label: 'Material',
+          type: 'select',
+          options: [
+            'Fabric',
+            'Mesh',
+            'Leather',
+            'Faux Leather',
+            'Wood',
+            'Metal',
+            'Plastic',
+            'Mixed',
+          ],
+        },
+        {
+          key: 'color',
+          label: 'Color',
+          type: 'text',
+          placeholder: 'e.g. Black, White, Grey…',
+        },
+        {
+          key: 'dimensions',
+          label: 'Dimensions (cm)',
+          type: 'text',
+          placeholder: 'e.g. 120×60×75 (W×D×H)',
+        },
+        {
+          key: 'assembly_required',
+          label: 'Assembly',
+          type: 'select',
+          options: ['Pre-assembled', 'Requires Assembly', 'Partial Assembly'],
+        },
+      ],
+    },
+  },
+
+  // ── Art & Craft Supplies ──────────────────────────────────────────────────
+  {
+    name: 'Art & Craft Supplies',
+    slug: 'art-craft-supplies',
+    description: '',
+    image: '',
+    isActive: true,
+    isFeatured: false,
+    parentSlug: 'office-school-supplies',
+    template: {
+      titlePlaceholder: 'e.g. Winsor & Newton Watercolour Set, A3 Drawing Pad…',
+      fields: [
+        {
+          key: 'condition',
+          label: 'Condition',
+          type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Used — Good', 'Partial / Open'],
+        },
+        {
+          key: 'item_type',
+          label: 'Category',
+          type: 'select',
+          required: true,
+          options: [
+            'Drawing Pencils & Charcoal',
+            'Watercolour',
+            'Acrylic Paint',
+            'Oil Paint',
+            'Gouache',
+            'Brushes',
+            'Canvas & Boards',
+            'Sketchbooks & Drawing Pads',
+            'Markers & Liners',
+            'Pastels & Chalks',
+            'Craft Paper & Cardstock',
+            'Cutting & Sculpting Tools',
+            'Glue & Adhesives',
+            'Sewing & Textile',
+            'Sets & Kits',
+            'Other',
+          ],
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          type: 'text',
+          placeholder: 'e.g. Winsor & Newton, Faber-Castell, Canson…',
+        },
+        {
+          key: 'quantity',
+          label: 'Quantity / Pack Size',
+          type: 'text',
+          placeholder: 'e.g. 12 pencils, 24 colours, Set of 5…',
+        },
+      ],
+    },
+  },
+
+  // ── Other ─────────────────────────────────────────────────────────────────
+  {
+    name: 'Other Office & School',
     slug: 'other-office-school',
     description: '',
     image: '',
@@ -9828,21 +14532,28 @@ const categoriesData = [
     isFeatured: false,
     parentSlug: 'office-school-supplies',
     template: {
+      titlePlaceholder: 'Describe your item…',
       fields: [
         {
           key: 'condition',
           label: 'Condition',
-          options: ['New', 'Used'],
           type: 'select',
+          required: true,
+          options: ['New', 'Like New', 'Used', 'Damaged'],
         },
         {
-          key: 'description',
-          label: 'Description',
-          placeholder: 'Details...',
-          type: 'textarea',
+          key: 'item_type',
+          label: 'Item Type',
+          type: 'text',
+          placeholder: 'What is this item?',
+        },
+        {
+          key: 'brand',
+          label: 'Brand',
+          type: 'text',
+          placeholder: 'Brand or manufacturer…',
         },
       ],
-      titlePlaceholder: 'e.g. Other Office/School',
     },
   },
   {
@@ -9874,7 +14585,7 @@ const categoriesData = [
           type: 'textarea',
         },
       ],
-      titlePlaceholder: 'e.g. Do It Yourself (DIY)',
+      titlePlaceholder: 'e.g. Do It Yourself',
     },
   },
   {
@@ -9884,7 +14595,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -9916,7 +14627,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -9948,7 +14659,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -9980,7 +14691,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -10012,7 +14723,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -10044,7 +14755,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -10076,7 +14787,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -10108,7 +14819,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -10140,7 +14851,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -10172,7 +14883,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -10204,7 +14915,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -10236,7 +14947,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -10268,7 +14979,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -10300,7 +15011,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -10332,7 +15043,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -10364,7 +15075,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -10396,7 +15107,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -10428,7 +15139,7 @@ const categoriesData = [
     image: '',
     isActive: true,
     isFeatured: false,
-    parentSlug: 'napravete-sami',
+    parentSlug: 'do-it-yourself',
     template: {
       fields: [
         {
@@ -20288,7 +24999,10 @@ export const seedCategories = internalMutation({
     const slugToId = new Map<string, string>();
 
     // 2. Separate into roots and children (with original index for positioning)
-    const categoriesWithIndex = categoriesData.map((c, index) => ({ ...c, originalIndex: index }));
+    const categoriesWithIndex = categoriesData.map((c, index) => ({
+      ...c,
+      originalIndex: index,
+    }));
     const roots = categoriesWithIndex.filter((c) => !c.parentSlug);
     const children = categoriesWithIndex.filter((c) => c.parentSlug);
 

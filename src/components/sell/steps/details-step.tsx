@@ -565,7 +565,7 @@ export function DetailsStep({
                   value={formData.description || ''}
                   onChange={(e) => updateFormData({ description: e.target.value })}
                   rows={4}
-                  className='resize-none text-xs border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-0 py-1.5 w-full min-h-[100px] placeholder:text-foreground/80 placeholder:font-normal'
+                  className='resize-none text-xs border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-0 py-1.5 w-full min-h-[100px] placeholder:text-foreground/40 placeholder:font-normal'
                 />
               </FieldRow>
             )}
