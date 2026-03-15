@@ -66,11 +66,11 @@ const ROW_BASE = 'flex items-center gap-3 px-4 min-h-[52px] cursor-pointer group
 
 // Ghost input — transparent, no border, full width
 const ghostInput =
-  'h-10 border-0 border-none outline-none shadow-none ring-0 focus:ring-0 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 !bg-transparent hover:!bg-transparent focus:!bg-transparent px-0 text-sm font-medium w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none placeholder:text-muted-foreground/40 placeholder:font-normal';
+  'h-10 border-0 border-none outline-none shadow-none ring-0 focus:ring-0 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 !bg-transparent hover:!bg-transparent focus:!bg-transparent px-0 text-sm font-medium w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none placeholder:text-foreground/60 placeholder:font-normal';
 
 // SelectTrigger ghost — transparent, no border, no shadcn hover bg
 const ghostTrigger =
-  'h-10 border-0 border-none outline-none shadow-none ring-0 focus:ring-0 focus:border-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 !bg-transparent hover:!bg-transparent focus:!bg-transparent px-0 text-sm font-medium w-full data-[placeholder]:text-muted-foreground/40 [&>span]:font-normal data-[placeholder]:[&>span]:font-normal';
+  'h-10 border-0 border-none outline-none shadow-none ring-0 focus:ring-0 focus:border-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 !bg-transparent hover:!bg-transparent focus:!bg-transparent px-0 text-sm font-medium w-full data-[placeholder]:text-foreground/50 [&>span]:font-normal data-[placeholder]:[&>span]:font-normal';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // FieldRow — no label, placeholder carries the hint
@@ -182,11 +182,11 @@ function SwitchRow({
       className={cn(ROW_BASE, ROW_HOVER)}
       onClick={() => onChange(!checked)}
     >
-      <Icon className='h-4 w-4 text-muted-foreground/60 shrink-0' />
+      <Icon className='h-4 w-4 text-muted-foreground shrink-0' />
       <div className='flex-1 min-w-0'>
         <p className='text-sm font-medium leading-none'>{label}</p>
         {description && (
-          <p className='text-[11px] text-muted-foreground/60 mt-0.5'>{description}</p>
+          <p className='text-[11px] text-muted-foreground mt-0.5'>{description}</p>
         )}
       </div>
       <Toggle checked={checked} onChange={onChange} />
@@ -270,7 +270,7 @@ export function DetailsStep({
                 </div>
               )}
 
-              <label className='flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50'>
+              <label className='flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-foreground'>
                 <PenLine className='w-3 h-3' />
                 {t('label_title')}
                 <span className='text-red-500'>*</span>
@@ -283,12 +283,12 @@ export function DetailsStep({
                 }
                 value={formData.title || ''}
                 onChange={(e) => updateFormData({ title: e.target.value })}
-                className='text-base sm:text-lg font-semibold h-11 px-3.5 bg-background border border-border/70 hover:border-primary/30 focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/10 transition-all rounded-lg placeholder:text-muted-foreground/30 placeholder:font-normal shadow-none'
+                className='text-base sm:text-lg font-semibold h-11 px-3.5 bg-muted border border-border/70 hover:border-primary/30 focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/10 transition-all rounded-lg placeholder:text-muted-foreground placeholder:font-normal shadow-none'
               />
 
               <div className='flex items-start gap-1.5 pt-0.5'>
                 <Info className='w-3 h-3 text-primary/50 mt-0.5 shrink-0' />
-                <p className='text-[11px] text-muted-foreground/50 leading-snug'>
+                <p className='text-[11px] text-muted-foreground leading-snug'>
                   Насловот го гледаат сите купувачи. Напишете го јасно и конкретно.
                 </p>
               </div>
@@ -410,7 +410,7 @@ export function DetailsStep({
                   }}
                   className={cn(ghostInput, 'flex-1')}
                 />
-                <span className='text-sm text-muted-foreground/60 font-medium select-none'>
+                <span className='text-sm text-muted-foreground font-medium select-none'>
                   {currencySymbol}
                 </span>
                 <Select
@@ -565,7 +565,7 @@ export function DetailsStep({
                   value={formData.description || ''}
                   onChange={(e) => updateFormData({ description: e.target.value })}
                   rows={4}
-                  className='resize-none text-sm border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-0 py-1.5 w-full min-h-[100px] placeholder:text-muted-foreground/35 placeholder:font-normal'
+                  className='resize-none text-xs border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-0 py-1.5 w-full min-h-[100px] placeholder:text-foreground/60 placeholder:font-normal'
                 />
               </FieldRow>
             )}
