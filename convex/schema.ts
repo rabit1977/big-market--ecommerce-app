@@ -125,6 +125,7 @@ export default defineSchema({
 
     // Promotion
     isPromoted: v.optional(v.boolean()),
+    isUrgent: v.optional(v.boolean()),
     promotionTier: v.optional(v.string()), // 'GOLD' | 'SILVER' | 'BASIC'
     promotionExpiresAt: v.optional(v.number()),
     promotionPackageId: v.optional(v.string()), // References promotionPackages._id

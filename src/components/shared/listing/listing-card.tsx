@@ -186,6 +186,20 @@ export const ListingCard = memo(
               </div>
             </div>
           )}
+          
+          {listing.isUrgent && (
+            <div className={cn(
+              'absolute z-20 pointer-events-none',
+              listing.previousPrice && listing.previousPrice > listing.price 
+                ? 'bottom-8 left-2' 
+                : 'bottom-2 left-2'
+            )}>
+              <div className='bg-primary text-primary-foreground text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm'>
+                <span className='animate-pulse w-1.5 h-1.5 rounded-full bg-white'></span>
+                URGENT
+              </div>
+            </div>
+          )}
 
           {/* Heart Button Overlay - Moved to bottom row per user request */}
         </div>

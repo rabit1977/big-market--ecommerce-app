@@ -53,6 +53,9 @@ export interface ListingFormData {
   // Step 3: Images
   images?: string[];
   thumbnail?: string;
+
+  // Flags
+  isUrgent?: boolean;
 }
 
 export function PostListingWizard({
@@ -202,6 +205,7 @@ export function PostListingWizard({
         specifications: formData.specifications,
         contactPhone: formData.contactPhone,
         contactEmail: formData.contactEmail,
+        isUrgent: formData.isUrgent,
         clientNonce,
       };
 

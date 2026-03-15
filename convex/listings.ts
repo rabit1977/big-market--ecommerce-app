@@ -590,6 +590,7 @@ export const create = mutation({
     isPromoted: v.optional(v.boolean()),
     promotionTier: v.optional(v.string()),
     currency: v.optional(v.string()),
+    isUrgent: v.optional(v.boolean()),
     clientNonce: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
@@ -891,6 +892,7 @@ export const update = mutation({
     isPromoted: v.optional(v.boolean()),
     promotionTier: v.optional(v.string()),
     currency: v.optional(v.string()),
+    isUrgent: v.optional(v.boolean()),
 
     // System Fields
     createdAt: v.optional(v.number()),
