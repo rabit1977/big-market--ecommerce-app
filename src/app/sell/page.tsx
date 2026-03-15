@@ -25,7 +25,7 @@ export default async function SellPage() {
 
   return (
     <div className='min-h-screen bg-background pt-4 md:pt-6 pb-8'>
-      <div className='container-wide px-3 md:px-4'>
+      <div className='container-wide'>
         <PostListingWizard
           categories={categories}
           userId={session.user.id || ''}

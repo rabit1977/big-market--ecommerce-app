@@ -224,7 +224,7 @@ export function PostListingWizard({
 
   return (
     <div className='min-h-screen bg-background'>
-      <div className='container-wide max-w-4xl'>
+      <div className='max-w-4xl'>
         {/* Progress Header */}
         <div className='mb-8'>
           <div className='flex items-center justify-between mb-2'>

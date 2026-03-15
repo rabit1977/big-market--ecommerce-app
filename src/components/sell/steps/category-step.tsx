@@ -205,8 +205,8 @@ export function CategoryStep({
   const currentDesc = level === 0 ? t('cat_desc_main') : t('cat_desc_sub');
 
   return (
-    <div className='space-y-6 hover'>
-      <div className='flex items-center gap-4'>
+    <div className='space-y-4 hover'>
+      <div className='flex items-center gap-1'>
         {level > 0 && (
           <button
             onClick={goBack}
@@ -216,8 +216,8 @@ export function CategoryStep({
           </button>
         )}
         <div>
-          <h2 className='text-2xl font-bold'>{currentTitle}</h2>
-          <p className='text-muted-foreground'>{currentDesc}</p>
+          <h2 className='text-xl font-bold'>{currentTitle}</h2>
+          <p className='text-xs text-muted-foreground'>{currentDesc}</p>
         </div>
       </div>
 

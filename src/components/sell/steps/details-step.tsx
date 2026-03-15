@@ -10,10 +10,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { MK_LOCATIONS } from '@/lib/locations';
 import { cn } from '@/lib/utils';
 import {
   ArrowRightLeft,
-  Check,
   ChevronLeft,
   Info,
   Package,
@@ -22,7 +22,6 @@ import {
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { ListingFormData } from '../post-listing-wizard';
-import { MK_LOCATIONS } from '@/lib/locations';
 
 interface DetailsStepProps {
   categories: Array<{
@@ -46,471 +45,11 @@ interface DetailsStepProps {
   onBack: () => void;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Macedonia — all municipalities grouped by city/region
-// Imported from @/lib/locations
-// ─────────────────────────────────────────────────────────────────────────────
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Other static data
-// ─────────────────────────────────────────────────────────────────────────────
-
 const CONDITIONS = [
   { value: 'new', label: 'New' },
   { value: 'used', label: 'Used' },
 ];
 
-const BODY_TYPES = [
-  { value: 'sedan', label: 'Sedan', icon: '🚗' },
-  { value: 'hatchback', label: 'Hatchback', icon: '🚙' },
-  { value: 'suv', label: 'SUV', icon: '🛻' },
-  { value: 'coupe', label: 'Coupé', icon: '🏎️' },
-  { value: 'convertible', label: 'Cabrio', icon: '🚘' },
-  { value: 'wagon', label: 'Wagon', icon: '🚐' },
-  { value: 'van', label: 'Van', icon: '🚌' },
-  { value: 'pickup', label: 'Pickup', icon: '🛻' },
-];
-
-const EMISSION_STANDARDS = [
-  'Euro 1',
-  'Euro 2',
-  'Euro 3',
-  'Euro 4',
-  'Euro 5',
-  'Euro 6',
-  'Euro 6d',
-];
-
-const MILEAGE_OPTIONS = [
-  { value: '0-10000', label: '0 – 10.000 km' },
-  { value: '10-30000', label: '10.000 – 30.000 km' },
-  { value: '30-60000', label: '30.000 – 60.000 km' },
-  { value: '60-100000', label: '60.000 – 100.000 km' },
-  { value: '100-150000', label: '100.000 – 150.000 km' },
-  { value: '150-200000', label: '150.000 – 200.000 km' },
-  { value: '200000+', label: '200.000+ km' },
-];
-
-const MONTHS = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-
-const currentYear = new Date().getFullYear();
-const YEARS = Array.from({ length: currentYear - 1979 }, (_, i) =>
-  String(currentYear - i),
-);
-
-const CAR_COLORS = [
-  { value: 'black', label: 'Црна', hex: '#1a1a1a' },
-  { value: 'white', label: 'Бела', hex: '#f5f5f5' },
-  { value: 'silver', label: 'Сребрена', hex: '#c0c0c0' },
-  { value: 'gray', label: 'Сива', hex: '#6b7280' },
-  { value: 'red', label: 'Црвена', hex: '#dc2626' },
-  { value: 'blue', label: 'Сина', hex: '#2563eb' },
-  { value: 'dark-blue', label: 'Т.сина', hex: '#1e3a5f' },
-  { value: 'green', label: 'Зелена', hex: '#16a34a' },
-  { value: 'beige', label: 'Беж', hex: '#d4b896' },
-  { value: 'brown', label: 'Кафена', hex: '#7c3f1e' },
-];
-
-const CAR_BRANDS: Record<string, string[]> = {
-  Audi: [
-    'A1',
-    'A2',
-    'A3',
-    'A4',
-    'A5',
-    'A6',
-    'A7',
-    'A8',
-    'Q2',
-    'Q3',
-    'Q4 e-tron',
-    'Q5',
-    'Q7',
-    'Q8',
-    'TT',
-    'R8',
-    'e-tron',
-    'S3',
-    'S4',
-    'S5',
-    'S6',
-    'RS3',
-    'RS4',
-    'RS6',
-  ],
-  BMW: [
-    '1 Series',
-    '2 Series',
-    '3 Series',
-    '4 Series',
-    '5 Series',
-    '6 Series',
-    '7 Series',
-    '8 Series',
-    'X1',
-    'X2',
-    'X3',
-    'X4',
-    'X5',
-    'X6',
-    'X7',
-    'Z3',
-    'Z4',
-    'M2',
-    'M3',
-    'M4',
-    'M5',
-    'i3',
-    'i4',
-    'iX',
-  ],
-  Mercedes: [
-    'A-Class',
-    'B-Class',
-    'C-Class',
-    'E-Class',
-    'S-Class',
-    'CLA',
-    'CLS',
-    'GLA',
-    'GLB',
-    'GLC',
-    'GLE',
-    'GLS',
-    'EQA',
-    'EQB',
-    'EQC',
-    'G-Class',
-    'AMG GT',
-    'SL',
-    'SLK',
-  ],
-  Volkswagen: [
-    'Golf',
-    'Polo',
-    'Passat',
-    'Tiguan',
-    'Touareg',
-    'Touran',
-    'T-Roc',
-    'T-Cross',
-    'Sharan',
-    'Arteon',
-    'ID.3',
-    'ID.4',
-    'ID.5',
-    'Phaeton',
-    'Scirocco',
-    'Beetle',
-    'Up',
-    'Caddy',
-  ],
-  Toyota: [
-    'Yaris',
-    'Corolla',
-    'Camry',
-    'Auris',
-    'Avensis',
-    'Prius',
-    'RAV4',
-    'Land Cruiser',
-    'Hilux',
-    'C-HR',
-    'Aygo',
-    'Supra',
-    'GR86',
-    'Verso',
-    'Previa',
-    'bZ4X',
-  ],
-  Honda: [
-    'Civic',
-    'Accord',
-    'Jazz',
-    'CR-V',
-    'HR-V',
-    'Pilot',
-    'Fit',
-    'Insight',
-    'Element',
-    'Ridgeline',
-    'e',
-    'ZR-V',
-  ],
-  Ford: [
-    'Fiesta',
-    'Focus',
-    'Mondeo',
-    'Puma',
-    'Kuga',
-    'Explorer',
-    'Mustang',
-    'Edge',
-    'Ranger',
-    'Transit',
-    'EcoSport',
-    'Bronco',
-    'F-150',
-    'Maverick',
-  ],
-  Opel: [
-    'Astra',
-    'Corsa',
-    'Insignia',
-    'Zafira',
-    'Meriva',
-    'Mokka',
-    'Crossland',
-    'Grandland',
-    'Adam',
-    'Agila',
-    'Combo',
-    'Vivaro',
-    'Vectra',
-    'Omega',
-  ],
-  Renault: [
-    'Clio',
-    'Megane',
-    'Laguna',
-    'Scenic',
-    'Captur',
-    'Koleos',
-    'Kadjar',
-    'Talisman',
-    'Zoe',
-    'Arkana',
-    'Austral',
-    'Espace',
-    'Twingo',
-    'Kangoo',
-  ],
-  Peugeot: [
-    '108',
-    '208',
-    '308',
-    '408',
-    '508',
-    '2008',
-    '3008',
-    '5008',
-    'Rifter',
-    'Partner',
-    'Traveller',
-    'e-208',
-    'e-2008',
-  ],
-  Seat: [
-    'Ibiza',
-    'Leon',
-    'Ateca',
-    'Arona',
-    'Tarraco',
-    'Alhambra',
-    'Toledo',
-    'Mii',
-  ],
-  Skoda: [
-    'Fabia',
-    'Octavia',
-    'Superb',
-    'Rapid',
-    'Karoq',
-    'Kodiaq',
-    'Scala',
-    'Kamiq',
-    'Enyaq',
-    'Citigo',
-  ],
-  Hyundai: [
-    'i10',
-    'i20',
-    'i30',
-    'i40',
-    'ix35',
-    'Tucson',
-    'Santa Fe',
-    'Ioniq',
-    'Ioniq 5',
-    'Ioniq 6',
-    'Kona',
-    'Bayon',
-  ],
-  Kia: [
-    'Picanto',
-    'Rio',
-    'Ceed',
-    'ProCeed',
-    'Optima',
-    'Sportage',
-    'Sorento',
-    'Soul',
-    'Stinger',
-    'Niro',
-    'EV6',
-  ],
-  Nissan: [
-    'Micra',
-    'Note',
-    'Leaf',
-    'Qashqai',
-    'X-Trail',
-    'Juke',
-    'Navara',
-    'Pathfinder',
-    'Murano',
-    '370Z',
-    'Ariya',
-  ],
-  Mazda: [
-    'Mazda2',
-    'Mazda3',
-    'Mazda6',
-    'CX-3',
-    'CX-5',
-    'CX-30',
-    'CX-50',
-    'MX-5',
-    'MX-30',
-  ],
-  Subaru: ['Impreza', 'Legacy', 'Outback', 'Forester', 'XV', 'BRZ', 'WRX'],
-  Mitsubishi: [
-    'Colt',
-    'Lancer',
-    'Outlander',
-    'Eclipse Cross',
-    'ASX',
-    'Pajero',
-    'L200',
-    'Space Star',
-  ],
-  Volvo: [
-    'V40',
-    'V60',
-    'V70',
-    'V90',
-    'S40',
-    'S60',
-    'S80',
-    'S90',
-    'XC40',
-    'XC60',
-    'XC90',
-    'C30',
-    'EX30',
-  ],
-  Fiat: [
-    'Punto',
-    'Uno',
-    'Panda',
-    '500',
-    'Tipo',
-    'Bravo',
-    'Stilo',
-    'Ducato',
-    'Doblo',
-    '500X',
-    '600',
-  ],
-  'Alfa Romeo': [
-    '147',
-    '156',
-    '159',
-    'Giulia',
-    'Giulietta',
-    'Stelvio',
-    'Tonale',
-    'Spider',
-    '4C',
-    'Brera',
-  ],
-  Jeep: [
-    'Renegade',
-    'Compass',
-    'Cherokee',
-    'Grand Cherokee',
-    'Wrangler',
-    'Gladiator',
-    'Avenger',
-  ],
-  Chevrolet: [
-    'Spark',
-    'Aveo',
-    'Cruze',
-    'Malibu',
-    'Camaro',
-    'Corvette',
-    'Equinox',
-    'Trax',
-    'Captiva',
-    'Blazer',
-  ],
-  Tesla: ['Model 3', 'Model S', 'Model X', 'Model Y', 'Cybertruck'],
-  Porsche: [
-    '911',
-    'Cayenne',
-    'Macan',
-    'Panamera',
-    'Taycan',
-    'Boxster',
-    'Cayman',
-  ],
-  'Land Rover': [
-    'Defender',
-    'Discovery',
-    'Freelander',
-    'Range Rover',
-    'Range Rover Sport',
-    'Range Rover Evoque',
-  ],
-  Jaguar: ['XE', 'XF', 'XJ', 'F-Type', 'E-Pace', 'F-Pace', 'I-Pace'],
-  Lexus: ['IS', 'ES', 'GS', 'LS', 'UX', 'NX', 'RX', 'LX', 'LC'],
-  Dacia: ['Logan', 'Sandero', 'Duster', 'Lodgy', 'Dokker', 'Spring', 'Jogger'],
-  Suzuki: ['Swift', 'Ignis', 'Baleno', 'Vitara', 'SX4', 'Jimny', 'S-Cross'],
-  Citroen: [
-    'C1',
-    'C2',
-    'C3',
-    'C4',
-    'C5',
-    'Berlingo',
-    'Picasso',
-    'C5 X',
-    'C3 Aircross',
-    'C5 Aircross',
-  ],
-  Mini: ['One', 'Cooper', 'Clubman', 'Countryman', 'Convertible'],
-  Cupra: ['Formentor', 'Born', 'Ateca', 'Leon'],
-  Polestar: ['2', '3', '4'],
-  Genesis: ['G70', 'G80', 'G90', 'GV70', 'GV80'],
-  DS: ['DS3', 'DS4', 'DS5', 'DS7', 'DS9'],
-  Smart: ['ForTwo', 'ForFour', '#1', '#3'],
-};
-
-const BRAND_NAMES = Object.keys(CAR_BRANDS).sort();
-const VEHICLE_SLUGS = [
-  'cars',
-  'motorcycles',
-  'trucks',
-  'vehicles',
-  'vechicles',
-  'auto',
-  'vozila',
-  'avtomobili',
-];
 const MANUAL_KEYS = new Set<string>([
   // 'condition', // Removed to allow dynamic condition field
   // 'sostojba',
@@ -520,40 +59,44 @@ const MANUAL_KEYS = new Set<string>([
 // Style tokens
 // ─────────────────────────────────────────────────────────────────────────────
 const ghostSelect =
-  'h-10 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-secondary/30 transition-colors rounded-md px-3 font-medium text-sm [&>svg]:opacity-40';
+  'h-10 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent transition-colors rounded-none px-0 font-medium text-sm [&>svg]:opacity-40 w-full hover:bg-transparent';
 const ghostInput =
-  'h-10 border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-secondary/30 transition-colors rounded-md px-3 font-medium text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
+  'h-10 border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent transition-colors rounded-none px-0 font-medium text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-full hover:bg-transparent';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Sub-components
 // ─────────────────────────────────────────────────────────────────────────────
 function FieldRow({
-  label,
-  required,
   children,
-  tall,
   id,
+  className,
 }: {
   label: string;
   required?: boolean;
   children: React.ReactNode;
   tall?: boolean;
   id?: string;
+  className?: string;
 }) {
+  const handleClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('button, input, select, textarea'))
+      return;
+    const row = e.currentTarget;
+    const focusable = row.querySelector(
+      'input, select, textarea, [role="combobox"]',
+    ) as HTMLElement;
+    if (focusable) focusable.focus();
+  };
+
   return (
     <div
       id={id}
+      onClick={handleClick}
       className={cn(
-        'flex gap-3 px-4',
-        tall
-          ? 'flex-col py-2 sm:flex-row sm:items-start'
-          : 'items-center min-h-[40px]',
+        'flex items-center px-4 transition-all duration-200 hover:bg-muted/50 group cursor-pointer w-full min-h-[52px]',
+        className,
       )}
     >
-      <span className='hidden sm:block text-sm text-muted-foreground w-28 shrink-0 truncate'>
-        {label}
-        {required && <span className='text-destructive ml-0.5'>*</span>}
-      </span>
       <div className='flex-1 min-w-0'>{children}</div>
     </div>
   );
@@ -582,7 +125,10 @@ function Toggle({
       type='button'
       role='switch'
       aria-checked={checked}
-      onClick={() => onChange(!checked)}
+      onClick={(e) => {
+        e.stopPropagation();
+        onChange(!checked);
+      }}
       className={cn(
         'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         checked
@@ -615,7 +161,10 @@ function SwitchRow({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <div className='flex items-center gap-3 px-4 min-h-[52px]'>
+    <div
+      className='flex items-center gap-3 px-4 min-h-[52px] transition-all duration-200 hover:bg-muted/50 cursor-pointer'
+      onClick={() => onChange(!checked)}
+    >
       <Icon className='h-4 w-4 text-muted-foreground shrink-0' />
       <div className='flex-1 min-w-0'>
         <p className='text-sm font-medium leading-none'>{label}</p>
@@ -643,25 +192,18 @@ export function DetailsStep({
     categories.find((c) => c.slug === formData.subCategory) ||
     categories.find((c) => c.slug === formData.category);
 
-  const isVehicle = false; // Deprecated, using dynamic templates
-
   const handleSpec = (key: string, value: any) => {
     const updates: Partial<ListingFormData> = {
       specifications: { ...(formData.specifications || {}), [key]: value },
     };
-    
+
     // Promote key fields to top-level for validation
     if (key === 'condition') updates.condition = value;
     if (key === 'description') updates.description = value;
-    
+
     updateFormData(updates);
   };
 
-  const selectedBrand = formData.specifications?.brand || '';
-  const availableModels = selectedBrand
-    ? (CAR_BRANDS[selectedBrand] ?? [])
-    : [];
-  const selectedColor = formData.specifications?.color || '';
   const selectedRegion = formData.region || '';
 
   const dynamicFields = (selectedCategory?.template?.fields || []).filter(
@@ -693,30 +235,41 @@ export function DetailsStep({
 
           {/* ═══════════════ UNIFIED CARD ═══════════════ */}
           <div className='rounded-xl border bg-card overflow-hidden divide-y divide-border'>
-            <div id='title' className='p-5 sm:p-7 space-y-4 bg-card transition-all'>
-              <div className='flex flex-wrap items-center gap-1 opacity-50 px-0.5'>
-                {formData.category && (
-                  <span className='text-[10px] sm:text-[11px] font-bold text-neutral-800/90 uppercase tracking-widest'>
-                    {categories.find(c => c.slug === formData.category)?.name || formData.category}
-                  </span>
-                )}
-                {formData.subCategory && formData.subCategory !== formData.category && (
-                  <>
-                    <span className='text-[10px] font-bold text-neutral-500 mx-1'>{'>'}</span>
-                    <span className='text-[10px] sm:text-[11px] font-bold text-neutral-800/90 uppercase tracking-widest'>
-                      {categories.find(c => c.slug === formData.subCategory)?.name || formData.subCategory}
+            <div
+              id='title-section'
+              className='transition-all duration-200 hover:bg-muted/50 pb-2'
+            >
+              <div className='px-4 pt-3 pb-1'>
+                <div className='flex flex-wrap items-center gap-1 opacity-50'>
+                  {formData.category && (
+                    <span className='text-[10px] sm:text-[11px] font-bold text-muted-foreground/90 uppercase tracking-widest'>
+                      {categories.find((c) => c.slug === formData.category)
+                        ?.name || formData.category}
                     </span>
-                  </>
-                )}
+                  )}
+                  {formData.subCategory &&
+                    formData.subCategory !== formData.category && (
+                      <>
+                        <span className='text-[10px] font-bold text-muted-foreground mx-1'>
+                          {'>'}
+                        </span>
+                        <span className='text-[10px] sm:text-[11px] font-bold text-muted-foreground uppercase tracking-widest'>
+                          {categories.find(
+                            (c) => c.slug === formData.subCategory,
+                          )?.name || formData.subCategory}
+                        </span>
+                      </>
+                    )}
+                </div>
               </div>
 
-              <div className='space-y-2'>
-                <label className='flex items-center gap-2 text-xs font-black uppercase tracking-tighter text-muted-foreground mb-1'>
+              <div className='space-y-2 px-4'>
+                <label className='flex items-center gap-2 text-xs font-black uppercase tracking-tighter text-muted-foreground my-2'>
                   <PenLine className='w-3.5 h-3.5' />
                   {t('label_title')}
                   <span className='text-red-500'>*</span>
                 </label>
-                
+
                 <Input
                   placeholder={
                     selectedCategory?.template?.titlePlaceholder ||
@@ -726,11 +279,12 @@ export function DetailsStep({
                   onChange={(e) => updateFormData({ title: e.target.value })}
                   className='text-lg sm:text-2xl font-bold h-12 sm:h-16 px-4 bg-background border-2 border-border/60 hover:border-primary/30 focus-visible:border-primary/50 focus-visible:ring-4 focus-visible:ring-primary/5 transition-all rounded-xl placeholder:text-muted-foreground/30 shadow-none'
                 />
-                
+
                 <div className='flex items-start gap-2 pt-1'>
                   <Info className='w-3.5 h-3.5 text-primary mt-0.5 shrink-0' />
                   <p className='text-[11px] text-muted-foreground/80 leading-snug font-medium italic'>
-                    This is the main title that buyers will see when searching for your item. Make it clear and descriptive!
+                    This is the main title that buyers will see when searching
+                    for your item. Make it clear and descriptive!
                   </p>
                 </div>
               </div>
@@ -744,7 +298,9 @@ export function DetailsStep({
                     key={field.key}
                     icon={ArrowRightLeft}
                     label={field.label}
-                    checked={['Да', 'Yes', 'True', 'true'].includes(formData.specifications?.isTradePossible)}
+                    checked={['Да', 'Yes', 'True', 'true'].includes(
+                      formData.specifications?.isTradePossible,
+                    )}
                     onChange={(v) =>
                       handleSpec('isTradePossible', v ? 'Да' : 'Не')
                     }
@@ -781,7 +337,19 @@ export function DetailsStep({
                       placeholder={field.placeholder || field.label}
                       value={formData.specifications?.[field.key] || ''}
                       onChange={(e) => handleSpec(field.key, e.target.value)}
-                      className={cn(ghostInput, 'max-w-xs')}
+                      maxLength={
+                        field.key.toLowerCase().includes('vin') ||
+                        field.key.toLowerCase().includes('chassis')
+                          ? 17
+                          : undefined
+                      }
+                      className={cn(
+                        ghostInput,
+                        'max-w-xs',
+                        (field.key.toLowerCase().includes('vin') ||
+                          field.key.toLowerCase().includes('chassis')) &&
+                          'uppercase tracking-wider font-mono',
+                      )}
                     />
                   )}
                 </FieldRow>
@@ -798,12 +366,9 @@ export function DetailsStep({
             <SectionLabel>Listing Details</SectionLabel>
 
             {/* New / Used toggle chips - Only show if not defined in template as dynamic field */}
-            {!dynamicFields.some(f => f.key === 'condition') && (
-              <div id='condition' className='px-4 py-3 space-y-2'>
-                <span className='text-sm text-muted-foreground'>
-                  Condition <span className='text-destructive ml-0.5'>*</span>
-                </span>
-                <div className='flex gap-2 flex-wrap'>
+            {!dynamicFields.some((f) => f.key === 'condition') && (
+              <FieldRow id='condition' label='Condition' required>
+                <div className='flex gap-2 flex-wrap py-2'>
                   {CONDITIONS.map((c) => {
                     const active = (formData.condition || '') === c.value;
                     return (
@@ -823,15 +388,15 @@ export function DetailsStep({
                     );
                   })}
                 </div>
-              </div>
+              </FieldRow>
             )}
             {/* Price */}
             <FieldRow id='price' label='Price' required>
-              <div className='flex items-center justify-between flex-wrap w-full'>
-                <div className='flex flex-2 items-center border-r'>
+              <div className='flex items-center w-full'>
+                <div className='flex-1 flex items-center'>
                   <Input
                     type='number'
-                    placeholder=''
+                    placeholder='000...'
                     min={0}
                     step={500}
                     value={formData.price ?? ''}
@@ -841,10 +406,7 @@ export function DetailsStep({
                         price: val === '' ? undefined : parseFloat(val),
                       });
                     }}
-                    className={cn(
-                      ghostInput,
-                      '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none',
-                    )}
+                    className={cn(ghostInput, 'w-full')}
                   />
                   <span className='text-xs text-muted-foreground pointer-events-none select-none pr-4'>
                     {currencySymbol}
@@ -854,7 +416,7 @@ export function DetailsStep({
                   value={formData.currency || 'MKD'}
                   onValueChange={(val) => updateFormData({ currency: val })}
                 >
-                  <SelectTrigger className='flex-1 h-10 w-[84px] px-2 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-secondary/30 transition-colors rounded-md text-xs font-medium'>
+                  <SelectTrigger className='h-10 w-[84px] px-0 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent transition-colors rounded-none text-xs font-medium hover:bg-transparent uppercase'>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -907,7 +469,8 @@ export function DetailsStep({
             </FieldRow>
 
             {/* Municipality — appears after region */}
-            {selectedRegion && selectedRegion !== 'Друго' &&
+            {selectedRegion &&
+              selectedRegion !== 'Друго' &&
               (MK_LOCATIONS[selectedRegion]?.length ?? 0) > 0 && (
                 <FieldRow id='city' label='Municipality' required>
                   <Select
@@ -915,12 +478,12 @@ export function DetailsStep({
                       !formData.city
                         ? ''
                         : formData.city === 'Друго'
-                        ? 'other_municipality'
-                        : MK_LOCATIONS[selectedRegion]
-                            .map((m) => m.toLowerCase())
-                            .includes(formData.city.toLowerCase())
-                        ? formData.city.toLowerCase()
-                        : 'other_municipality'
+                          ? 'other_municipality'
+                          : MK_LOCATIONS[selectedRegion]
+                                .map((m) => m.toLowerCase())
+                                .includes(formData.city.toLowerCase())
+                            ? formData.city.toLowerCase()
+                            : 'other_municipality'
                     }
                     onValueChange={(v) => {
                       if (v === 'other_municipality') {
@@ -970,16 +533,16 @@ export function DetailsStep({
             <SectionLabel>Description & Contact</SectionLabel>
 
             {/* Description */}
-            {!dynamicFields.some(f => f.key === 'description') && (
-              <FieldRow id='description' label='Description' required tall>
+            {!dynamicFields.some((f) => f.key === 'description') && (
+              <FieldRow id='description' label='Description' tall>
                 <Textarea
-                  placeholder='Describe the product...'
+                  placeholder='Description...'
                   value={formData.description || ''}
                   onChange={(e) =>
                     updateFormData({ description: e.target.value })
                   }
                   rows={4}
-                  className='resize-none text-sm border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent hover:bg-secondary/30 transition-colors rounded-md px-3 py-2 -mt-1'
+                  className='resize-none text-sm border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent transition-colors rounded-none px-0 py-4 w-full min-h-[120px] hover:bg-transparent'
                 />
               </FieldRow>
             )}
