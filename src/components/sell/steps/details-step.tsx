@@ -66,11 +66,11 @@ const ROW_BASE = 'flex items-center gap-3 px-4 min-h-[52px] cursor-pointer group
 
 // Ghost input — transparent, no border, full width
 const ghostInput =
-  'h-10 border-0 border-none outline-none shadow-none ring-0 focus:ring-0 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 !bg-transparent hover:!bg-transparent focus:!bg-transparent px-0 text-sm font-medium w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none placeholder:text-foreground/60 placeholder:font-normal';
+  'h-10 border-0 border-none outline-none shadow-none ring-0 focus:ring-0 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 !bg-transparent hover:!bg-transparent focus:!bg-transparent px-0 text-sm font-medium w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none placeholder:text-foreground/70 placeholder:font-normal';
 
 // SelectTrigger ghost — transparent, no border, no shadcn hover bg
 const ghostTrigger =
-  'h-10 border-0 border-none outline-none shadow-none ring-0 focus:ring-0 focus:border-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 !bg-transparent hover:!bg-transparent focus:!bg-transparent px-0 text-sm font-medium w-full data-[placeholder]:text-foreground/50 [&>span]:font-normal data-[placeholder]:[&>span]:font-normal';
+  'h-10 border-0 border-none outline-none shadow-none ring-0 focus:ring-0 focus:border-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 !bg-transparent hover:!bg-transparent focus:!bg-transparent px-0 text-sm font-medium w-full data-[placeholder]:text-foreground/70 [&>span]:font-normal data-[placeholder]:[&>span]:font-normal';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // FieldRow — no label, placeholder carries the hint
@@ -120,7 +120,7 @@ function FieldRow({
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className='px-4 py-2 bg-muted/60 border-y border-border/50'>
-      <span className='text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/50'>
+      <span className='text-[10px] font-bold uppercase tracking-[0.15em] text-foreground'>
         {children}
       </span>
     </div>
@@ -255,14 +255,14 @@ export function DetailsStep({
               {(formData.category || formData.subCategory) && (
                 <div className='flex flex-wrap items-center gap-1 mb-2'>
                   {formData.category && (
-                    <span className='text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40'>
+                    <span className='text-[10px] font-bold uppercase tracking-widest text-foreground/60'>
                       {categories.find((c) => c.slug === formData.category)?.name || formData.category}
                     </span>
                   )}
                   {formData.subCategory && formData.subCategory !== formData.category && (
                     <>
-                      <span className='text-[10px] text-muted-foreground/30 mx-0.5'>›</span>
-                      <span className='text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40'>
+                      <span className='text-[10px] text-foreground/60 mx-0.5'>›</span>
+                      <span className='text-[10px] font-bold uppercase tracking-widest text-foreground/60'>
                         {categories.find((c) => c.slug === formData.subCategory)?.name || formData.subCategory}
                       </span>
                     </>
@@ -565,7 +565,7 @@ export function DetailsStep({
                   value={formData.description || ''}
                   onChange={(e) => updateFormData({ description: e.target.value })}
                   rows={4}
-                  className='resize-none text-xs border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-0 py-1.5 w-full min-h-[100px] placeholder:text-foreground/60 placeholder:font-normal'
+                  className='resize-none text-xs border-none shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent px-0 py-1.5 w-full min-h-[100px] placeholder:text-foreground/80 placeholder:font-normal'
                 />
               </FieldRow>
             )}
