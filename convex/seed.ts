@@ -1662,7 +1662,7 @@ const categoriesData = [
         {
           key: 'furnished',
           label: 'Furnished Status',
-          options: ['Fully Furnished', 'Empty (Unfurnished)', 'Kitchen Only'],
+          options: ['Furnished', 'Empty (Unfurnished)', 'Kitchen Only'],
           type: 'select',
         },
         {
@@ -1679,8 +1679,8 @@ const categoriesData = [
         },
         {
           key: 'title_deed',
-          label: 'Title Deed (Имотен лист)',
-          options: ['Yes (Clear)', 'In Process', 'No'],
+          label: 'Title Deed',
+          options: ['Yes', 'In Process', 'No'],
           type: 'select',
         },
         {
@@ -1765,13 +1765,13 @@ const categoriesData = [
         {
           key: 'furnished',
           label: 'Furnished Status',
-          options: ['Fully Furnished', 'Empty', 'Partially Furnished'],
+          options: ['Furnished', 'Empty', 'Partially Furnished'],
           type: 'select',
         },
         {
           key: 'title_deed',
-          label: 'Title Deed (Имотен лист)',
-          options: ['Yes (Clear)', 'In Process', 'No'],
+          label: 'Title Deed',
+          options: ['Yes', 'In Process', 'No'],
           type: 'select',
         },
         {
@@ -1901,13 +1901,13 @@ const categoriesData = [
         {
           key: 'electricity',
           label: 'Electricity Access',
-          options: ['Yes (Connected)', 'Nearby', 'No'],
+          options: ['Yes', 'Nearby', 'No'],
           type: 'select',
         },
         {
           key: 'water',
           label: 'Water / Sewage Access',
-          options: ['Yes (Connected)', 'Nearby', 'No'],
+          options: ['Yes', 'Nearby', 'No'],
           type: 'select',
         },
         {
@@ -21650,7 +21650,7 @@ const categoriesData = [
         {
           key: 'pedigree',
           label: 'Pedigree',
-          options: ['Yes (with papers)', 'No'],
+          options: ['Yes', 'No'],
           type: 'select',
         },
       ],
@@ -21705,7 +21705,7 @@ const categoriesData = [
         {
           key: 'pedigree',
           label: 'Pedigree',
-          options: ['Yes (with papers)', 'No'],
+          options: ['Yes', 'No'],
           type: 'select',
         },
       ],

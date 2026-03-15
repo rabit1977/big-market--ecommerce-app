@@ -10,6 +10,7 @@ import { ReportModal } from '@/components/shared/report-modal';
 import { SellerBadge } from '@/components/shared/seller-badge';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import { LeaveReviewModal } from '@/components/store/leave-review-modal';
+import { ListingLightbox } from '@/components/shared/listing/listing-lightbox';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -49,6 +50,8 @@ import {
   ShieldAlert,
   Store,
   Trash2,
+  Truck,
+  ZoomIn,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -101,6 +104,9 @@ interface Listing {
   previousPrice?: number;
   listingNumber?: number;
   isPriceNegotiable?: boolean;
+  acceptsPriceOffers?: boolean;
+  hasShipping?: boolean;
+  isTradePossible?: boolean | string;
   isPromoted?: boolean;
   promotionTier?: string;
   promotionExpiresAt?: number;
@@ -127,6 +133,8 @@ export function ListingDetailContent({
   const isFavorite = isFavCheck(listing._id);
   const { data: session } = useSession();
   const [isDescExpanded, setIsDescExpanded] = useState(false);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [activeLightboxImage, setActiveLightboxImage] = useState(0);
 
   // condition label helper (same mapping as listing cards)
   const getConditionLabel = (condition?: string | null): string => {
@@ -240,6 +248,16 @@ export function ListingDetailContent({
   const specsMidpoint = Math.ceil(filteredSpecs.length / 2);
   const specsLeft = filteredSpecs.slice(0, specsMidpoint);
   const specsRight = filteredSpecs.slice(specsMidpoint);
+
+  const isTradePossible =
+    listing.isTradePossible === true ||
+    listing.isTradePossible === 'Да' ||
+    listing.specifications?.isTradePossible === 'Да';
+
+  const hasShipping =
+    listing.hasShipping === true ||
+    listing.specifications?.hasShipping === true ||
+    listing.specifications?.shippingAvailable === true;
 
   // ── Handlers ──────────────────────────────────────────────────────────────
   const handleShare = () => {
@@ -424,7 +442,7 @@ export function ListingDetailContent({
             {/* Image Gallery */}
             <div className='relative group overflow-hidden md:rounded-xl border border-border bg-muted'>
               <div
-                className='flex w-full aspect-[4/3] md:aspect-video overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar pointer-events-auto touch-pan-x touch-pan-y'
+                className='flex w-full aspect-4/3 md:aspect-video overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar pointer-events-auto touch-pan-x touch-pan-y'
                 onScroll={(e) => {
                   const container = e.currentTarget;
                   const index = Math.round(
@@ -437,7 +455,7 @@ export function ListingDetailContent({
                   images.map((img, i) => (
                     <div
                       key={i}
-                      className='relative w-full h-full flex-shrink-0 snap-center pointer-events-auto'
+                      className='relative w-full h-full shrink-0 snap-center pointer-events-auto'
                     >
                       <Image
                         src={typeof img === 'string' ? img : (img as any).url}
@@ -446,9 +464,19 @@ export function ListingDetailContent({
                         sizes='(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 1200px'
                         placeholder='blur'
                         blurDataURL={rgbDataURL(241, 245, 249)}
-                        className='object-cover pointer-events-none'
+                        className='object-cover cursor-zoom-in'
                         priority={i === 0}
+                        onClick={() => {
+                          setActiveLightboxImage(i);
+                          setIsLightboxOpen(true);
+                        }}
                       />
+                      {/* Zoom Indicator on Hover */}
+                      <div className='absolute bottom-2 left-2  opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none'>
+                        <div className='bg-black/40 backdrop-blur-md p-2 rounded-full border border-white/20 scale-90 group-hover:scale-100 transition-transform'>
+                          <ZoomIn className='w-4 h-4 text-white' />
+                        </div>
+                      </div>
                       {/* Floating Badges */}
                       <div className='absolute top-2 left-2 z-30 flex flex-col gap-2 pointer-events-none'>
                         {promoConfig && (
@@ -477,14 +505,24 @@ export function ListingDetailContent({
                     </div>
                   ))
                 ) : (
-                  <div className='relative w-full h-full flex-shrink-0 snap-center pointer-events-auto'>
+                  <div className='relative w-full h-full shrink-0 snap-center pointer-events-auto'>
                     <Image
                       src={mainImage}
                       alt={listing.title}
                       fill
-                      className='object-cover pointer-events-none'
+                      className='object-cover cursor-zoom-in'
                       priority
+                      onClick={() => {
+                        setActiveLightboxImage(0);
+                        setIsLightboxOpen(true);
+                      }}
                     />
+                    {/* Zoom Indicator on Hover */}
+                    <div className='absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none'>
+                      <div className='bg-black/40 backdrop-blur-md p-3 rounded-full border border-white/20 scale-90 group-hover:scale-100 transition-transform'>
+                        <ZoomIn className='w-6 h-6 text-white' />
+                      </div>
+                    </div>
                     {/* Floating Badges */}
                     <div className='absolute top-1.5 left-1.5 z-30 flex flex-col gap-2 pointer-events-none'>
                       {promoConfig && (
@@ -558,21 +596,21 @@ export function ListingDetailContent({
             </div>
 
             {/* Mobile Info Block */}
-            <div className='md:hidden space-y-4 px-4 bg-background border-b py-2'>
+            <div className='md:hidden space-y-4 bg-background border-b py-2'>
               <div className='flex items-start justify-between gap-2'>
                 <div className='flex flex-col flex-1'>
                   <div className='flex items-center gap-1 mb-1'>
                     {categoryData && (
-                      <span className='text-[9.5px] font-bold text-foreground/40 hover:underline cursor-pointer uppercase tracking-wider'>
+                      <span className='text-[11.5px] font-bold text-foreground/60 hover:underline cursor-pointer tracking-wider'>
                         {categoryData.name}
                       </span>
                     )}
                     {subCategoryData && (
                       <>
-                        <span className='text-[11.5px] font-bold text-neutral-500 mx-1'>
+                        <span className='text-[11.5px] font-bold text-foreground/60 mx-1'>
                           {'>'}
                         </span>
-                        <span className='text-[11.5px] font-bold text-neutral-800/90 hover:underline cursor-pointer uppercase tracking-wider'>
+                        <span className='text-[11.5px] font-bold text-foreground/60 hover:underline cursor-pointer  tracking-wider'>
                           {subCategoryData.name}
                         </span>
                       </>
@@ -582,7 +620,19 @@ export function ListingDetailContent({
                     {listing.title}
                   </h1>
                 </div>
-                <SellerBadge seller={seller} showLabel />
+                <div className="flex items-center  flex-wrap">
+                  {isTradePossible && (
+                    <span className="text-[9px] font-bold text-amber-600 uppercase tracking-tighter bg-amber-500/10 py-0.5 rounded-md">
+                      {t('trade_possible')}
+                    </span>
+                  )}
+                  {hasShipping && (
+                    <span className="text-[9px] font-bold text-blue-600 uppercase tracking-tighter bg-blue-500/10 py-0.5 rounded-md flex items-center gap-1">
+                      <Truck className="w-3 h-3" />
+                      {t('delivery_available')}
+                    </span>
+                  )}
+                </div>
               </div>
               <div className='space-y-2'>
                 <div className='flex items-center gap-2 mb-1 flex-wrap'>
@@ -634,7 +684,9 @@ export function ListingDetailContent({
                     <div className='flex items-center gap-2 mt-0.5'>
                       {listing.price > 0 && (
                         <span className='text-[10px] font-black text-primary uppercase tracking-tighter bg-primary/5 px-2 py-0.5 rounded-md'>
-                          {listing.isPriceNegotiable
+                          {listing.acceptsPriceOffers 
+                          ? t('predlog_cena')
+                          : listing.isPriceNegotiable
                             ? t('negotiable')
                             : t('fixed')}
                         </span>
@@ -829,7 +881,20 @@ export function ListingDetailContent({
                         {listing.title}
                       </h1>
                     </div>
-                    <SellerBadge seller={seller} showLabel />
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <SellerBadge seller={seller} showLabel={false} />
+                      {isTradePossible && (
+                        <span className="text-[9.5px] font-bold text-amber-600 uppercase tracking-tighter bg-amber-500/10 px-2 py-0.5 rounded-md">
+                          {t('trade_possible')}
+                        </span>
+                      )}
+                      {hasShipping && (
+                        <span className="text-[9.5px] font-bold text-blue-600 uppercase tracking-tighter bg-blue-500/10 px-2 py-0.5 rounded-md flex items-center gap-1">
+                          <Truck className="w-3 h-3" />
+                          {t('delivery_available')}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className='flex items-center gap-2 text-[10px] font-black text-muted-foreground uppercase tracking-widest'>
                     <MapPin className='w-3.5 h-3.5 text-primary' />
@@ -844,9 +909,11 @@ export function ListingDetailContent({
                       : t('call_for_price')}
                     {listing.price > 0 && (
                       <span className='text-[10px] font-black text-primary uppercase tracking-tighter bg-primary/5 px-2 py-0.5 rounded'>
-                        {listing.isPriceNegotiable
-                          ? t('negotiable')
-                          : t('fixed')}
+                        {listing.acceptsPriceOffers 
+                          ? t('predlog_cena')
+                          : listing.isPriceNegotiable
+                            ? t('negotiable')
+                            : t('fixed')}
                       </span>
                     )}
                   </div>
@@ -1000,7 +1067,7 @@ export function ListingDetailContent({
 
         {/* Mobile Map & Safety */}
         <div className='md:hidden px-4 py-8 space-y-6'>
-          <div className='bg-card border border-border rounded-xl overflow-hidden shadow-sm aspect-[4/3] relative'>
+          <div className='bg-card border border-border rounded-xl overflow-hidden shadow-sm aspect-4/3 relative'>
             <iframe
               width='100%'
               height='100%'
@@ -1036,6 +1103,13 @@ export function ListingDetailContent({
           </div>
         </div>
       </div>
+      <ListingLightbox
+        isOpen={isLightboxOpen}
+        onClose={() => setIsLightboxOpen(false)}
+        images={images}
+        initialIndex={activeLightboxImage}
+        title={listing.title}
+      />
     </div>
   );
 }
@@ -1064,7 +1138,7 @@ const SpecsColumn = memo(function SpecsColumn({
           key={key}
           className='flex justify-between items-baseline py-2 md:py-2.5 border-b border-border/40 last:border-0 group transition-colors'
         >
-          <span className='flex-2 text-muted-foreground text-xs md:text-sm font-bold uppercase tracking-wider pr-2'>
+          <span className='flex-2 text-muted-foreground text-xs md:text-sm font-bold tracking-wide pr-2'>
             {fieldLabelMap[key] ?? humanize(key)}
           </span>
           <span className='flex-1 font-bold text-foreground text-sm md:text-base text-left shrink-0'>

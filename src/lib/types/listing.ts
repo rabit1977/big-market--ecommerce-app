@@ -35,6 +35,8 @@ export interface Listing {
   priority?: number;
   promotionExpiresAt?: number;
   previousPrice?: number;
+  isPriceNegotiable?: boolean;
+  acceptsPriceOffers?: boolean;
   isUrgent?: boolean;
   listingNumber?: number;
 }

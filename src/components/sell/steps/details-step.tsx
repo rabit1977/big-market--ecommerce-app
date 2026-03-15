@@ -398,7 +398,7 @@ export function DetailsStep({
               <div className='flex items-center gap-2'>
                 <Input
                   type='number'
-                  placeholder='0'
+                  placeholder={currencySymbol}
                   min={0}
                   step={500}
                   value={formData.price ?? ''}
@@ -410,14 +410,12 @@ export function DetailsStep({
                   }}
                   className={cn(ghostInput, 'flex-1')}
                 />
-                <span className='text-sm text-muted-foreground font-medium select-none'>
-                  {currencySymbol}
-                </span>
+                
                 <Select
                   value={formData.currency || 'MKD'}
                   onValueChange={(val) => updateFormData({ currency: val })}
                 >
-                  <SelectTrigger className='h-8 w-[68px] px-2 border border-border/50 rounded-md shadow-none ring-0 focus:ring-0 focus-visible:ring-0 text-xs font-semibold uppercase bg-transparent hover:bg-transparent transition-colors'>
+                  <SelectTrigger className='h-8 w-fit px-2 border border-border/50 rounded-md shadow-none ring-0 focus:ring-0 focus-visible:ring-0 text-xs font-semibold uppercase bg-transparent hover:bg-transparent transition-colors'>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
